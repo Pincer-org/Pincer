@@ -27,14 +27,14 @@ from re import search, MULTILINE
 
 this_dir = path.abspath(path.dirname(__file__))
 
-with open(path.join(this_dir, "README.md"), encoding='utf-8') as f:
+with open(path.join(this_dir, "docs", "README.md"), encoding='utf-8') as f:
     dyn_props = {
         "long_description": f.read(),
         "long_description_content_type": "text/markdown"
     }
 
 with open(path.join(this_dir, "pyscord", "__init__.py"), encoding='utf-8') as f:
-    _re_match_str = r'\s*[\'"]([^\'"]*)[\'"]'
+    _re_match_str = r'.=*.\s*[\'"]([^\'"]*)[\'"]'
     content = f.read()
 
 
@@ -47,7 +47,7 @@ with open(path.join(this_dir, "pyscord", "__init__.py"), encoding='utf-8') as f:
 
     dyn_props = {
         **dyn_props,
-        "name": get_content("package"),
+        "name": get_content("__package__"),
         "version": get_content("__version__"),
         "packages": ["pyscord", "pyscord.core"],
         "license": get_content("__license__"),
