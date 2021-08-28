@@ -37,7 +37,6 @@ with open(path.join(this_dir, "pyscord", "__init__.py"), encoding='utf-8') as f:
     _re_match_str = r'.=*.\s*[\'"]([^\'"]*)[\'"]'
     content = f.read()
 
-
     def get_content(name: str):
         match = search(name + _re_match_str, content, MULTILINE).group(1)
         if not match:

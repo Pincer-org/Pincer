@@ -11,5 +11,14 @@ pyvenv
 # Dev Tools
 tools/*
 
+<<<<<<< HEAD
 # Dev testing
 _testing.py
+=======
+
+# Packaging
+bin
+build
+dist
+MANIFEST
+>>>>>>> 96f09ab1f2f7b8b7819421b4d0fd24a94172c6ae
