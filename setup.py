@@ -10,7 +10,7 @@ README = (HERE / "README.md").read_text(encoding='utf8')
 # This call to setup() does all the work
 setup(
     name="pyscord",
-    version="0.0.1b",
+    version="0.0.1",
     description="Discord API wrapper rebuild from scratch.",
     long_description=README,
     long_description_content_type="text/markdown",
