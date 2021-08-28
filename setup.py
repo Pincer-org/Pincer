@@ -21,13 +21,10 @@ with open(path.join(this_dir, "pyscord", "__init__.py"), encoding='utf-8') as f:
             raise RuntimeError(f"{name} is not set!")
         return match
 
-
-    version = get_content("__version__")
-
     dyn_props = {
         **dyn_props,
         "name": get_content("package"),
-        "version": version,
+        "version": get_content("__version__"),
         "packages": ["pyscord", "pyscord.utils"],
         "license": get_content("__license__"),
         "description": get_content("__description__"),
