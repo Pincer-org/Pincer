@@ -8,6 +8,7 @@
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Embed-Templator)
 -->
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Pyscord/Pyscord/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/Pyscord/Pyscord/?branch=main)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Sigmanificient/Embed-Templator)
 ![GitHub repo size](https://img.shields.io/github/repo-size/Sigmanificient/Embed-Templator)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Sigmanificient/Embed-Templator)
