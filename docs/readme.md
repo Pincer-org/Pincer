@@ -11,6 +11,7 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Sigmanificient/Embed-Templator)
 ![GitHub repo size](https://img.shields.io/github/repo-size/Sigmanificient/Embed-Templator)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Sigmanificient/Embed-Templator)
+![Code Style](https://img.shields.io/badge/code%20style-pep8-green)
 
 *Discord API wrapper rebuild from scratch.*
 
