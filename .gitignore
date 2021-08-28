@@ -10,3 +10,10 @@ pyvenv
 
 # Dev Tools
 tools/*
+
+
+# Packaging
+bin
+build
+dist
+MANIFEST
