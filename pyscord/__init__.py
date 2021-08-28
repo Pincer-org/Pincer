@@ -9,7 +9,7 @@ An asynchronous python API wrapper meant to replace discord.py
 
 __title__ = "Pyscord library"
 __package__ = "pyscord"
-__author__ = "Sigmanficient, Arthurdw"
+__author__ = "Sigmanificient, Arthurdw"
 __license__ = "MIT"
 __copyright__ = "Copyright 2021-present"
 __version__ = "0.0.0-p"
