@@ -21,6 +21,7 @@ with open(path.join(this_dir, "pyscord", "__init__.py"), encoding='utf-8') as f:
             raise RuntimeError(f"{name} is not set!")
         return match
 
+
     dyn_props = {
         **dyn_props,
         "name": get_content("package"),
@@ -33,8 +34,10 @@ with open(path.join(this_dir, "pyscord", "__init__.py"), encoding='utf-8') as f:
     }
 
 with open(path.join(this_dir, "requirements.txt"), encoding='utf-8') as f:
-    dyn_props = {**dyn_props, "install_requires": [itm.strip() for itm in
-                                                   f.read().strip().split(" ")]}
+    dyn_props = {
+        **dyn_props,
+        "install_requires": [itm.strip() for itm in f.read().strip().split(" ")]
+    }
 
 setup(
     **dyn_props,
