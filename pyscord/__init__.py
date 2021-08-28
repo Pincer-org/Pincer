@@ -3,7 +3,7 @@ Pyscord library
 ====================
 An asynchronous python API wrapper meant to replace discord.py
 
-:copyright: (c) 2021-present
+:copyright: (c) 2021-present Pyscord
 :license: MIT, see LICENSE for more details.
 """
 
