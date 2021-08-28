@@ -1,4 +1,6 @@
-# pyscord
+<center>
+    <h1><img src="img/icon.png" height="24px" alt="Pyscord Logo"> Pyscord</h1>
+</center>
 
 <!-- 
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/pyscord)
