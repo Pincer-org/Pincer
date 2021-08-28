@@ -10,3 +10,6 @@ pyvenv
 
 # Dev Tools
 tools/*
+
+# Dev testing
+_testing.py
