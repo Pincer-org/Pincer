@@ -12,6 +12,7 @@ pyvenv
 tools/*
 
 # Dev testing
+dev
 _testing.py
 
 # Packaging
