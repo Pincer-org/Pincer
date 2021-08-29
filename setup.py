@@ -21,7 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from distutils.core import setup
+from setuptools import setup
 from os import path
 from re import search, MULTILINE
 
@@ -64,10 +64,11 @@ with open(path.join(this_dir, "requirements.txt"), encoding='utf-8') as f:
 setup(
     **dyn_props,
     project_urls={
-        "Documentation": "-- WIP --",
+        # "Documentation": "-- WIP --",
+        "Github repository": "https://github.com/Pyscord/pyscord"
     },
     url="https://github.com/Pyscord/Pyscord",
-    author_email="...",
+    author_email="contact@pyscord.org",
     classifiers=[
         # Development statuses:
         'Development Status :: 1 - Planning',
