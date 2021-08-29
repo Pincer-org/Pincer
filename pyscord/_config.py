@@ -32,7 +32,11 @@ class GatewayConfig:
     # compress: str = "zlib-stream"
 
     @staticmethod
-    def uri():
+    def uri() -> str:
+        """
+        :return uri:
+            The GatewayConfig's uri.
+        """
         return f"{GatewayConfig.base_url}" \
                f"?v={GatewayConfig.version}" \
                f"&encoding={GatewayConfig.version}"

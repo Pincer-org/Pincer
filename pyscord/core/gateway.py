@@ -53,8 +53,11 @@ class Dispatcher:
 
     # TODO: Add intents argument
     # TODO: Add handlers argument
-    def __init__(self, token: str):
-        # TODO: Write docs for __init__.
+    def __init__(self, token: str) -> None:
+        """
+        :param token:
+            Bot token for discord's API.
+        """
 
         if len(token) != 59:
             raise InvalidTokenError(
@@ -66,7 +69,17 @@ class Dispatcher:
 
         async def identify_and_handle_hello(socket: WebSocketClientProtocol,
                                             payload: GatewayDispatch):
-            # TODO: Fix docs
+            """
+            Handchecks with the Discord WebSocket API.
+
+            :param socket:
+                The current socket, which can be used to interact
+                with the Discord API.
+
+            :param payload:
+                The received payload from Discord.
+
+            """
             await socket.send(str(GatewayDispatch(2, {
                 "token": token,
                 "intents": 0,
@@ -127,7 +140,12 @@ class Dispatcher:
                     self.handle_error(exc)
 
     @staticmethod
-    def handle_error(exc):
+    def handle_error(exc) -> None:
+        """Handle exceptions when connection is closed unexpectedly.
+
+        :param exc:
+            Exception raised by the handler_manager.
+        """
         if exc.code == 4004:
             raise InvalidTokenError()
 
