@@ -26,6 +26,7 @@ from asyncio import get_event_loop, AbstractEventLoop, ensure_future
 from platform import system
 from typing import Dict, Callable, Awaitable
 
+import websockets.exceptions
 from websockets import connect
 from websockets.legacy.client import WebSocketClientProtocol
 
@@ -34,6 +35,7 @@ from pyscord._config import GatewayConfig
 # TODO: Implement logging
 from pyscord.core.dispatch import GatewayDispatch
 from pyscord.core.handlers.heartbeat import handle_hello, handle_heartbeat
+from pyscord.exceptions import InvalidTokenError
 
 Handler = Callable[[WebSocketClientProtocol, GatewayDispatch], Awaitable[None]]
 
@@ -53,6 +55,10 @@ class Dispatcher:
     # TODO: Add handlers argument
     def __init__(self, token: str):
         # TODO: Write docs for __init__.
+
+        if len(token) != 59:
+            raise InvalidTokenError()
+
         self.__token = token
         self.__keep_alive = True
 
@@ -108,10 +114,20 @@ class Dispatcher:
         # TODO: Implement logging
         async with connect(GatewayConfig.uri()) as socket:
             while self.__keep_alive:
-                await self.handler_manager(
-                    socket,
-                    GatewayDispatch.from_string(await socket.recv()),
-                    loop)
+                try:
+                    await self.handler_manager(
+                        socket,
+                        GatewayDispatch.from_string(await socket.recv()),
+                        loop)
+
+                except websockets.exceptions.ConnectionClosedError as exc:
+                    self.__keep_alive = False
+                    self.handle_error(exc)
+
+    @staticmethod
+    def handle_error(exc):
+        if exc.code == 4004:
+            raise InvalidTokenError()
 
     def run(self):
         """

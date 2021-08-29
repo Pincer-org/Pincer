@@ -51,7 +51,7 @@ async def handle_hello(socket: WebSocketClientProtocol,
         # TODO: Throw invalid heartbeat exception if no heartbeat is present.
         return
 
-    heartbeat = heartbeat / 1000
+    heartbeat /= 1000
 
     await __send_heartbeat(socket)
 
