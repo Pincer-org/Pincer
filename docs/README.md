@@ -61,7 +61,7 @@ py -m pip install pyscord
 
 ## License
 
-`© 2020 copyright pyscord`
+`© 2021 copyright pyscord`
 
 This repository is licensed under the MIT License.
 See LICENSE for details.
