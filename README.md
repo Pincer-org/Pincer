@@ -1,2 +1,0 @@
-# Pyscord
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/da3fa4b7d6b74daba89e12d5d12d64d3)](https://app.codacy.com/gh/Pyscord/Pyscord?utm_source=github.com&utm_medium=referral&utm_content=Pyscord/Pyscord&utm_campaign=Badge_Grade_Settings)
