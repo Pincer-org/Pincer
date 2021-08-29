@@ -11,8 +11,8 @@ The Context object will work similarly to the `discordpy` package.
 ## Simplest command
 
 The command syntax will be very similar to the original discordpy one.
-However, indeed of `await ctx.send`, the command will return an object.
-When the return type is a string, this will send be a simple message.
+However, instead of `await ctx.send`, the command will return an object.
+When the return type is a string, this will send a simple message.
 
 ```py
 @command('my_command')
@@ -20,7 +20,7 @@ async def ping() -> str:
     return 'pong'
 ```
 
-A `Message` object could also be return for further customization:
+A `Message` object could also be returned for further customization:
 ```py
 @command('my_command')
 async def ping(ctx: Context) -> Message:
@@ -31,7 +31,7 @@ async def ping(ctx: Context) -> Message:
 ```
 
 ## Watchers
-Watcher objects can be return to have an even trigger which allow to 
+Watcher objects can be returned to have an even trigger which allow to 
 execute a watcher decorated function.
 
 ```py
