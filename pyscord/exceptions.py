@@ -10,5 +10,5 @@ class InvalidTokenError(ValueError):
             Additional information about the exception cause.
         """
         super(InvalidTokenError, self).__init__(
-            "The given token is not a valid token." + (hint * bool(hint))
+            "The given token is not a valid token." + (str(hint) * bool(hint))
         )
