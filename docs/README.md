@@ -21,7 +21,7 @@
 
 # Installation
 
-Use The following command to install Embed-Templator into your python environment:
+Use the following command to install Embed-Templator into your python environment:
 ```bash
 pip install pyscord
 ```
