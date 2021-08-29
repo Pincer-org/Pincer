@@ -39,4 +39,4 @@ class GatewayConfig:
         """
         return f"{GatewayConfig.base_url}" \
                f"?v={GatewayConfig.version}" \
-               f"&encoding={GatewayConfig.version}"
+               f"&encoding={GatewayConfig.encoding}"
