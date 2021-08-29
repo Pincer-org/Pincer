@@ -12,7 +12,7 @@
 
 [![Build Status](https://scrutinizer-ci.com/g/Pyscord/Pyscord/badges/build.png?b=main)](https://scrutinizer-ci.com/g/Pyscord/Pyscord/build-status/main)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Pyscord/Pyscord/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/Pyscord/Pyscord/?branch=main)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Sigmanificient/pyscord)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/pysocrd/pyscord)
 ![GitHub repo size](https://img.shields.io/github/repo-size/pyscord/pyscord)
 ![GitHub last commit](https://img.shields.io/github/last-commit/pyscord/pyscord)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/pyscord/pyscord)
