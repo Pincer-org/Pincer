@@ -57,7 +57,9 @@ class Dispatcher:
         # TODO: Write docs for __init__.
 
         if len(token) != 59:
-            raise InvalidTokenError()
+            raise InvalidTokenError(
+                "Discord Token must have exactly 59 characters."
+            )
 
         self.__token = token
         self.__keep_alive = True
