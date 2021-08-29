@@ -28,7 +28,7 @@ pip install pyscord
 
 <details>
 	<summary>
-		<i>didn't works?</i>
+		<i>Didn't work?</i>
 	</summary>
 
 Depending on your python installation, you might need to use one of the following.
