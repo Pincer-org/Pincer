@@ -28,12 +28,17 @@
 
 <img src="img/pypi.svg" width="12px" alt="Pincer Logo"> ｜The pypi package: https://pypi.org/project/Pincer/
 
+<<<<<<< HEAD
+Use the following command to install pyscord into your python environment:
+
+=======
 <img src="img/pincer.svg" width="12px" alt="Pincer Logo"> ｜Our website: https://pincer.dev
 
 
 ## ☄️ Installation
 
 Use The following command to install Pincer into your python environment:
+>>>>>>> upstream/main
 ```bash
 pip install pincer
 ```
