@@ -77,7 +77,7 @@ class HTTPClient:
         }
 
     async def __send(self, method: RequestMethod, route: str, *,
-                     __ttl: int = None, data: Optional[Dict] = None):
+                     __ttl: int = None, data: Optional[Dict] = None) -> Dict:
         # TODO: Fix docs
         # TODO: Implement logging
         __ttl = __ttl or self.max_ttl
