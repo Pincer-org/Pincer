@@ -44,7 +44,7 @@ class RequestMethod(Enum):
 
 class HttpCallable(Protocol):
     def __call__(self, url: StrOrURL, *, allow_redirects: bool = True,
-                 **kwargs: Any) -> "_RequestContextManager":
+                 **kwargs: Any) -> _RequestContextManager:
                  pass
 
 
