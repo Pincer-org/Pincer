@@ -1,6 +1,6 @@
 # Code of Conduct
 
-Everyone interacting in Pyscord package is expected to follow the 
+Everyone interacting in Pincer package is expected to follow the 
 [PSF Code of Conduct](https://www.python.org/psf/conduct).
 
 In general, this means that everyone is expected to be **open**,

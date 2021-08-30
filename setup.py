@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # MIT License
 #
-# Copyright (c) 2021 Pyscord
+# Copyright (c) 2021 Pincer
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ with open(path.join(this_dir, "docs", "README.md"), encoding='utf-8') as f:
         "long_description_content_type": "text/markdown"
     }
 
-with open(path.join(this_dir, "pyscord", "__init__.py"), encoding='utf-8') as f:
+with open(path.join(this_dir, "Pincer", "__init__.py"), encoding='utf-8') as f:
     _re_match_str = r'.=*.\s*[\'"]([^\'"]*)[\'"]'
     content = f.read()
 
@@ -49,7 +49,7 @@ with open(path.join(this_dir, "pyscord", "__init__.py"), encoding='utf-8') as f:
     def get_packages():
         return [
             item[0].replace("./", "").replace("\\", ".").replace("/", ".")
-            for item in list(walk('./pyscord'))
+            for item in list(walk('./pincer'))
             if "__pycache__" not in item[0]
         ]
 
@@ -74,10 +74,10 @@ setup(
     **dyn_props,
     project_urls={
         # "Documentation": "-- WIP --",
-        "Github repository": "https://github.com/Pyscord/pyscord"
+        "Github repository": "https://github.com/pincer-org/pincer"
     },
-    url="https://github.com/Pyscord/Pyscord",
-    author_email="contact@pyscord.org",
+    url="https://github.com/Pincer/Pincer",
+    author_email="contact@pincer.dev",
     classifiers=[
         # Development statuses:
         'Development Status :: 1 - Planning',
