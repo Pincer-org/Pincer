@@ -41,6 +41,7 @@ Handler = Callable[[WebSocketClientProtocol, GatewayDispatch], Awaitable[None]]
 
 
 class Dispatcher:
+
     """
     The Dispatcher handles all interactions with the discord websocket
     API. This also contains the main event loop, and handles the heartbeat.
@@ -123,8 +124,8 @@ class Dispatcher:
 
     async def __dispatcher(self, loop: AbstractEventLoop):
         """
-        The main event loop. This handles all interactions with the
-        websocket API.
+        The main event loop.
+        This handles all interactions with the websocket API.
         """
         # TODO: Implement logging
         async with connect(GatewayConfig.uri()) as socket:
