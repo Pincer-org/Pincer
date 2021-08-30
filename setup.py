@@ -34,7 +34,7 @@ with open(path.join(this_dir, "docs", "README.md"), encoding='utf-8') as f:
         "long_description_content_type": "text/markdown"
     }
 
-with open(path.join(this_dir, "Pincer", "__init__.py"), encoding='utf-8') as f:
+with open(path.join(this_dir, "pincer", "__init__.py"), encoding='utf-8') as f:
     _re_match_str = r'.=*.\s*[\'"]([^\'"]*)[\'"]'
     content = f.read()
 
