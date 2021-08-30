@@ -113,7 +113,7 @@ class HTTPClient:
                 else:
                     #status code is guaranteed to be 5xx
                     await asyncio.sleep(1 + (self.max_ttl - __ttl) * 2)
-                    await self.__send(method, route, __ttl=__ttl - 1)
+                    await self.__send(method, route, __ttl=__ttl - 1, data=data)
 
     async def delete(self, route: str) -> Dict:
         """
