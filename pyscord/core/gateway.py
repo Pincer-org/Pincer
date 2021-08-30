@@ -26,8 +26,8 @@ from asyncio import get_event_loop, AbstractEventLoop, ensure_future
 from platform import system
 from typing import Dict, Callable, Awaitable
 
-import websockets.exceptions
 from websockets import connect
+from websockets.exceptions import ConnectionClosedError
 from websockets.legacy.client import WebSocketClientProtocol
 
 from pyscord import __package__
@@ -35,7 +35,8 @@ from pyscord._config import GatewayConfig
 # TODO: Implement logging
 from pyscord.core.dispatch import GatewayDispatch
 from pyscord.core.handlers.heartbeat import handle_hello, handle_heartbeat
-from pyscord.exceptions import InvalidTokenError
+from pyscord.exceptions import PyscordError, InvalidTokenError, \
+    UnhandledException
 
 Handler = Callable[[WebSocketClientProtocol, GatewayDispatch], Awaitable[None]]
 
@@ -96,6 +97,10 @@ class Dispatcher:
             11: handle_heartbeat
         }
 
+        self.__dispatch_errors: Dict[int, PyscordError] = {
+            4004: InvalidTokenError()
+        }
+
     # TODO: Implement socket typehint
     async def handler_manager(self, socket: WebSocketClientProtocol,
                               payload: GatewayDispatch,
@@ -135,19 +140,13 @@ class Dispatcher:
                         GatewayDispatch.from_string(await socket.recv()),
                         loop)
 
-                except websockets.exceptions.ConnectionClosedError as exc:
-                    self.__keep_alive = False
-                    self.handle_error(exc)
+                except ConnectionClosedError as exc:
+                    self.close()
 
-    @staticmethod
-    def handle_error(exc) -> None:
-        """Handle exceptions when connection is closed unexpectedly.
+                    exception = self.__dispatch_errors.get(exc.code)
 
-        :param exc:
-            Exception raised by the handler_manager.
-        """
-        if exc.code == 4004:
-            raise InvalidTokenError()
+                    raise exception if exception else UnhandledException(
+                        f"Dispatch error ({exc.code}): {exc.reason}")
 
     def run(self):
         """
