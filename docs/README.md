@@ -1,73 +1,85 @@
-<center>
-    <h1><img src="img/icon.png" height="24px" alt="Pyscord Logo"> Pyscord</h1>
-</center>
+# <img src="img/pincer.svg" height="24px" alt="Pincer Logo"> Pincer
 
-<!-- 
-![PyPI - Downloads](https://img.shields.io/pypi/dm/pyscord)
-[![PyPI - Downloads](https://img.shields.io/badge/dynamic/json?label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2Fpyscord)](https://pypi.org/project/pyscord)
-![PyPI](https://img.shields.io/pypi/v/pyscord)
-![PyPI - Format](https://img.shields.io/pypi/format/pyscord)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pyscord)
+<!--
+[![PyPI - Downloads](https://img.shields.io/badge/dynamic/json?label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2FPincer)](https://pypi.org/project/Pincer)
+![PyPI](https://img.shields.io/pypi/v/Pincer)
+![PyPI - Format](https://img.shields.io/pypi/format/Pincer)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Pincer)
 -->
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/da3fa4b7d6b74daba89e12d5d12d64d3)](https://app.codacy.com/gh/Pyscord/Pyscord?utm_source=github.com&utm_medium=referral&utm_content=Pyscord/Pyscord&utm_campaign=Badge_Grade_Settings)
-[![Build Status](https://scrutinizer-ci.com/g/Pyscord/Pyscord/badges/build.png?b=main)](https://scrutinizer-ci.com/g/Pyscord/Pyscord/build-status/main)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Pyscord/Pyscord/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/Pyscord/Pyscord/?branch=main)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/pyscord/pyscord)
-![GitHub repo size](https://img.shields.io/github/repo-size/pyscord/pyscord)
-![GitHub last commit](https://img.shields.io/github/last-commit/pyscord/pyscord)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/pyscord/pyscord)
-![GitHub](https://img.shields.io/github/license/pyscord/pyscord)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Pincer-org/pincer/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/Pincer-org/pincer/?branch=main)
+[![Build Status](https://scrutinizer-ci.com/g/Pincer-org/Pincer/badges/build.png?b=main)](https://scrutinizer-ci.com/g/Pincer-org/Pincer/build-status/main)
+![GitHub repo size](https://img.shields.io/github/repo-size/Pincer-org/Pincer)
+![GitHub last commit](https://img.shields.io/github/last-commit/Pincer-org/Pincer)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Pincer-org/Pincer)
+![GitHub](https://img.shields.io/github/license/Pincer-org/Pincer)
 ![Code Style](https://img.shields.io/badge/code%20style-pep8-green)
 ![Discord](https://img.shields.io/discord/881531065859190804)
 
-*Discord API wrapper rebuild from scratch.*
+*An asynchronous python API wrapper meant to replace discord.py*
+
+| :exclamation: | The pakcage is currently within the planning phase |
+| ------------- | :------------------------------------------------- |
 
 
-# Installation
+## :pushpin: Links
 
+<img src="img/discord.svg" width="12px" alt="Pincer Logo"> ｜Join the discord server: https://discord.gg/8WkYz3fNFm
+
+<img src="img/pypi.svg" width="12px" alt="Pincer Logo"> ｜The pypi package: https://pypi.org/project/Pincer/
+
+<<<<<<< HEAD
 Use the following command to install pyscord into your python environment:
 
+=======
+<img src="img/pincer.svg" width="12px" alt="Pincer Logo"> ｜Our website: https://pincer.dev
+
+
+## ☄️ Installation
+
+Use The following command to install Pincer into your python environment:
+>>>>>>> upstream/main
 ```bash
-pip install pyscord
+pip install pincer
 ```
 
 <details>
 	<summary>
-		<i>Didn't work?</i>
+		<i>⚙️ Didn't work?</i>
 	</summary>
 
 Depending on your python installation, you might need to use one of the following.
 
 *pip isn't in the path but python is*
 ```sh
-python -m pip install pyscord
+python -m pip install pincer
 ```
 
 *Unix system can use pip3/python3 command*
 ```sh
-python3 -m pip install pyscord
+python3 -m pip install pincer
 ```
 
 ```sh
-pip3 install pyscord
+pip3 install pincer
 ```
 
 *python isn't in the path*
 ```sh
-path/to/python.exe -m pip install pyscord
+path/to/python.exe -m pip install pincer
 ```
 
 *Using multiple python versions*
 ```sh
-py -m pip install pyscord
+py -m pip install pincer
 ```
 </details>
 
 
-## License
+## 🏷️ License
 
-`© 2021 copyright pyscord`
+`© 2021 copyright Pincer`
 
 This repository is licensed under the MIT License.
+
 See LICENSE for details.

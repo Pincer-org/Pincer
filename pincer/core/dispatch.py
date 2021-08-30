@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # MIT License
 #
-# Copyright (c) 2021 Pyscord
+# Copyright (c) 2021 Pincer
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -28,9 +28,7 @@ from typing import Optional, Union, Dict, Any
 
 
 class GatewayDispatch:
-    """
-    Represents a websocket message.
-    """
+    """Represents a websocket message."""
 
     def __init__(self, op: int, data: Optional[Union[int, Dict[str, Any]]],
                  seq: Optional[int] = None, name: Optional[str] = None):

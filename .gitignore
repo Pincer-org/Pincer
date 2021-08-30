@@ -9,6 +9,9 @@ venv
 pyvenv
 Pipfile.lock
 
+# Docs
+docs/_build
+
 # Dev Tools
 tools/*
 
@@ -17,6 +20,7 @@ dev
 _testing.py
 
 # Packaging
+*.egg-info
 bin
 build
 dist
