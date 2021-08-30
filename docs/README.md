@@ -1,8 +1,6 @@
-<center>
-    <h1><img src="img/icon.png" height="24px" alt="Pincer Logo"> Pincer</h1>
-</center>
+<h1><img src="img/icon.png" height="24px" alt="Pincer Logo"> Pincer</h1>
 
-<!-- 
+<!--
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/Pincer)
 [![PyPI - Downloads](https://img.shields.io/badge/dynamic/json?label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2FPincer)](https://pypi.org/project/Pincer)
 ![PyPI](https://img.shields.io/pypi/v/Pincer)
@@ -22,8 +20,14 @@
 
 *Discord API wrapper rebuild from scratch.*
 
+## Links
 
-# Installation
+Join the discord server: https://discord.gg/8WkYz3fNFm
+The pypi package: https://pypi.org/project/Pincer/
+Our website: https://pincer.dev
+
+
+## Installation
 
 Use The following command to install Pincer into your python environment:
 ```bash
