@@ -36,30 +36,39 @@ class InvalidTokenError(PyscordError, ValueError):
 # https://discord.com/developers/docs/topics/opcodes-and-status-codes#http
 
 class NotModifiedError(PyscordError):
+
     """Error code 304"""
 
 class BadRequestError(PyscordError):
+
     """Error code 400"""
 
 class UnauthorizedError(PyscordError):
+
     """Error code 401"""
 
 class ForbiddenError(PyscordError):
+
     """Error code 403"""
 
 class NotFoundError(PyscordError):
+
     """Error code 404"""
 
 class MethodNotAllowedError(PyscordError):
+
     """Error code 405"""
 
 class RateLimitError(PyscordError):
+
     """Error code 429"""
 
 class GatewayError(PyscordError):
+
     """Error code 502"""
 
 class ServerError(PyscordError):
+    
     """
     Error code 5xx
     Status code is not in the discord API

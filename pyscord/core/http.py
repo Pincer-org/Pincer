@@ -42,7 +42,6 @@ class HTTPClient:
         :param max_retries: Max amount of attemps after
                             error code 5xx
         """
-
         self.header: Dict[str, str] = {"Authorization": f"Bot {token}"}
         self.endpoint: str = f"https://discord.com/api/v{version}"
         self.max_retries: int = max_retries
