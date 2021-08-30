@@ -102,7 +102,7 @@ class HTTPClient:
             async with sender(f"{self.endpoint}/{route}",
                               headers=self.header, json=data) as res:
 
-                if res.status in [200, 201, 204]:
+                if res.ok:
                     return await res.json()
 
                 exception = self.__http_exceptions.get(res.status)
@@ -114,11 +114,23 @@ class HTTPClient:
                     await asyncio.sleep(3)
                     await self.__send(method, route, __ttl=__ttl - 1)
 
+    async def delete(self, route: str) -> Dict:
+        """
+        :return: JSON response from the discord API.
+        """
+        return await self.__send(RequestMethod.DELETE, route)
+
     async def get(self, route: str) -> Dict:
         """
         :return: JSON response from the discord API.
         """
         return await self.__send(RequestMethod.GET, route)
+
+    async def options(self, route: str) -> Dict:
+        """
+        :return: JSON response from the discord API.
+        """
+        return await self.__send(RequestMethod.OPTIONS, route)
 
     async def post(self, route: str, data: Dict) -> Dict:
         """
@@ -126,20 +138,8 @@ class HTTPClient:
         """
         return await self.__send(RequestMethod.POST, route, data=data)
 
-    async def delete(self, route: str) -> Dict:
-        """
-        :return: JSON response from the discord API.
-        """
-        return await self.__send(RequestMethod.DELETE, route)
-
     async def put(self, route: str, data: Dict) -> Dict:
         """
         :return: JSON response from the discord API.
         """
         return await self.__send(RequestMethod.PUT, route, data=data)
-
-    async def options(self, route: str) -> Dict:
-        """
-        :return: JSON response from the discord API.
-        """
-        return await self.__send(RequestMethod.OPTIONS, route)
