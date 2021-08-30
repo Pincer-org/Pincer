@@ -21,7 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from typing import Dict, Union
+from typing import Dict
 import asyncio
 
 import aiohttp
@@ -30,7 +30,7 @@ from ..exceptions import NotFoundError, BadRequestError, NotModifiedError, Unaut
 
 
 class HTTPClient:
-    def __init__(self, token: str, version: Union[int, str] = 9, max_retries: int = 4) -> None:
+    def __init__(self, token: str, version: int = 9, max_retries: int = 4) -> None:
         """
         Instantiate a new HttpApi object.
 
@@ -40,7 +40,7 @@ class HTTPClient:
         :param version: The discord API version.
                         See https://discord.com/developers/docs/reference#api-versioning.
         :param max_retries: Max amount of attemps after
-                            error codes 5xx & 429
+                            error code 5xx
         """
 
         self.header: Dict[str, str] = {"Authorization": f"Bot {token}"}
