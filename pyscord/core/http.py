@@ -24,12 +24,13 @@
 from typing import Dict, Union
 
 import requests
+from requests.models import Response
 
 from ..exceptions import NotFoundError, BadRequestError, NotModifiedError, UnauthorizedError, ForbiddenError, MethodNotAllowedError, RateLimitError, GatewayError, ServerError
 
 
 class HTTPClient:
-    def __init__(self, version: Union[int, str], token: str) -> None:
+    def __init__(self, token: str, version: Union[int, str] = 9) -> None:
         """
         Instantiate a new HttpApi object.
 
@@ -38,15 +39,18 @@ class HTTPClient:
         :param token: Discord API token
         """
 
-        self.header = {"Authorization": f"Bot {token}"}
-        self.endpoint = f"https://discord.com/api/v{version}"
+        self.header: Dict[str, str] = {"Authorization": f"Bot {token}"}
+        self.endpoint: str = f"https://discord.com/api/v{version}"
 
-    def get(self, path) -> Dict:
+    # TODO: Retry on error code 5xx
+    # TODO: Retry after rate limit time is up
+    def get(self, route: str) -> Dict:
         """
         :return: JSON response from the discord API.
         """
 
-        res = requests.get(f"{self.endpoint}/{path}", headers=self.header)
+        res: Response = requests.get(
+            f"{self.endpoint}/{route}", headers=self.header)
 
         if res.status_code in [200, 201, 204]:
             return res.json()
