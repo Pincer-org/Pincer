@@ -9,7 +9,6 @@
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Pincer-org/pincer/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/Pincer-org/pincer/?branch=main)
 [![Build Status](https://scrutinizer-ci.com/g/Pincer-org/Pincer/badges/build.png?b=main)](https://scrutinizer-ci.com/g/Pincer-org/Pincer/build-status/main)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Pincer-org/Pincer/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/Pincer-org/Pincer/?branch=main)
 ![GitHub repo size](https://img.shields.io/github/repo-size/Pincer-org/Pincer)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Pincer-org/Pincer)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Pincer-org/Pincer)
