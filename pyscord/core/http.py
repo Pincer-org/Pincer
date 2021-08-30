@@ -25,8 +25,10 @@ from typing import Dict, Union
 
 import requests
 
+from ..exceptions import NotFoundError, BadRequestError, NotModifiedError, UnauthorizedError, ForbiddenError, MethodNotAllowedError, RateLimitError, GatewayError, ServerError
 
-class HttpApi:
+
+class HTTPClient:
     def __init__(self, version: Union[int, str], token: str) -> None:
         """
         Instantiate a new HttpApi object.
@@ -46,7 +48,23 @@ class HttpApi:
 
         res = requests.get(f"{self.endpoint}/{path}", headers=self.header)
 
-        if res.status_code == 200:
+        if res.status_code in [200, 201, 204]:
             return res.json()
+        elif res.status_code == 304:
+            raise NotModifiedError
+        elif res.status_code == 400:
+            raise BadRequestError
+        elif res.status_code == 401:
+            raise UnauthorizedError
+        elif res.status_code == 403:
+            raise ForbiddenError
+        elif res.status_code == 404:
+            raise NotFoundError
+        elif res.status_code == 405:
+            raise MethodNotAllowedError
+        elif res.status_code == 429:
+            raise RateLimitError
+        elif res.status_code == 502:
+            raise GatewayError
         else:
-            raise Exception(res.status_code)
+            raise ServerError
