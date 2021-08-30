@@ -1,12 +1,9 @@
-
 # Command
 
 When creating a command, the function will be able to have a `ctx` parameter.
 This parameter will be optional, and if not set, will not cause any error.
 
 The Context object will work similarly to the `discordpy` package.
-
-
 
 ## Simplest command
 
