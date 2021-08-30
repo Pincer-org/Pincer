@@ -26,8 +26,8 @@ from asyncio import get_event_loop, AbstractEventLoop, ensure_future
 from platform import system
 from typing import Dict, Callable, Awaitable
 
-import websockets.exceptions
 from websockets import connect
+from websockets.exceptions import ConnectionClosedError
 from websockets.legacy.client import WebSocketClientProtocol
 
 from pyscord import __package__
@@ -35,7 +35,8 @@ from pyscord._config import GatewayConfig
 # TODO: Implement logging
 from pyscord.core.dispatch import GatewayDispatch
 from pyscord.core.handlers.heartbeat import handle_hello, handle_heartbeat
-from pyscord.exceptions import InvalidTokenError
+from pyscord.exceptions import PyscordError, InvalidTokenError, \
+    UnhandledException
 
 Handler = Callable[[WebSocketClientProtocol, GatewayDispatch], Awaitable[None]]
 
@@ -70,15 +71,16 @@ class Dispatcher:
         async def identify_and_handle_hello(socket: WebSocketClientProtocol,
                                             payload: GatewayDispatch):
             """
-            Handchecks with the Discord WebSocket API.
+            Identifies the client to the Discord Websocket API, this
+            gets done when the client receives the `hello` (opcode 10)
+            message from discord. Right after we send our identification
+            the heartbeat starts.
 
             :param socket:
                 The current socket, which can be used to interact
                 with the Discord API.
 
-            :param payload:
-                The received payload from Discord.
-
+            :param payload: The received payload from Discord.
             """
             await socket.send(str(GatewayDispatch(2, {
                 "token": token,
@@ -96,7 +98,10 @@ class Dispatcher:
             11: handle_heartbeat
         }
 
-    # TODO: Implement socket typehint
+        self.__dispatch_errors: Dict[int, PyscordError] = {
+            4004: InvalidTokenError()
+        }
+
     async def handler_manager(self, socket: WebSocketClientProtocol,
                               payload: GatewayDispatch,
                               loop: AbstractEventLoop):
@@ -105,19 +110,18 @@ class Dispatcher:
         This method gets invoked for every message that is received from
         Discord.
 
-        :param socket: The current socket, which can be used to interact
-                with the Discord API.
+        :param socket:
+            The current socket, which can be used to interact
+            with the Discord API.
         :param payload: The received payload from Discord.
         :param loop: The current async loop on which the future is bound.
         """
-        # TODO: Implement heartbeat
         # TODO: Implement given handlers.
         # TODO: Implement logging
         handler: Handler = self.__dispatch_handlers.get(payload.op)
 
         if not handler:
-            # TODO: Implement unhandled opcode exception if handler is None
-            return
+            raise UnhandledException(f"Unhandled payload: {payload}")
 
         ensure_future(handler(socket, payload), loop=loop)
 
@@ -135,19 +139,13 @@ class Dispatcher:
                         GatewayDispatch.from_string(await socket.recv()),
                         loop)
 
-                except websockets.exceptions.ConnectionClosedError as exc:
-                    self.__keep_alive = False
-                    self.handle_error(exc)
+                except ConnectionClosedError as exc:
+                    self.close()
 
-    @staticmethod
-    def handle_error(exc) -> None:
-        """Handle exceptions when connection is closed unexpectedly.
+                    exception = self.__dispatch_errors.get(exc.code)
 
-        :param exc:
-            Exception raised by the handler_manager.
-        """
-        if exc.code == 4004:
-            raise InvalidTokenError()
+                    raise exception if exception else UnhandledException(
+                        f"Dispatch error ({exc.code}): {exc.reason}")
 
     def run(self):
         """

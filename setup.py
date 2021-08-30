@@ -21,9 +21,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from setuptools import setup
-from os import path
+from os import path, walk
 from re import search, MULTILINE
+
+from setuptools import setup
 
 this_dir = path.abspath(path.dirname(__file__))
 
@@ -37,6 +38,7 @@ with open(path.join(this_dir, "pyscord", "__init__.py"), encoding='utf-8') as f:
     _re_match_str = r'.=*.\s*[\'"]([^\'"]*)[\'"]'
     content = f.read()
 
+
     def get_content(name: str):
         match = search(name + _re_match_str, content, MULTILINE).group(1)
         if not match:
@@ -44,15 +46,22 @@ with open(path.join(this_dir, "pyscord", "__init__.py"), encoding='utf-8') as f:
         return match
 
 
+    def get_packages():
+        return [
+            item[0].replace("./", "").replace("\\", ".").replace("/", ".")
+            for item in list(walk('./pyscord'))
+            if "__pycache__" not in item[0]
+        ]
+
+
     dyn_props = {
         **dyn_props,
         "name": get_content("__package__"),
         "version": get_content("__version__"),
-        "packages": ["pyscord", "pyscord.core"],
+        "packages": get_packages(),
         "license": get_content("__license__"),
         "description": get_content("__description__"),
         "author": get_content("__author__"),
-        "copyright": get_content("__copyright__")
     }
 
 with open(path.join(this_dir, "requirements.txt"), encoding='utf-8') as f:

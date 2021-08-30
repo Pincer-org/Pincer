@@ -4,17 +4,22 @@
 
 <!-- 
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/pyscord)
-[![PyPI - Downloads](https://img.shields.io/badge/dynamic/json?label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2Fpyscord)](https://pypi.org/project/pyscord/)
+[![PyPI - Downloads](https://img.shields.io/badge/dynamic/json?label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2Fpyscord)](https://pypi.org/project/pyscord)
 ![PyPI](https://img.shields.io/pypi/v/pyscord)
-![PyPI - Format](https://img.shields.io/pypi/format/Embed-Templator)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Embed-Templator)
+![PyPI - Format](https://img.shields.io/pypi/format/pyscord)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pyscord)
 -->
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/da3fa4b7d6b74daba89e12d5d12d64d3)](https://app.codacy.com/gh/Pyscord/Pyscord?utm_source=github.com&utm_medium=referral&utm_content=Pyscord/Pyscord&utm_campaign=Badge_Grade_Settings)
+[![Build Status](https://scrutinizer-ci.com/g/Pyscord/Pyscord/badges/build.png?b=main)](https://scrutinizer-ci.com/g/Pyscord/Pyscord/build-status/main)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Pyscord/Pyscord/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/Pyscord/Pyscord/?branch=main)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Sigmanificient/Embed-Templator)
-![GitHub repo size](https://img.shields.io/github/repo-size/Sigmanificient/Embed-Templator)
-![GitHub last commit](https://img.shields.io/github/last-commit/Sigmanificient/Embed-Templator)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/pyscord/pyscord)
+![GitHub repo size](https://img.shields.io/github/repo-size/pyscord/pyscord)
+![GitHub last commit](https://img.shields.io/github/last-commit/pyscord/pyscord)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/pyscord/pyscord)
+![GitHub](https://img.shields.io/github/license/pyscord/pyscord)
 ![Code Style](https://img.shields.io/badge/code%20style-pep8-green)
+![Discord](https://img.shields.io/discord/881531065859190804)
 
 *Discord API wrapper rebuild from scratch.*
 
