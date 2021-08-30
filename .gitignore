@@ -9,6 +9,9 @@ venv
 pyvenv
 Pipfile.lock
 
+# Docs
+docs/_build
+
 # Dev Tools
 tools/*
 
