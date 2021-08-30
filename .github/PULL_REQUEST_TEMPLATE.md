@@ -3,9 +3,7 @@
 ### Changes
 
 -   `adds`: ...
-
 -   `fixed`: ...
-
 -   `improvements`: ...
 
  ### Check off the following
