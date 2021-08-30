@@ -71,15 +71,16 @@ class Dispatcher:
         async def identify_and_handle_hello(socket: WebSocketClientProtocol,
                                             payload: GatewayDispatch):
             """
-            Handchecks with the Discord WebSocket API.
+            Identifies the client to the Discord Websocket API, this
+            gets done when the client receives the `hello` (opcode 10)
+            message from discord. Right after we send our identification
+            the heartbeat starts.
 
             :param socket:
                 The current socket, which can be used to interact
                 with the Discord API.
 
-            :param payload:
-                The received payload from Discord.
-
+            :param payload: The received payload from Discord.
             """
             await socket.send(str(GatewayDispatch(2, {
                 "token": token,
@@ -101,7 +102,6 @@ class Dispatcher:
             4004: InvalidTokenError()
         }
 
-    # TODO: Implement socket typehint
     async def handler_manager(self, socket: WebSocketClientProtocol,
                               payload: GatewayDispatch,
                               loop: AbstractEventLoop):
@@ -110,19 +110,18 @@ class Dispatcher:
         This method gets invoked for every message that is received from
         Discord.
 
-        :param socket: The current socket, which can be used to interact
-                with the Discord API.
+        :param socket:
+            The current socket, which can be used to interact
+            with the Discord API.
         :param payload: The received payload from Discord.
         :param loop: The current async loop on which the future is bound.
         """
-        # TODO: Implement heartbeat
         # TODO: Implement given handlers.
         # TODO: Implement logging
         handler: Handler = self.__dispatch_handlers.get(payload.op)
 
         if not handler:
-            # TODO: Implement unhandled opcode exception if handler is None
-            return
+            raise UnhandledException(f"Unhandled payload: {payload}")
 
         ensure_future(handler(socket, payload), loop=loop)
 
