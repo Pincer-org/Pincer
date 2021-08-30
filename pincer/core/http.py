@@ -49,7 +49,7 @@ class HttpCallable(Protocol):
 
 
 class HTTPClient:
-    def __init__(self, token: str, version: int = 9, ttl: int = 4):
+    def __init__(self, token: str, version: int = 9, ttl: int = 5):
         """
         Instantiate a new HttpApi object.
 
@@ -81,7 +81,6 @@ class HTTPClient:
         # TODO: Fix docs
         # TODO: Implement logging
         __ttl = __ttl or self.max_ttl
-        print(__ttl)
 
         if __ttl == 0:
             raise ServerError(f"Maximum amount of retries for `{route}`.")
@@ -111,8 +110,9 @@ class HTTPClient:
                 if exception:
                     exception.__init__(res.reason)
                     raise exception
-                elif res.status == 502:
-                    await asyncio.sleep(3)
+                else:
+                    #status code is guaranteed to be 5xx
+                    await asyncio.sleep(1 + (self.max_ttl - __ttl) * 2)
                     await self.__send(method, route, __ttl=__ttl - 1)
 
     async def delete(self, route: str) -> Dict:
