@@ -1,2 +1,2 @@
 websockets
-requests
+aiohttp
