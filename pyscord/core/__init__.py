@@ -20,3 +20,11 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+"""
+Pyscord Core library
+====================
+An asynchronous python API wrapper meant to replace discord.py
+
+:copyright: (c) 2021-present Pyscord
+:license: MIT, see LICENSE for more details.
+"""

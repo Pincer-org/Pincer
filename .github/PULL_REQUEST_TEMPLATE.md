@@ -2,16 +2,11 @@
 
 ### Changes
 
-- `adds`: ...
-
-
-- `fixed`: ...
-
-
-- `improvements`: ...
-
+-   `adds`: ...
+-   `fixed`: ...
+-   `improvements`: ...
 
  ### Check off the following
 
-- [ ] I have tested my changes with the current requirements
-- [ ] My Code follows the pep8 code style.
+-   [ ] I have tested my changes with the current requirements
+-   [ ] My Code follows the pep8 code style.
