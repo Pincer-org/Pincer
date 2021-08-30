@@ -1,5 +1,5 @@
-pyscord package
-===============
+pincer package
+==============
 
 Subpackages
 -----------
@@ -7,15 +7,15 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   pyscord.core
+   pincer.core
 
 Submodules
 ----------
 
-pyscord.exceptions module
--------------------------
+pincer.exceptions module
+------------------------
 
-.. automodule:: pyscord.exceptions
+.. automodule:: pincer.exceptions
    :members:
    :undoc-members:
    :show-inheritance:
@@ -23,7 +23,7 @@ pyscord.exceptions module
 Module contents
 ---------------
 
-.. automodule:: pyscord
+.. automodule:: pincer
    :members:
    :undoc-members:
    :show-inheritance:

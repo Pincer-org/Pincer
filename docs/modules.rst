@@ -1,7 +1,7 @@
-pyscord
-=======
+pincer
+======
 
 .. toctree::
    :maxdepth: 4
 
-   pyscord
+   pincer
