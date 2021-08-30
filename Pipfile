@@ -7,6 +7,9 @@ name = "pypi"
 websockets = "*"
 
 [dev-packages]
+sphinx = "*"
+sphinx-rtd-theme = "*"
+sphinx-rtd-dark-mode = "*"
 
 [requires]
 python_version = "3.6"
