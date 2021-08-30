@@ -23,8 +23,7 @@
 
 from typing import Dict, Union
 
-import requests
-from requests.models import Response
+import aiohttp
 
 from ..exceptions import NotFoundError, BadRequestError, NotModifiedError, UnauthorizedError, ForbiddenError, MethodNotAllowedError, RateLimitError, GatewayError, ServerError
 
@@ -44,31 +43,31 @@ class HTTPClient:
 
     # TODO: Retry on error code 5xx
     # TODO: Retry after rate limit time is up
-    def get(self, route: str) -> Dict:
+    async def get(self, route: str) -> Dict:
         """
         :return: JSON response from the discord API.
         """
 
-        res: Response = requests.get(
-            f"{self.endpoint}/{route}", headers=self.header)
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"{self.endpoint}/{route}", headers=self.header) as resp:
 
-        if res.status_code in [200, 201, 204]:
-            return res.json()
-        elif res.status_code == 304:
-            raise NotModifiedError
-        elif res.status_code == 400:
-            raise BadRequestError
-        elif res.status_code == 401:
-            raise UnauthorizedError
-        elif res.status_code == 403:
-            raise ForbiddenError
-        elif res.status_code == 404:
-            raise NotFoundError
-        elif res.status_code == 405:
-            raise MethodNotAllowedError
-        elif res.status_code == 429:
-            raise RateLimitError
-        elif res.status_code == 502:
-            raise GatewayError
-        else:
-            raise ServerError
+                if resp.status in [200, 201, 204]:
+                    return await resp.json()
+                elif resp.status == 304:
+                    raise NotModifiedError
+                elif resp.status == 400:
+                    raise BadRequestError
+                elif resp.status == 401:
+                    raise UnauthorizedError
+                elif resp.status == 403:
+                    raise ForbiddenError
+                elif resp.status == 404:
+                    raise NotFoundError
+                elif resp.status == 405:
+                    raise MethodNotAllowedError
+                elif resp.status == 429:
+                    raise RateLimitError
+                elif resp.status == 502:
+                    raise GatewayError
+                else:
+                    raise ServerError
