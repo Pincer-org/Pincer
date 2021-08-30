@@ -23,7 +23,9 @@
 ## Links
 
 Join the discord server: https://discord.gg/8WkYz3fNFm
+
 The pypi package: https://pypi.org/project/Pincer/
+
 Our website: https://pincer.dev
 
 
