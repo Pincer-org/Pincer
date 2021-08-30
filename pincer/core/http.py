@@ -35,6 +35,8 @@ from ..exceptions import NotFoundError, BadRequestError, NotModifiedError, \
 
 
 class RequestMethod(Enum):
+    """HTTP Protocols supported by aiohttp"""
+
     DELETE = auto()
     GET = auto()
     HEAD = auto()
@@ -45,12 +47,16 @@ class RequestMethod(Enum):
 
 
 class HttpCallable(Protocol):
+    """aiohttp HTTP method"""
+
     def __call__(self, url: StrOrURL, *, allow_redirects: bool = True,
-                 **kwargs: Any) -> _RequestContextManager:
-                 pass
+                json: Dict = None, **kwargs: Any) -> _RequestContextManager:
+        pass
 
 
 class HTTPClient:
+    """Interacts with Discord API through HTTP protocol"""
+
     def __init__(self, token: str, version: int = 9, ttl: int = 5):
         """
         Instantiate a new HttpApi object.
@@ -114,10 +120,10 @@ class HTTPClient:
                 if exception:
                     exception.__init__(res.reason)
                     raise exception
-                else:
-                    #status code is guaranteed to be 5xx
-                    await asyncio.sleep(1 + (self.max_ttl - __ttl) * 2)
-                    await self.__send(method, route, __ttl=__ttl - 1, data=data)
+
+                #status code is guaranteed to be 5xx
+                await asyncio.sleep(1 + (self.max_ttl - __ttl) * 2)
+                await self.__send(method, route, __ttl=__ttl - 1, data=data)
 
     async def delete(self, route: str) -> Dict:
         """
