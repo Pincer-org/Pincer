@@ -35,6 +35,7 @@ sequence: Optional[int] = None
 
 
 async def __send_heartbeat(socket: WebSocketClientProtocol):
+    global sequence
     # TODO: Fix docs
     # TODO: Implement logging
     await socket.send(str(GatewayDispatch(1, sequence)))
@@ -44,7 +45,7 @@ async def handle_hello(socket: WebSocketClientProtocol,
                        payload: GatewayDispatch):
     # TODO: Fix docs
     # TODO: Implement logging
-    global heartbeat, sequence
+    global heartbeat
     heartbeat = payload.data.get("heartbeat_interval")
 
     if not heartbeat:
@@ -59,5 +60,7 @@ async def handle_hello(socket: WebSocketClientProtocol,
 async def handle_heartbeat(socket: WebSocketClientProtocol, _):
     # TODO: Fix docs
     # TODO: Implement logging
+    global heartbeat
     await sleep(heartbeat)
+
     await __send_heartbeat(socket)
