@@ -32,43 +32,47 @@ class InvalidTokenError(PyscordError, ValueError):
             "The given token is not a valid token." + (str(hint) * bool(hint))
         )
 
+
 # Discord HTTP Errors
 # https://discord.com/developers/docs/topics/opcodes-and-status-codes#http
 
-class NotModifiedError(PyscordError):
+class HTTPError(PyscordError):
+    """HTTP Exception base class."""
 
+
+class NotModifiedError(HTTPError):
     """Error code 304"""
 
-class BadRequestError(PyscordError):
 
+class BadRequestError(HTTPError):
     """Error code 400"""
 
-class UnauthorizedError(PyscordError):
 
+class UnauthorizedError(HTTPError):
     """Error code 401"""
 
-class ForbiddenError(PyscordError):
 
+class ForbiddenError(HTTPError):
     """Error code 403"""
 
-class NotFoundError(PyscordError):
 
+class NotFoundError(HTTPError):
     """Error code 404"""
 
-class MethodNotAllowedError(PyscordError):
 
+class MethodNotAllowedError(HTTPError):
     """Error code 405"""
 
-class RateLimitError(PyscordError):
 
+class RateLimitError(HTTPError):
     """Error code 429"""
 
-class GatewayError(PyscordError):
 
+class GatewayError(HTTPError):
     """Error code 502"""
 
-class ServerError(PyscordError):
-    
+
+class ServerError(HTTPError):
     """
     Error code 5xx
     Status code is not in the discord API
