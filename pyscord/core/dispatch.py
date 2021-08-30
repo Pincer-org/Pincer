@@ -28,7 +28,6 @@ from typing import Optional, Union, Dict, Any
 
 
 class GatewayDispatch:
-
     """Represents a websocket message."""
 
     def __init__(self, op: int, data: Optional[Union[int, Dict[str, Any]]],
