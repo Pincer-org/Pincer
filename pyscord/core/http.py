@@ -22,7 +22,7 @@
 # SOFTWARE.
 
 import asyncio
-from enum import Enum
+from enum import Enum, auto
 from typing import Dict, Any, Optional, Protocol
 
 from aiohttp import ClientSession
@@ -35,11 +35,11 @@ from ..exceptions import NotFoundError, BadRequestError, NotModifiedError, \
 
 
 class RequestMethod(Enum):
-    GET = 0
-    POST = 1
-    DELETE = 2
-    PUT = 3
-    OPTIONS = 4
+    GET = auto()
+    POST = auto()
+    DELETE = auto()
+    PUT = auto()
+    OPTIONS = auto()
 
 
 class HttpCallable(Protocol):
@@ -80,7 +80,8 @@ class HTTPClient:
                      __ttl: int = None, data: Optional[Dict] = None):
         # TODO: Fix docs
         # TODO: Implement logging
-        __ttl = self.max_ttl if __ttl is None else __ttl
+        __ttl = __ttl or self.max_ttl
+        print(__ttl)
 
         if __ttl == 0:
             raise ServerError(f"Maximum amount of retries for `{route}`.")
