@@ -1,7 +1,6 @@
-<h1><img src="img/icon.png" height="24px" alt="Pincer Logo"> Pincer</h1>
+# <img src="img/pincer.svg" height="24px" alt="Pincer Logo"> Pincer
 
 <!--
-![PyPI - Downloads](https://img.shields.io/pypi/dm/Pincer)
 [![PyPI - Downloads](https://img.shields.io/badge/dynamic/json?label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2FPincer)](https://pypi.org/project/Pincer)
 ![PyPI](https://img.shields.io/pypi/v/Pincer)
 ![PyPI - Format](https://img.shields.io/pypi/format/Pincer)
@@ -18,18 +17,22 @@
 ![Code Style](https://img.shields.io/badge/code%20style-pep8-green)
 ![Discord](https://img.shields.io/discord/881531065859190804)
 
-*Discord API wrapper rebuild from scratch.*
+*An asynchronous python API wrapper meant to replace discord.py*
 
-## Links
-
-Join the discord server: https://discord.gg/8WkYz3fNFm
-
-The pypi package: https://pypi.org/project/Pincer/
-
-Our website: https://pincer.dev
+| :exclamation: | The pakcage is currently within the planning phase |
+| ------------- | :------------------------------------------------- |
 
 
-## Installation
+## :pushpin: Links
+
+<img src="img/discord.svg" width="12px" alt="Pincer Logo"> ｜Join the discord server: https://discord.gg/8WkYz3fNFm
+
+<img src="img/pypi.svg" width="12px" alt="Pincer Logo"> ｜The pypi package: https://pypi.org/project/Pincer/
+
+<img src="img/pincer.svg" width="12px" alt="Pincer Logo"> ｜Our website: https://pincer.dev
+
+
+## ☄️ Installation
 
 Use The following command to install Pincer into your python environment:
 ```bash
@@ -38,7 +41,7 @@ pip install pincer
 
 <details>
 	<summary>
-		<i>Didn't work?</i>
+		<i>⚙️ Didn't work?</i>
 	</summary>
 
 Depending on your python installation, you might need to use one of the following.
@@ -69,9 +72,10 @@ py -m pip install pincer
 </details>
 
 
-## License
+## 🏷️ License
 
 `© 2021 copyright Pincer`
 
 This repository is licensed under the MIT License.
+
 See LICENSE for details.
