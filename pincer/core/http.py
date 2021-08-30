@@ -35,11 +35,13 @@ from ..exceptions import NotFoundError, BadRequestError, NotModifiedError, \
 
 
 class RequestMethod(Enum):
-    GET = auto()
-    POST = auto()
     DELETE = auto()
-    PUT = auto()
+    GET = auto()
+    HEAD = auto()
     OPTIONS = auto()
+    PATCH = auto()
+    POST = auto()
+    PUT = auto()
 
 
 class HttpCallable(Protocol):
@@ -87,11 +89,13 @@ class HTTPClient:
 
         async with ClientSession() as session:
             methods: Dict[RequestMethod, HttpCallable] = {
-                RequestMethod.GET: session.get,
-                RequestMethod.POST: session.post,
                 RequestMethod.DELETE: session.delete,
+                RequestMethod.GET: session.get,
+                RequestMethod.HEAD: session.head,
+                RequestMethod.OPTIONS: session.options,
+                RequestMethod.PATCH: session.patch,
+                RequestMethod.POST: session.post,
                 RequestMethod.PUT: session.put,
-                RequestMethod.OPTIONS: session.options
             }
 
             sender = methods.get(method)
@@ -127,11 +131,23 @@ class HTTPClient:
         """
         return await self.__send(RequestMethod.GET, route)
 
+    async def head(self, route: str) -> Dict:
+        """
+        :return: JSON response from the discord API.
+        """
+        return await self.__send(RequestMethod.HEAD, route)
+
     async def options(self, route: str) -> Dict:
         """
         :return: JSON response from the discord API.
         """
         return await self.__send(RequestMethod.OPTIONS, route)
+
+    async def patch(self, route: str, data: Dict) -> Dict:
+        """
+        :return: JSON response from the discord API.
+        """
+        return await self.__send(RequestMethod.PATCH, route, data=data)
 
     async def post(self, route: str, data: Dict) -> Dict:
         """
