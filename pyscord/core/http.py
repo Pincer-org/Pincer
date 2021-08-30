@@ -22,26 +22,31 @@
 # SOFTWARE.
 
 from typing import Dict, Union
+import asyncio
 
 import aiohttp
 
-from ..exceptions import NotFoundError, BadRequestError, NotModifiedError, UnauthorizedError, ForbiddenError, MethodNotAllowedError, RateLimitError, GatewayError, ServerError
+from ..exceptions import NotFoundError, BadRequestError, NotModifiedError, UnauthorizedError, ForbiddenError, MethodNotAllowedError, RateLimitError, ServerError
 
 
 class HTTPClient:
-    def __init__(self, token: str, version: Union[int, str] = 9) -> None:
+    def __init__(self, token: str, version: Union[int, str] = 9, max_retries: int = 4) -> None:
         """
         Instantiate a new HttpApi object.
 
+        :param token: Discord API token
+
+        Keyword Arguments:
         :param version: The discord API version.
                         See https://discord.com/developers/docs/reference#api-versioning.
-        :param token: Discord API token
+        :param max_retries: Max amount of attemps after
+                            error codes 5xx & 429
         """
 
         self.header: Dict[str, str] = {"Authorization": f"Bot {token}"}
         self.endpoint: str = f"https://discord.com/api/v{version}"
+        self.max_retries: int = max_retries
 
-    # TODO: Retry on error code 5xx
     # TODO: Retry after rate limit time is up
     async def get(self, route: str) -> Dict:
         """
@@ -49,25 +54,35 @@ class HTTPClient:
         """
 
         async with aiohttp.ClientSession() as session:
-            async with session.get(f"{self.endpoint}/{route}", headers=self.header) as resp:
+            for tries in range(self.max_retries):
+                async with session.get(f"{self.endpoint}/{route}", headers=self.header) as resp:
 
-                if resp.status in [200, 201, 204]:
-                    return await resp.json()
-                elif resp.status == 304:
-                    raise NotModifiedError
-                elif resp.status == 400:
-                    raise BadRequestError
-                elif resp.status == 401:
-                    raise UnauthorizedError
-                elif resp.status == 403:
-                    raise ForbiddenError
-                elif resp.status == 404:
-                    raise NotFoundError
-                elif resp.status == 405:
-                    raise MethodNotAllowedError
-                elif resp.status == 429:
-                    raise RateLimitError
-                elif resp.status == 502:
-                    raise GatewayError
-                else:
-                    raise ServerError
+                    if resp.status in [200, 201, 204]:
+                        return await resp.json()
+
+                    elif resp.status == 304:
+                        raise NotModifiedError
+
+                    elif resp.status == 400:
+                        raise BadRequestError
+
+                    elif resp.status == 401:
+                        raise UnauthorizedError
+
+                    elif resp.status == 403:
+                        raise ForbiddenError
+
+                    elif resp.status == 404:
+                        raise NotFoundError
+
+                    elif resp.status == 405:
+                        raise MethodNotAllowedError
+
+                    elif resp.status == 429:
+                        raise RateLimitError
+
+                    elif resp.status == 502:
+                        asyncio.sleep(1 + tries * 2)
+                        continue
+
+            raise ServerError("Max retries exceeded")
