@@ -83,6 +83,5 @@ class HTTPClient:
 
                     elif resp.status == 502:
                         asyncio.sleep(1 + tries * 2)
-                        continue
 
             raise ServerError("Max retries exceeded")
