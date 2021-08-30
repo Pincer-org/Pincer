@@ -119,3 +119,27 @@ class HTTPClient:
         :return: JSON response from the discord API.
         """
         return await self.__send(RequestMethod.GET, route)
+
+    async def post(self, route: str) -> Dict:
+        """
+        :return: JSON response from the discord API.
+        """
+        return await self.__send(RequestMethod.POST, route)
+
+    async def delete(self, route: str) -> Dict:
+        """
+        :return: JSON response from the discord API.
+        """
+        return await self.__send(RequestMethod.DELETE, route)
+
+    async def put(self, route: str) -> Dict:
+        """
+        :return: JSON response from the discord API.
+        """
+        return await self.__send(RequestMethod.PUT, route)
+
+    async def options(self, route: str) -> Dict:
+        """
+        :return: JSON response from the discord API.
+        """
+        return await self.__send(RequestMethod.OPTIONS, route)
