@@ -1,14 +1,14 @@
 from typing import Optional
 
 
-class PyscordError(Exception):
+class PincerError(Exception):
     """
-    Base exception class for all Pyscord errors.
+    Base exception class for all Pincer errors.
     """
     pass
 
 
-class UnhandledException(PyscordError):
+class UnhandledException(PincerError):
     def __init__(self, specific: str):
         """
         Exception which gets thrown if an exception wasn't handled.
@@ -20,7 +20,7 @@ class UnhandledException(PyscordError):
         )
 
 
-class InvalidTokenError(PyscordError, ValueError):
+class InvalidTokenError(PincerError, ValueError):
     def __init__(self, hint: Optional[str] = None):
         """
         Exception raised when the authorization token is invalid.

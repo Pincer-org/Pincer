@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # MIT License
 #
-# Copyright (c) 2021 Pyscord
+# Copyright (c) 2021 Pincer
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -30,12 +30,12 @@ from websockets import connect
 from websockets.exceptions import ConnectionClosedError
 from websockets.legacy.client import WebSocketClientProtocol
 
-from pyscord import __package__
-from pyscord._config import GatewayConfig
+from pincer import __package__
+from pincer._config import GatewayConfig
 # TODO: Implement logging
-from pyscord.core.dispatch import GatewayDispatch
-from pyscord.core.handlers.heartbeat import handle_hello, handle_heartbeat
-from pyscord.exceptions import PyscordError, InvalidTokenError, \
+from pincer.core.dispatch import GatewayDispatch
+from pincer.core.handlers.heartbeat import handle_hello, handle_heartbeat
+from pincer.exceptions import PincerError, InvalidTokenError, \
     UnhandledException
 
 Handler = Callable[[WebSocketClientProtocol, GatewayDispatch], Awaitable[None]]
@@ -99,7 +99,7 @@ class Dispatcher:
             11: handle_heartbeat
         }
 
-        self.__dispatch_errors: Dict[int, PyscordError] = {
+        self.__dispatch_errors: Dict[int, PincerError] = {
             4004: InvalidTokenError()
         }
 

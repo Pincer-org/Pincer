@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # MIT License
 #
-# Copyright (c) 2021 Pyscord
+# Copyright (c) 2021 Pincer
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ from typing import Optional
 
 from websockets.legacy.client import WebSocketClientProtocol
 
-from pyscord.core.dispatch import GatewayDispatch
+from pincer.core.dispatch import GatewayDispatch
 
 heartbeat: float = 0
 sequence: Optional[int] = None
