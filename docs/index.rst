@@ -1,4 +1,4 @@
-Pyscord Documentation
+Pincer Documentation
 ===================================
 
 .. toctree::

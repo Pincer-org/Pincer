@@ -16,9 +16,9 @@ sys.path.insert(0, os.path.abspath('../'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'Pyscord'
-copyright = '2021, Pyscord'
-author = 'Pyscord'
+project = 'Pincer'
+copyright = '2021, Pincer'
+author = 'Pincer'
 
 # The full version, including alpha/beta/rc tags
 release = '0.0.0.dev'
