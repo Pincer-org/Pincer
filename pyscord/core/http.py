@@ -23,7 +23,7 @@
 
 import asyncio
 from enum import Enum
-from typing import Dict, Any, Protocol
+from typing import Dict, Any, Optional, Protocol
 
 from aiohttp import ClientSession
 from aiohttp.client import _RequestContextManager
@@ -77,7 +77,7 @@ class HTTPClient:
         }
 
     async def __send(self, method: RequestMethod, route: str, *,
-                     __ttl: int = None):
+                     __ttl: int = None, data: Optional[Dict] = None):
         # TODO: Fix docs
         # TODO: Implement logging
         __ttl = self.max_ttl if __ttl is None else __ttl
@@ -100,7 +100,7 @@ class HTTPClient:
                 raise RuntimeError("Invalid RequestMethod has been passed.")
 
             async with sender(f"{self.endpoint}/{route}",
-                              headers=self.header) as res:
+                              headers=self.header, json=data) as res:
 
                 if res.status in [200, 201, 204]:
                     return await res.json()
@@ -120,11 +120,11 @@ class HTTPClient:
         """
         return await self.__send(RequestMethod.GET, route)
 
-    async def post(self, route: str) -> Dict:
+    async def post(self, route: str, data: Dict) -> Dict:
         """
         :return: JSON response from the discord API.
         """
-        return await self.__send(RequestMethod.POST, route)
+        return await self.__send(RequestMethod.POST, route, data=data)
 
     async def delete(self, route: str) -> Dict:
         """
@@ -132,11 +132,11 @@ class HTTPClient:
         """
         return await self.__send(RequestMethod.DELETE, route)
 
-    async def put(self, route: str) -> Dict:
+    async def put(self, route: str, data: Dict) -> Dict:
         """
         :return: JSON response from the discord API.
         """
-        return await self.__send(RequestMethod.PUT, route)
+        return await self.__send(RequestMethod.PUT, route, data=data)
 
     async def options(self, route: str) -> Dict:
         """
