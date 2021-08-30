@@ -21,16 +21,35 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from typing import Dict
 import asyncio
+from enum import Enum
+from typing import Dict, Any, Protocol
 
-import aiohttp
+from aiohttp import ClientSession
+from aiohttp.client import _RequestContextManager
+from aiohttp.typedefs import StrOrURL
 
-from ..exceptions import NotFoundError, BadRequestError, NotModifiedError, UnauthorizedError, ForbiddenError, MethodNotAllowedError, RateLimitError, ServerError
+from ..exceptions import NotFoundError, BadRequestError, NotModifiedError, \
+    UnauthorizedError, ForbiddenError, MethodNotAllowedError, RateLimitError, \
+    ServerError, HTTPError
+
+
+class RequestMethod(Enum):
+    GET = 0
+    POST = 1
+    DELETE = 2
+    PUT = 3
+    OPTIONS = 4
+
+
+class HttpCallable(Protocol):
+    def __call__(self, url: StrOrURL, *, allow_redirects: bool = True,
+                 **kwargs: Any) -> "_RequestContextManager":
+        ...
 
 
 class HTTPClient:
-    def __init__(self, token: str, version: int = 9, max_retries: int = 4) -> None:
+    def __init__(self, token: str, version: int = 9, ttl: int = 4):
         """
         Instantiate a new HttpApi object.
 
@@ -39,48 +58,64 @@ class HTTPClient:
         Keyword Arguments:
         :param version: The discord API version.
                         See https://discord.com/developers/docs/reference#api-versioning.
-        :param max_retries: Max amount of attemps after
+        :param ttl: Max amount of attempts after
                             error code 5xx
         """
-        self.header: Dict[str, str] = {"Authorization": f"Bot {token}"}
+        self.header: Dict[str, str] = {
+            "Authorization": f"Bot {token}"
+        }
         self.endpoint: str = f"https://discord.com/api/v{version}"
-        self.max_retries: int = max_retries
+        self.max_ttl: int = ttl
+        self.__http_exceptions: Dict[int, HTTPError] = {
+            304: NotModifiedError(),
+            400: BadRequestError(),
+            401: UnauthorizedError(),
+            403: ForbiddenError(),
+            404: NotFoundError(),
+            405: MethodNotAllowedError(),
+            439: RateLimitError()
+        }
 
-    # TODO: Retry after rate limit time is up
+    async def __send(self, method: RequestMethod, route: str, *,
+                     __ttl: int = None):
+        # TODO: Fix docs
+        # TODO: Implement logging
+        __ttl = self.max_ttl if __ttl is None else __ttl
+
+        if __ttl == 0:
+            raise ServerError(f"Maximum amount of retries for `{route}`.")
+
+        async with ClientSession() as session:
+            methods: Dict[RequestMethod, HttpCallable] = {
+                RequestMethod.GET: session.get,
+                RequestMethod.POST: session.post,
+                RequestMethod.DELETE: session.delete,
+                RequestMethod.PUT: session.put,
+                RequestMethod.OPTIONS: session.options
+            }
+
+            sender = methods.get(method)
+
+            if not sender:
+                raise RuntimeError("Invalid RequestMethod has been passed.")
+
+            async with sender(f"{self.endpoint}/{route}",
+                              headers=self.header) as res:
+
+                if res.status in [200, 201, 204]:
+                    return await res.json()
+
+                exception = self.__http_exceptions.get(res.status)
+
+                if exception:
+                    exception.__init__(res.reason)
+                    raise exception
+                elif res.status == 502:
+                    await asyncio.sleep(3)
+                    await self.__send(method, route, __ttl=__ttl - 1)
+
     async def get(self, route: str) -> Dict:
         """
         :return: JSON response from the discord API.
         """
-
-        async with aiohttp.ClientSession() as session:
-            for tries in range(self.max_retries):
-                async with session.get(f"{self.endpoint}/{route}", headers=self.header) as resp:
-
-                    if resp.status in [200, 201, 204]:
-                        return await resp.json()
-
-                    elif resp.status == 304:
-                        raise NotModifiedError
-
-                    elif resp.status == 400:
-                        raise BadRequestError
-
-                    elif resp.status == 401:
-                        raise UnauthorizedError
-
-                    elif resp.status == 403:
-                        raise ForbiddenError
-
-                    elif resp.status == 404:
-                        raise NotFoundError
-
-                    elif resp.status == 405:
-                        raise MethodNotAllowedError
-
-                    elif resp.status == 429:
-                        raise RateLimitError
-
-                    elif resp.status == 502:
-                        asyncio.sleep(1 + tries * 2)
-
-            raise ServerError("Max retries exceeded")
+        return await self.__send(RequestMethod.GET, route)
