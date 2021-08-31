@@ -24,11 +24,11 @@
 
 ## :pushpin: Links
 
-<img src="img/discord.svg" width="12px" alt="Pincer Logo"> ｜Join the discord server: https://discord.gg/8WkYz3fNFm
+<img src="../assets/svg/discord.svg" width="12px" alt="Pincer Logo"> ｜Join the discord server: https://discord.gg/8WkYz3fNFm
 
-<img src="img/pypi.svg" width="12px" alt="Pincer Logo"> ｜The pypi package: https://pypi.org/project/Pincer/
+<img src="../assets/svg/pypi.svg" width="12px" alt="Pincer Logo"> ｜The pypi package: https://pypi.org/project/Pincer/
 
-<img src="img/pincer.svg" width="12px" alt="Pincer Logo"> ｜Our website: https://pincer.dev
+<img src="../assets/svg/pincer.svg" width="12px" alt="Pincer Logo"> ｜Our website: https://pincer.dev
 
 
 ## ☄️ Installation
