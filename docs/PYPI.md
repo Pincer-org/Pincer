@@ -69,6 +69,41 @@ py -m pip install pincer
 ```
 </details>
 
+## Current Features
+- Dispatcher
+- Logging
+- `New` HTTP Client
+
+**HTTP client example**: *Adding a reaction to a message*
+```py
+import asyncio
+
+from pincer.core.http import HTTPClient
+
+client = HTTPClient("...")
+
+CHANNEL_ID: int = ...
+MESSAGE_ID: int = ...
+REACTION: str = ...
+# see: https://discord.com/developers/docs/resources/channel#get-channel
+
+
+async def add_reaction() -> None:
+    await client.put(
+        f'channels/{CHANNEL_ID}/messages/{MESSAGE_ID}/reactions/{REACTION}/@me',
+        {}
+    )
+
+
+def main() -> None:
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(add_reaction())
+
+
+if __name__ == '__main__':
+    main()
+
+```
 
 ## 🏷️ License
 
