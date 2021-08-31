@@ -115,7 +115,7 @@ class HTTPClient:
 
         if __ttl == 0:
             logging.error(
-                f"{method.value.name} {endpoint} has reached the "
+                f"{method.name} {endpoint} has reached the "
                 f"maximum retry count of  {self.max_ttl}."
             )
 
@@ -137,17 +137,13 @@ class HTTPClient:
             if not sender:
                 log.debug(
                     "Could not find provided RequestMethod "
-                    f"({method.value.name}) key in `methods` "
+                    f"({method.name}) key in `methods` "
                     f"[http.py>__send]."
                 )
 
                 raise RuntimeError("Unsupported RequestMethod has been passed.")
 
-<<<<<<< HEAD
-            log.debug(f"new {method.value.name} {endpoint} | {dumps(data)}")
-=======
-            log.debug(f"new {method.value} {route} | {dumps(data)}")
->>>>>>> 0c164abce2f21ca144d75c5d59350fd4795cac88
+            log.debug(f"new {method.name} {endpoint} | {dumps(data)}")
 
             async with sender(
                 f"{self.endpoint}/{endpoint}",
