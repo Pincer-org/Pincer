@@ -143,7 +143,11 @@ class HTTPClient:
 
                 raise RuntimeError("Unsupported RequestMethod has been passed.")
 
+<<<<<<< HEAD
             log.debug(f"new {method.value.name} {endpoint} | {dumps(data)}")
+=======
+            log.debug(f"new {method.value} {route} | {dumps(data)}")
+>>>>>>> 0c164abce2f21ca144d75c5d59350fd4795cac88
 
             async with sender(
                 f"{self.endpoint}/{endpoint}",
@@ -155,7 +159,11 @@ class HTTPClient:
                         "Returning json response."
                     )
 
-                    return await res.json()
+                    return (
+                        await res.json()
+                        if res.content_type == "application/json"
+                        else {}
+                    )
 
                 exception = self.__http_exceptions.get(res.status)
 
