@@ -18,7 +18,7 @@
 
 *An asynchronous python API wrapper meant to replace discord.py*
 
-| :exclamation: | The pakcage is currently within the planning phase |
+| :exclamation: | The package is currently within the planning phase |
 | ------------- | :------------------------------------------------- |
 
 
