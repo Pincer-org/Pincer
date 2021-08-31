@@ -28,7 +28,7 @@ from setuptools import setup
 
 this_dir = path.abspath(path.dirname(__file__))
 
-with open(path.join(this_dir, "docs", "README.md"), encoding='utf-8') as f:
+with open(path.join(this_dir, "docs", "PYPI.md"), encoding='utf-8') as f:
     dyn_props = {
         "long_description": f.read(),
         "long_description_content_type": "text/markdown"
