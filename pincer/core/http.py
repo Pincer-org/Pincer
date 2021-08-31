@@ -21,13 +21,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from __future__ import annotations
+
 import asyncio
 from enum import Enum, auto
+import time
 from typing import Dict, Any, Optional, Protocol
 
 from aiohttp import ClientSession
 from aiohttp.client import _RequestContextManager
-from aiohttp.typedefs import StrOrURL
+from aiohttp.typedefs import StrOrURL, CIMultiDictProxy
 
 from ..exceptions import NotFoundError, BadRequestError, NotModifiedError, \
     UnauthorizedError, ForbiddenError, MethodNotAllowedError, RateLimitError, \
@@ -50,8 +53,42 @@ class HttpCallable(Protocol):
     """aiohttp HTTP method"""
 
     def __call__(self, url: StrOrURL, *, allow_redirects: bool = True,
-                json: Dict = None, **kwargs: Any) -> _RequestContextManager:
+                 json: Dict = None, **kwargs: Any) -> _RequestContextManager:
         pass
+
+
+class RateLimitBucket:
+    """Rate limit bucket"""
+
+    def __init__(self,
+                 limit: int,
+                 remaining: int,
+                 reset: int,
+                 reset_after: int,
+                 bucket: int
+                ) -> None:
+        """
+        :param limit: The number of requests that can be made
+        :param remaining: The number of remaining requests that can be made
+        :param reset: Epoch time at which the rate limit resets
+        :param reset-after: Remaining seconds until rate limit resets
+        :param bucket: A unique string denoting the rate limit being encountered
+        """
+        self.limit: int = limit
+        self.remaining: int = remaining
+        self.reset: int = reset
+        self.reset_after = reset_after
+        self.bucket: str = bucket
+
+    @classmethod
+    def from_header(cls, header: CIMultiDictProxy) -> RateLimitBucket:
+        return cls(
+            header["x-ratelimit-limit"],
+            header["x-ratelimit-remaining"],
+            header["x-ratelimit-reset"],
+            header["x-ratelimit-reset_after"],
+            header["x-ratelimit-bucket"],
+        )
 
 
 class HTTPClient:
@@ -81,7 +118,7 @@ class HTTPClient:
             403: ForbiddenError(),
             404: NotFoundError(),
             405: MethodNotAllowedError(),
-            439: RateLimitError()
+            429: RateLimitError()
         }
 
     async def __send(self, method: RequestMethod, route: str, *,
@@ -121,7 +158,7 @@ class HTTPClient:
                     exception.__init__(res.reason)
                     raise exception
 
-                #status code is guaranteed to be 5xx
+                # status code is guaranteed to be 5xx
                 await asyncio.sleep(1 + (self.max_ttl - __ttl) * 2)
                 await self.__send(method, route, __ttl=__ttl - 1, data=data)
 
