@@ -21,26 +21,38 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+from websockets.legacy.client import WebSocketClientProtocol
 
-from dataclasses import dataclass
+from pincer._config import GatewayConfig
+from pincer.core.dispatch import GatewayDispatch
+from pincer.core.gateway import Dispatcher
+from pincer.core.http import HTTPClient
 
 
-@dataclass
-class GatewayConfig:
-    socket_base_url: str = "wss://gateway.discord.gg/"
-    version: int = 9
-    encoding: str = "json"
-    # TODO: Implement compression
-    # compress: str = "zlib-stream"
+class Client(Dispatcher):
+    """
+    The main instance which the user will interact with.
+    """
 
-    @staticmethod
-    def uri() -> str:
-        """
-        :return uri:
-            The GatewayConfig's uri.
-        """
-        return (
-            f"{GatewayConfig.socket_base_url}"
-            f"?v={GatewayConfig.version}"
-            f"&encoding={GatewayConfig.encoding}"
+    def __init__(self, token: str):
+        # TODO: Write docs
+        # TODO: Implement intents
+        super().__init__(
+            token,
+            handlers={
+                0: self.event_handler
+            }
         )
+
+        self.http = HTTPClient(token, GatewayConfig.version)
+
+    async def event_handler(
+            self,
+            socket: WebSocketClientProtocol,
+            payload: GatewayDispatch
+    ):
+        # TODO: Implement events
+        print(payload)
+
+
+Bot = Client

@@ -61,8 +61,7 @@ class Dispatcher:
     """
 
     # TODO: Add intents argument
-    # TODO: Add handlers argument
-    def __init__(self, token: str) -> None:
+    def __init__(self, token: str, *, handlers: Dict[int, Handler]) -> None:
         """
         :param token: Bot token for discord's API.
         """
@@ -122,6 +121,7 @@ class Dispatcher:
             self.run()
 
         self.__dispatch_handlers: Dict[int, Handler] = {
+            **handlers,
             7: handle_reconnect,
             9: handle_reconnect,
             10: identify_and_handle_hello,
@@ -136,7 +136,7 @@ class Dispatcher:
             4014: DisallowedIntentsError()
         }
 
-    async def handler_manager(
+    async def __handler_manager(
             self,
             socket: WebSocketClientProtocol,
             payload: GatewayDispatch,
@@ -189,7 +189,7 @@ class Dispatcher:
             while self.__keep_alive:
                 try:
                     log.debug("Waiting for new event.")
-                    await self.handler_manager(
+                    await self.__handler_manager(
                         socket,
                         GatewayDispatch.from_string(await socket.recv()),
                         loop
@@ -214,14 +214,14 @@ class Dispatcher:
                         f"Dispatch error ({exc.code}): {exc.reason}"
                     )
 
-    def run(self):
+    def run(self, loop: AbstractEventLoop = None):
         """
         Instantiate the dispatcher, this will create a connection to the
         Discord websocket API on behalf of the client who's token has
         been passed.
         """
         log.debug("Starting GatewayDispatcher")
-        loop = get_event_loop()
+        loop = loop or get_event_loop()
         loop.run_until_complete(self.__dispatcher(loop))
         loop.close()
 

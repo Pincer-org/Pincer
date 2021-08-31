@@ -67,7 +67,7 @@ class HttpCallable(Protocol):
 class HTTPClient:
     """Interacts with Discord API through HTTP protocol"""
 
-    def __init__(self, token: str, version: int = 9, ttl: int = 5):
+    def __init__(self, token: str, version: int, ttl: int = 5):
         """
         Instantiate a new HttpApi object.
 
