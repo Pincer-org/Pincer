@@ -39,7 +39,7 @@ from pincer.exceptions import (
     HTTPError
 )
 
-log = logging.getLogger(__package__)
+_log = logging.getLogger(__package__)
 
 
 class RequestMethod(Enum):
@@ -135,7 +135,7 @@ class HTTPClient:
             sender = methods.get(method)
 
             if not sender:
-                log.debug(
+                _log.debug(
                     "Could not find provided RequestMethod "
                     f"({method.name}) key in `methods` "
                     f"[http.py>__send]."
@@ -143,14 +143,14 @@ class HTTPClient:
 
                 raise RuntimeError("Unsupported RequestMethod has been passed.")
 
-            log.debug(f"new {method.name} {endpoint} | {dumps(data)}")
+            _log.debug(f"new {method.name} {endpoint} | {dumps(data)}")
 
             async with sender(
                 f"{self.endpoint}/{endpoint}",
                 headers=self.header, json=data
             ) as res:
                 if res.ok:
-                    log.debug(
+                    _log.debug(
                         "Request has been sent successfully. "
                         "Returning json response."
                     )
@@ -163,7 +163,7 @@ class HTTPClient:
                 exception = self.__http_exceptions.get(res.status)
 
                 if exception:
-                    log.error(
+                    _log.error(
                         f"An http exception occurred while trying to send "
                         f"a request to {endpoint}. ({res.status}, {res.reason})"
                     )
@@ -173,7 +173,7 @@ class HTTPClient:
 
                 # status code is guaranteed to be 5xx
                 retry_in = 1 + (self.max_ttl - __ttl) * 2
-                log.debug(
+                _log.debug(
                     "Server side error occurred with status code "
                     f"{res.status}. Retrying in {retry_in}s."
                 )

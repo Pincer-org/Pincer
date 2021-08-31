@@ -42,6 +42,14 @@ class UnhandledException(PincerError):
         )
 
 
+class InvalidEventName(PincerError):
+    """
+    Exception raised when the event name is not a valid event.
+    This can be because the event name did not begin with an `on_` or
+    because its not a  valid event in the library.
+    """
+
+
 class DispatchError(PincerError):
     """
     Base exception class for all errors which are specifically related

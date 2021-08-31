@@ -37,7 +37,7 @@ from pincer.exceptions import HeartbeatError
 heartbeat: float = 0
 sequence: Optional[int] = None
 
-log = logging.getLogger(__package__)
+_log = logging.getLogger(__package__)
 
 
 def get_heartbeat() -> float:
@@ -58,7 +58,7 @@ async def __send_heartbeat(socket: WebSocketClientProtocol):
     """
     global sequence
 
-    log.debug(f"Sending heartbeat (seq: {sequence})")
+    _log.debug(f"Sending heartbeat (seq: {sequence})")
     await socket.send(str(GatewayDispatch(1, sequence)))
 
 
@@ -70,11 +70,11 @@ async def handle_hello(socket: WebSocketClientProtocol,
     """
     global heartbeat
 
-    log.debug("Handling initial discord hello websocket message.")
+    _log.debug("Handling initial discord hello websocket message.")
     heartbeat = payload.data.get("heartbeat_interval")
 
     if not heartbeat:
-        log.error(
+        _log.error(
             "No `heartbeat_interval` is present. Has the API changed? "
             f"(payload: {payload})"
         )
@@ -86,7 +86,7 @@ async def handle_hello(socket: WebSocketClientProtocol,
         )
 
     heartbeat /= 1000
-    log.debug(f"Maintaining a connection with heartbeat: {heartbeat}")
+    _log.debug(f"Maintaining a connection with heartbeat: {heartbeat}")
 
     if sequence:
         await socket.send(str(GatewayDispatch(6, sequence, seq=sequence)))
@@ -114,5 +114,5 @@ def update_sequence(seq: int):
         The new heartbeat sequence to be updated with.
     """
     global sequence
-    log.debug("Updating heartbeat sequence...")
+    _log.debug("Updating heartbeat sequence...")
     sequence = seq

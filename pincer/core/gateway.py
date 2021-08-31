@@ -45,7 +45,7 @@ from pincer.exceptions import (
 )
 
 Handler = Callable[[WebSocketClientProtocol, GatewayDispatch], Awaitable[None]]
-log = logging.getLogger(__package__)
+_log = logging.getLogger(__package__)
 
 
 class Dispatcher:
@@ -90,7 +90,7 @@ class Dispatcher:
 
             :param payload: The received payload from Discord.
             """
-            log.debug("Sending authentication/identification message.")
+            _log.debug("Sending authentication/identification message.")
 
             await socket.send(
                 str(
@@ -114,7 +114,7 @@ class Dispatcher:
             """
             Closes the client and then reconnects it.
             """
-            log.debug("Reconnecting client...")
+            _log.debug("Reconnecting client...")
             self.close()
 
             update_sequence(payload.seq)
@@ -153,7 +153,7 @@ class Dispatcher:
         :param payload: The received payload from Discord.
         :param loop: The current async loop on which the future is bound.
         """
-        log.debug(
+        _log.debug(
             f"New event received, checking if handler exists for opcode: "
             + str(payload.op)
         )
@@ -161,14 +161,14 @@ class Dispatcher:
         handler: Handler = self.__dispatch_handlers.get(payload.op)
 
         if not handler:
-            log.error(
+            _log.error(
                 f"No handler was found for opcode {payload.op}, "
                 "please report this to the pincer dev team!"
             )
 
             raise UnhandledException(f"Unhandled payload: {payload}")
 
-        log.debug("Event handler found, ensuring async future in current loop.")
+        _log.debug("Event handler found, ensuring async future in current loop.")
         ensure_future(handler(socket, payload), loop=loop)
 
     async def __dispatcher(self, loop: AbstractEventLoop):
@@ -176,19 +176,19 @@ class Dispatcher:
         The main event loop.
         This handles all interactions with the websocket API.
         """
-        log.debug(
+        _log.debug(
             f"Establishing websocket connection with `{GatewayConfig.uri()}`"
         )
 
         async with connect(GatewayConfig.uri()) as socket:
-            log.debug(
+            _log.debug(
                 "Successfully established websocket connection with "
                 f"`{GatewayConfig.uri()}`"
             )
 
             while self.__keep_alive:
                 try:
-                    log.debug("Waiting for new event.")
+                    _log.debug("Waiting for new event.")
                     await self.__handler_manager(
                         socket,
                         GatewayDispatch.from_string(await socket.recv()),
@@ -196,7 +196,7 @@ class Dispatcher:
                     )
 
                 except ConnectionClosedError as exc:
-                    log.debug(
+                    _log.debug(
                         f"The connection with `{GatewayConfig.uri()}` "
                         f"has been broken unexpectedly. "
                         f"({exc.code}, {exc.reason})"
@@ -220,14 +220,14 @@ class Dispatcher:
         Discord websocket API on behalf of the client who's token has
         been passed.
         """
-        log.debug("Starting GatewayDispatcher")
+        _log.debug("Starting GatewayDispatcher")
         loop = loop or get_event_loop()
         loop.run_until_complete(self.__dispatcher(loop))
         loop.close()
 
         # Prevent client from disconnecting
         if self.__keep_alive:
-            log.debug("Reconnecting client!")
+            _log.debug("Reconnecting client!")
             self.run()
 
     def close(self):
@@ -235,7 +235,7 @@ class Dispatcher:
         Stop the dispatcher from listening and responding to gateway
         events. This should let the client close on itself.
         """
-        log.debug(
+        _log.debug(
             "Setting keep_alive to False, "
             "this will terminate the heartbeat."
         )
