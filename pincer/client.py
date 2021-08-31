@@ -98,13 +98,10 @@ class Client(Dispatcher):
         else:
             final_call, params = middleware, dict()
 
-        final_call: str = final_call
-        params: dict = params
-
         final_call_routine: Optional[Coro] = _events.get(final_call)
 
         if iscoroutinefunction(final_call_routine):
-            kwargs = {}
+            kwargs = params
             args = getfullargspec(final_call_routine).args
             if len(args) >= 1 and args[0] == "self":
                 kwargs["self"] = self
