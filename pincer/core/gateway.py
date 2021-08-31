@@ -224,11 +224,6 @@ class Dispatcher:
         loop.run_until_complete(self.__dispatcher(loop))
         loop.close()
 
-        # Prevent client from disconnecting
-        if self.__keep_alive:
-            _log.debug("Reconnecting client!")
-            self.run()
-
     def close(self):
         """
         Stop the dispatcher from listening and responding to gateway
