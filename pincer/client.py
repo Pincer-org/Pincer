@@ -23,11 +23,11 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import logging
 from asyncio import iscoroutinefunction
-from inspect import getcallargs, getfullargspec
-from typing import Optional, TypeVar, Callable, Coroutine, Any, Union
+from inspect import getfullargspec
+from typing import Optional, TypeVar, Callable, Coroutine, Any, Union, Dict
 
 from pincer import __package__
-from pincer._config import GatewayConfig
+from pincer._config import GatewayConfig, events
 from pincer.core.dispatch import GatewayDispatch
 from pincer.core.gateway import Dispatcher
 from pincer.core.http import HTTPClient
@@ -38,96 +38,11 @@ _log = logging.getLogger(__package__)
 
 Coro = TypeVar('Coro', bound=Callable[..., Coroutine[Any, Any, Any]])
 
-_events = {
-    "ready": "on_ready",
-    "on_ready": None,
-    "channel_create": "on_channel_create",
-    "on_channel_create": None,
-    "channel_update": "on_channel_update",
-    "on_channel_update": None,
-    "channel_delete": "on_channel_delete",
-    "on_channel_delete": None,
-    "channel_pin_update": "on_channel_pin_update",
-    "on_channel_pin_update": None,
-    "thread_create": "on_thread_create",
-    "on_thread_create": None,
-    "thread_update": "on_thread_update",
-    "on_thread_update": None,
-    "thread_delete": "on_thread_delete",
-    "on_thread_delete": None,
-    "thread_member_update": "on_thread_member_update",
-    "on_thread_member_update": None,
-    "thread_members_update": "on_thread_members_update",
-    "on_thread_members_update": None,
-    "guild_create": "on_guild_create",
-    "on_guild_create": None,
-    "guild_update": "on_guild_update",
-    "on_guild_update": None,
-    "guild_delete": "on_guild_delete",
-    "on_guild_delete": None,
-    "guild_ban_add": "on_guild_ban_add",
-    "on_guild_ban_add": None,
-    "guild_ban_remove": "on_guild_ban_remove",
-    "on_guild_ban_remove": None,
-    "guild_emoji_update": "on_guild_emoji_update",
-    "on_guild_emoji_update": None,
-    "guild_stickers_update": "on_guild_stickers_update",
-    "on_guild_stickers_update": None,
-    "guild_integrations_update": "on_guild_integrations_update",
-    "on_guild_integrations_update": None,
-    "guild_member_add": "on_guild_member_add",
-    "on_guild_member_add": None,
-    "guild_member_remove": "on_guild_member_remove",
-    "on_guild_member_remove": None,
-    "guild_members_chunk": "on_guild_members_chunk",
-    "on_guild_members_chunk": None,
-    "guild_role_create": "on_guild_role_create",
-    "on_guild_role_create": None,
-    "guild_role_update": "on_guild_role_update",
-    "on_guild_role_update": None,
-    "guild_role_delete": "on_guild_role_delete",
-    "on_guild_role_delete": None,
-    "integration_create": "on_integration_create",
-    "on_integration_create": None,
-    "integration_update": "on_integration_update",
-    "on_integration_update": None,
-    "integration_delete": "on_integration_delete",
-    "on_integration_delete": None,
-    "invite_create": "on_invite_create",
-    "on_invite_create": None,
-    "messages_create": "on_messages_create",
-    "on_messages_create": None,
-    "message_update": "on_message_update",
-    "on_message_update": None,
-    "message_delete": "on_message_delete",
-    "on_message_delete": None,
-    "message_delete_bulk": "on_message_delete_bulk",
-    "on_message_delete_bulk": None,
-    "message_reaction_add": "on_message_reaction_add",
-    "on_message_reaction_add": None,
-    "message_reaction_remove": "on_message_reaction_remove",
-    "on_message_reaction_remove": None,
-    "message_reaction_remove_all": "on_message_reaction_remove_all",
-    "on_message_reaction_remove_all": None,
-    "message_reaction_remove_emoji": "on_message_reaction_remove_emoji",
-    "on_message_reaction_remove_emoji": None,
-    "presence_update": "on_presence_update",
-    "on_presence_update": None,
-    "stage_instance_create": "on_stage_instance_create",
-    "on_stage_instance_create": None,
-    "stage_instance_update": "on_stage_instance_update",
-    "on_stage_instance_update": None,
-    "stage_instance_delete": "on_stage_instance_delete",
-    "on_stage_instance_delete": None,
-    "typing_start": "on_typing_start",
-    "on_typing_start": None,
-    "voice_state_update": "on_voice_state_update",
-    "on_voice_state_update": None,
-    "voice_server_update": "on_voice_server_update",
-    "on_voice_server_update": None,
-    "webhooks_update": "on_webhooks_update",
-    "on_webhooks_update": None,
-}
+_events: Dict[str, Union[str, None, Coro]] = {}
+
+for event in events:
+    _events[event] = None
+    _events[f"on_{event}"] = None
 
 
 class Client(Dispatcher):
@@ -151,6 +66,7 @@ class Client(Dispatcher):
 
     @staticmethod
     def event(coroutine: Coro):
+        # TODO: Write docs
         if not iscoroutinefunction(coroutine):
             raise TypeError("Any event which is registered must be a coroutine "
                             "function")
@@ -172,6 +88,7 @@ class Client(Dispatcher):
         return coroutine
 
     async def event_handler(self, _, payload: GatewayDispatch):
+        # TODO: Write docs
         middleware: Optional[Union[Coro, str]] = _events.get(
             payload.event_name.lower()
         )
@@ -195,6 +112,7 @@ class Client(Dispatcher):
             await final_call_routine(**kwargs)
 
     async def __on_ready(self, payload: GatewayDispatch):
+        # TODO: Write docs
         self.bot = User.from_dict(payload.data.get("user"))
         return "on_ready", dict()
 
