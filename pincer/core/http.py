@@ -109,6 +109,7 @@ class HTTPClient:
         self.header: Dict[str, str] = {
             "Authorization": f"Bot {token}"
         }
+        self.rate_limit: RateLimitBucket = None
         self.endpoint: str = f"https://discord.com/api/v{version}"
         self.max_ttl: int = ttl
         self.__http_exceptions: Dict[int, HTTPError] = {
@@ -130,6 +131,9 @@ class HTTPClient:
         if __ttl == 0:
             raise ServerError(f"Maximum amount of retries for `{route}`.")
 
+        if self.rate_limit:
+            print("here")
+
         async with ClientSession() as session:
             methods: Dict[RequestMethod, HttpCallable] = {
                 RequestMethod.DELETE: session.delete,
@@ -150,6 +154,7 @@ class HTTPClient:
                               headers=self.header, json=data) as res:
 
                 if res.ok:
+                    self.rate_limit = RateLimitBucket.from_header(res.headers)
                     return await res.json()
 
                 exception = self.__http_exceptions.get(res.status)
