@@ -34,85 +34,103 @@ from pincer import __package__
 from pincer.core.dispatch import GatewayDispatch
 from pincer.exceptions import HeartbeatError
 
-heartbeat: float = 0
-sequence: Optional[int] = None
 
 log = logging.getLogger(__package__)
 
 
-def get_heartbeat() -> float:
-    """
-    Get the current heartbeat.
+class Heartbeat:
+    __heartbeat: float = 0
+    __sequence: Optional[int] = None
 
-    :return:
-        The current heartbeat of the client.
-        Default is 0 (client has not initialized the heartbeat yet.)
+    @staticmethod
+    async def __send(socket: WebSocketClientProtocol):
+        """
+        Sends a heartbeat to the API gateway.
+        """
+        log.debug(f"Sending heartbeat (seq: {Heartbeat.__sequence})")
+        await socket.send(str(GatewayDispatch(1, Heartbeat.__sequence)))
 
-    """
-    return heartbeat
+    @staticmethod
+    def get() -> float:
+        """
+        Get the current heartbeat.
 
+        :return:
+            The current heartbeat of the client.
+            Default is 0 (client has not initialized the heartbeat yet.)
 
-async def __send_heartbeat(socket: WebSocketClientProtocol):
-    """
-    Sends a heartbeat to the API gateway.
-    """
-    global sequence
+        """
+        return Heartbeat.__heartbeat
 
-    log.debug(f"Sending heartbeat (seq: {sequence})")
-    await socket.send(str(GatewayDispatch(1, sequence)))
+    @staticmethod
+    async def handle_hello(
+        socket: WebSocketClientProtocol,
+        payload: GatewayDispatch
+    ):
+        """
+        Handshake between the discord API and the client.
+        Retrieve the heartbeat for maintaining a connection.
+        """
+        log.debug("Handling initial discord hello websocket message.")
+        Heartbeat.__heartbeat = payload.data.get("heartbeat_interval")
 
+        if not Heartbeat.__heartbeat:
+            log.error(
+                "No `heartbeat_interval` is present. Has the API changed? "
+                f"(payload: {payload})"
+            )
 
-async def handle_hello(socket: WebSocketClientProtocol,
-                       payload: GatewayDispatch):
-    """
-    Handshake between the discord API and the client.
-    Retrieve the heartbeat for maintaining a connection.
-    """
-    global heartbeat
+            raise HeartbeatError(
+                "Discord hello is missing `heartbeat_interval` in payload."
+                "Because of this the client can not maintain a connection. "
+                "Check logging for more information."
+            )
 
-    log.debug("Handling initial discord hello websocket message.")
-    heartbeat = payload.data.get("heartbeat_interval")
+        Heartbeat.__heartbeat /= 1000
 
-    if not heartbeat:
-        log.error(
-            "No `heartbeat_interval` is present. Has the API changed? "
-            f"(payload: {payload})"
+        log.debug(
+            f"Maintaining a connection with heartbeat: {Heartbeat.__heartbeat}"
         )
 
-        raise HeartbeatError(
-            "Discord hello is missing `heartbeat_interval` in payload."
-            "Because of this the client can not maintain a connection. "
-            "Check logging for more information."
-        )
+        if Heartbeat.__sequence:
+            await socket.send(
+                str(
+                    GatewayDispatch(
+                        6,
+                        Heartbeat.__sequence,
+                        seq=Heartbeat.__sequence
+                    )
+                )
+            )
 
-    heartbeat /= 1000
-    log.debug(f"Maintaining a connection with heartbeat: {heartbeat}")
+        else:
+            await Heartbeat.__send(socket)
 
-    if sequence:
-        await socket.send(str(GatewayDispatch(6, sequence, seq=sequence)))
-    else:
-        await __send_heartbeat(socket)
+    @staticmethod
+    async def handle_heartbeat(socket: WebSocketClientProtocol, _):
+        """
+        Handles a heartbeat, which means that it rests and then sends a new
+        heartbeat.
+        """
+
+        logging.debug(f"Resting heart for {Heartbeat.__heartbeat}s")
+        await sleep(Heartbeat.__heartbeat)
+        await Heartbeat.__send(socket)
+
+    @staticmethod
+    def update_sequence(seq: int):
+        """
+        Update the heartbeat sequence.
+
+        :param seq:
+            The new heartbeat sequence to be updated with.
+        """
+        log.debug("Updating heartbeat sequence...")
+        Heartbeat.__sequence = seq
 
 
-async def handle_heartbeat(socket: WebSocketClientProtocol, _):
-    """
-    Handles a heartbeat, which means that it rests and then sends a new
-    heartbeat.
-    """
-    global heartbeat
+handle_hello = Heartbeat.handle_hello
+handle_heartbeat = Heartbeat.handle_heartbeat
+update_sequence = Heartbeat.update_sequence
 
-    logging.debug(f"Resting heart for {heartbeat}s")
-    await sleep(heartbeat)
-    await __send_heartbeat(socket)
-
-
-def update_sequence(seq: int):
-    """
-    Update the heartbeat sequence.
-
-    :param seq:
-        The new heartbeat sequence to be updated with.
-    """
-    global sequence
-    log.debug("Updating heartbeat sequence...")
-    sequence = seq
+__all__ = (handle_hello, handle_heartbeat, update_sequence)
