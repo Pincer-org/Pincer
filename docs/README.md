@@ -1,4 +1,4 @@
-# <img src="…/assets/svg/pincer.svg" height="24px" alt="Pincer Logo"> Pincer
+# <img src="../assets/svg/pincer.svg" height="24px" alt="Pincer Logo"> Pincer
 
 <!--
 [![PyPI - Downloads](https://img.shields.io/badge/dynamic/json?label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2FPincer)](https://pypi.org/project/Pincer)
