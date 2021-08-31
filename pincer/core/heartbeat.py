@@ -133,4 +133,4 @@ handle_hello = Heartbeat.handle_hello
 handle_heartbeat = Heartbeat.handle_heartbeat
 update_sequence = Heartbeat.update_sequence
 
-__all__ = (handle_hello, handle_heartbeat, update_sequence)
+__all__ = ("handle_hello", "handle_heartbeat", "update_sequence")
