@@ -41,7 +41,8 @@ from pincer.core.handlers.heartbeat import (
 )
 
 from pincer.exceptions import (
-    PincerError, InvalidTokenError, UnhandledException
+    PincerError, InvalidTokenError, UnhandledException,
+    _InternalPerformReconnectError, DisallowedIntentsError
 )
 
 Handler = Callable[[WebSocketClientProtocol, GatewayDispatch], Awaitable[None]]
@@ -129,7 +130,11 @@ class Dispatcher:
         }
 
         self.__dispatch_errors: Dict[int, PincerError] = {
-            4004: InvalidTokenError()
+            4000: _InternalPerformReconnectError(),
+            4004: InvalidTokenError(),
+            4007: _InternalPerformReconnectError(),
+            4009: _InternalPerformReconnectError(),
+            4014: DisallowedIntentsError()
         }
 
     async def handler_manager(
@@ -200,6 +205,11 @@ class Dispatcher:
 
                     self.close()
                     exception = self.__dispatch_errors.get(exc.code)
+
+                    if isinstance(exception, _InternalPerformReconnectError):
+                        update_sequence(0)
+                        self.close()
+                        return self.run()
 
                     raise exception or UnhandledException(
                         f"Dispatch error ({exc.code}): {exc.reason}"

@@ -49,6 +49,17 @@ class DispatchError(PincerError):
     """
 
 
+class _InternalPerformReconnectError(DispatchError):
+    """Internal helper exception which on raise lets the client reconnect."""
+
+
+class DisallowedIntentsError(DispatchError):
+    """
+    Invalid gateway intent got provided.
+    Make sure your client has the enabled intent.
+    """
+
+
 class InvalidTokenError(DispatchError, ValueError):
     def __init__(self, hint: Optional[str] = None):
         """
@@ -57,8 +68,7 @@ class InvalidTokenError(DispatchError, ValueError):
         :param hint:
             Additional information about the exception cause.
         """
-        if hint is None:
-            hint = ''
+        hint = hint or ''
 
         super(InvalidTokenError, self).__init__(
             "The given token is not a valid token.\n" + hint
