@@ -116,7 +116,7 @@ class HTTPClient:
         if __ttl == 0:
             logging.error(
                 f"{method.name} {endpoint} has reached the "
-                f"maximum retry count of  {self.max_ttl}."
+                f"maximum retry count of {self.max_ttl}."
             )
 
             raise ServerError(f"Maximum amount of retries for `{endpoint}`.")
@@ -149,37 +149,43 @@ class HTTPClient:
                 f"{self.endpoint}/{endpoint}",
                 headers=self.header, json=data
             ) as res:
-                if res.ok:
-                    log.debug(
-                        "Request has been sent successfully. "
-                        "Returning json response."
-                    )
-
-                    if res.status == 204:
-                        return
-
-                    return await res.json()
-
-                exception = self.__http_exceptions.get(res.status)
-
-                if exception:
-                    log.error(
-                        f"An http exception occurred while trying to send "
-                        f"a request to {endpoint}. ({res.status}, {res.reason})"
-                    )
-
-                    exception.__init__(res.reason)
-                    raise exception
-
-                # status code is guaranteed to be 5xx
-                retry_in = 1 + (self.max_ttl - __ttl) * 2
-                log.debug(
-                    "Server side error occurred with status code "
-                    f"{res.status}. Retrying in {retry_in}s."
+                return self.__handle_response(
+                    res, endpoint, method, __ttl, data
                 )
 
-                await asyncio.sleep(retry_in)
-                await self.__send(method, endpoint, __ttl=__ttl - 1, data=data)
+    def __handle_response(self, res, endpoint, method, __ttl, data):
+        """Handle responses from the discord API."""
+        if res.ok:
+            log.debug(
+                "Request has been sent successfully. "
+                "Returning json response."
+            )
+
+            if res.status == 204:
+                return
+
+            return await res.json()
+
+        exception = self.__http_exceptions.get(res.status)
+
+        if exception:
+            log.error(
+                f"An http exception occurred while trying to send "
+                f"a request to {endpoint}. ({res.status}, {res.reason})"
+            )
+
+            exception.__init__(res.reason)
+            raise exception
+
+        # status code is guaranteed to be 5xx
+        retry_in = 1 + (self.max_ttl - __ttl) * 2
+        log.debug(
+            "Server side error occurred with status code "
+            f"{res.status}. Retrying in {retry_in}s."
+        )
+
+        await asyncio.sleep(retry_in)
+        await self.__send(method, endpoint, __ttl=__ttl - 1, data=data)
 
     async def delete(self, route: str) -> Dict:
         """
