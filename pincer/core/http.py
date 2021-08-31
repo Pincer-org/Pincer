@@ -63,9 +63,9 @@ class RateLimitBucket:
     def __init__(self,
                  limit: int,
                  remaining: int,
-                 reset: int,
-                 reset_after: int,
-                 bucket: int
+                 reset: float,
+                 reset_after: float,
+                 bucket: str
                 ) -> None:
         """
         :param limit: The number of requests that can be made
@@ -83,10 +83,10 @@ class RateLimitBucket:
     @classmethod
     def from_header(cls, header: CIMultiDictProxy) -> RateLimitBucket:
         return cls(
-            header["x-ratelimit-limit"],
-            header["x-ratelimit-remaining"],
-            header["x-ratelimit-reset"],
-            header["x-ratelimit-reset_after"],
+            int(header["x-ratelimit-limit"]),
+            int(header["x-ratelimit-remaining"]),
+            float(header["x-ratelimit-reset"]),
+            float(header["x-ratelimit-reset-after"]),
             header["x-ratelimit-bucket"],
         )
 
@@ -132,7 +132,10 @@ class HTTPClient:
             raise ServerError(f"Maximum amount of retries for `{route}`.")
 
         if self.rate_limit:
-            print("here")
+            if self.rate_limit.remaining == 0:
+                time_until_free = self.rate_limit.reset - time.time()
+                if time_until_free > 0:
+                    await asyncio.sleep(time_until_free)
 
         async with ClientSession() as session:
             methods: Dict[RequestMethod, HttpCallable] = {
