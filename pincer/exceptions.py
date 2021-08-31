@@ -57,8 +57,11 @@ class InvalidTokenError(DispatchError, ValueError):
         :param hint:
             Additional information about the exception cause.
         """
+        if hint is None:
+            hint = ''
+
         super(InvalidTokenError, self).__init__(
-            "The given token is not a valid token." + (str(hint) * bool(hint))
+            "The given token is not a valid token.\n" + hint
         )
 
 

@@ -73,12 +73,16 @@ async def handle_hello(socket: WebSocketClientProtocol,
     heartbeat = payload.data.get("heartbeat_interval")
 
     if not heartbeat:
-        log.error("No `heartbeat_interval` is present. Has the API changed? "
-                  f"(payload: {payload})")
-        raise HeartbeatError("Discord hello is missing `heartbeat_interval` "
-                             "in payload. Because of this the client can not "
-                             f"maintain a connection. Check logging for more "
-                             f"information.")
+        log.error(
+            "No `heartbeat_interval` is present. Has the API changed? "
+            f"(payload: {payload})"
+        )
+
+        raise HeartbeatError(
+            "Discord hello is missing `heartbeat_interval` in payload."
+            "Because of this the client can not maintain a connection. "
+            "Check logging for more information."
+        )
 
     heartbeat /= 1000
     log.debug(f"Maintaining a connection with heartbeat: {heartbeat}")

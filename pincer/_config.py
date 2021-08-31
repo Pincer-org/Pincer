@@ -39,6 +39,8 @@ class GatewayConfig:
         :return uri:
             The GatewayConfig's uri.
         """
-        return f"{GatewayConfig.base_url}" \
-               f"?v={GatewayConfig.version}" \
-               f"&encoding={GatewayConfig.encoding}"
+        return (
+            f"{GatewayConfig.base_url}"
+            f"?v={GatewayConfig.version}"
+            f"&encoding={GatewayConfig.encoding}"
+        )
