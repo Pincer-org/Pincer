@@ -36,10 +36,9 @@ from websockets.legacy.client import WebSocketClientProtocol
 from pincer import __package__
 from pincer._config import GatewayConfig
 from pincer.core.dispatch import GatewayDispatch
-from pincer.core.handlers.heartbeat import (
+from pincer.core.heartbeat import (
     handle_hello, handle_heartbeat, update_sequence
 )
-
 from pincer.exceptions import (
     PincerError, InvalidTokenError, UnhandledException,
     _InternalPerformReconnectError, DisallowedIntentsError
@@ -77,8 +76,8 @@ class Dispatcher:
         self.__keep_alive = True
 
         async def identify_and_handle_hello(
-            socket: WebSocketClientProtocol,
-            payload: GatewayDispatch
+                socket: WebSocketClientProtocol,
+                payload: GatewayDispatch
         ):
             """
             Identifies the client to the Discord Websocket API, this
@@ -138,10 +137,10 @@ class Dispatcher:
         }
 
     async def handler_manager(
-        self,
-        socket: WebSocketClientProtocol,
-        payload: GatewayDispatch,
-        loop: AbstractEventLoop
+            self,
+            socket: WebSocketClientProtocol,
+            payload: GatewayDispatch,
+            loop: AbstractEventLoop
     ):
         """
         This manages all handles for given OP codes.
