@@ -66,3 +66,10 @@ class User:
     def premium(self) -> PremiumTypes:
         # TODO: Write documentation
         return PremiumTypes(self.premium_type)
+
+    @property
+    def user(self) -> str:
+        return self.username + '#' + self.discriminator
+
+    def __repr__(self):
+        return self.user
