@@ -28,7 +28,7 @@ from enum import Enum, auto
 from json import dumps
 from typing import Dict, Any, Optional, Protocol
 
-from aiohttp import ClientSession
+from aiohttp import ClientSession, ClientResponse
 from aiohttp.client import _RequestContextManager
 from aiohttp.typedefs import StrOrURL
 
@@ -99,8 +99,8 @@ class HTTPClient:
         }
 
     async def __send(
-        self, method: RequestMethod, endpoint: str, *,
-        __ttl: int = None, data: Optional[Dict] = None
+            self, method: RequestMethod, endpoint: str, *,
+            __ttl: int = None, data: Optional[Dict] = None
     ) -> Optional[Dict]:
         """
         Send an api request to the Discord REST API.
@@ -153,7 +153,10 @@ class HTTPClient:
                     res, endpoint, method, __ttl, data
                 )
 
-    async def __handle_response(self, res, endpoint, method, __ttl, data):
+    async def __handle_response(
+            self, res: ClientResponse, method: RequestMethod, endpoint: str, *,
+            __ttl: int = None, data: Optional[Dict] = None
+    ):
         """Handle responses from the discord API."""
         if res.ok:
             log.debug(
@@ -185,7 +188,7 @@ class HTTPClient:
         )
 
         await asyncio.sleep(retry_in)
-        await self.__send(method, endpoint, __ttl=__ttl - 1, data=data)
+        return await self.__send(method, endpoint, __ttl=__ttl - 1, data=data)
 
     async def delete(self, route: str) -> Dict:
         """
