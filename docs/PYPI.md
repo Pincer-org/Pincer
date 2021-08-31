@@ -74,7 +74,7 @@ py -m pip install pincer
 - Logging
 - HTTP Client
 - Client base class 
-- *New* basic events
+- Basic events *Improved* 
 
 **Client base class Example:**
 
