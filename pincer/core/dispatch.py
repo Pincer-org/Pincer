@@ -3,23 +3,24 @@
 #
 # Copyright (c) 2021 Pincer
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files
+# (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge,
+# publish, distribute, sublicense, and/or sell copies of the Software,
+# and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
 #
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
@@ -35,12 +36,18 @@ class GatewayDispatch:
         """
         Instantiate a new GatewayDispatch object.
 
-        :param op: The discord opcode which represents what the message
-                    means.
-        :param data: The event data that has been sent/received.
-        :param seq: The sequence number of a message, which can be used
-                    for resuming sessions and heartbeats.
-        :param name: The event name for the payload.
+        :param op:
+            The discord opcode which represents what the message means.
+
+        :param data:
+            The event data that has been sent/received.
+
+        :param seq:
+            The sequence number of a message, which can be used
+            for resuming sessions and heartbeats.
+
+        :param name:
+            The event name for the payload.
         """
         self.op: int = op
         self.data: Optional[Union[int, Dict[str, Any]]] = data
@@ -49,8 +56,10 @@ class GatewayDispatch:
 
     def __str__(self) -> str:
         """
-        :return The string representation of the GatewayDispatch object.
-        This object can be used to send a websocket message to the gateway.
+        :return
+            The string representation of the GatewayDispatch object.
+
+        This can be used to send a websocket message to the gateway.
         """
         return dumps(dict(
             op=self.op,
@@ -65,8 +74,10 @@ class GatewayDispatch:
         Parses a given payload from a string format and returns a
         GatewayDispatch.
 
-        :param payload: The payload to parse.
-        :return: A proper GatewayDispatch object.
+        :param payload:
+            The payload to parse.
+        :return:
+            A proper GatewayDispatch object.
         """
         payload: Dict[str, Union[int, str, Dict[str, Any]]] = loads(payload)
         return cls(
