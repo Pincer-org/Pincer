@@ -31,8 +31,13 @@ from typing import Optional, Union, Dict, Any
 class GatewayDispatch:
     """Represents a websocket message."""
 
-    def __init__(self, op: int, data: Optional[Union[int, Dict[str, Any]]],
-                 seq: Optional[int] = None, name: Optional[str] = None):
+    def __init__(
+        self,
+        op: int,
+        data: Optional[Union[int, Dict[str, Any]]],
+        seq: Optional[int] = None,
+        name: Optional[str] = None
+    ):
         """
         Instantiate a new GatewayDispatch object.
 
@@ -61,12 +66,14 @@ class GatewayDispatch:
 
         This can be used to send a websocket message to the gateway.
         """
-        return dumps(dict(
-            op=self.op,
-            d=self.data,
-            s=self.seq,
-            t=self.event_name
-        ))
+        return dumps(
+            dict(
+                op=self.op,
+                d=self.data,
+                s=self.seq,
+                t=self.event_name
+            )
+        )
 
     @classmethod
     def from_string(cls, payload: str) -> GatewayDispatch:

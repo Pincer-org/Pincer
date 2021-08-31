@@ -36,10 +36,13 @@ from websockets.legacy.client import WebSocketClientProtocol
 from pincer import __package__
 from pincer._config import GatewayConfig
 from pincer.core.dispatch import GatewayDispatch
-from pincer.core.handlers.heartbeat import handle_hello, handle_heartbeat, \
-    update_sequence
-from pincer.exceptions import PincerError, InvalidTokenError, \
-    UnhandledException
+from pincer.core.handlers.heartbeat import (
+    handle_hello, handle_heartbeat, update_sequence
+)
+
+from pincer.exceptions import (
+    PincerError, InvalidTokenError, UnhandledException
+)
 
 Handler = Callable[[WebSocketClientProtocol, GatewayDispatch], Awaitable[None]]
 log = logging.getLogger(__package__)
@@ -73,8 +76,10 @@ class Dispatcher:
         self.__token = token
         self.__keep_alive = True
 
-        async def identify_and_handle_hello(socket: WebSocketClientProtocol,
-                                            payload: GatewayDispatch):
+        async def identify_and_handle_hello(
+            socket: WebSocketClientProtocol,
+            payload: GatewayDispatch
+        ):
             """
             Identifies the client to the Discord Websocket API, this
             gets done when the client receives the `hello` (opcode 10)
@@ -88,21 +93,30 @@ class Dispatcher:
             :param payload: The received payload from Discord.
             """
             log.debug("Sending authentication/identification message.")
-            await socket.send(str(GatewayDispatch(2, {
-                "token": token,
-                "intents": 0,
-                "properties": {
-                    "$os": system(),
-                    "$browser": __package__,
-                    "$device": __package__
-                }
-            })))
+
+            await socket.send(
+                str(
+                    GatewayDispatch(
+                        2, {
+                            "token": token,
+                            "intents": 0,
+                            "properties": {
+                                "$os": system(),
+                                "$browser": __package__,
+                                "$device": __package__
+                            }
+                        }
+                    )
+                )
+            )
+
             await handle_hello(socket, payload)
 
         async def handle_reconnect(_, payload: GatewayDispatch):
             # TODO: Fix docs
             log.debug("Reconnecting client...")
             self.close()
+
             update_sequence(payload.seq)
             self.run()
 
@@ -117,9 +131,12 @@ class Dispatcher:
             4004: InvalidTokenError()
         }
 
-    async def handler_manager(self, socket: WebSocketClientProtocol,
-                              payload: GatewayDispatch,
-                              loop: AbstractEventLoop):
+    async def handler_manager(
+        self,
+        socket: WebSocketClientProtocol,
+        payload: GatewayDispatch,
+        loop: AbstractEventLoop
+    ):
         """
         This manages all handles for given OP codes.
         This method gets invoked for every message that is received from
@@ -132,13 +149,19 @@ class Dispatcher:
         :param loop: The current async loop on which the future is bound.
         """
         # TODO: Implement given handlers.
-        log.debug(f"New event received, checking if handler exists for opcode: "
-                  + str(payload.op))
+        log.debug(
+            f"New event received, checking if handler exists for opcode: "
+            + str(payload.op)
+        )
+
         handler: Handler = self.__dispatch_handlers.get(payload.op)
 
         if not handler:
-            log.error(f"No handler was found for opcode {payload.op}, "
-                      "please report this to the pincer dev team!")
+            log.error(
+                f"No handler was found for opcode {payload.op}, "
+                "please report this to the pincer dev team!"
+            )
+
             raise UnhandledException(f"Unhandled payload: {payload}")
 
         log.debug("Event handler found, ensuring async future in current loop.")
@@ -149,25 +172,33 @@ class Dispatcher:
         The main event loop.
         This handles all interactions with the websocket API.
         """
-        log.debug("Establishing websocket connection with "
-                  f"`{GatewayConfig.uri()}`")
+        log.debug(
+            f"Establishing websocket connection with `{GatewayConfig.uri()}`"
+        )
+
         async with connect(GatewayConfig.uri()) as socket:
-            log.debug("Successfully established websocket connection with "
-                      f"`{GatewayConfig.uri()}`")
+            log.debug(
+                "Successfully established websocket connection with "
+                f"`{GatewayConfig.uri()}`"
+            )
+
             while self.__keep_alive:
                 try:
                     log.debug("Waiting for new event.")
                     await self.handler_manager(
                         socket,
                         GatewayDispatch.from_string(await socket.recv()),
-                        loop)
+                        loop
+                    )
 
                 except ConnectionClosedError as exc:
-                    log.debug(f"The connection with `{GatewayConfig.uri()}` "
-                              f"has been broken unexpectedly. "
-                              f"({exc.code}, {exc.reason})")
-                    self.close()
+                    log.debug(
+                        f"The connection with `{GatewayConfig.uri()}` "
+                        f"has been broken unexpectedly. "
+                        f"({exc.code}, {exc.reason})"
+                    )
 
+                    self.close()
                     exception = self.__dispatch_errors.get(exc.code)
 
                     raise exception or UnhandledException(
@@ -195,6 +226,9 @@ class Dispatcher:
         Stop the dispatcher from listening and responding to gateway
         events. This should let the client close on itself.
         """
-        log.debug("Setting keep_alive to False, "
-                  "this will terminate the heartbeat.")
+        log.debug(
+            "Setting keep_alive to False, "
+            "this will terminate the heartbeat."
+        )
+
         self.__keep_alive = False
