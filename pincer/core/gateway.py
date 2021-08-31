@@ -34,7 +34,8 @@ from websockets.legacy.client import WebSocketClientProtocol
 from pincer import __package__
 from pincer._config import GatewayConfig
 from pincer.core.dispatch import GatewayDispatch
-from pincer.core.handlers.heartbeat import handle_hello, handle_heartbeat
+from pincer.core.handlers.heartbeat import handle_hello, handle_heartbeat, \
+    update_sequence
 from pincer.exceptions import PincerError, InvalidTokenError, \
     UnhandledException
 
@@ -95,7 +96,16 @@ class Dispatcher:
             })))
             await handle_hello(socket, payload)
 
+        async def handle_reconnect(_, payload: GatewayDispatch):
+            # TODO: Fix docs
+            log.debug("Reconnecting client...")
+            self.close()
+            update_sequence(payload.seq)
+            self.run()
+
         self.__dispatch_handlers: Dict[int, Handler] = {
+            7: handle_reconnect,
+            9: handle_reconnect,
             10: identify_and_handle_hello,
             11: handle_heartbeat
         }
@@ -151,7 +161,8 @@ class Dispatcher:
 
                 except ConnectionClosedError as exc:
                     log.debug(f"The connection with `{GatewayConfig.uri()}` "
-                              f"has been broken. ({exc.code}, {exc.reason})")
+                              f"has been broken unexpectedly. "
+                              f"({exc.code}, {exc.reason})")
                     self.close()
 
                     exception = self.__dispatch_errors.get(exc.code)
@@ -169,6 +180,11 @@ class Dispatcher:
         loop = get_event_loop()
         loop.run_until_complete(self.__dispatcher(loop))
         loop.close()
+
+        # Prevent client from disconnecting
+        if self.__keep_alive:
+            log.debug("Reconnecting client!")
+            self.run()
 
     def close(self):
         """

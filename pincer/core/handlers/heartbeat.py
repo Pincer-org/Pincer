@@ -78,7 +78,10 @@ async def handle_hello(socket: WebSocketClientProtocol,
     heartbeat /= 1000
     log.debug(f"Maintaining a connection with heartbeat: {heartbeat}")
 
-    await __send_heartbeat(socket)
+    if sequence:
+        await socket.send(str(GatewayDispatch(6, sequence, seq=sequence)))
+    else:
+        await __send_heartbeat(socket)
 
 
 async def handle_heartbeat(socket: WebSocketClientProtocol, _):
@@ -88,3 +91,10 @@ async def handle_heartbeat(socket: WebSocketClientProtocol, _):
     logging.debug(f"Resting heart for {heartbeat}s")
     await sleep(heartbeat)
     await __send_heartbeat(socket)
+
+
+def update_sequence(seq: int):
+    # TODO: Fix docs
+    global sequence
+    log.debug("Updating heartbeat sequence...")
+    sequence = seq
