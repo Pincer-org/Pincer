@@ -72,7 +72,7 @@ py -m pip install pincer
 ## Current Features
 - Dispatcher
 - Logging
-- `New` HTTP Client
+- HTTP Client
 
 **HTTP client example**: *Adding a reaction to a message*
 ```py
@@ -104,6 +104,18 @@ if __name__ == '__main__':
     main()
 
 ```
+
+- *New* Client base class 
+
+**Client base class Example:**
+
+```py
+from pincer.client import Bot
+
+bot = Bot("...")
+bot.run()
+```
+
 
 ## 🏷️ License
 
