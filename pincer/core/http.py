@@ -101,7 +101,7 @@ class HTTPClient:
     async def __send(
         self, method: RequestMethod, endpoint: str, *,
         __ttl: int = None, data: Optional[Dict] = None
-    ) -> Dict:
+    ) -> Optional[Dict]:
         """
         Send an api request to the Discord REST API.
 
@@ -155,11 +155,10 @@ class HTTPClient:
                         "Returning json response."
                     )
 
-                    return (
-                        await res.json()
-                        if res.content_type == "application/json"
-                        else {}
-                    )
+                    if res.status == 204:
+                        return
+
+                    return await res.json()
 
                 exception = self.__http_exceptions.get(res.status)
 
