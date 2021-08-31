@@ -99,19 +99,27 @@ class HTTPClient:
         }
 
     async def __send(
-        self, method: RequestMethod, route: str, *,
+        self, method: RequestMethod, endpoint: str, *,
         __ttl: int = None, data: Optional[Dict] = None
     ) -> Dict:
-        # TODO: Fix docs
+        """
+        Send an api request to the Discord REST API.
+
+        :param method: The method for the request. (eg GET or POST)
+        :param endpoint: The endpoint to which the request will be sent.
+        :param __ttl: Private param used for recursively setting the
+        retry amount. (Eg set to 1 for 1 max retry)
+        :param data: The data which will be added to the request.
+        """
         __ttl = __ttl or self.max_ttl
 
         if __ttl == 0:
             logging.error(
-                f"{method.value.name} {route} has reached the "
+                f"{method.value.name} {endpoint} has reached the "
                 f"maximum retry count of  {self.max_ttl}."
             )
 
-            raise ServerError(f"Maximum amount of retries for `{route}`.")
+            raise ServerError(f"Maximum amount of retries for `{endpoint}`.")
 
         async with ClientSession() as session:
             methods: Dict[RequestMethod, HttpCallable] = {
@@ -135,10 +143,10 @@ class HTTPClient:
 
                 raise RuntimeError("Unsupported RequestMethod has been passed.")
 
-            log.debug(f"new {method.value.name} {route} | {dumps(data)}")
+            log.debug(f"new {method.value.name} {endpoint} | {dumps(data)}")
 
             async with sender(
-                f"{self.endpoint}/{route}",
+                f"{self.endpoint}/{endpoint}",
                 headers=self.header, json=data
             ) as res:
                 if res.ok:
@@ -154,7 +162,7 @@ class HTTPClient:
                 if exception:
                     log.error(
                         f"An http exception occurred while trying to send "
-                        f"a request to {route}. ({res.status}, {res.reason})"
+                        f"a request to {endpoint}. ({res.status}, {res.reason})"
                     )
 
                     exception.__init__(res.reason)
@@ -168,7 +176,7 @@ class HTTPClient:
                 )
 
                 await asyncio.sleep(retry_in)
-                await self.__send(method, route, __ttl=__ttl - 1, data=data)
+                await self.__send(method, endpoint, __ttl=__ttl - 1, data=data)
 
     async def delete(self, route: str) -> Dict:
         """

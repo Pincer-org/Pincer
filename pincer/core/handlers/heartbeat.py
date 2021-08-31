@@ -53,8 +53,9 @@ def get_heartbeat() -> float:
 
 
 async def __send_heartbeat(socket: WebSocketClientProtocol):
-    # TODO: Fix docs
-
+    """
+    Sends a heartbeat to the API gateway.
+    """
     global sequence
 
     log.debug(f"Sending heartbeat (seq: {sequence})")
@@ -94,7 +95,10 @@ async def handle_hello(socket: WebSocketClientProtocol,
 
 
 async def handle_heartbeat(socket: WebSocketClientProtocol, _):
-    # TODO: Fix docs
+    """
+    Handles a heartbeat, which means that it rests and then sends a new
+    heartbeat.
+    """
     global heartbeat
 
     logging.debug(f"Resting heart for {heartbeat}s")

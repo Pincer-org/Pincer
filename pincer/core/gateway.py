@@ -64,8 +64,7 @@ class Dispatcher:
     # TODO: Add handlers argument
     def __init__(self, token: str) -> None:
         """
-        :param token:
-            Bot token for discord's API.
+        :param token: Bot token for discord's API.
         """
 
         if len(token) != 59:
@@ -113,7 +112,9 @@ class Dispatcher:
             await handle_hello(socket, payload)
 
         async def handle_reconnect(_, payload: GatewayDispatch):
-            # TODO: Fix docs
+            """
+            Closes the client and then reconnects it.
+            """
             log.debug("Reconnecting client...")
             self.close()
 
@@ -148,7 +149,6 @@ class Dispatcher:
         :param payload: The received payload from Discord.
         :param loop: The current async loop on which the future is bound.
         """
-        # TODO: Implement given handlers.
         log.debug(
             f"New event received, checking if handler exists for opcode: "
             + str(payload.op)
