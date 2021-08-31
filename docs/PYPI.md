@@ -73,48 +73,50 @@ py -m pip install pincer
 - Dispatcher
 - Logging
 - HTTP Client
-
-**HTTP client example**: *Adding a reaction to a message*
-```py
-import asyncio
-
-from pincer.core.http import HTTPClient
-
-client = HTTPClient("...")
-
-CHANNEL_ID: int = ...
-MESSAGE_ID: int = ...
-REACTION: str = ...
-# see: https://discord.com/developers/docs/resources/channel#get-channel
-
-
-async def add_reaction() -> None:
-    await client.put(
-        f'channels/{CHANNEL_ID}/messages/{MESSAGE_ID}/reactions/{REACTION}/@me',
-        {}
-    )
-
-
-def main() -> None:
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(add_reaction())
-
-
-if __name__ == '__main__':
-    main()
-
-```
-
-- *New* Client base class 
+- Client base class 
+- *New* basic events
 
 **Client base class Example:**
 
 ```py
 from pincer.client import Bot
 
+# Note that both `Bot` and `Client` are valid!
 bot = Bot("...")
 bot.run()
 ```
+
+**An example on `on_ready` event
+
+```py
+from time import perf_counter
+from pincer.client import Client
+
+client = Client("...")
+
+
+@client.event
+async def on_ready():
+    print(f"Logged in as {client.bot} after {perf_counter()} seconds")
+
+
+client.run()
+```
+
+### Enable the debug mode
+
+*If you want to see everything that is happening under the hood, 
+either for curiosity or the implementation of some features,
+we provide a debug logging!*
+
+```py
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+```
+
+**Note** *A lot of printing can happen, with sensitive information, 
+make sure to be aware or what your doing if your enable it!*
 
 
 ## 🏷️ License
