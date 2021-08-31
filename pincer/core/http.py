@@ -149,11 +149,11 @@ class HTTPClient:
                 f"{self.endpoint}/{endpoint}",
                 headers=self.header, json=data
             ) as res:
-                return self.__handle_response(
+                return await self.__handle_response(
                     res, endpoint, method, __ttl, data
                 )
 
-    def __handle_response(self, res, endpoint, method, __ttl, data):
+    async def __handle_response(self, res, endpoint, method, __ttl, data):
         """Handle responses from the discord API."""
         if res.ok:
             log.debug(
