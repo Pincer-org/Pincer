@@ -22,16 +22,21 @@
 # SOFTWARE.
 
 import asyncio
+import logging
 from enum import Enum, auto
+from json import dumps
 from typing import Dict, Any, Optional, Protocol
 
 from aiohttp import ClientSession
 from aiohttp.client import _RequestContextManager
 from aiohttp.typedefs import StrOrURL
 
-from ..exceptions import NotFoundError, BadRequestError, NotModifiedError, \
+from pincer import __package__
+from pincer.exceptions import NotFoundError, BadRequestError, NotModifiedError, \
     UnauthorizedError, ForbiddenError, MethodNotAllowedError, RateLimitError, \
     ServerError, HTTPError
+
+log = logging.getLogger(__package__)
 
 
 class RequestMethod(Enum):
@@ -50,7 +55,7 @@ class HttpCallable(Protocol):
     """aiohttp HTTP method"""
 
     def __call__(self, url: StrOrURL, *, allow_redirects: bool = True,
-                json: Dict = None, **kwargs: Any) -> _RequestContextManager:
+                 json: Dict = None, **kwargs: Any) -> _RequestContextManager:
         pass
 
 
@@ -87,10 +92,11 @@ class HTTPClient:
     async def __send(self, method: RequestMethod, route: str, *,
                      __ttl: int = None, data: Optional[Dict] = None) -> Dict:
         # TODO: Fix docs
-        # TODO: Implement logging
         __ttl = __ttl or self.max_ttl
 
         if __ttl == 0:
+            logging.error(f"{method.value.name} {route} has reached the "
+                          f"maximum retry count of  {self.max_ttl}.")
             raise ServerError(f"Maximum amount of retries for `{route}`.")
 
         async with ClientSession() as session:
@@ -107,22 +113,34 @@ class HTTPClient:
             sender = methods.get(method)
 
             if not sender:
-                raise RuntimeError("Invalid RequestMethod has been passed.")
+                log.debug("Could not find provided RequestMethod "
+                          f"({method.value.name}) key in `methods` "
+                          f"[http.py>__send].")
+                raise RuntimeError("Unsupported RequestMethod has been passed.")
+
+            log.debug(f"new {method.value.name} {route} | {dumps(data)}")
 
             async with sender(f"{self.endpoint}/{route}",
                               headers=self.header, json=data) as res:
-
                 if res.ok:
+                    log.debug("Request has been sent successfully. "
+                              "Returning json response.")
                     return await res.json()
 
                 exception = self.__http_exceptions.get(res.status)
 
                 if exception:
+                    log.error(f"An http exception occurred while trying to "
+                              f"send a request to {route}."
+                              f" ({res.status}, {res.reason})")
                     exception.__init__(res.reason)
                     raise exception
 
-                #status code is guaranteed to be 5xx
-                await asyncio.sleep(1 + (self.max_ttl - __ttl) * 2)
+                # status code is guaranteed to be 5xx
+                retry_in = 1 + (self.max_ttl - __ttl) * 2
+                log.debug("Server side error occurred with status code "
+                          f"{res.status}. Retrying in {retry_in}s.")
+                await asyncio.sleep(retry_in)
                 await self.__send(method, route, __ttl=__ttl - 1, data=data)
 
     async def delete(self, route: str) -> Dict:

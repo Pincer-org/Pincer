@@ -22,6 +22,7 @@
 # SOFTWARE.
 from __future__ import annotations
 
+import logging
 from asyncio import get_event_loop, AbstractEventLoop, ensure_future
 from platform import system
 from typing import Dict, Callable, Awaitable
@@ -32,17 +33,16 @@ from websockets.legacy.client import WebSocketClientProtocol
 
 from pincer import __package__
 from pincer._config import GatewayConfig
-# TODO: Implement logging
 from pincer.core.dispatch import GatewayDispatch
 from pincer.core.handlers.heartbeat import handle_hello, handle_heartbeat
 from pincer.exceptions import PincerError, InvalidTokenError, \
     UnhandledException
 
 Handler = Callable[[WebSocketClientProtocol, GatewayDispatch], Awaitable[None]]
+log = logging.getLogger(__package__)
 
 
 class Dispatcher:
-
     """
     The Dispatcher handles all interactions with the discord websocket
     API. This also contains the main event loop, and handles the heartbeat.
@@ -83,6 +83,7 @@ class Dispatcher:
 
             :param payload: The received payload from Discord.
             """
+            log.debug("Sending authentication/identification message.")
             await socket.send(str(GatewayDispatch(2, {
                 "token": token,
                 "intents": 0,
@@ -118,12 +119,16 @@ class Dispatcher:
         :param loop: The current async loop on which the future is bound.
         """
         # TODO: Implement given handlers.
-        # TODO: Implement logging
+        log.debug(f"New event received, checking if handler exists for opcode: "
+                  + str(payload.op))
         handler: Handler = self.__dispatch_handlers.get(payload.op)
 
         if not handler:
+            log.error(f"No handler was found for opcode {payload.op}, "
+                      "please report this to the pincer dev team!")
             raise UnhandledException(f"Unhandled payload: {payload}")
 
+        log.debug("Event handler found, ensuring async future in current loop.")
         ensure_future(handler(socket, payload), loop=loop)
 
     async def __dispatcher(self, loop: AbstractEventLoop):
@@ -131,16 +136,22 @@ class Dispatcher:
         The main event loop.
         This handles all interactions with the websocket API.
         """
-        # TODO: Implement logging
+        log.debug("Establishing websocket connection with "
+                  f"`{GatewayConfig.uri()}`")
         async with connect(GatewayConfig.uri()) as socket:
+            log.debug("Successfully established websocket connection with "
+                      f"`{GatewayConfig.uri()}`")
             while self.__keep_alive:
                 try:
+                    log.debug("Waiting for new event.")
                     await self.handler_manager(
                         socket,
                         GatewayDispatch.from_string(await socket.recv()),
                         loop)
 
                 except ConnectionClosedError as exc:
+                    log.debug(f"The connection with `{GatewayConfig.uri()}` "
+                              f"has been broken. ({exc.code}, {exc.reason})")
                     self.close()
 
                     exception = self.__dispatch_errors.get(exc.code)
@@ -154,7 +165,7 @@ class Dispatcher:
         Discord websocket API on behalf of the client who's token has
         been passed.
         """
-        # TODO: Implement logging
+        log.debug("Starting GatewayDispatcher")
         loop = get_event_loop()
         loop.run_until_complete(self.__dispatcher(loop))
         loop.close()
@@ -164,5 +175,6 @@ class Dispatcher:
         Stop the dispatcher from listening and responding to gateway
         events. This should let the client close on itself.
         """
-        # TODO: Implement logging
+        log.debug("Setting keep_alive to False, "
+                  "this will terminate the heartbeat.")
         self.__keep_alive = False

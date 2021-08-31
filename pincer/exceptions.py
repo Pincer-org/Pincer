@@ -17,7 +17,14 @@ class UnhandledException(PincerError):
         )
 
 
-class InvalidTokenError(PincerError, ValueError):
+class DispatchError(PincerError):
+    """
+    Base exception class for all errors which are specifically related
+    to the dispatcher.
+    """
+
+
+class InvalidTokenError(DispatchError, ValueError):
     def __init__(self, hint: Optional[str] = None):
         """
         Exception raised when the authorization token is invalid.
@@ -28,6 +35,10 @@ class InvalidTokenError(PincerError, ValueError):
         super(InvalidTokenError, self).__init__(
             "The given token is not a valid token." + (str(hint) * bool(hint))
         )
+
+
+class HeartbeatError(DispatchError):
+    """Exception raised when there is a problem with the websocket heartbeat."""
 
 
 # Discord HTTP Errors

@@ -23,44 +23,68 @@
 
 from __future__ import annotations
 
+import logging
 from asyncio import sleep
 from typing import Optional
 
 from websockets.legacy.client import WebSocketClientProtocol
 
+from pincer import __package__
 from pincer.core.dispatch import GatewayDispatch
+from pincer.exceptions import HeartbeatError
 
 heartbeat: float = 0
 sequence: Optional[int] = None
 
+log = logging.getLogger(__package__)
+
+
+def get_heartbeat() -> float:
+    """
+    Get the current heartbeat.
+
+    :return: The current heartbeat of the client.
+            Default is 0 (client has not initialized the heartbeat yet.)
+
+    """
+    return heartbeat
+
 
 async def __send_heartbeat(socket: WebSocketClientProtocol):
-    global sequence
     # TODO: Fix docs
-    # TODO: Implement logging
+
+    global sequence
+
+    log.debug(f"Sending heartbeat (seq: {sequence})")
     await socket.send(str(GatewayDispatch(1, sequence)))
 
 
 async def handle_hello(socket: WebSocketClientProtocol,
                        payload: GatewayDispatch):
     # TODO: Fix docs
-    # TODO: Implement logging
     global heartbeat
+
+    log.debug("Handling initial discord hello websocket message.")
     heartbeat = payload.data.get("heartbeat_interval")
 
     if not heartbeat:
-        # TODO: Throw invalid heartbeat exception if no heartbeat is present.
-        return
+        log.error("No `heartbeat_interval` is present. Has the API changed? "
+                  f"(payload: {payload})")
+        raise HeartbeatError("Discord hello is missing `heartbeat_interval` "
+                             "in payload. Because of this the client can not "
+                             f"maintain a connection. Check logging for more "
+                             f"information.")
 
     heartbeat /= 1000
+    log.debug(f"Maintaining a connection with heartbeat: {heartbeat}")
 
     await __send_heartbeat(socket)
 
 
 async def handle_heartbeat(socket: WebSocketClientProtocol, _):
     # TODO: Fix docs
-    # TODO: Implement logging
     global heartbeat
-    await sleep(heartbeat)
 
+    logging.debug(f"Resting heart for {heartbeat}s")
+    await sleep(heartbeat)
     await __send_heartbeat(socket)
