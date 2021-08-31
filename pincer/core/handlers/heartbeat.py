@@ -44,8 +44,9 @@ def get_heartbeat() -> float:
     """
     Get the current heartbeat.
 
-    :return: The current heartbeat of the client.
-            Default is 0 (client has not initialized the heartbeat yet.)
+    :return:
+        The current heartbeat of the client.
+        Default is 0 (client has not initialized the heartbeat yet.)
 
     """
     return heartbeat
@@ -62,7 +63,10 @@ async def __send_heartbeat(socket: WebSocketClientProtocol):
 
 async def handle_hello(socket: WebSocketClientProtocol,
                        payload: GatewayDispatch):
-    # TODO: Fix docs
+    """
+    Handshake between the discord API and the client.
+    Retrieve the heartbeat for maintaining a connection.
+    """
     global heartbeat
 
     log.debug("Handling initial discord hello websocket message.")
@@ -95,7 +99,12 @@ async def handle_heartbeat(socket: WebSocketClientProtocol, _):
 
 
 def update_sequence(seq: int):
-    # TODO: Fix docs
+    """
+    Update the heartbeat sequence.
+
+    :param seq:
+        The new heartbeat sequence to be updated with.
+    """
     global sequence
     log.debug("Updating heartbeat sequence...")
     sequence = seq
