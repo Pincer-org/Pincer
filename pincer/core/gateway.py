@@ -36,9 +36,7 @@ from websockets.legacy.client import WebSocketClientProtocol
 from pincer import __package__
 from pincer._config import GatewayConfig
 from pincer.core.dispatch import GatewayDispatch
-from pincer.core.heartbeat import (
-    handle_hello, handle_heartbeat, update_sequence
-)
+from pincer.core.heartbeat import Heartbeat
 from pincer.exceptions import (
     PincerError, InvalidTokenError, UnhandledException,
     _InternalPerformReconnectError, DisallowedIntentsError
@@ -108,7 +106,7 @@ class Dispatcher:
                 )
             )
 
-            await handle_hello(socket, payload)
+            await Heartbeat.handle_hello(socket, payload)
 
         async def handle_reconnect(_, payload: GatewayDispatch):
             """
@@ -117,7 +115,7 @@ class Dispatcher:
             _log.debug("Reconnecting client...")
             self.close()
 
-            update_sequence(payload.seq)
+            Heartbeat.update_sequence(payload.seq)
             self.run()
 
         self.__dispatch_handlers: Dict[int, Handler] = {
@@ -125,7 +123,7 @@ class Dispatcher:
             7: handle_reconnect,
             9: handle_reconnect,
             10: identify_and_handle_hello,
-            11: handle_heartbeat
+            11: Heartbeat.handle_heartbeat
         }
 
         self.__dispatch_errors: Dict[int, PincerError] = {
@@ -168,7 +166,8 @@ class Dispatcher:
 
             raise UnhandledException(f"Unhandled payload: {payload}")
 
-        _log.debug("Event handler found, ensuring async future in current loop.")
+        _log.debug(
+            "Event handler found, ensuring async future in current loop.")
         ensure_future(handler(socket, payload), loop=loop)
 
     async def __dispatcher(self, loop: AbstractEventLoop):
@@ -206,7 +205,7 @@ class Dispatcher:
                     exception = self.__dispatch_errors.get(exc.code)
 
                     if isinstance(exception, _InternalPerformReconnectError):
-                        update_sequence(0)
+                        Heartbeat.update_sequence(0)
                         self.close()
                         return self.run()
 

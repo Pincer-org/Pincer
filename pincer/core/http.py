@@ -28,7 +28,7 @@ from enum import Enum, auto
 from json import dumps
 from typing import Dict, Any, Optional, Protocol
 
-from aiohttp import ClientSession
+from aiohttp import ClientSession, ClientResponse
 from aiohttp.client import _RequestContextManager
 from aiohttp.typedefs import StrOrURL
 
@@ -58,8 +58,8 @@ class HttpCallable(Protocol):
     """aiohttp HTTP method"""
 
     def __call__(
-        self, url: StrOrURL, *,
-        allow_redirects: bool = True, json: Dict = None, **kwargs: Any
+            self, url: StrOrURL, *,
+            allow_redirects: bool = True, json: Dict = None, **kwargs: Any
     ) -> _RequestContextManager:
         pass
 
@@ -99,8 +99,8 @@ class HTTPClient:
         }
 
     async def __send(
-        self, method: RequestMethod, endpoint: str, *,
-        __ttl: int = None, data: Optional[Dict] = None
+            self, method: RequestMethod, endpoint: str, *,
+            __ttl: int = None, data: Optional[Dict] = None
     ) -> Optional[Dict]:
         """
         Send an api request to the Discord REST API.
@@ -116,7 +116,7 @@ class HTTPClient:
         if __ttl == 0:
             logging.error(
                 f"{method.name} {endpoint} has reached the "
-                f"maximum retry count of  {self.max_ttl}."
+                f"maximum retry count of {self.max_ttl}."
             )
 
             raise ServerError(f"Maximum amount of retries for `{endpoint}`.")
@@ -146,40 +146,49 @@ class HTTPClient:
             _log.debug(f"new {method.name} {endpoint} | {dumps(data)}")
 
             async with sender(
-                f"{self.endpoint}/{endpoint}",
-                headers=self.header, json=data
+                    f"{self.endpoint}/{endpoint}",
+                    headers=self.header, json=data
             ) as res:
-                if res.ok:
-                    _log.debug(
-                        "Request has been sent successfully. "
-                        "Returning json response."
-                    )
-
-                    if res.status == 204:
-                        return
-
-                    return await res.json()
-
-                exception = self.__http_exceptions.get(res.status)
-
-                if exception:
-                    _log.error(
-                        f"An http exception occurred while trying to send "
-                        f"a request to {endpoint}. ({res.status}, {res.reason})"
-                    )
-
-                    exception.__init__(res.reason)
-                    raise exception
-
-                # status code is guaranteed to be 5xx
-                retry_in = 1 + (self.max_ttl - __ttl) * 2
-                _log.debug(
-                    "Server side error occurred with status code "
-                    f"{res.status}. Retrying in {retry_in}s."
+                return await self.__handle_response(
+                    res, method, endpoint, __ttl=__ttl, data=data
                 )
 
-                await asyncio.sleep(retry_in)
-                await self.__send(method, endpoint, __ttl=__ttl - 1, data=data)
+    async def __handle_response(
+            self, res: ClientResponse, method: RequestMethod, endpoint: str, *,
+            __ttl: int = None, data: Optional[Dict] = None
+    ):
+        """Handle responses from the discord API."""
+        if res.ok:
+            _log.debug(
+                "Request has been sent successfully. "
+                "Returning json response."
+            )
+
+            if res.status == 204:
+                return
+
+            return await res.json()
+
+        exception = self.__http_exceptions.get(res.status)
+
+        if exception:
+            _log.error(
+                f"An http exception occurred while trying to send "
+                f"a request to {endpoint}. ({res.status}, {res.reason})"
+            )
+
+            exception.__init__(res.reason)
+            raise exception
+
+        # status code is guaranteed to be 5xx
+        retry_in = 1 + (self.max_ttl - __ttl) * 2
+        _log.debug(
+            "Server side error occurred with status code "
+            f"{res.status}. Retrying in {retry_in}s."
+        )
+
+        await asyncio.sleep(retry_in)
+        return await self.__send(method, endpoint, __ttl=__ttl - 1, data=data)
 
     async def delete(self, route: str) -> Dict:
         """
