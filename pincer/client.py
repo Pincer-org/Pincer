@@ -38,7 +38,7 @@ _log = logging.getLogger(__package__)
 
 Coro = TypeVar('Coro', bound=Callable[..., Coroutine[Any, Any, Any]])
 
-_events: Dict[str, Union[str, None, Coro]] = {}
+_events: Dict[str, Optional[Union[str, Coro]]] = {}
 
 for event in events:
     _events[event] = None
