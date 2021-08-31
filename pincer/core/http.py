@@ -86,7 +86,7 @@ class HTTPClient:
             403: ForbiddenError(),
             404: NotFoundError(),
             405: MethodNotAllowedError(),
-            439: RateLimitError()
+            429: RateLimitError()
         }
 
     async def __send(self, method: RequestMethod, route: str, *,
