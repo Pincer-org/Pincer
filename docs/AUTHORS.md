@@ -1,8 +1,8 @@
 # Credits
 
+## Development Lead
 
-Development Lead
-----------------
+---
 
-* [Arthur](https://github.com/Arthurdw) 
-* [Yohann Boniface](https://github.com/Sigmanficient) 
+- [Arthur](https://github.com/Arthurdw)
+- [Yohann Boniface](https://github.com/Sigmanficient)
