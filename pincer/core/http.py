@@ -134,7 +134,7 @@ class HTTPClient:
             endpoint: str,
             __ttl: int,
             data: Optional[Dict],
-    ):
+    ) -> Optional[Dict]:
         """Handle responses from the discord API."""
         if res.ok:
 
