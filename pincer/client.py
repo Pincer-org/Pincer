@@ -60,7 +60,7 @@ class Client(Dispatcher):
             }
         )
 
-        self.http = HTTPClient(token, GatewayConfig.version)
+        self.http = HTTPClient(token, version=GatewayConfig.version)
         self.bot: Optional[User] = None
         _events["ready"] = self.__on_ready
 
