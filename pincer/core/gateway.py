@@ -199,8 +199,8 @@ class Dispatcher:
 
                 except ConnectionClosedError as exc:
                     _log.debug(
-                        f"The connection with `%s` has been broken unexpectedly."
-                        f" (%i, %s)"
+                        f"The connection with `%s` has been broken"
+                        f" unexpectedly. (%i, %s)"
                         % (GatewayConfig.uri(), exc.code, exc.reason)
                     )
 
@@ -243,4 +243,4 @@ class Dispatcher:
         )
 
         self.__keep_alive = False
-        await self.__socket.close(1000)
+        await self.__socket.close()

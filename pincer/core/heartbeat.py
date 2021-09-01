@@ -47,16 +47,16 @@ class Heartbeat:
     __heartbeat: float = 0
     __sequence: Optional[int] = None
 
-    @staticmethod
-    async def __send(socket: WebSocketClientProtocol):
+    @classmethod
+    async def __send(cls, socket: WebSocketClientProtocol):
         """
         Sends a heartbeat to the API gateway.
         """
-        _log.debug(f"Sending heartbeat (seq: %s)" % str(Heartbeat.__sequence))
-        await socket.send(str(GatewayDispatch(1, Heartbeat.__sequence)))
+        _log.debug(f"Sending heartbeat (seq: %s)" % str(cls.__sequence))
+        await socket.send(str(GatewayDispatch(1, cls.__sequence)))
 
-    @staticmethod
-    def get() -> float:
+    @classmethod
+    def get(cls) -> float:
         """
         Get the current heartbeat.
 
@@ -65,10 +65,11 @@ class Heartbeat:
             Default is 0 (client has not initialized the heartbeat yet.)
 
         """
-        return Heartbeat.__heartbeat
+        return cls.__heartbeat
 
-    @staticmethod
+    @classmethod
     async def handle_hello(
+            cls,
             socket: WebSocketClientProtocol,
             payload: GatewayDispatch
     ):
@@ -77,9 +78,9 @@ class Heartbeat:
         Retrieve the heartbeat for maintaining a connection.
         """
         _log.debug("Handling initial discord hello websocket message.")
-        Heartbeat.__heartbeat = payload.data.get("heartbeat_interval")
+        cls.__heartbeat = payload.data.get("heartbeat_interval")
 
-        if not Heartbeat.__heartbeat:
+        if not cls.__heartbeat:
             _log.error(
                 "No `heartbeat_interval` is present. Has the API changed? "
                 f"(payload: %s)" % payload
@@ -91,40 +92,33 @@ class Heartbeat:
                 "Check logging for more information."
             )
 
-        Heartbeat.__heartbeat /= 1000
+        cls.__heartbeat /= 1000
 
         _log.debug(
-            "Maintaining a connection with heartbeat: %s"
-            % Heartbeat.__heartbeat
+            "Maintaining a connection with heartbeat: %s" % cls.__heartbeat
         )
 
         if Heartbeat.__sequence:
             await socket.send(
-                str(
-                    GatewayDispatch(
-                        6,
-                        Heartbeat.__sequence,
-                        seq=Heartbeat.__sequence
-                    )
-                )
+                str(GatewayDispatch(6, cls.__sequence, seq=cls.__sequence))
             )
 
         else:
-            await Heartbeat.__send(socket)
+            await cls.__send(socket)
 
-    @staticmethod
-    async def handle_heartbeat(socket: WebSocketClientProtocol, _):
+    @classmethod
+    async def handle_heartbeat(cls, socket: WebSocketClientProtocol, _):
         """
         Handles a heartbeat, which means that it rests and then sends a new
         heartbeat.
         """
 
-        _log.debug("Resting heart for %is" % Heartbeat.__heartbeat)
-        await sleep(Heartbeat.__heartbeat)
-        await Heartbeat.__send(socket)
+        _log.debug("Resting heart for %is" % cls.__heartbeat)
+        await sleep(cls.__heartbeat)
+        await cls.__send(socket)
 
-    @staticmethod
-    def update_sequence(seq: int):
+    @classmethod
+    def update_sequence(cls, seq: int):
         """
         Update the heartbeat sequence.
 
@@ -132,4 +126,4 @@ class Heartbeat:
             The new heartbeat sequence to be updated with.
         """
         _log.debug("Updating heartbeat sequence...")
-        Heartbeat.__sequence = seq
+        cls.__sequence = seq

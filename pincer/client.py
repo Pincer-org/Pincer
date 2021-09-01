@@ -90,8 +90,9 @@ class Client(Dispatcher):
         global _events
 
         if not iscoroutinefunction(coroutine):
-            raise TypeError("Any event which is registered must be a coroutine "
-                            "function")
+            raise TypeError(
+                "Any event which is registered must be a coroutine function"
+            )
 
         name: str = coroutine.__name__.lower()
 

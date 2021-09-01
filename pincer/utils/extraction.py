@@ -50,5 +50,6 @@ def get_index(
     """
     try:
         return collection[index]
+
     except IndexError:
         return fallback

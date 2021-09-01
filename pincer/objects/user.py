@@ -69,10 +69,12 @@ class User:
 
     @property
     def user(self) -> str:
-        # TODO: Write documentation
+        """
+        :return:
+            Return the full discord tag of the client.
+        """
         return self.username + '#' + self.discriminator
 
     def __str__(self):
-        # Lets return the user#discriminator when the object gets used
-        # as a string.
+        """return the discord tag when object gets used as a string."""
         return self.user
