@@ -30,16 +30,18 @@ class PincerError(Exception):
 
 
 class UnhandledException(PincerError):
-    def __init__(self, specific: str):
-        """
-        Exception which gets thrown if an exception wasn't handled.
+    """
+    Exception which gets thrown if an exception wasn't handled.
 
-        Please create an issue on our github
-        if this exception gets thrown.
-        """
-        super(UnhandledException, self).__init__(
-            specific + " Please report this to the library devs."
-        )
+    Please create an issue on our github
+    if this exception gets thrown.
+    """
+
+
+def __init__(self, specific: str):
+    super(UnhandledException, self).__init__(
+        specific + " Please report this to the library devs."
+    )
 
 
 class InvalidEventName(PincerError):
@@ -69,6 +71,10 @@ class DisallowedIntentsError(DispatchError):
 
 
 class InvalidTokenError(DispatchError, ValueError):
+    """
+    Exception raised when the authorization token is invalid.
+    """
+
     def __init__(self, hint: Optional[str] = None):
         """
         Exception raised when the authorization token is invalid.

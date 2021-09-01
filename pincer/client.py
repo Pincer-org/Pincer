@@ -77,6 +77,7 @@ class Client(Dispatcher):
                 0: self.event_handler
             }
         )
+        global _events
 
         # TODO: close the client after use
         self.http = HTTPClient(token, version=GatewayConfig.version)
@@ -86,6 +87,8 @@ class Client(Dispatcher):
     @staticmethod
     def event(coroutine: Coro):
         # TODO: Write docs
+        global _events
+
         if not iscoroutinefunction(coroutine):
             raise TypeError("Any event which is registered must be a coroutine "
                             "function")

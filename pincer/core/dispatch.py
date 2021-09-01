@@ -32,11 +32,11 @@ class GatewayDispatch:
     """Represents a websocket message."""
 
     def __init__(
-        self,
-        op: int,
-        data: Optional[Union[int, Dict[str, Any]]],
-        seq: Optional[int] = None,
-        name: Optional[str] = None
+            self,
+            op: int,
+            data: Optional[Union[int, Dict[str, Any]]],
+            seq: Optional[int] = None,
+            name: Optional[str] = None
     ):
         """
         Instantiate a new GatewayDispatch object.

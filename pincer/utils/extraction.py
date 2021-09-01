@@ -25,6 +25,7 @@ from typing import Any, Optional
 
 
 def get_index(collection, index: int, fallback: Optional[Any] = None):
+    # TODO: Write documentation
     try:
         return collection[index]
     except IndexError:

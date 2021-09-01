@@ -69,7 +69,10 @@ class User:
 
     @property
     def user(self) -> str:
+        # TODO: Write documentation
         return self.username + '#' + self.discriminator
 
-    def __repr__(self):
+    def __str__(self):
+        # Lets return the user#discriminator when the object gets used
+        # as a string.
         return self.user

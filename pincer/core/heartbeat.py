@@ -38,6 +38,12 @@ _log = logging.getLogger(__package__)
 
 
 class Heartbeat:
+    """
+    The heartbeat of the websocket connection.
+
+    This is what lets the server and client know that they are still
+    both online and properly connected.
+    """
     __heartbeat: float = 0
     __sequence: Optional[int] = None
 
@@ -46,7 +52,7 @@ class Heartbeat:
         """
         Sends a heartbeat to the API gateway.
         """
-        _log.debug(f"Sending heartbeat (seq: {Heartbeat.__sequence})")
+        _log.debug(f"Sending heartbeat (seq: %s)" % str(Heartbeat.__sequence))
         await socket.send(str(GatewayDispatch(1, Heartbeat.__sequence)))
 
     @staticmethod
@@ -76,7 +82,7 @@ class Heartbeat:
         if not Heartbeat.__heartbeat:
             _log.error(
                 "No `heartbeat_interval` is present. Has the API changed? "
-                f"(payload: {payload})"
+                f"(payload: %s)" % payload
             )
 
             raise HeartbeatError(
@@ -88,7 +94,8 @@ class Heartbeat:
         Heartbeat.__heartbeat /= 1000
 
         _log.debug(
-            f"Maintaining a connection with heartbeat: {Heartbeat.__heartbeat}"
+            "Maintaining a connection with heartbeat: %s"
+            % Heartbeat.__heartbeat
         )
 
         if Heartbeat.__sequence:
@@ -112,7 +119,7 @@ class Heartbeat:
         heartbeat.
         """
 
-        logging.debug(f"Resting heart for {Heartbeat.__heartbeat}s")
+        logging.debug("Resting heart for %is" % Heartbeat.__heartbeat)
         await sleep(Heartbeat.__heartbeat)
         await Heartbeat.__send(socket)
 

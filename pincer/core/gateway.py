@@ -153,16 +153,16 @@ class Dispatcher:
         :param loop: The current async loop on which the future is bound.
         """
         _log.debug(
-            f"New event received, checking if handler exists for opcode: "
-            + str(payload.op)
+            "New event received, checking if handler exists for opcode: %i"
+            % payload.op
         )
 
         handler: Handler = self.__dispatch_handlers.get(payload.op)
 
         if not handler:
             _log.error(
-                f"No handler was found for opcode {payload.op}, "
-                "please report this to the pincer dev team!"
+                "No handler was found for opcode %i, please report this to the "
+                "pincer dev team!" % payload.op
             )
 
             raise UnhandledException(f"Unhandled payload: {payload}")
@@ -177,14 +177,14 @@ class Dispatcher:
         This handles all interactions with the websocket API.
         """
         _log.debug(
-            f"Establishing websocket connection with `{GatewayConfig.uri()}`"
+            "Establishing websocket connection with `%s`" % GatewayConfig.uri()
         )
 
         async with connect(GatewayConfig.uri()) as socket:
             self.__socket = socket
             _log.debug(
-                "Successfully established websocket connection with "
-                f"`{GatewayConfig.uri()}`"
+                "Successfully established websocket connection with `%s`"
+                % GatewayConfig.uri()
             )
 
             while self.__keep_alive:
@@ -198,9 +198,9 @@ class Dispatcher:
 
                 except ConnectionClosedError as exc:
                     _log.debug(
-                        f"The connection with `{GatewayConfig.uri()}` "
-                        f"has been broken unexpectedly. "
-                        f"({exc.code}, {exc.reason})"
+                        f"The connection with `%s` has been broken unexpectedly."
+                        f" (%i, %s)"
+                        % (GatewayConfig.uri(), exc.code, exc.reason)
                     )
 
                     await self.close()
@@ -238,8 +238,7 @@ class Dispatcher:
             raise RuntimeError("Please open the connection before closing.")
 
         _log.debug(
-            "Setting keep_alive to False, "
-            "this will terminate the heartbeat."
+            "Setting keep_alive to False, this will terminate the heartbeat."
         )
 
         self.__keep_alive = False
