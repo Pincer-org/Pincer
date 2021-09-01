@@ -24,8 +24,9 @@
 import logging
 from asyncio import iscoroutinefunction
 from inspect import getfullargspec
-from typing import Optional, TypeVar, Callable, Coroutine, Any, Union, Dict, \
-    Tuple, List
+from typing import (
+    Optional, TypeVar, Callable, Coroutine, Any, Union, Dict, Tuple, List
+)
 
 from pincer import __package__
 from pincer._config import GatewayConfig, events
