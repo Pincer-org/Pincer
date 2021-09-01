@@ -40,6 +40,7 @@ from pincer.exceptions import (
 
 _log = logging.getLogger(__package__)
 
+
 class HttpCallable(Protocol):
     """aiohttp HTTP method"""
 
