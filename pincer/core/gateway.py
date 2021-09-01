@@ -27,10 +27,10 @@ from __future__ import annotations
 import logging
 from asyncio import get_event_loop, AbstractEventLoop, ensure_future
 from platform import system
-from typing import Dict, Callable, Awaitable
+from typing import Dict, Callable, Awaitable, Optional
 
 from websockets import connect
-from websockets.exceptions import ConnectionClosedError
+from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
 from websockets.legacy.client import WebSocketClientProtocol
 
 from pincer import __package__
@@ -71,6 +71,7 @@ class Dispatcher:
 
         self.__token = token
         self.__keep_alive = True
+        self.__socket: Optional[WebSocketClientProtocol] = None
 
         async def identify_and_handle_hello(
                 socket: WebSocketClientProtocol,
@@ -113,7 +114,7 @@ class Dispatcher:
             Closes the client and then reconnects it.
             """
             _log.debug("Reconnecting client...")
-            self.close()
+            await self.close()
 
             Heartbeat.update_sequence(payload.seq)
             self.run()
@@ -180,6 +181,7 @@ class Dispatcher:
         )
 
         async with connect(GatewayConfig.uri()) as socket:
+            self.__socket = socket
             _log.debug(
                 "Successfully established websocket connection with "
                 f"`{GatewayConfig.uri()}`"
@@ -201,17 +203,19 @@ class Dispatcher:
                         f"({exc.code}, {exc.reason})"
                     )
 
-                    self.close()
+                    await self.close()
                     exception = self.__dispatch_errors.get(exc.code)
 
                     if isinstance(exception, _InternalPerformReconnectError):
                         Heartbeat.update_sequence(0)
-                        self.close()
+                        await self.close()
                         return self.run()
 
                     raise exception or UnhandledException(
                         f"Dispatch error ({exc.code}): {exc.reason}"
                     )
+                except ConnectionClosedOK:
+                    _log.debug("Connection closed successfully.")
 
     def run(self, loop: AbstractEventLoop = None):
         """
@@ -224,14 +228,19 @@ class Dispatcher:
         loop.run_until_complete(self.__dispatcher(loop))
         loop.close()
 
-    def close(self):
+    async def close(self):
         """
         Stop the dispatcher from listening and responding to gateway
         events. This should let the client close on itself.
         """
+        if not self.__socket:
+            _log.error("Cannot close non existing socket socket connection.")
+            raise RuntimeError("Please open the connection before closing.")
+
         _log.debug(
             "Setting keep_alive to False, "
             "this will terminate the heartbeat."
         )
 
         self.__keep_alive = False
+        await self.__socket.close(1000)

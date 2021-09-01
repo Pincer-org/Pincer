@@ -41,8 +41,9 @@ Coro = TypeVar('Coro', bound=Callable[..., Coroutine[Any, Any, Any]])
 _events: Dict[str, Optional[Union[str, Coro]]] = {}
 
 for event in events:
-    _events[event] = None
-    _events[f"on_{event}"] = event
+    event_final_executor = f"on_{event}"
+    _events[event] = event_final_executor
+    _events[event_final_executor] = None
 
 
 class Client(Dispatcher):
