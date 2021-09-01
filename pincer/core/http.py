@@ -92,6 +92,9 @@ class HTTPClient:
         return self
 
     async def __aexit__(self, exc_type, exc, tb):
+        await self.close()
+
+    async def close(self):
         await self.__session.close()
 
     async def __send(
