@@ -34,9 +34,7 @@ class GatewayConfig:
     socket_base_url: str = "wss://gateway.discord.gg/"
     version: int = 9
     encoding: str = "json"
-
-    # TODO: Implement compression
-    # compress: str = "zlib-stream"
+    compression: str = "zlib-stream"
 
     @staticmethod
     def uri() -> str:

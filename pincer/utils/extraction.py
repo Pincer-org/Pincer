@@ -21,11 +21,33 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from typing import Any, Optional
+from typing import Any, Optional, Protocol, TypeVar
+
+T = TypeVar("T")
 
 
-def get_index(collection, index: int, fallback: Optional[Any] = None):
-    # TODO: Write documentation
+class GetItem(Protocol):
+    """
+    Represents a class which implements the __getitem__ property.
+    """
+    def __getitem__(self, key: int) -> Any:
+        ...
+
+
+def get_index(
+        collection: GetItem,
+        index: int,
+        fallback: Optional[T] = None
+) -> Optional[T]:
+    """
+    Gets an item from a collection through index. Allows you to provide
+    a fallback for if that index is out of bounds.
+
+    :param collection: The collection from which the item is retrieved.
+    :param index: The index of the item in the collection.
+    :param fallback: The fallback value which will be used if the index
+        doesn't exist. Default value is None.
+    """
     try:
         return collection[index]
     except IndexError:
