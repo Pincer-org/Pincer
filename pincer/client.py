@@ -60,6 +60,7 @@ class Client(Dispatcher):
             }
         )
 
+        # TODO: close the client after use
         self.http = HTTPClient(token, version=GatewayConfig.version)
         self.bot: Optional[User] = None
         _events["ready"] = self.__on_ready
