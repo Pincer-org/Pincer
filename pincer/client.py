@@ -42,7 +42,7 @@ _events: Dict[str, Optional[Union[str, Coro]]] = {}
 
 for event in events:
     _events[event] = None
-    _events[f"on_{event}"] = None
+    _events[f"on_{event}"] = event
 
 
 class Client(Dispatcher):
@@ -82,7 +82,7 @@ class Client(Dispatcher):
         if _events.get(name) is not None:
             raise InvalidEventName(
                 f"The event `{name}` has already been registered or is not "
-                f"a event name."
+                f"a valid event name."
             )
 
         _events[name] = coroutine
