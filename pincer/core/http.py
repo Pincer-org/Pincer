@@ -24,7 +24,6 @@
 
 import asyncio
 import logging
-from enum import Enum, auto
 from json import dumps
 from typing import Dict, Any, Optional, Protocol
 
@@ -45,8 +44,8 @@ class HttpCallable(Protocol):
     """aiohttp HTTP method"""
 
     def __call__(
-        self, url: StrOrURL, *,
-        allow_redirects: bool = True, json: Dict = None, **kwargs: Any
+            self, url: StrOrURL, *,
+            allow_redirects: bool = True, json: Dict = None, **kwargs: Any
     ) -> _RequestContextManager:
         pass
 
@@ -96,12 +95,8 @@ class HTTPClient:
         await self.__session.close()
 
     async def __send(
-        self,
-        method: HttpCallable,
-        endpoint: str,
-        *,
-        data: Optional[Dict] = None,
-        __ttl: int = None
+            self, method: HttpCallable, endpoint: str, *,
+            data: Optional[Dict] = None, __ttl: int = None
     ) -> Optional[Dict]:
         """
         Send an api request to the Discord REST API.
@@ -122,7 +117,7 @@ class HTTPClient:
             )
 
             raise ServerError(f"Maximum amount of retries for `{endpoint}`.")
-        
+
         # TODO: print better method name
         _log.debug(f"{method.__name__.upper()} {endpoint} | {dumps(data)}")
 
@@ -133,12 +128,12 @@ class HTTPClient:
             )
 
     async def __handle_response(
-        self,
-        res: ClientResponse,
-        method: HttpCallable,
-        endpoint: str,
-        __ttl: int,
-        data: Optional[Dict],
+            self,
+            res: ClientResponse,
+            method: HttpCallable,
+            endpoint: str,
+            __ttl: int,
+            data: Optional[Dict],
     ):
         """Handle responses from the discord API."""
         if res.ok:
