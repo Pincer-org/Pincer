@@ -92,6 +92,9 @@ class HTTPClient:
         return self
 
     async def __aexit__(self, exc_type, exc, tb):
+        await self.close()
+
+    async def close(self):
         await self.__session.close()
 
     async def __send(
@@ -134,7 +137,7 @@ class HTTPClient:
             endpoint: str,
             __ttl: int,
             data: Optional[Dict],
-    ):
+    ) -> Optional[Dict]:
         """Handle responses from the discord API."""
         if res.ok:
 
