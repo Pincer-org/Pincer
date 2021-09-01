@@ -119,7 +119,7 @@ class Heartbeat:
         heartbeat.
         """
 
-        logging.debug("Resting heart for %is" % Heartbeat.__heartbeat)
+        _log.debug("Resting heart for %is" % Heartbeat.__heartbeat)
         await sleep(Heartbeat.__heartbeat)
         await Heartbeat.__send(socket)
 
