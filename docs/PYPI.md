@@ -71,10 +71,10 @@ py -m pip install pincer
 
 ## Current Features
 - Dispatcher
-- Logging
-- HTTP Client
+- Logging  *Improved*
+- HTTP Client 
 - Client base class 
-- Basic events *Improved* 
+- Basic events *Improved*
 
 **Client base class Example:**
 
@@ -102,6 +102,25 @@ async def on_ready():
 
 client.run()
 ```
+
+### Inherited client
+
+You have the possibility to use your own class to inherit from the pincer bot base.
+
+```py
+class Bot(Client):
+
+    def __init__(self) -> None:
+        super(Bot, self).__init__(token='...')
+
+    @Client.event
+    async def on_ready(self) -> None:
+        ...
+```
+
+See an advanced bot implementation:
+> https://github.com/Pincer-org/Pincer
+
 
 ### Enable the debug mode
 
