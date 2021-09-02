@@ -33,7 +33,7 @@ def should_pass_cls(call: Union[Coro, Callable[..., Any]]):
 
     :param call: The callable to check.
 
-    :returns: Whether or not its required.
+    :return: Whether or not its required.
     """
     args = getfullargspec(call).args
     return len(args) >= 1 and args[0] in ["self", "cls"]

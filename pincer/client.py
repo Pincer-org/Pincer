@@ -223,9 +223,9 @@ class Client(Dispatcher):
 
         if iscoroutinefunction(call):
             if should_pass_cls(call):
-                kwargs["self"] = self
-
-            await call(*args, **kwargs)
+                await call(self, *args, **kwargs)
+            else:
+                await call(*args, **kwargs)
 
     @middleware("ready")
     async def on_ready_middleware(self, payload: GatewayDispatch):

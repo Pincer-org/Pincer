@@ -99,8 +99,11 @@ class HTTPClient:
         await self.__session.close()
 
     async def __send(
-            self, method: HttpCallable, endpoint: str, *,
-            data: Optional[Dict] = None, __ttl: int = None
+            self,
+            method: HttpCallable,
+            endpoint: str, *,
+            data: Optional[Dict] = None,
+            __ttl: int = None
     ) -> Optional[Dict]:
         """
         Send an api request to the Discord REST API.
@@ -141,7 +144,6 @@ class HTTPClient:
     ) -> Optional[Dict]:
         """Handle responses from the discord API."""
         if res.ok:
-
             if res.status == 204:
                 _log.debug(
                     "Request has been sent successfully. "
