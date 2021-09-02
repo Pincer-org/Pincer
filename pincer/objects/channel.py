@@ -30,6 +30,7 @@ from typing import Optional, Union, List
 from websockets.typing import Data
 
 from pincer._config import GatewayConfig
+from pincer.utils.api_object import APIObject
 
 
 class ChannelType(Enum):
@@ -50,7 +51,7 @@ class ChannelType(Enum):
 
 
 @dataclass
-class Channel:
+class Channel(APIObject):
     id: int
     type: ChannelType
     guild_id: Optional[int] = None

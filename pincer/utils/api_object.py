@@ -23,7 +23,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
-from abc import ABC
+from abc import ABC, abstractmethod
 from typing import Union
 
 from websockets.typing import Data
@@ -36,5 +36,6 @@ class APIObject(ABC):
         # TODO: Write documentation
         return cls(**data)
 
+    @abstractmethod
     def __str__(self) -> str:
         ...
