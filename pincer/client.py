@@ -23,10 +23,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import logging
 from asyncio import iscoroutinefunction
-from inspect import getfullargspec
-from typing import (
-    Optional, TypeVar, Callable, Coroutine, Any, Union, Dict, Tuple, List
-)
+from typing import Optional, Any, Union, Dict, Tuple, List
 
 from pincer import __package__
 from pincer._config import GatewayConfig, events
@@ -36,10 +33,11 @@ from pincer.core.http import HTTPClient
 from pincer.exceptions import InvalidEventName
 from pincer.objects.user import User
 from pincer.utils.extraction import get_index
+from pincer.utils.insertion import should_pass_cls
+from pincer.utils.types import Coro
 
 _log = logging.getLogger(__package__)
 
-Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
 middleware_type = Optional[Union[Coro, Tuple[str, List[Any], Dict[str, Any]]]]
 
 _events: Dict[str, Optional[Union[str, Coro]]] = {}
@@ -58,6 +56,22 @@ for event in events:
 
     # The registered event by the client. Do not manually overwrite.
     _events[event_final_executor] = None
+
+
+def middleware(call: str):
+    # TODO: Write docs
+    # TODO: Write implementation example
+    def decorator(func: Coro):
+        async def wrapper(cls, payload: GatewayDispatch):
+            _log.debug("`%s` middleware has been invoked", call)
+            return await func(cls, payload) \
+                if should_pass_cls(func) \
+                else await func(payload)
+
+        _events[call] = wrapper
+        return wrapper
+
+    return decorator
 
 
 class Client(Dispatcher):
@@ -81,7 +95,6 @@ class Client(Dispatcher):
         # TODO: close the client after use
         self.http = HTTPClient(token, version=GatewayConfig.version)
         self.bot: Optional[User] = None
-        _events["ready"] = self.__on_ready
 
     @staticmethod
     def event(coroutine: Coro):
@@ -108,32 +121,70 @@ class Client(Dispatcher):
         _events[name] = coroutine
         return coroutine
 
-    async def event_handler(self, _, payload: GatewayDispatch):
-        # TODO: Write docs
-        event_name = payload.event_name.lower()
-        middleware: middleware_type = _events.get(event_name)
-        final_call, args, params = middleware, list(), dict()
+    async def handle_middleware(
+            self,
+            payload: GatewayDispatch,
+            key: str,
+            *args,
+            **kwargs
+    ) -> tuple[Optional[Coro], List[Any], Dict[str, Any]]:
+        """
+        Handles all middleware recursively. Stops when it has found an
+        event name which starts with "on_".
 
-        if iscoroutinefunction(middleware):
-            extractable = await middleware(payload)
-            final_call = get_index(extractable, 0, f"on_{event_name}")
-            args = get_index(extractable, 1, list())
+        :param payload: The original payload for the event.
+        :param key: The index of the middleware in `_events`.
+        :param *args: The arguments which will be passed to the middleware.
+        :param **kwargs: The named arguments which will be passed to the
+                        middleware.
+
+        :return: A tuple where the first element is the final executor
+            (so the event) its index in `_events`. The second and third
+            element are the `*args` and `**kwargs` for the event.
+        """
+        ware: middleware_type = _events.get(key)
+        next_call, arguments, params = ware, list(), dict()
+
+        if iscoroutinefunction(ware):
+            extractable = await ware(self, payload, *args, **kwargs)
+
+            if not isinstance(extractable, tuple):
+                raise RuntimeError(f"Return type from `{key}` middleware must "
+                                   f"be tuple. ")
+
+            next_call = get_index(extractable, 0, "")
+            arguments = get_index(extractable, 1, list())
             params = get_index(extractable, 2, dict())
 
-        final_call_routine: Optional[Coro] = _events.get(final_call)
+        if next_call is None:
+            raise RuntimeError(f"Middleware `{key}` has not been registered.")
 
-        if iscoroutinefunction(final_call_routine):
-            kwargs = params
-            arguments = getfullargspec(final_call_routine).args
-            if len(arguments) >= 1 and arguments[0] == "self":
+        return (next_call, arguments, params) \
+            if next_call.startswith("on_") \
+            else await self.handle_middleware(payload, next_call,
+                                              *arguments, **params)
+
+    async def event_handler(self, _, payload: GatewayDispatch):
+        """
+        Handles all payload events with opcode 0.
+        """
+        event_name = payload.event_name.lower()
+
+        key, args, kwargs = await self.handle_middleware(payload, event_name)
+
+        call = _events.get(key)
+
+        if iscoroutinefunction(call):
+            if should_pass_cls(call):
                 kwargs["self"] = self
 
-            await final_call_routine(*args, **kwargs)
+            await call(*args, **kwargs)
 
-    async def __on_ready(self, payload: GatewayDispatch):
-        # TODO: Write docs
+    @middleware("ready")
+    async def on_ready_middleware(self, payload: GatewayDispatch):
+        """Middleware for `on_ready` event. """
         self.bot = User.from_dict(payload.data.get("user"))
-        return "on_ready",
+        return "on_ready"
 
 
 Bot = Client
