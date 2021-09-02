@@ -22,12 +22,10 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import unittest
-
 from pincer.core.dispatch import GatewayDispatch
 
 
-class TestDispatch(unittest.TestCase):
+class TestDispatch:
     op = 123
     data = {
         "foo": "bar",
@@ -36,7 +34,10 @@ class TestDispatch(unittest.TestCase):
     seq = 456
     event_name = "test_event"
 
-    dispatch_string = '{"op": 123, "d": {"foo": "bar", "bar": "foo"}, "s": 456, "t": "test_event"}'
+    dispatch_string = (
+        '{"op": 123, "d": {"foo": "bar", "bar": "foo"}, '
+        '"s": 456, "t": "test_event"}'
+    )
 
     dispatch = GatewayDispatch(op, data, seq, event_name)
 
@@ -45,18 +46,15 @@ class TestDispatch(unittest.TestCase):
         Tests whether or not the dispatch class its string conversion
         is correct.
         """
-        self.assertEqual(str(self.dispatch), self.dispatch_string)
+        assert str(self.dispatch) == self.dispatch_string
 
     def test_from_string(self):
         """
         Tests whether or not the from_string function is properly
         parsing the string and creating a GatewayDispatch instance.
         """
-        self.assertEqual(
-            str(GatewayDispatch.from_string(self.dispatch_string)),
-            self.dispatch_string
+        assert (
+            str(GatewayDispatch.from_string(self.dispatch_string))
+            == self.dispatch_string
         )
 
-
-if __name__ == '__main__':
-    unittest.main()
