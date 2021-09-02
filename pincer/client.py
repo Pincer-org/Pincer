@@ -86,13 +86,13 @@ def middleware(call: str, *, override: bool = False):
 
     Implementation example:
     ```py
-    @middleware("ready", override=True)
-    async def custom_ready(payload: GatewayDispatch):
-        return "on_ready", [User.from_dict(payload.data.get("user"))]
+    >>> @middleware("ready", override=True)
+    >>> async def custom_ready(payload: GatewayDispatch):
+    >>>     return "on_ready", [User.from_dict(payload.data.get("user"))]
 
-    @Client.event
-    async def on_ready(bot: User):
-        print(f"Signed in as {bot}")
+    >>> @Client.event
+    >>> async def on_ready(bot: User):
+    >>>     print(f"Signed in as {bot}")
     ```
 
     :param call: The call where the method should be registered.
