@@ -126,7 +126,11 @@ See an advanced bot implementation:
 
 > <https://github.com/Pincer-org/Pincer>
 
-### Enable the debug mode
+### Advanced Usage
+
+__Warning: These features are meant for advanced developers to make early experimentation with Pincer.__
+
+#### Enable the debug mode
 
 _If you want to see everything that is happening under the hood,
 either for curiosity or the implementation of some features,
@@ -137,9 +141,18 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 ```
-
 **Note:** _A lot of printing can happen, with sensitive information,
 make sure to be aware or what your doing if your enable it!_
+
+
+#### middleware
+_Within the version 0.4.0-dev, middleware system has been re-created,
+and now also advanced user to use them. However, it should be used carefully._
+
+An /say command early implementation, using middleware
+
+> https://gist.github.com/Arthurdw/e110ebbdafca388722f25ddb79c1dfb8
+
 
 ## 🏷️ License
 
