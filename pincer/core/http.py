@@ -32,6 +32,7 @@ from aiohttp.client import _RequestContextManager
 from aiohttp.typedefs import StrOrURL
 
 from pincer import __package__
+from pincer._config import GatewayConfig
 from pincer.exceptions import (
     NotFoundError, BadRequestError, NotModifiedError, UnauthorizedError,
     ForbiddenError, MethodNotAllowedError, RateLimitError, ServerError,
@@ -54,7 +55,7 @@ class HttpCallable(Protocol):
 class HTTPClient:
     """Interacts with Discord API through HTTP protocol"""
 
-    def __init__(self, token: str, *, version: int, ttl: int = 5):
+    def __init__(self, token: str, *, version: int = None, ttl: int = 5):
         """
         Instantiate a new HttpApi object.
 
@@ -70,11 +71,13 @@ class HTTPClient:
         :param ttl:
             Max amount of attempts after error code 5xx
         """
+        version = version or GatewayConfig.version
         self.url: str = f"https://discord.com/api/v{version}"
         self.max_ttl: int = ttl
 
         headers: Dict[str, str] = {
-            "Authorization": f"Bot {token}"
+            "Authorization": f"Bot {token}",
+            "Content-Type": "application/json"
         }
         self.__session = ClientSession(headers=headers)
 
