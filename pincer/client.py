@@ -103,11 +103,11 @@ def middleware(call: str, *, override: bool = False):
     def decorator(func: Coro):
         if override:
             _log.warning(f"Middleware overriding has been enabled for `{call}`."
-                         f"This might cause unexpected behaviour.")
+                         " This might cause unexpected behaviour.")
 
-        if not override and iscoroutinefunction(_events.get(call)):
+        if not override and callable(_events.get(call)):
             raise RuntimeError(f"Middleware event with call `{call}` has "
-                               f"already been registered or is no coroutine.")
+                               "already been registered")
 
         async def wrapper(cls, payload: GatewayDispatch):
             _log.debug("`%s` middleware has been invoked", call)
