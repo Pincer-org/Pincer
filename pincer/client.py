@@ -58,10 +58,57 @@ for event in events:
     _events[event_final_executor] = None
 
 
-def middleware(call: str):
-    # TODO: Write docs
-    # TODO: Write implementation example
+def middleware(call: str, *, override: bool = False):
+    """
+    Middleware are methods which can be registered with this decorator.
+    These methods are invoked before any `on_` event. As the `on_` event
+    is the final call.
+
+    A default call exists for all events, but some might already be in
+    use by the library. If you know what you are doing, you can override
+    these default middleware methods by passing the override parameter.
+
+    The method to which this decorator is registered must be a coroutine,
+    and it must return a tuple with the following format:
+    ```
+        tuple(
+            key for next middleware or final event [str],
+            args for next middleware/event which will be passed as *args
+                [list(Any)],
+            kwargs for next middleware/event which will be passed as
+                **kwargs [dict(Any)]
+        )
+    ```
+
+    One parameter is passed to the middleware. This parameter is the
+    payload parameter which is of type GatewayDispatch. This contains
+    the response from the discord API.
+
+    Implementation example:
+    ```py
+    @middleware("ready", override=True)
+    async def custom_ready(payload: GatewayDispatch):
+        return "on_ready", [User.from_dict(payload.data.get("user"))]
+
+    @Client.event
+    async def on_ready(bot: User):
+        print(f"Signed in as {bot}")
+    ```
+
+    :param call: The call where the method should be registered.
+    :param override: Setting this to True will allow you to override
+        existing middleware. Usage of this is discouraged, but can help
+        you out of some situations.
+    """
     def decorator(func: Coro):
+        if override:
+            _log.warning(f"Middleware overriding has been enabled for `{call}`."
+                         f"This might cause unexpected behaviour.")
+
+        if not override and iscoroutinefunction(_events.get(call)):
+            raise RuntimeError(f"Middleware event with call `{call}` has "
+                               f"already been registered or is no coroutine.")
+
         async def wrapper(cls, payload: GatewayDispatch):
             _log.debug("`%s` middleware has been invoked", call)
             return await func(cls, payload) \
@@ -184,7 +231,7 @@ class Client(Dispatcher):
     async def on_ready_middleware(self, payload: GatewayDispatch):
         """Middleware for `on_ready` event. """
         self.bot = User.from_dict(payload.data.get("user"))
-        return "on_ready"
+        return "on_ready",
 
 
 Bot = Client
