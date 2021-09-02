@@ -25,9 +25,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional, Union
+from typing import Optional
 
-from websockets.typing import Data
+from pincer.utils.api_object import APIObject
 
 
 class PremiumTypes(Enum):
@@ -38,7 +38,7 @@ class PremiumTypes(Enum):
 
 
 @dataclass
-class User:
+class User(APIObject):
     # TODO: Write documentation
     id: int
     flags: int
@@ -56,11 +56,6 @@ class User:
     avatar_url: Optional[str] = None
     mfa_enabled: Optional[bool] = False
     premium_type: Optional[int] = 0
-
-    @classmethod
-    def from_dict(cls, data: Data[str, Union[str, bool, int]]) -> User:
-        # TODO: Write documentation
-        return cls(**data)
 
     @property
     def premium(self) -> PremiumTypes:
