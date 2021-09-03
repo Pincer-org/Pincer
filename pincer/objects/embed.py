@@ -79,7 +79,9 @@ class EmbedFooter:
 
     def __post_init__(self):
         if _field_size(self.text) > 2048:
-            raise EmbedFieldError.from_desc("Footer text", 2048, len(self.text))
+            raise EmbedFieldError.from_desc(
+                "Footer text", 2048, len(self.text)
+            )
 
 
 @dataclass
@@ -189,10 +191,14 @@ class EmbedField:
 
     def __post_init__(self):
         if _field_size(self.name) > 256:
-            raise EmbedFieldError.from_desc("Field name", 256, len(self.name))
+            raise EmbedFieldError.from_desc(
+                "Field name", 256, len(self.name)
+            )
 
         if _field_size(self.value) > 1024:
-            raise EmbedFieldError.from_desc("Field value", 1024, len(self.value))
+            raise EmbedFieldError.from_desc(
+                "Field value", 1024, len(self.value)
+            )
 
 
 # TODO: Handle Bad Request if embed that is too big is sent
@@ -233,7 +239,9 @@ class Embed(APIObject):
 
     def __post_init__(self):
         if _field_size(self.title) > 256:
-            raise EmbedFieldError.from_desc("Embed title", 256, len(self.title))
+            raise EmbedFieldError.from_desc(
+                "Embed title", 256, len(self.title)
+            )
 
         if _field_size(self.description) > 4096:
             raise EmbedFieldError.from_desc(
@@ -241,7 +249,9 @@ class Embed(APIObject):
             )
 
         if len(self.fields) > 25:
-            raise EmbedFieldError.from_desc("Embed field", 25, len(self.fields))
+            raise EmbedFieldError.from_desc(
+                "Embed field", 25, len(self.fields)
+            )
 
     def set_timestamp(self, time: datetime):
         self.timestamp = time.isoformat()
