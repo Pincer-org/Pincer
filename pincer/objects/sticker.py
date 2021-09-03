@@ -25,7 +25,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional, List
+from typing import Optional
 
 from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
