@@ -21,6 +21,8 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional
@@ -29,8 +31,11 @@ from pincer.utils.api_object import APIObject
 
 
 class EmbedFieldError(ValueError):
-    def __init__(self, _type: str, max_size: int, cur_size: int) -> None:
-        super().__init__(
+    """Exception that is raised when an embed field is too large"""
+
+    @classmethod
+    def from_desc(cls, _type: str, max_size: int, cur_size: int):
+        return cls(
             f"{_type} can have a maximum length of {max_size}."
             f" (Current size: {cur_size})"
         )
@@ -40,14 +45,22 @@ class InvalidUrlError(ValueError):
     pass
 
 
-def _field_size(f):
-    return len(f) if f else 0
+def _field_size(f: str) -> int:
+    """
+    The Discord API removes white space when counting the length of a field
+
+    :param f: The field.
+    :return: Length of the string without white space.
+    """
+    return len(f.strip()) if f else 0
 
 
-def _is_valid_url(url: str):
-    return url.startswith("http://") \
-        or url.startswith("https://") \
+def _is_valid_url(url: str) -> bool:
+    return (
+        url.startswith("http://")
+        or url.startswith("https://")
         or url.startswith("attachment://")
+    )
 
 
 @dataclass
@@ -67,7 +80,9 @@ class EmbedFooter:
 
     def __post_init__(self):
         if _field_size(self.text) > 2048:
-            raise EmbedFieldError("Footer text", 2048, len(self.text))
+            raise EmbedFieldError.from_desc(
+                "Footer text", 2048, len(self.text)
+            )
 
 
 @dataclass
@@ -142,7 +157,7 @@ class EmbedProvider:
 class EmbedAuthor:
     """
     Representation of the Embed Author class
-    
+
     :param name: Name of the author
     :param url: Url of the author
     :param icon_url: Url of the author icon
@@ -155,7 +170,7 @@ class EmbedAuthor:
 
     def __post_init__(self):
         if _field_size(self.name) > 256:
-            raise EmbedFieldError("Author name", 256, len(self.name))
+            raise EmbedFieldError.from_desc("Author name", 256, len(self.name))
 
         if not _is_valid_url(self.url):
             raise InvalidUrlError("Url must be http, https, or attachment.")
@@ -165,7 +180,7 @@ class EmbedAuthor:
 class EmbedField:
     """
     Representation of the Embed Field class
-    
+
     :param name: The name of the field
     :param value: The text in the field
     :param inline: Whether or not this field should display inline
@@ -178,10 +193,14 @@ class EmbedField:
 
     def __post_init__(self):
         if _field_size(self.name) > 256:
-            raise EmbedFieldError("Field name", 256, len(self.name))
+            raise EmbedFieldError.from_desc(
+                "Field name", 256, len(self.name)
+            )
 
         if _field_size(self.value) > 1024:
-            raise EmbedFieldError("Field value", 1024, len(self.value))
+            raise EmbedFieldError.from_desc(
+                "Field value", 1024, len(self.value)
+            )
 
 
 # TODO: Handle Bad Request if embed that is too big is sent
@@ -193,18 +212,18 @@ class Embed(APIObject):
     """
     Representation of the discord Embed class
 
-    :param title: Embed title.
-    :param description: Embed description.
-    :param url: Embed url.
-    :param timestamp: Timestamp of embed content in ISO format.
+    :param author: Author information.
     :param color: Embed color code.
+    :param description: Embed description.
+    :param fields: Fields information.
     :param footer: Footer information.
     :param image: Image information.
-    :param thumbnail: Thumbnail information.
-    :param video: Video information.
     :param provider: Provider information.
-    :param author: Author information.
-    :param fields: Fields information.
+    :param thumbnail: Thumbnail information.
+    :param timestamp: Timestamp of embed content in ISO format.
+    :param title: Embed title.
+    :param url: Embed url.
+    :param video: Video information.
     """
 
     author: Optional[EmbedAuthor] = None
@@ -214,23 +233,27 @@ class Embed(APIObject):
     footer: Optional[EmbedFooter] = None
     image: Optional[EmbedImage] = None
     provider: Optional[EmbedProvider] = None
-    title: Optional[str] = None
-    timestamp: Optional[str] = None
     thumbnail: Optional[EmbedThumbnail] = None
+    timestamp: Optional[str] = None
+    title: Optional[str] = None
     url: Optional[str] = None
     video: Optional[EmbedVideo] = None
 
     def __post_init__(self):
         if _field_size(self.title) > 256:
-            raise EmbedFieldError("Embed title", 256, len(self.title))
+            raise EmbedFieldError.from_desc(
+                "Embed title", 256, len(self.title)
+            )
 
         if _field_size(self.description) > 4096:
-            raise EmbedFieldError(
+            raise EmbedFieldError.from_desc(
                 "Embed description", 4096, len(self.description)
             )
 
-        if _field_size(self.fields) > 25:
-            raise EmbedFieldError("Embed field", 25, len(self.fields))
+        if len(self.fields) > 25:
+            raise EmbedFieldError.from_desc(
+                "Embed field", 25, len(self.fields)
+            )
 
     def set_timestamp(self, time: datetime):
         self.timestamp = time.isoformat()
