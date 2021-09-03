@@ -23,18 +23,52 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
-from abc import ABC
-from typing import Union
+import copy
+from dataclasses import dataclass, fields, _is_dataclass_instance
+from typing import Dict, Union
 
 from websockets.typing import Data
 
+def _asdict_ignore_none(obj: APIObject, dict_factory) -> Dict:
 
-class APIObject(ABC):
+    """
+    Returns a dict from a dataclass that ignores
+    all values that are None
+    Modification of _asdict_inner from dataclasses
+
+    :param obj: Dataclass obj
+    :param dict_factory: Dict 
+    """
+
+    if _is_dataclass_instance(obj):
+        result = []
+        for f in fields(obj):
+            value = _asdict_ignore_none(getattr(obj, f.name), dict_factory)
+
+            if not value is None: 
+                result.append((f.name, value))
+        return dict_factory(result)
+    elif isinstance(obj, tuple) and hasattr(obj, '_fields'):
+        return type(obj)(*[_asdict_ignore_none(v, dict_factory) for v in obj])
+
+    elif isinstance(obj, (list, tuple)):
+        return type(obj)(_asdict_ignore_none(v, dict_factory) for v in obj)
+
+    elif isinstance(obj, dict):
+        return type(obj)((_asdict_ignore_none(k, dict_factory),
+                          _asdict_ignore_none(v, dict_factory))
+                         for k, v in obj.items())
+    else:
+        return copy.deepcopy(obj)
+
+# @dataclass
+class APIObject:
 
     @classmethod
     def from_dict(cls, data: Data[str, Union[str, bool, int]]) -> APIObject:
         # TODO: Write documentation
         return cls(**data)
 
-    def __str__(self) -> str:
-        ...
+    def to_dict(self) -> Dict:
+        return _asdict_ignore_none(self, dict)
+
