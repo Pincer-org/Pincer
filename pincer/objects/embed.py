@@ -23,26 +23,32 @@
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from enum import Enum, auto
 from typing import Optional
 
 from pincer.utils.api_object import APIObject
 
+
 class EmbedFieldError(ValueError):
-    def __init__(self, type: str, max_size: str, cur_size: str) -> None:
-        super().__init__(f"{type} can have a maximum length of {max_size}. (Current size: {cur_size})")
+    def __init__(self, _type: str, max_size: int, cur_size: int) -> None:
+        super().__init__(
+            f"{_type} can have a maximum length of {max_size}."
+            f" (Current size: {cur_size})"
+        )
+
 
 class InvalidUrlError(ValueError):
     pass
 
+
 def _field_size(f):
-    if not f: return 0
-    else: return len(f)
+    return len(f) if f else 0
+
 
 def _is_valid_url(url: str):
     return url.startswith("http://") \
         or url.startswith("https://") \
         or url.startswith("attachment://")
+
 
 @dataclass
 class EmbedFooter:
@@ -60,7 +66,8 @@ class EmbedFooter:
 
     def __post_init__(self):
         if _field_size(self.text) > 2048:
-            raise EmbedFieldError("Footer text",2048,len(self.text))
+            raise EmbedFieldError("Footer text", 2048, len(self.text))
+
 
 @dataclass
 class EmbedImage:
@@ -72,7 +79,7 @@ class EmbedImage:
     :param height: Height of the image
     :param width: Width of the image
     """
-    
+
     url: Optional[str] = None
     proxy_url: Optional[str] = None
     height: Optional[int] = None
@@ -81,6 +88,7 @@ class EmbedImage:
     def __post_init__(self):
         if not _is_valid_url(self.url):
             raise InvalidUrlError("Url must be http, https, or attachment.")
+
 
 @dataclass
 class EmbedThumbnail:
@@ -102,6 +110,7 @@ class EmbedThumbnail:
         if not _is_valid_url(self.url):
             raise InvalidUrlError("Url must be http, https, or attachment.")
 
+
 @dataclass
 class EmbedVideo:
     """
@@ -117,6 +126,7 @@ class EmbedVideo:
     height: Optional[int] = None
     width: Optional[int] = None
 
+
 @dataclass
 class EmbedProvider:
     """
@@ -125,6 +135,7 @@ class EmbedProvider:
     """
     name: Optional[str] = None
     url: Optional[str] = None
+
 
 @dataclass
 class EmbedAuthor:
@@ -143,9 +154,11 @@ class EmbedAuthor:
 
     def __post_init__(self):
         if _field_size(self.name) > 256:
-            raise EmbedFieldError("Author name",256,len(self.name))
+            raise EmbedFieldError("Author name", 256, len(self.name))
+
         if not _is_valid_url(self.url):
             raise InvalidUrlError("Url must be http, https, or attachment.")
+
 
 @dataclass
 class EmbedField:
@@ -163,9 +176,11 @@ class EmbedField:
 
     def __post_init__(self):
         if _field_size(self.name) > 256:
-            raise EmbedFieldError("Field name",256,len(self.name))
+            raise EmbedFieldError("Field name", 256, len(self.name))
+
         if _field_size(self.value) > 1024:
-            raise EmbedFieldError("Field value",1024,len(self.value))
+            raise EmbedFieldError("Field value", 1024, len(self.value))
+
 
 # TODO: Handle Bad Request if embed that is too big is sent
 # https://discord.com/developers/docs/resources/channel#embed-limits
@@ -205,14 +220,18 @@ class Embed(APIObject):
 
     def __post_init__(self):
         if _field_size(self.title) > 256:
-            raise EmbedFieldError("Embed title",256,len(self.title))
+            raise EmbedFieldError("Embed title", 256, len(self.title))
+
         if _field_size(self.description) > 4096:
-            raise EmbedFieldError("Embed description",4096,len(self.description))
+            raise EmbedFieldError(
+                "Embed description", 4096, len(self.description)
+            )
+
         if _field_size(self.fields) > 25:
             raise EmbedFieldError("Embed field",25,len(self.fields))
 
     def set_timestamp(self, time: datetime):
         self.timestamp = time.isoformat()
 
-    def add_field(self,field: EmbedField):
-        self.fields += [field]
+    def add_field(self, _field: EmbedField):
+        self.fields += [_field]

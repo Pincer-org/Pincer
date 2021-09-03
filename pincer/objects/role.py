@@ -28,16 +28,17 @@ from typing import Optional
 
 from pincer.utils.api_object import APIObject
 
+
 @dataclass
 class Role(APIObject):
-    id : int
-    name : str
+    id: int
+    name: str
 
-    color : int
-    hoist : bool
-    position : int
-    permissions : str
-    managed : bool
-    mentionable : bool
+    color: int
+    hoist: bool
+    position: int
+    permissions: str
+    managed: bool
+    mentionable: bool
 
-    tags : Optional[...] = None
+    tags: Optional[...] = None

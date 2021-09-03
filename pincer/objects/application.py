@@ -30,26 +30,26 @@ from pincer.utils.api_object import APIObject
 
 from pincer.objects.user import User
 
+
 @dataclass
 class Application(APIObject):
-    id : int
-    name : str
-    description : str
+    id: int
+    name: str
+    description: str
 
-    bot_public : bool
-    bot_require_code_grant : bool
-    summary : str
-    verify_key : str
+    bot_public: bool
+    bot_require_code_grant: bool
+    summary: str
+    verify_key: str
 
-    icon : Optional[str] = None
-    rpc_origins : Optional[List[str]] = None
-    terms_of_service_url : Optional[str] = None
-    privacy_policy_url : Optional[str] = None
+    icon: Optional[str] = None
+    rpc_origins: Optional[List[str]] = None
+    terms_of_service_url: Optional[str] = None
+    privacy_policy_url: Optional[str] = None
 
-    owner : Optional[User] = None
-    guild_id : Optional[int] = None
-    primary_sku_id : Optional[int] = None
-    slug : Optional[str] = None
-    cover_image : Optional[str] = None
-    flags : Optional[int] = None
-
+    owner: Optional[User] = None
+    guild_id: Optional[int] = None
+    primary_sku_id: Optional[int] = None
+    slug: Optional[str] = None
+    cover_image: Optional[str] = None
+    flags: Optional[int] = None

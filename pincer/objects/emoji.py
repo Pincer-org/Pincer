@@ -43,4 +43,3 @@ class Emoji(APIObject):
     managed: Optional[bool] = None
     animated: Optional[bool] = None
     available: Optional[bool] = None
-

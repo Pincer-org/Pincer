@@ -35,35 +35,34 @@ from pincer.objects.user import User
 from pincer.objects.member import Member
 from pincer.objects.application import Application
 
+
 class InviteTargetType(Enum):
     STREAM = 1
     EMBEDDED_APPLICATION = 2
 
+
 @dataclass
 class InviteStageInstance(APIObject):
-    members : List[Member]
-    participant_count : int
-    speaker_count : int
-    topic : str
+    members: List[Member]
+    participant_count: int
+    speaker_count: int
+    topic: str
 
 
 @dataclass
 class Invite(APIObject):
-    code : str
-    channel : Channel
+    code: str
+    channel: Channel
 
-    guild : Optional[Guild] = None
-    inviter : Optional[User] = None
+    guild: Optional[Guild] = None
+    inviter: Optional[User] = None
 
-    target_type : Optional[InviteTargetType] = None
-    target_user : Optional[User] = None
-    target_application : Optional[Application] = None
+    target_type: Optional[InviteTargetType] = None
+    target_user: Optional[User] = None
+    target_application: Optional[Application] = None
 
-    approximate_presence_count : Optional[int] = None
-    approximate_member_count : Optional[int] = None
+    approximate_presence_count: Optional[int] = None
+    approximate_member_count: Optional[int] = None
 
-    expires_at : Optional[str] = None
-    stage_instance : Optional[InviteStageInstance] = None
-
-
-
+    expires_at: Optional[str] = None
+    stage_instance: Optional[InviteStageInstance] = None

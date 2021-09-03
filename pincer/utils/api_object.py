@@ -30,8 +30,11 @@ from typing import Dict, Union
 
 from websockets.typing import Data
 
-def _asdict_ignore_none(obj: APIObject, dict_factory) -> Dict:
 
+def _asdict_ignore_none(
+        obj: APIObject,
+        dict_factory
+) -> Union[tuple, dict, APIObject]:
     """
     Returns a dict from a dataclass that ignores
     all values that are None
@@ -46,9 +49,11 @@ def _asdict_ignore_none(obj: APIObject, dict_factory) -> Dict:
         for f in fields(obj):
             value = _asdict_ignore_none(getattr(obj, f.name), dict_factory)
 
-            if not value is None: 
+            if value is not None:
                 result.append((f.name, value))
+
         return dict_factory(result)
+
     elif isinstance(obj, tuple) and hasattr(obj, '_fields'):
         return type(obj)(*[_asdict_ignore_none(v, dict_factory) for v in obj])
 
@@ -56,11 +61,16 @@ def _asdict_ignore_none(obj: APIObject, dict_factory) -> Dict:
         return type(obj)(_asdict_ignore_none(v, dict_factory) for v in obj)
 
     elif isinstance(obj, dict):
-        return type(obj)((_asdict_ignore_none(k, dict_factory),
-                          _asdict_ignore_none(v, dict_factory))
-                         for k, v in obj.items())
+        return type(obj)(
+            (
+                _asdict_ignore_none(k, dict_factory),
+                _asdict_ignore_none(v, dict_factory)
+            ) for k, v in obj.items()
+        )
+
     else:
         return copy.deepcopy(obj)
+
 
 @dataclass
 class APIObject:
@@ -72,4 +82,3 @@ class APIObject:
 
     def to_dict(self) -> Dict:
         return _asdict_ignore_none(self, dict)
-

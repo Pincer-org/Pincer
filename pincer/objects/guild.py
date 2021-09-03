@@ -26,13 +26,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional, List
 
-
-from pincer.objects.emoji import Emoji
-from pincer.objects.role import Role
-from pincer.objects.member import Member
 from pincer.objects.channel import Channel
+from pincer.objects.emoji import Emoji
+from pincer.objects.member import Member
+from pincer.objects.role import Role
 from pincer.objects.sticker import Sticker
 from pincer.utils.api_object import APIObject
+
 
 @dataclass
 class Guild(APIObject):

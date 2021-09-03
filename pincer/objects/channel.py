@@ -35,6 +35,7 @@ from pincer.utils.api_object import APIObject
 from pincer.objects.user import User
 from pincer.objects.member import Member
 
+
 class ChannelType(Enum):
     GUILD_TEXT = 0
     DM = 1

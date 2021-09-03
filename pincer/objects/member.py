@@ -30,15 +30,16 @@ from pincer.utils.api_object import APIObject
 from pincer.objects.user import User
 from pincer.objects.role import Role
 
+
 @dataclass
 class Member(APIObject):
-    roles : List[Role]
-    joined_at : str
-    deaf : bool
-    mute : bool
-    
-    user : Optional[User] = None
-    nick : Optional[str] = None
-    premium_since : Optional[str] = None
-    pending : Optional[bool] = None
-    permissions : Optional[str] = None
+    roles: List[Role]
+    joined_at: str
+    deaf: bool
+    mute: bool
+
+    user: Optional[User] = None
+    nick: Optional[str] = None
+    premium_since: Optional[str] = None
+    pending: Optional[bool] = None
+    permissions: Optional[str] = None

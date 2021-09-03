@@ -30,26 +30,29 @@ from typing import Optional
 from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
 
+
 class StickerType(Enum):
     STANDARD = 1
     GUILD = 2
+
 
 class StickerFormatType(Enum):
     PNG = 1
     APNG = 2
     LOTTIE = 3
 
+
 @dataclass
 class Sticker(APIObject):
-    id : int
-    name : str
-    description : str
-    tags : str
-    type : StickerType
-    format_type : StickerFormatType
+    id: int
+    name: str
+    description: str
+    tags: str
+    type: StickerType
+    format_type: StickerFormatType
 
-    pack_id : Optional[int] = None
-    available : Optional[bool] = None
-    guild_id : Optional[int] = None
-    user : Optional[User] = None
-    sort_value : Optional[int] = None
+    pack_id: Optional[int] = None
+    available: Optional[bool] = None
+    guild_id: Optional[int] = None
+    user: Optional[User] = None
+    sort_value: Optional[int] = None
