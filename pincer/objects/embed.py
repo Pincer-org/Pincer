@@ -21,12 +21,20 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum, auto
 from typing import Optional
 
 from pincer.utils.api_object import APIObject
+
+class EmbedFieldError(ValueError):
+    def __init__(self, type: str, max_size: str, cur_size: str) -> None:
+        super().__init__(f"{type} can have a maximum length of {max_size}. (Current size: {cur_size})")
+
+def field_size(f):
+    if not f: return 0
+    else: return len(f)
 
 @dataclass
 class EmbedFooter:
@@ -41,6 +49,10 @@ class EmbedFooter:
     text: str
     icon_url: Optional[str] = None
     proxy_icon_url: Optional[str] = None
+
+    def __post_init__(self):
+        if field_size(self.text) > 2048:
+            raise EmbedFieldError("Footer text",2048,len(self.text))
 
 @dataclass
 class EmbedImage:
@@ -113,6 +125,10 @@ class EmbedAuthor:
     icon_url: Optional[str] = None
     proxy_icon_url: Optional[str] = None
 
+    def __post_init__(self):
+        if field_size(self.name):
+            raise EmbedFieldError("Author name",256,len(self.name))
+
 @dataclass
 class EmbedField:
     """
@@ -125,8 +141,18 @@ class EmbedField:
 
     name: str
     value: str
-    inline: Optional[bool] = None 
+    inline: Optional[bool] = None
 
+    def __post_init__(self):
+        if field_size(self.name) > 256:
+            raise EmbedFieldError("Field name",256,len(self.name))
+        if field_size(self.value) > 1024:
+            raise EmbedFieldError("Field value",1024,len(self.value))
+
+# TODO: Handle Bad Request if embed that is too big is sent
+# https://discord.com/developers/docs/resources/channel#embed-limits
+# Currently ignored since I don't think it would make sense to put
+# This with the Embed class
 @dataclass
 class Embed(APIObject):
     """
@@ -157,7 +183,18 @@ class Embed(APIObject):
     video: Optional[EmbedVideo] = None
     provider: Optional[EmbedProvider] = None
     author: Optional[EmbedAuthor] = None
-    fields: Optional[list[EmbedField]] = None
+    fields: list[EmbedField] = field(default_factory=list)
+
+    def __post_init__(self):
+        if field_size(self.title) > 256:
+            raise EmbedFieldError("Embed title",256,len(self.title))
+        if field_size(self.description) > 4096:
+            raise EmbedFieldError("Embed description",4096,len(self.description))
+        if field_size(self.fields) > 25:
+            raise EmbedFieldError("Embed field",25,len(self.fields))
 
     def set_timestamp(self, time: datetime):
         self.timestamp = time.isoformat()
+
+    def add_field(self,field: EmbedField):
+        self.fields += [field]

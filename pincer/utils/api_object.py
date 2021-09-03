@@ -61,7 +61,7 @@ def _asdict_ignore_none(obj: APIObject, dict_factory) -> Dict:
     else:
         return copy.deepcopy(obj)
 
-# @dataclass
+@dataclass
 class APIObject:
 
     @classmethod
