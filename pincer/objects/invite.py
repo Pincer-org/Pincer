@@ -34,6 +34,7 @@ from pincer.objects.guild import Guild
 from pincer.objects.user import User
 from pincer.objects.member import Member
 from pincer.objects.application import Application
+from pincer.utils.constants import OptionallyProvided, MISSING
 
 
 class InviteTargetType(Enum):
@@ -54,15 +55,15 @@ class Invite(APIObject):
     code: str
     channel: Channel
 
-    guild: Optional[Guild] = None
-    inviter: Optional[User] = None
+    guild: OptionallyProvided[Guild] = MISSING
+    inviter: OptionallyProvided[User] = MISSING
 
-    target_type: Optional[InviteTargetType] = None
-    target_user: Optional[User] = None
-    target_application: Optional[Application] = None
+    target_type: OptionallyProvided[InviteTargetType] = MISSING
+    target_user: OptionallyProvided[User] = MISSING
+    target_application: OptionallyProvided[Application] = MISSING
 
-    approximate_presence_count: Optional[int] = None
-    approximate_member_count: Optional[int] = None
+    approximate_presence_count: OptionallyProvided[int] = MISSING
+    approximate_member_count: OptionallyProvided[int] = MISSING
 
-    expires_at: Optional[str] = None
-    stage_instance: Optional[InviteStageInstance] = None
+    expires_at: OptionallyProvided[Optional[str]] = MISSING
+    stage_instance: OptionallyProvided[InviteStageInstance] = MISSING

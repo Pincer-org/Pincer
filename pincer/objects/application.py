@@ -29,6 +29,7 @@ from typing import Optional, List
 from pincer.utils.api_object import APIObject
 
 from pincer.objects.user import User
+from pincer.utils.constants import OptionallyProvided, MISSING
 
 
 @dataclass
@@ -43,13 +44,13 @@ class Application(APIObject):
     verify_key: str
 
     icon: Optional[str] = None
-    rpc_origins: Optional[List[str]] = None
-    terms_of_service_url: Optional[str] = None
-    privacy_policy_url: Optional[str] = None
+    rpc_origins: OptionallyProvided[List[str]] = MISSING
+    terms_of_service_url: OptionallyProvided[str] = MISSING
+    privacy_policy_url: OptionallyProvided[str] = None
 
-    owner: Optional[User] = None
-    guild_id: Optional[int] = None
-    primary_sku_id: Optional[int] = None
-    slug: Optional[str] = None
-    cover_image: Optional[str] = None
-    flags: Optional[int] = None
+    owner: OptionallyProvided[User] = MISSING
+    guild_id: OptionallyProvided[int] = MISSING
+    primary_sku_id: OptionallyProvided[int] = MISSING
+    slug: OptionallyProvided[str] = MISSING
+    cover_image: OptionallyProvided[str] = MISSING
+    flags: OptionallyProvided[int] = MISSING

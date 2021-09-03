@@ -32,6 +32,7 @@ from pincer.objects.member import Member
 from pincer.objects.role import Role
 from pincer.objects.sticker import Sticker
 from pincer.utils.api_object import APIObject
+from pincer.utils.constants import OptionallyProvided, MISSING
 
 
 @dataclass
@@ -55,41 +56,41 @@ class Guild(APIObject):
     preferred_locale: str
     nsfw_level: int
 
-    application_id: Optional[int] = None
-    system_channel_id: Optional[int] = None
-    rules_channel_id: Optional[int] = None
+    application_id: Optional[int]
+    system_channel_id: Optional[int]
+    rules_channel_id: Optional[int]
 
-    icon: Optional[str] = None
-    icon_hash: Optional[str] = None
+    icon: Optional[str]
+    icon_hash: OptionallyProvided[Optional[str]] = MISSING
     splash: Optional[str] = None
     discovery_splash: Optional[str] = None
-    owner: Optional[bool] = None
-    permissions: Optional[str] = None
-    region: Optional[str] = None
+    owner: OptionallyProvided[bool] = MISSING
+    permissions: OptionallyProvided[str] = MISSING
+    region: OptionallyProvided[Optional[str]] = MISSING
     afk_channel_id: Optional[int] = None
-    widget_enabled: Optional[bool] = None
-    widget_channel_id: Optional[bool] = None
+    widget_enabled: OptionallyProvided[bool] = MISSING
+    widget_channel_id: OptionallyProvided[Optional[bool]] = MISSING
 
-    joined_at: Optional[str] = None
-    large: Optional[bool] = None
-    unavailable: Optional[bool] = None
-    member_count: Optional[bool] = None
-    voice_states: Optional[bool] = None
-    members: Optional[List[Member]] = None
-    channels: Optional[List[Channel]] = None
-    threads: Optional[List[...]] = None
-    presences: Optional[List[...]] = None
-    max_presences: Optional[int] = None
-    max_members: Optional[int] = None
+    joined_at: OptionallyProvided[str] = MISSING
+    large: OptionallyProvided[bool] = MISSING
+    unavailable: OptionallyProvided[bool] = MISSING
+    member_count: OptionallyProvided[bool] = MISSING
+    voice_states: OptionallyProvided[bool] = MISSING
+    members: OptionallyProvided[List[Member]] = MISSING
+    channels: OptionallyProvided[List[Channel]] = MISSING
+    threads: OptionallyProvided[List[...]] = MISSING
+    presences: OptionallyProvided[List[...]] = MISSING
+    max_presences: OptionallyProvided[Optional[int]] = MISSING
+    max_members: OptionallyProvided[int] = MISSING
     vanity_url_code: Optional[str] = None
     description: Optional[str] = None
     banner: Optional[str] = None
 
-    premium_subscription_count: Optional[int] = None
+    premium_subscription_count: OptionallyProvided[int] = MISSING
     public_updates_channel_id: Optional[int] = None
-    max_video_channel_users: Optional[int] = None
-    approximate_member_count: Optional[int] = None
-    approximate_presence_count: Optional[int] = None
-    welcome_screen: Optional[...] = None
-    stage_instances: Optional[List[...]] = None
-    stickers: Optional[List[Sticker]] = None
+    max_video_channel_users: OptionallyProvided[int] = MISSING
+    approximate_member_count: OptionallyProvided[int] = MISSING
+    approximate_presence_count: OptionallyProvided[int] = MISSING
+    welcome_screen: OptionallyProvided[...] = MISSING
+    stage_instances: OptionallyProvided[List[...]] = MISSING
+    stickers: OptionallyProvided[List[Sticker]] = MISSING

@@ -29,6 +29,7 @@ from typing import Optional, List
 from pincer.utils.api_object import APIObject
 from pincer.objects.user import User
 from pincer.objects.role import Role
+from pincer.utils.constants import OptionallyProvided, MISSING
 
 
 @dataclass
@@ -38,8 +39,8 @@ class Member(APIObject):
     deaf: bool
     mute: bool
 
-    user: Optional[User] = None
-    nick: Optional[str] = None
-    premium_since: Optional[str] = None
-    pending: Optional[bool] = None
-    permissions: Optional[str] = None
+    user: OptionallyProvided[User] = MISSING
+    nick: OptionallyProvided[Optional[str]] = MISSING
+    premium_since: OptionallyProvided[Optional[str]] = MISSING
+    pending: OptionallyProvided[bool] = MISSING
+    permissions: OptionallyProvided[str] = MISSING

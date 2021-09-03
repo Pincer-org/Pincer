@@ -29,6 +29,7 @@ from typing import Optional
 
 from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
+from pincer.utils.constants import MISSING, OptionallyProvided
 
 
 class StickerType(Enum):
@@ -46,13 +47,13 @@ class StickerFormatType(Enum):
 class Sticker(APIObject):
     id: int
     name: str
-    description: str
+    description: Optional[str]
     tags: str
     type: StickerType
     format_type: StickerFormatType
 
-    pack_id: Optional[int] = None
-    available: Optional[bool] = None
-    guild_id: Optional[int] = None
-    user: Optional[User] = None
-    sort_value: Optional[int] = None
+    pack_id: OptionallyProvided[int] = MISSING
+    available: OptionallyProvided[bool] = MISSING
+    guild_id: OptionallyProvided[int] = MISSING
+    user: OptionallyProvided[User] = MISSING
+    sort_value: OptionallyProvided[int] = MISSING

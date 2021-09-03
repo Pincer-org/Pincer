@@ -27,6 +27,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from pincer.utils.api_object import APIObject
+from pincer.utils.constants import MISSING, OptionallyProvided
 
 
 @dataclass
@@ -41,4 +42,4 @@ class Role(APIObject):
     managed: bool
     mentionable: bool
 
-    tags: Optional[...] = None
+    tags: OptionallyProvided[...] = MISSING

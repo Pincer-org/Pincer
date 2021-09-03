@@ -28,6 +28,7 @@ from enum import Enum
 from typing import Optional
 
 from pincer.utils.api_object import APIObject
+from pincer.utils.constants import MISSING, OptionallyProvided
 
 
 class PremiumTypes(Enum):
@@ -44,18 +45,17 @@ class User(APIObject):
     flags: int
     username: str
     discriminator: str
-    bot: Optional[bool] = False
-    email: Optional[str] = None
-    banner: Optional[str] = None
-    locale: Optional[str] = None
+    bot: OptionallyProvided[bool] = MISSING
+    email: OptionallyProvided[Optional[str]] = MISSING
+    banner: OptionallyProvided[Optional[str]] = MISSING
+    locale: OptionallyProvided[str] = MISSING
     avatar: Optional[str] = None
-    system: Optional[bool] = False
-    accent_color: Optional[int] = 0
-    public_flags: Optional[int] = 0
-    verified: Optional[bool] = False
-    avatar_url: Optional[str] = None
-    mfa_enabled: Optional[bool] = False
-    premium_type: Optional[int] = 0
+    system: OptionallyProvided[bool] = MISSING
+    accent_color: OptionallyProvided[Optional[int]] = MISSING
+    public_flags: OptionallyProvided[int] = MISSING
+    verified: OptionallyProvided[bool] = MISSING
+    mfa_enabled: OptionallyProvided[bool] = MISSING
+    premium_type: OptionallyProvided[int] = MISSING
 
     @property
     def premium(self) -> PremiumTypes:

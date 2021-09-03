@@ -21,25 +21,17 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from __future__ import annotations
+from typing import Union
 
-from dataclasses import dataclass
-from typing import Optional, List
-
-from pincer.objects.role import Role
-from pincer.objects.user import User
-from pincer.utils.api_object import APIObject
-from pincer.utils.constants import OptionallyProvided, MISSING
+MISSING = object()
 
 
-@dataclass
-class Emoji(APIObject):
-    id: Optional[int]
-    name: Optional[str]
-    roles: OptionallyProvided[List[Role]] = MISSING
-    user: OptionallyProvided[User] = MISSING
+class MetaType(type):
 
-    require_colons: OptionallyProvided[bool] = MISSING
-    managed: OptionallyProvided[bool] = MISSING
-    animated: OptionallyProvided[bool] = MISSING
-    available: OptionallyProvided[bool] = MISSING
+    @staticmethod
+    def __getitem__(key):
+        return Union[MISSING, key]
+
+
+class OptionallyProvided(metaclass=MetaType):
+    pass
