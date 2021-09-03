@@ -70,12 +70,6 @@ class APIObject:
         # TODO: Write documentation
         return cls(**data)
 
-<<<<<<< HEAD
     def to_dict(self) -> Dict:
         return _asdict_ignore_none(self, dict)
 
-=======
-    @abstractmethod
-    def __str__(self) -> str:
-        ...
->>>>>>> upstream/objects
