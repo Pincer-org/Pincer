@@ -28,10 +28,11 @@ from typing import Optional, List
 
 from pincer.utils.api_object import APIObject
 from pincer.objects.user import User
+from pincer.objects.role import Role
 
 @dataclass
 class Member(APIObject):
-    roles : List[...]
+    roles : List[Role]
     joined_at : str
     deaf : bool
     mute : bool
