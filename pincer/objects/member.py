@@ -34,13 +34,13 @@ from pincer.utils.constants import OptionallyProvided, MISSING
 
 @dataclass
 class Member(APIObject):
-    roles: List[Role]
-    joined_at: str
     deaf: bool
+    joined_at: str
     mute: bool
+    roles: List[Role]
 
-    user: OptionallyProvided[User] = MISSING
     nick: OptionallyProvided[Optional[str]] = MISSING
-    premium_since: OptionallyProvided[Optional[str]] = MISSING
     pending: OptionallyProvided[bool] = MISSING
     permissions: OptionallyProvided[str] = MISSING
+    premium_since: OptionallyProvided[Optional[str]] = MISSING
+    user: OptionallyProvided[User] = MISSING

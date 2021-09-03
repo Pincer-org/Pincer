@@ -32,14 +32,13 @@ from pincer.utils.constants import MISSING, OptionallyProvided
 
 @dataclass
 class Role(APIObject):
-    id: int
-    name: str
-
     color: int
     hoist: bool
-    position: int
-    permissions: str
+    id: int
     managed: bool
     mentionable: bool
+    name: str
+    permissions: str
+    position: int
 
     tags: OptionallyProvided[...] = MISSING

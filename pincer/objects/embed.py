@@ -61,6 +61,7 @@ class EmbedFooter:
     """
 
     text: str
+
     icon_url: Optional[str] = None
     proxy_icon_url: Optional[str] = None
 
@@ -80,9 +81,9 @@ class EmbedImage:
     :param width: Width of the image
     """
 
-    url: Optional[str] = None
-    proxy_url: Optional[str] = None
     height: Optional[int] = None
+    proxy_url: Optional[str] = None
+    url: Optional[str] = None
     width: Optional[int] = None
 
     def __post_init__(self):
@@ -101,9 +102,9 @@ class EmbedThumbnail:
     :param width: Width of the thumbnail
     """
 
-    url: Optional[str] = None
-    proxy_url: Optional[str] = None
     height: Optional[int] = None
+    proxy_url: Optional[str] = None
+    url: Optional[str] = None
     width: Optional[int] = None
 
     def __post_init__(self):
@@ -121,9 +122,9 @@ class EmbedVideo:
     :param height: Height of the video
     :param width: Width of the video
     """
-    url: Optional[str] = None
-    proxy_url: Optional[str] = None
     height: Optional[int] = None
+    proxy_url: Optional[str] = None
+    url: Optional[str] = None
     width: Optional[int] = None
 
 
@@ -147,10 +148,10 @@ class EmbedAuthor:
     :param icon_url: Url of the author icon
     :param proxy_icon_url: A proxied url of the author icon
     """
-    name: Optional[str] = None
-    url: Optional[str] = None
     icon_url: Optional[str] = None
+    name: Optional[str] = None
     proxy_icon_url: Optional[str] = None
+    url: Optional[str] = None
 
     def __post_init__(self):
         if _field_size(self.name) > 256:
@@ -172,6 +173,7 @@ class EmbedField:
 
     name: str
     value: str
+
     inline: Optional[bool] = None
 
     def __post_init__(self):
@@ -205,18 +207,18 @@ class Embed(APIObject):
     :param fields: Fields information.
     """
 
-    title: Optional[str] = None
-    description: Optional[str] = None
-    url: Optional[str] = None
-    timestamp: Optional[str] = None
+    author: Optional[EmbedAuthor] = None
     color: Optional[int] = None
+    description: Optional[str] = None
+    fields: list[EmbedField] = field(default_factory=list)
     footer: Optional[EmbedFooter] = None
     image: Optional[EmbedImage] = None
-    thumbnail: Optional[EmbedThumbnail] = None
-    video: Optional[EmbedVideo] = None
     provider: Optional[EmbedProvider] = None
-    author: Optional[EmbedAuthor] = None
-    fields: list[EmbedField] = field(default_factory=list)
+    title: Optional[str] = None
+    timestamp: Optional[str] = None
+    thumbnail: Optional[EmbedThumbnail] = None
+    url: Optional[str] = None
+    video: Optional[EmbedVideo] = None
 
     def __post_init__(self):
         if _field_size(self.title) > 256:
@@ -228,7 +230,7 @@ class Embed(APIObject):
             )
 
         if _field_size(self.fields) > 25:
-            raise EmbedFieldError("Embed field",25,len(self.fields))
+            raise EmbedFieldError("Embed field", 25, len(self.fields))
 
     def set_timestamp(self, time: datetime):
         self.timestamp = time.isoformat()

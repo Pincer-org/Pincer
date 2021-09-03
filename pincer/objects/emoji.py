@@ -36,10 +36,10 @@ from pincer.utils.constants import OptionallyProvided, MISSING
 class Emoji(APIObject):
     id: Optional[int]
     name: Optional[str]
-    roles: OptionallyProvided[List[Role]] = MISSING
-    user: OptionallyProvided[User] = MISSING
 
-    require_colons: OptionallyProvided[bool] = MISSING
-    managed: OptionallyProvided[bool] = MISSING
     animated: OptionallyProvided[bool] = MISSING
     available: OptionallyProvided[bool] = MISSING
+    managed: OptionallyProvided[bool] = MISSING
+    require_colons: OptionallyProvided[bool] = MISSING
+    roles: OptionallyProvided[List[Role]] = MISSING
+    user: OptionallyProvided[User] = MISSING

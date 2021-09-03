@@ -45,15 +45,15 @@ class StickerFormatType(Enum):
 
 @dataclass
 class Sticker(APIObject):
+    description: Optional[str]
+    format_type: StickerFormatType
     id: int
     name: str
-    description: Optional[str]
     tags: str
     type: StickerType
-    format_type: StickerFormatType
 
-    pack_id: OptionallyProvided[int] = MISSING
     available: OptionallyProvided[bool] = MISSING
     guild_id: OptionallyProvided[int] = MISSING
-    user: OptionallyProvided[User] = MISSING
+    pack_id: OptionallyProvided[int] = MISSING
     sort_value: OptionallyProvided[int] = MISSING
+    user: OptionallyProvided[User] = MISSING

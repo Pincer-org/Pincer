@@ -41,21 +41,22 @@ class PremiumTypes(Enum):
 @dataclass
 class User(APIObject):
     # TODO: Write documentation
-    id: int
-    flags: int
-    username: str
+    avatar: Optional[str]
     discriminator: str
+    flags: int
+    id: int
+    username: str
+
+    accent_color: OptionallyProvided[Optional[int]] = MISSING
+    banner: OptionallyProvided[Optional[str]] = MISSING
     bot: OptionallyProvided[bool] = MISSING
     email: OptionallyProvided[Optional[str]] = MISSING
-    banner: OptionallyProvided[Optional[str]] = MISSING
     locale: OptionallyProvided[str] = MISSING
-    avatar: Optional[str] = None
-    system: OptionallyProvided[bool] = MISSING
-    accent_color: OptionallyProvided[Optional[int]] = MISSING
-    public_flags: OptionallyProvided[int] = MISSING
-    verified: OptionallyProvided[bool] = MISSING
     mfa_enabled: OptionallyProvided[bool] = MISSING
     premium_type: OptionallyProvided[int] = MISSING
+    public_flags: OptionallyProvided[int] = MISSING
+    system: OptionallyProvided[bool] = MISSING
+    verified: OptionallyProvided[bool] = MISSING
 
     @property
     def premium(self) -> PremiumTypes:

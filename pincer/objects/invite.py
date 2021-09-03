@@ -52,18 +52,15 @@ class InviteStageInstance(APIObject):
 
 @dataclass
 class Invite(APIObject):
-    code: str
     channel: Channel
+    code: str
 
-    guild: OptionallyProvided[Guild] = MISSING
+    approximate_member_count: OptionallyProvided[int] = MISSING
+    approximate_presence_count: OptionallyProvided[int] = MISSING
+    expires_at: OptionallyProvided[Optional[str]] = MISSING
     inviter: OptionallyProvided[User] = MISSING
-
+    guild: OptionallyProvided[Guild] = MISSING
+    stage_instance: OptionallyProvided[InviteStageInstance] = MISSING
     target_type: OptionallyProvided[InviteTargetType] = MISSING
     target_user: OptionallyProvided[User] = MISSING
     target_application: OptionallyProvided[Application] = MISSING
-
-    approximate_presence_count: OptionallyProvided[int] = MISSING
-    approximate_member_count: OptionallyProvided[int] = MISSING
-
-    expires_at: OptionallyProvided[Optional[str]] = MISSING
-    stage_instance: OptionallyProvided[InviteStageInstance] = MISSING

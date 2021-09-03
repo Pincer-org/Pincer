@@ -55,30 +55,31 @@ class ChannelType(Enum):
 class Channel(APIObject):
     id: int
     type: ChannelType
-    guild_id: OptionallyProvided[int] = MISSING
-    position: OptionallyProvided[int] = MISSING
-    permission_overwrites: OptionallyProvided[List[...]] = MISSING
-    name: OptionallyProvided[str] = MISSING
-    topic: OptionallyProvided[Optional[str]] = MISSING
-    nsfw: OptionallyProvided[bool] = MISSING
-    last_message_id: OptionallyProvided[Optional[int]] = MISSING
+
+    application_id: OptionallyProvided[int] = MISSING
     bitrate: OptionallyProvided[int] = MISSING
-    user_limit: OptionallyProvided[int] = MISSING
+    default_auto_archive_duration: OptionallyProvided[int] = MISSING
+    guild_id: OptionallyProvided[int] = MISSING
+    icon: OptionallyProvided[Optional[str]] = MISSING
+    last_message_id: OptionallyProvided[Optional[int]] = MISSING
+    last_pin_timestamp: OptionallyProvided[Optional[str]] = MISSING
+    member: OptionallyProvided[Member] = MISSING
+    member_count: OptionallyProvided[int] = MISSING
+    message_count: OptionallyProvided[int] = MISSING
+    name: OptionallyProvided[str] = MISSING
+    nsfw: OptionallyProvided[bool] = MISSING
+    owner_id: OptionallyProvided[int] = MISSING
+    parent_id: OptionallyProvided[Optional[int]] = MISSING
+    permissions: OptionallyProvided[str] = MISSING
+    permission_overwrites: OptionallyProvided[List[...]] = MISSING
+    position: OptionallyProvided[int] = MISSING
     rate_limit_per_user: OptionallyProvided[int] = MISSING
     recipients: OptionallyProvided[List[User]] = MISSING
-    icon: OptionallyProvided[Optional[str]] = MISSING
-    owner_id: OptionallyProvided[int] = MISSING
-    application_id: OptionallyProvided[int] = MISSING
-    parent_id: OptionallyProvided[Optional[int]] = MISSING
-    last_pin_timestamp: OptionallyProvided[Optional[str]] = MISSING
     rtc_region: OptionallyProvided[Optional[str]] = MISSING
-    video_quality_mode: OptionallyProvided[int] = MISSING
-    message_count: OptionallyProvided[int] = MISSING
-    member_count: OptionallyProvided[int] = MISSING
     thread_metadata: OptionallyProvided[...] = MISSING
-    member: OptionallyProvided[Member] = MISSING
-    default_auto_archive_duration: OptionallyProvided[int] = MISSING
-    permissions: OptionallyProvided[str] = MISSING
+    topic: OptionallyProvided[Optional[str]] = MISSING
+    user_limit: OptionallyProvided[int] = MISSING
+    video_quality_mode: OptionallyProvided[int] = MISSING
 
     def __str__(self):
         """return the discord tag when object gets used as a string."""
