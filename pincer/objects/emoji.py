@@ -28,6 +28,7 @@ from enum import Enum
 from typing import Optional, List
 
 from pincer.objects.user import User
+from pincer.objects.role import Role
 from pincer.utils.api_object import APIObject
 
 
@@ -35,7 +36,7 @@ from pincer.utils.api_object import APIObject
 class Emoji(APIObject):
     id: Optional[int]
     name: Optional[str]
-    roles: Optional[List[...]] = None
+    roles: Optional[List[Role]] = None
     user: Optional[User] = None
 
     require_colons: Optional[bool] = None
