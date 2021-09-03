@@ -24,23 +24,21 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
 from typing import Optional, List
 
+from pincer.utils.api_object import APIObject
 from pincer.objects.user import User
 from pincer.objects.role import Role
-from pincer.utils.api_object import APIObject
-
 
 @dataclass
-class Emoji(APIObject):
-    id: Optional[int]
-    name: Optional[str]
-    roles: Optional[List[Role]] = None
-    user: Optional[User] = None
-
-    require_colons: Optional[bool] = None
-    managed: Optional[bool] = None
-    animated: Optional[bool] = None
-    available: Optional[bool] = None
-
+class Member(APIObject):
+    roles : List[Role]
+    joined_at : str
+    deaf : bool
+    mute : bool
+    
+    user : Optional[User] = None
+    nick : Optional[str] = None
+    premium_since : Optional[str] = None
+    pending : Optional[bool] = None
+    permissions : Optional[str] = None

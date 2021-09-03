@@ -30,7 +30,10 @@ from typing import Optional, Union, List
 from websockets.typing import Data
 
 from pincer._config import GatewayConfig
+from pincer.utils.api_object import APIObject
 
+from pincer.objects.user import User
+from pincer.objects.member import Member
 
 class ChannelType(Enum):
     GUILD_TEXT = 0
@@ -50,7 +53,7 @@ class ChannelType(Enum):
 
 
 @dataclass
-class Channel:
+class Channel(APIObject):
     id: int
     type: ChannelType
     guild_id: Optional[int] = None
@@ -63,7 +66,7 @@ class Channel:
     bitrate: Optional[int] = None
     user_limit: Optional[int] = None
     rate_limit_per_user: Optional[int] = None
-    recipients: Optional[List[...]] = None
+    recipients: Optional[List[User]] = None
     icon: Optional[str] = None
     owner_id: Optional[int] = None
     application_id: Optional[int] = None
@@ -74,7 +77,7 @@ class Channel:
     message_count: Optional[int] = None
     member_count: Optional[int] = None
     thread_metadata: Optional[...] = None
-    member: Optional[...] = None
+    member: Optional[Member] = None
     default_auto_archive_duration: Optional[int] = None
     permissions: Optional[str] = None
 

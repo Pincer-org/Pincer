@@ -23,6 +23,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
+
 import copy
 from dataclasses import dataclass, fields, _is_dataclass_instance
 from typing import Dict, Union
@@ -69,6 +70,12 @@ class APIObject:
         # TODO: Write documentation
         return cls(**data)
 
+<<<<<<< HEAD
     def to_dict(self) -> Dict:
         return _asdict_ignore_none(self, dict)
 
+=======
+    @abstractmethod
+    def __str__(self) -> str:
+        ...
+>>>>>>> upstream/objects
