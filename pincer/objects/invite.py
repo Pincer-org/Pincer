@@ -27,20 +27,43 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, List
 
-from pincer.objects.user import User
-from pincer.objects.role import Role
 from pincer.utils.api_object import APIObject
+
+from pincer.objects.channel import Channel
+from pincer.objects.guild import Guild
+from pincer.objects.user import User
+from pincer.objects.member import Member
+from pincer.objects.application import Application
+
+class InviteTargetType(Enum):
+    STREAM = 1
+    EMBEDDED_APPLICATION = 2
+
+@dataclass
+class InviteStageInstance(APIObject):
+    members : List[Member]
+    participant_count : int
+    speaker_count : int
+    topic : str
 
 
 @dataclass
-class Emoji(APIObject):
-    id: Optional[int]
-    name: Optional[str]
-    roles: Optional[List[Role]] = None
-    user: Optional[User] = None
+class Invite(APIObject):
+    code : str
+    channel : Channel
 
-    require_colons: Optional[bool] = None
-    managed: Optional[bool] = None
-    animated: Optional[bool] = None
-    available: Optional[bool] = None
+    guild : Optional[Guild] = None
+    inviter : Optional[User] = None
+
+    target_type : Optional[InviteTargetType] = None
+    target_user : Optional[User] = None
+    target_application : Optional[Application] = None
+
+    approximate_presence_count : Optional[int] = None
+    approximate_member_count : Optional[int] = None
+
+    expires_at : Optional[str] = None
+    stage_instance : Optional[InviteStageInstance] = None
+
+
 

@@ -28,8 +28,11 @@ from typing import Optional, List
 
 
 from pincer.objects.emoji import Emoji
+from pincer.objects.role import Role
+from pincer.objects.member import Member
+from pincer.objects.channel import Channel
+from pincer.objects.sticker import Sticker
 from pincer.utils.api_object import APIObject
-
 
 @dataclass
 class Guild(APIObject):
@@ -44,7 +47,7 @@ class Guild(APIObject):
     explicit_content_filter: int
     system_channel_flags: int
 
-    roles: List[...]
+    roles: List[Role]
     emojis: List[Emoji]
     features: List[...]
     mfa_level: int
@@ -72,8 +75,8 @@ class Guild(APIObject):
     unavailable: Optional[bool] = None
     member_count: Optional[bool] = None
     voice_states: Optional[bool] = None
-    members: Optional[List[...]] = None
-    channels: Optional[List[...]] = None
+    members: Optional[List[Member]] = None
+    channels: Optional[List[Channel]] = None
     threads: Optional[List[...]] = None
     presences: Optional[List[...]] = None
     max_presences: Optional[int] = None
@@ -89,4 +92,4 @@ class Guild(APIObject):
     approximate_presence_count: Optional[int] = None
     welcome_screen: Optional[...] = None
     stage_instances: Optional[List[...]] = None
-    stickers: Optional[List[...]] = None
+    stickers: Optional[List[Sticker]] = None
