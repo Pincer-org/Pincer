@@ -126,7 +126,7 @@ class EmbedAuthor:
     proxy_icon_url: Optional[str] = None
 
     def __post_init__(self):
-        if field_size(self.name):
+        if field_size(self.name) > 256:
             raise EmbedFieldError("Author name",256,len(self.name))
 
 @dataclass
