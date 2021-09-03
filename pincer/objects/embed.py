@@ -32,9 +32,17 @@ class EmbedFieldError(ValueError):
     def __init__(self, type: str, max_size: str, cur_size: str) -> None:
         super().__init__(f"{type} can have a maximum length of {max_size}. (Current size: {cur_size})")
 
-def field_size(f):
+class InvalidUrlError(ValueError):
+    pass
+
+def _field_size(f):
     if not f: return 0
     else: return len(f)
+
+def _is_valid_url(url: str):
+    return url.startswith("http://") \
+        or url.startswith("https://") \
+        or url.startswith("attachment://")
 
 @dataclass
 class EmbedFooter:
@@ -51,7 +59,7 @@ class EmbedFooter:
     proxy_icon_url: Optional[str] = None
 
     def __post_init__(self):
-        if field_size(self.text) > 2048:
+        if _field_size(self.text) > 2048:
             raise EmbedFieldError("Footer text",2048,len(self.text))
 
 @dataclass
@@ -70,6 +78,10 @@ class EmbedImage:
     height: Optional[int] = None
     width: Optional[int] = None
 
+    def __post_init__(self):
+        if not _is_valid_url(self.url):
+            raise InvalidUrlError("Url must be http, https, or attachment.")
+
 @dataclass
 class EmbedThumbnail:
     """
@@ -85,6 +97,10 @@ class EmbedThumbnail:
     proxy_url: Optional[str] = None
     height: Optional[int] = None
     width: Optional[int] = None
+
+    def __post_init__(self):
+        if not _is_valid_url(self.url):
+            raise InvalidUrlError("Url must be http, https, or attachment.")
 
 @dataclass
 class EmbedVideo:
@@ -126,8 +142,10 @@ class EmbedAuthor:
     proxy_icon_url: Optional[str] = None
 
     def __post_init__(self):
-        if field_size(self.name) > 256:
+        if _field_size(self.name) > 256:
             raise EmbedFieldError("Author name",256,len(self.name))
+        if not _is_valid_url(self.url):
+            raise InvalidUrlError("Url must be http, https, or attachment.")
 
 @dataclass
 class EmbedField:
@@ -144,9 +162,9 @@ class EmbedField:
     inline: Optional[bool] = None
 
     def __post_init__(self):
-        if field_size(self.name) > 256:
+        if _field_size(self.name) > 256:
             raise EmbedFieldError("Field name",256,len(self.name))
-        if field_size(self.value) > 1024:
+        if _field_size(self.value) > 1024:
             raise EmbedFieldError("Field value",1024,len(self.value))
 
 # TODO: Handle Bad Request if embed that is too big is sent
@@ -186,11 +204,11 @@ class Embed(APIObject):
     fields: list[EmbedField] = field(default_factory=list)
 
     def __post_init__(self):
-        if field_size(self.title) > 256:
+        if _field_size(self.title) > 256:
             raise EmbedFieldError("Embed title",256,len(self.title))
-        if field_size(self.description) > 4096:
+        if _field_size(self.description) > 4096:
             raise EmbedFieldError("Embed description",4096,len(self.description))
-        if field_size(self.fields) > 25:
+        if _field_size(self.fields) > 25:
             raise EmbedFieldError("Embed field",25,len(self.fields))
 
     def set_timestamp(self, time: datetime):
