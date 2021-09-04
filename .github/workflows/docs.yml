@@ -27,7 +27,7 @@ jobs:
         pip install -r docs/requirements.txt
      
     - name: generate template
-      run: sphinx-apidoc -o docs pincer 
+      run: sphinx-apidoc -o docs pincer -f 
 
     - name: setup git
       run: |
