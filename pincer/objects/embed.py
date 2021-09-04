@@ -254,7 +254,24 @@ class Embed(APIObject):
             )
 
     def set_timestamp(self, time: datetime):
+        """
+        Discord uses iso format for time stamps. This function will set the time to that format.
+        :param time: A datetime object.
+        """
         self.timestamp = time.isoformat()
 
     def add_field(self, _field: EmbedField):
+        """
+        
+        """
+        if len(self.fields) > 25:
+            raise EmbedFieldError.from_desc(
+                "Embed field", 25, len(self.fields)+1
+            )
+            
         self.fields += [_field]
+
+        return self
+
+    def set_author(self) -> Embed:
+        return self
