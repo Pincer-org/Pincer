@@ -21,24 +21,17 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from __future__ import annotations
+from typing import Union
 
-from dataclasses import dataclass
-from typing import Optional
-
-from pincer.utils.api_object import APIObject
-from pincer.utils.constants import MISSING, OptionallyProvided
+MISSING = object()
 
 
-@dataclass
-class Role(APIObject):
-    color: int
-    hoist: bool
-    id: int
-    managed: bool
-    mentionable: bool
-    name: str
-    permissions: str
-    position: int
+class MetaType(type):
 
-    tags: OptionallyProvided[...] = MISSING
+    @staticmethod
+    def __getitem__(key):
+        return Union[MISSING, key]
+
+
+class OptionallyProvided(metaclass=MetaType):
+    pass

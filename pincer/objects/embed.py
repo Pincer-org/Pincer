@@ -52,15 +52,15 @@ def _field_size(f: str) -> int:
     :param f: The field.
     :return: Length of the string without white space.
     """
-    if not f:
-        return 0
-    return len(f.strip())
+    return len(f.strip()) if f else 0
 
 
 def _is_valid_url(url: str) -> bool:
-    return url.startswith("http://") \
-        or url.startswith("https://") \
+    return (
+        url.startswith("http://")
+        or url.startswith("https://")
         or url.startswith("attachment://")
+    )
 
 
 @dataclass
@@ -74,6 +74,7 @@ class EmbedFooter:
     """
 
     text: str
+
     icon_url: Optional[str] = None
     proxy_icon_url: Optional[str] = None
 
@@ -95,9 +96,9 @@ class EmbedImage:
     :param width: Width of the image
     """
 
-    url: Optional[str] = None
-    proxy_url: Optional[str] = None
     height: Optional[int] = None
+    proxy_url: Optional[str] = None
+    url: Optional[str] = None
     width: Optional[int] = None
 
     def __post_init__(self):
@@ -116,9 +117,9 @@ class EmbedThumbnail:
     :param width: Width of the thumbnail
     """
 
-    url: Optional[str] = None
-    proxy_url: Optional[str] = None
     height: Optional[int] = None
+    proxy_url: Optional[str] = None
+    url: Optional[str] = None
     width: Optional[int] = None
 
     def __post_init__(self):
@@ -136,9 +137,9 @@ class EmbedVideo:
     :param height: Height of the video
     :param width: Width of the video
     """
-    url: Optional[str] = None
-    proxy_url: Optional[str] = None
     height: Optional[int] = None
+    proxy_url: Optional[str] = None
+    url: Optional[str] = None
     width: Optional[int] = None
 
 
@@ -162,10 +163,10 @@ class EmbedAuthor:
     :param icon_url: Url of the author icon
     :param proxy_icon_url: A proxied url of the author icon
     """
-    name: Optional[str] = None
-    url: Optional[str] = None
     icon_url: Optional[str] = None
+    name: Optional[str] = None
     proxy_icon_url: Optional[str] = None
+    url: Optional[str] = None
 
     def __post_init__(self):
         if _field_size(self.name) > 256:
@@ -187,6 +188,7 @@ class EmbedField:
 
     name: str
     value: str
+
     inline: Optional[bool] = None
 
     def __post_init__(self):
@@ -210,32 +212,32 @@ class Embed(APIObject):
     """
     Representation of the discord Embed class
 
-    :param title: Embed title.
-    :param description: Embed description.
-    :param url: Embed url.
-    :param timestamp: Timestamp of embed content in ISO format.
+    :param author: Author information.
     :param color: Embed color code.
+    :param description: Embed description.
+    :param fields: Fields information.
     :param footer: Footer information.
     :param image: Image information.
-    :param thumbnail: Thumbnail information.
-    :param video: Video information.
     :param provider: Provider information.
-    :param author: Author information.
-    :param fields: Fields information.
+    :param thumbnail: Thumbnail information.
+    :param timestamp: Timestamp of embed content in ISO format.
+    :param title: Embed title.
+    :param url: Embed url.
+    :param video: Video information.
     """
 
-    title: Optional[str] = None
-    description: Optional[str] = None
-    url: Optional[str] = None
-    timestamp: Optional[str] = None
+    author: Optional[EmbedAuthor] = None
     color: Optional[int] = None
+    description: Optional[str] = None
+    fields: list[EmbedField] = field(default_factory=list)
     footer: Optional[EmbedFooter] = None
     image: Optional[EmbedImage] = None
-    thumbnail: Optional[EmbedThumbnail] = None
-    video: Optional[EmbedVideo] = None
     provider: Optional[EmbedProvider] = None
-    author: Optional[EmbedAuthor] = None
-    fields: list[EmbedField] = field(default_factory=list)
+    thumbnail: Optional[EmbedThumbnail] = None
+    timestamp: Optional[str] = None
+    title: Optional[str] = None
+    url: Optional[str] = None
+    video: Optional[EmbedVideo] = None
 
     def __post_init__(self):
         if _field_size(self.title) > 256:

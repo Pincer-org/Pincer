@@ -25,15 +25,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional, Union, List
-
-from websockets.typing import Data
+from typing import Optional, List
 
 from pincer._config import GatewayConfig
-from pincer.utils.api_object import APIObject
-
-from pincer.objects.user import User
 from pincer.objects.member import Member
+from pincer.objects.user import User
+from pincer.utils.api_object import APIObject
+from pincer.utils.constants import OptionallyProvided, MISSING
 
 
 class ChannelType(Enum):
@@ -57,35 +55,31 @@ class ChannelType(Enum):
 class Channel(APIObject):
     id: int
     type: ChannelType
-    guild_id: Optional[int] = None
-    position: Optional[int] = None
-    permission_overwrites: Optional[List[...]] = None
-    name: Optional[str] = None
-    topic: Optional[str] = None
-    nsfw: Optional[bool] = None
-    last_message_id: Optional[int] = None
-    bitrate: Optional[int] = None
-    user_limit: Optional[int] = None
-    rate_limit_per_user: Optional[int] = None
-    recipients: Optional[List[User]] = None
-    icon: Optional[str] = None
-    owner_id: Optional[int] = None
-    application_id: Optional[int] = None
-    parent_id: Optional[int] = None
-    last_pin_timestamp: Optional[str] = None
-    rtc_region: Optional[str] = None
-    video_quality_mode: Optional[int] = None
-    message_count: Optional[int] = None
-    member_count: Optional[int] = None
-    thread_metadata: Optional[...] = None
-    member: Optional[Member] = None
-    default_auto_archive_duration: Optional[int] = None
-    permissions: Optional[str] = None
 
-    @classmethod
-    def from_dict(cls, data: Data[str, Union[str, bool, int]]) -> Channel:
-        # TODO: Write documentation
-        return cls(**data)
+    application_id: OptionallyProvided[int] = MISSING
+    bitrate: OptionallyProvided[int] = MISSING
+    default_auto_archive_duration: OptionallyProvided[int] = MISSING
+    guild_id: OptionallyProvided[int] = MISSING
+    icon: OptionallyProvided[Optional[str]] = MISSING
+    last_message_id: OptionallyProvided[Optional[int]] = MISSING
+    last_pin_timestamp: OptionallyProvided[Optional[str]] = MISSING
+    member: OptionallyProvided[Member] = MISSING
+    member_count: OptionallyProvided[int] = MISSING
+    message_count: OptionallyProvided[int] = MISSING
+    name: OptionallyProvided[str] = MISSING
+    nsfw: OptionallyProvided[bool] = MISSING
+    owner_id: OptionallyProvided[int] = MISSING
+    parent_id: OptionallyProvided[Optional[int]] = MISSING
+    permissions: OptionallyProvided[str] = MISSING
+    permission_overwrites: OptionallyProvided[List[...]] = MISSING
+    position: OptionallyProvided[int] = MISSING
+    rate_limit_per_user: OptionallyProvided[int] = MISSING
+    recipients: OptionallyProvided[List[User]] = MISSING
+    rtc_region: OptionallyProvided[Optional[str]] = MISSING
+    thread_metadata: OptionallyProvided[...] = MISSING
+    topic: OptionallyProvided[Optional[str]] = MISSING
+    user_limit: OptionallyProvided[int] = MISSING
+    video_quality_mode: OptionallyProvided[int] = MISSING
 
     def __str__(self):
         """return the discord tag when object gets used as a string."""

@@ -29,17 +29,18 @@ from typing import Optional, List
 from pincer.utils.api_object import APIObject
 from pincer.objects.user import User
 from pincer.objects.role import Role
+from pincer.utils.constants import OptionallyProvided, MISSING
 
 
 @dataclass
 class Member(APIObject):
-    roles: List[Role]
-    joined_at: str
     deaf: bool
+    joined_at: str
     mute: bool
+    roles: List[Role]
 
-    user: Optional[User] = None
-    nick: Optional[str] = None
-    premium_since: Optional[str] = None
-    pending: Optional[bool] = None
-    permissions: Optional[str] = None
+    nick: OptionallyProvided[Optional[str]] = MISSING
+    pending: OptionallyProvided[bool] = MISSING
+    permissions: OptionallyProvided[str] = MISSING
+    premium_since: OptionallyProvided[Optional[str]] = MISSING
+    user: OptionallyProvided[User] = MISSING
