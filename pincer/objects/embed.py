@@ -64,25 +64,26 @@ def _is_valid_url(url: str) -> bool:
 
 
 @dataclass
-class EmbedFooter:
+class EmbedAuthor:
     """
-    Representation of the Embed Footer class
+    Representation of the Embed Author class
 
-    :param text: Footer text
-    :param icon_url: Url of the footer icon
-    :param proxy_icon_url: A proxied url of the footer icon
+    :param name: Name of the author
+    :param url: Url of the author
+    :param icon_url: Url of the author icon
+    :param proxy_icon_url: A proxied url of the author icon
     """
-
-    text: str
-
     icon_url: Optional[str] = None
+    name: Optional[str] = None
     proxy_icon_url: Optional[str] = None
+    url: Optional[str] = None
 
     def __post_init__(self):
-        if _field_size(self.text) > 2048:
-            raise EmbedFieldError.from_desc(
-                "Footer text", 2048, len(self.text)
-            )
+        if _field_size(self.name) > 256:
+            raise EmbedFieldError.from_desc("Author name", 256, len(self.name))
+
+        if not _is_valid_url(self.url):
+            raise InvalidUrlError("Url must be http, https, or attachment.")
 
 
 @dataclass
@@ -104,6 +105,16 @@ class EmbedImage:
     def __post_init__(self):
         if not _is_valid_url(self.url):
             raise InvalidUrlError("Url must be http, https, or attachment.")
+
+
+@dataclass
+class EmbedProvider:
+    """
+    :param name: Name of the provider
+    :param url: Url of the provider
+    """
+    name: Optional[str] = None
+    url: Optional[str] = None
 
 
 @dataclass
@@ -144,36 +155,25 @@ class EmbedVideo:
 
 
 @dataclass
-class EmbedProvider:
+class EmbedFooter:
     """
-    :param name: Name of the provider
-    :param url: Url of the provider
-    """
-    name: Optional[str] = None
-    url: Optional[str] = None
+    Representation of the Embed Footer class
 
-
-@dataclass
-class EmbedAuthor:
+    :param text: Footer text
+    :param icon_url: Url of the footer icon
+    :param proxy_icon_url: A proxied url of the footer icon
     """
-    Representation of the Embed Author class
 
-    :param name: Name of the author
-    :param url: Url of the author
-    :param icon_url: Url of the author icon
-    :param proxy_icon_url: A proxied url of the author icon
-    """
+    text: str
+
     icon_url: Optional[str] = None
-    name: Optional[str] = None
     proxy_icon_url: Optional[str] = None
-    url: Optional[str] = None
 
     def __post_init__(self):
-        if _field_size(self.name) > 256:
-            raise EmbedFieldError.from_desc("Author name", 256, len(self.name))
-
-        if not _is_valid_url(self.url):
-            raise InvalidUrlError("Url must be http, https, or attachment.")
+        if _field_size(self.text) > 2048:
+            raise EmbedFieldError.from_desc(
+                "Footer text", 2048, len(self.text)
+            )
 
 
 @dataclass
@@ -262,18 +262,18 @@ class Embed(APIObject):
         """
         self.timestamp = time.isoformat()
 
+    def set_author(self) -> Embed:
+        return self
+
     def add_field(self, _field: EmbedField):
         """
-        
+
         """
         if len(self.fields) > 25:
             raise EmbedFieldError.from_desc(
                 "Embed field", 25, len(self.fields)+1
             )
-            
+
         self.fields += [_field]
 
-        return self
-
-    def set_author(self) -> Embed:
         return self
