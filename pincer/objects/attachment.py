@@ -37,6 +37,6 @@ class Attachment(APIObject):
 	url: str
 	proxy_url: str
 
-	height: OptionallyProvided[Optional[int]]
-	width: OptionallyProvided[Optional[int]]
 	content_type: OptionallyProvided[str] = MISSING
+	height: OptionallyProvided[Optional[int]] = MISSING
+	width: OptionallyProvided[Optional[int]] = MISSING
