@@ -21,25 +21,21 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Optional
+class Snowflake(int):
 
-from pincer.utils.api_object import APIObject
+	@property
+	def timestamp(self) -> int:
+		return self >> 22
 
+	@property
+	def worker_id(self) -> int:
+		return (self >> 17) % 16
 
-@dataclass
-class WelcomeScreenChannel(APIObject):
-    channel_id: int
-    description: str
+	@property
+	def process_id(self) -> int:
+		return (self >> 12) % 16
 
-    emoji_id: Optional[int] = None
-    emoji_name: Optional[str] = None
-
-
-@dataclass
-class WelcomeScreen(APIObject):
-    welcome_channels: WelcomeScreenChannel
-
-    description: Optional[str] = None
+	@property
+	def increment(self) -> int:
+		return self % 2048
