@@ -95,10 +95,15 @@ def middleware(call: str, *, override: bool = False):
     >>>     print(f"Signed in as {bot}")
     ```
 
-    :param call: The call where the method should be registered.
-    :param override: Setting this to True will allow you to override
-        existing middleware. Usage of this is discouraged, but can help
-        you out of some situations.
+    :param call:
+        The call where the method should be registered.
+
+    Keyword Arguments:
+
+    :param override:
+        Setting this to True will allow you to override existing
+        middleware. Usage of this is discouraged, but can help you out
+        of some situations.
     """
     def decorator(func: Coro):
         if override:
@@ -127,8 +132,9 @@ class Client(Dispatcher):
         The client is the main instance which is between the programmer and the
         discord API. This client represents your bot.
 
-        :param token: The secret bot token which can be found in
-            https://discord.com/developers/applications/<bot_id>/bot.
+        :param token:
+            The secret bot token which can be found in
+            https://discord.com/developers/applications/<bot_id>/bot
         """
         # TODO: Implement intents
         super().__init__(
@@ -139,13 +145,77 @@ class Client(Dispatcher):
             }
         )
 
-        # TODO: close the client after use
-        self.http = HTTPClient(token, version=GatewayConfig.version)
         self.bot: Optional[User] = None
+        self.__token = token
+
+    @property
+    def _http(self):
+        """
+        Returns a http client with the current client its
+        authentication credentials.
+
+        Usage example:
+        ```py
+        >>> async with self._http as client:
+        >>>     await client.post(
+        >>>         '<endpoint>',
+        >>>         {
+        >>>             "foo": "bar",
+        >>>             "bar": "baz",
+        >>>             "baz": "foo"
+        >>>         })
+        ```
+        """
+        return HTTPClient(self.__token)
 
     @staticmethod
     def event(coroutine: Coro):
-        # TODO: Write docs
+        """
+        Register a Discord gateway event listener. This event will get
+        called when the client receives a new event update from Discord
+        which matches the event name.
+
+        The event name gets pulled from your method name, and this must
+        start with `on_`. This forces you to write clean and consistent
+        code.
+
+        This decorator can be used in and out of a class, and all
+        event methods must be coroutines. *(async)*
+
+        Example usage:
+        ```py
+        >>> # Function based
+        >>> from pincer import Client
+        >>>
+        >>> client = Client("token")
+        >>>
+        >>> @client.event
+        >>> async def on_ready():
+        >>>     print(f"Signed in as {client.bot}")
+        >>>
+        >>> if __name__ == "__main__":
+        >>>     client.run()
+        ```
+        ```py
+        >>> # Class based
+        >>> from pincer import Client
+        >>>
+        >>> class BotClient(Client):
+        >>>     @Client.event
+        >>>     async def on_ready(self):
+        >>>         print(f"Signed in as {self.bot}")
+        >>>
+        >>> if __name__ == "__main__":
+        >>>     BotClient("token").run()
+        ```
+
+        :raises TypeError:
+            If the method is not a coroutine.
+
+        :raises InvalidEventName:
+            If the event name does not start with 'on_', has already
+            been registered or is not a valid event name.
+        """
 
         if not iscoroutinefunction(coroutine):
             raise TypeError(
@@ -179,13 +249,20 @@ class Client(Dispatcher):
         Handles all middleware recursively. Stops when it has found an
         event name which starts with "on_".
 
-        :param payload: The original payload for the event.
-        :param key: The index of the middleware in `_events`.
-        :param *args: The arguments which will be passed to the middleware.
-        :param **kwargs: The named arguments which will be passed to the
-                        middleware.
+        :param payload:
+            The original payload for the event.
 
-        :return: A tuple where the first element is the final executor
+        :param key:
+            The index of the middleware in `_events`.
+
+        :param *args:
+            The arguments which will be passed to the middleware.
+
+        :param **kwargs:
+            The named arguments which will be passed to the middleware.
+
+        :return:
+            A tuple where the first element is the final executor
             (so the event) its index in `_events`. The second and third
             element are the `*args` and `**kwargs` for the event.
         """
@@ -214,6 +291,15 @@ class Client(Dispatcher):
     async def event_handler(self, _, payload: GatewayDispatch):
         """
         Handles all payload events with opcode 0.
+
+        :param _:
+            Socket param, but this isn't required for this handler. So
+            its just a filler parameter, doesn't matter what is passed.
+
+        :param payload:
+            The payload sent from the Discord gateway, this contains the
+            required data for the client to know what event it is and
+            what specifically happened.
         """
         event_name = payload.event_name.lower()
 
@@ -229,7 +315,11 @@ class Client(Dispatcher):
 
     @middleware("ready")
     async def on_ready_middleware(self, payload: GatewayDispatch):
-        """Middleware for `on_ready` event. """
+        """
+        Middleware for `on_ready` event.
+
+        :param payload: The data received from the ready event.
+        """
         self.bot = User.from_dict(payload.data.get("user"))
         return "on_ready",
 

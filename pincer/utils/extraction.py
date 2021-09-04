@@ -44,10 +44,19 @@ def get_index(
     Gets an item from a collection through index. Allows you to provide
     a fallback for if that index is out of bounds.
 
-    :param collection: The collection from which the item is retrieved.
-    :param index: The index of the item in the collection.
-    :param fallback: The fallback value which will be used if the index
-        doesn't exist. Default value is None.
+    :param collection:
+        The collection from which the item is retrieved.
+
+    :param index:
+        The index of the item in the collection.
+
+    :param fallback:
+        The fallback value which will be used if the index doesn't
+        exist. Default value is None.
+
+    :returns:
+        The item at the provided index from the collection, or if that
+        item doesn't exist it will return the fallback value.
     """
     try:
         return collection[index]

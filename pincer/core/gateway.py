@@ -62,7 +62,8 @@ class Dispatcher:
     # TODO: Implement compression
     def __init__(self, token: str, *, handlers: Dict[int, Handler]) -> None:
         """
-        :param token: Bot token for discord's API.
+        :param token:
+            Bot token for discord's API.
         """
 
         if len(token) != 59:
@@ -88,7 +89,8 @@ class Dispatcher:
                 The current socket, which can be used to interact
                 with the Discord API.
 
-            :param payload: The received payload from Discord.
+            :param payload:
+                The received payload from Discord.
             """
             _log.debug("Sending authentication/identification message.")
 
@@ -148,10 +150,14 @@ class Dispatcher:
         Discord.
 
         :param socket:
-            The current socket, which can be used to interact
-            with the Discord API.
-        :param payload: The received payload from Discord.
-        :param loop: The current async loop on which the future is bound.
+            The current socket, which can be used to interact with
+            the Discord API.
+
+        :param payload:
+            The received payload from Discord.
+
+        :param loop:
+            The current async loop on which the future is bound.
         """
         _log.debug(
             "New event received, checking if handler exists for opcode: %i"
@@ -176,6 +182,9 @@ class Dispatcher:
         """
         The main event loop.
         This handles all interactions with the websocket API.
+
+        :param loop:
+            The loop in which the dispatcher is running.
         """
         _log.debug(
             "Establishing websocket connection with `%s`" % GatewayConfig.uri()
@@ -218,11 +227,17 @@ class Dispatcher:
                 except ConnectionClosedOK:
                     _log.debug("Connection closed successfully.")
 
-    def run(self, loop: AbstractEventLoop = None):
+    def run(self, *, loop: AbstractEventLoop = None):
         """
         Instantiate the dispatcher, this will create a connection to the
         Discord websocket API on behalf of the client who's token has
         been passed.
+
+        Keyword Arguments:
+
+        :param loop:
+            The loop in which the Dispatcher will run. If no loop is
+            provided it will get a new one.
         """
         _log.debug("Starting GatewayDispatcher")
         loop = loop or get_event_loop()
