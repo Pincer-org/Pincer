@@ -57,3 +57,22 @@ class Sticker(APIObject):
     pack_id: OptionallyProvided[int] = MISSING
     sort_value: OptionallyProvided[int] = MISSING
     user: OptionallyProvided[User] = MISSING
+
+        
+@dataclass
+class StickerItem(APIObject):
+    id: int
+    name: str
+    format_type: StickerFormatType
+
+
+@dataclass
+class StickerPack(APIObject):
+    id: int
+    stickers: List[Sticker]
+    name: str
+    sku_id: int
+    description: str
+
+    cover_sticker_id: OptionallyProvided[int] = MISSING
+    banner_asset_id: OptionallyProvided[int] = MISSING
