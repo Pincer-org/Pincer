@@ -6,7 +6,7 @@ name: Build Sphinx
 on:
   push:
     branches: 
-      - gh-actions
+      - main
 
 
 jobs:
