@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 websockets = "*"
+aiohttp = "*"
 
 [dev-packages]
 sphinx = "*"
@@ -12,4 +13,4 @@ sphinx-rtd-theme = "*"
 sphinx-rtd-dark-mode = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"
