@@ -24,9 +24,7 @@ jobs:
     - name: install packages
       run: |
         pip install -r requirements.txt
-        pip install sphinx
-        pip install sphinx-rtd-theme
-        pip install sphinx-rtd-dark-mode
+        pip install -r docs/requirements.txt
      
     - name: generate template
       run: sphinx-apidoc -o docs pincer 
