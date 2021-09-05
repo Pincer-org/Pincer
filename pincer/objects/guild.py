@@ -30,6 +30,7 @@ from pincer.objects.channel import Channel
 from pincer.objects.emoji import Emoji
 from pincer.objects.member import Member
 from pincer.objects.role import Role
+from pincer.objects.stage import StageInstance
 from pincer.objects.sticker import Sticker
 from pincer.objects.welcome_screen import WelcomeScreen
 from pincer.utils.api_object import APIObject
@@ -82,7 +83,7 @@ class Guild(APIObject):
     permissions: OptionallyProvided[str] = MISSING
     premium_subscription_count: OptionallyProvided[int] = MISSING
     presences: OptionallyProvided[List[...]] = MISSING
-    stage_instances: OptionallyProvided[List[...]] = MISSING
+    stage_instances: OptionallyProvided[List[StageInstance]] = MISSING
     stickers: OptionallyProvided[List[Sticker]] = MISSING
     region: OptionallyProvided[Optional[str]] = MISSING
     threads: OptionallyProvided[List[Channel]] = MISSING
