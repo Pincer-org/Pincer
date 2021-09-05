@@ -24,8 +24,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import logging
 from typing import Optional, List
 
+from pincer.exceptions import PincerError
 from pincer.objects.channel import Channel
 from pincer.objects.emoji import Emoji
 from pincer.objects.member import Member
@@ -37,6 +39,10 @@ from pincer.utils.api_object import APIObject
 from pincer.utils.constants import OptionallyProvided, MISSING
 from pincer.utils.snowflake import Snowflake
 from pincer.utils.timestamp import Timestamp
+
+
+class UnavailableGuildError(PincerError):
+    pass
 
 
 @dataclass
@@ -87,8 +93,18 @@ class Guild(APIObject):
     stickers: OptionallyProvided[List[Sticker]] = MISSING
     region: OptionallyProvided[Optional[str]] = MISSING
     threads: OptionallyProvided[List[Channel]] = MISSING
-    unavailable: OptionallyProvided[bool] = MISSING
+    # Guilds are considered available unless otherwise specified
+    unavailable: bool = False
     voice_states: OptionallyProvided[bool] = MISSING
     widget_enabled: OptionallyProvided[bool] = MISSING
     widget_channel_id: OptionallyProvided[Optional[Snowflake]] = MISSING
     welcome_screen: OptionallyProvided[WelcomeScreen] = MISSING
+
+    @classmethod
+    def from_dict(cls, data, *args, **kwargs) -> Guild:
+        if data.get("unavailable", False):
+            raise UnavailableGuildError(
+                f"Guild \"{data['id']}\" is unavailable due"
+                " to a discord outage."
+            )
+        return super().from_dict(data, *args, **kwargs)
