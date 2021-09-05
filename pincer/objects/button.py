@@ -28,7 +28,7 @@ from enum import Enum
 
 from pincer.utils.api_object import APIObject
 from pincer.objects.emoji import Emoji
-from pincer.utils.constants import OptionallyProvided
+from pincer.utils.constants import MISSING, OptionallyProvided
 
 class ButtonStyle(Enum):
 	"""
