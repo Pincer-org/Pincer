@@ -28,6 +28,7 @@ from enum import Enum
 from typing import Any, Optional, List
 
 from pincer.objects.channel import Channel
+from pincer.objects.integration import Integration
 from pincer.objects.user import User
 from pincer.objects.webhook import Webhook
 from pincer.utils.api_object import APIObject
@@ -35,7 +36,7 @@ from pincer.utils.constants import OptionallyProvided, MISSING
 from pincer.utils.snowflake import Snowflake
 
 class AuditLogEvent(Enum):
-	# TODO: Write documentation
+	"""Represents a Discord Audit Log Event"""
 	GUILD_UPDATE = 1
 	CHANNEL_CREATE = 10
 	CHANNEL_UPDATE = 11
@@ -83,14 +84,29 @@ class AuditLogEvent(Enum):
 
 @dataclass
 class AuditLogChange(APIObject):
-	# TODO: Write documentation
+	"""Representation of Discord Audit Log Change object
+	
+	:param new_value: new value of the key
+	:param old_value: old value of the key
+	:param key: name of audit log change key
+	"""
 	new_value: Any
 	old_value: Any
 	key: str
 
 @dataclass
 class AuditEntryInfo(APIObject):
-	# TODO: Write documentation
+	"""Represents Discord Optional Audit Entry Info
+	
+	:param delete_member_days: number of days after which inactive members were kicked
+	:param members_removed: number of members removed by the prune
+	:param channel_id: channel in which the entities were targeted
+	:param message_id: id of the message that was targeted
+	:param count: number of entities that were targeted
+	:param id: id of the overwritten entity
+	:param type: type of overwritten entity - "0" for "role" or "1" for "member"
+	:param role_name: name of the role if type is "0" (not present if type is "1")
+	"""
 	delete_member_days: str
 	members_removed: str
 	channel_id: Snowflake
@@ -102,11 +118,20 @@ class AuditEntryInfo(APIObject):
 
 @dataclass
 class AuditLogEntry(APIObject):
-	# TODO: Write documentation
+	"""Represents a Discord Audit Log Entry object
+
+	:param target_id: id of the affected entity x(webhook, user, role, etc.)
+	:param changes: changes made to the target_id
+	:param user_id: the user who made the changes
+	:param id: id of the entry
+	:param action_type: type of action that occured
+	:param options: additional info for certain action types
+	:param reason: the reason for the change x(0-512 characters)
+	"""
 	target_id: Optional[str]
 	user_id: Optional[Snowflake]
 	id: Snowflake
-	action_type: int
+	action_type: AuditLogEvent
 	
 	changes: OptionallyProvided[List[AuditLogChange]] = MISSING
 	options: OptionallyProvided[AuditEntryInfo] = MISSING
@@ -114,9 +139,16 @@ class AuditLogEntry(APIObject):
 
 @dataclass
 class AuditLog(APIObject):
-	# TODO: Write documentation
+	"""Represents a Discord Audit Log object
+
+	:param webhooks: list of webhooks found in the audit log
+	:param users: list of users found in the audit log
+	:param audit_log_entries: list of audit log entries
+	:param integrations: list of partial integration objects
+	:param threads: list of threads found in the audit log
+	"""
 	webhooks: List[Webhook]
 	users: List[User]
 	audit_log_entries: List[AuditLogEntry]
-	integrations: List[...]
+	integrations: List[Integration]
 	threads: List[Channel]

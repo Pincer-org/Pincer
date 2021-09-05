@@ -22,32 +22,32 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class Snowflake(int):
+from dataclasses import dataclass
+from typing import Optional
+
+from pincer.utils.api_object import APIObject
+from pincer.utils.constants import MISSING, OptionallyProvided
+from pincer.utils.snowflake import Snowflake
+
+@dataclass
+class Attachment(APIObject):
+	"""Represents a Discord Attachment object
+
+	:param id: attachment id
+	:param filename: name of file attached
+	:param content_type: the attachment's data type
+	:param size: size of file in bytes
+	:param url: source url of file
+	:param proxy_url: a proxied url of file
+	:param height: height of file (if image)
+	:param width: width of file (if image)
 	"""
-	Discord utilizes Twitter's snowflake format for uniquely identifiable descriptors (IDs).
-	These IDs are guaranteed to be unique across all of Discord, except in some unique
-	scenarios in which child objects share their parent's ID. Because Snowflake IDs are up
-	to 64 bits in size (e.g. a uint64), they are always returned as strings in the HTTP API
-	to prevent integer overflows in some languages.
+	id: Snowflake
+	filename: str
+	size: int
+	url: str
+	proxy_url: str
 
-	:var timestamp: Milliseconds since Discord Epoch, the first second of 2015 or 14200704000000
-	:var worker_id: Internal worker ID
-	:var process_id: Internal process ID
-	:var increment: For every ID that is generated on that process, this number is incremented
-	"""
-
-	@property
-	def timestamp(self) -> int:
-		return self >> 22
-
-	@property
-	def worker_id(self) -> int:
-		return (self >> 17) % 16
-
-	@property
-	def process_id(self) -> int:
-		return (self >> 12) % 16
-
-	@property
-	def increment(self) -> int:
-		return self % 2048
+	content_type: OptionallyProvided[str] = MISSING
+	height: OptionallyProvided[Optional[int]] = MISSING
+	width: OptionallyProvided[Optional[int]] = MISSING

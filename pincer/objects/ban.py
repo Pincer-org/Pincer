@@ -30,5 +30,10 @@ from pincer.utils.api_object import APIObject
 
 @dataclass
 class Ban(APIObject):
+	"""Representation of the Discord Ban object
+
+	:param reason: The reason for the ban
+	:param user: The banned user
+	"""
 	reason: Optional[str]
 	user: User
