@@ -26,6 +26,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 
+from pincer.utils.api_object import APIObject
 from pincer.objects.emoji import Emoji
 from pincer.utils.constants import OptionallyProvided
 
@@ -57,7 +58,7 @@ class ButtonStyle(Enum):
 	LINK = 5
 
 @dataclass
-class Button:
+class Button(APIObject):
 	"""
 	Represents a Discord Button object. Buttons are interactive components
 	that render on messages. They can be clicked by users, and send an
