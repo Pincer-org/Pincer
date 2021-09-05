@@ -29,25 +29,41 @@ from pincer.utils.api_object import APIObject
 from pincer.utils.constants import MISSING, OptionallyProvided
 from pincer.utils.snowflake import Snowflake
 
+
 @dataclass
 class Attachment(APIObject):
-	"""Represents a Discord Attachment object
+    """Represents a Discord Attachment object
 
-	:param id: attachment id
-	:param filename: name of file attached
-	:param content_type: the attachment's data type
-	:param size: size of file in bytes
-	:param url: source url of file
-	:param proxy_url: a proxied url of file
-	:param height: height of file (if image)
-	:param width: width of file (if image)
-	"""
-	id: Snowflake
-	filename: str
-	size: int
-	url: str
-	proxy_url: str
+    :param id:
+        attachment id
 
-	content_type: OptionallyProvided[str] = MISSING
-	height: OptionallyProvided[Optional[int]] = MISSING
-	width: OptionallyProvided[Optional[int]] = MISSING
+    :param filename:
+        name of file attached
+
+    :param content_type:
+        the attachment's data type
+
+    :param size:
+        size of file in bytes
+
+    :param url:
+        source url of file
+
+    :param proxy_url:
+        a proxied url of file
+
+    :param height:
+        height of file (if image)
+
+    :param width:
+        width of file (if image)
+    """
+    id: Snowflake
+    filename: str
+    size: int
+    url: str
+    proxy_url: str
+
+    content_type: OptionallyProvided[str] = MISSING
+    height: OptionallyProvided[Optional[int]] = MISSING
+    width: OptionallyProvided[Optional[int]] = MISSING

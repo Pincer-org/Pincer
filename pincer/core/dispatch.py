@@ -83,6 +83,7 @@ class GatewayDispatch:
 
         :param payload:
             The payload to parse.
+
         :return:
             A proper GatewayDispatch object.
         """

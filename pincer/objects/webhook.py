@@ -40,6 +40,7 @@ class WebhookType(Enum):
     CHANNEL_FOLLOWER = 2
     APPLICATION = 3
 
+
 @dataclass
 class Webhook(APIObject):
     id: Snowflake

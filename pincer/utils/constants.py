@@ -24,7 +24,7 @@
 from typing import Union
 
 
-class MissingType():
+class MissingType:
     pass
 
 
@@ -33,7 +33,7 @@ MISSING = MissingType()
 
 class MetaType(type):
 
-    # @staticmethod
+    @staticmethod
     def __getitem__(key):
         return Union[MISSING, key]
 

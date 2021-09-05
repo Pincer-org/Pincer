@@ -47,7 +47,8 @@ class InvalidUrlError(ValueError):
 
 def _field_size(f: str) -> int:
     """
-    The Discord API removes white space when counting the length of a field
+    The Discord API removes white space
+        when counting the length of a field.
 
     :param f: The field.
     :return: Length of the string without white space.
