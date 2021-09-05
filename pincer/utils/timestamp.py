@@ -89,4 +89,4 @@ class Timestamp:
 		return self.__epoch == other.__epoch
 	
 	def __ne__(self, other: Timestamp) -> bool:
-		return not self == other
+		return self.__epoch != other.__epoch
