@@ -15,13 +15,15 @@ sys.path.insert(0, os.path.abspath('../'))
 
 
 # -- Project information -----------------------------------------------------
+from pincer import __title__, __author__, __version__
 
-project = 'Pincer'
+
+project = __title__
 copyright = '2021, Pincer'
-author = 'Pincer'
+author = __author__
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.0.dev'
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------
