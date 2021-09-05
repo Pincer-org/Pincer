@@ -23,12 +23,17 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from typing import Union
 
-MISSING = object()
+
+class MissingType():
+    pass
+
+
+MISSING = MissingType()
 
 
 class MetaType(type):
 
-    @staticmethod
+    # @staticmethod
     def __getitem__(key):
         return Union[MISSING, key]
 
