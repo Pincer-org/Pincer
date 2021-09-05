@@ -50,6 +50,21 @@ class InviteStageInstance(APIObject):
     speaker_count: int
     topic: str
 
+@dataclass
+class InviteMetadata(APIObject):
+    """Extra information about an invite, will extend the invite object.
+
+    :param uses: number of times this invite has been used
+    :param max_uses: max number of times this invite can be used
+    :param max_age: duration (in seconds) after which the invite expires
+    :param temporary: whether this invite only grants temporary membership
+    :param created_at: when this invite was created
+    """
+    uses: int
+    max_uses: int
+    max_age: int
+    temporary: bool
+    created_at: Timestamp
 
 @dataclass
 class Invite(APIObject):
