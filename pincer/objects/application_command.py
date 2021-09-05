@@ -86,7 +86,7 @@ class ApplicationCommandOption(APIObject):
 	type: ApplicationCommandOptionType
 	name: str
 	description: str
-	
+
 	required: OptionallyProvided[bool] = False
 	choices: OptionallyProvided[List[ApplicationCommandOptionChoice]] = MISSING
 	options: OptionallyProvided[List[ApplicationCommandOption]] = MISSING
