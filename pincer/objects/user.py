@@ -40,22 +40,25 @@ class PremiumTypes(Enum):
 @dataclass
 class User:
     # TODO: Write documentation
-    id: int
-    flags: int
-    username: str
-    discriminator: str
-    bot: Optional[bool] = False
-    email: Optional[str] = None
-    banner: Optional[str] = None
-    locale: Optional[str] = None
-    avatar: Optional[str] = None
-    system: Optional[bool] = False
-    accent_color: Optional[int] = 0
-    public_flags: Optional[int] = 0
-    verified: Optional[bool] = False
-    avatar_url: Optional[str] = None
-    mfa_enabled: Optional[bool] = False
-    premium_type: Optional[int] = 0
+    # Note: Current docs are mostly copied from
+    # https://discord.com/developers/docs/resources/user
+
+    id: int #: The user's id
+    flags: int #: The flags on a user's account
+    username: str #: The user's username, not unique across the platform
+    discriminator: str #: The user's 4-digit discord-tag
+    bot: Optional[bool] = False #: Whether the user is a bot
+    email: Optional[str] = None #: The user's email
+    banner: Optional[str] = None #: The user's banner (if exists)
+    locale: Optional[str] = None #: The user's chosen language
+    avatar: Optional[str] = None #: The user's avatar hash
+    system: Optional[bool] = False #: Whether user is an Official Discord System user
+    accent_color: Optional[int] = 0 #: The user's banner hexadecimal color code as an integer
+    public_flags: Optional[int] = 0 #: The public flags on the account
+    verified: Optional[bool] = False #: Whether the email on this account has been verified
+    avatar_url: Optional[str] = None #: The url to the user's avatar
+    mfa_enabled: Optional[bool] = False #: Whether the user has two factor enabled on their account
+    premium_type: Optional[PremiumTypes] = PremiumTypes.NONE #: The type of Nitro subscription on a user's account
 
     @classmethod
     def from_dict(cls, data: Data[str, Union[str, bool, int]]) -> User:
@@ -76,5 +79,5 @@ class User:
         return self.username + '#' + self.discriminator
 
     def __str__(self):
-        """return the discord tag when object gets used as a string."""
+        """Return the discord tag when object gets used as a string."""
         return self.user

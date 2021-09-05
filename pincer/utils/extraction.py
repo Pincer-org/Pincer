@@ -54,7 +54,7 @@ def get_index(
         The fallback value which will be used if the index doesn't
         exist. Default value is None.
 
-    :returns:
+    :return:
         The item at the provided index from the collection, or if that
         item doesn't exist it will return the fallback value.
     """

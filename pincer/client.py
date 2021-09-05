@@ -21,6 +21,9 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+from __future__ import annotations
+
 import logging
 from asyncio import iscoroutinefunction
 from typing import Optional, Any, Union, Dict, Tuple, List
@@ -61,7 +64,7 @@ for event in events:
 def middleware(call: str, *, override: bool = False):
     """
     Middleware are methods which can be registered with this decorator.
-    These methods are invoked before any `on_` event. As the `on_` event
+    These methods are invoked before any ``on_`` event. As the ``on_`` event
     is the final call.
 
     A default call exists for all events, but some might already be in
@@ -69,8 +72,10 @@ def middleware(call: str, *, override: bool = False):
     these default middleware methods by passing the override parameter.
 
     The method to which this decorator is registered must be a coroutine,
-    and it must return a tuple with the following format:
-    ```
+    and it must return a tuple with the following format\:
+
+    .. code-block:: python
+
         tuple(
             key for next middleware or final event [str],
             args for next middleware/event which will be passed as *args
@@ -78,22 +83,23 @@ def middleware(call: str, *, override: bool = False):
             kwargs for next middleware/event which will be passed as
                 **kwargs [dict(Any)]
         )
-    ```
 
     One parameter is passed to the middleware. This parameter is the
-    payload parameter which is of type GatewayDispatch. This contains
+    payload parameter which is of type :class:`~.core.dispatch.GatewayDispatch`. This contains
     the response from the discord API.
 
-    Implementation example:
-    ```py
-    >>> @middleware("ready", override=True)
-    >>> async def custom_ready(payload: GatewayDispatch):
-    >>>     return "on_ready", [User.from_dict(payload.data.get("user"))]
+    :Implementation example:
 
-    >>> @Client.event
-    >>> async def on_ready(bot: User):
-    >>>     print(f"Signed in as {bot}")
-    ```
+    .. code-block:: pycon
+
+        >>> @middleware("ready", override=True)
+        >>> async def custom_ready(payload: GatewayDispatch):
+        >>>     return "on_ready", [User.from_dict(payload.data.get("user"))]
+
+        >>> @Client.event
+        >>> async def on_ready(bot: User):
+        >>>     print(f"Signed in as {bot}")
+    
 
     :param call:
         The call where the method should be registered.
@@ -134,7 +140,7 @@ class Client(Dispatcher):
 
         :param token:
             The secret bot token which can be found in
-            https://discord.com/developers/applications/<bot_id>/bot
+            `<https://discord.com/developers/applications/\<bot_id\>/bot>`_
         """
         # TODO: Implement intents
         super().__init__(
@@ -154,17 +160,19 @@ class Client(Dispatcher):
         Returns a http client with the current client its
         authentication credentials.
 
-        Usage example:
-        ```py
-        >>> async with self._http as client:
-        >>>     await client.post(
-        >>>         '<endpoint>',
-        >>>         {
-        >>>             "foo": "bar",
-        >>>             "bar": "baz",
-        >>>             "baz": "foo"
-        >>>         })
-        ```
+        :Usage example:
+
+        .. code-block:: pycon
+
+            >>> async with self._http as client:
+            >>>     await client.post(
+            >>>         '<endpoint>',
+            >>>         {
+            >>>             "foo": "bar",
+            >>>             "bar": "baz",
+            >>>             "baz": "foo"
+            >>>         })
+        
         """
         return HTTPClient(self.__token)
 
@@ -176,44 +184,49 @@ class Client(Dispatcher):
         which matches the event name.
 
         The event name gets pulled from your method name, and this must
-        start with `on_`. This forces you to write clean and consistent
+        start with ``on_``. This forces you to write clean and consistent
         code.
 
         This decorator can be used in and out of a class, and all
         event methods must be coroutines. *(async)*
 
-        Example usage:
-        ```py
-        >>> # Function based
-        >>> from pincer import Client
-        >>>
-        >>> client = Client("token")
-        >>>
-        >>> @client.event
-        >>> async def on_ready():
-        >>>     print(f"Signed in as {client.bot}")
-        >>>
-        >>> if __name__ == "__main__":
-        >>>     client.run()
-        ```
-        ```py
-        >>> # Class based
-        >>> from pincer import Client
-        >>>
-        >>> class BotClient(Client):
-        >>>     @Client.event
-        >>>     async def on_ready(self):
-        >>>         print(f"Signed in as {self.bot}")
-        >>>
-        >>> if __name__ == "__main__":
-        >>>     BotClient("token").run()
-        ```
+        :Example usage:
+        
+        .. code-block:: pycon
+
+            >>> # Function based
+            >>> from pincer import Client
+            >>>
+            >>> client = Client("token")
+            >>>
+            >>> @client.event
+            >>> async def on_ready():
+            >>>     print(f"Signed in as {client.bot}")
+            >>>
+            >>> if __name__ == "__main__":
+            >>>     client.run()
+
+        .. code-block :: pycon
+
+            >>> # Class based
+            >>> from pincer import Client
+            >>>
+            >>> class BotClient(Client):
+            >>>     @Client.event
+            >>>     async def on_ready(self):
+            >>>         print(f"Signed in as {self.bot}")
+            >>>
+            >>> if __name__ == "__main__":
+            >>>     BotClient("token").run()
+        
+
+        :param coroutine: # TODO: add info
 
         :raises TypeError:
             If the method is not a coroutine.
 
         :raises InvalidEventName:
-            If the event name does not start with 'on_', has already
+            If the event name does not start with ``on_``, has already
             been registered or is not a valid event name.
         """
 
@@ -244,27 +257,27 @@ class Client(Dispatcher):
             key: str,
             *args,
             **kwargs
-    ) -> tuple[Optional[Coro], List[Any], Dict[str, Any]]:
+    ) -> Tuple[Optional[Coro], List[Any], Dict[str, Any]]:
         """
         Handles all middleware recursively. Stops when it has found an
-        event name which starts with "on_".
+        event name which starts with ``on_``.
 
         :param payload:
             The original payload for the event.
 
         :param key:
-            The index of the middleware in `_events`.
+            The index of the middleware in ``_events``.
 
-        :param *args:
+        :param \*args:
             The arguments which will be passed to the middleware.
 
-        :param **kwargs:
+        :param \*\*kwargs:
             The named arguments which will be passed to the middleware.
 
         :return:
             A tuple where the first element is the final executor
-            (so the event) its index in `_events`. The second and third
-            element are the `*args` and `**kwargs` for the event.
+            (so the event) its index in ``_events``. The second and third
+            element are the ``*args`` and ``**kwargs`` for the event.
         """
         ware: middleware_type = _events.get(key)
         next_call, arguments, params = ware, list(), dict()
@@ -316,7 +329,7 @@ class Client(Dispatcher):
     @middleware("ready")
     async def on_ready_middleware(self, payload: GatewayDispatch):
         """
-        Middleware for `on_ready` event.
+        Middleware for ``on_ready`` event.
 
         :param payload: The data received from the ready event.
         """
