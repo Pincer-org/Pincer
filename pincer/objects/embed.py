@@ -27,7 +27,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import MISSING, OptionallyProvided
+from pincer.utils.constants import MISSING, APINullable
 
 
 class EmbedFieldError(ValueError):
@@ -74,10 +74,10 @@ class EmbedAuthor:
     :param icon_url: Url of the author icon
     :param proxy_icon_url: A proxied url of the author icon
     """
-    icon_url: OptionallyProvided[str] = MISSING
-    name: OptionallyProvided[str] = MISSING
-    proxy_icon_url: OptionallyProvided[str] = MISSING
-    url: OptionallyProvided[str] = MISSING
+    icon_url: APINullable[str] = MISSING
+    name: APINullable[str] = MISSING
+    proxy_icon_url: APINullable[str] = MISSING
+    url: APINullable[str] = MISSING
 
     def __post_init__(self):
         if _field_size(self.name) > 256:
@@ -98,10 +98,10 @@ class EmbedImage:
     :param width: Width of the image
     """
 
-    height: OptionallyProvided[int] = MISSING
-    proxy_url: OptionallyProvided[str] = MISSING
-    url: OptionallyProvided[str] = MISSING
-    width: OptionallyProvided[int] = MISSING
+    height: APINullable[int] = MISSING
+    proxy_url: APINullable[str] = MISSING
+    url: APINullable[str] = MISSING
+    width: APINullable[int] = MISSING
 
     def __post_init__(self):
         if not _is_valid_url(self.url):
@@ -116,8 +116,8 @@ class EmbedProvider:
     :param name: Name of the provider
     :param url: Url of the provider
     """
-    name: OptionallyProvided[str] = MISSING
-    url: OptionallyProvided[str] = MISSING
+    name: APINullable[str] = MISSING
+    url: APINullable[str] = MISSING
 
 
 @dataclass
@@ -131,10 +131,10 @@ class EmbedThumbnail:
     :param width: Width of the thumbnail
     """
 
-    height: OptionallyProvided[int] = MISSING
-    proxy_url: OptionallyProvided[str] = MISSING
-    url: OptionallyProvided[str] = MISSING
-    width: OptionallyProvided[int] = MISSING
+    height: APINullable[int] = MISSING
+    proxy_url: APINullable[str] = MISSING
+    url: APINullable[str] = MISSING
+    width: APINullable[int] = MISSING
 
     def __post_init__(self):
         if not _is_valid_url(self.url):
@@ -151,10 +151,10 @@ class EmbedVideo:
     :param height: Height of the video
     :param width: Width of the video
     """
-    height: OptionallyProvided[int] = MISSING
-    url: OptionallyProvided[str] = MISSING
-    proxy_url: OptionallyProvided[str] = MISSING
-    width: OptionallyProvided[int] = MISSING
+    height: APINullable[int] = MISSING
+    url: APINullable[str] = MISSING
+    proxy_url: APINullable[str] = MISSING
+    width: APINullable[int] = MISSING
 
 
 @dataclass
@@ -169,8 +169,8 @@ class EmbedFooter:
 
     text: str
 
-    icon_url: OptionallyProvided[str] = MISSING
-    proxy_icon_url: OptionallyProvided[str] = MISSING
+    icon_url: APINullable[str] = MISSING
+    proxy_icon_url: APINullable[str] = MISSING
 
     def __post_init__(self):
         if _field_size(self.text) > 2048:
@@ -192,7 +192,7 @@ class EmbedField:
     name: str
     value: str
 
-    inline: OptionallyProvided[bool] = MISSING
+    inline: APINullable[bool] = MISSING
 
     def __post_init__(self):
         if _field_size(self.name) > 256:
@@ -229,18 +229,18 @@ class Embed(APIObject):
     :param video: Video information.
     """
 
-    author: OptionallyProvided[EmbedAuthor] = MISSING
-    color: OptionallyProvided[int] = MISSING
-    description: OptionallyProvided[str] = MISSING
+    author: APINullable[EmbedAuthor] = MISSING
+    color: APINullable[int] = MISSING
+    description: APINullable[str] = MISSING
     fields: list[EmbedField] = field(default_factory=list)
-    footer: OptionallyProvided[EmbedFooter] = MISSING
-    image: OptionallyProvided[EmbedImage] = MISSING
-    provider: OptionallyProvided[EmbedProvider] = MISSING
-    thumbnail: OptionallyProvided[EmbedThumbnail] = MISSING
-    timestamp: OptionallyProvided[str] = MISSING
-    title: OptionallyProvided[str] = MISSING
-    url: OptionallyProvided[str] = MISSING
-    video: OptionallyProvided[EmbedVideo] = MISSING
+    footer: APINullable[EmbedFooter] = MISSING
+    image: APINullable[EmbedImage] = MISSING
+    provider: APINullable[EmbedProvider] = MISSING
+    thumbnail: APINullable[EmbedThumbnail] = MISSING
+    timestamp: APINullable[str] = MISSING
+    title: APINullable[str] = MISSING
+    url: APINullable[str] = MISSING
+    video: APINullable[EmbedVideo] = MISSING
 
     def __post_init__(self):
         if _field_size(self.title) > 256:
@@ -268,10 +268,10 @@ class Embed(APIObject):
 
     def set_author(
         self,
-        icon_url: OptionallyProvided[str] = MISSING,
-        name: OptionallyProvided[str] = MISSING,
-        proxy_icon_url: OptionallyProvided[str] = MISSING,
-        url: OptionallyProvided[str] = MISSING
+        icon_url: APINullable[str] = MISSING,
+        name: APINullable[str] = MISSING,
+        proxy_icon_url: APINullable[str] = MISSING,
+        url: APINullable[str] = MISSING
     ) -> Embed:
 
         self.author = EmbedAuthor(
@@ -285,10 +285,10 @@ class Embed(APIObject):
 
     def set_image(
         self,
-        height: OptionallyProvided[int] = MISSING,
-        url: OptionallyProvided[str] = MISSING,
-        proxy_url: OptionallyProvided[str] = MISSING,
-        width: OptionallyProvided[int] = MISSING
+        height: APINullable[int] = MISSING,
+        url: APINullable[str] = MISSING,
+        proxy_url: APINullable[str] = MISSING,
+        width: APINullable[int] = MISSING
     ) -> Embed:
         """
         :param url: Source url of the video
@@ -305,8 +305,8 @@ class Embed(APIObject):
 
     def set_provider(
         self,
-        name: OptionallyProvided[str] = MISSING,
-        url: OptionallyProvided[str] = MISSING
+        name: APINullable[str] = MISSING,
+        url: APINullable[str] = MISSING
     ) -> Embed:
         """
         :param name: Name of the provider
@@ -317,10 +317,10 @@ class Embed(APIObject):
 
     def set_thumbnail(
         self,
-        height: OptionallyProvided[int] = MISSING,
-        url: OptionallyProvided[str] = MISSING,
-        proxy_url: OptionallyProvided[str] = MISSING,
-        width: OptionallyProvided[int] = MISSING
+        height: APINullable[int] = MISSING,
+        url: APINullable[str] = MISSING,
+        proxy_url: APINullable[str] = MISSING,
+        width: APINullable[int] = MISSING
     ) -> Embed:
         """
         :param url: Source url of the video
@@ -339,10 +339,10 @@ class Embed(APIObject):
 
     def set_video(
         self,
-        height: OptionallyProvided[int] = MISSING,
-        url: OptionallyProvided[str] = MISSING,
-        proxy_url: OptionallyProvided[str] = MISSING,
-        width: OptionallyProvided[int] = MISSING
+        height: APINullable[int] = MISSING,
+        url: APINullable[str] = MISSING,
+        proxy_url: APINullable[str] = MISSING,
+        width: APINullable[int] = MISSING
     ) -> Embed:
         """
         :param url: Source url of the video
@@ -362,8 +362,8 @@ class Embed(APIObject):
     def set_footer(
         self,
         text: str,
-        icon_url: OptionallyProvided[str] = MISSING,
-        proxy_icon_url: OptionallyProvided[str] = MISSING
+        icon_url: APINullable[str] = MISSING,
+        proxy_icon_url: APINullable[str] = MISSING
     ) -> Embed:
         """
         :param text: Footer text
@@ -382,7 +382,7 @@ class Embed(APIObject):
         self,
         name: str,
         value: str,
-        inline: OptionallyProvided[bool] = MISSING
+        inline: APINullable[bool] = MISSING
     ) -> Embed:
         """
         :param name: The name of the field

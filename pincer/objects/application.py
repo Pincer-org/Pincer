@@ -29,7 +29,7 @@ from typing import Optional, List
 from pincer.utils.api_object import APIObject
 
 from pincer.objects.user import User
-from pincer.utils.constants import OptionallyProvided, MISSING
+from pincer.utils.constants import APINullable, MISSING
 from pincer.utils.snowflake import Snowflake
 
 
@@ -41,15 +41,15 @@ class Application(APIObject):
     id: Snowflake
     icon: Optional[str]
     name: str
-    privacy_policy_url: OptionallyProvided[str]
+    privacy_policy_url: APINullable[str]
     summary: str
     verify_key: str
 
-    cover_image: OptionallyProvided[str] = MISSING
-    flags: OptionallyProvided[int] = MISSING
-    guild_id: OptionallyProvided[Snowflake] = MISSING
-    owner: OptionallyProvided[User] = MISSING
-    primary_sku_id: OptionallyProvided[Snowflake] = MISSING
-    rpc_origins: OptionallyProvided[List[str]] = MISSING
-    slug: OptionallyProvided[str] = MISSING
-    terms_of_service_url: OptionallyProvided[str] = MISSING
+    cover_image: APINullable[str] = MISSING
+    flags: APINullable[int] = MISSING
+    guild_id: APINullable[Snowflake] = MISSING
+    owner: APINullable[User] = MISSING
+    primary_sku_id: APINullable[Snowflake] = MISSING
+    rpc_origins: APINullable[List[str]] = MISSING
+    slug: APINullable[str] = MISSING
+    terms_of_service_url: APINullable[str] = MISSING

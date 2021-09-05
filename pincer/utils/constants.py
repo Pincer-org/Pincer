@@ -21,22 +21,9 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from typing import Union
+from typing import Union, TypeVar
 
+MISSING = object()
+S = TypeVar('S')
 
-class MissingType:
-    pass
-
-
-MISSING = MissingType()
-
-
-class MetaType(type):
-
-    @staticmethod
-    def __getitem__(key):
-        return Union[MISSING, key]
-
-
-class OptionallyProvided(metaclass=MetaType):
-    pass
+APINullable: Union[S, MISSING] = MISSING

@@ -30,7 +30,7 @@ from pincer.objects.button import ButtonStyle
 from pincer.objects.emoji import Emoji
 from pincer.objects.select_menu import SelectOption
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import MISSING, OptionallyProvided
+from pincer.utils.constants import MISSING, APINullable
 
 
 @dataclass
@@ -81,13 +81,13 @@ class MessageComponent(APIObject):
     type: int
     options: List[SelectOption]
 
-    custom_id: OptionallyProvided[str] = MISSING
-    disabled: OptionallyProvided[bool] = False
-    style: OptionallyProvided[ButtonStyle] = MISSING
-    label: OptionallyProvided[str] = MISSING
-    emoji: OptionallyProvided[Emoji] = MISSING
-    url: OptionallyProvided[str] = MISSING
-    placeholder: OptionallyProvided[str] = MISSING
-    min_values: OptionallyProvided[int] = 1
-    max_values: OptionallyProvided[int] = 1
-    components: OptionallyProvided[List[MessageComponent]] = MISSING
+    custom_id: APINullable[str] = MISSING
+    disabled: APINullable[bool] = False
+    style: APINullable[ButtonStyle] = MISSING
+    label: APINullable[str] = MISSING
+    emoji: APINullable[Emoji] = MISSING
+    url: APINullable[str] = MISSING
+    placeholder: APINullable[str] = MISSING
+    min_values: APINullable[int] = 1
+    max_values: APINullable[int] = 1
+    components: APINullable[List[MessageComponent]] = MISSING

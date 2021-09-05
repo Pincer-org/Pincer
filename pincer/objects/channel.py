@@ -32,7 +32,7 @@ from pincer.objects.member import Member
 from pincer.objects.user import User
 from pincer.objects.thread import ThreadMetadata
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import OptionallyProvided, MISSING
+from pincer.utils.constants import APINullable, MISSING
 from pincer.utils.snowflake import Snowflake
 from pincer.utils.timestamp import Timestamp
 
@@ -60,30 +60,30 @@ class Channel(APIObject):
     id: Snowflake
     type: ChannelType
 
-    application_id: OptionallyProvided[Snowflake] = MISSING
-    bitrate: OptionallyProvided[int] = MISSING
-    default_auto_archive_duration: OptionallyProvided[int] = MISSING
-    guild_id: OptionallyProvided[Snowflake] = MISSING
-    icon: OptionallyProvided[Optional[str]] = MISSING
-    last_message_id: OptionallyProvided[Optional[Snowflake]] = MISSING
-    last_pin_timestamp: OptionallyProvided[Optional[Timestamp]] = MISSING
-    member: OptionallyProvided[Member] = MISSING
-    member_count: OptionallyProvided[int] = MISSING
-    message_count: OptionallyProvided[int] = MISSING
-    name: OptionallyProvided[str] = MISSING
-    nsfw: OptionallyProvided[bool] = MISSING
-    owner_id: OptionallyProvided[Snowflake] = MISSING
-    parent_id: OptionallyProvided[Optional[Snowflake]] = MISSING
-    permissions: OptionallyProvided[str] = MISSING
-    permission_overwrites: OptionallyProvided[List[...]] = MISSING
-    position: OptionallyProvided[int] = MISSING
-    rate_limit_per_user: OptionallyProvided[int] = MISSING
-    recipients: OptionallyProvided[List[User]] = MISSING
-    rtc_region: OptionallyProvided[Optional[str]] = MISSING
-    thread_metadata: OptionallyProvided[ThreadMetadata] = MISSING
-    topic: OptionallyProvided[Optional[str]] = MISSING
-    user_limit: OptionallyProvided[int] = MISSING
-    video_quality_mode: OptionallyProvided[int] = MISSING
+    application_id: APINullable[Snowflake] = MISSING
+    bitrate: APINullable[int] = MISSING
+    default_auto_archive_duration: APINullable[int] = MISSING
+    guild_id: APINullable[Snowflake] = MISSING
+    icon: APINullable[Optional[str]] = MISSING
+    last_message_id: APINullable[Optional[Snowflake]] = MISSING
+    last_pin_timestamp: APINullable[Optional[Timestamp]] = MISSING
+    member: APINullable[Member] = MISSING
+    member_count: APINullable[int] = MISSING
+    message_count: APINullable[int] = MISSING
+    name: APINullable[str] = MISSING
+    nsfw: APINullable[bool] = MISSING
+    owner_id: APINullable[Snowflake] = MISSING
+    parent_id: APINullable[Optional[Snowflake]] = MISSING
+    permissions: APINullable[str] = MISSING
+    permission_overwrites: APINullable[List[...]] = MISSING
+    position: APINullable[int] = MISSING
+    rate_limit_per_user: APINullable[int] = MISSING
+    recipients: APINullable[List[User]] = MISSING
+    rtc_region: APINullable[Optional[str]] = MISSING
+    thread_metadata: APINullable[ThreadMetadata] = MISSING
+    topic: APINullable[Optional[str]] = MISSING
+    user_limit: APINullable[int] = MISSING
+    video_quality_mode: APINullable[int] = MISSING
 
     def __str__(self):
         """return the discord tag when object gets used as a string."""

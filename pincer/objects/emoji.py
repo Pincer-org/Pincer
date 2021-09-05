@@ -29,7 +29,7 @@ from typing import Optional, List
 from pincer.objects.role import Role
 from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import OptionallyProvided, MISSING
+from pincer.utils.constants import APINullable, MISSING
 
 
 @dataclass
@@ -37,9 +37,9 @@ class Emoji(APIObject):
     id: Optional[int]
     name: Optional[str]
 
-    animated: OptionallyProvided[bool] = MISSING
-    available: OptionallyProvided[bool] = MISSING
-    managed: OptionallyProvided[bool] = MISSING
-    require_colons: OptionallyProvided[bool] = MISSING
-    roles: OptionallyProvided[List[Role]] = MISSING
-    user: OptionallyProvided[User] = MISSING
+    animated: APINullable[bool] = MISSING
+    available: APINullable[bool] = MISSING
+    managed: APINullable[bool] = MISSING
+    require_colons: APINullable[bool] = MISSING
+    roles: APINullable[List[Role]] = MISSING
+    user: APINullable[User] = MISSING

@@ -28,7 +28,7 @@ from typing import Optional
 from pincer.objects.member import Member
 from pincer.utils.api_object import APIObject
 from pincer.utils.snowflake import Snowflake
-from pincer.utils.constants import MISSING, OptionallyProvided
+from pincer.utils.constants import MISSING, APINullable
 from pincer.utils.timestamp import Timestamp
 
 @dataclass
@@ -86,6 +86,6 @@ class VoiceState(APIObject):
     suppress: bool
     request_to_speak_timestamp: Optional[Timestamp]
 
-    guild_id: OptionallyProvided[Snowflake] = MISSING
-    member: OptionallyProvided[Member] = MISSING
-    self_stream: OptionallyProvided[bool] = MISSING
+    guild_id: APINullable[Snowflake] = MISSING
+    member: APINullable[Member] = MISSING
+    self_stream: APINullable[bool] = MISSING

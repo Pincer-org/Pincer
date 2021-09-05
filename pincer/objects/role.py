@@ -26,15 +26,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import MISSING, OptionallyProvided
+from pincer.utils.constants import MISSING, APINullable
 from pincer.utils.snowflake import Snowflake
 
 
 @dataclass
 class RoleTags(APIObject):
-    bot_id: OptionallyProvided[Snowflake] = MISSING
-    integration_id: OptionallyProvided[Snowflake] = MISSING
-    premium_subscriber: OptionallyProvided[bool] = MISSING
+    bot_id: APINullable[Snowflake] = MISSING
+    integration_id: APINullable[Snowflake] = MISSING
+    premium_subscriber: APINullable[bool] = MISSING
 
 
 @dataclass
@@ -48,4 +48,4 @@ class Role(APIObject):
     permissions: str
     position: int
 
-    tags: OptionallyProvided[...] = MISSING
+    tags: APINullable[...] = MISSING

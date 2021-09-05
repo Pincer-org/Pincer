@@ -24,10 +24,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-import logging
 from typing import Optional, List
 
-from pincer.exceptions import PincerError
 from pincer.objects.channel import Channel
 from pincer.objects.emoji import Emoji
 from pincer.objects.member import Member
@@ -36,12 +34,12 @@ from pincer.objects.stage import StageInstance
 from pincer.objects.sticker import Sticker
 from pincer.objects.welcome_screen import WelcomeScreen
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import OptionallyProvided, MISSING
+from pincer.utils.constants import APINullable, MISSING
 from pincer.utils.snowflake import Snowflake
 from pincer.utils.timestamp import Timestamp
 
 
-class UnavailableGuildError(PincerError):
+class UnavailableGuildError(Exception):
     pass
 
 
@@ -74,31 +72,31 @@ class Guild(APIObject):
     vanity_url_code: Optional[str]
     verification_level: int
 
-    approximate_member_count: OptionallyProvided[int] = MISSING
-    approximate_presence_count: OptionallyProvided[int] = MISSING
-    channels: OptionallyProvided[List[Channel]] = MISSING
-    icon_hash: OptionallyProvided[Optional[str]] = MISSING
-    joined_at: OptionallyProvided[Timestamp] = MISSING
-    large: OptionallyProvided[bool] = MISSING
-    max_members: OptionallyProvided[int] = MISSING
-    max_presences: OptionallyProvided[Optional[int]] = MISSING
-    max_video_channel_users: OptionallyProvided[int] = MISSING
-    members: OptionallyProvided[List[Member]] = MISSING
-    member_count: OptionallyProvided[bool] = MISSING
-    owner: OptionallyProvided[bool] = MISSING
-    permissions: OptionallyProvided[str] = MISSING
-    premium_subscription_count: OptionallyProvided[int] = MISSING
-    presences: OptionallyProvided[List[...]] = MISSING
-    stage_instances: OptionallyProvided[List[StageInstance]] = MISSING
-    stickers: OptionallyProvided[List[Sticker]] = MISSING
-    region: OptionallyProvided[Optional[str]] = MISSING
-    threads: OptionallyProvided[List[Channel]] = MISSING
+    approximate_member_count: APINullable[int] = MISSING
+    approximate_presence_count: APINullable[int] = MISSING
+    channels: APINullable[List[Channel]] = MISSING
+    icon_hash: APINullable[Optional[str]] = MISSING
+    joined_at: APINullable[Timestamp] = MISSING
+    large: APINullable[bool] = MISSING
+    max_members: APINullable[int] = MISSING
+    max_presences: APINullable[Optional[int]] = MISSING
+    max_video_channel_users: APINullable[int] = MISSING
+    members: APINullable[List[Member]] = MISSING
+    member_count: APINullable[bool] = MISSING
+    owner: APINullable[bool] = MISSING
+    permissions: APINullable[str] = MISSING
+    premium_subscription_count: APINullable[int] = MISSING
+    presences: APINullable[List[...]] = MISSING
+    stage_instances: APINullable[List[StageInstance]] = MISSING
+    stickers: APINullable[List[Sticker]] = MISSING
+    region: APINullable[Optional[str]] = MISSING
+    threads: APINullable[List[Channel]] = MISSING
     # Guilds are considered available unless otherwise specified
-    unavailable: bool = False
-    voice_states: OptionallyProvided[bool] = MISSING
-    widget_enabled: OptionallyProvided[bool] = MISSING
-    widget_channel_id: OptionallyProvided[Optional[Snowflake]] = MISSING
-    welcome_screen: OptionallyProvided[WelcomeScreen] = MISSING
+    unavailable: APINullable[bool] = MISSING
+    voice_states: APINullable[bool] = MISSING
+    widget_enabled: APINullable[bool] = MISSING
+    widget_channel_id: APINullable[Optional[Snowflake]] = MISSING
+    welcome_screen: APINullable[WelcomeScreen] = MISSING
 
     @classmethod
     def from_dict(cls, data, *args, **kwargs) -> Guild:

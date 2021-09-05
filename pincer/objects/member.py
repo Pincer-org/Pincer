@@ -28,7 +28,7 @@ from typing import Optional, List
 
 from pincer.utils.api_object import APIObject
 from pincer.objects.user import User
-from pincer.utils.constants import OptionallyProvided, MISSING
+from pincer.utils.constants import APINullable, MISSING
 from pincer.utils.snowflake import Snowflake
 from pincer.utils.timestamp import Timestamp
 
@@ -40,8 +40,8 @@ class Member(APIObject):
     mute: bool
     roles: List[Snowflake]
 
-    nick: OptionallyProvided[Optional[str]] = MISSING
-    pending: OptionallyProvided[bool] = MISSING
-    permissions: OptionallyProvided[str] = MISSING
-    premium_since: OptionallyProvided[Optional[Timestamp]] = MISSING
-    user: OptionallyProvided[User] = MISSING
+    nick: APINullable[Optional[str]] = MISSING
+    pending: APINullable[bool] = MISSING
+    permissions: APINullable[str] = MISSING
+    premium_since: APINullable[Optional[Timestamp]] = MISSING
+    user: APINullable[User] = MISSING

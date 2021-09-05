@@ -25,7 +25,7 @@
 from dataclasses import dataclass
 
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import MISSING, OptionallyProvided
+from pincer.utils.constants import MISSING, APINullable
 from pincer.utils.snowflake import Snowflake
 
 
@@ -46,7 +46,7 @@ class MessageReference(APIObject):
         exist instead of sending as a normal (non-reply) message,
         default true
     """
-    message_id: OptionallyProvided[Snowflake] = MISSING
-    channel_id: OptionallyProvided[Snowflake] = MISSING
-    guild_id: OptionallyProvided[Snowflake] = MISSING
-    fail_if_not_exists: OptionallyProvided[bool] = True
+    message_id: APINullable[Snowflake] = MISSING
+    channel_id: APINullable[Snowflake] = MISSING
+    guild_id: APINullable[Snowflake] = MISSING
+    fail_if_not_exists: APINullable[bool] = True

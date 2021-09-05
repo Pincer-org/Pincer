@@ -40,7 +40,7 @@ from pincer.objects.role import Role
 from pincer.objects.sticker import StickerItem
 from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import MISSING, OptionallyProvided
+from pincer.utils.constants import MISSING, APINullable
 from pincer.utils.snowflake import Snowflake
 from pincer.utils.timestamp import Timestamp
 
@@ -126,7 +126,7 @@ class MessageActivity(APIObject):
         party_id from a Rich Presence event
     """
     type: MessageActivityType
-    party_id: OptionallyProvided[str] = MISSING
+    party_id: APINullable[str] = MISSING
 
 @dataclass
 class Message(APIObject):
@@ -243,18 +243,18 @@ class Message(APIObject):
     pinned: bool
     type: MessageType
 
-    guild_id: OptionallyProvided[Snowflake] = MISSING
-    member: OptionallyProvided[Member] = MISSING
-    reactions: OptionallyProvided[List[Reaction]] = MISSING
-    nonce: OptionallyProvided[Union[int, str]] = MISSING
-    webhook_id: OptionallyProvided[Snowflake] = MISSING
-    activity: OptionallyProvided[MessageActivity] = MISSING
-    application: OptionallyProvided[Application] = MISSING
-    application_id: OptionallyProvided[Snowflake] = MISSING
-    message_reference: OptionallyProvided[MessageReference] = MISSING
-    flags: OptionallyProvided[MessageFlags] = MISSING
-    referenced_message: OptionallyProvided[Optional[Message]] = MISSING
-    interaction: OptionallyProvided[MessageInteraction] = MISSING
-    thread: OptionallyProvided[Channel] = MISSING
-    components: OptionallyProvided[List[MessageComponent]] = MISSING
-    sticker_items: OptionallyProvided[List[StickerItem]] = MISSING
+    guild_id: APINullable[Snowflake] = MISSING
+    member: APINullable[Member] = MISSING
+    reactions: APINullable[List[Reaction]] = MISSING
+    nonce: APINullable[Union[int, str]] = MISSING
+    webhook_id: APINullable[Snowflake] = MISSING
+    activity: APINullable[MessageActivity] = MISSING
+    application: APINullable[Application] = MISSING
+    application_id: APINullable[Snowflake] = MISSING
+    message_reference: APINullable[MessageReference] = MISSING
+    flags: APINullable[MessageFlags] = MISSING
+    referenced_message: APINullable[Optional[Message]] = MISSING
+    interaction: APINullable[MessageInteraction] = MISSING
+    thread: APINullable[Channel] = MISSING
+    components: APINullable[List[MessageComponent]] = MISSING
+    sticker_items: APINullable[List[StickerItem]] = MISSING

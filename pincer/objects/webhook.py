@@ -31,7 +31,7 @@ from pincer.objects.channel import Channel
 from pincer.objects.guild import Guild
 from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import OptionallyProvided, MISSING
+from pincer.utils.constants import APINullable, MISSING
 from pincer.utils.snowflake import Snowflake
 
 
@@ -51,10 +51,10 @@ class Webhook(APIObject):
     avatar: Optional[str] = None
     application_id: Optional[Snowflake] = None
 
-    user: OptionallyProvided[User] = MISSING
-    token: OptionallyProvided[str] = MISSING
-    source_guild: OptionallyProvided[Guild] = MISSING
-    source_channel: OptionallyProvided[Channel] = MISSING
-    url: OptionallyProvided[str] = MISSING
+    user: APINullable[User] = MISSING
+    token: APINullable[str] = MISSING
+    source_guild: APINullable[Guild] = MISSING
+    source_channel: APINullable[Channel] = MISSING
+    url: APINullable[str] = MISSING
     
-    guild_id: OptionallyProvided[Optional[Snowflake]] = MISSING
+    guild_id: APINullable[Optional[Snowflake]] = MISSING

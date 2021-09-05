@@ -28,7 +28,7 @@ from enum import Enum
 
 from pincer.utils.api_object import APIObject
 from pincer.objects.emoji import Emoji
-from pincer.utils.constants import MISSING, OptionallyProvided
+from pincer.utils.constants import MISSING, APINullable
 
 
 class ButtonStyle(Enum):
@@ -93,8 +93,8 @@ class Button(APIObject):
     type: int
     style: ButtonStyle
 
-    label: OptionallyProvided[str] = MISSING
-    emoji: OptionallyProvided[Emoji] = MISSING
-    custom_id: OptionallyProvided[str] = MISSING
-    url: OptionallyProvided[str] = MISSING
-    disabled: OptionallyProvided[bool] = False
+    label: APINullable[str] = MISSING
+    emoji: APINullable[Emoji] = MISSING
+    custom_id: APINullable[str] = MISSING
+    url: APINullable[str] = MISSING
+    disabled: APINullable[bool] = False
