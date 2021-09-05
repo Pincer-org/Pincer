@@ -47,7 +47,6 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 autoclass_content = 'both'
 
 with open('../requirements.txt') as f:
-    f.read()
     autodock_mock_imports = f.read().splitlines()
 
 # -- Options for HTML output -------------------------------------------------
