@@ -21,58 +21,14 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
-from typing import List, Optional
+from typing import Optional
 
 from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import MISSING, OptionallyProvided
-
-
-class StickerType(Enum):
-    STANDARD = 1
-    GUILD = 2
-
-
-class StickerFormatType(Enum):
-    PNG = 1
-    APNG = 2
-    LOTTIE = 3
-
 
 @dataclass
-class Sticker(APIObject):
-    description: Optional[str]
-    format_type: StickerFormatType
-    id: int
-    name: str
-    tags: str
-    type: StickerType
-
-    available: OptionallyProvided[bool] = MISSING
-    guild_id: OptionallyProvided[int] = MISSING
-    pack_id: OptionallyProvided[int] = MISSING
-    sort_value: OptionallyProvided[int] = MISSING
-    user: OptionallyProvided[User] = MISSING
-
-        
-@dataclass
-class StickerItem(APIObject):
-    id: int
-    name: str
-    format_type: StickerFormatType
-
-
-@dataclass
-class StickerPack(APIObject):
-    id: int
-    stickers: List[Sticker]
-    name: str
-    sku_id: int
-    description: str
-
-    cover_sticker_id: OptionallyProvided[int] = MISSING
-    banner_asset_id: OptionallyProvided[int] = MISSING
+class Ban(APIObject):
+	reason: Optional[str]
+	user: User

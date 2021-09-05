@@ -24,55 +24,22 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
-from typing import List, Optional
+from typing import Optional
 
-from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import MISSING, OptionallyProvided
-
-
-class StickerType(Enum):
-    STANDARD = 1
-    GUILD = 2
-
-
-class StickerFormatType(Enum):
-    PNG = 1
-    APNG = 2
-    LOTTIE = 3
 
 
 @dataclass
-class Sticker(APIObject):
-    description: Optional[str]
-    format_type: StickerFormatType
-    id: int
-    name: str
-    tags: str
-    type: StickerType
-
-    available: OptionallyProvided[bool] = MISSING
-    guild_id: OptionallyProvided[int] = MISSING
-    pack_id: OptionallyProvided[int] = MISSING
-    sort_value: OptionallyProvided[int] = MISSING
-    user: OptionallyProvided[User] = MISSING
-
-        
-@dataclass
-class StickerItem(APIObject):
-    id: int
-    name: str
-    format_type: StickerFormatType
-
-
-@dataclass
-class StickerPack(APIObject):
-    id: int
-    stickers: List[Sticker]
-    name: str
-    sku_id: int
+class WelcomeScreenChannel(APIObject):
+    channel_id: int
     description: str
 
-    cover_sticker_id: OptionallyProvided[int] = MISSING
-    banner_asset_id: OptionallyProvided[int] = MISSING
+    emoji_id: Optional[int] = None
+    emoji_name: Optional[str] = None
+
+
+@dataclass
+class WelcomeScreen(APIObject):
+    welcome_channels: WelcomeScreenChannel
+
+    description: Optional[str] = None
