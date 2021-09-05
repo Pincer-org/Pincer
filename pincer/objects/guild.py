@@ -26,6 +26,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional, List
 
+from pincer.exceptions import PincerError
 from pincer.objects.channel import Channel
 from pincer.objects.emoji import Emoji
 from pincer.objects.member import Member
@@ -39,7 +40,7 @@ from pincer.utils.snowflake import Snowflake
 from pincer.utils.timestamp import Timestamp
 
 
-class UnavailableGuildError(Exception):
+class UnavailableGuildError(PincerError):
     pass
 
 
