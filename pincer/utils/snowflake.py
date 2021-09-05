@@ -23,6 +23,18 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class Snowflake(int):
+	"""
+	Discord utilizes Twitter's snowflake format for uniquely identifiable descriptors (IDs).
+	These IDs are guaranteed to be unique across all of Discord, except in some unique
+	scenarios in which child objects share their parent's ID. Because Snowflake IDs are up
+	to 64 bits in size (e.g. a uint64), they are always returned as strings in the HTTP API
+	to prevent integer overflows in some languages.
+
+	:var timestamp: Milliseconds since Discord Epoch, the first second of 2015 or 14200704000000
+	:var worker_id: Internal worker ID
+	:var process_id: Internal process ID
+	:var increment: For every ID that is generated on that process, this number is incremented
+	"""
 
 	@property
 	def timestamp(self) -> int:
