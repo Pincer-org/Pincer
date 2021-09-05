@@ -36,7 +36,7 @@ class VoiceState(APIObject):
     """Used to represent a user's voice connection status
 
     :param guild_id: the guild id this voice state is for
-    :param channel_id: the channel id this user is conncted to
+    :param channel_id: the channel id this user is connected to
     :param user_id: the user id this voice state is for
     :param member: the guild member this voice state is for
     :param session_id: the session id for this voice state
