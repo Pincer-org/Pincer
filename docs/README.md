@@ -125,7 +125,7 @@ class Bot(Client):
 
 See an advanced bot implementation:
 
-> <https://github.com/Pincer-org/Pincer>
+> <https://github.com/Pincer-org/Pincer-bot>
 
 ### Advanced Usage
 
