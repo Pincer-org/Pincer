@@ -56,6 +56,7 @@ class ChannelType(Enum):
 
 @dataclass
 class Channel(APIObject):
+    """Represents a Discord Channel Mention object"""
     id: Snowflake
     type: ChannelType
 
@@ -87,3 +88,25 @@ class Channel(APIObject):
     def __str__(self):
         """return the discord tag when object gets used as a string."""
         return self.name or str(self.id)
+
+
+@dataclass
+class ChannelMention(APIObject):
+    """Represents a Discord Channel Mention object
+
+    :param id:
+        id of the channel
+
+    :param guild_id:
+        id of the guild containing the channel
+
+    :param type:
+        the type of channel
+
+    :param name:
+        the name of the channel
+    """
+    id: Snowflake
+    guild_id: Snowflake
+    type: ChannelType
+    name: str
