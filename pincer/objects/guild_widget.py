@@ -28,12 +28,16 @@ from typing import Optional
 from pincer.utils.api_object import APIObject
 from pincer.utils.snowflake import Snowflake
 
+
 @dataclass
 class GuildWidget(APIObject):
-	"""Represents a Discord Guild Widget object
+    """Represents a Discord Guild Widget object
 
-	:param enabled: whether the widget is enabled
-	:param channel_id: the widget channel id
-	"""
-	enabled: bool
-	channel_id: Optional[Snowflake]
+    :param enabled:
+        whether the widget is enabled
+
+    :param channel_id:
+        the widget channel id
+    """
+    enabled: bool
+    channel_id: Optional[Snowflake]

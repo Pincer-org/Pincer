@@ -109,8 +109,8 @@ class Heartbeat:
     @classmethod
     async def handle_heartbeat(cls, socket: WebSocketClientProtocol, _):
         """
-        Handles a heartbeat, which means that it rests and then sends a new
-        heartbeat.
+        Handles a heartbeat, which means that it rests
+        and then sends a new heartbeat.
         """
 
         _log.debug("Resting heart for %is" % cls.__heartbeat)

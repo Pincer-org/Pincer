@@ -88,7 +88,8 @@ class Dispatcher:
                 The current socket, which can be used to interact
                 with the Discord API.
 
-            :param payload: The received payload from Discord.
+            :param payload:
+                The received payload from Discord.
             """
             _log.debug("Sending authentication/identification message.")
 
@@ -150,8 +151,12 @@ class Dispatcher:
         :param socket:
             The current socket, which can be used to interact
             with the Discord API.
-        :param payload: The received payload from Discord.
-        :param loop: The current async loop on which the future is bound.
+
+        :param payload:
+            The received payload from Discord.
+
+        :param loop:
+            The current async loop on which the future is bound.
         """
         _log.debug(
             "New event received, checking if handler exists for opcode: %i"

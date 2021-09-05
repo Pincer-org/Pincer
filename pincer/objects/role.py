@@ -32,9 +32,10 @@ from pincer.utils.snowflake import Snowflake
 
 @dataclass
 class RoleTags(APIObject):
-	bot_id: OptionallyProvided[Snowflake] = MISSING
-	integration_id: OptionallyProvided[Snowflake] = MISSING
-	premium_subscriber: OptionallyProvided[bool] = MISSING
+    bot_id: OptionallyProvided[Snowflake] = MISSING
+    integration_id: OptionallyProvided[Snowflake] = MISSING
+    premium_subscriber: OptionallyProvided[bool] = MISSING
+
 
 @dataclass
 class Role(APIObject):

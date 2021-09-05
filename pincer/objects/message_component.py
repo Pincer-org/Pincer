@@ -32,33 +32,62 @@ from pincer.objects.select_menu import SelectOption
 from pincer.utils.api_object import APIObject
 from pincer.utils.constants import MISSING, OptionallyProvided
 
+
 @dataclass
 class MessageComponent(APIObject):
-	"""Represents a Discord Message Component object
+    """Represents a Discord Message Component object
 
-	:param type: component type
-	:param custom_id: a developer-defined identifier for the component, max 100 characters
-	:param disabled: whether the component is disabled, defaults to `False`
-	:param style: one of button styles
-	:param label: text that appears on the button, max 80 characters
-	:param emoji: `name`, `id`, and `animated`
-	:param url: a url for link-style buttons
-	:param options: the choices in the select, max 25
-	:param placeholder: custom placeholder text if nothing is selected, max 100 characters
-	:param min_values: the minimum number of items that must be chosen; default 1, min 0, max 25
-	:param max_values: the maximum number of items that can be chosen; default 1, max 25
-	:param components: a list of child components
-	"""
-	type: int
-	options: List[SelectOption]
+    :param type:
+        component type
 
-	custom_id: OptionallyProvided[str] = MISSING
-	disabled: OptionallyProvided[bool] = False
-	style: OptionallyProvided[ButtonStyle] = MISSING
-	label: OptionallyProvided[str] = MISSING
-	emoji: OptionallyProvided[Emoji] = MISSING
-	url: OptionallyProvided[str] = MISSING
-	placeholder: OptionallyProvided[str] = MISSING
-	min_values: OptionallyProvided[int] = 1
-	max_values: OptionallyProvided[int] = 1
-	components: OptionallyProvided[List[MessageComponent]] = MISSING
+    :param custom_id:
+        a developer-defined identifier for the component,
+        max 100 characters
+
+    :param disabled:
+        whether the component is disabled,
+        defaults to `False`
+
+    :param style:
+        one of button styles
+
+    :param label:
+        text that appears on the button, max 80 characters
+
+    :param emoji:
+        `name`, `id`, and `animated`
+
+    :param url:
+        a url for link-style buttons
+
+    :param options:
+        the choices in the select, max 25
+
+    :param placeholder:
+        custom placeholder text if nothing is selected,
+        max 100 characters
+
+    :param min_values:
+        the minimum number of items that must be chosen;
+        default 1, min 0, max 25
+
+    :param max_values:
+        the maximum number of items that can be chosen;
+        default 1, max 25
+
+    :param components:
+        a list of child components
+    """
+    type: int
+    options: List[SelectOption]
+
+    custom_id: OptionallyProvided[str] = MISSING
+    disabled: OptionallyProvided[bool] = False
+    style: OptionallyProvided[ButtonStyle] = MISSING
+    label: OptionallyProvided[str] = MISSING
+    emoji: OptionallyProvided[Emoji] = MISSING
+    url: OptionallyProvided[str] = MISSING
+    placeholder: OptionallyProvided[str] = MISSING
+    min_values: OptionallyProvided[int] = 1
+    max_values: OptionallyProvided[int] = 1
+    components: OptionallyProvided[List[MessageComponent]] = MISSING

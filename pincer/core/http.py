@@ -105,11 +105,18 @@ class HTTPClient:
         """
         Send an api request to the Discord REST API.
 
-        :param method: The method for the request. (eg GET or POST)
-        :param endpoint: The endpoint to which the request will be sent.
-        :param __ttl: Private param used for recursively setting the
-        retry amount. (Eg set to 1 for 1 max retry)
-        :param data: The data which will be added to the request.
+        :param method:
+            The method for the request. (eg GET or POST)
+
+        :param endpoint:
+            The endpoint to which the request will be sent.
+
+        :param __ttl:
+            Private param used for recursively setting the retry amount.
+            (Eg set to 1 for 1 max retry)
+
+        :param data:
+            The data which will be added to the request.
         """
         ttl = __ttl or self.max_ttl
 
