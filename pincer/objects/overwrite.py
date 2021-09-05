@@ -29,6 +29,13 @@ from pincer.utils.snowflake import Snowflake
 
 @dataclass
 class Overwrite(APIObject):
+	"""Represents a Discord Overwrite object
+	
+	:param id: role or user id
+	:param type: either 0 (role) or 1 (member)
+	:param allow: permission bit set
+	:param deny: permission bit set
+	"""
 	id: Snowflake
 	type: int
 	allow: str
