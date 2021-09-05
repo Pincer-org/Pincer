@@ -30,7 +30,14 @@ from pincer.utils.snowflake import Snowflake
 
 @dataclass
 class MessageReference(APIObject):
+	"""Represents a Discord Message Reference object
+	
+	:param message_id: id of the originating message
+	:param channel_id: id of the originating message's channel
+	:param guild_id: id of the originating message's guild
+	:param fail_if_not_exists: when sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true
+	"""
 	message_id: OptionallyProvided[Snowflake] = MISSING
 	channel_id: OptionallyProvided[Snowflake] = MISSING
 	guild_id: OptionallyProvided[Snowflake] = MISSING
-	fail_if_not_exists: OptionallyProvided[bool] = MISSING
+	fail_if_not_exists: OptionallyProvided[bool] = True
