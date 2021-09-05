@@ -37,43 +37,43 @@ class VoiceState(APIObject):
 
 
     :param guild_id:
-		the guild id this voice state is for
+        the guild id this voice state is for
 
     :param channel_id:
-		the channel id this user is connected to
+        the channel id this user is connected to
 
     :param user_id:
-		the user id this voice state is for
+        the user id this voice state is for
 
     :param member:
-		the guild member this voice state is for
+        the guild member this voice state is for
 
     :param session_id:
-		the session id for this voice state
+        the session id for this voice state
 
     :param deaf:
-		whether this user is deafened by the server
+        whether this user is deafened by the server
 
     :param mute:
-		whether this user is muted by the server
+        whether this user is muted by the server
 
     :param self_deaf:
-		whether this user is locally deafened
+        whether this user is locally deafened
 
     :param self_mute:
-		whether this user is locally muted
+        whether this user is locally muted
 
     :param self_stream:
-		whether this user is streaming using "Go Live"
+        whether this user is streaming using "Go Live"
 
     :param self_video:
-		whether this user's camera is enabled
+        whether this user's camera is enabled
 
     :param suppress:
-		whether this user is muted by the current user
+        whether this user is muted by the current user
 
     :param request_to_speak_timestamp:
-		the time at which the user requested to speak
+        the time at which the user requested to speak
     """
     channel_id: Optional[Snowflake]
     user_id: Snowflake

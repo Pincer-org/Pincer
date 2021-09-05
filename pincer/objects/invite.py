@@ -56,19 +56,19 @@ class InviteMetadata(APIObject):
 
 
     :param uses:
-		number of times this invite has been used
+        number of times this invite has been used
 
     :param max_uses:
-		max number of times this invite can be used
+        max number of times this invite can be used
 
     :param max_age:
-		duration (in seconds) after which the invite expires
+        duration (in seconds) after which the invite expires
 
     :param temporary:
-		whether this invite only grants temporary membership
+        whether this invite only grants temporary membership
 
     :param created_at:
-		when this invite was created
+        when this invite was created
     """
     uses: int
     max_uses: int
