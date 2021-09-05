@@ -86,7 +86,6 @@ class HTTPClient:
         :meta public:
         """
 
-
         self.__http_exceptions: Dict[int, HTTPError] = {
             304: NotModifiedError(),
             400: BadRequestError(),

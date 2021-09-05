@@ -27,9 +27,7 @@ T = TypeVar("T")
 
 
 class GetItem(Protocol):
-    """
-    Represents a class which implements the __getitem__ property.
-    """
+    """Represents a class which implements the __getitem__ property."""
 
     def __getitem__(self, key: int) -> Any:
         ...
@@ -41,8 +39,8 @@ def get_index(
         fallback: Optional[T] = None
 ) -> Optional[T]:
     """
-    Gets an item from a collection through index. Allows you to provide
-    a fallback for if that index is out of bounds.
+    Gets an item from a collection through index.
+    Allows you to provide a fallback for if that index is out of bounds.
 
     :param collection:
         The collection from which the item is retrieved.

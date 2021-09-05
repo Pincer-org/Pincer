@@ -42,7 +42,7 @@ class Heartbeat:
     The heartbeat of the websocket connection.
 
     This is what lets the server and client know that they are still
-    both online and properly connected.
+        both online and properly connected.
     """
     __heartbeat: float = 0
     __sequence: Optional[int] = None
@@ -118,8 +118,8 @@ class Heartbeat:
     @classmethod
     async def handle_heartbeat(cls, socket: WebSocketClientProtocol, _):
         """
-        Handles a heartbeat, which means that it rests and then sends a new
-        heartbeat.
+        Handles a heartbeat, which means that it rests
+            and then sends a new heartbeat.
 
         :param socket:
             The socket to send the heartbeat to.

@@ -29,7 +29,7 @@ from asyncio import iscoroutinefunction
 from typing import Optional, Any, Union, Dict, Tuple, List
 
 from pincer import __package__
-from pincer._config import GatewayConfig, events
+from pincer._config import events
 from pincer.core.dispatch import GatewayDispatch
 from pincer.core.gateway import Dispatcher
 from pincer.core.http import HTTPClient
@@ -48,12 +48,16 @@ _events: Dict[str, Optional[Union[str, Coro]]] = {}
 for event in events:
     event_final_executor = f"on_{event}"
 
-    # Event middleware for the library. Function argument is a payload
-    # (GatewayDispatch). The function must return a string which
-    # contains the main event key. As second value a list with arguments,
-    # and thee third value value must be a dictionary. The last two are
-    # passed on as *args and **kwargs.
-    #
+    # Event middleware for the library.
+    # Function argument is a payload (GatewayDispatch).
+
+    # The function must return a string which
+    # contains the main event key.
+
+    # As second value a list with arguments,
+    # and thee third value value must be a dictionary.
+    # The last two are passed on as *args and **kwargs.
+
     # NOTE: These return values must be passed as a tuple!
     _events[event] = event_final_executor
 
@@ -64,12 +68,14 @@ for event in events:
 def middleware(call: str, *, override: bool = False):
     """
     Middleware are methods which can be registered with this decorator.
-    These methods are invoked before any ``on_`` event. As the ``on_`` event
-    is the final call.
+    These methods are invoked before any ``on_`` event.
+    As the ``on_`` event is the final call.
 
     A default call exists for all events, but some might already be in
-    use by the library. If you know what you are doing, you can override
-    these default middleware methods by passing the override parameter.
+    use by the library.
+
+    If you know what you are doing, you can override these default
+    middleware methods by passing the override parameter.
 
     The method to which this decorator is registered must be a coroutine,
     and it must return a tuple with the following format\:
@@ -85,8 +91,8 @@ def middleware(call: str, *, override: bool = False):
         )
 
     One parameter is passed to the middleware. This parameter is the
-    payload parameter which is of type :class:`~.core.dispatch.GatewayDispatch`. This contains
-    the response from the discord API.
+    payload parameter which is of type :class:`~.core.dispatch.GatewayDispatch`.
+    This contains the response from the discord API.
 
     :Implementation example:
 
@@ -113,18 +119,25 @@ def middleware(call: str, *, override: bool = False):
     """
     def decorator(func: Coro):
         if override:
-            _log.warning(f"Middleware overriding has been enabled for `{call}`."
-                         " This might cause unexpected behaviour.")
+            _log.warning(
+                f"Middleware overriding has been enabled for `{call}`."
+                " This might cause unexpected behaviour."
+            )
 
         if not override and callable(_events.get(call)):
-            raise RuntimeError(f"Middleware event with call `{call}` has "
-                               "already been registered")
+            raise RuntimeError(
+                f"Middleware event with call `{call}` has "
+                "already been registered"
+            )
 
         async def wrapper(cls, payload: GatewayDispatch):
             _log.debug("`%s` middleware has been invoked", call)
-            return await func(cls, payload) \
-                if should_pass_cls(func) \
+
+            return await (
+                func(cls, payload)
+                if should_pass_cls(func)
                 else await func(payload)
+            )
 
         _events[call] = wrapper
         return wrapper
@@ -135,8 +148,10 @@ def middleware(call: str, *, override: bool = False):
 class Client(Dispatcher):
     def __init__(self, token: str):
         """
-        The client is the main instance which is between the programmer and the
-        discord API. This client represents your bot.
+        The client is the main instance which is between the programmer
+            and the discord API.
+
+        This client represents your bot.
 
         :param token:
             The secret bot token which can be found in
@@ -166,12 +181,13 @@ class Client(Dispatcher):
 
             >>> async with self._http as client:
             >>>     await client.post(
-            >>>         '<endpoint>',
-            >>>         {
-            >>>             "foo": "bar",
-            >>>             "bar": "baz",
-            >>>             "baz": "foo"
-            >>>         })
+            ...         '<endpoint>',
+            ...         {
+            ...             "foo": "bar",
+            ...             "bar": "baz",
+            ...             "baz": "foo"
+            ...         }
+            ...    )
         
         """
         return HTTPClient(self.__token)
@@ -201,10 +217,10 @@ class Client(Dispatcher):
             >>>
             >>> @client.event
             >>> async def on_ready():
-            >>>     print(f"Signed in as {client.bot}")
+            ...     print(f"Signed in as {client.bot}")
             >>>
             >>> if __name__ == "__main__":
-            >>>     client.run()
+            ...     client.run()
 
         .. code-block :: pycon
 
@@ -212,12 +228,12 @@ class Client(Dispatcher):
             >>> from pincer import Client
             >>>
             >>> class BotClient(Client):
-            >>>     @Client.event
-            >>>     async def on_ready(self):
-            >>>         print(f"Signed in as {self.bot}")
+            ...     @Client.event
+            ...     async def on_ready(self):
+            ...         print(f"Signed in as {self.bot}")
             >>>
             >>> if __name__ == "__main__":
-            >>>     BotClient("token").run()
+            ...     BotClient("token").run()
         
 
         :param coroutine: # TODO: add info
@@ -286,8 +302,9 @@ class Client(Dispatcher):
             extractable = await ware(self, payload, *args, **kwargs)
 
             if not isinstance(extractable, tuple):
-                raise RuntimeError(f"Return type from `{key}` middleware must "
-                                   f"be tuple. ")
+                raise RuntimeError(
+                    f"Return type from `{key}` middleware must be tuple. "
+                )
 
             next_call = get_index(extractable, 0, "")
             arguments = get_index(extractable, 1, list())
@@ -296,10 +313,13 @@ class Client(Dispatcher):
         if next_call is None:
             raise RuntimeError(f"Middleware `{key}` has not been registered.")
 
-        return (next_call, arguments, params) \
-            if next_call.startswith("on_") \
-            else await self.handle_middleware(payload, next_call,
-                                              *arguments, **params)
+        return (
+            (next_call, arguments, params)
+            if next_call.startswith("on_")
+            else await self.handle_middleware(
+                payload, next_call, *arguments, **params
+            )
+        )
 
     async def event_handler(self, _, payload: GatewayDispatch):
         """
