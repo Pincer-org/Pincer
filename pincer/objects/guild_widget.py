@@ -31,7 +31,7 @@ from pincer.utils.snowflake import Snowflake
 @dataclass
 class GuildWidget(APIObject):
 	"""Represents a Discord Guild Widget object
-	
+
 	:param enabled: whether the widget is enabled
 	:param channel_id: the widget channel id
 	"""

@@ -29,7 +29,7 @@ from pincer.utils.api_object import APIObject
 @dataclass
 class VoiceRegion(APIObject):
 	"""Represents a Discord Voice Region object
-	
+
 	:param id: unique ID for the region
 	:param name: name of the region
 	:param vip: true if this is a vip-only server

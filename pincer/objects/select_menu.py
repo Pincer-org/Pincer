@@ -32,7 +32,7 @@ from pincer.utils.constants import MISSING, OptionallyProvided
 @dataclass
 class SelectOption(APIObject):
 	"""Represents a Discord Select Option object
-	
+
 	:param label: the user-facing name of the option, max 100 characters
 	:param value: the def-defined value of the option, max 100 characters
 	:param description: an additional description of the option, max 100 characters
@@ -48,7 +48,7 @@ class SelectOption(APIObject):
 @dataclass
 class SelectMenu(APIObject):
 	"""Represents a Discord Select Menu object
-	
+
 	:param type: `3` for a select menu
 	:param custom_id: a developer-defined identifier for the button, max 100 characters
 	:param options: the choices in the select, max 25

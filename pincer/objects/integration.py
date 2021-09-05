@@ -40,7 +40,7 @@ class IntegrationExpireBehavior(Enum):
 @dataclass
 class IntegrationAccount(APIObject):
 	"""Represents a Discord Integration Account object
-	
+
 	:param id: id of the account
 	:param name: name of the account"""
 	id: str
@@ -49,7 +49,7 @@ class IntegrationAccount(APIObject):
 @dataclass
 class IntegrationApplication(APIObject):
 	"""Represents a Discord Integration Application object
-	
+
 	:param id: the id of the app
 	:param name: the name of the app
 	:param icon: the icon hash of the app

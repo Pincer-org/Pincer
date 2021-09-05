@@ -60,7 +60,7 @@ class ResolvedData(APIObject):
 @dataclass
 class InteractionData(APIObject):
 	"""Represents a Discord Interaction Data structure
-	
+
 	:param id: the `ID` of the invoked command
 	:param name: the `name` of the invoked command
 	:param type: the `type` of the invoked command
@@ -102,7 +102,7 @@ class MessageInteraction(APIObject):
 @dataclass
 class Interaction(APIObject):
 	"""Represents a Discord Interaction object
-	
+
 	:param id: id of the interaction
 	:param application_id: id of the application this interaction is for
 	:param type: the type of interaction

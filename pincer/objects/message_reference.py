@@ -31,7 +31,7 @@ from pincer.utils.snowflake import Snowflake
 @dataclass
 class MessageReference(APIObject):
 	"""Represents a Discord Message Reference object
-	
+
 	:param message_id: id of the originating message
 	:param channel_id: id of the originating message's channel
 	:param guild_id: id of the originating message's guild

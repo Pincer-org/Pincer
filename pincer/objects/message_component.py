@@ -35,7 +35,7 @@ from pincer.utils.constants import MISSING, OptionallyProvided
 @dataclass
 class MessageComponent(APIObject):
 	"""Represents a Discord Message Component object
-	
+
 	:param type: component type
 	:param custom_id: a developer-defined identifier for the component, max 100 characters
 	:param disabled: whether the component is disabled, defaults to `False`

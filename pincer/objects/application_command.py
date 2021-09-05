@@ -51,7 +51,7 @@ class ApplicationCommandOptionType(Enum):
 @dataclass
 class ApplicationCommandInteractionDataOption(APIObject):
 	"""Represents a Discord Application Command Interaction Data Option
-	
+
 	:param name: the name of the parameter
 	:param type: value of application command option type
 	:param value: the value of the pair
@@ -65,7 +65,7 @@ class ApplicationCommandInteractionDataOption(APIObject):
 @dataclass
 class ApplicationCommandOptionChoice(APIObject):
 	"""Represents a Discord Application Command Option Choice object
-	
+
 	:param name: 1-100 character choice name
 	:param value: value of the choice, up to 100 characters if string
 	"""
@@ -75,7 +75,7 @@ class ApplicationCommandOptionChoice(APIObject):
 @dataclass
 class ApplicationCommandOption(APIObject):
 	"""Represents a Discord Application Command Option object
-	
+
 	:param type: the type of option
 	:param name: 1-32 lowercase character name matching `^[\w-]{1,32}$`
 	:param description: 1-100 chartacter description
@@ -94,7 +94,7 @@ class ApplicationCommandOption(APIObject):
 @dataclass
 class ApplicationCommand(APIObject):
 	"""Represents a Discord Application Command object
-	
+
 	:param id: unique id of the command
 	:param type: the type of command, defaults `1` if not set
 	:param application_id: unique id of the parent application

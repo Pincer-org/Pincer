@@ -63,7 +63,7 @@ class Button(APIObject):
 	Represents a Discord Button object. Buttons are interactive components
 	that render on messages. They can be clicked by users, and send an
 	interaction to your app when clicked.
-	
+
 	:param type: `2` for a button
 	:param style: one of button styles
 	:param label: text that appears on the button, max 80 characters
