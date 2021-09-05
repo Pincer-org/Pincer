@@ -26,7 +26,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List
 
+from pincer.objects.button import ButtonStyle
 from pincer.objects.emoji import Emoji
+from pincer.objects.select_menu import SelectOption
 from pincer.utils.api_object import APIObject
 from pincer.utils.constants import MISSING, OptionallyProvided
 
@@ -48,11 +50,11 @@ class MessageComponent(APIObject):
 	:param components: a list of child components
 	"""
 	type: int
-	options: List[...]
+	options: List[SelectOption]
 
 	custom_id: OptionallyProvided[str] = MISSING
 	disabled: OptionallyProvided[bool] = False
-	style: OptionallyProvided[int] = MISSING
+	style: OptionallyProvided[ButtonStyle] = MISSING
 	label: OptionallyProvided[str] = MISSING
 	emoji: OptionallyProvided[Emoji] = MISSING
 	url: OptionallyProvided[str] = MISSING
