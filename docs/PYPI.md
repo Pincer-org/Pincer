@@ -25,6 +25,7 @@ An asynchronous Python API wrapper meant to replace discord.py
 > Join the Discord server: <https://discord.gg/8WkYz3fNFm>  
 > The PyPI package: <https://pypi.org/project/Pincer>  
 > Our website: <https://pincer.dev>  
+> ReadTheDoc: <https://pincer.readthedocs.io/en/latest/pincer.html>
 
 ## ☄️ Installation
 
@@ -75,10 +76,12 @@ Depending on your Python installation, you might need to use one of the followin
 ## Current Features
 
 - Dispatcher
-- Logging _Improved_
+- Logging
 - HTTP Client
 - Client base class
-- Basic events _Improved_
+- Basic events
+
+*The documentation has been improved!*
 
 **Client base class example:**
 
@@ -124,7 +127,7 @@ class Bot(Client):
 
 See an advanced bot implementation:
 
-> <https://github.com/Pincer-org/Pincer>
+> <https://github.com/Pincer-org/Pincer-bot>
 
 ### Advanced Usage
 

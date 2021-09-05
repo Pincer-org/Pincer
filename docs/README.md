@@ -23,9 +23,10 @@ An asynchronous Python API wrapper meant to replace discord.py
 
 ## :pushpin: Links
 
-> <img src="../assets/svg/discord.svg" width="12px" alt="Discord Logo"> ｜Join the Discord server: <https://discord.gg/8WkYz3fNFm>  
-> <img src="../assets/svg/pypi.svg" width="12px" alt="PyPI Logo"> ｜The PyPI package: <https://pypi.org/project/Pincer>  
-> <img src="../assets/svg/pincer.svg" width="12px" alt="Pincer Logo"> ｜Our website: <https://pincer.dev>  
+> <img src="../assets/svg/discord.svg" width="12px" alt="Discord Logo"> ｜Join the Discord server: https://discord.gg/8WkYz3fNFm
+> <img src="../assets/svg/pypi.svg" width="12px" alt="PyPI Logo"> ｜The PyPI package: https://pypi.org/project/Pincer
+> <img src="../assets/svg/pincer.svg" width="12px" alt="Pincer Logo"> ｜Our website: https://pincer.dev
+> 📝 | ReadTheDoc: https://pincer.readthedocs.io/en/latest/pincer.html
 
 ## ☄️ Installation
 
