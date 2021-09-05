@@ -27,7 +27,7 @@ from typing import List
 
 from pincer.objects.emoji import Emoji
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import MISSING, OptionallyProvided
+from pincer.utils.constants import MISSING, APINullable
 
 
 @dataclass
@@ -51,9 +51,9 @@ class SelectOption(APIObject):
     """
     label: str
     value: str
-    description: OptionallyProvided[str] = MISSING
-    emoji: OptionallyProvided[Emoji] = MISSING
-    default: OptionallyProvided[bool] = MISSING
+    description: APINullable[str] = MISSING
+    emoji: APINullable[Emoji] = MISSING
+    default: APINullable[bool] = MISSING
 
 
 @dataclass
@@ -89,7 +89,7 @@ class SelectMenu(APIObject):
     custom_id: str
     options: List[SelectOption]
 
-    placeholder: OptionallyProvided[str] = MISSING
-    min_values: OptionallyProvided[int] = 1
-    max_values: OptionallyProvided[int] = 1
-    disabled: OptionallyProvided[bool] = False
+    placeholder: APINullable[str] = MISSING
+    min_values: APINullable[int] = 1
+    max_values: APINullable[int] = 1
+    disabled: APINullable[bool] = False

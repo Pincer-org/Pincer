@@ -28,7 +28,7 @@ from dataclasses import dataclass
 from pincer.utils.timestamp import Timestamp
 from pincer.utils.snowflake import Snowflake
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import OptionallyProvided, MISSING
+from pincer.utils.constants import APINullable, MISSING
 
 @dataclass
 class ThreadMetadata(APIObject):
@@ -58,7 +58,7 @@ class ThreadMetadata(APIObject):
     archive_timestamp: Timestamp
     locked: bool
 
-    invitable: OptionallyProvided[bool] = MISSING
+    invitable: APINullable[bool] = MISSING
 
 @dataclass
 class ThreadMember(APIObject):
@@ -79,6 +79,6 @@ class ThreadMember(APIObject):
     join_timestamp: Timestamp
     flags: int
 
-    id: OptionallyProvided[Snowflake] = MISSING
-    user_id: OptionallyProvided[Snowflake] = MISSING
+    id: APINullable[Snowflake] = MISSING
+    user_id: APINullable[Snowflake] = MISSING
 

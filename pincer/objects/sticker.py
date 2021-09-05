@@ -29,7 +29,7 @@ from typing import List, Optional
 
 from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import MISSING, OptionallyProvided
+from pincer.utils.constants import MISSING, APINullable
 from pincer.utils.snowflake import Snowflake
 
 
@@ -53,11 +53,11 @@ class Sticker(APIObject):
     tags: str
     type: StickerType
 
-    available: OptionallyProvided[bool] = MISSING
-    guild_id: OptionallyProvided[Snowflake] = MISSING
-    pack_id: OptionallyProvided[Snowflake] = MISSING
-    sort_value: OptionallyProvided[int] = MISSING
-    user: OptionallyProvided[User] = MISSING
+    available: APINullable[bool] = MISSING
+    guild_id: APINullable[Snowflake] = MISSING
+    pack_id: APINullable[Snowflake] = MISSING
+    sort_value: APINullable[int] = MISSING
+    user: APINullable[User] = MISSING
 
         
 @dataclass
@@ -75,5 +75,5 @@ class StickerPack(APIObject):
     sku_id: Snowflake
     description: str
 
-    cover_sticker_id: OptionallyProvided[Snowflake] = MISSING
-    banner_asset_id: OptionallyProvided[Snowflake] = MISSING
+    cover_sticker_id: APINullable[Snowflake] = MISSING
+    banner_asset_id: APINullable[Snowflake] = MISSING

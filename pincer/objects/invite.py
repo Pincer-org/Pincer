@@ -34,7 +34,7 @@ from pincer.objects.guild import Guild
 from pincer.objects.user import User
 from pincer.objects.member import Member
 from pincer.objects.application import Application
-from pincer.utils.constants import OptionallyProvided, MISSING
+from pincer.utils.constants import APINullable, MISSING
 from pincer.utils.timestamp import Timestamp
 
 
@@ -81,12 +81,12 @@ class Invite(APIObject):
     channel: Channel
     code: str
 
-    approximate_member_count: OptionallyProvided[int] = MISSING
-    approximate_presence_count: OptionallyProvided[int] = MISSING
-    expires_at: OptionallyProvided[Optional[Timestamp]] = MISSING
-    inviter: OptionallyProvided[User] = MISSING
-    guild: OptionallyProvided[Guild] = MISSING
-    stage_instance: OptionallyProvided[InviteStageInstance] = MISSING
-    target_type: OptionallyProvided[InviteTargetType] = MISSING
-    target_user: OptionallyProvided[User] = MISSING
-    target_application: OptionallyProvided[Application] = MISSING
+    approximate_member_count: APINullable[int] = MISSING
+    approximate_presence_count: APINullable[int] = MISSING
+    expires_at: APINullable[Optional[Timestamp]] = MISSING
+    inviter: APINullable[User] = MISSING
+    guild: APINullable[Guild] = MISSING
+    stage_instance: APINullable[InviteStageInstance] = MISSING
+    target_type: APINullable[InviteTargetType] = MISSING
+    target_user: APINullable[User] = MISSING
+    target_application: APINullable[Application] = MISSING

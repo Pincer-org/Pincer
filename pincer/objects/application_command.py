@@ -28,7 +28,7 @@ from enum import Enum
 from typing import List, Union
 
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import MISSING, OptionallyProvided
+from pincer.utils.constants import MISSING, APINullable
 from pincer.utils.snowflake import Snowflake
 
 
@@ -62,8 +62,8 @@ class ApplicationCommandInteractionDataOption(APIObject):
     """
     name: str
     type: int
-    value: OptionallyProvided[ApplicationCommandOptionType] = MISSING
-    options: OptionallyProvided[
+    value: APINullable[ApplicationCommandOptionType] = MISSING
+    options: APINullable[
         List[ApplicationCommandInteractionDataOption]] = MISSING
 
 
@@ -106,9 +106,9 @@ class ApplicationCommandOption(APIObject):
     name: str
     description: str
 
-    required: OptionallyProvided[bool] = False
-    choices: OptionallyProvided[List[ApplicationCommandOptionChoice]] = MISSING
-    options: OptionallyProvided[List[ApplicationCommandOption]] = MISSING
+    required: APINullable[bool] = False
+    choices: APINullable[List[ApplicationCommandOptionChoice]] = MISSING
+    options: APINullable[List[ApplicationCommandOption]] = MISSING
 
 
 @dataclass
@@ -147,6 +147,6 @@ class ApplicationCommand(APIObject):
     name: str
     description: str
 
-    options: OptionallyProvided[List[ApplicationCommandOption]] = MISSING
-    guild_id: OptionallyProvided[Snowflake] = MISSING
-    default_permission: OptionallyProvided[bool] = True
+    options: APINullable[List[ApplicationCommandOption]] = MISSING
+    guild_id: APINullable[Snowflake] = MISSING
+    default_permission: APINullable[bool] = True

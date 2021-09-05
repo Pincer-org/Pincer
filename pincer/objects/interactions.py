@@ -34,7 +34,7 @@ from pincer.objects.role import Role
 from pincer.objects.select_menu import SelectOption
 from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import MISSING, OptionallyProvided
+from pincer.utils.constants import MISSING, APINullable
 from pincer.utils.snowflake import Snowflake
 
 
@@ -63,11 +63,11 @@ class ResolvedData(APIObject):
     :param messages:
         Map of Snowflakes to partial message objects
     """
-    users: OptionallyProvided[Dict[Snowflake, User]] = MISSING
-    members: OptionallyProvided[Dict[Snowflake, Member]] = MISSING
-    roles: OptionallyProvided[Dict[Snowflake, Role]] = MISSING
-    channels: OptionallyProvided[Dict[Snowflake, Channel]] = MISSING
-    messages: OptionallyProvided[Dict[Snowflake, ...]] = MISSING
+    users: APINullable[Dict[Snowflake, User]] = MISSING
+    members: APINullable[Dict[Snowflake, Member]] = MISSING
+    roles: APINullable[Dict[Snowflake, Role]] = MISSING
+    channels: APINullable[Dict[Snowflake, Channel]] = MISSING
+    messages: APINullable[Dict[Snowflake, ...]] = MISSING
     # Message
 
 
@@ -106,12 +106,12 @@ class InteractionData(APIObject):
     name: str
     type: int
 
-    resolved: OptionallyProvided[ResolvedData] = MISSING
-    options: OptionallyProvided[ApplicationCommandInteractionDataOption] = MISSING
-    custom_id: OptionallyProvided[str] = MISSING
-    component_type: OptionallyProvided[int] = MISSING
-    values = OptionallyProvided[SelectOption] = MISSING
-    target_id = OptionallyProvided[Snowflake] = MISSING
+    resolved: APINullable[ResolvedData] = MISSING
+    options: APINullable[ApplicationCommandInteractionDataOption] = MISSING
+    custom_id: APINullable[str] = MISSING
+    component_type: APINullable[int] = MISSING
+    values = APINullable[SelectOption] = MISSING
+    target_id = APINullable[Snowflake] = MISSING
 
 
 @dataclass
@@ -175,9 +175,9 @@ class Interaction(APIObject):
     token: str
 
     version: int = 1
-    data: OptionallyProvided[InteractionData] = MISSING
-    guild_id: OptionallyProvided[Snowflake] = MISSING
-    channel_id: OptionallyProvided[Snowflake] = MISSING
-    member: OptionallyProvided[Member] = MISSING
-    user: OptionallyProvided[User] = MISSING
-    message: OptionallyProvided[...] = MISSING  # Message
+    data: APINullable[InteractionData] = MISSING
+    guild_id: APINullable[Snowflake] = MISSING
+    channel_id: APINullable[Snowflake] = MISSING
+    member: APINullable[Member] = MISSING
+    user: APINullable[User] = MISSING
+    message: APINullable[...] = MISSING  # Message

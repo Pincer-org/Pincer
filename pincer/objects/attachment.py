@@ -26,7 +26,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import MISSING, OptionallyProvided
+from pincer.utils.constants import MISSING, APINullable
 from pincer.utils.snowflake import Snowflake
 
 
@@ -64,6 +64,6 @@ class Attachment(APIObject):
     url: str
     proxy_url: str
 
-    content_type: OptionallyProvided[str] = MISSING
-    height: OptionallyProvided[Optional[int]] = MISSING
-    width: OptionallyProvided[Optional[int]] = MISSING
+    content_type: APINullable[str] = MISSING
+    height: APINullable[Optional[int]] = MISSING
+    width: APINullable[Optional[int]] = MISSING

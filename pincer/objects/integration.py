@@ -29,7 +29,7 @@ from typing import Optional
 
 from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import MISSING, OptionallyProvided
+from pincer.utils.constants import MISSING, APINullable
 from pincer.utils.snowflake import Snowflake
 
 
@@ -76,7 +76,7 @@ class IntegrationApplication(APIObject):
     icon: Optional[str]
     description: str
     summary: str
-    bot: OptionallyProvided[User] = MISSING
+    bot: APINullable[User] = MISSING
 
 
 @dataclass
@@ -136,16 +136,16 @@ class Integration(APIObject):
     enabled: bool
     account: IntegrationAccount
 
-    syncing: OptionallyProvided[bool] = MISSING
-    role_id: OptionallyProvided[Snowflake] = MISSING
-    enable_emoticons: OptionallyProvided[bool] = MISSING
-    expire_behavior: OptionallyProvided[IntegrationExpireBehavior] = MISSING
-    expire_grace_period: OptionallyProvided[int] = MISSING
-    user: OptionallyProvided[User] = MISSING
-    synced_at: OptionallyProvided[str] = MISSING
-    subscriber_count: OptionallyProvided[int] = MISSING
-    revoked: OptionallyProvided[bool] = MISSING
-    application: OptionallyProvided[IntegrationApplication] = MISSING
+    syncing: APINullable[bool] = MISSING
+    role_id: APINullable[Snowflake] = MISSING
+    enable_emoticons: APINullable[bool] = MISSING
+    expire_behavior: APINullable[IntegrationExpireBehavior] = MISSING
+    expire_grace_period: APINullable[int] = MISSING
+    user: APINullable[User] = MISSING
+    synced_at: APINullable[str] = MISSING
+    subscriber_count: APINullable[int] = MISSING
+    revoked: APINullable[bool] = MISSING
+    application: APINullable[IntegrationApplication] = MISSING
 
     def set_synced_at(self, time: datetime):
         self.synced_at = time.isoformat()

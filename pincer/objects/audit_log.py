@@ -32,7 +32,7 @@ from pincer.objects.integration import Integration
 from pincer.objects.user import User
 from pincer.objects.webhook import Webhook
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import OptionallyProvided, MISSING
+from pincer.utils.constants import APINullable, MISSING
 from pincer.utils.snowflake import Snowflake
 
 
@@ -170,9 +170,9 @@ class AuditLogEntry(APIObject):
     id: Snowflake
     action_type: AuditLogEvent
 
-    changes: OptionallyProvided[List[AuditLogChange]] = MISSING
-    options: OptionallyProvided[AuditEntryInfo] = MISSING
-    reason: OptionallyProvided[str] = MISSING
+    changes: APINullable[List[AuditLogChange]] = MISSING
+    options: APINullable[AuditEntryInfo] = MISSING
+    reason: APINullable[str] = MISSING
 
 
 @dataclass
