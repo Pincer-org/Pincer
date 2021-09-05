@@ -51,6 +51,7 @@ class Heartbeat:
     async def __send(cls, socket: WebSocketClientProtocol):
         """
         Sends a heartbeat to the API gateway.
+        :meta public:
 
         :param socket:
             The socket to send the heartbeat to.

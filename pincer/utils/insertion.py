@@ -27,7 +27,7 @@ from typing import Any, Union, Callable
 from pincer.utils.types import Coro
 
 
-def should_pass_cls(call: Union[Coro, Callable[..., Any]]):
+def should_pass_cls(call: Union[Coro, Callable[..., Any]]) -> bool:
     """
     Checks whether a callable requires a self/cls as first parameter.
 

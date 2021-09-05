@@ -25,4 +25,4 @@
 from typing import TypeVar, Callable, Coroutine, Any
 
 # Represents a coroutine.
-Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
+Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]]) #:

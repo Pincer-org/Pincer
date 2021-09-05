@@ -66,7 +66,7 @@ class HTTPClient:
 
         :param version:
             The discord API version.
-            See `developers/docs/reference#api-versioning`.
+            See `<https://discord.com/developers/docs/reference#api-versioning>`_.
 
         :param ttl:
             Max amount of attempts after error code 5xx
@@ -79,7 +79,13 @@ class HTTPClient:
             "Authorization": f"Bot {token}",
             "Content-Type": "application/json"
         }
-        self.__session = ClientSession(headers=headers)
+        self.__session: ClientSession = ClientSession(headers=headers) 
+        """
+        The client session object
+        
+        :meta public:
+        """
+
 
         self.__http_exceptions: Dict[int, HTTPError] = {
             304: NotModifiedError(),
@@ -99,6 +105,7 @@ class HTTPClient:
         await self.close()
 
     async def close(self):
+        """Closes :attr:`~.HTTPClient.__session`"""
         await self.__session.close()
 
     async def __send(
@@ -110,6 +117,8 @@ class HTTPClient:
     ) -> Optional[Dict]:
         """
         Send an api request to the Discord REST API.
+
+        :meta public:
 
         :param method:
             The method for the request. (eg GET or POST)
@@ -156,6 +165,8 @@ class HTTPClient:
     ) -> Optional[Dict]:
         """
         Handle responses from the discord API.
+        
+        :meta public:
 
         Side effects:
             If a 5xx error code is returned it will retry the request.
