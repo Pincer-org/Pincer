@@ -30,7 +30,7 @@ from typing import Dict, Union
 
 from websockets.typing import Data
 
-from pincer.utils.constants import MISSING, MissingType
+from pincer.utils.constants import MissingType
 
 
 def _asdict_ignore_none(
