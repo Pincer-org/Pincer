@@ -25,7 +25,7 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
-from typing import List
+from typing import List, Union
 
 from pincer.utils.api_object import APIObject
 from pincer.utils.constants import MISSING, OptionallyProvided
@@ -70,7 +70,7 @@ class ApplicationCommandOptionChoice(APIObject):
 	:param value: value of the choice, up to 100 characters if string
 	"""
 	name: str
-	value: str | int | float
+	value: Union[str, int, float]
 
 @dataclass
 class ApplicationCommandOption(APIObject):
