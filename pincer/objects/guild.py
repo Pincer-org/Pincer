@@ -39,6 +39,10 @@ from pincer.utils.snowflake import Snowflake
 from pincer.utils.timestamp import Timestamp
 
 
+class UnavailableGuildError(Exception):
+    pass
+
+
 @dataclass
 class Guild(APIObject):
     afk_channel_id: Optional[Snowflake]
@@ -87,8 +91,18 @@ class Guild(APIObject):
     stickers: APINullable[List[Sticker]] = MISSING
     region: APINullable[Optional[str]] = MISSING
     threads: APINullable[List[Channel]] = MISSING
+    # Guilds are considered available unless otherwise specified
     unavailable: APINullable[bool] = MISSING
     voice_states: APINullable[bool] = MISSING
     widget_enabled: APINullable[bool] = MISSING
     widget_channel_id: APINullable[Optional[Snowflake]] = MISSING
     welcome_screen: APINullable[WelcomeScreen] = MISSING
+
+    @classmethod
+    def from_dict(cls, data, *args, **kwargs) -> Guild:
+        if data.get("unavailable", False):
+            raise UnavailableGuildError(
+                f"Guild \"{data['id']}\" is unavailable due"
+                " to a discord outage."
+            )
+        return super().from_dict(data, *args, **kwargs)
