@@ -64,7 +64,7 @@ class Dispatcher:
         """
         :param token:
             Bot token for discord's API.
-        :raises InvalidTokenError: 
+        :raises InvalidTokenError:
             Discord Token length is not 59 characters.
         """
 

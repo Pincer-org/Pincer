@@ -79,10 +79,10 @@ class HTTPClient:
             "Authorization": f"Bot {token}",
             "Content-Type": "application/json"
         }
-        self.__session: ClientSession = ClientSession(headers=headers) 
+        self.__session: ClientSession = ClientSession(headers=headers)
         """
         The client session object
-        
+
         :meta public:
         """
 

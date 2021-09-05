@@ -89,7 +89,7 @@ def middleware(call: str, *, override: bool = False):
     the response from the discord API.
 
     :Implementation example:
-   
+
     .. code-block:: pycon
 
         >>> @middleware("ready", override=True)
