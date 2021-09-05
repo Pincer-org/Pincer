@@ -27,11 +27,12 @@ from dataclasses import dataclass
 from typing import Optional
 
 from pincer.utils.api_object import APIObject
+from pincer.utils.snowflake import Snowflake
 
 
 @dataclass
 class WelcomeScreenChannel(APIObject):
-    channel_id: int
+    channel_id: Snowflake
     description: str
 
     emoji_id: Optional[int] = None

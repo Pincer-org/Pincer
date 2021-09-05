@@ -32,6 +32,8 @@ from pincer.objects.member import Member
 from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
 from pincer.utils.constants import OptionallyProvided, MISSING
+from pincer.utils.snowflake import Snowflake
+from pincer.utils.timestamp import Timestamp
 
 
 class ChannelType(Enum):
@@ -53,23 +55,23 @@ class ChannelType(Enum):
 
 @dataclass
 class Channel(APIObject):
-    id: int
+    id: Snowflake
     type: ChannelType
 
-    application_id: OptionallyProvided[int] = MISSING
+    application_id: OptionallyProvided[Snowflake] = MISSING
     bitrate: OptionallyProvided[int] = MISSING
     default_auto_archive_duration: OptionallyProvided[int] = MISSING
-    guild_id: OptionallyProvided[int] = MISSING
+    guild_id: OptionallyProvided[Snowflake] = MISSING
     icon: OptionallyProvided[Optional[str]] = MISSING
-    last_message_id: OptionallyProvided[Optional[int]] = MISSING
-    last_pin_timestamp: OptionallyProvided[Optional[str]] = MISSING
+    last_message_id: OptionallyProvided[Optional[Snowflake]] = MISSING
+    last_pin_timestamp: OptionallyProvided[Optional[Timestamp]] = MISSING
     member: OptionallyProvided[Member] = MISSING
     member_count: OptionallyProvided[int] = MISSING
     message_count: OptionallyProvided[int] = MISSING
     name: OptionallyProvided[str] = MISSING
     nsfw: OptionallyProvided[bool] = MISSING
-    owner_id: OptionallyProvided[int] = MISSING
-    parent_id: OptionallyProvided[Optional[int]] = MISSING
+    owner_id: OptionallyProvided[Snowflake] = MISSING
+    parent_id: OptionallyProvided[Optional[Snowflake]] = MISSING
     permissions: OptionallyProvided[str] = MISSING
     permission_overwrites: OptionallyProvided[List[...]] = MISSING
     position: OptionallyProvided[int] = MISSING

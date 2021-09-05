@@ -30,6 +30,7 @@ from pincer.utils.api_object import APIObject
 
 from pincer.objects.user import User
 from pincer.utils.constants import OptionallyProvided, MISSING
+from pincer.utils.snowflake import Snowflake
 
 
 @dataclass
@@ -37,7 +38,7 @@ class Application(APIObject):
     bot_public: bool
     bot_require_code_grant: bool
     description: str
-    id: int
+    id: Snowflake
     icon: Optional[str]
     name: str
     privacy_policy_url: OptionallyProvided[str]
@@ -46,9 +47,9 @@ class Application(APIObject):
 
     cover_image: OptionallyProvided[str] = MISSING
     flags: OptionallyProvided[int] = MISSING
-    guild_id: OptionallyProvided[int] = MISSING
+    guild_id: OptionallyProvided[Snowflake] = MISSING
     owner: OptionallyProvided[User] = MISSING
-    primary_sku_id: OptionallyProvided[int] = MISSING
+    primary_sku_id: OptionallyProvided[Snowflake] = MISSING
     rpc_origins: OptionallyProvided[List[str]] = MISSING
     slug: OptionallyProvided[str] = MISSING
     terms_of_service_url: OptionallyProvided[str] = MISSING

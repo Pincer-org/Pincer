@@ -35,6 +35,7 @@ from pincer.objects.user import User
 from pincer.objects.member import Member
 from pincer.objects.application import Application
 from pincer.utils.constants import OptionallyProvided, MISSING
+from pincer.utils.timestamp import Timestamp
 
 
 class InviteTargetType(Enum):
@@ -57,7 +58,7 @@ class Invite(APIObject):
 
     approximate_member_count: OptionallyProvided[int] = MISSING
     approximate_presence_count: OptionallyProvided[int] = MISSING
-    expires_at: OptionallyProvided[Optional[str]] = MISSING
+    expires_at: OptionallyProvided[Optional[Timestamp]] = MISSING
     inviter: OptionallyProvided[User] = MISSING
     guild: OptionallyProvided[Guild] = MISSING
     stage_instance: OptionallyProvided[InviteStageInstance] = MISSING
