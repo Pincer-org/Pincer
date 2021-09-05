@@ -23,8 +23,13 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from typing import Union
 
-class MISSING:
-    pass 
+
+class MissingType():
+    pass
+
+
+MISSING = MissingType()
+
 
 class MetaType(type):
 

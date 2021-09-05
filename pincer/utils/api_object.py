@@ -30,7 +30,7 @@ from typing import Dict, Union
 
 from websockets.typing import Data
 
-from pincer.utils.constants import MISSING
+from pincer.utils.constants import MISSING, MissingType
 
 
 def _asdict_ignore_none(
@@ -51,7 +51,7 @@ def _asdict_ignore_none(
         for f in fields(obj):
             value = _asdict_ignore_none(getattr(obj, f.name), dict_factory)
 
-            if value != MISSING:
+            if not isinstance(value, MissingType):
                 result.append((f.name, value))
 
         return dict_factory(result)
