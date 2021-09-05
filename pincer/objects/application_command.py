@@ -28,7 +28,7 @@ from enum import Enum
 from typing import List
 
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import OptionallyProvided
+from pincer.utils.constants import MISSING, OptionallyProvided
 from pincer.utils.snowflake import Snowflake
 
 class ApplicationCommandType(Enum):
