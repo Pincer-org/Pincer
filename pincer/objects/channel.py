@@ -30,6 +30,7 @@ from typing import Optional, List
 from pincer._config import GatewayConfig
 from pincer.objects.member import Member
 from pincer.objects.user import User
+from pincer.objects.thread import ThreadMetadata
 from pincer.utils.api_object import APIObject
 from pincer.utils.constants import OptionallyProvided, MISSING
 from pincer.utils.snowflake import Snowflake
@@ -78,7 +79,7 @@ class Channel(APIObject):
     rate_limit_per_user: OptionallyProvided[int] = MISSING
     recipients: OptionallyProvided[List[User]] = MISSING
     rtc_region: OptionallyProvided[Optional[str]] = MISSING
-    thread_metadata: OptionallyProvided[...] = MISSING
+    thread_metadata: OptionallyProvided[ThreadMetadata] = MISSING
     topic: OptionallyProvided[Optional[str]] = MISSING
     user_limit: OptionallyProvided[int] = MISSING
     video_quality_mode: OptionallyProvided[int] = MISSING
