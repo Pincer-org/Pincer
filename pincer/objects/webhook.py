@@ -32,6 +32,7 @@ from pincer.objects.guild import Guild
 from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
 from pincer.utils.constants import OptionallyProvided, MISSING
+from pincer.utils.snowflake import Snowflake
 
 
 class WebhookType(Enum):
@@ -41,13 +42,13 @@ class WebhookType(Enum):
 
 @dataclass
 class Webhook(APIObject):
-    id: int
+    id: Snowflake
     type: WebhookType
 
-    channel_id: Optional[int] = None
+    channel_id: Optional[Snowflake] = None
     name: Optional[str] = None
     avatar: Optional[str] = None
-    application_id: Optional[int] = None
+    application_id: Optional[Snowflake] = None
 
     user: OptionallyProvided[User] = MISSING
     token: OptionallyProvided[str] = MISSING
@@ -55,4 +56,4 @@ class Webhook(APIObject):
     source_channel: OptionallyProvided[Channel] = MISSING
     url: OptionallyProvided[str] = MISSING
     
-    guild_id: OptionallyProvided[Optional[int]] = MISSING
+    guild_id: OptionallyProvided[Optional[Snowflake]] = MISSING

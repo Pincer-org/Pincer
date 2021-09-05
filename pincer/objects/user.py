@@ -29,6 +29,7 @@ from typing import Optional
 
 from pincer.utils.api_object import APIObject
 from pincer.utils.constants import MISSING, OptionallyProvided
+from pincer.utils.snowflake import Snowflake
 
 
 class PremiumTypes(Enum):
@@ -44,7 +45,7 @@ class User(APIObject):
     avatar: Optional[str]
     discriminator: str
     flags: int
-    id: int
+    id: Snowflake
     username: str
 
     accent_color: OptionallyProvided[Optional[int]] = MISSING

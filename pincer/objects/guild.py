@@ -31,13 +31,16 @@ from pincer.objects.emoji import Emoji
 from pincer.objects.member import Member
 from pincer.objects.role import Role
 from pincer.objects.sticker import Sticker
+from pincer.objects.welcome_screen import WelcomeScreen
 from pincer.utils.api_object import APIObject
 from pincer.utils.constants import OptionallyProvided, MISSING
+from pincer.utils.snowflake import Snowflake
+from pincer.utils.timestamp import Timestamp
 
 
 @dataclass
 class Guild(APIObject):
-    afk_channel_id: Optional[int]
+    afk_channel_id: Optional[Snowflake]
     afk_timeout: int
     application_id: Optional[int]
     banner: Optional[str]
@@ -47,15 +50,15 @@ class Guild(APIObject):
     emojis: List[Emoji]
     explicit_content_filter: int
     features: List[...]
-    id: int
+    id: Snowflake
     icon: Optional[str]
     mfa_level: int
     name: str
     nsfw_level: int
-    owner_id: int
+    owner_id: Snowflake
     preferred_locale: str
     premium_tier: int
-    public_updates_channel_id: Optional[int]
+    public_updates_channel_id: Optional[Snowflake]
     roles: List[Role]
     rules_channel_id: Optional[int]
     splash: Optional[str]
@@ -68,7 +71,7 @@ class Guild(APIObject):
     approximate_presence_count: OptionallyProvided[int] = MISSING
     channels: OptionallyProvided[List[Channel]] = MISSING
     icon_hash: OptionallyProvided[Optional[str]] = MISSING
-    joined_at: OptionallyProvided[str] = MISSING
+    joined_at: OptionallyProvided[Timestamp] = MISSING
     large: OptionallyProvided[bool] = MISSING
     max_members: OptionallyProvided[int] = MISSING
     max_presences: OptionallyProvided[Optional[int]] = MISSING
@@ -82,9 +85,9 @@ class Guild(APIObject):
     stage_instances: OptionallyProvided[List[...]] = MISSING
     stickers: OptionallyProvided[List[Sticker]] = MISSING
     region: OptionallyProvided[Optional[str]] = MISSING
-    threads: OptionallyProvided[List[...]] = MISSING
+    threads: OptionallyProvided[List[Channel]] = MISSING
     unavailable: OptionallyProvided[bool] = MISSING
     voice_states: OptionallyProvided[bool] = MISSING
     widget_enabled: OptionallyProvided[bool] = MISSING
-    widget_channel_id: OptionallyProvided[Optional[bool]] = MISSING
-    welcome_screen: OptionallyProvided[...] = MISSING
+    widget_channel_id: OptionallyProvided[Optional[Snowflake]] = MISSING
+    welcome_screen: OptionallyProvided[WelcomeScreen] = MISSING

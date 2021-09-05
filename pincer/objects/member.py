@@ -28,19 +28,20 @@ from typing import Optional, List
 
 from pincer.utils.api_object import APIObject
 from pincer.objects.user import User
-from pincer.objects.role import Role
 from pincer.utils.constants import OptionallyProvided, MISSING
+from pincer.utils.snowflake import Snowflake
+from pincer.utils.timestamp import Timestamp
 
 
 @dataclass
 class Member(APIObject):
     deaf: bool
-    joined_at: str
+    joined_at: Timestamp
     mute: bool
-    roles: List[Role]
+    roles: List[Snowflake]
 
     nick: OptionallyProvided[Optional[str]] = MISSING
     pending: OptionallyProvided[bool] = MISSING
     permissions: OptionallyProvided[str] = MISSING
-    premium_since: OptionallyProvided[Optional[str]] = MISSING
+    premium_since: OptionallyProvided[Optional[Timestamp]] = MISSING
     user: OptionallyProvided[User] = MISSING

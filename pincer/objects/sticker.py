@@ -30,6 +30,7 @@ from typing import List, Optional
 from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
 from pincer.utils.constants import MISSING, OptionallyProvided
+from pincer.utils.snowflake import Snowflake
 
 
 class StickerType(Enum):
@@ -47,32 +48,32 @@ class StickerFormatType(Enum):
 class Sticker(APIObject):
     description: Optional[str]
     format_type: StickerFormatType
-    id: int
+    id: Snowflake
     name: str
     tags: str
     type: StickerType
 
     available: OptionallyProvided[bool] = MISSING
-    guild_id: OptionallyProvided[int] = MISSING
-    pack_id: OptionallyProvided[int] = MISSING
+    guild_id: OptionallyProvided[Snowflake] = MISSING
+    pack_id: OptionallyProvided[Snowflake] = MISSING
     sort_value: OptionallyProvided[int] = MISSING
     user: OptionallyProvided[User] = MISSING
 
         
 @dataclass
 class StickerItem(APIObject):
-    id: int
+    id: Snowflake
     name: str
     format_type: StickerFormatType
 
 
 @dataclass
 class StickerPack(APIObject):
-    id: int
+    id: Snowflake
     stickers: List[Sticker]
     name: str
-    sku_id: int
+    sku_id: Snowflake
     description: str
 
-    cover_sticker_id: OptionallyProvided[int] = MISSING
-    banner_asset_id: OptionallyProvided[int] = MISSING
+    cover_sticker_id: OptionallyProvided[Snowflake] = MISSING
+    banner_asset_id: OptionallyProvided[Snowflake] = MISSING
