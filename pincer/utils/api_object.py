@@ -43,7 +43,7 @@ def _asdict_ignore_none(
     Modification of _asdict_inner from dataclasses
 
     :param obj: Dataclass obj
-    :param dict_factory: Dict 
+    :param dict_factory: Dict
     """
 
     if _is_dataclass_instance(obj):
