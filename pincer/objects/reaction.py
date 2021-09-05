@@ -29,6 +29,12 @@ from pincer.utils.api_object import APIObject
 
 @dataclass
 class Reaction(APIObject):
+	"""Represents a Discord Reaction object
+	
+	:param count: times this emoji has been used to react
+	:param me: whether the current user reacted using this emoji
+	:param emoji: emoji information
+	"""
 	count: int
 	me: bool
 	emoji: Emoji
