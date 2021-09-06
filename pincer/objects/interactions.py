@@ -46,7 +46,8 @@ class InteractionType(Enum):
 
 @dataclass
 class ResolvedData(APIObject):
-    """Represents a Discord Resolved Data structure
+    """
+    Represents a Discord Resolved Data structure
 
     :param users:
         Map of Snowflakes to user objects
@@ -73,7 +74,8 @@ class ResolvedData(APIObject):
 
 @dataclass
 class InteractionData(APIObject):
-    """Represents a Discord Interaction Data structure
+    """
+    Represents a Discord Interaction Data structure
 
     :param id:
         the `ID` of the invoked command
@@ -116,7 +118,8 @@ class InteractionData(APIObject):
 
 @dataclass
 class MessageInteraction(APIObject):
-    """Represents a Discord Message Interaction object
+    """
+    Represents a Discord Message Interaction object
 
     This is sent on the message object when the message
     is a response to an Interaction without an existing message.
@@ -134,7 +137,8 @@ class MessageInteraction(APIObject):
 
 @dataclass
 class Interaction(APIObject):
-    """Represents a Discord Interaction object
+    """
+    Represents a Discord Interaction object
 
     :param id:
         id of the interaction
