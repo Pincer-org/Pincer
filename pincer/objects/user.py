@@ -118,7 +118,7 @@ class User(APIObject):
     def user(self) -> str:
         """
         Get a string representation of the user.
-        
+
         :return:
             Return the full discord tag of the client.
         """

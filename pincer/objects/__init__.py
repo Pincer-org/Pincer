@@ -34,6 +34,6 @@ from .sticker import Sticker
 from .user import User
 
 __all__ = (
-    "Application", "Channel", "Embed", "Emoji", "Guild", "Invite", "Member",
-    "Role", "Sticker", "User"
+    "Application", "Channel", "Embed", "Emoji", "Guild", "Invite",
+    "GuildMember", "Role", "Sticker", "User"
 )
