@@ -32,7 +32,8 @@ from pincer.utils.constants import APINullable, MISSING
 
 @dataclass
 class ThreadMetadata(APIObject):
-    """Represents a Discord Thread Metadata object
+    """
+    Represents a Discord Thread Metadata object
 
     :param archived:
         whether the thread is archived
@@ -62,7 +63,8 @@ class ThreadMetadata(APIObject):
 
 @dataclass
 class ThreadMember(APIObject):
-    """Represents a Discord Thread Member object
+    """
+    Represents a Discord Thread Member object
 
     :param join_timestamp:
         the time the current user last joined the thread
