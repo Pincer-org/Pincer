@@ -50,7 +50,8 @@ def _asdict_ignore_none(
         result = []
         for f in fields(obj):
             value = _asdict_ignore_none(getattr(obj, f.name), dict_factory)
-
+            
+            # This if statement was added to the function
             if not isinstance(value, MissingType):
                 result.append((f.name, value))
 
