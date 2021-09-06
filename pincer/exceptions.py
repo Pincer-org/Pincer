@@ -122,7 +122,7 @@ class HeartbeatError(DispatchError):
 
 class UnavailableGuildError(PincerError):
     """
-    Exception raised due to a guild being unavaiable.
+    Exception raised due to a guild being unavailable.
     This is caused by a discord outage.
     """
 

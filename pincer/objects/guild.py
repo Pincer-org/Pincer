@@ -264,9 +264,18 @@ class Guild(APIObject):
 
     @classmethod
     def from_dict(cls, data) -> Guild:
+        """
+        Instantiate a new guild from a dictionary.
+
+        Also handles it if the guild isn't available.
+
+        :raises UnavailableGuildError:
+            Exception gets raised when guild is unavailable.
+        """
         if data.get("unavailable", False):
             raise UnavailableGuildError(
                 f"Guild \"{data['id']}\" is unavailable due"
                 " to a discord outage."
             )
-        return super().from_dict(data)
+
+        return cls(**data)
