@@ -530,16 +530,9 @@ class Embed(APIObject):
 
         :param inline:
             Whether or not this field should display inline
-<<<<<<< HEAD
 
         :raises EmbedFieldError:
             Raised when there are more than 25 fields in the embed
-=======
-        
-        :raises EmbedFieldError:
-            Gets raised when the maximum
-            amount of fields has already been reached.
->>>>>>> d374f1cad1946af23b457eb045abf5855b0daf9e
         """
         _field = EmbedField(
             name=name,
