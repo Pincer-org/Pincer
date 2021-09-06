@@ -37,7 +37,7 @@ from pincer.utils.timestamp import Timestamp
 class GuildMember(APIObject):
     """
     Represents a member which resides in a guild/server.
-    
+
     :param deaf:
         whether the user is deafened in voice channels
 
