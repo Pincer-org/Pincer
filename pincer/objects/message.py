@@ -28,6 +28,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional, Union
 
+from pincer._config import GatewayConfig
 from pincer.objects.application import Application
 from pincer.objects.attachment import Attachment
 from pincer.objects.channel import Channel, ChannelMention
@@ -47,6 +48,11 @@ from pincer.utils.timestamp import Timestamp
 
 
 class MessageActivityType(Enum):
+    """
+    The activity people can perform on a rich presence activity.
+
+    Such an activity could for example be a spotify listen.
+    """
     JOIN = 1
     SPECTATE = 2
     LISTEN = 3
@@ -55,6 +61,8 @@ class MessageActivityType(Enum):
 
 class MessageFlags(Enum):
     """
+    Special message properties.
+
     :param CROSSPOSTED:
         the message has been published to subscribed
         channels (via Channel Following)
@@ -96,6 +104,9 @@ class MessageFlags(Enum):
 
 
 class MessageType(Enum):
+    """
+    Represents the type of the message.
+    """
     DEFAULT = 0
     RECIPIENT_ADD = 1
     RECIPIENT_REMOVE = 2
@@ -114,9 +125,17 @@ class MessageType(Enum):
     GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING = 16
     GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING = 17
     THREAD_CREATED = 18
-    REPLY = 19
-    APPLICATION_COMMAND = 20
-    THREAD_STARTER_MESSAGE = 21
+
+    if GatewayConfig.version >= 8:
+        REPLY = 19
+        APPLICATION_COMMAND = 20
+    else:
+        REPLY = 0
+        APPLICATION_COMMAND = 0
+
+    if GatewayConfig.version >= 9:
+        THREAD_STARTER_MESSAGE = 21
+
     GUILD_INVITE_REMINDER = 22
 
 
@@ -245,7 +264,7 @@ class Message(APIObject):
     mention_everyone: bool
     mentions: List[User]
     mention_roles: List[Role]
-    mention_channels: List[ChannelMention]  # FIXME
+    mention_channels: List[ChannelMention]
     attachments: List[Attachment]
     embeds: List[Embed]
     pinned: bool
