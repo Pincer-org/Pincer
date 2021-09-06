@@ -57,7 +57,6 @@ class User(APIObject):
     :param username:
         the user's username, not unique across the platform
 
-
     :param accent_color:
         the user's banner color encoded as an integer representation of
         hexadecimal color code
@@ -110,12 +109,16 @@ class User(APIObject):
 
     @property
     def premium(self) -> PremiumTypes:
-        # TODO: Write documentation
+        """
+        The user their premium type in a usable enum.
+        """
         return PremiumTypes(self.premium_type)
 
     @property
     def user(self) -> str:
         """
+        Get a string representation of the user.
+        
         :return:
             Return the full discord tag of the client.
         """
