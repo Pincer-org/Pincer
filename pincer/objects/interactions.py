@@ -159,7 +159,7 @@ class Interaction(APIObject):
 
     :param data:
         the command data payload
-    
+
     :param guild_id:
         the guild it was sent from
 
