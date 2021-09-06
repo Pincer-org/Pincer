@@ -51,10 +51,10 @@ def _field_size(field: str) -> int:
     The Discord API removes white space
         when counting the length of a field.
 
-    :param field: 
+    :param field:
         The field.
 
-    :return: 
+    :return:
         Length of the string without white space.
     """
     return 0 if field == MISSING else len(field.strip())
@@ -62,7 +62,7 @@ def _field_size(field: str) -> int:
 
 def _is_valid_url(url: str) -> bool:
     """
-    Checks wheter the url is a proper and valid url. 
+    Checks wheter the url is a proper and valid url.
     (matches for http and attachement protocol.
 
     :param url:
@@ -77,7 +77,7 @@ def _is_valid_url(url: str) -> bool:
 def _check_if_valid_url(url: str):
     """
     Checks if the provided url is valid.
-    
+
     :raises:
         :class InvalidUrlError: if the url didn't match the url regex.
         (which means that it was malformed or didn't match the http/attachment protocol.
@@ -91,16 +91,16 @@ class EmbedAuthor:
     """
     Representation of the Embed Author class
 
-    :param name: 
+    :param name:
         Name of the author
 
-    :param url: 
-            Url of the author
+    :param url:
+        Url of the author
 
-    :param icon_url: 
+    :param icon_url:
         Url of the author icon
 
-    :param proxy_icon_url: 
+    :param proxy_icon_url:
         A proxied url of the author icon
     """
     icon_url: APINullable[str] = MISSING
@@ -120,16 +120,16 @@ class EmbedImage:
     """
     Representation of the Embed Image class
 
-    :param url: 
+    :param url:
         Source url of the image
         
-    :param proxy_url: 
+    :param proxy_url:
         A proxied url of the image
         
-    :param height: 
+    :param height:
         Height of the image
         
-    :param width: 
+    :param width:
         Width of the image
     """
 
@@ -147,7 +147,7 @@ class EmbedProvider:
     """
     Representation of the Provider class
 
-    :param name: 
+    :param name:
         Name of the provider
         
     :param url:
@@ -162,16 +162,16 @@ class EmbedThumbnail:
     """
     Representation of the Embed Thumbnail class
 
-    :param url: 
+    :param url:
         Source url of the thumbnail
         
-    :param proxy_url: 
+    :param proxy_url:
         A proxied url of the thumbnail
         
-    :param height: 
+    :param height:
         Height of the thumbnail
     
-    :param width: 
+    :param width:
         Width of the thumbnail
     """
 
@@ -189,16 +189,16 @@ class EmbedVideo:
     """
     Representation of the Embed Video class
 
-    :param url: 
+    :param url:
         Source url of the video
         
-    :param proxy_url: 
+    :param proxy_url:
         A proxied url of the video
         
-    :param height: 
+    :param height:
         Height of the video
         
-    :param width: 
+    :param width:
         Width of the video
     """
     height: APINullable[int] = MISSING
@@ -212,9 +212,14 @@ class EmbedFooter:
     """
     Representation of the Embed Footer class
 
-    :param text: Footer text
-    :param icon_url: Url of the footer icon
-    :param proxy_icon_url: A proxied url of the footer icon
+    :param text:
+        Footer text
+
+    :param icon_url:
+        Url of the footer icon
+
+    :param proxy_icon_url:
+        A proxied url of the footer icon
     """
 
     text: str
@@ -234,9 +239,14 @@ class EmbedField:
     """
     Representation of the Embed Field class
 
-    :param name: The name of the field
-    :param value: The text in the field
-    :param inline: Whether or not this field should display inline
+    :param name:
+        The name of the field
+
+    :param value:
+        The text in the field
+
+    :param inline:
+        Whether or not this field should display inline
     """
 
     name: str
@@ -265,40 +275,40 @@ class Embed(APIObject):
     """
     Representation of the discord Embed class
 
-    :param author: 
+    :param author:
         Author information.
-        
-    :param color: 
+
+    :param color:
         Embed color code.
-        
-    :param description: 
+
+    :param description:
         Embed description.
-        
-    :param fields: 
+
+    :param fields:
         Fields information.
-        
-    :param footer: 
+
+    :param footer:
         Footer information.
-        
-    :param image: 
+
+    :param image:
         Image information.
-        
-    :param provider: 
+
+    :param provider:
         Provider information.
-        
-    :param thumbnail: 
+
+    :param thumbnail:
         Thumbnail information.
-        
-    :param timestamp: 
+
+    :param timestamp:
         Timestamp of embed content in ISO format.
-        
-    :param title: 
+
+    :param title:
         Embed title.
-        
-    :param url: 
+
+    :param url:
         Embed url.
-        
-    :param video: 
+
+    :param video:
         Video information.
     """
 
@@ -336,7 +346,7 @@ class Embed(APIObject):
         Discord uses iso format for time stamps.
         This function will set the time to that format.
         
-        :param time: 
+        :param time:
             A datetime object.
         """
         self.timestamp = time.isoformat()
@@ -352,15 +362,15 @@ class Embed(APIObject):
         Set the author message for the embed. This is the top
         field of the embed.
         
-        :param icon_url: 
+        :param icon_url:
             The icon which will be next to the author name.
-            
+        
         :param name:
             The name for the author (so the message).
 
         :param proxy_icon_url:
             A proxied url of the author icon.
-            
+        
         :param url:
             The url for the author name, this will make the
             name field a link/url.
@@ -385,15 +395,15 @@ class Embed(APIObject):
         """
         Sets an image for your embed.
         
-        :param url: 
+        :param url:
             Source url of the video
-            
-        :param proxy_url: 
+        
+        :param proxy_url:
             A proxied url of the video
-            
-        :param height: 
+        
+        :param height:
             Height of the video
-            
+        
         :param width: 
             Width of the video
         """
@@ -411,10 +421,10 @@ class Embed(APIObject):
     ) -> Embed:
         # TODO: Provide general documentation of what a provider is.
         """
-        :param name: 
+        :param name:
             Name of the provider
-            
-        :param url: 
+        
+        :param url:
             Url of the provider
         """
         self.provider = EmbedProvider(name=name, url=url)
@@ -431,16 +441,16 @@ class Embed(APIObject):
         Sets the thumbnail of the embed.
         This image is bigger than the `image` property.
         
-        :param url: 
+        :param url:
             Source url of the video
-            
-        :param proxy_url: 
+        
+        :param proxy_url:
             A proxied url of the video
-            
-        :param height: 
+        
+        :param height:
             Height of the video
-            
-        :param width: 
+        
+        :param width:
             Width of the video
         """
         self.video = EmbedThumbnail(
@@ -462,16 +472,16 @@ class Embed(APIObject):
         """
         Sets a playable video in the embed.
         
-        :param url: 
+        :param url:
             Source url of the video
-            
-        :param proxy_url: 
+        
+        :param proxy_url:
             A proxied url of the video
-            
-        :param height: 
+        
+        :param height:
             Height of the video
-            
-        :param width: 
+        
+        :param width:
             Width of the video
         """
         self.video = EmbedVideo(
@@ -492,13 +502,13 @@ class Embed(APIObject):
         """
         Sets the embed footer. This is at the bottom of your embed.
         
-        :param text: 
+        :param text:
             Footer text
-            
-        :param icon_url: 
+        
+        :param icon_url:
             Url of the footer icon
-            
-        :param proxy_icon_url: 
+        
+        :param proxy_icon_url:
             A proxied url of the footer icon
         """
         self.footer = EmbedFooter(
@@ -519,16 +529,16 @@ class Embed(APIObject):
         Adds a field to the embed.
         An embed can contain up to 25 fields.
         
-        :param name: 
+        :param name:
             The name of the field
-            
-        :param value: 
+        
+        :param value:
             The text in the field
-            
-        :param inline: 
+        
+        :param inline:
             Whether or not this field should display inline
-            
-        :raises: 
+        
+        :raises:
             :class EmbedFieldError: Gets raised when the maximum 
             amount of fields has already been reached.
         """
