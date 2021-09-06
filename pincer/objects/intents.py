@@ -53,7 +53,7 @@ class Intents(Enum):
 
     @staticmethod
     def all():
-        """Merges all existing intents."""
+        """Consists of all intents"""
         res = 0
 
         for intent in list(map(lambda itm: itm.value, Intents)):
