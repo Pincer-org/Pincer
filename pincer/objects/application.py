@@ -36,12 +36,14 @@ from pincer.utils.snowflake import Snowflake
 @dataclass
 class Application(APIObject):
     """
+    Represents a Discord application. (eg Bot, OAuth)
+
     :param bot_public:
         when false only app owner can join the app's bot to guilds
 
     :param bot_require_code_grant:
-        when true the app's bot will only join upon completion of the full
-        oauth2 code grant flow
+        when true the app's bot will only join upon completion of the
+        full oauth2 code grant flow
 
     :param description:
         the description of the app
