@@ -159,7 +159,7 @@ class HTTPClient:
     ) -> Optional[Dict]:
         """
         Handle responses from the discord API.
-        
+
         :meta public:
 
         Side effects:

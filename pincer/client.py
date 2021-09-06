@@ -188,7 +188,7 @@ class Client(Dispatcher):
             ...             "baz": "foo"
             ...         }
             ...    )
-        
+
         """
         return HTTPClient(self.__token)
 
