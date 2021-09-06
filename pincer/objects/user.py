@@ -33,7 +33,9 @@ from pincer.utils.snowflake import Snowflake
 
 
 class PremiumTypes(Enum):
-    # TODO: Write documentation
+    """
+    The type of Discord premium a user has.
+    """
     NONE = 0
     NITRO_CLASSIC = 1
     NITRO = 2
@@ -42,6 +44,9 @@ class PremiumTypes(Enum):
 @dataclass
 class User(APIObject):
     """
+    Represents a Discord user. This can be a bot account or a
+    human account.
+
     :param avatar:
         the user's avatar hash
 
