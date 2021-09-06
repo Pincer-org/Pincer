@@ -207,7 +207,7 @@ class Client(Dispatcher):
         event methods must be coroutines. *(async)*
 
         :Example usage:
-        
+
         .. code-block:: pycon
 
             >>> # Function based
@@ -234,7 +234,7 @@ class Client(Dispatcher):
             >>>
             >>> if __name__ == "__main__":
             ...     BotClient("token").run()
-        
+
 
         :param coroutine: # TODO: add info
 
