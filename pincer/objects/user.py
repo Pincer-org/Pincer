@@ -119,16 +119,6 @@ class User(APIObject):
         """
         return PremiumTypes(self.premium_type)
 
-    @property
-    def user(self) -> str:
-        """
-        Get a string representation of the user.
-
-        :return:
-            Return the full discord tag of the client.
-        """
-        return self.username + '#' + self.discriminator
-
     def __str__(self):
         """Return the discord tag when object gets used as a string."""
-        return self.user
+        return self.username + '#' + self.discriminator
