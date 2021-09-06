@@ -39,6 +39,15 @@ from pincer.utils.timestamp import Timestamp
 
 
 class InviteTargetType(Enum):
+    """
+    Represents the type of the invite.
+
+    :param STREAM:
+        A normal Discord invite, eg for a channel or guild.
+
+    :param EMBEDDED_APPLICATION:
+        An embedded application invite, eg poker-night etc
+    """
     STREAM = 1
     EMBEDDED_APPLICATION = 2
 
