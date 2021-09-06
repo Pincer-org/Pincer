@@ -23,6 +23,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
+
 from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional, Union
@@ -32,7 +33,7 @@ from pincer.objects.attachment import Attachment
 from pincer.objects.channel import Channel, ChannelMention
 from pincer.objects.embed import Embed
 from pincer.objects.interactions import MessageInteraction
-from pincer.objects.member import Member
+from pincer.objects.member import GuildMember
 from pincer.objects.message_component import MessageComponent
 from pincer.objects.message_reference import MessageReference
 from pincer.objects.reaction import Reaction
@@ -44,11 +45,13 @@ from pincer.utils.constants import MISSING, APINullable
 from pincer.utils.snowflake import Snowflake
 from pincer.utils.timestamp import Timestamp
 
+
 class MessageActivityType(Enum):
     JOIN = 1
     SPECTATE = 2
     LISTEN = 3
     JOIN_REQUEST = 5
+
 
 class MessageFlags(Enum):
     """
@@ -91,6 +94,7 @@ class MessageFlags(Enum):
     EPHEMERAL = 1 << 6
     LOADING = 1 << 7
 
+
 class MessageType(Enum):
     DEFAULT = 0
     RECIPIENT_ADD = 1
@@ -115,6 +119,7 @@ class MessageType(Enum):
     THREAD_STARTER_MESSAGE = 21
     GUILD_INVITE_REMINDER = 22
 
+
 @dataclass
 class MessageActivity(APIObject):
     """
@@ -128,6 +133,7 @@ class MessageActivity(APIObject):
     """
     type: MessageActivityType
     party_id: APINullable[str] = MISSING
+
 
 @dataclass
 class Message(APIObject):
@@ -239,14 +245,14 @@ class Message(APIObject):
     mention_everyone: bool
     mentions: List[User]
     mention_roles: List[Role]
-    mention_channels: List[ChannelMention] # FIXME
+    mention_channels: List[ChannelMention]  # FIXME
     attachments: List[Attachment]
     embeds: List[Embed]
     pinned: bool
     type: MessageType
 
     guild_id: APINullable[Snowflake] = MISSING
-    member: APINullable[Member] = MISSING
+    member: APINullable[GuildMember] = MISSING
     reactions: APINullable[List[Reaction]] = MISSING
     nonce: APINullable[Union[int, str]] = MISSING
     webhook_id: APINullable[Snowflake] = MISSING
