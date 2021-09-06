@@ -76,12 +76,15 @@ class Timestamp:
 
         :param time:
             The time to be converted to a datetime object.
-            This can be one of these types: str, float, int
+            This can be one of these types: datetime, float, int, str
 
             If no parameter is passed it will return the current
             datetime.
         """
-        if isinstance(time, str):
+        if isinstance(time, datetime):
+            return time
+
+        elif isinstance(time, str):
             return Timestamp.string_to_datetime(time)
 
         elif isinstance(time, (int, float)):
