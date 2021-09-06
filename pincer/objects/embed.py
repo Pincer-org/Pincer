@@ -73,6 +73,9 @@ class EmbedAuthor:
     :param url: Url of the author
     :param icon_url: Url of the author icon
     :param proxy_icon_url: A proxied url of the author icon
+
+    :raises EmbedFieldError: Name is longer than 256 characters.
+    :raises InvalidUrlError: Url protocol is not http, https, or attachment.
     """
     icon_url: APINullable[str] = MISSING
     name: APINullable[str] = MISSING
@@ -96,6 +99,8 @@ class EmbedImage:
     :param proxy_url: A proxied url of the image
     :param height: Height of the image
     :param width: Width of the image
+
+    :raises InvalidUrlError: Url protocol is not http, https, or attachment.
     """
 
     height: APINullable[int] = MISSING
@@ -129,6 +134,8 @@ class EmbedThumbnail:
     :param proxy_url: A proxied url of the thumbnail
     :param height: Height of the thumbnail
     :param width: Width of the thumbnail
+
+    :raises InvalidUrlError: Url protocol is not http, https, or attachment.
     """
 
     height: APINullable[int] = MISSING
@@ -165,6 +172,8 @@ class EmbedFooter:
     :param text: Footer text
     :param icon_url: Url of the footer icon
     :param proxy_icon_url: A proxied url of the footer icon
+
+    :raises EmbedFieldError: Text is longer than 2048 characters
     """
 
     text: str
@@ -187,6 +196,9 @@ class EmbedField:
     :param name: The name of the field
     :param value: The text in the field
     :param inline: Whether or not this field should display inline
+
+    :raises EmbedFieldError: Name is longer than 256 characters
+    :raises EmbedFieldError: Description is longer than 1024 characters
     """
 
     name: str
@@ -354,6 +366,8 @@ class Embed(APIObject):
         :param name: The name of the field
         :param value: The text in the field
         :param inline: Whether or not this field should display inline
+
+        :raises EmbedFieldError: The embed has more than 25 fields
         """
         _field = EmbedField(
             name=name,
