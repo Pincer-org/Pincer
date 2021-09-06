@@ -437,7 +437,7 @@ class Embed(APIObject):
 
         :param height:
             Height of the video
-        
+
         :param width:
             Width of the video
 
