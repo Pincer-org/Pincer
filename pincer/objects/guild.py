@@ -26,6 +26,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional, List
 
+from pincer.exceptions import UnavailableGuildError
 from pincer.objects.channel import Channel
 from pincer.objects.emoji import Emoji
 from pincer.objects.member import Member
@@ -39,12 +40,174 @@ from pincer.utils.snowflake import Snowflake
 from pincer.utils.timestamp import Timestamp
 
 
-class UnavailableGuildError(Exception):
-    pass
-
-
 @dataclass
 class Guild(APIObject):
+    """
+    :param afk_channel_id:
+        id of afk channel
+
+    :param afk_timeout:
+        afk timeout in seconds
+
+    :param application_id:
+        application id of the guild creator if it is bot-created
+
+    :param banner:
+        banner hash
+
+    :param default_message_notifications:
+        default message notifications level
+
+    :param description:
+        the description of a Community guild
+
+    :param discovery_splash:
+        discovery splash hash; only present for guilds with the "DISCOVERABLE"
+        feature
+
+    :param emojis:
+        custom guild emojis
+
+    :param explicit_content_filter:
+        explicit content filter level
+
+    :param features:
+        enabled guild features
+
+    :param id:
+        guild id
+
+    :param icon:
+        icon hash
+
+    :param mfa_level:
+        required MFA level for the guild
+
+    :param name:
+        guild name (2-100 characters, excluding trailing and leading
+        whitespace)
+
+    :param nsfw_level:
+        guild NSFW level
+
+    :param owner_id:
+        id of owner
+
+    :param preferred_locale:
+        the preferred locale of a Community guild; used in server discovery and
+        notices from Discord; defaults to "en-US"
+
+    :param premium_tier:
+        premium tier (Server Boost level)
+
+    :param public_updates_channel_id:
+        the id of the channel where admins and moderators of Community guilds
+        receive notices from Discord
+
+    :param roles:
+        roles in the guild
+
+    :param rules_channel_id:
+        the id of the channel where Community guilds can display rules and/or
+        guidelines
+
+    :param splash:
+        splash hash
+
+    :param system_channel_flags:
+        system channel flags
+
+    :param system_channel_id:
+        the id of the channel where guild notices such as welcome messages and
+        boost events are posted
+
+    :param vanity_url_code:
+        the vanity url code for the guild
+
+    :param verification_level:
+        verification level required for the guild
+
+
+    :param approximate_member_count:
+        approximate number of members in this guild, returned from the GET
+        /guilds/<id> endpoint when with_counts is true
+
+    :param approximate_presence_count:
+        approximate number of non-offline members in this guild, returned from
+        the GET /guilds/<id> endpoint when with_counts is true
+
+    :param channels:
+        channels in the guild
+
+    :param icon_hash:
+        icon hash, returned when in the template object
+
+    :param joined_at:
+        when this guild was joined at
+
+    :param large:
+        true if this is considered a large guild
+
+    :param max_members:
+        the maximum number of members for the guild
+
+    :param max_presences:
+        the maximum number of presences for the guild (null is always returned,
+        apart from the largest of guilds)
+
+    :param max_video_channel_users:
+        the maximum amount of users in a video channel
+
+    :param members:
+        users in the guild
+
+    :param member_count:
+        total number of members in this guild
+
+    :param owner:
+        true if the user is the owner of the guild
+
+    :param permissions:
+        total permissions for the user in the guild (excludes overwrites)
+
+    :param premium_subscription_count:
+        the number of boosts this guild currently has
+
+    :param presences:
+        presences of the members in the guild, will only include non-offline
+        members if the size is greater than large threshold
+
+    :param stage_instances:
+        Stage instances in the guild
+
+    :param stickers:
+        custom guild stickers
+
+    :param region:
+        voice region id for the guild (deprecated)
+
+    :param threads:
+        all active threads in the guild that current user has permission to
+        view
+
+    :param unavailable:
+        true if this guild is unavailable due to an outage
+
+    :param voice_states:
+        states of members currently in voice channels; lacks the guild_id key
+
+    :param widget_enabled:
+        true if the server widget is enabled
+
+    :param widget_channel_id:
+        the channel id that the widget will generate an invite to, or null if
+        set to no invite
+
+    :param welcome_screen:
+        the welcome screen of a Community guild, shown to new members, returned
+        in an Invite's guild object
+    """
+
     afk_channel_id: Optional[Snowflake]
     afk_timeout: int
     application_id: Optional[int]
@@ -92,17 +255,17 @@ class Guild(APIObject):
     region: APINullable[Optional[str]] = MISSING
     threads: APINullable[List[Channel]] = MISSING
     # Guilds are considered available unless otherwise specified
-    unavailable: APINullable[bool] = MISSING
+    unavailable: APINullable[bool] = False
     voice_states: APINullable[bool] = MISSING
     widget_enabled: APINullable[bool] = MISSING
     widget_channel_id: APINullable[Optional[Snowflake]] = MISSING
     welcome_screen: APINullable[WelcomeScreen] = MISSING
 
     @classmethod
-    def from_dict(cls, data, *args, **kwargs) -> Guild:
+    def from_dict(cls, data) -> Guild:
         if data.get("unavailable", False):
             raise UnavailableGuildError(
                 f"Guild \"{data['id']}\" is unavailable due"
                 " to a discord outage."
             )
-        return super().from_dict(data, *args, **kwargs)
+        return super().from_dict(data)

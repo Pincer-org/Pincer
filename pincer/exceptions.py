@@ -93,8 +93,15 @@ class HeartbeatError(DispatchError):
     """Exception raised due to a problem with websocket heartbeat."""
 
 
+class UnavailableGuildError(PincerError):
+    """
+    Exception raised due to a guild being unavaiable.
+    This is caused by a discord outage.
+    """
+
 # Discord HTTP Errors
 # `developers/docs/topics/opcodes-and-status-codes#http`
+
 
 class HTTPError(PincerError):
     """HTTP Exception base class."""

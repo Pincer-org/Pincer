@@ -32,6 +32,16 @@ from pincer.utils.snowflake import Snowflake
 
 @dataclass
 class RoleTags(APIObject):
+    """
+    :bot_id:
+        the id of the bot this role belongs to
+
+    :integration_id:
+        the id of the integration this role belongs to
+
+    :premium_subscriber:
+        whether this is the guild's premium subscriber role
+    """
     bot_id: APINullable[Snowflake] = MISSING
     integration_id: APINullable[Snowflake] = MISSING
     premium_subscriber: APINullable[bool] = MISSING
@@ -39,6 +49,36 @@ class RoleTags(APIObject):
 
 @dataclass
 class Role(APIObject):
+    """
+    :param color:
+        integer representation of hexadecimal color code
+
+    :param hoist:
+        if this role is pinned in the user listing
+
+    :param id:
+        role id
+
+    :param managed:
+        whether this role is managed by an integration
+
+    :param mentionable:
+        whether this role is mentionable
+
+    :param name:
+        role name
+
+    :param permissions:
+        permission bit set
+
+    :param position:
+        position of this role
+
+
+    :param tags:
+        the tags this role has
+    """
+
     color: int
     hoist: bool
     id: Snowflake

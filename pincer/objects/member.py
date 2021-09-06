@@ -34,7 +34,39 @@ from pincer.utils.timestamp import Timestamp
 
 
 @dataclass
-class Member(APIObject):
+class GuildMember(APIObject):
+    """
+    :param deaf:
+        whether the user is deafened in voice channels
+
+    :param joined_at:
+        when the user joined the guild
+
+    :param mute:
+        whether the user is muted in voice channels
+
+    :param roles:
+        array of role object ids
+
+
+    :param nick:
+        this users guild nickname
+
+    :param pending:
+        whether the user has not yet passed the guild's Membership Screening
+        requirements
+
+    :param permissions:
+        total permissions of the member in the channel, including overwrites,
+        returned when in the interaction object
+
+    :param premium_since:
+        when the user started boosting the guild
+
+    :param user:
+        the user this guild member represents
+    """
+
     deaf: bool
     joined_at: Timestamp
     mute: bool

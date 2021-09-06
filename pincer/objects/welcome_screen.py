@@ -32,6 +32,22 @@ from pincer.utils.snowflake import Snowflake
 
 @dataclass
 class WelcomeScreenChannel(APIObject):
+    """
+    :param channel_id:
+        the channel's id
+
+    :param description:
+        the description shown for the channel
+
+
+    :param emoji_id:
+        the emoji id, if the emoji is custom
+
+    :param emoji_name:
+        the emoji name if custom, the unicode character if standard, or null if
+        no emoji is set
+    """
+
     channel_id: Snowflake
     description: str
 
@@ -41,6 +57,13 @@ class WelcomeScreenChannel(APIObject):
 
 @dataclass
 class WelcomeScreen(APIObject):
+    """
+    :description:
+        the server description shown in the welcome screen
+
+    :welcome_channels:
+        the channels shown in the welcome screen, up to 5
+    """
     welcome_channels: WelcomeScreenChannel
 
     description: Optional[str] = None
