@@ -37,7 +37,8 @@ class PrivacyLevel(Enum):
 
 @dataclass
 class StageInstance(APIObject):
-    """Represents a Stage Instance object
+    """
+    Represents a Stage Instance object
 
 
     :param id:
