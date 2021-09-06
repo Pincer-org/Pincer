@@ -30,6 +30,7 @@ from pincer.objects.application_command import \
     ApplicationCommandInteractionDataOption
 from pincer.objects.channel import Channel
 from pincer.objects.guild_member import GuildMember
+from pincer.objects.message import Message
 from pincer.objects.role import Role
 from pincer.objects.select_menu import SelectOption
 from pincer.objects.user import User
@@ -81,8 +82,7 @@ class ResolvedData(APIObject):
     members: APINullable[Dict[Snowflake, GuildMember]] = MISSING
     roles: APINullable[Dict[Snowflake, Role]] = MISSING
     channels: APINullable[Dict[Snowflake, Channel]] = MISSING
-    messages: APINullable[Dict[Snowflake, ...]] = MISSING
-    # Message
+    messages: APINullable[Dict[Snowflake, Message]] = MISSING
 
 
 @dataclass
@@ -197,4 +197,4 @@ class Interaction(APIObject):
     channel_id: APINullable[Snowflake] = MISSING
     member: APINullable[GuildMember] = MISSING
     user: APINullable[User] = MISSING
-    message: APINullable[...] = MISSING  # Message
+    message: APINullable[Message] = MISSING
