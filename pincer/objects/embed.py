@@ -27,23 +27,9 @@ from re import match
 from dataclasses import dataclass, field
 from datetime import datetime
 
+from pincer.exceptions import InvalidUrlError, EmbedFieldError
 from pincer.utils.api_object import APIObject
 from pincer.utils.constants import MISSING, APINullable
-
-
-class EmbedFieldError(ValueError):
-    """Exception that is raised when an embed field is too large"""
-
-    @classmethod
-    def from_desc(cls, _type: str, max_size: int, cur_size: int):
-        return cls(
-            f"{_type} can have a maximum length of {max_size}."
-            f" (Current size: {cur_size})"
-        )
-
-
-class InvalidUrlError(ValueError):
-    pass
 
 
 def _field_size(field: str) -> int:
@@ -62,8 +48,8 @@ def _field_size(field: str) -> int:
 
 def _is_valid_url(url: str) -> bool:
     """
-    Checks wheter the url is a proper and valid url.
-    (matches for http and attachement protocol.
+    Checks whether the url is a proper and valid url.
+    (matches for http and attachment protocol.
 
     :param url:
         The url which must be checked.
@@ -81,12 +67,8 @@ def _check_if_valid_url(url: str):
 
     :raises InvalidUrlError:
         if the url didn't match the url regex.
-<<<<<<< HEAD
         (which means that it was malformed or didn't match the http/attachment
         protocol).
-=======
-        (which means that it was malformed or didn't match the http/attachment protocol.
->>>>>>> d374f1cad1946af23b457eb045abf5855b0daf9e
     """
     if not _is_valid_url(url):
         raise InvalidUrlError(
@@ -295,7 +277,7 @@ class Embed(APIObject):
     """
     Representation of the discord Embed class
 
-    :param author:
+    :property author:
         Author information.
 
     :param color:
@@ -449,6 +431,8 @@ class Embed(APIObject):
             proxy_url=proxy_url,
             width=width
         )
+
+        return self
 
     def set_thumbnail(
         self,
