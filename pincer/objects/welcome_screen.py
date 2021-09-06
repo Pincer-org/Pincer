@@ -24,7 +24,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, List
 
 from pincer.utils.api_object import APIObject
 from pincer.utils.snowflake import Snowflake
@@ -33,12 +33,14 @@ from pincer.utils.snowflake import Snowflake
 @dataclass
 class WelcomeScreenChannel(APIObject):
     """
+    Represents a welcome screen channel. This is a channel which gets
+    shown on the welcome screen.
+
     :param channel_id:
         the channel's id
 
     :param description:
         the description shown for the channel
-
 
     :param emoji_id:
         the emoji id, if the emoji is custom
@@ -58,12 +60,14 @@ class WelcomeScreenChannel(APIObject):
 @dataclass
 class WelcomeScreen(APIObject):
     """
+    Representation of a Discord guild/server welcome screen.
+
     :description:
         the server description shown in the welcome screen
 
     :welcome_channels:
         the channels shown in the welcome screen, up to 5
     """
-    welcome_channels: WelcomeScreenChannel
+    welcome_channels: List[WelcomeScreenChannel]
 
     description: Optional[str] = None
