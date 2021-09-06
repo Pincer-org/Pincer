@@ -37,7 +37,6 @@ class GuildTemplate(APIObject):
     Represents a code that when used,
     creates a guild based on a snapshot of an existing guild.
 
-
     :param code:
         the template code (unique ID)
 
