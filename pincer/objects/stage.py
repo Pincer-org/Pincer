@@ -31,6 +31,9 @@ from pincer.utils.api_object import APIObject
 
 
 class PrivacyLevel(Enum):
+    """
+    Represents the level of publicity of a stage.
+    """
     PUBLIC = 1
     GUILD_ONLY = 2
 
