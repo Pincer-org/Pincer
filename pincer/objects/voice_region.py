@@ -29,7 +29,8 @@ from pincer.utils.api_object import APIObject
 
 @dataclass
 class VoiceRegion(APIObject):
-    """Represents a Discord Voice Region object
+    """
+    Represents a Discord Voice Region object
 
     :param id:
         unique ID for the region
