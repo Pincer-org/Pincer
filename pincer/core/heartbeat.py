@@ -56,7 +56,7 @@ class Heartbeat:
         :param socket:
             The socket to send the heartbeat to.
         """
-        _log.debug(f"Sending heartbeat (seq: %s)" % str(cls.__sequence))
+        _log.debug("Sending heartbeat (seq: %s)" % str(cls.__sequence))
         await socket.send(str(GatewayDispatch(1, cls.__sequence)))
 
     @classmethod
@@ -92,7 +92,7 @@ class Heartbeat:
         if not cls.__heartbeat:
             _log.error(
                 "No `heartbeat_interval` is present. Has the API changed? "
-                f"(payload: %s)" % payload
+                "(payload: %s)" % payload
             )
 
             raise HeartbeatError(
