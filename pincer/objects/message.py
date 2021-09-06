@@ -125,11 +125,10 @@ class MessageType(Enum):
     GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING = 16
     GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING = 17
     THREAD_CREATED = 18
+    REPLY = 19
+    APPLICATION_COMMAND = 20
 
-    if GatewayConfig.version >= 8:
-        REPLY = 19
-        APPLICATION_COMMAND = 20
-    else:
+    if GatewayConfig.version < 8:
         REPLY = 0
         APPLICATION_COMMAND = 0
 
