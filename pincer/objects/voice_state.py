@@ -33,8 +33,8 @@ from pincer.utils.timestamp import Timestamp
 
 @dataclass
 class VoiceState(APIObject):
-    """Used to represent a user's voice connection status
-
+    """
+    Used to represent a user's voice connection status
 
     :param guild_id:
         the guild id this voice state is for
