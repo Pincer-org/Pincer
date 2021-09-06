@@ -35,7 +35,8 @@ from pincer.utils.constants import MISSING, APINullable
 
 @dataclass
 class MessageComponent(APIObject):
-    """Represents a Discord Message Component object
+    """
+    Represents a Discord Message Component object
 
     :param type:
         component type

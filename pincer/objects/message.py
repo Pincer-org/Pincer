@@ -52,33 +52,33 @@ class MessageActivityType(Enum):
 
 class MessageFlags(Enum):
     """
-    :var CROSSPOSTED:
+    :param CROSSPOSTED:
         the message has been published to subscribed
         channels (via Channel Following)
 
-    :var IS_CROSSPOST:
+    :param IS_CROSSPOST:
         this message originated from a message
         in another channel (via Channel Following)
 
-    :var SUPPRESS_EMBEDS:
+    :param SUPPRESS_EMBEDS:
         do not include any embeds when serializing this message
 
-    :var SOURCE_MESSAGE_DELETED:
+    :param SOURCE_MESSAGE_DELETED:
         the source message for this crosspost
         has been deleted (via Channel Following)
 
-    :var URGENT:
+    :param URGENT:
         this message came from the urgent message system
 
-    :var HAS_THREAD:
+    :param HAS_THREAD:
         this message has an associated thread,
         with the same id as the message
 
-    :var EPHEMERAL:
+    :param EPHEMERAL:
         this message is only visible to the user
         who invoked the Interaction
 
-    :var LOADING:
+    :param LOADING:
         this message is an Interaction
         Response and the bot is "thinking"
     """
@@ -117,7 +117,8 @@ class MessageType(Enum):
 
 @dataclass
 class MessageActivity(APIObject):
-    """Represents a Discord Message Activity object
+    """
+    Represents a Discord Message Activity object
 
     :param type:
         type of message activity
@@ -130,7 +131,8 @@ class MessageActivity(APIObject):
 
 @dataclass
 class Message(APIObject):
-    """Represents a message sent in a channel within Discord.
+    """
+    Represents a message sent in a channel within Discord.
 
     :param id:
         id of the message

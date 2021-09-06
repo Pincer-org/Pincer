@@ -129,14 +129,13 @@ class Guild(APIObject):
     :param verification_level:
         verification level required for the guild
 
-
     :param approximate_member_count:
-        approximate number of members in this guild, returned from the GET
-        /guilds/<id> endpoint when with_counts is true
+        approximate number of members in this guild, returned from the 
+        `GET /guilds/<id>` endpoint when with_counts is true
 
     :param approximate_presence_count:
         approximate number of non-offline members in this guild, returned from
-        the GET /guilds/<id> endpoint when with_counts is true
+        the `GET /guilds/<id>` endpoint when with_counts is true
 
     :param channels:
         channels in the guild

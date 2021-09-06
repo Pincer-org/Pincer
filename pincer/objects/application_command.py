@@ -56,10 +56,17 @@ class ApplicationCommandInteractionDataOption(APIObject):
     """
     Represents a Discord Application Command Interaction Data Option
 
-    :param name: the name of the parameter
-    :param type: value of application command option type
-    :param value: the value of the pair
-    :param options: present if this option is a group or subcommand
+    :param name:
+        the name of the parameter
+
+    :param type:
+        value of application command option type
+
+    :param value:
+        the value of the pair
+
+    :param options:
+        present if this option is a group or subcommand
     """
     name: str
     type: int
@@ -73,8 +80,11 @@ class ApplicationCommandOptionChoice(APIObject):
     """
     Represents a Discord Application Command Option Choice object
 
-    :param name: 1-100 character choice name
-    :param value: value of the choice, up to 100 characters if string
+    :param name:
+        1-100 character choice name
+
+    :param value:
+        value of the choice, up to 100 characters if string
     """
     name: str
     value: Union[str, int, float]

@@ -44,8 +44,11 @@ class IntegrationAccount(APIObject):
     """
     Represents a Discord Integration Account object
 
-    :param id: id of the account
-    :param name: name of the account
+    :param id:
+        id of the account
+
+    :param name:
+        name of the account
     """
     id: str
     name: str
@@ -155,6 +158,7 @@ class Integration(APIObject):
         """
         Set the synced time of the integration.
 
-        :param time: The new time for the integration to be synced.
+        :param time:
+            The new time for the integration to be synced.
         """
         self.synced_at = time.isoformat()

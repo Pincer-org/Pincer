@@ -81,8 +81,12 @@ def _check_if_valid_url(url: str):
 
     :raises InvalidUrlError:
         if the url didn't match the url regex.
+<<<<<<< HEAD
         (which means that it was malformed or didn't match the http/attachment
         protocol).
+=======
+        (which means that it was malformed or didn't match the http/attachment protocol.
+>>>>>>> d374f1cad1946af23b457eb045abf5855b0daf9e
     """
     if not _is_valid_url(url):
         raise InvalidUrlError(
@@ -433,7 +437,7 @@ class Embed(APIObject):
 
         :param height:
             Height of the video
-
+        
         :param width:
             Width of the video
 
@@ -526,9 +530,16 @@ class Embed(APIObject):
 
         :param inline:
             Whether or not this field should display inline
+<<<<<<< HEAD
 
         :raises EmbedFieldError:
             Raised when there are more than 25 fields in the embed
+=======
+        
+        :raises EmbedFieldError:
+            Gets raised when the maximum
+            amount of fields has already been reached.
+>>>>>>> d374f1cad1946af23b457eb045abf5855b0daf9e
         """
         _field = EmbedField(
             name=name,
