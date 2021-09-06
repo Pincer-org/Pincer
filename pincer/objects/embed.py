@@ -342,6 +342,14 @@ class Embed(APIObject):
     video: APINullable[EmbedVideo] = MISSING
 
     def __post_init__(self):
+        """
+        :raises EmbedFieldError:
+            Embed title is longer than 256 characters.
+        :raises EmbedFieldError:
+            Embed description is longer than 4096 characters.
+        :raises EmbedFieldError:
+            Embed has more than 25 fields.
+        """
         if _field_size(self.title) > 256:
             raise EmbedFieldError.from_desc(
                 "Embed title", 256, len(self.title)
