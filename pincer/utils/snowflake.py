@@ -34,34 +34,30 @@ class Snowflake(int):
     Because Snowflake IDs are up to 64 bits in size (e.g. a uint64),
     they are always returned as strings in the HTTP API
     to prevent integer overflows in some languages.
-
-    :param timestamp:
-        Milliseconds since Discord Epoch,
-        the first second of 2015 or 14200704000000
-
-    :param worker_id:
-        Internal worker ID
-
-    :param process_id:
-        Internal process ID
-
-    :param increment:
-        For every ID that is generated on that process,
-        this number is incremented
     """
 
     @property
     def timestamp(self) -> int:
+        """
+        Milliseconds since Discord Epoch,
+        the first second of 2015 or 14200704000000
+        """
         return self >> 22
 
     @property
     def worker_id(self) -> int:
+        """Internal worker ID"""
         return (self >> 17) % 16
 
     @property
     def process_id(self) -> int:
+        """Internal process ID"""
         return (self >> 12) % 16
 
     @property
     def increment(self) -> int:
+        """
+        For every ID that is generated on that process,
+        this number is incremented
+        """
         return self % 2048
