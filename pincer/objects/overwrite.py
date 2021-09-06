@@ -30,7 +30,8 @@ from pincer.utils.snowflake import Snowflake
 
 @dataclass
 class Overwrite(APIObject):
-    """Represents a Discord Overwrite object
+    """
+    Represents a Discord Overwrite object
 
     :param id:
         role or user id
