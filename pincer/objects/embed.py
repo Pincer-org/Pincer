@@ -23,9 +23,9 @@
 
 from __future__ import annotations
 
-from re import match
 from dataclasses import dataclass, field
 from datetime import datetime
+from re import match
 
 from pincer.exceptions import InvalidUrlError, EmbedFieldError
 from pincer.utils.api_object import APIObject
@@ -91,9 +91,6 @@ class EmbedAuthor:
 
     :param proxy_icon_url:
         A proxied url of the author icon
-
-    :raises EmbedFieldError:
-        Name is longer than 256 characters.
     """
     icon_url: APINullable[str] = MISSING
     name: APINullable[str] = MISSING
@@ -101,6 +98,15 @@ class EmbedAuthor:
     url: APINullable[str] = MISSING
 
     def __post_init__(self):
+        """
+        :raises EmbedFieldError:
+            Name is longer than 256 characters.
+
+        :raises InvalidUrlError:
+            if the url didn't match the url regex.
+            (which means that it was malformed or didn't match the
+            http/attachment protocol).
+        """
         if _field_size(self.name) > 256:
             raise EmbedFieldError.from_desc("Author name", 256, len(self.name))
 
@@ -131,6 +137,12 @@ class EmbedImage:
     width: APINullable[int] = MISSING
 
     def __post_init__(self):
+        """
+        :raises InvalidUrlError:
+            if the url didn't match the url regex.
+            (which means that it was malformed or didn't match the
+            http/attachment protocol).
+        """
         _check_if_valid_url(self.url)
 
 
@@ -174,6 +186,12 @@ class EmbedThumbnail:
     width: APINullable[int] = MISSING
 
     def __post_init__(self):
+        """
+        :raises InvalidUrlError:
+            if the url didn't match the url regex.
+            (which means that it was malformed or didn't match the
+            http/attachment protocol).
+        """
         _check_if_valid_url(self.url)
 
 
@@ -366,11 +384,11 @@ class Embed(APIObject):
         return self
 
     def set_author(
-        self,
-        icon_url: APINullable[str] = MISSING,
-        name: APINullable[str] = MISSING,
-        proxy_icon_url: APINullable[str] = MISSING,
-        url: APINullable[str] = MISSING
+            self,
+            icon_url: APINullable[str] = MISSING,
+            name: APINullable[str] = MISSING,
+            proxy_icon_url: APINullable[str] = MISSING,
+            url: APINullable[str] = MISSING
     ) -> Embed:
         """
         Set the author message for the embed. This is the top
@@ -402,11 +420,11 @@ class Embed(APIObject):
         return self
 
     def set_image(
-        self,
-        height: APINullable[int] = MISSING,
-        url: APINullable[str] = MISSING,
-        proxy_url: APINullable[str] = MISSING,
-        width: APINullable[int] = MISSING
+            self,
+            height: APINullable[int] = MISSING,
+            url: APINullable[str] = MISSING,
+            proxy_url: APINullable[str] = MISSING,
+            width: APINullable[int] = MISSING
     ) -> Embed:
         """
         Sets an image for your embed.
@@ -435,11 +453,11 @@ class Embed(APIObject):
         return self
 
     def set_thumbnail(
-        self,
-        height: APINullable[int] = MISSING,
-        url: APINullable[str] = MISSING,
-        proxy_url: APINullable[str] = MISSING,
-        width: APINullable[int] = MISSING
+            self,
+            height: APINullable[int] = MISSING,
+            url: APINullable[str] = MISSING,
+            proxy_url: APINullable[str] = MISSING,
+            width: APINullable[int] = MISSING
     ) -> Embed:
         """
         Sets the thumbnail of the embed.
@@ -469,10 +487,10 @@ class Embed(APIObject):
         return self
 
     def set_footer(
-        self,
-        text: str,
-        icon_url: APINullable[str] = MISSING,
-        proxy_icon_url: APINullable[str] = MISSING
+            self,
+            text: str,
+            icon_url: APINullable[str] = MISSING,
+            proxy_icon_url: APINullable[str] = MISSING
     ) -> Embed:
         """
         Sets the embed footer. This is at the bottom of your embed.
@@ -497,10 +515,10 @@ class Embed(APIObject):
         return self
 
     def add_field(
-        self,
-        name: str,
-        value: str,
-        inline: APINullable[bool] = MISSING
+            self,
+            name: str,
+            value: str,
+            inline: APINullable[bool] = MISSING
     ) -> Embed:
         """
         Adds a field to the embed.
@@ -526,7 +544,7 @@ class Embed(APIObject):
 
         if len(self.fields) > 25:
             raise EmbedFieldError.from_desc(
-                "Embed field", 25, len(self.fields)+1
+                "Embed field", 25, len(self.fields) + 1
             )
 
         self.fields += [_field]
