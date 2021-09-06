@@ -25,7 +25,7 @@ An asynchronous Python API wrapper meant to replace discord.py
 > Join the Discord server: <https://discord.gg/8WkYz3fNFm>  
 > The PyPI package: <https://pypi.org/project/Pincer>  
 > Our website: <https://pincer.dev>  
-> ReadTheDoc: <https://pincer.readthedocs.io/en/latest/pincer.html>
+> ReadTheDoc: <https://pincer.readthedocs.io>
 
 ## ☄️ Installation
 
