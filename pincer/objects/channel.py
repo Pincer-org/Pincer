@@ -143,7 +143,7 @@ class Channel(APIObject):
 
     :param user_limit:
         the user limit of the voice channel
-        
+
     :param video_quality_mode:
         the camera video quality mode of the voice channel, 1 when not present
     """

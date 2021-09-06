@@ -37,7 +37,7 @@ class Emoji(APIObject):
     """
     :param id:
         emoji id
-        
+
     :param name:
         emoji name
 
@@ -50,7 +50,7 @@ class Emoji(APIObject):
 
     :param managed:
         whether this emoji is managed
-        
+
     :param require_colons:
         whether this emoji must be wrapped in colons
 
