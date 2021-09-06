@@ -31,7 +31,9 @@ TS = TypeVar("TS", str, datetime, float, int)
 
 
 class Timestamp:
-
+    """
+    Contains a lot of useful methods for working with timestamps.
+    """
     def __init__(self, time: Optional[TS] = None):
         self.__time = Timestamp.parse(time)
         self.__epoch = Timestamp.to_epoch(self.__time)
@@ -39,18 +41,46 @@ class Timestamp:
 
     @staticmethod
     def to_epoch(time: datetime) -> int:
+        """
+        Convert a datetime to an epoch.
+
+        :param time:
+            The datetime to convert.
+        """
         return int(time.timestamp() * 1000)
 
     @staticmethod
     def string_to_datetime(string: str) -> datetime:
+        """
+        Convert a string to a datetime object.
+
+        :param string:
+            The string to convert.
+        """
         return datetime.fromisoformat(string)
 
     @staticmethod
     def epoch_to_datetime(epoch: Union[int, float]) -> datetime:
+        """
+        Convert an epoch to a datetime object.
+
+        :param epoch:
+            The epoch to convert to a datetime object.
+        """
         return datetime.utcfromtimestamp(epoch)
 
     @staticmethod
-    def parse(time: Optional[TS]) -> datetime:
+    def parse(time: Optional[TS] = None) -> datetime:
+        """
+        Convert a time to datetime object.
+
+        :param time:
+            The time to be converted to a datetime object.
+            This can be one of these types: str, float, int
+
+            If no parameter is passed it will return the current
+            datetime.
+        """
         if isinstance(time, str):
             return Timestamp.string_to_datetime(time)
 
