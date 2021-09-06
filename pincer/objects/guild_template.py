@@ -33,7 +33,8 @@ from pincer.utils.timestamp import Timestamp
 
 @dataclass
 class GuildTemplate(APIObject):
-    """Represents a code that when used,
+    """
+    Represents a code that when used,
     creates a guild based on a snapshot of an existing guild.
 
 
