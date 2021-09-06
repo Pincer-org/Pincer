@@ -32,7 +32,8 @@ from pincer.utils.snowflake import Snowflake
 
 @dataclass
 class Attachment(APIObject):
-    """Represents a Discord Attachment object
+    """
+    Represents a Discord Attachment object
 
     :param id:
         attachment id
