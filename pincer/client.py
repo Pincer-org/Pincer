@@ -21,25 +21,26 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+from __future__ import annotations
+
 import logging
 from asyncio import iscoroutinefunction
-from inspect import getfullargspec
-from typing import (
-    Optional, TypeVar, Callable, Coroutine, Any, Union, Dict, Tuple, List
-)
+from typing import Optional, Any, Union, Dict, Tuple, List
 
 from pincer import __package__
-from pincer._config import GatewayConfig, events
+from pincer._config import events
 from pincer.core.dispatch import GatewayDispatch
 from pincer.core.gateway import Dispatcher
 from pincer.core.http import HTTPClient
 from pincer.exceptions import InvalidEventName
 from pincer.objects.user import User
 from pincer.utils.extraction import get_index
+from pincer.utils.insertion import should_pass_cls
+from pincer.utils.types import Coro
 
 _log = logging.getLogger(__package__)
 
-Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
 middleware_type = Optional[Union[Coro, Tuple[str, List[Any], Dict[str, Any]]]]
 
 _events: Dict[str, Optional[Union[str, Coro]]] = {}
@@ -47,12 +48,16 @@ _events: Dict[str, Optional[Union[str, Coro]]] = {}
 for event in events:
     event_final_executor = f"on_{event}"
 
-    # Event middleware for the library. Function argument is a payload
-    # (GatewayDispatch). The function must return a string which
-    # contains the main event key. As second value a list with arguments,
-    # and thee third value value must be a dictionary. The last two are
-    # passed on as *args and **kwargs.
-    #
+    # Event middleware for the library.
+    # Function argument is a payload (GatewayDispatch).
+
+    # The function must return a string which
+    # contains the main event key.
+
+    # As second value a list with arguments,
+    # and thee third value value must be a dictionary.
+    # The last two are passed on as *args and **kwargs.
+
     # NOTE: These return values must be passed as a tuple!
     _events[event] = event_final_executor
 
@@ -60,14 +65,97 @@ for event in events:
     _events[event_final_executor] = None
 
 
+def middleware(call: str, *, override: bool = False):
+    """
+    Middleware are methods which can be registered with this decorator.
+    These methods are invoked before any ``on_`` event.
+    As the ``on_`` event is the final call.
+
+    A default call exists for all events, but some might already be in
+    use by the library.
+
+    If you know what you are doing, you can override these default
+    middleware methods by passing the override parameter.
+
+    The method to which this decorator is registered must be a coroutine,
+    and it must return a tuple with the following format\:
+
+    .. code-block:: python
+
+        tuple(
+            key for next middleware or final event [str],
+            args for next middleware/event which will be passed as *args
+                [list(Any)],
+            kwargs for next middleware/event which will be passed as
+                **kwargs [dict(Any)]
+        )
+
+    One parameter is passed to the middleware. This parameter is the
+    payload parameter which is of type :class:`~.core.dispatch.GatewayDispatch`.
+    This contains the response from the discord API.
+
+    :Implementation example:
+
+    .. code-block:: pycon
+
+        >>> @middleware("ready", override=True)
+        >>> async def custom_ready(payload: GatewayDispatch):
+        >>>     return "on_ready", [User.from_dict(payload.data.get("user"))]
+
+        >>> @Client.event
+        >>> async def on_ready(bot: User):
+        >>>     print(f"Signed in as {bot}")
+    
+
+    :param call:
+        The call where the method should be registered.
+
+    Keyword Arguments:
+
+    :param override:
+        Setting this to True will allow you to override existing
+        middleware. Usage of this is discouraged, but can help you out
+        of some situations.
+    """
+    def decorator(func: Coro):
+        if override:
+            _log.warning(
+                f"Middleware overriding has been enabled for `{call}`."
+                " This might cause unexpected behaviour."
+            )
+
+        if not override and callable(_events.get(call)):
+            raise RuntimeError(
+                f"Middleware event with call `{call}` has "
+                "already been registered"
+            )
+
+        async def wrapper(cls, payload: GatewayDispatch):
+            _log.debug("`%s` middleware has been invoked", call)
+
+            return await (
+                func(cls, payload)
+                if should_pass_cls(func)
+                else await func(payload)
+            )
+
+        _events[call] = wrapper
+        return wrapper
+
+    return decorator
+
+
 class Client(Dispatcher):
     def __init__(self, token: str):
         """
-        The client is the main instance which is between the programmer and the
-        discord API. This client represents your bot.
+        The client is the main instance which is between the programmer
+            and the discord API.
 
-        :param token: The secret bot token which can be found in
-            https://discord.com/developers/applications/<bot_id>/bot.
+        This client represents your bot.
+
+        :param token:
+            The secret bot token which can be found in
+            `<https://discord.com/developers/applications/\<bot_id\>/bot>`_
         """
         # TODO: Implement intents
         super().__init__(
@@ -78,14 +166,85 @@ class Client(Dispatcher):
             }
         )
 
-        # TODO: close the client after use
-        self.http = HTTPClient(token, version=GatewayConfig.version)
         self.bot: Optional[User] = None
-        _events["ready"] = self.__on_ready
+        self.__token = token
+
+    @property
+    def _http(self):
+        """
+        Returns a http client with the current client its
+        authentication credentials.
+
+        :Usage example:
+
+        .. code-block:: pycon
+
+            >>> async with self._http as client:
+            >>>     await client.post(
+            ...         '<endpoint>',
+            ...         {
+            ...             "foo": "bar",
+            ...             "bar": "baz",
+            ...             "baz": "foo"
+            ...         }
+            ...    )
+        
+        """
+        return HTTPClient(self.__token)
 
     @staticmethod
     def event(coroutine: Coro):
-        # TODO: Write docs
+        """
+        Register a Discord gateway event listener. This event will get
+        called when the client receives a new event update from Discord
+        which matches the event name.
+
+        The event name gets pulled from your method name, and this must
+        start with ``on_``. This forces you to write clean and consistent
+        code.
+
+        This decorator can be used in and out of a class, and all
+        event methods must be coroutines. *(async)*
+
+        :Example usage:
+        
+        .. code-block:: pycon
+
+            >>> # Function based
+            >>> from pincer import Client
+            >>>
+            >>> client = Client("token")
+            >>>
+            >>> @client.event
+            >>> async def on_ready():
+            ...     print(f"Signed in as {client.bot}")
+            >>>
+            >>> if __name__ == "__main__":
+            ...     client.run()
+
+        .. code-block :: pycon
+
+            >>> # Class based
+            >>> from pincer import Client
+            >>>
+            >>> class BotClient(Client):
+            ...     @Client.event
+            ...     async def on_ready(self):
+            ...         print(f"Signed in as {self.bot}")
+            >>>
+            >>> if __name__ == "__main__":
+            ...     BotClient("token").run()
+        
+
+        :param coroutine: # TODO: add info
+
+        :raises TypeError:
+            If the method is not a coroutine.
+
+        :raises InvalidEventName:
+            If the event name does not start with ``on_``, has already
+            been registered or is not a valid event name.
+        """
 
         if not iscoroutinefunction(coroutine):
             raise TypeError(
@@ -108,30 +267,92 @@ class Client(Dispatcher):
         _events[name] = coroutine
         return coroutine
 
-    async def event_handler(self, _, payload: GatewayDispatch):
-        # TODO: Write docs
-        event_name = payload.event_name.lower()
-        middleware: middleware_type = _events.get(event_name)
-        final_call, args, params = middleware, list(), dict()
+    async def handle_middleware(
+            self,
+            payload: GatewayDispatch,
+            key: str,
+            *args,
+            **kwargs
+    ) -> Tuple[Optional[Coro], List[Any], Dict[str, Any]]:
+        """
+        Handles all middleware recursively. Stops when it has found an
+        event name which starts with ``on_``.
 
-        if iscoroutinefunction(middleware):
-            extractable = await middleware(payload)
-            final_call = get_index(extractable, 0, f"on_{event_name}")
-            args = get_index(extractable, 1, list())
+        :param payload:
+            The original payload for the event.
+
+        :param key:
+            The index of the middleware in ``_events``.
+
+        :param \*args:
+            The arguments which will be passed to the middleware.
+
+        :param \*\*kwargs:
+            The named arguments which will be passed to the middleware.
+
+        :return:
+            A tuple where the first element is the final executor
+            (so the event) its index in ``_events``. The second and third
+            element are the ``*args`` and ``**kwargs`` for the event.
+        """
+        ware: middleware_type = _events.get(key)
+        next_call, arguments, params = ware, list(), dict()
+
+        if iscoroutinefunction(ware):
+            extractable = await ware(self, payload, *args, **kwargs)
+
+            if not isinstance(extractable, tuple):
+                raise RuntimeError(
+                    f"Return type from `{key}` middleware must be tuple. "
+                )
+
+            next_call = get_index(extractable, 0, "")
+            arguments = get_index(extractable, 1, list())
             params = get_index(extractable, 2, dict())
 
-        final_call_routine: Optional[Coro] = _events.get(final_call)
+        if next_call is None:
+            raise RuntimeError(f"Middleware `{key}` has not been registered.")
 
-        if iscoroutinefunction(final_call_routine):
-            kwargs = params
-            arguments = getfullargspec(final_call_routine).args
-            if len(arguments) >= 1 and arguments[0] == "self":
-                kwargs["self"] = self
+        return (
+            (next_call, arguments, params)
+            if next_call.startswith("on_")
+            else await self.handle_middleware(
+                payload, next_call, *arguments, **params
+            )
+        )
 
-            await final_call_routine(*args, **kwargs)
+    async def event_handler(self, _, payload: GatewayDispatch):
+        """
+        Handles all payload events with opcode 0.
 
-    async def __on_ready(self, payload: GatewayDispatch):
-        # TODO: Write docs
+        :param _:
+            Socket param, but this isn't required for this handler. So
+            its just a filler parameter, doesn't matter what is passed.
+
+        :param payload:
+            The payload sent from the Discord gateway, this contains the
+            required data for the client to know what event it is and
+            what specifically happened.
+        """
+        event_name = payload.event_name.lower()
+
+        key, args, kwargs = await self.handle_middleware(payload, event_name)
+
+        call = _events.get(key)
+
+        if iscoroutinefunction(call):
+            if should_pass_cls(call):
+                await call(self, *args, **kwargs)
+            else:
+                await call(*args, **kwargs)
+
+    @middleware("ready")
+    async def on_ready_middleware(self, payload: GatewayDispatch):
+        """
+        Middleware for ``on_ready`` event.
+
+        :param payload: The data received from the ready event.
+        """
         self.bot = User.from_dict(payload.data.get("user"))
         return "on_ready",
 

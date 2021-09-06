@@ -21,64 +21,60 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, List
 
-from pincer.objects.guild import Guild
-from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
+from pincer.objects.user import User
+from pincer.utils.constants import APINullable, MISSING
 from pincer.utils.snowflake import Snowflake
 from pincer.utils.timestamp import Timestamp
 
+
 @dataclass
-class GuildTemplate(APIObject):
+class GuildMember(APIObject):
     """
-    Represents a code that when used,
-    creates a guild based on a snapshot of an existing guild.
+    Represents a member which resides in a guild/server.
+    
+    :param deaf:
+        whether the user is deafened in voice channels
 
+    :param joined_at:
+        when the user joined the guild
 
-    :param code:
-        the template code (unique ID)
+    :param mute:
+        whether the user is muted in voice channels
 
-    :param name:
-        template name
+    :param roles:
+        array of role object ids
 
-    :param description:
-        the description for the template
+    :param nick:
+        this users guild nickname
 
-    :param usage_count:
-        number of times this template has been used
+    :param pending:
+        whether the user has not yet passed the guild's Membership Screening
+        requirements
 
-    :param creator_id:
-        the ID of the user who created the template
+    :param permissions:
+        total permissions of the member in the channel, including overwrites,
+        returned when in the interaction object
 
-    :param creator: the
-        user who created the template
+    :param premium_since:
+        when the user started boosting the guild
 
-    :param created_at:
-        when this template was created
-
-    :param updated_at:
-        when this template was last synced to the source guild
-
-    :param source_guild_id:
-        the ID of the guild this template is based on
-
-    :param serialized_source_guild:
-        the guild snapshot this template contains
-
-    :param is_dirty:
-        whether the template has unsynced changes
+    :param user:
+        the user this guild member represents
     """
-    code: str
-    name: str
-    description: Optional[str]
-    usage_count: int
-    creator_id: Snowflake
-    creator: User
-    created_at: Timestamp
-    updated_at: Timestamp
-    source_guild_id: Snowflake
-    serialized_source_guild: Guild
-    is_dirty: Optional[bool]
+
+    deaf: bool
+    joined_at: Timestamp
+    mute: bool
+    roles: List[Snowflake]
+
+    nick: APINullable[Optional[str]] = MISSING
+    pending: APINullable[bool] = MISSING
+    permissions: APINullable[str] = MISSING
+    premium_since: APINullable[Optional[Timestamp]] = MISSING
+    user: APINullable[User] = MISSING

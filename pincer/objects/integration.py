@@ -41,17 +41,20 @@ class IntegrationExpireBehavior(Enum):
 
 @dataclass
 class IntegrationAccount(APIObject):
-    """Represents a Discord Integration Account object
+    """
+    Represents a Discord Integration Account object
 
     :param id: id of the account
-    :param name: name of the account"""
+    :param name: name of the account
+    """
     id: str
     name: str
 
 
 @dataclass
 class IntegrationApplication(APIObject):
-    """Represents a Discord Integration Application object
+    """
+    Represents a Discord Integration Application object
 
     :param id:
         the id of the app
@@ -81,7 +84,8 @@ class IntegrationApplication(APIObject):
 
 @dataclass
 class Integration(APIObject):
-    """Represents a Discord Integration object
+    """
+    Represents a Discord Integration object
 
     :param id:
         integration id
@@ -148,4 +152,9 @@ class Integration(APIObject):
     application: APINullable[IntegrationApplication] = MISSING
 
     def set_synced_at(self, time: datetime):
+        """
+        Set the synced time of the integration.
+
+        :param time: The new time for the integration to be synced.
+        """
         self.synced_at = time.isoformat()

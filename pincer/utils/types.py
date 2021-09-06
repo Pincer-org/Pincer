@@ -22,23 +22,7 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from dataclasses import dataclass
-from typing import Optional
+from typing import TypeVar, Callable, Coroutine, Any
 
-from pincer.utils.api_object import APIObject
-from pincer.utils.snowflake import Snowflake
-
-
-@dataclass
-class GuildWidget(APIObject):
-    """
-    Represents a Discord Guild Widget object
-
-    :param enabled:
-        whether the widget is enabled
-
-    :param channel_id:
-        the widget channel id
-    """
-    enabled: bool
-    channel_id: Optional[Snowflake]
+# Represents a coroutine.
+Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])

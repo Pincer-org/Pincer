@@ -66,7 +66,6 @@ class Application(APIObject):
         the hex encoded key for verification in interactions and the GameSDK's
         GetTicket
 
-
     :param cover_image:
         the application's default rich presence invite cover image hash
 

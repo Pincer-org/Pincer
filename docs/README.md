@@ -16,20 +16,21 @@
 ![Code Style](https://img.shields.io/badge/code%20style-pep8-green)
 ![Discord](https://img.shields.io/discord/881531065859190804)
 
-An asynchronous python API wrapper meant to replace discord.py
+An asynchronous Python API wrapper meant to replace discord.py
 
 | :exclamation: | The package is currently within the planning phase |
 | ------------- | :------------------------------------------------- |
 
 ## :pushpin: Links
 
-> <img src="../assets/svg/discord.svg" width="12px" alt="Pincer Logo"> ｜Join the discord server: <https://discord.gg/8WkYz3fNFm>  
-> <img src="../assets/svg/pypi.svg" width="12px" alt="Pincer Logo"> ｜The pypi package: <https://pypi.org/project/Pincer>  
-> <img src="../assets/svg/pincer.svg" width="12px" alt="Pincer Logo"> ｜Our website: <https://pincer.dev>  
+> <img src="../assets/svg/discord.svg" width="16px" alt="Discord Logo"> ｜Join the Discord server: https://discord.gg/8WkYz3fNFm <br>
+> <img src="../assets/svg/pypi.svg" width="16px" alt="PyPI Logo"> ｜The PyPI package: https://pypi.org/project/Pincer <br>
+> <img src="../assets/svg/pincer.svg" width="16px" alt="Pincer Logo"> ｜Our website: https://pincer.dev <br>
+> 📝 | ReadTheDoc: https://pincer.readthedocs.io
 
 ## ☄️ Installation
 
-Use the following command to install Pincer into your python environment:
+Use the following command to install Pincer into your Python environment:
 
 ```bash
 pip install pincer
@@ -41,15 +42,21 @@ pip install pincer
     ⚙️ <i> Didn't work?</i>
 </summary>
 
-Depending on your python installation, you might need to use one of the following:
+Depending on your Python installation, you might need to use one of the following:
 
-- pip isn't in the path but python is
+- Python is not in PATH
+
+    ```sh
+    path/to/python.exe -m pip install pincer
+    ```
+
+- Python is in PATH but pip is not
 
     ```sh
     python -m pip install pincer
     ```
 
-- Unix system can use pip3/python3 command
+- Unix systems can use pip3/python3 commands
 
     ```sh
     pip3 install pincer
@@ -59,13 +66,7 @@ Depending on your python installation, you might need to use one of the followin
     python3 -m pip install pincer
     ```
 
-- python isn't in the path
-
-    ```sh
-    path/to/python.exe -m pip install pincer
-    ```
-
-- Using multiple python versions
+- Using multiple Python versions
 
     ```sh
     py -m pip install pincer
@@ -91,7 +92,7 @@ bot = Bot("...")
 bot.run()
 ```
 
-**An example on `on_ready` event**
+**An example on the `on_ready` event**
 
 ```py
 from time import perf_counter
@@ -110,7 +111,7 @@ client.run()
 
 ### Inherited client
 
-You have the possibility to use your own class to inherit from the pincer bot base.
+You have the possibility to use your own class to inherit from the Pincer bot base.
 
 ```py
 class Bot(Client):
@@ -125,22 +126,35 @@ class Bot(Client):
 
 See an advanced bot implementation:
 
-> <https://github.com/Pincer-org/Pincer>
+> <https://github.com/Pincer-org/Pincer-bot>
 
-### Enable the debug mode
+### Advanced Usage
+
+__Warning: These features are meant for advanced developers to make early experimentation with Pincer.__
+
+#### Enable the debug mode
 
 _If you want to see everything that is happening under the hood,
-either for curiosity or the implementation of some features,
-we provide a debug logging!_
+either out of curiosity or to get a deeper insight into the implementation
+of some features, we provide debug logging!_
 
 ```py
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
 ```
+**Note:** _A lot of printing can happen, including sensitive information,
+so make sure to be aware of what you're doing if you're enabling it!_
 
-**Note:** _A lot of printing can happen, with sensitive information,
-make sure to be aware or what your doing if your enable it!_
+
+#### Middleware
+_Within the version 0.4.0-dev, the middleware system has been re-created,
+and now advanced users can utilize them; however, it should be done carefully._
+
+A /say command early implementation using middleware
+
+> https://gist.github.com/Arthurdw/e110ebbdafca388722f25ddb79c1dfb8
+
 
 ## 🏷️ License
 

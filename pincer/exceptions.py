@@ -47,8 +47,8 @@ def __init__(self, specific: str):
 class InvalidEventName(PincerError):
     """
     Exception raised when the event name is not a valid event.
-    This can be because the event name did not begin with an `on_` or
-    because its not a  valid event in the library.
+    This can be because the event name did not begin with an ``on_`` or
+    because its not a valid event in the library.
     """
 
 
@@ -77,8 +77,6 @@ class InvalidTokenError(DispatchError, ValueError):
 
     def __init__(self, hint: Optional[str] = None):
         """
-        Exception raised when the authorization token is invalid.
-
         :param hint:
             Additional information about the exception cause.
         """

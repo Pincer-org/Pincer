@@ -21,24 +21,3 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-from dataclasses import dataclass
-from typing import Optional
-
-from pincer.utils.api_object import APIObject
-from pincer.utils.snowflake import Snowflake
-
-
-@dataclass
-class GuildWidget(APIObject):
-    """
-    Represents a Discord Guild Widget object
-
-    :param enabled:
-        whether the widget is enabled
-
-    :param channel_id:
-        the widget channel id
-    """
-    enabled: bool
-    channel_id: Optional[Snowflake]

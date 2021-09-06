@@ -43,6 +43,8 @@ from pincer.utils.timestamp import Timestamp
 @dataclass
 class Guild(APIObject):
     """
+    Represents a Discord guild/server in which your client resides.
+
     :param afk_channel_id:
         id of afk channel
 

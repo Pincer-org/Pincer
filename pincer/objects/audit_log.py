@@ -37,7 +37,11 @@ from pincer.utils.snowflake import Snowflake
 
 
 class AuditLogEvent(Enum):
-    """Represents a Discord Audit Log Event"""
+    """
+    Audit log action type.
+    This represents the action which got performed,
+    and logged.
+    """
     GUILD_UPDATE = 1
     CHANNEL_CREATE = 10
     CHANNEL_UPDATE = 11
@@ -86,7 +90,8 @@ class AuditLogEvent(Enum):
 
 @dataclass
 class AuditLogChange(APIObject):
-    """Representation of Discord Audit Log Change object
+    """
+    Representation of Discord Audit Log Change object
 
     :param new_value:
         new value of the key
@@ -104,7 +109,8 @@ class AuditLogChange(APIObject):
 
 @dataclass
 class AuditEntryInfo(APIObject):
-    """Represents Discord Optional Audit Entry Info
+    """
+    Represents Discord Optional Audit Entry Info
 
     :param delete_member_days:
         number of days after which inactive members were kicked
@@ -142,7 +148,8 @@ class AuditEntryInfo(APIObject):
 
 @dataclass
 class AuditLogEntry(APIObject):
-    """Represents a Discord Audit Log Entry object.
+    """
+    Represents a Discord Audit Log Entry object.
 
     :param target_id:
         id of the affected entity x(webhook, user, role, etc.)
@@ -177,7 +184,8 @@ class AuditLogEntry(APIObject):
 
 @dataclass
 class AuditLog(APIObject):
-    """Represents a Discord Audit Log object.
+    """
+    Represents a Discord Audit Log object.
 
     :param webhooks:
         list of webhooks found in the audit log

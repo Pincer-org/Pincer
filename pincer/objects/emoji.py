@@ -28,6 +28,7 @@ from typing import Optional, List
 
 from pincer.objects.role import Role
 from pincer.objects.user import User
+from pincer.utils.snowflake import Snowflake
 from pincer.utils.api_object import APIObject
 from pincer.utils.constants import APINullable, MISSING
 
@@ -61,7 +62,7 @@ class Emoji(APIObject):
         user that created this emoji
     """
 
-    id: Optional[int]
+    id: Optional[Snowflake]
     name: Optional[str]
 
     animated: APINullable[bool] = MISSING

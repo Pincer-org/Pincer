@@ -42,7 +42,7 @@ class Heartbeat:
     The heartbeat of the websocket connection.
 
     This is what lets the server and client know that they are still
-    both online and properly connected.
+        both online and properly connected.
     """
     __heartbeat: float = 0
     __sequence: Optional[int] = None
@@ -51,6 +51,10 @@ class Heartbeat:
     async def __send(cls, socket: WebSocketClientProtocol):
         """
         Sends a heartbeat to the API gateway.
+        :meta public:
+
+        :param socket:
+            The socket to send the heartbeat to.
         """
         _log.debug(f"Sending heartbeat (seq: %s)" % str(cls.__sequence))
         await socket.send(str(GatewayDispatch(1, cls.__sequence)))
@@ -63,7 +67,6 @@ class Heartbeat:
         :return:
             The current heartbeat of the client.
             Default is 0 (client has not initialized the heartbeat yet.)
-
         """
         return cls.__heartbeat
 
@@ -76,6 +79,12 @@ class Heartbeat:
         """
         Handshake between the discord API and the client.
         Retrieve the heartbeat for maintaining a connection.
+
+        :param socket:
+            The socket to send the heartbeat to.
+
+        :param payload:
+            The received hello message from the Discord gateway.
         """
         _log.debug("Handling initial discord hello websocket message.")
         cls.__heartbeat = payload.data.get("heartbeat_interval")
@@ -111,6 +120,12 @@ class Heartbeat:
         """
         Handles a heartbeat, which means that it rests
         and then sends a new heartbeat.
+
+        :param socket:
+            The socket to send the heartbeat to.
+
+        :param _:
+            Filling param for auto event handling.
         """
 
         _log.debug("Resting heart for %is" % cls.__heartbeat)

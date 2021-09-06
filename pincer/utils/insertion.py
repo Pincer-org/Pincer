@@ -21,24 +21,21 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+from inspect import getfullargspec
+from typing import Any, Union, Callable
 
-from dataclasses import dataclass
-from typing import Optional
-
-from pincer.utils.api_object import APIObject
-from pincer.utils.snowflake import Snowflake
+from pincer.utils.types import Coro
 
 
-@dataclass
-class GuildWidget(APIObject):
+def should_pass_cls(call: Union[Coro, Callable[..., Any]]) -> bool:
     """
-    Represents a Discord Guild Widget object
+    Checks whether a callable requires a self/cls as first parameter.
 
-    :param enabled:
-        whether the widget is enabled
+    :param call:
+        The callable to check.
 
-    :param channel_id:
-        the widget channel id
+    :return:
+        Whether or not its required.
     """
-    enabled: bool
-    channel_id: Optional[Snowflake]
+    args = getfullargspec(call).args
+    return len(args) >= 1 and args[0] in ["self", "cls"]

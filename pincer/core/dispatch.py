@@ -78,8 +78,8 @@ class GatewayDispatch:
     @classmethod
     def from_string(cls, payload: str) -> GatewayDispatch:
         """
-        Parses a given payload from a string format and returns a
-        GatewayDispatch.
+        Parses a given payload from a string format
+            and returns a GatewayDispatch.
 
         :param payload:
             The payload to parse.
