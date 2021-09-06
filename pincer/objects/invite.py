@@ -47,7 +47,7 @@ class InviteTargetType(Enum):
 class InviteStageInstance(APIObject):
     """
     Represents an invite for a Discord stages channel.
-    
+
     :param members:
         the members speaking in the Stage
 
