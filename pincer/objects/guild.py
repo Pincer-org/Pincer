@@ -29,7 +29,7 @@ from typing import Optional, List
 from pincer.exceptions import UnavailableGuildError
 from pincer.objects.channel import Channel
 from pincer.objects.emoji import Emoji
-from pincer.objects.member import Member
+from pincer.objects.guild_member import GuildMember
 from pincer.objects.role import Role
 from pincer.objects.stage import StageInstance
 from pincer.objects.sticker import Sticker
@@ -245,7 +245,7 @@ class Guild(APIObject):
     max_members: APINullable[int] = MISSING
     max_presences: APINullable[Optional[int]] = MISSING
     max_video_channel_users: APINullable[int] = MISSING
-    members: APINullable[List[Member]] = MISSING
+    members: APINullable[List[GuildMember]] = MISSING
     member_count: APINullable[bool] = MISSING
     owner: APINullable[bool] = MISSING
     permissions: APINullable[str] = MISSING

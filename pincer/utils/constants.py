@@ -23,7 +23,13 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from typing import Union, TypeVar
 
-MISSING = object()
+
+class MissingType:
+    pass
+
+
+MISSING = MissingType()
+
 S = TypeVar('S')
 
-APINullable: Union[S, MISSING] = MISSING
+APINullable: Union[S, MissingType] = MISSING

@@ -74,16 +74,23 @@ def _is_valid_url(url: str) -> bool:
     stmt = r"(http[s]|attachment)?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
     return bool(match(stmt, url))
 
+
 def _check_if_valid_url(url: str):
     """
     Checks if the provided url is valid.
 
     :raises InvalidUrlError:
         if the url didn't match the url regex.
+<<<<<<< HEAD
+        (which means that it was malformed or didn't match the http/attachment
+        protocol).
+=======
         (which means that it was malformed or didn't match the http/attachment protocol.
+>>>>>>> d374f1cad1946af23b457eb045abf5855b0daf9e
     """
     if not _is_valid_url(url):
-        raise InvalidUrlError("Url was malformed or wasn't of protocol http(s)/attachment.")
+        raise InvalidUrlError(
+            "Url was malformed or wasn't of protocol http(s)/attachment.")
 
 
 @dataclass
@@ -102,6 +109,9 @@ class EmbedAuthor:
 
     :param proxy_icon_url:
         A proxied url of the author icon
+
+    :raises EmbedFieldError:
+        Name is longer than 256 characters.
     """
     icon_url: APINullable[str] = MISSING
     name: APINullable[str] = MISSING
@@ -149,7 +159,7 @@ class EmbedProvider:
 
     :param name:
         Name of the provider
-        
+
     :param url:
         Url of the provider
     """
@@ -164,15 +174,16 @@ class EmbedThumbnail:
 
     :param url:
         Source url of the thumbnail
-        
+
     :param proxy_url:
         A proxied url of the thumbnail
-        
+
     :param height:
         Height of the thumbnail
-    
+
     :param width:
         Width of the thumbnail
+
     """
 
     height: APINullable[int] = MISSING
@@ -191,13 +202,13 @@ class EmbedVideo:
 
     :param url:
         Source url of the video
-        
+
     :param proxy_url:
         A proxied url of the video
-        
+
     :param height:
         Height of the video
-        
+
     :param width:
         Width of the video
     """
@@ -220,6 +231,9 @@ class EmbedFooter:
 
     :param proxy_icon_url:
         A proxied url of the footer icon
+
+    :raises EmbedFieldError:
+        Text is longer than 2048 characters
     """
 
     text: str
@@ -247,6 +261,12 @@ class EmbedField:
 
     :param inline:
         Whether or not this field should display inline
+
+    :raises EmbedFieldError:
+        Name is longer than 256 characters
+
+    :raises EmbedFieldError:
+        Description is longer than 1024 characters
     """
 
     name: str
@@ -326,6 +346,14 @@ class Embed(APIObject):
     video: APINullable[EmbedVideo] = MISSING
 
     def __post_init__(self):
+        """
+        :raises EmbedFieldError:
+            Embed title is longer than 256 characters.
+        :raises EmbedFieldError:
+            Embed description is longer than 4096 characters.
+        :raises EmbedFieldError:
+            Embed has more than 25 fields.
+        """
         if _field_size(self.title) > 256:
             raise EmbedFieldError.from_desc(
                 "Embed title", 256, len(self.title)
@@ -341,15 +369,19 @@ class Embed(APIObject):
                 "Embed field", 25, len(self.fields)
             )
 
-    def set_timestamp(self, time: datetime):
+    def set_timestamp(self, time: datetime) -> Embed:
         """
         Discord uses iso format for time stamps.
         This function will set the time to that format.
-        
+
         :param time:
             A datetime object.
+
+        :return: self
         """
         self.timestamp = time.isoformat()
+
+        return self
 
     def set_author(
         self,
@@ -361,19 +393,21 @@ class Embed(APIObject):
         """
         Set the author message for the embed. This is the top
         field of the embed.
-        
+
         :param icon_url:
             The icon which will be next to the author name.
-        
+
         :param name:
             The name for the author (so the message).
 
         :param proxy_icon_url:
             A proxied url of the author icon.
-        
+
         :param url:
             The url for the author name, this will make the
             name field a link/url.
+
+        :return: self
         """
 
         self.author = EmbedAuthor(
@@ -394,18 +428,20 @@ class Embed(APIObject):
     ) -> Embed:
         """
         Sets an image for your embed.
-        
+
         :param url:
             Source url of the video
-        
+
         :param proxy_url:
             A proxied url of the video
-        
+
         :param height:
             Height of the video
-        
+
         :param width:
             Width of the video
+
+        :return: self
         """
         self.video = EmbedImage(
             height=height,
@@ -413,22 +449,6 @@ class Embed(APIObject):
             proxy_url=proxy_url,
             width=width
         )
-
-    def set_provider(
-        self,
-        name: APINullable[str] = MISSING,
-        url: APINullable[str] = MISSING
-    ) -> Embed:
-        # TODO: Provide general documentation of what a provider is.
-        """
-        :param name:
-            Name of the provider
-        
-        :param url:
-            Url of the provider
-        """
-        self.provider = EmbedProvider(name=name, url=url)
-        return self
 
     def set_thumbnail(
         self,
@@ -440,51 +460,22 @@ class Embed(APIObject):
         """
         Sets the thumbnail of the embed.
         This image is bigger than the `image` property.
-        
+
         :param url:
             Source url of the video
-        
+
         :param proxy_url:
             A proxied url of the video
-        
+
         :param height:
             Height of the video
-        
+
         :param width:
             Width of the video
+
+        :return self:
         """
         self.video = EmbedThumbnail(
-            height=height,
-            url=url,
-            proxy_url=proxy_url,
-            width=width
-        )
-
-        return self
-
-    def set_video(
-        self,
-        height: APINullable[int] = MISSING,
-        url: APINullable[str] = MISSING,
-        proxy_url: APINullable[str] = MISSING,
-        width: APINullable[int] = MISSING
-    ) -> Embed:
-        """
-        Sets a playable video in the embed.
-        
-        :param url:
-            Source url of the video
-        
-        :param proxy_url:
-            A proxied url of the video
-        
-        :param height:
-            Height of the video
-        
-        :param width:
-            Width of the video
-        """
-        self.video = EmbedVideo(
             height=height,
             url=url,
             proxy_url=proxy_url,
@@ -501,15 +492,17 @@ class Embed(APIObject):
     ) -> Embed:
         """
         Sets the embed footer. This is at the bottom of your embed.
-        
+
         :param text:
             Footer text
-        
+
         :param icon_url:
             Url of the footer icon
-        
+
         :param proxy_icon_url:
             A proxied url of the footer icon
+
+        :return: self
         """
         self.footer = EmbedFooter(
             text=text,
@@ -528,19 +521,18 @@ class Embed(APIObject):
         """
         Adds a field to the embed.
         An embed can contain up to 25 fields.
-        
+
         :param name:
             The name of the field
-        
+
         :param value:
             The text in the field
-        
+
         :param inline:
             Whether or not this field should display inline
-        
+
         :raises EmbedFieldError:
-            Gets raised when the maximum
-            amount of fields has already been reached.
+            Raised when there are more than 25 fields in the embed
         """
         _field = EmbedField(
             name=name,
