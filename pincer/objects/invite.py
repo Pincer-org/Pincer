@@ -46,6 +46,8 @@ class InviteTargetType(Enum):
 @dataclass
 class InviteStageInstance(APIObject):
     """
+    Represents an invite for a Discord stages channel.
+    
     :param members:
         the members speaking in the Stage
 
@@ -67,8 +69,8 @@ class InviteStageInstance(APIObject):
 
 @dataclass
 class InviteMetadata(APIObject):
-    """Extra information about an invite, will extend the invite object.
-
+    """
+    Extra information about an invite, will extend the invite object.
 
     :param uses:
         number of times this invite has been used
@@ -95,12 +97,13 @@ class InviteMetadata(APIObject):
 @dataclass
 class Invite(APIObject):
     """
+    Represents a Discord invite.
+    
     :param channel:
         the channel this invite is for
 
     :param code:
         the invite code (unique ID)
-
 
     :param approximate_member_count:
         approximate count of total members, returned from the GET
