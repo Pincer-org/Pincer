@@ -42,7 +42,7 @@ class InteractionType(Enum):
     """
     Represents the different types of interactions the client
     can have with a member.
-    
+
     CHAT_INPUT: Slash commands; a text-based command that shows up when a user types /
     USER: A UI-based command that shows up when you right click or tap on a user
     MESSAGE: A UI-based command that shows up when you right click or tap on a message
