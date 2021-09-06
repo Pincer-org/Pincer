@@ -93,4 +93,4 @@ class Role(APIObject):
     permissions: str
     position: int
 
-    tags: APINullable[...] = MISSING
+    tags: APINullable[RoleTags] = MISSING
