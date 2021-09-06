@@ -303,18 +303,6 @@ class Embed(APIObject):
             width=width
         )
 
-    def set_provider(
-        self,
-        name: APINullable[str] = MISSING,
-        url: APINullable[str] = MISSING
-    ) -> Embed:
-        """
-        :param name: Name of the provider
-        :param url: Url of the provider
-        """
-        self.provider = EmbedProvider(name=name, url=url)
-        return self
-
     def set_thumbnail(
         self,
         height: APINullable[int] = MISSING,
@@ -329,28 +317,6 @@ class Embed(APIObject):
         :param width: Width of the video
         """
         self.video = EmbedThumbnail(
-            height=height,
-            url=url,
-            proxy_url=proxy_url,
-            width=width
-        )
-
-        return self
-
-    def set_video(
-        self,
-        height: APINullable[int] = MISSING,
-        url: APINullable[str] = MISSING,
-        proxy_url: APINullable[str] = MISSING,
-        width: APINullable[int] = MISSING
-    ) -> Embed:
-        """
-        :param url: Source url of the video
-        :param proxy_url: A proxied url of the video
-        :param height: Height of the video
-        :param width: Width of the video
-        """
-        self.video = EmbedVideo(
             height=height,
             url=url,
             proxy_url=proxy_url,
