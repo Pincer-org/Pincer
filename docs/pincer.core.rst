@@ -20,6 +20,22 @@ pincer.core.gateway module
    :undoc-members:
    :show-inheritance:
 
+pincer.core.heartbeat module
+----------------------------
+
+.. automodule:: pincer.core.heartbeat
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pincer.core.http module
+-----------------------
+
+.. automodule:: pincer.core.http
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

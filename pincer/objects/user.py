@@ -122,5 +122,5 @@ class User(APIObject):
         return self.username + '#' + self.discriminator
 
     def __str__(self):
-        """return the discord tag when object gets used as a string."""
+        """Return the discord tag when object gets used as a string."""
         return self.user

@@ -29,7 +29,7 @@ from dataclasses import dataclass
 class GatewayConfig:
     """
     This file is to make maintaining the library its gateway
-    configuration easier.
+        configuration easier.
     """
     socket_base_url: str = "wss://gateway.discord.gg/"
     version: int = 9

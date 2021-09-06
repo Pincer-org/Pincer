@@ -21,43 +21,40 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from typing import Any, Optional, Protocol, TypeVar
 
-T = TypeVar("T")
-
-
-class GetItem(Protocol):
-    """Represents a class which implements the __getitem__ property."""
-
-    def __getitem__(self, key: int) -> Any:
-        ...
+from pincer.core.dispatch import GatewayDispatch
 
 
-def get_index(
-        collection: GetItem,
-        index: int,
-        fallback: Optional[T] = None
-) -> Optional[T]:
-    """
-    Gets an item from a collection through index.
-    Allows you to provide a fallback for if that index is out of bounds.
+class TestDispatch:
+    op = 123
+    data = {
+        "foo": "bar",
+        "bar": "foo"
+    }
+    seq = 456
+    event_name = "test_event"
 
-    :param collection:
-        The collection from which the item is retrieved.
+    dispatch_string = (
+        '{"op": 123, "d": {"foo": "bar", "bar": "foo"}, '
+        '"s": 456, "t": "test_event"}'
+    )
 
-    :param index:
-        The index of the item in the collection.
+    dispatch = GatewayDispatch(op, data, seq, event_name)
 
-    :param fallback:
-        The fallback value which will be used if the index doesn't
-        exist. Default value is None.
+    def test_string_fmt(self):
+        """
+        Tests whether or not the dispatch class its string conversion
+        is correct.
+        """
+        assert str(self.dispatch) == self.dispatch_string
 
-    :return:
-        The item at the provided index from the collection, or if that
-        item doesn't exist it will return the fallback value.
-    """
-    try:
-        return collection[index]
+    def test_from_string(self):
+        """
+        Tests whether or not the from_string function is properly
+        parsing the string and creating a GatewayDispatch instance.
+        """
+        assert (
+            str(GatewayDispatch.from_string(self.dispatch_string))
+            == self.dispatch_string
+        )
 
-    except IndexError:
-        return fallback

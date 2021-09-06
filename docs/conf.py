@@ -15,13 +15,15 @@ sys.path.insert(0, os.path.abspath('../'))
 
 
 # -- Project information -----------------------------------------------------
+from pincer import __title__, __author__, __version__
 
-project = 'Pincer'
+
+project = __title__
 copyright = '2021, Pincer'
-author = 'Pincer'
+author = __author__
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.0.dev'
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------
@@ -42,10 +44,10 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
+autoclass_content = 'both'
 
 with open('../requirements.txt') as f:
-    f.read()
-    autodock_mock_imports = f.read().splitlines()
+    autodoc_mock_imports = f.read().splitlines()
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -53,7 +55,7 @@ with open('../requirements.txt') as f:
 # a list of builtin themes.
 #
 html_theme = 'sphinx_rtd_theme'
-default_dark_mode = True
+default_dark_mode = False
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
