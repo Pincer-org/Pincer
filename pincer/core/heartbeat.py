@@ -119,7 +119,7 @@ class Heartbeat:
     async def handle_heartbeat(cls, socket: WebSocketClientProtocol, _):
         """
         Handles a heartbeat, which means that it rests
-            and then sends a new heartbeat.
+        and then sends a new heartbeat.
 
         :param socket:
             The socket to send the heartbeat to.

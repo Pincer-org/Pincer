@@ -52,6 +52,35 @@ class InvalidEventName(PincerError):
     """
 
 
+class InvalidUrlError(PincerError, ValueError):
+    """
+    Exception raised when an invalid url has been provided.
+    """
+
+
+class EmbedFieldError(PincerError, ValueError):
+    """Exception that is raised when an embed field is too large"""
+
+    @classmethod
+    def from_desc(cls, _type: str, max_size: int, cur_size: int):
+        """
+        Create an instance by description.
+
+        :param _type:
+            The type/name of the field.
+
+        :param max_size:
+            The maximum size of the field.
+
+        :param cur_size:
+            The current size of the field.
+        """
+        return cls(
+            f"{_type} can have a maximum length of {max_size}."
+            f" (Current size: {cur_size})"
+        )
+
+
 class DispatchError(PincerError):
     """
     Base exception class for all errors which are specifically related
@@ -91,8 +120,16 @@ class HeartbeatError(DispatchError):
     """Exception raised due to a problem with websocket heartbeat."""
 
 
+class UnavailableGuildError(PincerError):
+    """
+    Exception raised due to a guild being unavailable.
+    This is caused by a discord outage.
+    """
+
+
 # Discord HTTP Errors
 # `developers/docs/topics/opcodes-and-status-codes#http`
+
 
 class HTTPError(PincerError):
     """HTTP Exception base class."""

@@ -25,59 +25,100 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional, Union
+from typing import Optional
 
-from websockets.typing import Data
+from pincer.utils.api_object import APIObject
+from pincer.utils.constants import MISSING, APINullable
+from pincer.utils.snowflake import Snowflake
 
 
 class PremiumTypes(Enum):
-    # TODO: Write documentation
+    """
+    The type of Discord premium a user has.
+    """
     NONE = 0
     NITRO_CLASSIC = 1
     NITRO = 2
 
 
 @dataclass
-class User:
-    # TODO: Write documentation
-    # Note: Current docs are mostly copied from
-    # https://discord.com/developers/docs/resources/user
+class User(APIObject):
+    """
+    Represents a Discord user. This can be a bot account or a
+    human account.
 
-    id: int #: The user's id
-    flags: int #: The flags on a user's account
-    username: str #: The user's username, not unique across the platform
-    discriminator: str #: The user's 4-digit discord-tag
-    bot: Optional[bool] = False #: Whether the user is a bot
-    email: Optional[str] = None #: The user's email
-    banner: Optional[str] = None #: The user's banner (if exists)
-    locale: Optional[str] = None #: The user's chosen language
-    avatar: Optional[str] = None #: The user's avatar hash
-    system: Optional[bool] = False #: Whether user is an Official Discord System user
-    accent_color: Optional[int] = 0 #: The user's banner hexadecimal color code as an integer
-    public_flags: Optional[int] = 0 #: The public flags on the account
-    verified: Optional[bool] = False #: Whether the email on this account has been verified
-    avatar_url: Optional[str] = None #: The url to the user's avatar
-    mfa_enabled: Optional[bool] = False #: Whether the user has two factor enabled on their account
-    premium_type: Optional[PremiumTypes] = PremiumTypes.NONE #: The type of Nitro subscription on a user's account
+    :param avatar:
+        the user's avatar hash
 
-    @classmethod
-    def from_dict(cls, data: Data[str, Union[str, bool, int]]) -> User:
-        # TODO: Write documentation
-        return cls(**data)
+    :param discriminator:
+        the user's 4-digit discord-tag
+
+    :param flags:
+        the flags on a user's account
+
+    :param id:
+        the user's id
+
+    :param username:
+        the user's username, not unique across the platform
+
+    :param accent_color:
+        the user's banner color encoded as an integer representation of
+        hexadecimal color code
+
+    :param banner:
+        the user's banner, or null if unset
+
+    :param bot:
+        whether the user belongs to an OAuth2 application
+
+    :param email:
+        the user's email
+
+    :param locale:
+        the user's chosen language option
+
+    :param mfa_enabled:
+        whether the user has two factor enabled on their account
+
+    :param premium_type:
+        the type of Nitro subscription on a user's account
+
+    :param public_flags:
+        the public flags on a user's account
+
+    :param system:
+        whether the user is an Official Discord System user (part of the urgent
+        message system)
+
+    :param verified:
+        whether the email on this account has been verified
+    """
+
+    avatar: Optional[str]
+    discriminator: str
+    flags: int
+    id: Snowflake
+    username: str
+
+    accent_color: APINullable[Optional[int]] = MISSING
+    banner: APINullable[Optional[str]] = MISSING
+    bot: APINullable[bool] = MISSING
+    email: APINullable[Optional[str]] = MISSING
+    locale: APINullable[str] = MISSING
+    mfa_enabled: APINullable[bool] = MISSING
+    premium_type: APINullable[int] = MISSING
+    public_flags: APINullable[int] = MISSING
+    system: APINullable[bool] = MISSING
+    verified: APINullable[bool] = MISSING
 
     @property
     def premium(self) -> PremiumTypes:
-        # TODO: Write documentation
+        """
+        The user their premium type in a usable enum.
+        """
         return PremiumTypes(self.premium_type)
-
-    @property
-    def user(self) -> str:
-        """
-        :return:
-            Return the full discord tag of the client.
-        """
-        return self.username + '#' + self.discriminator
 
     def __str__(self):
         """Return the discord tag when object gets used as a string."""
-        return self.user
+        return self.username + '#' + self.discriminator
