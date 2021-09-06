@@ -67,7 +67,6 @@ class Sticker(APIObject):
     :param type:
         type of sticker
 
-
     :param available:
         whether this guild sticker can be used, may be false due to loss of
         Server Boosts
@@ -134,7 +133,6 @@ class StickerPack(APIObject):
 
     :param description:
         description of the sticker pack
-
 
     :param cover_sticker_id:
         id of a sticker in the pack which is shown as the pack's icon
