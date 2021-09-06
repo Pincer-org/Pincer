@@ -31,6 +31,7 @@ from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
 from pincer.utils.constants import MISSING, APINullable
 from pincer.utils.snowflake import Snowflake
+from pincer.utils.timestamp import Timestamp
 
 
 class IntegrationExpireBehavior(Enum):
@@ -149,16 +150,7 @@ class Integration(APIObject):
     expire_behavior: APINullable[IntegrationExpireBehavior] = MISSING
     expire_grace_period: APINullable[int] = MISSING
     user: APINullable[User] = MISSING
-    synced_at: APINullable[str] = MISSING
+    synced_at: APINullable[Timestamp] = MISSING
     subscriber_count: APINullable[int] = MISSING
     revoked: APINullable[bool] = MISSING
     application: APINullable[IntegrationApplication] = MISSING
-
-    def set_synced_at(self, time: datetime):
-        """
-        Set the synced time of the integration.
-
-        :param time:
-            The new time for the integration to be synced.
-        """
-        self.synced_at = time.isoformat()
