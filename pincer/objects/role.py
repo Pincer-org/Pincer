@@ -33,14 +33,18 @@ from pincer.utils.snowflake import Snowflake
 @dataclass
 class RoleTags(APIObject):
     """
+    Special tags/flags which have been defined for a role.
+
     :bot_id:
-        the id of the bot this role belongs to
+        The id of the bot this role belongs to.
+        (the role got created by adding the bot with this id)
 
     :integration_id:
-        the id of the integration this role belongs to
+        The id of the integration this role belongs to.
+        (the role got created by adding an integration with this id)
 
     :premium_subscriber:
-        whether this is the guild's premium subscriber role
+        Whether this is the guild's premium subscriber role or not.
     """
     bot_id: APINullable[Snowflake] = MISSING
     integration_id: APINullable[Snowflake] = MISSING
@@ -50,6 +54,8 @@ class RoleTags(APIObject):
 @dataclass
 class Role(APIObject):
     """
+    Represents a Discord guild/server role.
+
     :param color:
         integer representation of hexadecimal color code
 
