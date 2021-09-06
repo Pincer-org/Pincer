@@ -214,8 +214,8 @@ class Dispatcher:
 
                 except ConnectionClosedError as exc:
                     _log.debug(
-                        f"The connection with `%s` has been broken"
-                        f" unexpectedly. (%i, %s)"
+                        "The connection with `%s` has been broken unexpectedly."
+                        " (%i, %s)"
                         % (GatewayConfig.uri(), exc.code, exc.reason)
                     )
 

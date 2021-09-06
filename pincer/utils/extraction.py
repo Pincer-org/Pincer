@@ -30,7 +30,7 @@ class GetItem(Protocol):
     """Represents a class which implements the __getitem__ property."""
 
     def __getitem__(self, key: int) -> Any:
-        ...
+        return ...
 
 
 def get_index(

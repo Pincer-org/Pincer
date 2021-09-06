@@ -80,11 +80,6 @@ class HTTPClient:
             "Content-Type": "application/json"
         }
         self.__session: ClientSession = ClientSession(headers=headers)
-        """
-        The client session object
-
-        :meta public:
-        """
 
         self.__http_exceptions: Dict[int, HTTPError] = {
             304: NotModifiedError(),

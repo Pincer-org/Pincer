@@ -105,7 +105,7 @@ def middleware(call: str, *, override: bool = False):
         >>> @Client.event
         >>> async def on_ready(bot: User):
         >>>     print(f"Signed in as {bot}")
-    
+
 
     :param call:
         The call where the method should be registered.
