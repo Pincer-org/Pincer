@@ -22,18 +22,46 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from .application_command import ApplicationCommand
 from .application import Application
+from .attachment import Attachment
+from .audit_log import AuditLog
+from .ban import Ban
+from .button import Button
 from .channel import Channel
 from .embed import Embed
 from .emoji import Emoji
-from .guild import Guild
-from .invite import Invite
+from .followed_channel import FollowedChannel
 from .guild_member import GuildMember
+from .guild_template import GuildTemplate
+from .guild_widget import GuildWidget
+from .guild import Guild
+from .integration import Integration
+from .interactions import Interaction, MessageInteraction
+from .invite import Invite
+from .message_component import MessageComponent
+from .message_reference import MessageReference
+from .message import Message
+from .overwrite import Overwrite
+from .reaction import Reaction
 from .role import Role
+from .select_menu import SelectMenu, SelectOption
+from .stage import StageInstance
 from .sticker import Sticker
+from .thread import ThreadMember, ThreadMetadata
 from .user import User
+from .voice_region import VoiceRegion
+from .voice_state import VoiceState
+from .webhook import Webhook
+from .welcome_screen import WelcomeScreen
 
 __all__ = (
-    "Application", "Channel", "Embed", "Emoji", "Guild", "Invite",
-    "GuildMember", "Role", "Sticker", "User"
+    "ApplicationCommand", "Application", "Attachment", "AuditLog",
+    "Ban", "Button", "Channel", "Embed", "Emoji", "FollowedChannel",
+    "GuildMember", "GuildTemplate", "GuildWidget", "Guild",
+    "Integration", "Interaction", "MessageInteraction", "Invite",
+    "MessageComponent", "MessageReference", "Message", "Overwrite",
+    "Reaction", "Role", "SelectMenu", "SelectOption", "StageInstance",
+    "Sticker", "ThreadMember", "ThreadMetadata", "User", "VoiceRegion",
+    "VoiceState", "Webhook", "WelcomeScreen"
 )
