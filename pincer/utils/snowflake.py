@@ -35,17 +35,17 @@ class Snowflake(int):
     they are always returned as strings in the HTTP API
     to prevent integer overflows in some languages.
 
-    :var timestamp:
+    :param timestamp:
         Milliseconds since Discord Epoch,
         the first second of 2015 or 14200704000000
 
-    :var worker_id:
+    :param worker_id:
         Internal worker ID
 
-    :var process_id:
+    :param process_id:
         Internal process ID
 
-    :var increment:
+    :param increment:
         For every ID that is generated on that process,
         this number is incremented
     """
