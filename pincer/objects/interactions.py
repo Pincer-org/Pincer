@@ -29,7 +29,7 @@ from typing import Dict
 from pincer.objects.application_command import \
     ApplicationCommandInteractionDataOption
 from pincer.objects.channel import Channel
-from pincer.objects.member import Member
+from pincer.objects.guild_member import GuildMember
 from pincer.objects.role import Role
 from pincer.objects.select_menu import SelectOption
 from pincer.objects.user import User
@@ -78,7 +78,7 @@ class ResolvedData(APIObject):
         Map of Snowflakes to partial message objects
     """
     users: APINullable[Dict[Snowflake, User]] = MISSING
-    members: APINullable[Dict[Snowflake, Member]] = MISSING
+    members: APINullable[Dict[Snowflake, GuildMember]] = MISSING
     roles: APINullable[Dict[Snowflake, Role]] = MISSING
     channels: APINullable[Dict[Snowflake, Channel]] = MISSING
     messages: APINullable[Dict[Snowflake, ...]] = MISSING
@@ -195,6 +195,6 @@ class Interaction(APIObject):
     data: APINullable[InteractionData] = MISSING
     guild_id: APINullable[Snowflake] = MISSING
     channel_id: APINullable[Snowflake] = MISSING
-    member: APINullable[Member] = MISSING
+    member: APINullable[GuildMember] = MISSING
     user: APINullable[User] = MISSING
     message: APINullable[...] = MISSING  # Message
