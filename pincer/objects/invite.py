@@ -98,7 +98,7 @@ class InviteMetadata(APIObject):
 class Invite(APIObject):
     """
     Represents a Discord invite.
-    
+
     :param channel:
         the channel this invite is for
 
