@@ -38,6 +38,7 @@ from pincer.utils.timestamp import Timestamp
 
 
 class ChannelType(Enum):
+    """Represents a channel its type."""
     GUILD_TEXT = 0
     DM = 1
     GUILD_VOICE = 2
@@ -58,6 +59,7 @@ class ChannelType(Enum):
 class Channel(APIObject):
     """
     Represents a Discord Channel Mention object
+
     :param id:
         the id of this channel
 
@@ -184,7 +186,8 @@ def __str__(self):
 
 @dataclass
 class ChannelMention(APIObject):
-    """Represents a Discord Channel Mention object
+    """
+    Represents a Discord Channel Mention object
 
     :param id:
         id of the channel
