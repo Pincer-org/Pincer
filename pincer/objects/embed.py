@@ -78,8 +78,8 @@ def _check_if_valid_url(url: str):
     """
     Checks if the provided url is valid.
 
-    :raises:
-        :class InvalidUrlError: if the url didn't match the url regex.
+    :raises InvalidUrlError:
+        if the url didn't match the url regex.
         (which means that it was malformed or didn't match the http/attachment protocol.
     """
     if not _is_valid_url(url):
@@ -538,8 +538,8 @@ class Embed(APIObject):
         :param inline:
             Whether or not this field should display inline
         
-        :raises:
-            :class EmbedFieldError: Gets raised when the maximum
+        :raises EmbedFieldError:
+            Gets raised when the maximum
             amount of fields has already been reached.
         """
         _field = EmbedField(
