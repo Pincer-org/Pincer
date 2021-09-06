@@ -81,7 +81,8 @@ def _check_if_valid_url(url: str):
 
     :raises InvalidUrlError:
         if the url didn't match the url regex.
-        (which means that it was malformed or didn't match the http/attachment protocol.
+        (which means that it was malformed or didn't match the http/attachment
+        protocol).
     """
     if not _is_valid_url(url):
         raise InvalidUrlError(
