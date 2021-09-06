@@ -122,13 +122,13 @@ class EmbedImage:
 
     :param url:
         Source url of the image
-        
+
     :param proxy_url:
         A proxied url of the image
-        
+
     :param height:
         Height of the image
-        
+
     :param width:
         Width of the image
     """
@@ -404,7 +404,7 @@ class Embed(APIObject):
         :param height:
             Height of the video
         
-        :param width: 
+        :param width:
             Width of the video
         """
         self.video = EmbedImage(
@@ -539,7 +539,7 @@ class Embed(APIObject):
             Whether or not this field should display inline
         
         :raises:
-            :class EmbedFieldError: Gets raised when the maximum 
+            :class EmbedFieldError: Gets raised when the maximum
             amount of fields has already been reached.
         """
         _field = EmbedField(
