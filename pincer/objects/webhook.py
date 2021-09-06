@@ -44,12 +44,13 @@ class WebhookType(Enum):
 @dataclass
 class Webhook(APIObject):
     """
+    Represents a Discord channel webhook.
+
     :param id:
         the id of the webhook
 
     :param type:
         the type of the webhook
-
 
     :param channel_id:
         the channel id this webhook is for, if any
@@ -62,7 +63,6 @@ class Webhook(APIObject):
 
     :param application_id:
         the bot/OAuth2 application that created this webhook
-
 
     :param user:
         the user this webhook was created by (not returned when getting a
@@ -82,7 +82,6 @@ class Webhook(APIObject):
     :param url:
         the url used for executing the webhook (returned by the webhooks OAuth2
         flow)
-
 
     :param guild_id:
         the guild id this webhook is for, if any
