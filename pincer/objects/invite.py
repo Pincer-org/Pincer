@@ -32,7 +32,7 @@ from pincer.utils.api_object import APIObject
 from pincer.objects.channel import Channel
 from pincer.objects.guild import Guild
 from pincer.objects.user import User
-from pincer.objects.member import Member
+from pincer.objects.guild_member import GuildMember
 from pincer.objects.application import Application
 from pincer.utils.constants import APINullable, MISSING
 from pincer.utils.timestamp import Timestamp
@@ -59,7 +59,7 @@ class InviteStageInstance(APIObject):
         the topic of the Stage instance (1-120 characters)
     """
 
-    members: List[Member]
+    members: List[GuildMember]
     participant_count: int
     speaker_count: int
     topic: str

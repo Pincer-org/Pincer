@@ -28,7 +28,7 @@ from .embed import Embed
 from .emoji import Emoji
 from .guild import Guild
 from .invite import Invite
-from .member import Member
+from .guild_member import GuildMember
 from .role import Role
 from .sticker import Sticker
 from .user import User

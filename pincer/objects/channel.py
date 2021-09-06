@@ -28,7 +28,7 @@ from enum import Enum
 from typing import Optional, List
 
 from pincer._config import GatewayConfig
-from pincer.objects.member import Member
+from pincer.objects.guild_member import GuildMember
 from pincer.objects.user import User
 from pincer.objects.thread import ThreadMetadata
 from pincer.utils.api_object import APIObject
@@ -158,7 +158,7 @@ class Channel(APIObject):
     icon: APINullable[Optional[str]] = MISSING
     last_message_id: APINullable[Optional[Snowflake]] = MISSING
     last_pin_timestamp: APINullable[Optional[Timestamp]] = MISSING
-    member: APINullable[Member] = MISSING
+    member: APINullable[GuildMember] = MISSING
     member_count: APINullable[int] = MISSING
     message_count: APINullable[int] = MISSING
     name: APINullable[str] = MISSING
