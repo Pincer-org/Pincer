@@ -34,11 +34,32 @@ from pincer.utils.snowflake import Snowflake
 
 
 class StickerType(Enum):
+    """
+    Displays from where the sticker comes from.
+
+    :param STANDARD:
+        Sticker is included in the default Discord sticker pack.
+
+    :param GUILD:
+        Sticker is a custom sticker from a discord server.
+    """
     STANDARD = 1
     GUILD = 2
 
 
 class StickerFormatType(Enum):
+    """
+    The type of the sticker.
+
+    :param PNG:
+        Sticker is of PNG format.
+
+    :param APNG:
+        Sticker is animated with APNG format.
+
+    :param LOTTIE:
+        Sticker is animated with with LOTTIE format. (vector based)
+    """
     PNG = 1
     APNG = 2
     LOTTIE = 3
@@ -47,6 +68,8 @@ class StickerFormatType(Enum):
 @dataclass
 class Sticker(APIObject):
     """
+    Represents a Discord sticker.
+
     :param description:
         description of the sticker
 
@@ -101,6 +124,9 @@ class Sticker(APIObject):
 @dataclass
 class StickerItem(APIObject):
     """
+    Represents the smallest amount of data required to render a sticker.
+    A partial sticker object.
+
     :param id:
         id of the sticker
 
@@ -119,6 +145,8 @@ class StickerItem(APIObject):
 @dataclass
 class StickerPack(APIObject):
     """
+    Represents a pack of standard stickers.
+
     :param id:
         id of the sticker pack
 
