@@ -154,7 +154,7 @@ class Integration(APIObject):
     def set_synced_at(self, time: datetime):
         """
         Set the synced time of the integration.
-        
+
         :param time: The new time for the integration to be synced.
         """
         self.synced_at = time.isoformat()
