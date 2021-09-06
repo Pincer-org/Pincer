@@ -74,7 +74,6 @@ class Role(APIObject):
     :param position:
         position of this role
 
-
     :param tags:
         the tags this role has
     """
