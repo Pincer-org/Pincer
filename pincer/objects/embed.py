@@ -270,13 +270,17 @@ class Embed(APIObject):
                 "Embed field", 25, len(self.fields)
             )
 
-    def set_timestamp(self, time: datetime):
+    def set_timestamp(self, time: datetime) -> Embed:
         """
         Discord uses iso format for time stamps.
         This function will set the time to that format.
         :param time: A datetime object.
+
+        :return: self
         """
         self.timestamp = time.isoformat()
+
+        return self
 
     def set_author(
         self,
@@ -285,7 +289,14 @@ class Embed(APIObject):
         proxy_icon_url: APINullable[str] = MISSING,
         url: APINullable[str] = MISSING
     ) -> Embed:
+        """
+        :param name: Name of the author
+        :param url: Url of the author
+        :param icon_url: Url of the author icon
+        :param proxy_icon_url: A proxied url of the author icon
 
+        :return: self
+        """
         self.author = EmbedAuthor(
             icon_url=icon_url,
             name=name,
@@ -307,6 +318,8 @@ class Embed(APIObject):
         :param proxy_url: A proxied url of the video
         :param height: Height of the video
         :param width: Width of the video
+
+        :return: self
         """
         self.video = EmbedImage(
             height=height,
@@ -327,6 +340,8 @@ class Embed(APIObject):
         :param proxy_url: A proxied url of the video
         :param height: Height of the video
         :param width: Width of the video
+
+        :return: self
         """
         self.video = EmbedThumbnail(
             height=height,
@@ -347,6 +362,8 @@ class Embed(APIObject):
         :param text: Footer text
         :param icon_url: Url of the footer icon
         :param proxy_icon_url: A proxied url of the footer icon
+
+        :return: self
         """
         self.footer = EmbedFooter(
             text=text,
@@ -368,6 +385,8 @@ class Embed(APIObject):
         :param inline: Whether or not this field should display inline
 
         :raises EmbedFieldError: The embed has more than 25 fields
+
+        :return: self
         """
         _field = EmbedField(
             name=name,
