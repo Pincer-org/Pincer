@@ -46,6 +46,45 @@ class StickerFormatType(Enum):
 
 @dataclass
 class Sticker(APIObject):
+    """
+    :param description:
+        description of the sticker
+
+    :param format_type:
+        type of sticker format
+
+    :param id:
+        id of the sticker
+
+    :param name:
+        name of the sticker
+
+    :param tags:
+        for guild stickers, the Discord name of a unicode emoji representing
+        the sticker's expression. for standard stickers, a comma-separated list
+        of related expressions.
+
+    :param type:
+        type of sticker
+
+
+    :param available:
+        whether this guild sticker can be used, may be false due to loss of
+        Server Boosts
+
+    :param guild_id:
+        id of the guild that owns this sticker
+
+    :param pack_id:
+        for standard stickers, id of the pack the sticker is from
+
+    :param sort_value:
+        the standard sticker's sort order within its pack
+
+    :param user:
+        the user that uploaded the guild sticker
+    """
+
     description: Optional[str]
     format_type: StickerFormatType
     id: Snowflake
@@ -59,9 +98,20 @@ class Sticker(APIObject):
     sort_value: APINullable[int] = MISSING
     user: APINullable[User] = MISSING
 
-        
+
 @dataclass
 class StickerItem(APIObject):
+    """
+    :param id:
+        id of the sticker
+
+    :param name:
+        name of the sticker
+
+    :param format_type:
+        type of sticker format
+    """
+
     id: Snowflake
     name: str
     format_type: StickerFormatType
@@ -69,6 +119,30 @@ class StickerItem(APIObject):
 
 @dataclass
 class StickerPack(APIObject):
+    """
+    :param id:
+        id of the sticker pack
+
+    :param stickers:
+        the stickers in the pack
+
+    :param name:
+        name of the sticker pack
+
+    :param sku_id:
+        id of the pack's SKU
+
+    :param description:
+        description of the sticker pack
+
+
+    :param cover_sticker_id:
+        id of a sticker in the pack which is shown as the pack's icon
+
+    :param banner_asset_id:
+        id of the sticker pack's banner image
+    """
+
     id: Snowflake
     stickers: List[Sticker]
     name: str

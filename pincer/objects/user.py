@@ -41,7 +41,56 @@ class PremiumTypes(Enum):
 
 @dataclass
 class User(APIObject):
-    # TODO: Write documentation
+    """
+    :param avatar:
+        the user's avatar hash
+
+    :param discriminator:
+        the user's 4-digit discord-tag
+
+    :param flags:
+        the flags on a user's account
+
+    :param id:
+        the user's id
+
+    :param username:
+        the user's username, not unique across the platform
+
+
+    :param accent_color:
+        the user's banner color encoded as an integer representation of
+        hexadecimal color code
+
+    :param banner:
+        the user's banner, or null if unset
+
+    :param bot:
+        whether the user belongs to an OAuth2 application
+
+    :param email:
+        the user's email
+
+    :param locale:
+        the user's chosen language option
+
+    :param mfa_enabled:
+        whether the user has two factor enabled on their account
+
+    :param premium_type:
+        the type of Nitro subscription on a user's account
+
+    :param public_flags:
+        the public flags on a user's account
+
+    :param system:
+        whether the user is an Official Discord System user (part of the urgent
+        message system)
+
+    :param verified:
+        whether the email on this account has been verified
+    """
+
     avatar: Optional[str]
     discriminator: str
     flags: int

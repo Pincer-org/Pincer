@@ -45,10 +45,25 @@ class InviteTargetType(Enum):
 
 @dataclass
 class InviteStageInstance(APIObject):
+    """
+    :param members:
+        the members speaking in the Stage
+
+    :param participant_count:
+        the number of users in the Stage
+
+    :param speaker_count:
+        the number of users speaking in the Stage
+
+    :param topic:
+        the topic of the Stage instance (1-120 characters)
+    """
+
     members: List[Member]
     participant_count: int
     speaker_count: int
     topic: str
+
 
 @dataclass
 class InviteMetadata(APIObject):
@@ -76,8 +91,50 @@ class InviteMetadata(APIObject):
     temporary: bool
     created_at: Timestamp
 
+
 @dataclass
 class Invite(APIObject):
+    """
+    :param channel:
+        the channel this invite is for
+
+    :param code:
+        the invite code (unique ID)
+
+
+    :param approximate_member_count:
+        approximate count of total members, returned from the GET
+        /invites/<code> endpoint when with_counts is true
+
+    :param approximate_presence_count:
+        approximate count of online members, returned from the GET
+        /invites/<code> endpoint when with_counts is true
+
+    :param expires_at:
+        the expiration date of this invite, returned from the GET
+        /invites/<code> endpoint when with_expiration is true
+
+    :param inviter:
+        the user who created the invite
+
+    :param guild:
+        the guild this invite is for
+
+    :param stage_instance:
+        stage instance data if there is a public Stage instance in the Stage
+        channel this invite is for
+
+    :param target_type:
+        the type of target for this voice channel invite
+
+    :param target_user:
+        the user whose stream to display for this voice channel stream invite
+
+    :param target_application:
+        the embedded application to open for this voice channel embedded
+        application invite
+    """
+
     channel: Channel
     code: str
 
