@@ -36,6 +36,20 @@ from pincer.utils.snowflake import Snowflake
 
 
 class WebhookType(Enum):
+    """
+    Represents the type of a webhook.
+
+    :param INCOMING:
+        Incoming Webhooks can post messages to channels with a
+        generated token.
+
+    :param CHANNEL_FOLLOWER:
+        Channel Follower Webhooks are internal webhooks used with
+        Channel Following to post new messages into channels.
+
+    :param APPLICATION:
+        Application webhooks are webhooks used with Interactions
+    """
     INCOMING = 1
     CHANNEL_FOLLOWER = 2
     APPLICATION = 3
