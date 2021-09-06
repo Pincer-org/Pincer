@@ -278,4 +278,4 @@ class Guild(APIObject):
                 " to a discord outage."
             )
 
-        return cls(**data)
+        return cls.from_dict(data)

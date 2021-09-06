@@ -26,48 +26,47 @@ from __future__ import annotations
 
 import copy
 from dataclasses import dataclass, fields, _is_dataclass_instance
-from typing import Dict, Union
+from typing import Dict, Union, Generic, TypeVar
 
 from websockets.typing import Data
 
 from pincer.utils.constants import MissingType
 
+T = TypeVar("T")
 
-def _asdict_ignore_none(
-        obj: APIObject,
-        dict_factory
-) -> Union[tuple, dict, APIObject]:
+
+def _asdict_ignore_none(obj: Generic[T]) -> Union[tuple, dict, T]:
     """
     Returns a dict from a dataclass that ignores
     all values that are None
     Modification of _asdict_inner from dataclasses
 
-    :param obj: Dataclass obj
-    :param dict_factory: Dict
+    :param obj:
+        Dataclass obj
     """
 
     if _is_dataclass_instance(obj):
         result = []
         for f in fields(obj):
-            value = _asdict_ignore_none(getattr(obj, f.name), dict_factory)
+            value = _asdict_ignore_none(getattr(obj, f.name))
 
             # This if statement was added to the function
             if not isinstance(value, MissingType):
                 result.append((f.name, value))
 
-        return dict_factory(result)
+        return dict(result)
 
     elif isinstance(obj, tuple) and hasattr(obj, '_fields'):
-        return type(obj)(*[_asdict_ignore_none(v, dict_factory) for v in obj])
+        return type(obj)(*[_asdict_ignore_none(v) for v in obj])
 
     elif isinstance(obj, (list, tuple)):
-        return type(obj)(_asdict_ignore_none(v, dict_factory) for v in obj)
+        return type(obj)(_asdict_ignore_none(v) for v in obj)
 
     elif isinstance(obj, dict):
         return type(obj)(
             (
-                _asdict_ignore_none(k, dict_factory),
-                _asdict_ignore_none(v, dict_factory)
+                _asdict_ignore_none(k),
+                _asdict_ignore_none(v)
             ) for k, v in obj.items()
         )
     else:
@@ -81,9 +80,17 @@ class APIObject:
     """
 
     @classmethod
-    def from_dict(cls, data: Data[str, Union[str, bool, int]]) -> APIObject:
-        # TODO: Write documentation
+    def from_dict(cls: Generic[T], data: Data[str, Union[str, bool, int]]) -> T:
+        """
+        Parse an API object from a dictionary.
+        """
+        # Disable inspection for IDE because this is valid code for the
+        # inherited classes:
+        # noinspection PyArgumentList
         return cls(**data)
 
     def to_dict(self) -> Dict:
-        return _asdict_ignore_none(self, dict)
+        """
+        Transform the current object to a dictionary representation.
+        """
+        return _asdict_ignore_none(self)
