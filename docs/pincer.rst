@@ -22,6 +22,14 @@ pincer.client module
    :undoc-members:
    :show-inheritance:
 
+pincer.commands module
+----------------------
+
+.. automodule:: pincer.commands
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.exceptions module
 ------------------------
 

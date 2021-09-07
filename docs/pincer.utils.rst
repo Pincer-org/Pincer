@@ -12,6 +12,14 @@ pincer.utils.api\_object module
    :undoc-members:
    :show-inheritance:
 
+pincer.utils.conversion module
+------------------------------
+
+.. automodule:: pincer.utils.conversion
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.utils.extraction module
 ------------------------------
 

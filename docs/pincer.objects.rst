@@ -60,6 +60,14 @@ pincer.objects.channel module
    :undoc-members:
    :show-inheritance:
 
+pincer.objects.context module
+-----------------------------
+
+.. automodule:: pincer.objects.context
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.objects.embed module
 ---------------------------
 
