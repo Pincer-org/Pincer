@@ -12,14 +12,6 @@ pincer.utils.api\_object module
    :undoc-members:
    :show-inheritance:
 
-pincer.utils.constants module
------------------------------
-
-.. automodule:: pincer.utils.constants
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 pincer.utils.extraction module
 ------------------------------
 

@@ -132,6 +132,14 @@ pincer.objects.intents module
    :undoc-members:
    :show-inheritance:
 
+pincer.objects.interaction\_base module
+---------------------------------------
+
+.. automodule:: pincer.objects.interaction_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.objects.interactions module
 ----------------------------------
 
