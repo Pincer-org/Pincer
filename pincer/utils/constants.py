@@ -32,4 +32,4 @@ MISSING = MissingType()
 
 S = TypeVar('S')
 
-APINullable: Union[S, MissingType] = MISSING
+APINullable = Union[S, MissingType]
