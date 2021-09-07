@@ -21,7 +21,11 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+from inspect import signature
 from typing import Any, Optional, Protocol, TypeVar
+
+from pincer.utils.insertion import should_pass_cls
+from pincer.utils.types import Coro
 
 T = TypeVar("T")
 
@@ -61,3 +65,19 @@ def get_index(
 
     except IndexError:
         return fallback
+
+
+def get_signature_and_params(func: Coro):
+    """
+    Get the signature and its parameters from a coroutine.
+
+    :param func:
+        The coroutine from whom the information should be extracted.
+    """
+    sig = signature(func).parameters
+    params = list(sig)
+
+    if should_pass_cls(func):
+        del params[0]
+
+    return sig, params

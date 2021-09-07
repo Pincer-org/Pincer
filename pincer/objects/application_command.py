@@ -29,8 +29,9 @@ from enum import Enum
 from typing import List, Union
 
 from pincer.utils.api_object import APIObject
+from pincer.utils.conversion import convert
 from pincer.utils.snowflake import Snowflake
-from pincer.utils.types import MISSING, APINullable
+from pincer.utils.types import MISSING, APINullable, Coro
 
 
 class ApplicationCommandType(Enum):
@@ -123,6 +124,14 @@ class ApplicationCommandInteractionDataOption(APIObject):
     options: APINullable[
         List[ApplicationCommandInteractionDataOption]] = MISSING
 
+    def __post_init__(self):
+        self.value = convert(self.value, ApplicationCommandOptionType)
+        self.options = convert(
+            self.options,
+            ApplicationCommandInteractionDataOption.from_dict,
+            ApplicationCommandInteractionDataOption
+        )
+
 
 @dataclass
 class ApplicationCommandOptionChoice(APIObject):
@@ -172,6 +181,18 @@ class ApplicationCommandOption(APIObject):
     choices: APINullable[List[ApplicationCommandOptionChoice]] = MISSING
     options: APINullable[List[ApplicationCommandOption]] = MISSING
 
+    def __post_init__(self):
+        self.choices = convert(
+            self.choices,
+            ApplicationCommandOptionChoice.from_dict,
+            ApplicationCommandOptionChoice
+        )
+        self.options = convert(
+            self.options,
+            ApplicationCommandOption.from_dict,
+            ApplicationCommandOption
+        )
+
 
 @dataclass
 class ApplicationCommand(APIObject):
@@ -203,16 +224,42 @@ class ApplicationCommand(APIObject):
     :param default_permission:
         whether the command is enabled by default
         when the app is added to a guild
+
+    :param version:
+        autoincrementing version identifier updated during substantial
+        record changes
     """
     type: ApplicationCommandType
     name: str
     description: str
 
     id: APINullable[Snowflake] = MISSING
+    version: APINullable[Snowflake] = MISSING
     application_id: APINullable[Snowflake] = MISSING
     options: APINullable[List[ApplicationCommandOption]] = MISSING
     guild_id: APINullable[Snowflake] = MISSING
     default_permission: APINullable[bool] = True
+
+    _eq_props = ["type", "name", "description", "application_id", "options",
+                 "guild_id", "default_permission"]
+
+    def __post_init__(self):
+        self.id = convert(self.id, Snowflake.from_string)
+        self.version = convert(self.version, Snowflake.from_string)
+        self.application_id = convert(self.application_id,
+                                      Snowflake.from_string)
+        self.options = convert(
+            self.options,
+            ApplicationCommandOption.from_dict,
+            ApplicationCommandOption
+        )
+        self.guild_id = convert(self.guild_id, Snowflake.from_string)
+
+    def __eq__(self, other: ApplicationCommand):
+        return all(
+            self.__getattribute__(prop) == other.__getattribute__(prop)
+            for prop in self._eq_props
+        )
 
     def add_option(self, option: ApplicationCommandOption):
         """
@@ -224,3 +271,20 @@ class ApplicationCommand(APIObject):
             self.options.append(option)
         else:
             self.options = [option]
+
+
+@dataclass
+class ClientCommandStructure:
+    """
+    Represents the structure of how the client saves the existing
+    commands in the register.
+
+    :param app:
+        The command application.
+
+    :param call:
+        The coroutine which should be called when the command gets
+        executed.
+    """
+    app: ApplicationCommand
+    call: Coro

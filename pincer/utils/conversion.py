@@ -21,30 +21,27 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from inspect import getfullargspec, Parameter, Signature
-from typing import Any, Union, Callable, Mapping, List
+from typing import Callable, Any, Optional
 
-from pincer.objects.context import Context
-from pincer.utils.types import Coro
+from pincer.utils.types import T, MISSING
 
 
-def should_pass_cls(call: Union[Coro, Callable[..., Any]]) -> bool:
+def convert(
+        value: Any,
+        factory: Callable[[Any], T],
+        check: Optional[type] = None
+) -> T:
     """
-    Checks whether a callable requires a self/cls as first parameter.
-
-    :param call:
-        The callable to check.
-
-    :return:
-        Whether or not its required.
+    Convert a value to T if its not MISSING.
     """
-    args = getfullargspec(call).args
-    return len(args) >= 1 and args[0] in ["self", "cls"]
+    def handle_factory() -> T:
+        def fin_fac(v: Any):
+            return v \
+                if check is not None and isinstance(v, check) \
+                else factory(v)
 
+        return list(map(fin_fac, value)) \
+            if isinstance(value, list) \
+            else fin_fac(value)
 
-context_types = [Signature.empty, Context]
-
-
-def should_pass_ctx(sig: Mapping[str, Parameter], params: List[str]) -> bool:
-    # TODO: Write docs
-    return len(params) >= 1 and sig[params[0]].annotation in context_types
+    return MISSING if value is MISSING else handle_factory()

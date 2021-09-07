@@ -171,7 +171,7 @@ class Client(Dispatcher):
         self.__token = token
 
     @property
-    def _http(self):
+    def http(self):
         """
         Returns a http client with the current client its
         authentication credentials.
@@ -180,7 +180,7 @@ class Client(Dispatcher):
 
         .. code-block:: pycon
 
-            >>> async with self._http as client:
+            >>> async with self.http as client:
             >>>     await client.post(
             ...         '<endpoint>',
             ...         {

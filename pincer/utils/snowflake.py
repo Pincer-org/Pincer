@@ -35,6 +35,15 @@ class Snowflake(int):
     they are always returned as strings in the HTTP API
     to prevent integer overflows in some languages.
     """
+    @classmethod
+    def from_string(cls, string: str):
+        """
+        Initialize a new Snowflake from a string.
+
+        :param string:
+            The snowflake as a string.
+        """
+        return Snowflake(int(string))
 
     @property
     def timestamp(self) -> int:

@@ -37,11 +37,47 @@ class UnhandledException(PincerError):
     if this exception gets thrown.
     """
 
+    def __init__(self, specific: str):
+        super(UnhandledException, self).__init__(
+            specific + " Please report this to the library devs."
+        )
 
-def __init__(self, specific: str):
-    super(UnhandledException, self).__init__(
-        specific + " Please report this to the library devs."
-    )
+
+class CommandError(PincerError):
+    """
+    Base class for exceptions which are related to commands.
+    """
+
+
+class CommandIsNotCoroutine(CommandError):
+    """
+    Exception raised when the provided command call is not a coroutine.
+    """
+
+
+class CommandAlreadyRegistered(CommandError):
+    """
+    The command which you are trying to register is already registered.
+    """
+
+
+class CommandDescriptionTooLong(CommandError):
+    """
+    The provided command description is too long, as it exceeds 100 characters.
+    """
+
+
+class TooManyArguments(CommandError):
+    """
+    A command can have a maximum of 25 arguments.
+    If this number of arguments gets exceeded, this exception will be raised.
+    """
+
+
+class InvalidArgumentAnnotation(CommandError):
+    """
+    The provided argument annotation is not known, so it cannot be used.
+    """
 
 
 class InvalidEventName(PincerError):
