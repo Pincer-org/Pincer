@@ -26,11 +26,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional, List
 
-from pincer.utils.api_object import APIObject
-
 from pincer.objects.user import User
-from pincer.utils.constants import APINullable, MISSING
+from pincer.utils.api_object import APIObject
 from pincer.utils.snowflake import Snowflake
+from pincer.utils.types import APINullable, MISSING
 
 
 @dataclass

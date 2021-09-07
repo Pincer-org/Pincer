@@ -29,7 +29,7 @@ from re import match
 
 from pincer.exceptions import InvalidUrlError, EmbedFieldError
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import MISSING, APINullable
+from pincer.utils.types import MISSING, APINullable
 
 
 def _field_size(field: str) -> int:

@@ -25,10 +25,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from pincer.utils.timestamp import Timestamp
-from pincer.utils.snowflake import Snowflake
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import APINullable, MISSING
+from pincer.utils.snowflake import Snowflake
+from pincer.utils.timestamp import Timestamp
+from pincer.utils.types import APINullable, MISSING
+
 
 @dataclass
 class ThreadMetadata(APIObject):
@@ -61,6 +62,7 @@ class ThreadMetadata(APIObject):
 
     invitable: APINullable[bool] = MISSING
 
+
 @dataclass
 class ThreadMember(APIObject):
     """
@@ -83,4 +85,3 @@ class ThreadMember(APIObject):
 
     id: APINullable[Snowflake] = MISSING
     user_id: APINullable[Snowflake] = MISSING
-

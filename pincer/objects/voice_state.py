@@ -28,8 +28,9 @@ from typing import Optional
 from pincer.objects.guild_member import GuildMember
 from pincer.utils.api_object import APIObject
 from pincer.utils.snowflake import Snowflake
-from pincer.utils.constants import MISSING, APINullable
 from pincer.utils.timestamp import Timestamp
+from pincer.utils.types import MISSING, APINullable
+
 
 @dataclass
 class VoiceState(APIObject):

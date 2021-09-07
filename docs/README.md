@@ -114,10 +114,12 @@ client.run()
 You have the possibility to use your own class to inherit from the Pincer bot base.
 
 ```py
+from pincer import Client
+
 class Bot(Client):
 
     def __init__(self) -> None:
-        super(Bot, self).__init__(token='...')
+        super(Bot, self).__init__(token="...")
 
     @Client.event
     async def on_ready(self) -> None:

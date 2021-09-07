@@ -29,12 +29,12 @@ from typing import Optional, List
 
 from pincer._config import GatewayConfig
 from pincer.objects.guild_member import GuildMember
-from pincer.objects.user import User
 from pincer.objects.thread import ThreadMetadata
+from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import APINullable, MISSING
 from pincer.utils.snowflake import Snowflake
 from pincer.utils.timestamp import Timestamp
+from pincer.utils.types import APINullable, MISSING
 
 
 class ChannelType(Enum):

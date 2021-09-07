@@ -31,8 +31,8 @@ from pincer.objects.channel import Channel
 from pincer.objects.guild import Guild
 from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import APINullable, MISSING
 from pincer.utils.snowflake import Snowflake
+from pincer.utils.types import APINullable, MISSING
 
 
 class WebhookType(Enum):

@@ -29,8 +29,8 @@ from typing import List, Optional
 
 from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import MISSING, APINullable
 from pincer.utils.snowflake import Snowflake
+from pincer.utils.types import MISSING, APINullable
 
 
 class StickerType(Enum):

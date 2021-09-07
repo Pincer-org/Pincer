@@ -27,7 +27,7 @@ from typing import List
 
 from pincer.objects.emoji import Emoji
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import MISSING, APINullable
+from pincer.utils.types import MISSING, APINullable
 
 
 @dataclass

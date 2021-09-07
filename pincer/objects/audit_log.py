@@ -23,6 +23,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
+
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Optional, List
@@ -32,8 +33,8 @@ from pincer.objects.integration import Integration
 from pincer.objects.user import User
 from pincer.objects.webhook import Webhook
 from pincer.utils.api_object import APIObject
-from pincer.utils.constants import APINullable, MISSING
 from pincer.utils.snowflake import Snowflake
+from pincer.utils.types import APINullable, MISSING
 
 
 class AuditLogEvent(Enum):

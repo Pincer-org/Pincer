@@ -22,7 +22,20 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from typing import TypeVar, Callable, Coroutine, Any
+from typing import TypeVar, Callable, Coroutine, Any, Union
+
+
+class MissingType:
+    def __repr__(self):
+        return "<MISSING>"
+
+
+MISSING = MissingType()
+
+T = TypeVar('T')
+
+# Represents a value which is optionally returned from the API
+APINullable = Union[T, MissingType]
 
 # Represents a coroutine.
 Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
