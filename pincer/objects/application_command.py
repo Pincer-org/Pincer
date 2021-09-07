@@ -204,12 +204,23 @@ class ApplicationCommand(APIObject):
         whether the command is enabled by default
         when the app is added to a guild
     """
-    id: Snowflake
     type: ApplicationCommandType
-    application_id: Snowflake
     name: str
     description: str
 
+    id: APINullable[Snowflake] = MISSING
+    application_id: APINullable[Snowflake] = MISSING
     options: APINullable[List[ApplicationCommandOption]] = MISSING
     guild_id: APINullable[Snowflake] = MISSING
     default_permission: APINullable[bool] = True
+
+    def add_option(self, option: ApplicationCommandOption):
+        """
+        Add a new option field to the current application command.
+
+        :param option: The option which will be appended.
+        """
+        if self.options:
+            self.options.append(option)
+        else:
+            self.options = [option]

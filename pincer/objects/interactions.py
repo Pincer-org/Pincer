@@ -23,13 +23,13 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from dataclasses import dataclass
-from enum import Enum
 from typing import Dict
 
 from pincer.objects.application_command import \
     ApplicationCommandInteractionDataOption
 from pincer.objects.channel import Channel
 from pincer.objects.guild_member import GuildMember
+from pincer.objects.interaction_base import InteractionType
 from pincer.objects.message import Message
 from pincer.objects.role import Role
 from pincer.objects.select_menu import SelectOption
@@ -37,25 +37,6 @@ from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
 from pincer.utils.constants import MISSING, APINullable
 from pincer.utils.snowflake import Snowflake
-
-
-class InteractionType(Enum):
-    """
-    Represents the different types of interactions the client
-    can have with a member.
-
-    :param CHAT_INPUT:
-        Slash commands; a text-based command that shows up when a user types /
-
-    :param USER:
-        A UI-based command that shows up when you right click or tap on a user
-
-    :param MESSAGE:
-        A UI-based command that shows up when you right click or tap on a message
-    """
-    PING = 1
-    APPLICATION_COMMAND = 2
-    MESSAGE_COMPONENT = 2
 
 
 @dataclass
@@ -125,27 +106,8 @@ class InteractionData(APIObject):
     options: APINullable[ApplicationCommandInteractionDataOption] = MISSING
     custom_id: APINullable[str] = MISSING
     component_type: APINullable[int] = MISSING
-    values = APINullable[SelectOption] = MISSING
-    target_id = APINullable[Snowflake] = MISSING
-
-
-@dataclass
-class MessageInteraction(APIObject):
-    """
-    Represents a Discord Message Interaction object
-
-    This is sent on the message object when the message
-    is a response to an Interaction without an existing message.
-
-    :param id: id of the interaction
-    :param type: the type of interaction
-    :param name: the name of the application command
-    :param user: the user who invoked the interaction
-    """
-    id: Snowflake
-    type: InteractionType
-    name: str
-    user: User
+    values: APINullable[SelectOption] = MISSING
+    target_id: APINullable[Snowflake] = MISSING
 
 
 @dataclass

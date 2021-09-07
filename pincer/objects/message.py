@@ -33,8 +33,8 @@ from pincer.objects.application import Application
 from pincer.objects.attachment import Attachment
 from pincer.objects.channel import Channel, ChannelMention
 from pincer.objects.embed import Embed
-from pincer.objects.interactions import MessageInteraction
 from pincer.objects.guild_member import GuildMember
+from pincer.objects.interaction_base import MessageInteraction
 from pincer.objects.message_component import MessageComponent
 from pincer.objects.message_reference import MessageReference
 from pincer.objects.reaction import Reaction

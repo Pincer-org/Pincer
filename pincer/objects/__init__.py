@@ -38,7 +38,8 @@ from .guild_template import GuildTemplate
 from .guild_widget import GuildWidget
 from .integration import Integration
 from .intents import Intents
-from .interactions import Interaction, MessageInteraction
+from .interaction_base import MessageInteraction
+from .interactions import Interaction
 from .invite import Invite
 from .message import Message
 from .message_component import MessageComponent
