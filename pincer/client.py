@@ -41,7 +41,7 @@ from pincer.utils.types import Coro
 
 _log = logging.getLogger(__package__)
 
-middleware_type = Optional[Union[Coro, Tuple[str, List[Any], Dict[str, Any]]]]
+MiddlewareType = Optional[Union[Coro, Tuple[str, List[Any], Dict[str, Any]]]]
 
 _events: Dict[str, Optional[Union[str, Coro]]] = {}
 
@@ -121,8 +121,8 @@ def middleware(call: str, *, override: bool = False):
     def decorator(func: Coro):
         if override:
             _log.warning(
-                f"Middleware overriding has been enabled for `{call}`."
-                " This might cause unexpected behaviour."
+                f"Middleware overriding has been enabled for `%s`."
+                " This might cause unexpected behaviour.", call
             )
 
         if not override and callable(_events.get(call)):
@@ -296,7 +296,7 @@ class Client(Dispatcher):
             (so the event) its index in ``_events``. The second and third
             element are the ``*args`` and ``**kwargs`` for the event.
         """
-        ware: middleware_type = _events.get(key)
+        ware: MiddlewareType = _events.get(key)
         next_call, arguments, params = ware, list(), dict()
 
         if iscoroutinefunction(ware):

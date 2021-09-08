@@ -164,8 +164,8 @@ class Dispatcher:
             The current async loop on which the future is bound.
         """
         _log.debug(
-            "New event received, checking if handler exists for opcode: %i"
-            % payload.op
+            "New event received, checking if handler exists for opcode: %i",
+            payload.op
         )
 
         handler: Handler = self.__dispatch_handlers.get(payload.op)
@@ -173,13 +173,15 @@ class Dispatcher:
         if not handler:
             _log.error(
                 "No handler was found for opcode %i, please report this to the "
-                "pincer dev team!" % payload.op
+                "pincer dev team!", payload.op
             )
 
             raise UnhandledException(f"Unhandled payload: {payload}")
 
         _log.debug(
-            "Event handler found, ensuring async future in current loop.")
+            "Event handler found, ensuring async future in current loop."
+        )
+
         ensure_future(handler(socket, payload), loop=loop)
 
     async def __dispatcher(self, loop: AbstractEventLoop):
@@ -193,14 +195,14 @@ class Dispatcher:
             The loop in which the dispatcher is running.
         """
         _log.debug(
-            "Establishing websocket connection with `%s`" % GatewayConfig.uri()
+            "Establishing websocket connection with `%s`", GatewayConfig.uri()
         )
 
         async with connect(GatewayConfig.uri()) as socket:
             self.__socket = socket
             _log.debug(
-                "Successfully established websocket connection with `%s`"
-                % GatewayConfig.uri()
+                "Successfully established websocket connection with `%s`",
+                GatewayConfig.uri()
             )
 
             while self.__keep_alive:
@@ -215,8 +217,7 @@ class Dispatcher:
                 except ConnectionClosedError as exc:
                     _log.debug(
                         "The connection with `%s` has been broken unexpectedly."
-                        " (%i, %s)"
-                        % (GatewayConfig.uri(), exc.code, exc.reason)
+                        " (%i, %s)", GatewayConfig.uri(), exc.code, exc.reason
                     )
 
                     await self.close()
