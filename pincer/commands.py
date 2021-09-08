@@ -106,7 +106,7 @@ def command(
 
             options.append(ApplicationCommandOption(
                 type=param_type,
-                name=name,
+                name=param,
                 description=description,
                 # TODO: Check for Optional type
                 required=True
@@ -115,7 +115,7 @@ def command(
         ChatCommandHandler.register[cmd] = ClientCommandStructure(
             call=func,
             app=ApplicationCommand(
-                name=name,
+                name=cmd,
                 description=description,
                 type=ApplicationCommandType.CHAT_INPUT,
                 default_permission=enable_default,
@@ -135,8 +135,6 @@ class ChatCommandHandler:
         # TODO: Fix docs
         self.client = client
         self._api_commands: List[ApplicationCommand] = list()
-        print(
-            f"{len(ChatCommandHandler.register.items())} commands registered.")
 
     async def __init_existing_commands(self):
         # TODO: Fix docs
@@ -178,12 +176,16 @@ class ChatCommandHandler:
             if api.default_permission != local.default_permission:
                 update["default_permission"] = local.default_permission
 
-            options: List[ApplicationCommandOption] = []
-            for idx, api_option in enumerate(api.options):
-                option = get_index(local.options, idx)
+            options: List[Dict[str, Any]] = []
+            if len(api.options) == len(local.options):
+                for idx, api_option in enumerate(api.options):
+                    option: Optional[ApplicationCommandOption] = \
+                        get_index(local.options, idx)
 
-                if option:
-                    options.append(option)
+                    if option:
+                        options.append(option.to_dict())
+            else:
+                options = local.options
 
             if options != api.options:
                 update["options"] = options
@@ -198,7 +200,7 @@ class ChatCommandHandler:
                     to_update[api_cmd.id] = changes
 
         async with self.client.http as http:
-            for cmd_id, changes in to_update:
+            for cmd_id, changes in to_update.items():
                 await http.patch(
                     f"applications/{self.client.bot.id}/commands/{cmd_id}",
                     changes
@@ -206,13 +208,22 @@ class ChatCommandHandler:
 
     async def __add_commands(self):
         # TODO: Fix docs
-        commands_to_add = [
-            cmd for cmd in ChatCommandHandler.register.items()
-            if cmd not in self._api_commands
+        commands_to_add: List[ClientCommandStructure] = [
+            cmd for cmd in ChatCommandHandler.register.values()
+            if cmd.app not in self._api_commands
         ]
+
+        if commands_to_add:
+            async with self.client.http as http:
+                for cmd in commands_to_add:
+                    await http.post(
+                        f"applications/{self.client.bot.id}/commands",
+                        cmd.app.to_dict()
+                    )
 
     async def initialize(self):
         # TODO: Fix docs
         await self.__init_existing_commands()
         await self.__remove_unused_commands()
         await self.__update_existing_commands()
+        await self.__add_commands()

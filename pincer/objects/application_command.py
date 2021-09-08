@@ -25,16 +25,17 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
-from typing import List, Union
+from enum import IntEnum
+from typing import List, Union, Optional
 
 from pincer.utils.api_object import APIObject
 from pincer.utils.conversion import convert
+from pincer.utils.extraction import get_index
 from pincer.utils.snowflake import Snowflake
 from pincer.utils.types import MISSING, APINullable, Coro
 
 
-class ApplicationCommandType(Enum):
+class ApplicationCommandType(IntEnum):
     """
     Defines the different types of application commands.
 
@@ -55,7 +56,7 @@ class ApplicationCommandType(Enum):
     MESSAGE = 3
 
 
-class ApplicationCommandOptionType(Enum):
+class ApplicationCommandOptionType(IntEnum):
     """
     Represents a parameter type.
 
@@ -182,6 +183,7 @@ class ApplicationCommandOption(APIObject):
     options: APINullable[List[ApplicationCommandOption]] = MISSING
 
     def __post_init__(self):
+        self.type = ApplicationCommandOptionType(self.type)
         self.choices = convert(
             self.choices,
             ApplicationCommandOptionChoice.from_dict,
@@ -240,8 +242,9 @@ class ApplicationCommand(APIObject):
     guild_id: APINullable[Snowflake] = MISSING
     default_permission: APINullable[bool] = True
 
-    _eq_props = ["type", "name", "description", "application_id", "options",
-                 "guild_id", "default_permission"]
+    _eq_props = [
+        "type", "name", "description", "guild_id", "default_permission"
+    ]
 
     # def __post_init__(self):
     #     self.id = convert(self.id, Snowflake.from_string)
@@ -255,11 +258,25 @@ class ApplicationCommand(APIObject):
     #     )
     #     self.guild_id = convert(self.guild_id, Snowflake.from_string)
 
-    def __eq__(self, other: ApplicationCommand):
-        return all(
+    def __eq__(self, other: Union[ApplicationCommand, ClientCommandStructure]):
+        if isinstance(other, ClientCommandStructure):
+            other = other.app
+
+        is_equal = all(
             self.__getattribute__(prop) == other.__getattribute__(prop)
             for prop in self._eq_props
         )
+
+        if is_equal and len(other.options) == len(self.options):
+            for idx, option in enumerate(other.options):
+                option_comp: Optional[ApplicationCommandOption] = \
+                    get_index(self.options, idx)
+
+                if not option_comp or \
+                        option != ApplicationCommandOption.from_dict(option_comp):
+                    is_equal = False
+
+        return is_equal
 
     def add_option(self, option: ApplicationCommandOption):
         """

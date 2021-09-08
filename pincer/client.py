@@ -78,7 +78,7 @@ def middleware(call: str, *, override: bool = False):
     middleware methods by passing the override parameter.
 
     The method to which this decorator is registered must be a coroutine,
-    and it must return a tuple with the following format\:
+    and it must return a tuple with the following format:
 
     .. code-block:: python
 

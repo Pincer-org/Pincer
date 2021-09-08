@@ -203,7 +203,7 @@ class HTTPClient:
                 f"a request to {endpoint}. ({res.status}, {res.reason})"
             )
 
-            exception.__init__(res.reason)
+            exception.__init__(f"{res.reason}")
             raise exception
 
         # status code is guaranteed to be 5xx
