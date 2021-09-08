@@ -96,22 +96,7 @@ class Dispatcher:
             """
             _log.debug("Sending authentication/identification message.")
 
-            await socket.send(
-                str(
-                    GatewayDispatch(
-                        2, {
-                            "token": token,
-                            "intents": 0,
-                            "properties": {
-                                "$os": system(),
-                                "$browser": __package__,
-                                "$device": __package__
-                            }
-                        }
-                    )
-                )
-            )
-
+            await socket.send(self.__hello_socket)
             await Heartbeat.handle_hello(socket, payload)
 
         async def handle_reconnect(_, payload: GatewayDispatch):
@@ -139,6 +124,22 @@ class Dispatcher:
             4009: _InternalPerformReconnectError(),
             4014: DisallowedIntentsError()
         }
+
+    @property
+    def __hello_socket(self) -> str:
+        return str(
+            GatewayDispatch(
+                2, {
+                    "token": self.__token,
+                    "intents": 0,
+                    "properties": {
+                        "$os": system(),
+                        "$browser": __package__,
+                        "$device": __package__
+                    }
+                }
+            )
+        )
 
     async def __handler_manager(
             self,

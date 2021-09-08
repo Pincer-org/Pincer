@@ -49,7 +49,7 @@ class HttpCallable(Protocol):
             self, url: StrOrURL, *,
             allow_redirects: bool = True, json: Dict = None, **kwargs: Any
     ) -> _RequestContextManager:
-        pass
+        ...
 
 
 class HTTPClient:

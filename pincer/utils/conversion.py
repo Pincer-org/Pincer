@@ -36,12 +36,15 @@ def convert(
     """
     def handle_factory() -> T:
         def fin_fac(v: Any):
-            return v \
-                if check is not None and isinstance(v, check) \
+            return (
+                v if check is not None and isinstance(v, check)
                 else factory(v)
+            )
 
-        return list(map(fin_fac, value)) \
-            if isinstance(value, list) \
+        return (
+            list(map(fin_fac, value))
+            if isinstance(value, list)
             else fin_fac(value)
+        )
 
     return MISSING if value is MISSING else handle_factory()
