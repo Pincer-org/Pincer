@@ -119,8 +119,8 @@ def middleware(call: str, *, override: bool = False):
     def decorator(func: Coro):
         if override:
             _log.warning(
-                f"Middleware overriding has been enabled for `%s`."
-                " This might cause unexpected behaviour.", call
+                "Middleware overriding has been enabled for `%s`."
+                " This might cause unexpected behavior.", call
             )
 
         if not override and callable(_events.get(call)):
