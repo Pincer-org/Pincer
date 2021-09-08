@@ -119,8 +119,8 @@ def middleware(call: str, *, override: bool = False):
     def decorator(func: Coro):
         if override:
             _log.warning(
-                f"Middleware overriding has been enabled for `%s`."
-                " This might cause unexpected behaviour.", call
+                "Middleware overriding has been enabled for `%s`."
+                " This might cause unexpected behavior.", call
             )
 
         if not override and callable(_events.get(call)):
@@ -295,7 +295,7 @@ class Client(Dispatcher):
             element are the ``*args`` and ``**kwargs`` for the event.
         """
         ware: MiddlewareType = _events.get(key)
-        next_call, arguments, params = ware, list(), dict()
+        next_call, arguments, params = ware, [], {}
 
         if iscoroutinefunction(ware):
             extractable = await ware(self, payload, *args, **kwargs)
@@ -306,8 +306,8 @@ class Client(Dispatcher):
                 )
 
             next_call = get_index(extractable, 0, "")
-            arguments = get_index(extractable, 1, list())
-            params = get_index(extractable, 2, dict())
+            arguments = get_index(extractable, 1, [])
+            params = get_index(extractable, 2, {})
 
         if next_call is None:
             raise RuntimeError(f"Middleware `{key}` has not been registered.")

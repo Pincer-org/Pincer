@@ -131,7 +131,7 @@ def command(
 
 
 class ChatCommandHandler:
-    register: Dict[str, ClientCommandStructure] = dict()
+    register: Dict[str, ClientCommandStructure] = {}
 
     # TODO: Fix docs
     def __init__(self, client: Client):
@@ -169,13 +169,13 @@ class ChatCommandHandler:
         ]
 
     async def __update_existing_commands(self):
-        to_update: Dict[str, Dict[str, Any]] = dict()
+        to_update: Dict[str, Dict[str, Any]] = {}
 
         def get_changes(
                 api: ApplicationCommand,
                 local: ApplicationCommand
         ) -> Dict[str, Any]:
-            update: Dict[str, Any] = dict()
+            update: Dict[str, Any] = {}
 
             if api.description != local.description:
                 update["description"] = local.description
