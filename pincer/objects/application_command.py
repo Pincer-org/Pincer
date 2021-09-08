@@ -32,7 +32,7 @@ from ..utils import APIObject, APINullable, Coro, convert, MISSING, Snowflake, \
     get_index
 
 
-class ApplicationCommandType(IntEnum):
+class AppCommandType(IntEnum):
     """
     Defines the different types of application commands.
 
@@ -53,7 +53,7 @@ class ApplicationCommandType(IntEnum):
     MESSAGE = 3
 
 
-class ApplicationCommandOptionType(IntEnum):
+class AppCommandOptionType(IntEnum):
     """
     Represents a parameter type.
 
@@ -100,7 +100,7 @@ class ApplicationCommandOptionType(IntEnum):
 
 
 @dataclass
-class ApplicationCommandInteractionDataOption(APIObject):
+class AppCommandInteractionDataOption(APIObject):
     """
     Represents a Discord Application Command Interaction Data Option
 
@@ -118,21 +118,21 @@ class ApplicationCommandInteractionDataOption(APIObject):
     """
     name: str
     type: int
-    value: APINullable[ApplicationCommandOptionType] = MISSING
+    value: APINullable[AppCommandOptionType] = MISSING
     options: APINullable[
-        List[ApplicationCommandInteractionDataOption]] = MISSING
+        List[AppCommandInteractionDataOption]] = MISSING
 
     def __post_init__(self):
-        self.value = convert(self.value, ApplicationCommandOptionType)
+        self.value = convert(self.value, AppCommandOptionType)
         self.options = convert(
             self.options,
-            ApplicationCommandInteractionDataOption.from_dict,
-            ApplicationCommandInteractionDataOption
+            AppCommandInteractionDataOption.from_dict,
+            AppCommandInteractionDataOption
         )
 
 
 @dataclass
-class ApplicationCommandOptionChoice(APIObject):
+class AppCommandOptionChoice(APIObject):
     """
     Represents a Discord Application Command Option Choice object
 
@@ -147,7 +147,7 @@ class ApplicationCommandOptionChoice(APIObject):
 
 
 @dataclass
-class ApplicationCommandOption(APIObject):
+class AppCommandOption(APIObject):
     """
     Represents a Discord Application Command Option object
 
@@ -171,30 +171,30 @@ class ApplicationCommandOption(APIObject):
         if the option is a subcommand or subcommand group type,
         this nested options will be the parameters
     """
-    type: ApplicationCommandOptionType
+    type: AppCommandOptionType
     name: str
     description: str
 
     required: APINullable[bool] = False
-    choices: APINullable[List[ApplicationCommandOptionChoice]] = MISSING
-    options: APINullable[List[ApplicationCommandOption]] = MISSING
+    choices: APINullable[List[AppCommandOptionChoice]] = MISSING
+    options: APINullable[List[AppCommandOption]] = MISSING
 
     def __post_init__(self):
-        self.type = ApplicationCommandOptionType(self.type)
+        self.type = AppCommandOptionType(self.type)
         self.choices = convert(
             self.choices,
-            ApplicationCommandOptionChoice.from_dict,
-            ApplicationCommandOptionChoice
+            AppCommandOptionChoice.from_dict,
+            AppCommandOptionChoice
         )
         self.options = convert(
             self.options,
-            ApplicationCommandOption.from_dict,
-            ApplicationCommandOption
+            AppCommandOption.from_dict,
+            AppCommandOption
         )
 
 
 @dataclass
-class ApplicationCommand(APIObject):
+class AppCommand(APIObject):
     """
     Represents a Discord Application Command object
 
@@ -228,14 +228,14 @@ class ApplicationCommand(APIObject):
         autoincrementing version identifier updated during substantial
         record changes
     """
-    type: ApplicationCommandType
+    type: AppCommandType
     name: str
     description: str
 
     id: APINullable[Snowflake] = MISSING
     version: APINullable[Snowflake] = MISSING
     application_id: APINullable[Snowflake] = MISSING
-    options: APINullable[List[ApplicationCommandOption]] = MISSING
+    options: APINullable[List[AppCommandOption]] = MISSING
     guild_id: APINullable[Snowflake] = MISSING
     default_permission: APINullable[bool] = True
 
@@ -255,7 +255,7 @@ class ApplicationCommand(APIObject):
     #     )
     #     self.guild_id = convert(self.guild_id, Snowflake.from_string)
 
-    def __eq__(self, other: Union[ApplicationCommand, ClientCommandStructure]):
+    def __eq__(self, other: Union[AppCommand, ClientCommandStructure]):
         if isinstance(other, ClientCommandStructure):
             other = other.app
 
@@ -266,17 +266,17 @@ class ApplicationCommand(APIObject):
 
         if is_equal and len(other.options) == len(self.options):
             for idx, option in enumerate(other.options):
-                option_comp: Optional[ApplicationCommandOption] = \
+                option_comp: Optional[AppCommandOption] = \
                     get_index(self.options, idx)
 
                 if not option_comp or \
-                        option != ApplicationCommandOption.from_dict(
+                        option != AppCommandOption.from_dict(
                     option_comp):
                     is_equal = False
 
         return is_equal
 
-    def add_option(self, option: ApplicationCommandOption):
+    def add_option(self, option: AppCommandOption):
         """
         Add a new option field to the current application command.
 
@@ -301,5 +301,5 @@ class ClientCommandStructure:
         The coroutine which should be called when the command gets
         executed.
     """
-    app: ApplicationCommand
+    app: AppCommand
     call: Coro

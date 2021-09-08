@@ -25,8 +25,7 @@
 from dataclasses import dataclass
 from typing import Dict
 
-from ..objects.application_command import \
-    ApplicationCommandInteractionDataOption
+from ..objects.application_command import AppCommandInteractionDataOption
 from ..objects.channel import Channel
 from ..objects.guild_member import GuildMember
 from ..objects.interaction_base import InteractionType
@@ -101,7 +100,7 @@ class InteractionData(APIObject):
     type: int
 
     resolved: APINullable[ResolvedData] = MISSING
-    options: APINullable[ApplicationCommandInteractionDataOption] = MISSING
+    options: APINullable[AppCommandInteractionDataOption] = MISSING
     custom_id: APINullable[str] = MISSING
     component_type: APINullable[int] = MISSING
     values: APINullable[SelectOption] = MISSING

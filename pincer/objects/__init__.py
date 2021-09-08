@@ -23,7 +23,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from .application import Application
-from .application_command import ApplicationCommand
+from .application_command import AppCommand
 from .attachment import Attachment
 from .audit_log import AuditLog
 from .ban import Ban
@@ -58,12 +58,11 @@ from .webhook import Webhook
 from .welcome_screen import WelcomeScreen
 
 __all__ = (
-    "ApplicationCommand", "Application", "Attachment", "AuditLog",
-    "Ban", "Button", "Channel", "Embed", "Emoji", "FollowedChannel",
-    "GuildMember", "GuildTemplate", "GuildWidget", "Guild",
-    "Integration", "Interaction", "MessageInteraction", "Invite",
-    "MessageComponent", "MessageReference", "Message", "Overwrite",
-    "Reaction", "Role", "SelectMenu", "SelectOption", "StageInstance",
-    "Sticker", "ThreadMember", "ThreadMetadata", "User", "VoiceRegion",
-    "VoiceState", "Webhook", "WelcomeScreen", "Intents"
+    "AppCommand", "Application", "Attachment", "AuditLog", "Ban", "Button",
+    "Channel", "Embed", "Emoji", "FollowedChannel", "GuildMember",
+    "GuildTemplate", "GuildWidget", "Guild", "Integration", "Interaction",
+    "MessageInteraction", "Invite", "MessageComponent", "MessageReference",
+    "Message", "Overwrite", "Reaction", "Role", "SelectMenu", "SelectOption",
+    "StageInstance", "Sticker", "ThreadMember", "ThreadMetadata", "User",
+    "VoiceRegion", "VoiceState", "Webhook", "WelcomeScreen", "Intents"
 )
