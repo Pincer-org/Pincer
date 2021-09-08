@@ -8,7 +8,7 @@ An asynchronous python API wrapper meant to replace discord.py
 """
 
 __title__ = "Pincer library"
-__package__ = "Pincer"
+__package__ = "pincer"
 __author__ = "Sigmanificient, Arthurdw"
 __license__ = "MIT"
 __version__ = "0.5.5-dev"
