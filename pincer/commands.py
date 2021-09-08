@@ -26,7 +26,7 @@ from __future__ import annotations
 import logging
 from asyncio import iscoroutinefunction
 from inspect import Signature
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Any
 
 from pincer import __package__, Client
 from pincer.exceptions import (
@@ -37,7 +37,7 @@ from pincer.objects.application_command import (
     ApplicationCommand, ApplicationCommandType, ClientCommandStructure,
     ApplicationCommandOption, ApplicationCommandOptionType
 )
-from pincer.utils.extraction import get_signature_and_params
+from pincer.utils.extraction import get_signature_and_params, get_index
 from pincer.utils.insertion import should_pass_ctx
 from pincer.utils.types import Coro
 
@@ -128,21 +128,91 @@ def command(
 
 
 class ChatCommandHandler:
-    register: Dict[str, ClientCommandStructure] = {}
+    register: Dict[str, ClientCommandStructure] = dict()
 
     # TODO: Fix docs
     def __init__(self, client: Client):
         # TODO: Fix docs
         self.client = client
-        self.commands: List[ApplicationCommand] = []
+        self._api_commands: List[ApplicationCommand] = list()
         print(
             f"{len(ChatCommandHandler.register.items())} commands registered.")
 
     async def __init_existing_commands(self):
-        async with self.client.http as sess:
-            res = await sess.get(f"applications/{self.client.bot.id}/commands")
-            self.commands = list(map(ApplicationCommand.from_dict, res))
+        # TODO: Fix docs
+        async with self.client.http as http:
+            res = await http.get(f"applications/{self.client.bot.id}/commands")
+            self._api_commands = list(map(ApplicationCommand.from_dict, res))
+
+    async def __remove_unused_commands(self):
+        # TODO: Fix docs
+        to_remove: List[ApplicationCommand] = list()
+
+        for api_cmd in self._api_commands:
+            for loc_cmd in ChatCommandHandler.register.values():
+                if api_cmd.name != loc_cmd.app.name:
+                    to_remove.append(api_cmd)
+
+        async with self.client.http as http:
+            for cmd in to_remove:
+                await http.delete(
+                    f"applications/{self.client.bot.id}/commands/{cmd.id}"
+                )
+
+        self._api_commands = [
+            cmd for cmd in self._api_commands if cmd not in to_remove
+        ]
+
+    async def __update_existing_commands(self):
+        to_update: Dict[str, Dict[str, Any]] = dict()
+
+        def get_changes(
+                api: ApplicationCommand,
+                local: ApplicationCommand
+        ) -> Dict[str, Any]:
+            update: Dict[str, Any] = dict()
+
+            if api.description != local.description:
+                update["description"] = local.description
+
+            if api.default_permission != local.default_permission:
+                update["default_permission"] = local.default_permission
+
+            options: List[ApplicationCommandOption] = []
+            for idx, api_option in enumerate(api.options):
+                option = get_index(local.options, idx)
+
+                if option:
+                    options.append(option)
+
+            if options != api.options:
+                update["options"] = options
+
+            return update
+
+        for api_cmd in self._api_commands:
+            for loc_cmd in ChatCommandHandler.register.values():
+                changes = get_changes(api_cmd, loc_cmd.app)
+
+                if changes:
+                    to_update[api_cmd.id] = changes
+
+        async with self.client.http as http:
+            for cmd_id, changes in to_update:
+                await http.patch(
+                    f"applications/{self.client.bot.id}/commands/{cmd_id}",
+                    changes
+                )
+
+    async def __add_commands(self):
+        # TODO: Fix docs
+        commands_to_add = [
+            cmd for cmd in ChatCommandHandler.register.items()
+            if cmd not in self._api_commands
+        ]
 
     async def initialize(self):
         # TODO: Fix docs
         await self.__init_existing_commands()
+        await self.__remove_unused_commands()
+        await self.__update_existing_commands()

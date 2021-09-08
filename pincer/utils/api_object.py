@@ -79,6 +79,17 @@ class APIObject:
     Represents an object which has been fetched from the Discord API.
     """
 
+    # def __post_init__(self):
+    #     fin = {
+    #         key: _eval_type(ForwardRef(value), globals(), globals())
+    #         for key, value in self.__annotations__.items()
+    #     }
+    #
+    #     # pprint(self.__annotations__)
+    #     # pprint(get_type_hints(self))
+    #     print(fin)
+    #     print("Post init", self)
+
     @classmethod
     def from_dict(cls: Generic[T], data: Data[str, Union[str, bool, int]]) -> T:
         """

@@ -243,17 +243,17 @@ class ApplicationCommand(APIObject):
     _eq_props = ["type", "name", "description", "application_id", "options",
                  "guild_id", "default_permission"]
 
-    def __post_init__(self):
-        self.id = convert(self.id, Snowflake.from_string)
-        self.version = convert(self.version, Snowflake.from_string)
-        self.application_id = convert(self.application_id,
-                                      Snowflake.from_string)
-        self.options = convert(
-            self.options,
-            ApplicationCommandOption.from_dict,
-            ApplicationCommandOption
-        )
-        self.guild_id = convert(self.guild_id, Snowflake.from_string)
+    # def __post_init__(self):
+    #     self.id = convert(self.id, Snowflake.from_string)
+    #     self.version = convert(self.version, Snowflake.from_string)
+    #     self.application_id = convert(self.application_id,
+    #                                   Snowflake.from_string)
+    #     self.options = convert(
+    #         self.options,
+    #         ApplicationCommandOption.from_dict,
+    #         ApplicationCommandOption
+    #     )
+    #     self.guild_id = convert(self.guild_id, Snowflake.from_string)
 
     def __eq__(self, other: ApplicationCommand):
         return all(

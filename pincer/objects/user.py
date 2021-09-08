@@ -117,7 +117,9 @@ class User(APIObject):
         """
         The user their premium type in a usable enum.
         """
-        return PremiumTypes(self.premium_type)
+        return MISSING \
+            if self.premium_type is MISSING \
+            else PremiumTypes(self.premium_type)
 
     def __str__(self):
         """Return the discord tag when object gets used as a string."""
