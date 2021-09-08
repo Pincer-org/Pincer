@@ -12,10 +12,10 @@ pincer.utils.api\_object module
    :undoc-members:
    :show-inheritance:
 
-pincer.utils.constants module
------------------------------
+pincer.utils.conversion module
+------------------------------
 
-.. automodule:: pincer.utils.constants
+.. automodule:: pincer.utils.conversion
    :members:
    :undoc-members:
    :show-inheritance:

@@ -25,18 +25,15 @@
 from dataclasses import dataclass
 from typing import Dict
 
-from pincer.objects.application_command import \
-    ApplicationCommandInteractionDataOption
-from pincer.objects.channel import Channel
-from pincer.objects.guild_member import GuildMember
-from pincer.objects.interaction_base import InteractionType
-from pincer.objects.message import Message
-from pincer.objects.role import Role
-from pincer.objects.select_menu import SelectOption
-from pincer.objects.user import User
-from pincer.utils.api_object import APIObject
-from pincer.utils.snowflake import Snowflake
-from pincer.utils.types import MISSING, APINullable
+from ..objects.application_command import AppCommandInteractionDataOption
+from ..objects.channel import Channel
+from ..objects.guild_member import GuildMember
+from ..objects.interaction_base import InteractionType
+from ..objects.message import Message
+from ..objects.role import Role
+from ..objects.select_menu import SelectOption
+from ..objects.user import User
+from ..utils import APIObject, APINullable, MISSING, Snowflake
 
 
 @dataclass
@@ -103,7 +100,7 @@ class InteractionData(APIObject):
     type: int
 
     resolved: APINullable[ResolvedData] = MISSING
-    options: APINullable[ApplicationCommandInteractionDataOption] = MISSING
+    options: APINullable[AppCommandInteractionDataOption] = MISSING
     custom_id: APINullable[str] = MISSING
     component_type: APINullable[int] = MISSING
     values: APINullable[SelectOption] = MISSING

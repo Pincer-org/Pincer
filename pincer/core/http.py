@@ -31,9 +31,9 @@ from aiohttp import ClientSession, ClientResponse
 from aiohttp.client import _RequestContextManager
 from aiohttp.typedefs import StrOrURL
 
-from pincer import __package__
-from pincer._config import GatewayConfig
-from pincer.exceptions import (
+from . import __package__
+from .._config import GatewayConfig
+from ..exceptions import (
     NotFoundError, BadRequestError, NotModifiedError, UnauthorizedError,
     ForbiddenError, MethodNotAllowedError, RateLimitError, ServerError,
     HTTPError
@@ -49,7 +49,7 @@ class HttpCallable(Protocol):
             self, url: StrOrURL, *,
             allow_redirects: bool = True, json: Dict = None, **kwargs: Any
     ) -> _RequestContextManager:
-        pass
+        ...
 
 
 class HTTPClient:
@@ -203,7 +203,7 @@ class HTTPClient:
                 f"a request to {endpoint}. ({res.status}, {res.reason})"
             )
 
-            exception.__init__(res.reason)
+            exception.__init__(f"{res.reason}")
             raise exception
 
         # status code is guaranteed to be 5xx

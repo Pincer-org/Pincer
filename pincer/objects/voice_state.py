@@ -25,11 +25,8 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from pincer.objects.guild_member import GuildMember
-from pincer.utils.api_object import APIObject
-from pincer.utils.snowflake import Snowflake
-from pincer.utils.timestamp import Timestamp
-from pincer.utils.types import MISSING, APINullable
+from ..objects.guild_member import GuildMember
+from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
 
 
 @dataclass

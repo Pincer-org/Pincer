@@ -24,8 +24,8 @@
 
 from dataclasses import dataclass
 
-from pincer.objects.emoji import Emoji
-from pincer.utils.api_object import APIObject
+from ..objects.emoji import Emoji
+from ..utils.api_object import APIObject
 
 
 @dataclass

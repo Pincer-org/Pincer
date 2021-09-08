@@ -25,10 +25,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from pincer.utils.api_object import APIObject
-from pincer.utils.snowflake import Snowflake
-from pincer.utils.timestamp import Timestamp
-from pincer.utils.types import APINullable, MISSING
+from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
 
 
 @dataclass

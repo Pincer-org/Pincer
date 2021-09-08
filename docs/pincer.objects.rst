@@ -60,6 +60,14 @@ pincer.objects.channel module
    :undoc-members:
    :show-inheritance:
 
+pincer.objects.context module
+-----------------------------
+
+.. automodule:: pincer.objects.context
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.objects.embed module
 ---------------------------
 
@@ -128,6 +136,14 @@ pincer.objects.intents module
 -----------------------------
 
 .. automodule:: pincer.objects.intents
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pincer.objects.interaction\_base module
+---------------------------------------
+
+.. automodule:: pincer.objects.interaction_base
    :members:
    :undoc-members:
    :show-inheritance:

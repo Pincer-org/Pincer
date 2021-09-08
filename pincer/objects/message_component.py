@@ -27,11 +27,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List
 
-from pincer.objects.button import ButtonStyle
-from pincer.objects.emoji import Emoji
-from pincer.objects.select_menu import SelectOption
-from pincer.utils.api_object import APIObject
-from pincer.utils.types import MISSING, APINullable
+from ..objects.button import ButtonStyle
+from ..objects.emoji import Emoji
+from ..objects.select_menu import SelectOption
+from ..utils import APIObject, MISSING, APINullable
 
 
 @dataclass
