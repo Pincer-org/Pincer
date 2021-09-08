@@ -156,6 +156,50 @@ A /say command early implementation using middleware
 
 > https://gist.github.com/Arthurdw/e110ebbdafca388722f25ddb79c1dfb8
 
+## .5.x verions
+
+*The 0.5.x version don't add any new features, 
+but implement the discordpy classes within the package.
+Those will be very useful for the next versions*
+
+### Classes
+`APIObject`,
+`Application commands`, 
+`Application`, 
+`Attachement`,
+`AuditLog`, 
+`Ban`,
+`Button`,
+`Channel`, 
+`ChannelMention`, 
+`Emoji`,
+`FollowedChannels`,
+`GuidMember`, 
+`Guild`, 
+`GuildWidget`, 
+`Interactions`, 
+`Invite`,
+`Member`, 
+`Message`,
+`MessageReference`, 
+`Overwrite`, 
+`Reaction`,
+`Role`, 
+`Select Menu`, 
+`Select Option`
+`StageInstance`,
+`Sticker`, 
+`StickerItem`, 
+`StickerPack`, 
+`Thread`, 
+`User`, 
+`VoiceRegion`, 
+`VoiceState`, 
+`Webhook`,
+`WelcomeScreen`, 
+
+### Other added features
+
 
 ## 🏷️ License
 
