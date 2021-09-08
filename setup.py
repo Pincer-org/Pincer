@@ -75,9 +75,11 @@ setup(
     **dyn_props,
     project_urls={
         # "Documentation": "-- WIP --",
-        "Github repository": "https://github.com/pincer-org/pincer"
+        "Github repository": "https://github.com/pincer-org/pincer",
+        "ReadTheDocs": "https://pincer.readthedocs.org",
+        "Discord": "https://discord.gg/8WkYz3fNFm"
     },
-    url="https://github.com/Pincer/Pincer",
+    url="https://pincer.dev",
     author_email="contact@pincer.dev",
     classifiers=[
         # Development statuses:
