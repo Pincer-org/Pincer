@@ -26,11 +26,8 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
-from pincer.objects.user import User
-from pincer.utils.api_object import APIObject
-from pincer.utils.snowflake import Snowflake
-from pincer.utils.timestamp import Timestamp
-from pincer.utils.types import MISSING, APINullable
+from ..objects.user import User
+from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
 
 
 class IntegrationExpireBehavior(Enum):

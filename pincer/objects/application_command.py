@@ -28,11 +28,8 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import List, Union, Optional
 
-from pincer.utils.api_object import APIObject
-from pincer.utils.conversion import convert
-from pincer.utils.extraction import get_index
-from pincer.utils.snowflake import Snowflake
-from pincer.utils.types import MISSING, APINullable, Coro
+from ..utils import APIObject, APINullable, Coro, convert, MISSING, Snowflake, \
+    get_index
 
 
 class ApplicationCommandType(IntEnum):
@@ -273,7 +270,8 @@ class ApplicationCommand(APIObject):
                     get_index(self.options, idx)
 
                 if not option_comp or \
-                        option != ApplicationCommandOption.from_dict(option_comp):
+                        option != ApplicationCommandOption.from_dict(
+                    option_comp):
                     is_equal = False
 
         return is_equal

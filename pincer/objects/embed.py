@@ -27,9 +27,8 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from re import match
 
-from pincer.exceptions import InvalidUrlError, EmbedFieldError
-from pincer.utils.api_object import APIObject
-from pincer.utils.types import MISSING, APINullable
+from ..exceptions import InvalidUrlError, EmbedFieldError
+from ..utils import APIObject, APINullable, MISSING
 
 
 def _field_size(field: str) -> int:

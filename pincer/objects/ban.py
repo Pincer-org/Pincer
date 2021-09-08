@@ -25,8 +25,8 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from pincer.objects.user import User
-from pincer.utils.api_object import APIObject
+from ..objects.user import User
+from ..utils import APIObject
 
 
 @dataclass

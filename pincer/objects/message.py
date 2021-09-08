@@ -28,23 +28,20 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional, Union
 
-from pincer._config import GatewayConfig
-from pincer.objects.application import Application
-from pincer.objects.attachment import Attachment
-from pincer.objects.channel import Channel, ChannelMention
-from pincer.objects.embed import Embed
-from pincer.objects.guild_member import GuildMember
-from pincer.objects.interaction_base import MessageInteraction
-from pincer.objects.message_component import MessageComponent
-from pincer.objects.message_reference import MessageReference
-from pincer.objects.reaction import Reaction
-from pincer.objects.role import Role
-from pincer.objects.sticker import StickerItem
-from pincer.objects.user import User
-from pincer.utils.api_object import APIObject
-from pincer.utils.snowflake import Snowflake
-from pincer.utils.timestamp import Timestamp
-from pincer.utils.types import MISSING, APINullable
+from .._config import GatewayConfig
+from ..objects.application import Application
+from ..objects.attachment import Attachment
+from ..objects.channel import Channel, ChannelMention
+from ..objects.embed import Embed
+from ..objects.guild_member import GuildMember
+from ..objects.interaction_base import MessageInteraction
+from ..objects.message_component import MessageComponent
+from ..objects.message_reference import MessageReference
+from ..objects.reaction import Reaction
+from ..objects.role import Role
+from ..objects.sticker import StickerItem
+from ..objects.user import User
+from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
 
 
 class MessageActivityType(Enum):

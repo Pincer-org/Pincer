@@ -30,9 +30,9 @@ from typing import Optional
 
 from websockets.legacy.client import WebSocketClientProtocol
 
-from pincer import __package__
-from pincer.core.dispatch import GatewayDispatch
-from pincer.exceptions import HeartbeatError
+from . import __package__
+from ..core.dispatch import GatewayDispatch
+from ..exceptions import HeartbeatError
 
 _log = logging.getLogger(__package__)
 
@@ -56,7 +56,7 @@ class Heartbeat:
         :param socket:
             The socket to send the heartbeat to.
         """
-        _log.debug("Sending heartbeat (seq: %s)" % str(cls.__sequence))
+        _log.debug("Sending heartbeat (seq: %s)", str(cls.__sequence))
         await socket.send(str(GatewayDispatch(1, cls.__sequence)))
 
     @classmethod
@@ -92,7 +92,7 @@ class Heartbeat:
         if not cls.__heartbeat:
             _log.error(
                 "No `heartbeat_interval` is present. Has the API changed? "
-                "(payload: %s)" % payload
+                "(payload: %s)", payload
             )
 
             raise HeartbeatError(
@@ -104,7 +104,7 @@ class Heartbeat:
         cls.__heartbeat /= 1000
 
         _log.debug(
-            "Maintaining a connection with heartbeat: %s" % cls.__heartbeat
+            "Maintaining a connection with heartbeat: %s", cls.__heartbeat
         )
 
         if Heartbeat.__sequence:
@@ -128,7 +128,7 @@ class Heartbeat:
             Filling param for auto event handling.
         """
 
-        _log.debug("Resting heart for %is" % cls.__heartbeat)
+        _log.debug("Resting heart for %is", cls.__heartbeat)
         await sleep(cls.__heartbeat)
         await cls.__send(socket)
 

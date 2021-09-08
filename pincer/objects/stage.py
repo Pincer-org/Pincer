@@ -26,8 +26,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 
-from pincer.utils.snowflake import Snowflake
-from pincer.utils.api_object import APIObject
+from ..utils import APIObject, Snowflake
 
 
 class PrivacyLevel(Enum):

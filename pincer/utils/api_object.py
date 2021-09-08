@@ -30,7 +30,7 @@ from typing import Dict, Union, Generic, TypeVar
 
 from websockets.typing import Data
 
-from pincer.utils.types import MissingType
+from .types import MissingType
 
 T = TypeVar("T")
 

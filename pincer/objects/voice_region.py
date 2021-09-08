@@ -24,7 +24,7 @@
 
 from dataclasses import dataclass
 
-from pincer.utils.api_object import APIObject
+from ..utils.api_object import APIObject
 
 
 @dataclass

@@ -28,18 +28,18 @@ from asyncio import iscoroutinefunction
 from inspect import Signature
 from typing import Optional, Dict, List, Any
 
-from pincer import __package__, Client
-from pincer.exceptions import (
+from . import __package__, Client
+from .exceptions import (
     CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
     InvalidArgumentAnnotation, CommandDescriptionTooLong
 )
-from pincer.objects.application_command import (
+from .objects.application_command import (
     ApplicationCommand, ApplicationCommandType, ClientCommandStructure,
     ApplicationCommandOption, ApplicationCommandOptionType
 )
-from pincer.utils.extraction import get_signature_and_params, get_index
-from pincer.utils.insertion import should_pass_ctx
-from pincer.utils.types import Coro
+from .utils import (
+    get_signature_and_params, get_index, should_pass_ctx, Coro
+)
 
 _log = logging.getLogger(__package__)
 
@@ -86,7 +86,7 @@ def command(
         sig, params = get_signature_and_params(func)
         pass_context = should_pass_ctx(sig, params)
 
-        if len(params) > (26 if pass_context else 25):
+        if len(params) > (25 + pass_context):
             raise TooManyArguments(
                 f"Command `{cmd}` (`{func.__name__}`) can only have 25 "
                 f"arguments (excluding the context and self) yet {len(params)} "
@@ -104,13 +104,15 @@ def command(
                     f"a valid type."
                 )
 
-            options.append(ApplicationCommandOption(
-                type=param_type,
-                name=param,
-                description=description,
-                # TODO: Check for Optional type
-                required=True
-            ))
+            options.append(
+                ApplicationCommandOption(
+                    type=param_type,
+                    name=name,
+                    description=description,
+                    # TODO: Check for Optional type
+                    required=True
+                )
+            )
 
         ChatCommandHandler.register[cmd] = ClientCommandStructure(
             call=func,
@@ -122,6 +124,7 @@ def command(
                 options=options
             )
         )
+
         _log.info(f"Registered command `{cmd}` to `{func.__name__}`.")
 
     return decorator
@@ -135,6 +138,10 @@ class ChatCommandHandler:
         # TODO: Fix docs
         self.client = client
         self._api_commands: List[ApplicationCommand] = list()
+        logging.debug(
+            f"%i commands registered.",
+            len(ChatCommandHandler.register.items())
+        )
 
     async def __init_existing_commands(self):
         # TODO: Fix docs

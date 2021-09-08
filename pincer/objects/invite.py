@@ -27,14 +27,12 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, List
 
-from pincer.objects.application import Application
-from pincer.objects.channel import Channel
-from pincer.objects.guild import Guild
-from pincer.objects.guild_member import GuildMember
-from pincer.objects.user import User
-from pincer.utils.api_object import APIObject
-from pincer.utils.timestamp import Timestamp
-from pincer.utils.types import APINullable, MISSING
+from ..objects.application import Application
+from ..objects.channel import Channel
+from ..objects.guild import Guild
+from ..objects.guild_member import GuildMember
+from ..objects.user import User
+from ..utils import APIObject, APINullable, MISSING, Timestamp
 
 
 class InviteTargetType(Enum):

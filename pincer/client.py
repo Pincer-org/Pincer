@@ -28,20 +28,18 @@ import logging
 from asyncio import iscoroutinefunction
 from typing import Optional, Any, Union, Dict, Tuple, List
 
-from pincer import __package__
-from pincer._config import events
-from pincer.core.dispatch import GatewayDispatch
-from pincer.core.gateway import Dispatcher
-from pincer.core.http import HTTPClient
-from pincer.exceptions import InvalidEventName
-from pincer.objects import User
-from pincer.utils.extraction import get_index
-from pincer.utils.insertion import should_pass_cls
-from pincer.utils.types import Coro
+from . import __package__
+from ._config import events
+from .core.dispatch import GatewayDispatch
+from .core.gateway import Dispatcher
+from .core.http import HTTPClient
+from .exceptions import InvalidEventName
+from .objects import User
+from .utils import get_index, should_pass_cls, Coro
 
 _log = logging.getLogger(__package__)
 
-middleware_type = Optional[Union[Coro, Tuple[str, List[Any], Dict[str, Any]]]]
+MiddlewareType = Optional[Union[Coro, Tuple[str, List[Any], Dict[str, Any]]]]
 
 _events: Dict[str, Optional[Union[str, Coro]]] = {}
 
@@ -121,8 +119,8 @@ def middleware(call: str, *, override: bool = False):
     def decorator(func: Coro):
         if override:
             _log.warning(
-                f"Middleware overriding has been enabled for `{call}`."
-                " This might cause unexpected behaviour."
+                f"Middleware overriding has been enabled for `%s`."
+                " This might cause unexpected behaviour.", call
             )
 
         if not override and callable(_events.get(call)):
@@ -296,7 +294,7 @@ class Client(Dispatcher):
             (so the event) its index in ``_events``. The second and third
             element are the ``*args`` and ``**kwargs`` for the event.
         """
-        ware: middleware_type = _events.get(key)
+        ware: MiddlewareType = _events.get(key)
         next_call, arguments, params = ware, list(), dict()
 
         if iscoroutinefunction(ware):

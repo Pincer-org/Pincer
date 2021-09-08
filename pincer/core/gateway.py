@@ -33,11 +33,11 @@ from websockets import connect
 from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
 from websockets.legacy.client import WebSocketClientProtocol
 
-from pincer import __package__
-from pincer._config import GatewayConfig
-from pincer.core.dispatch import GatewayDispatch
-from pincer.core.heartbeat import Heartbeat
-from pincer.exceptions import (
+from . import __package__
+from .._config import GatewayConfig
+from ..core.dispatch import GatewayDispatch
+from ..core.heartbeat import Heartbeat
+from ..exceptions import (
     PincerError, InvalidTokenError, UnhandledException,
     _InternalPerformReconnectError, DisallowedIntentsError
 )
@@ -96,22 +96,7 @@ class Dispatcher:
             """
             _log.debug("Sending authentication/identification message.")
 
-            await socket.send(
-                str(
-                    GatewayDispatch(
-                        2, {
-                            "token": token,
-                            "intents": 0,
-                            "properties": {
-                                "$os": system(),
-                                "$browser": __package__,
-                                "$device": __package__
-                            }
-                        }
-                    )
-                )
-            )
-
+            await socket.send(self.__hello_socket)
             await Heartbeat.handle_hello(socket, payload)
 
         async def handle_reconnect(_, payload: GatewayDispatch):
@@ -140,6 +125,22 @@ class Dispatcher:
             4014: DisallowedIntentsError()
         }
 
+    @property
+    def __hello_socket(self) -> str:
+        return str(
+            GatewayDispatch(
+                2, {
+                    "token": self.__token,
+                    "intents": 0,
+                    "properties": {
+                        "$os": system(),
+                        "$browser": __package__,
+                        "$device": __package__
+                    }
+                }
+            )
+        )
+
     async def __handler_manager(
             self,
             socket: WebSocketClientProtocol,
@@ -164,8 +165,8 @@ class Dispatcher:
             The current async loop on which the future is bound.
         """
         _log.debug(
-            "New event received, checking if handler exists for opcode: %i"
-            % payload.op
+            "New event received, checking if handler exists for opcode: %i",
+            payload.op
         )
 
         handler: Handler = self.__dispatch_handlers.get(payload.op)
@@ -173,13 +174,15 @@ class Dispatcher:
         if not handler:
             _log.error(
                 "No handler was found for opcode %i, please report this to the "
-                "pincer dev team!" % payload.op
+                "pincer dev team!", payload.op
             )
 
             raise UnhandledException(f"Unhandled payload: {payload}")
 
         _log.debug(
-            "Event handler found, ensuring async future in current loop.")
+            "Event handler found, ensuring async future in current loop."
+        )
+
         ensure_future(handler(socket, payload), loop=loop)
 
     async def __dispatcher(self, loop: AbstractEventLoop):
@@ -193,14 +196,14 @@ class Dispatcher:
             The loop in which the dispatcher is running.
         """
         _log.debug(
-            "Establishing websocket connection with `%s`" % GatewayConfig.uri()
+            "Establishing websocket connection with `%s`", GatewayConfig.uri()
         )
 
         async with connect(GatewayConfig.uri()) as socket:
             self.__socket = socket
             _log.debug(
-                "Successfully established websocket connection with `%s`"
-                % GatewayConfig.uri()
+                "Successfully established websocket connection with `%s`",
+                GatewayConfig.uri()
             )
 
             while self.__keep_alive:
@@ -215,8 +218,7 @@ class Dispatcher:
                 except ConnectionClosedError as exc:
                     _log.debug(
                         "The connection with `%s` has been broken unexpectedly."
-                        " (%i, %s)"
-                        % (GatewayConfig.uri(), exc.code, exc.reason)
+                        " (%i, %s)", GatewayConfig.uri(), exc.code, exc.reason
                     )
 
                     await self.close()
