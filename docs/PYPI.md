@@ -198,8 +198,6 @@ Those will be very useful for the next versions*
 `Webhook`,
 `WelcomeScreen`, 
 
-### Other added features
-
 
 ## 🏷️ License
 
