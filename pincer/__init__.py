@@ -8,12 +8,12 @@ An asynchronous python API wrapper meant to replace discord.py
 """
 
 __title__ = "Pincer library"
-__package__ = "Pincer"
+__package__ = "pincer"
 __author__ = "Sigmanificient, Arthurdw"
 __license__ = "MIT"
 __version__ = "0.4.1-dev"
 __description__ = "Discord API wrapper rebuild from scratch."
 
-from pincer.client import Client, Bot
+from .client import Client, Bot
 
 __all__ = ("Client", "Bot")

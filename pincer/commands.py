@@ -28,18 +28,18 @@ from asyncio import iscoroutinefunction
 from inspect import Signature
 from typing import Optional, Dict, List, Any
 
-from pincer import __package__, Client
-from pincer.exceptions import (
+from . import __package__, Client
+from .exceptions import (
     CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
     InvalidArgumentAnnotation, CommandDescriptionTooLong
 )
-from pincer.objects.application_command import (
+from .objects.application_command import (
     ApplicationCommand, ApplicationCommandType, ClientCommandStructure,
     ApplicationCommandOption, ApplicationCommandOptionType
 )
-from pincer.utils.extraction import get_signature_and_params, get_index
-from pincer.utils.insertion import should_pass_ctx
-from pincer.utils.types import Coro
+from .utils import (
+    get_signature_and_params, get_index, should_pass_ctx, Coro
+)
 
 _log = logging.getLogger(__package__)
 

@@ -30,9 +30,9 @@ from typing import Optional
 
 from websockets.legacy.client import WebSocketClientProtocol
 
-from pincer import __package__
-from pincer.core.dispatch import GatewayDispatch
-from pincer.exceptions import HeartbeatError
+from . import __package__
+from ..core.dispatch import GatewayDispatch
+from ..exceptions import HeartbeatError
 
 _log = logging.getLogger(__package__)
 

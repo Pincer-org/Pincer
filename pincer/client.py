@@ -28,16 +28,14 @@ import logging
 from asyncio import iscoroutinefunction
 from typing import Optional, Any, Union, Dict, Tuple, List
 
-from pincer import __package__
-from pincer._config import events
-from pincer.core.dispatch import GatewayDispatch
-from pincer.core.gateway import Dispatcher
-from pincer.core.http import HTTPClient
-from pincer.exceptions import InvalidEventName
-from pincer.objects import User
-from pincer.utils.extraction import get_index
-from pincer.utils.insertion import should_pass_cls
-from pincer.utils.types import Coro
+from . import __package__
+from ._config import events
+from .core.dispatch import GatewayDispatch
+from .core.gateway import Dispatcher
+from .core.http import HTTPClient
+from .exceptions import InvalidEventName
+from .objects import User
+from .utils import get_index, should_pass_cls, Coro
 
 _log = logging.getLogger(__package__)
 

@@ -31,9 +31,9 @@ from aiohttp import ClientSession, ClientResponse
 from aiohttp.client import _RequestContextManager
 from aiohttp.typedefs import StrOrURL
 
-from pincer import __package__
-from pincer._config import GatewayConfig
-from pincer.exceptions import (
+from . import __package__
+from .._config import GatewayConfig
+from ..exceptions import (
     NotFoundError, BadRequestError, NotModifiedError, UnauthorizedError,
     ForbiddenError, MethodNotAllowedError, RateLimitError, ServerError,
     HTTPError

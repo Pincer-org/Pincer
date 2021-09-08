@@ -28,13 +28,11 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Optional, List
 
-from pincer.objects.channel import Channel
-from pincer.objects.integration import Integration
-from pincer.objects.user import User
-from pincer.objects.webhook import Webhook
-from pincer.utils.api_object import APIObject
-from pincer.utils.snowflake import Snowflake
-from pincer.utils.types import APINullable, MISSING
+from ..objects.channel import Channel
+from ..objects.integration import Integration
+from ..objects.user import User
+from ..objects.webhook import Webhook
+from ..utils import APIObject, APINullable, MISSING, Snowflake
 
 
 class AuditLogEvent(Enum):

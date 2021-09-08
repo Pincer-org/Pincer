@@ -28,10 +28,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import List, Union
 
-from pincer.utils.api_object import APIObject
-from pincer.utils.conversion import convert
-from pincer.utils.snowflake import Snowflake
-from pincer.utils.types import MISSING, APINullable, Coro
+from ..utils import APIObject, APINullable, Coro, convert, MISSING, Snowflake
 
 
 class ApplicationCommandType(Enum):

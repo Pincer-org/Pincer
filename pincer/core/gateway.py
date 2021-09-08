@@ -33,11 +33,11 @@ from websockets import connect
 from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
 from websockets.legacy.client import WebSocketClientProtocol
 
-from pincer import __package__
-from pincer._config import GatewayConfig
-from pincer.core.dispatch import GatewayDispatch
-from pincer.core.heartbeat import Heartbeat
-from pincer.exceptions import (
+from . import __package__
+from .._config import GatewayConfig
+from ..core.dispatch import GatewayDispatch
+from ..core.heartbeat import Heartbeat
+from ..exceptions import (
     PincerError, InvalidTokenError, UnhandledException,
     _InternalPerformReconnectError, DisallowedIntentsError
 )

@@ -27,9 +27,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 
-from pincer.objects.emoji import Emoji
-from pincer.utils.api_object import APIObject
-from pincer.utils.types import MISSING, APINullable
+from ..objects.emoji import Emoji
+from ..utils import APIObject, APINullable, MISSING
 
 
 class ButtonStyle(Enum):

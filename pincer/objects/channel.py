@@ -27,14 +27,11 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, List
 
-from pincer._config import GatewayConfig
-from pincer.objects.guild_member import GuildMember
-from pincer.objects.thread import ThreadMetadata
-from pincer.objects.user import User
-from pincer.utils.api_object import APIObject
-from pincer.utils.snowflake import Snowflake
-from pincer.utils.timestamp import Timestamp
-from pincer.utils.types import APINullable, MISSING
+from .._config import GatewayConfig
+from ..objects.guild_member import GuildMember
+from ..objects.thread import ThreadMetadata
+from ..objects.user import User
+from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
 
 
 class ChannelType(Enum):

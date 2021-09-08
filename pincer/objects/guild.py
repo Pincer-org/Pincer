@@ -26,18 +26,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional, List
 
-from pincer.exceptions import UnavailableGuildError
-from pincer.objects.channel import Channel
-from pincer.objects.emoji import Emoji
-from pincer.objects.guild_member import GuildMember
-from pincer.objects.role import Role
-from pincer.objects.stage import StageInstance
-from pincer.objects.sticker import Sticker
-from pincer.objects.welcome_screen import WelcomeScreen
-from pincer.utils.api_object import APIObject
-from pincer.utils.snowflake import Snowflake
-from pincer.utils.timestamp import Timestamp
-from pincer.utils.types import APINullable, MISSING
+from ..exceptions import UnavailableGuildError
+from ..objects.channel import Channel
+from ..objects.emoji import Emoji
+from ..objects.guild_member import GuildMember
+from ..objects.role import Role
+from ..objects.stage import StageInstance
+from ..objects.sticker import Sticker
+from ..objects.welcome_screen import WelcomeScreen
+from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
 
 
 @dataclass

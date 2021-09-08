@@ -23,7 +23,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from typing import Callable, Any, Optional
 
-from pincer.utils.types import T, MISSING
+from .types import T, MISSING
 
 
 def convert(

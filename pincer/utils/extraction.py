@@ -24,8 +24,8 @@
 from inspect import signature
 from typing import Any, Optional, Protocol, TypeVar
 
-from pincer.utils.insertion import should_pass_cls
-from pincer.utils.types import Coro
+from .insertion import should_pass_cls
+from .types import Coro
 
 T = TypeVar("T")
 

@@ -24,8 +24,8 @@
 from inspect import getfullargspec, Parameter, Signature
 from typing import Any, Union, Callable, Mapping, List
 
-from pincer.objects.context import Context
-from pincer.utils.types import Coro
+from ..objects.context import Context
+from .types import Coro
 
 
 def should_pass_cls(call: Union[Coro, Callable[..., Any]]) -> bool:
