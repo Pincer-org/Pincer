@@ -57,7 +57,7 @@ for event in events:
     # contains the main event key.
 
     # As second value a list with arguments,
-    # and thee third value value must be a dictionary.
+    # and the third value value must be a dictionary.
     # The last two are passed on as *args and **kwargs.
 
     # NOTE: These return values must be passed as a tuple!
