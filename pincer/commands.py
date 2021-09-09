@@ -31,14 +31,15 @@ from typing import Optional, Dict, List, Any, Tuple, get_origin, get_args, Union
 from . import __package__
 from .exceptions import (
     CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
-    InvalidArgumentAnnotation, CommandDescriptionTooLong, NotFoundError
+    InvalidArgumentAnnotation, CommandDescriptionTooLong
 )
 from .objects.application_command import (
     AppCommand, AppCommandType, ClientCommandStructure,
     AppCommandOption, AppCommandOptionType
 )
 from .utils import (
-    get_signature_and_params, get_index, should_pass_ctx, Coro, Snowflake, MISSING
+    get_signature_and_params, get_index, should_pass_ctx, Coro, Snowflake,
+    MISSING
 )
 
 _log = logging.getLogger(__package__)
@@ -214,7 +215,8 @@ class ChatCommandHandler:
                 else:
                     options = local.options
 
-            if list(map(AppCommandOption.from_dict, options)) != api.options:
+            if api.options is not MISSING and list(
+                    map(AppCommandOption.from_dict, options)) != api.options:
                 update["options"] = options
 
             return update
