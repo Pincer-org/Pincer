@@ -38,7 +38,7 @@ from .objects.application_command import (
     AppCommandOption, AppCommandOptionType
 )
 from .utils import (
-    get_signature_and_params, get_index, should_pass_ctx, Coro
+    get_signature_and_params, get_index, should_pass_ctx, Coro, MISSING
 )
 
 _log = logging.getLogger(__package__)
@@ -203,15 +203,16 @@ class ChatCommandHandler:
                 update["default_permission"] = local.default_permission
 
             options: List[Dict[str, Any]] = []
-            if len(api.options) == len(local.options):
-                for index, api_option in enumerate(api.options):
-                    opt: Optional[AppCommandOption] = \
-                        get_index(local.options, index)
+            if api.options is not MISSING:
+                if len(api.options) == len(local.options):
+                    for index, api_option in enumerate(api.options):
+                        opt: Optional[AppCommandOption] = \
+                            get_index(local.options, index)
 
-                    if opt:
-                        options.append(opt.to_dict())
-            else:
-                options = local.options
+                        if opt:
+                            options.append(opt.to_dict())
+                else:
+                    options = local.options
 
             if list(map(AppCommandOption.from_dict, options)) != api.options:
                 update["options"] = options
@@ -227,12 +228,13 @@ class ChatCommandHandler:
 
                 if changes:
                     api_update = []
-                    for option in changes["options"]:
-                        api_update.append(
-                            option.to_dict()
-                            if isinstance(option, AppCommandOption)
-                            else option
-                        )
+                    if changes.get("options"):
+                        for option in changes["options"]:
+                            api_update.append(
+                                option.to_dict()
+                                if isinstance(option, AppCommandOption)
+                                else option
+                            )
 
                     to_update[api_cmd.id] = {"options": api_update}
 

@@ -38,6 +38,7 @@ from .exceptions import InvalidEventName
 from .objects import User
 from .objects.interactions import Interaction
 from .utils import get_index, should_pass_cls, Coro
+from .utils.extraction import get_params
 
 _log = logging.getLogger(__package__)
 
@@ -193,6 +194,14 @@ class Client(Dispatcher):
 
         """
         return HTTPClient(self.__token)
+
+    @property
+    def chat_commands(self):
+        """
+        Get a list of chat command calls which have been registered in
+        the ChatCommandHandler.
+        """
+        return [cmd.app.name for cmd in ChatCommandHandler.register.values()]
 
     @staticmethod
     def event(coroutine: Coro):
@@ -373,7 +382,9 @@ class Client(Dispatcher):
         command = ChatCommandHandler.register.get(interaction.data.name)
 
         if command:
-            kwargs = {opt.name: opt.value for opt in interaction.data.options}
+            defaults = {param: None for param in get_params(command.call)}
+            params = {opt.name: opt.value for opt in interaction.data.options}
+            kwargs = {**defaults, **params}
 
             if should_pass_cls(command.call):
                 kwargs["self"] = self

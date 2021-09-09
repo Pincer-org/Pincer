@@ -81,3 +81,14 @@ def get_signature_and_params(func: Coro):
         del params[0]
 
     return sig, params
+
+
+def get_params(func: Coro):
+    """
+    Get the parameters from a coroutine.
+
+    :param func:
+        The coroutine from whom the information should be extracted.
+    """
+    _, params = get_signature_and_params(func)
+    return params

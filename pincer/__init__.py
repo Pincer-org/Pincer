@@ -15,5 +15,6 @@ __version__ = "0.5.6-dev"
 __description__ = "Discord API wrapper rebuild from scratch."
 
 from pincer.client import Client, Bot
+from pincer.commands import command
 
-__all__ = ("Client", "Bot")
+__all__ = ("Client", "Bot", "command")
