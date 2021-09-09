@@ -272,7 +272,7 @@ class Client(Dispatcher):
 
         if not name.startswith("on_"):
             raise InvalidEventName(
-                f"The event `{name}` its name must start with `on_`"
+                f"The event named `{name}` must start with `on_`"
             )
 
         if _events.get(name) is not None:
