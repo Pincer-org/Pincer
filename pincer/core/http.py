@@ -182,6 +182,7 @@ class HTTPClient:
             Private param used for recursively setting the retry amount.
             (Eg set to 1 for 1 max retry)
         """
+        _log.debug(f"Received response for {endpoint} | {await res.text()}")
         if res.ok:
             if res.status == 204:
                 _log.debug(
@@ -204,7 +205,7 @@ class HTTPClient:
                 f"a request to {endpoint}. ({res.status}, {res.reason})"
             )
 
-            exception.__init__(f"{res.reason}")
+            exception.__init__(res.reason)
             raise exception
 
         # status code is guaranteed to be 5xx

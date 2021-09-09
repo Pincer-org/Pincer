@@ -23,6 +23,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from dataclasses import dataclass
+from enum import IntEnum
 from typing import Dict
 
 from ..objects.application_command import AppCommandInteractionDataOption
@@ -34,6 +35,14 @@ from ..objects.role import Role
 from ..objects.select_menu import SelectOption
 from ..objects.user import User
 from ..utils import APIObject, APINullable, MISSING, Snowflake, convert
+
+
+class InteractionCallbackDataFlags(IntEnum):
+    """
+    :param EPHEMERAL:
+        only the user receiving the message can see it
+    """
+    EPHEMERAL = 1 << 6
 
 
 @dataclass

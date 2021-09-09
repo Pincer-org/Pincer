@@ -22,13 +22,39 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from dataclasses import dataclass
-from enum import Enum
+from enum import IntEnum
 
-from ..utils import APIObject, Snowflake
 from .user import User
+from ..utils import APIObject, Snowflake
 
 
-class InteractionType(Enum):
+class MessageInteractionCallbackType(IntEnum):
+    """
+    The types of response a client can give to a interaction.
+
+    :param PONG:
+        ACK a Ping
+
+    :param CHANNEL_MESSAGE_WITH_SOURCE:
+        respond to an interaction with a message
+
+    :param DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE:
+            ACK an interaction and edit a response later, the user sees a loading state
+
+    :param DEFERRED_UPDATE_MESSAGE:
+        for components, ACK an interaction and edit the original message later; the user does not see a loading state
+
+    :param UPDATE_MESSAGE
+        for components, edit the message the component was attached to
+    """
+    PONG = 1
+    CHANNEL_MESSAGE_WITH_SOURCE = 4
+    DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE = 5
+    DEFERRED_UPDATE_MESSAGE = 6
+    UPDATE_MESSAGE = 7
+
+
+class InteractionType(IntEnum):
     """
     Represents the different types of interactions the client
     can have with a member.
@@ -44,7 +70,7 @@ class InteractionType(Enum):
     """
     PING = 1
     APPLICATION_COMMAND = 2
-    MESSAGE_COMPONENT = 2
+    MESSAGE_COMPONENT = 3
 
 
 @dataclass

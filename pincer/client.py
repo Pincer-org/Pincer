@@ -36,7 +36,8 @@ from .core.gateway import Dispatcher
 from .core.http import HTTPClient
 from .exceptions import InvalidEventName
 from .objects import User
-from .objects.interactions import Interaction
+from .objects.interaction_base import MessageInteractionCallbackType
+from .objects.interactions import Interaction, InteractionCallbackDataFlags
 from .utils import get_index, should_pass_cls, Coro
 from .utils.extraction import get_params
 
@@ -149,7 +150,7 @@ def middleware(call: str, *, override: bool = False):
 
 
 class Client(Dispatcher):
-    def __init__(self, token: str):
+    def __init__(self, token: str, *, received: str = None):
         """
         The client is the main instance which is between the programmer
             and the discord API.
@@ -159,6 +160,10 @@ class Client(Dispatcher):
         :param token:
             The secret bot token which can be found in
             `<https://discord.com/developers/applications/<bot_id>/bot>`_
+
+        :param received:
+            The default message which will be sent when no response is
+            given.
         """
         # TODO: Implement intents
         super().__init__(
@@ -170,6 +175,7 @@ class Client(Dispatcher):
         )
 
         self.bot: Optional[User] = None
+        self.__received = received or "Command arrived successfully!"
         self.__token = token
 
     @property
@@ -392,15 +398,23 @@ class Client(Dispatcher):
             res = await command.call(**kwargs)
 
             if res:
-                async with self.http as http:
-                    await http.post(
-                        f"interactions/{interaction.id}/{interaction.token}/callback",
-                        {
-                            "type": 4,
-                            "data": {
-                                "content": str(res)
-                            }
-                        })
+                data = {
+                    "content": str(res)
+                }
+            else:
+                # TODO: Implement data parser/extraction for objects.
+                data = {
+                    "content": self.__received,
+                    "flags": InteractionCallbackDataFlags.EPHEMERAL
+                }
+
+            async with self.http as http:
+                await http.post(
+                    f"interactions/{interaction.id}/{interaction.token}/callback",
+                    {
+                        "type": MessageInteractionCallbackType.CHANNEL_MESSAGE_WITH_SOURCE,
+                        "data": data
+                    })
 
         return "on_interaction_create", [interaction]
 
