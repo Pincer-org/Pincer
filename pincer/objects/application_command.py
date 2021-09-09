@@ -155,7 +155,7 @@ class AppCommandOption(APIObject):
         the type of option
 
     :param name:
-        1-32 lowercase character name matching `^[\w-]{1,32}$`
+        1-32 lowercase character name matching `^[\\w-]{1,32}$`
 
     :param description:
         1-100 character description
