@@ -34,8 +34,8 @@ from .exceptions import (
     InvalidArgumentAnnotation, CommandDescriptionTooLong
 )
 from .objects.application_command import (
-    ApplicationCommand, ApplicationCommandType, ClientCommandStructure,
-    ApplicationCommandOption, ApplicationCommandOptionType
+    AppCommand, AppCommandType, ClientCommandStructure,
+    AppCommandOption, AppCommandOptionType
 )
 from .utils import (
     get_signature_and_params, get_index, should_pass_ctx, Coro
@@ -45,11 +45,11 @@ _log = logging.getLogger(__package__)
 
 _options_type_link = {
     # TODO: Implement other types:
-    Signature.empty: ApplicationCommandOptionType.STRING,
-    str: ApplicationCommandOptionType.STRING,
-    int: ApplicationCommandOptionType.INTEGER,
-    bool: ApplicationCommandOptionType.BOOLEAN,
-    float: ApplicationCommandOptionType.NUMBER
+    Signature.empty: AppCommandOptionType.STRING,
+    str: AppCommandOptionType.STRING,
+    int: AppCommandOptionType.INTEGER,
+    bool: AppCommandOptionType.BOOLEAN,
+    float: AppCommandOptionType.NUMBER
 }
 
 
@@ -93,7 +93,7 @@ def command(
                 "were provided!"
             )
 
-        options: List[ApplicationCommandOption] = []
+        options: List[AppCommandOption] = []
 
         for param in params:
             param_type = _options_type_link.get(sig[param].annotation)
@@ -105,9 +105,9 @@ def command(
                 )
 
             options.append(
-                ApplicationCommandOption(
+                AppCommandOption(
                     type=param_type,
-                    name=name,
+                    name=param,
                     description=description,
                     # TODO: Check for Optional type
                     required=True
@@ -116,10 +116,10 @@ def command(
 
         ChatCommandHandler.register[cmd] = ClientCommandStructure(
             call=func,
-            app=ApplicationCommand(
+            app=AppCommand(
                 name=cmd,
                 description=description,
-                type=ApplicationCommandType.CHAT_INPUT,
+                type=AppCommandType.CHAT_INPUT,
                 default_permission=enable_default,
                 options=options
             )
@@ -137,7 +137,7 @@ class ChatCommandHandler:
     def __init__(self, client: Client):
         # TODO: Fix docs
         self.client = client
-        self._api_commands: List[ApplicationCommand] = list()
+        self._api_commands: List[AppCommand] = list()
         logging.debug(
             f"%i commands registered.",
             len(ChatCommandHandler.register.items())
@@ -147,11 +147,11 @@ class ChatCommandHandler:
         # TODO: Fix docs
         async with self.client.http as http:
             res = await http.get(f"applications/{self.client.bot.id}/commands")
-            self._api_commands = list(map(ApplicationCommand.from_dict, res))
+            self._api_commands = list(map(AppCommand.from_dict, res))
 
     async def __remove_unused_commands(self):
         # TODO: Fix docs
-        to_remove: List[ApplicationCommand] = list()
+        to_remove: List[AppCommand] = list()
 
         for api_cmd in self._api_commands:
             for loc_cmd in ChatCommandHandler.register.values():
@@ -172,8 +172,8 @@ class ChatCommandHandler:
         to_update: Dict[str, Dict[str, Any]] = {}
 
         def get_changes(
-                api: ApplicationCommand,
-                local: ApplicationCommand
+                api: AppCommand,
+                local: AppCommand
         ) -> Dict[str, Any]:
             update: Dict[str, Any] = {}
 
@@ -186,7 +186,7 @@ class ChatCommandHandler:
             options: List[Dict[str, Any]] = []
             if len(api.options) == len(local.options):
                 for idx, api_option in enumerate(api.options):
-                    option: Optional[ApplicationCommandOption] = \
+                    option: Optional[AppCommandOption] = \
                         get_index(local.options, idx)
 
                     if option:
