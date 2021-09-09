@@ -158,7 +158,7 @@ class Client(Dispatcher):
 
         :param token:
             The secret bot token which can be found in
-            `<https://discord.com/developers/applications/\\<bot_id\\>/bot>`_
+            `<https://discord.com/developers/applications/<bot_id>/bot>`_
         """
         # TODO: Implement intents
         super().__init__(
