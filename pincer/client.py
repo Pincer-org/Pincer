@@ -382,12 +382,14 @@ class Client(Dispatcher):
 
             if res:
                 async with self.http as http:
-                    await http.post(f"interactions/{interaction.id}/{interaction.token}/callback", {
-                        "type": 4,
-                        "data": {
-                            "content": str(res)
-                        }
-                    })
+                    await http.post(
+                        f"interactions/{interaction.id}/{interaction.token}/callback",
+                        {
+                            "type": 4,
+                            "data": {
+                                "content": str(res)
+                            }
+                        })
 
         return "on_interaction_create", [interaction]
 

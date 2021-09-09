@@ -31,7 +31,7 @@ from typing import Optional, Dict, List, Any, get_origin, get_args, Union
 from . import __package__
 from .exceptions import (
     CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
-    InvalidArgumentAnnotation, CommandDescriptionTooLong
+    InvalidArgumentAnnotation, CommandDescriptionTooLong, NotFoundError
 )
 from .objects.application_command import (
     AppCommand, AppCommandType, ClientCommandStructure,
@@ -168,9 +168,13 @@ class ChatCommandHandler:
         to_remove: List[AppCommand] = list()
 
         for api_cmd in self._api_commands:
-            for loc_cmd in ChatCommandHandler.register.values():
-                if api_cmd.name != loc_cmd.app.name:
-                    to_remove.append(api_cmd)
+            doesnt_exist = all(
+                api_cmd.name != loc_cmd.app.name
+                for loc_cmd in ChatCommandHandler.register.values()
+            )
+
+            if doesnt_exist:
+                to_remove.append(api_cmd)
 
         async with self.client.http as http:
             for cmd in to_remove:
@@ -183,6 +187,7 @@ class ChatCommandHandler:
         ]
 
     async def __update_existing_commands(self):
+        # TODO: Fix docs
         to_update: Dict[str, Dict[str, Any]] = {}
 
         def get_changes(
@@ -200,11 +205,11 @@ class ChatCommandHandler:
             options: List[Dict[str, Any]] = []
             if len(api.options) == len(local.options):
                 for index, api_option in enumerate(api.options):
-                    option: Optional[AppCommandOption] = \
+                    opt: Optional[AppCommandOption] = \
                         get_index(local.options, index)
 
-                    if option:
-                        options.append(option.to_dict())
+                    if opt:
+                        options.append(opt.to_dict())
             else:
                 options = local.options
 
@@ -215,6 +220,9 @@ class ChatCommandHandler:
 
         for idx, api_cmd in enumerate(self._api_commands):
             for loc_cmd in ChatCommandHandler.register.values():
+                if api_cmd.name != loc_cmd.app.name:
+                    continue
+
                 changes = get_changes(api_cmd, loc_cmd.app)
 
                 if changes:
