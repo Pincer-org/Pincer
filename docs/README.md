@@ -42,7 +42,8 @@ pip install pincer
     ⚙️ <i> Didn't work?</i>
 </summary>
 
-Depending on your Python installation, you might need to use one of the following:
+Depending on your Python installation, you might need to use one of the
+following:
 
 - Python is not in PATH
 
@@ -111,19 +112,28 @@ client.run()
 
 ### Inherited client
 
-You have the possibility to use your own class to inherit from the Pincer bot base.
+You have the possibility to use your own class to inherit from the Pincer bot
+base.
 
 ```py
-from pincer import Client
+from pincer import Client, command
+
 
 class Bot(Client):
-
     def __init__(self) -> None:
         super(Bot, self).__init__(token="...")
 
     @Client.event
     async def on_ready(self) -> None:
         ...
+
+    @command(description="Say something as the bot!")
+    async def say(self, message: str):
+        return message
+
+    @command(description="Add two numbers!")
+    async def add(self, first: int, second: int):
+        return f"The addition of `{first}` and `{second}` is `{first + second}`"
 ```
 
 See an advanced bot implementation:
@@ -132,31 +142,36 @@ See an advanced bot implementation:
 
 ### Advanced Usage
 
-__Warning: These features are meant for advanced developers to make early experimentation with Pincer.__
+__Warning: These features are meant for advanced developers to make early
+experimentation with Pincer.__
 
 #### Enable the debug mode
 
-_If you want to see everything that is happening under the hood,
-either out of curiosity or to get a deeper insight into the implementation
-of some features, we provide debug logging!_
+_If you want to see everything that is happening under the hood, either out of
+curiosity or to get a deeper insight into the implementation of some features,
+we provide debug logging!_
 
 ```py
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
 ```
-**Note:** _A lot of printing can happen, including sensitive information,
-so make sure to be aware of what you're doing if you're enabling it!_
 
+**Note:** _A lot of printing can happen, including sensitive information, so
+make sure to be aware of what you're doing if you're enabling it!_
 
 #### Middleware
-_Within the version 0.4.0-dev, the middleware system has been re-created,
-and now advanced users can utilize them; however, it should be done carefully._
 
-A /say command early implementation using middleware
-
-> https://gist.github.com/Arthurdw/e110ebbdafca388722f25ddb79c1dfb8
-
+_From version 0.4.0-dev, the middleware system has been introduced. This system
+gives you the full freedom to remove the already existing middleware which has
+been created by the developers and create custom events. Your custom middleware
+directly receives the payload from Discord. You can't really do anything wrong
+without accessing the `override` attribute, but if you access this attribute the
+Pincer team will not provide any support for weird behaviour. So in short, only
+use this if you know what you're doing. An example of using this with a custom
+`on_ready` event can be found
+[in our docs](https://pincer.readthedocs.io/en/latest/pincer.html?highlight=middleware#pincer.client.middleware)
+._
 
 ## 🏷️ License
 
