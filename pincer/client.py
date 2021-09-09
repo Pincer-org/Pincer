@@ -357,6 +357,7 @@ class Client(Dispatcher):
             The data received from the ready event.
         """
         self.bot = User.from_dict(payload.data.get("user"))
+        await ChatCommandHandler(self).initialize()
         return "on_ready",
 
     @middleware("interaction_create")
