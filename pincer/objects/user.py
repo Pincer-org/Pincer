@@ -111,7 +111,7 @@ class User(APIObject):
     verified: APINullable[bool] = MISSING
 
     @property
-    def premium(self) -> PremiumTypes:
+    def premium(self) -> APINullable[PremiumTypes]:
         """
         The user their premium type in a usable enum.
         """

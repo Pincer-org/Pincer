@@ -117,8 +117,8 @@ class AppCommandInteractionDataOption(APIObject):
         present if this option is a group or subcommand
     """
     name: str
-    value: str = MISSING
-    type: AppCommandOptionType = MISSING
+    value: APINullable[str] = MISSING
+    type: APINullable[AppCommandOptionType] = MISSING
     options: APINullable[
         List[AppCommandInteractionDataOption]] = MISSING
 

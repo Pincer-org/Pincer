@@ -41,10 +41,10 @@ with open(path.join(this_dir, "pincer", "__init__.py"), encoding='utf-8') as f:
 
 
     def get_content(name: str):
-        match = search(name + _re_match_str, content, MULTILINE).group(1)
+        match = search(name + _re_match_str, content, MULTILINE)
         if not match:
             raise RuntimeError(f"{name} is not set!")
-        return match
+        return match.group(1)
 
 
     def get_packages():

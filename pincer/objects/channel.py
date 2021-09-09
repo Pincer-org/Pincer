@@ -31,6 +31,7 @@ from .._config import GatewayConfig
 from ..objects.guild_member import GuildMember
 from ..objects.thread import ThreadMetadata
 from ..objects.user import User
+from ..objects.overwrite import Overwrite
 from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
 
 
@@ -165,7 +166,7 @@ class Channel(APIObject):
     owner_id: APINullable[Snowflake] = MISSING
     parent_id: APINullable[Optional[Snowflake]] = MISSING
     permissions: APINullable[str] = MISSING
-    permission_overwrites: APINullable[List[...]] = MISSING
+    permission_overwrites: APINullable[List[Overwrite]] = MISSING
     position: APINullable[int] = MISSING
     rate_limit_per_user: APINullable[int] = MISSING
     recipients: APINullable[List[User]] = MISSING
