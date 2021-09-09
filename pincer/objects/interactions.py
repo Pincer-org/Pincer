@@ -33,7 +33,7 @@ from ..objects.message import Message
 from ..objects.role import Role
 from ..objects.select_menu import SelectOption
 from ..objects.user import User
-from ..utils import APIObject, APINullable, MISSING, Snowflake
+from ..utils import APIObject, APINullable, MISSING, Snowflake, convert
 
 
 @dataclass
@@ -106,6 +106,21 @@ class InteractionData(APIObject):
     values: APINullable[SelectOption] = MISSING
     target_id: APINullable[Snowflake] = MISSING
 
+    def __post_init__(self):
+        self.id = convert(self.id, Snowflake.from_string)
+        self.resolved = convert(
+            self.resolved,
+            ResolvedData.from_dict,
+            ResolvedData
+        )
+        self.options = convert(
+            self.options,
+            AppCommandInteractionDataOption.from_dict,
+            AppCommandInteractionDataOption
+        )
+        self.values = convert(self.values, SelectOption.from_dict, SelectOption)
+        self.target_id = convert(self.target_id, Snowflake.from_string)
+
 
 @dataclass
 class Interaction(APIObject):
@@ -157,3 +172,19 @@ class Interaction(APIObject):
     member: APINullable[GuildMember] = MISSING
     user: APINullable[User] = MISSING
     message: APINullable[Message] = MISSING
+
+    def __post_init__(self):
+        self.id = convert(self.id, Snowflake.from_string)
+        self.application_id = convert(self.application_id,
+                                      Snowflake.from_string)
+        self.type = convert(self.type, InteractionType)
+        self.data = convert(
+            self.data,
+            InteractionData.from_dict,
+            InteractionData
+        )
+        self.guild_id = convert(self.guild_id, Snowflake.from_string)
+        self.channel_id = convert(self.channel_id, Snowflake.from_string)
+        self.member = convert(self.member, GuildMember.from_dict, GuildMember)
+        self.user = convert(self.user, User.from_dict, User)
+        self.message = convert(self.message, Message.from_dict, Message)

@@ -98,6 +98,9 @@ class APIObject:
         """
         Parse an API object from a dictionary.
         """
+        if isinstance(data, cls):
+            return data
+
         # Disable inspection for IDE because this is valid code for the
         # inherited classes:
         # noinspection PyArgumentList

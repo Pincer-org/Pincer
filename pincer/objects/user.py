@@ -27,7 +27,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
-from ..utils import APIObject, APINullable, MISSING, Snowflake
+from ..utils import APIObject, APINullable, MISSING, Snowflake, convert
 
 
 class PremiumTypes(Enum):
@@ -95,10 +95,10 @@ class User(APIObject):
 
     avatar: Optional[str]
     discriminator: str
-    flags: int
     id: Snowflake
     username: str
 
+    flags: APINullable[int] = MISSING
     accent_color: APINullable[Optional[int]] = MISSING
     banner: APINullable[Optional[str]] = MISSING
     bot: APINullable[bool] = MISSING
@@ -122,3 +122,6 @@ class User(APIObject):
     def __str__(self):
         """Return the discord tag when object gets used as a string."""
         return self.username + '#' + self.discriminator
+
+    def __post_init__(self):
+        self.id = convert(self.id, Snowflake.from_string)

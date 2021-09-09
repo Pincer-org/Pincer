@@ -117,13 +117,13 @@ class AppCommandInteractionDataOption(APIObject):
         present if this option is a group or subcommand
     """
     name: str
-    type: int
-    value: APINullable[AppCommandOptionType] = MISSING
+    value: str = MISSING
+    type: AppCommandOptionType = MISSING
     options: APINullable[
         List[AppCommandInteractionDataOption]] = MISSING
 
     def __post_init__(self):
-        self.value = convert(self.value, AppCommandOptionType)
+        self.type = convert(self.type, AppCommandOptionType)
         self.options = convert(
             self.options,
             AppCommandInteractionDataOption.from_dict,

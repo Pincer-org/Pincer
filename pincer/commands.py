@@ -28,7 +28,7 @@ from asyncio import iscoroutinefunction
 from inspect import Signature
 from typing import Optional, Dict, List, Any, get_origin, get_args, Union
 
-from . import __package__, Client
+from . import __package__
 from .exceptions import (
     CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
     InvalidArgumentAnnotation, CommandDescriptionTooLong
@@ -148,7 +148,7 @@ class ChatCommandHandler:
     register: Dict[str, ClientCommandStructure] = {}
 
     # TODO: Fix docs
-    def __init__(self, client: Client):
+    def __init__(self, client):
         # TODO: Fix docs
         self.client = client
         self._api_commands: List[AppCommand] = list()
@@ -218,16 +218,22 @@ class ChatCommandHandler:
                 changes = get_changes(api_cmd, loc_cmd.app)
 
                 if changes:
-                    to_update[api_cmd.id] = changes
+                    api_update = []
+                    for option in changes["options"]:
+                        api_update.append(
+                            option.to_dict()
+                            if isinstance(option, AppCommandOption)
+                            else option
+                        )
+
+                    to_update[api_cmd.id] = {"options": api_update}
 
                     for key, change in changes.items():
                         if key == "options":
-                            print("change", change)
                             self._api_commands[idx].options = [
                                 AppCommandOption.from_dict(option)
                                 for option in change
                             ]
-                            print(self._api_commands[idx].options)
                         else:
                             setattr(self._api_commands[idx], key, change)
 

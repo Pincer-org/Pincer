@@ -27,7 +27,8 @@ from dataclasses import dataclass
 from typing import Optional, List
 
 from ..objects.user import User
-from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
+from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp, \
+    convert
 
 
 @dataclass
@@ -54,6 +55,9 @@ class GuildMember(APIObject):
         whether the user has not yet passed the guild's Membership Screening
         requirements
 
+    :param is_pending:
+        Deprecated version of pending.
+
     :param permissions:
         total permissions of the member in the channel, including overwrites,
         returned when in the interaction object
@@ -72,6 +76,14 @@ class GuildMember(APIObject):
 
     nick: APINullable[Optional[str]] = MISSING
     pending: APINullable[bool] = MISSING
+    is_pending: APINullable[bool] = MISSING
     permissions: APINullable[str] = MISSING
     premium_since: APINullable[Optional[Timestamp]] = MISSING
     user: APINullable[User] = MISSING
+    avatar: APINullable[str] = MISSING
+
+    def __post_init__(self):
+        self.roles = convert(self.roles, Snowflake.from_string)
+        self.premium_since = convert(self.premium_since, Timestamp.parse,
+                                     Timestamp)
+        self.user = convert(self.user, User.from_dict, User)

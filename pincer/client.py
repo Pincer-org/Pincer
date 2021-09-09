@@ -30,11 +30,13 @@ from typing import Optional, Any, Union, Dict, Tuple, List
 
 from . import __package__
 from ._config import events
+from .commands import ChatCommandHandler
 from .core.dispatch import GatewayDispatch
 from .core.gateway import Dispatcher
 from .core.http import HTTPClient
 from .exceptions import InvalidEventName
 from .objects import User
+from .objects.interactions import Interaction
 from .utils import get_index, should_pass_cls, Coro
 
 _log = logging.getLogger(__package__)
@@ -88,8 +90,9 @@ def middleware(call: str, *, override: bool = False):
                 **kwargs [dict(Any)]
         )
 
-    One parameter is passed to the middleware. This parameter is the
-    payload parameter which is of type :class:`~.core.dispatch.GatewayDispatch`.
+    Two parameters are passed to the middleware. The first parameter is
+    the current socket connection with and the second one is the payload
+    parameter which is of type :class:`~.core.dispatch.GatewayDispatch`.
     This contains the response from the discord API.
 
     :Implementation example:
@@ -97,7 +100,7 @@ def middleware(call: str, *, override: bool = False):
     .. code-block:: pycon
 
         >>> @middleware("ready", override=True)
-        >>> async def custom_ready(payload: GatewayDispatch):
+        >>> async def custom_ready(_, payload: GatewayDispatch):
         >>>     return "on_ready", [User.from_dict(payload.data.get("user"))]
 
         >>> @Client.event
@@ -350,10 +353,42 @@ class Client(Dispatcher):
         """
         Middleware for ``on_ready`` event.
 
-        :param payload: The data received from the ready event.
+        :param payload:
+            The data received from the ready event.
         """
         self.bot = User.from_dict(payload.data.get("user"))
         return "on_ready",
+
+    @middleware("interaction_create")
+    async def on_interaction_middleware(self, payload: GatewayDispatch):
+        """
+        Middleware for ``on_interaction``, which handles command
+        execution.
+
+        :param payload:
+            The data received from the interaction event.
+        """
+        interaction: Interaction = Interaction.from_dict(payload.data)
+        command = ChatCommandHandler.register.get(interaction.data.name)
+
+        if command:
+            kwargs = {opt.name: opt.value for opt in interaction.data.options}
+
+            if should_pass_cls(command.call):
+                kwargs["self"] = self
+
+            res = await command.call(**kwargs)
+
+            if res:
+                async with self.http as http:
+                    await http.post(f"interactions/{interaction.id}/{interaction.token}/callback", {
+                        "type": 4,
+                        "data": {
+                            "content": str(res)
+                        }
+                    })
+
+        return "on_interaction_create", [interaction]
 
 
 Bot = Client
