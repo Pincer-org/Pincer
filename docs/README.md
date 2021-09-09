@@ -170,7 +170,7 @@ without accessing the `override` attribute, but if you access this attribute the
 Pincer team will not provide any support for weird behaviour. So in short, only
 use this if you know what you're doing. An example of using this with a custom
 `on_ready` event can be found
-[in our docs](https://pincer.readthedocs.io/en/latest/pincer.html?highlight=middleware#pincer.client.middleware)
+[in our docs](https://pincer.readthedocs.io/en/latest/pincer.html#pincer.client.middleware)
 ._
 
 ## 🏷️ License
