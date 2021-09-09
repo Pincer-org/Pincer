@@ -158,7 +158,7 @@ class Client(Dispatcher):
 
         :param token:
             The secret bot token which can be found in
-            `<https://discord.com/developers/applications/\<bot_id\>/bot>`_
+            `<https://discord.com/developers/applications/<bot_id>/bot>`_
         """
         # TODO: Implement intents
         super().__init__(
@@ -295,10 +295,10 @@ class Client(Dispatcher):
         :param key:
             The index of the middleware in ``_events``.
 
-        :param \*args:
+        :param \\*args:
             The arguments which will be passed to the middleware.
 
-        :param \*\*kwargs:
+        :param \\*\\*kwargs:
             The named arguments which will be passed to the middleware.
 
         :return:

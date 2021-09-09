@@ -29,8 +29,6 @@ from dataclasses import dataclass, fields, _is_dataclass_instance
 from enum import Enum
 from typing import Dict, Union, Generic, TypeVar
 
-from websockets.typing import Data
-
 from .types import MissingType
 
 T = TypeVar("T")
@@ -94,7 +92,7 @@ class APIObject:
     #     print("Post init", self)
 
     @classmethod
-    def from_dict(cls: Generic[T], data: Data[str, Union[str, bool, int]]) -> T:
+    def from_dict(cls: Generic[T], data: Dict[str, Union[str, bool, int]]) -> T:
         """
         Parse an API object from a dictionary.
         """

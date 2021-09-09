@@ -26,7 +26,7 @@ from __future__ import annotations
 import logging
 from asyncio import iscoroutinefunction
 from inspect import Signature
-from typing import Optional, Dict, List, Any, get_origin, get_args, Union
+from typing import Optional, Dict, List, Any, Tuple, get_origin, get_args, Union
 
 from . import __package__
 from .exceptions import (
@@ -38,7 +38,7 @@ from .objects.application_command import (
     AppCommandOption, AppCommandOptionType
 )
 from .utils import (
-    get_signature_and_params, get_index, should_pass_ctx, Coro, MISSING
+    get_signature_and_params, get_index, should_pass_ctx, Coro, Snowflake, MISSING
 )
 
 _log = logging.getLogger(__package__)
@@ -109,7 +109,7 @@ def command(
                 union_args = [t for t in args if t is not type(None)]
                 annotation = get_index(union_args, 0) \
                     if len(union_args) == 1 \
-                    else Union[tuple(union_args)]
+                    else Union[Tuple[List]]
 
             param_type = _options_type_link.get(annotation)
             if not param_type:
@@ -188,7 +188,7 @@ class ChatCommandHandler:
 
     async def __update_existing_commands(self):
         # TODO: Fix docs
-        to_update: Dict[str, Dict[str, Any]] = {}
+        to_update: Dict[Snowflake, Dict[str, Any]] = {}
 
         def get_changes(
                 api: AppCommand,
