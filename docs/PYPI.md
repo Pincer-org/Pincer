@@ -156,17 +156,17 @@ A /say command early implementation using middleware
 
 > https://gist.github.com/Arthurdw/e110ebbdafca388722f25ddb79c1dfb8
 
-## .5.x verions
+## .5.x versions
 
 *The 0.5.x version don't add any new features, 
-but implement the discordpy classes within the package.
+but implement the discord.py classes within the package.
 Those will be very useful for the next versions*
 
 ### Classes
 `APIObject`,
 `Application commands`, 
 `Application`, 
-`Attachement`,
+`Attachment`,
 `AuditLog`, 
 `Ban`,
 `Button`,
