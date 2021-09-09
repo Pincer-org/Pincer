@@ -243,17 +243,17 @@ class AppCommand(APIObject):
         "type", "name", "description", "guild_id", "default_permission"
     ]
 
-    # def __post_init__(self):
-    #     self.id = convert(self.id, Snowflake.from_string)
-    #     self.version = convert(self.version, Snowflake.from_string)
-    #     self.application_id = convert(self.application_id,
-    #                                   Snowflake.from_string)
-    #     self.options = convert(
-    #         self.options,
-    #         ApplicationCommandOption.from_dict,
-    #         ApplicationCommandOption
-    #     )
-    #     self.guild_id = convert(self.guild_id, Snowflake.from_string)
+    def __post_init__(self):
+        self.id = convert(self.id, Snowflake.from_string)
+        self.version = convert(self.version, Snowflake.from_string)
+        self.application_id = convert(self.application_id,
+                                      Snowflake.from_string)
+        self.options = convert(
+            self.options,
+            AppCommandOption.from_dict,
+            AppCommandOption
+        )
+        self.guild_id = convert(self.guild_id, Snowflake.from_string)
 
     def __eq__(self, other: Union[AppCommand, ClientCommandStructure]):
         if isinstance(other, ClientCommandStructure):
@@ -269,9 +269,7 @@ class AppCommand(APIObject):
                 option_comp: Optional[AppCommandOption] = \
                     get_index(self.options, idx)
 
-                if not option_comp or \
-                        option != AppCommandOption.from_dict(
-                    option_comp):
+                if not option_comp or option != option_comp:
                     is_equal = False
 
         return is_equal

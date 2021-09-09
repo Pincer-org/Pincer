@@ -26,7 +26,7 @@ from __future__ import annotations
 import logging
 from asyncio import iscoroutinefunction
 from inspect import Signature
-from typing import Optional, Dict, List, Any
+from typing import Optional, Dict, List, Any, get_origin, get_args, Union
 
 from . import __package__, Client
 from .exceptions import (
@@ -96,10 +96,25 @@ def command(
         options: List[AppCommandOption] = []
 
         for param in params:
-            param_type = _options_type_link.get(sig[param].annotation)
+            annotation, required = sig[param].annotation, True
+
+            if get_origin(annotation) is Union:
+                args = get_args(annotation)
+                if type(None) in args:
+                    required = False
+
+                # Do NOT use isinstance as this is a comparison between
+                # two values of the type type and isinstance does NOT
+                # work here.
+                union_args = [t for t in args if t is not type(None)]
+                annotation = get_index(union_args, 0) \
+                    if len(union_args) == 1 \
+                    else Union[tuple(union_args)]
+
+            param_type = _options_type_link.get(annotation)
             if not param_type:
                 raise InvalidArgumentAnnotation(
-                    f"Annotation `{sig[param].annotation}` on parameter "
+                    f"Annotation `{annotation}` on parameter "
                     f"`{param}` in command `{cmd}` (`{func.__name__}`) is not "
                     f"a valid type."
                 )
@@ -109,8 +124,7 @@ def command(
                     type=param_type,
                     name=param,
                     description=description,
-                    # TODO: Check for Optional type
-                    required=True
+                    required=required
                 )
             )
 
@@ -185,26 +199,37 @@ class ChatCommandHandler:
 
             options: List[Dict[str, Any]] = []
             if len(api.options) == len(local.options):
-                for idx, api_option in enumerate(api.options):
+                for index, api_option in enumerate(api.options):
                     option: Optional[AppCommandOption] = \
-                        get_index(local.options, idx)
+                        get_index(local.options, index)
 
                     if option:
                         options.append(option.to_dict())
             else:
                 options = local.options
 
-            if options != api.options:
+            if list(map(AppCommandOption.from_dict, options)) != api.options:
                 update["options"] = options
 
             return update
 
-        for api_cmd in self._api_commands:
+        for idx, api_cmd in enumerate(self._api_commands):
             for loc_cmd in ChatCommandHandler.register.values():
                 changes = get_changes(api_cmd, loc_cmd.app)
 
                 if changes:
                     to_update[api_cmd.id] = changes
+
+                    for key, change in changes.items():
+                        if key == "options":
+                            print("change", change)
+                            self._api_commands[idx].options = [
+                                AppCommandOption.from_dict(option)
+                                for option in change
+                            ]
+                            print(self._api_commands[idx].options)
+                        else:
+                            setattr(self._api_commands[idx], key, change)
 
         async with self.client.http as http:
             for cmd_id, changes in to_update.items():

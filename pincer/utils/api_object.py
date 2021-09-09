@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import copy
 from dataclasses import dataclass, fields, _is_dataclass_instance
+from enum import Enum
 from typing import Dict, Union, Generic, TypeVar
 
 from websockets.typing import Data
@@ -50,8 +51,10 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[tuple, dict, T]:
         for f in fields(obj):
             value = _asdict_ignore_none(getattr(obj, f.name))
 
+            if isinstance(value, Enum):
+                result.append((f.name, value.value))
             # This if statement was added to the function
-            if not isinstance(value, MissingType):
+            elif not isinstance(value, MissingType):
                 result.append((f.name, value))
 
         return dict(result)
@@ -98,7 +101,10 @@ class APIObject:
         # Disable inspection for IDE because this is valid code for the
         # inherited classes:
         # noinspection PyArgumentList
-        return cls(**data)
+        return cls(**{
+            key: (value.value if isinstance(value, Enum)
+                  else value) for key, value in data.items()
+        })
 
     def to_dict(self) -> Dict:
         """
