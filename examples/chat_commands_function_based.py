@@ -1,5 +1,4 @@
-from pincer import command
-from pincer.client import Client
+from pincer import command, Client
 
 
 @Client.event
