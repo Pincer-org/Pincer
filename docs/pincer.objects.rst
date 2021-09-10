@@ -60,6 +60,14 @@ pincer.objects.channel module
    :undoc-members:
    :show-inheritance:
 
+pincer.objects.connection module
+--------------------------------
+
+.. automodule:: pincer.objects.connection
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.objects.context module
 -----------------------------
 
