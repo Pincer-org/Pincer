@@ -4,18 +4,18 @@ pincer.objects package
 Submodules
 ----------
 
-pincer.objects.application module
----------------------------------
+pincer.objects.app\_command module
+----------------------------------
 
-.. automodule:: pincer.objects.application
+.. automodule:: pincer.objects.app_command
    :members:
    :undoc-members:
    :show-inheritance:
 
-pincer.objects.application\_command module
-------------------------------------------
+pincer.objects.application module
+---------------------------------
 
-.. automodule:: pincer.objects.app_command
+.. automodule:: pincer.objects.application
    :members:
    :undoc-members:
    :show-inheritance:
