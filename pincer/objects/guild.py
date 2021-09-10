@@ -24,18 +24,45 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import IntEnum
 from typing import Optional, List
 
 from ..exceptions import UnavailableGuildError
 from .channel import Channel
 from .emoji import Emoji
 from .guild_member import GuildMember
+from .presence import PresenceUpdateEvent
 from .role import Role
 from .stage import StageInstance
 from .sticker import Sticker
+from .voice_state import VoiceState
 from .welcome_screen import WelcomeScreen
 from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
 
+class PremiumTier(IntEnum):
+    """
+    :param NONE:
+        guild has not unlocked any Server Boost perks
+
+    :param TIER_1:
+        guild has unlocked Server Boost level 1 perks
+
+    :param TIER_2:
+        guild has unlocked Server Boost level 2 perks
+
+    :param TIER_3:
+        guild has unlocked Server Boost level 3 perks
+    """
+    NONE = 0
+    TIER_1 = 1
+    TIER_2 = 2
+    TIER_3 = 3
+
+class GuildNSFWLevel(IntEnum):
+    DEFAULT = 0
+    EXPLICIT = 1
+    SAFE = 2
+    AGE_RESTRICTED = 3
 
 @dataclass
 class Guild(APIObject):
@@ -223,7 +250,7 @@ class Guild(APIObject):
     nsfw_level: int
     owner_id: Snowflake
     preferred_locale: str
-    premium_tier: int
+    premium_tier: PremiumTier
     public_updates_channel_id: Optional[Snowflake]
     roles: List[Role]
     rules_channel_id: Optional[int]
@@ -247,14 +274,14 @@ class Guild(APIObject):
     owner: APINullable[bool] = MISSING
     permissions: APINullable[str] = MISSING
     premium_subscription_count: APINullable[int] = MISSING
-    presences: APINullable[List[...]] = MISSING
+    presences: APINullable[List[PresenceUpdateEvent]] = MISSING
     stage_instances: APINullable[List[StageInstance]] = MISSING
     stickers: APINullable[List[Sticker]] = MISSING
     region: APINullable[Optional[str]] = MISSING
     threads: APINullable[List[Channel]] = MISSING
     # Guilds are considered available unless otherwise specified
     unavailable: APINullable[bool] = False
-    voice_states: APINullable[bool] = MISSING
+    voice_states: APINullable[List[VoiceState]] = MISSING
     widget_enabled: APINullable[bool] = MISSING
     widget_channel_id: APINullable[Optional[Snowflake]] = MISSING
     welcome_screen: APINullable[WelcomeScreen] = MISSING
