@@ -260,6 +260,14 @@ pincer.objects.user module
    :undoc-members:
    :show-inheritance:
 
+pincer.objects.user\_message module
+-----------------------------------
+
+.. automodule:: pincer.objects.user_message
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.objects.voice\_region module
 -----------------------------------
 
