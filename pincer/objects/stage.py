@@ -67,3 +67,7 @@ class StageInstance(APIObject):
     topic: str
     privacy_level: PrivacyLevel
     discoverable: bool
+
+    @property
+    def discoverable_disabled(self) -> bool:
+        return not self.discoverable
