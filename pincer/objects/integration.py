@@ -23,14 +23,14 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import IntEnum
 from typing import Optional
 
 from ..objects.user import User
 from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
 
 
-class IntegrationExpireBehavior(Enum):
+class IntegrationExpireBehavior(IntEnum):
     """Represents a Discord Integration expire behavior"""
     REMOVE_ROLE = 0
     KICK = 1

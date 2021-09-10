@@ -25,7 +25,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import IntEnum
 from typing import List, Optional, Union
 
 from .._config import GatewayConfig
@@ -44,7 +44,7 @@ from ..objects.user import User
 from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
 
 
-class MessageActivityType(Enum):
+class MessageActivityType(IntEnum):
     """
     The activity people can perform on a rich presence activity.
 
@@ -56,7 +56,7 @@ class MessageActivityType(Enum):
     JOIN_REQUEST = 5
 
 
-class MessageFlags(Enum):
+class MessageFlags(IntEnum):
     """
     Special message properties.
 
@@ -100,7 +100,7 @@ class MessageFlags(Enum):
     LOADING = 1 << 7
 
 
-class MessageType(Enum):
+class MessageType(IntEnum):
     """
     Represents the type of the message.
     """

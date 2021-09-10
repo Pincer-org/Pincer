@@ -24,12 +24,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import IntEnum
 
 from ..utils import APIObject, Snowflake
 
 
-class PrivacyLevel(Enum):
+class PrivacyLevel(IntEnum):
     """
     Represents the level of publicity of a stage.
     """

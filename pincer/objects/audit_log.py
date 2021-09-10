@@ -25,7 +25,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import IntEnum
 from typing import Any, Optional, List
 
 from ..objects.channel import Channel
@@ -35,7 +35,7 @@ from ..objects.webhook import Webhook
 from ..utils import APIObject, APINullable, MISSING, Snowflake
 
 
-class AuditLogEvent(Enum):
+class AuditLogEvent(IntEnum):
     """
     Audit log action type.
     This represents the action which got performed,

@@ -24,13 +24,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import IntEnum
 from typing import Optional
 
 from ..utils import APIObject, APINullable, MISSING, Snowflake, convert
 
 
-class PremiumTypes(Enum):
+class PremiumTypes(IntEnum):
     """
     The type of Discord premium a user has.
     """

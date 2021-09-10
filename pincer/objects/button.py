@@ -25,13 +25,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import IntEnum
 
 from ..objects.emoji import Emoji
 from ..utils import APIObject, APINullable, MISSING
 
 
-class ButtonStyle(Enum):
+class ButtonStyle(IntEnum):
     """
     Buttons come in a variety of styles to convey different types of actions.
     These styles also define what fields are valid for a button.
