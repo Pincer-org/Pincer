@@ -1,5 +1,4 @@
-from pincer.client import Client
-from pincer.commands import command
+from pincer import Client, command
 
 
 class Bot(Client):

@@ -257,6 +257,8 @@ class AppCommand(APIObject):
         )
         self.guild_id = convert(self.guild_id, Snowflake.from_string)
 
+        self.options = [] if self.options is MISSING else self.options
+
     def __eq__(self, other: Union[AppCommand, ClientCommandStructure]):
         if isinstance(other, ClientCommandStructure):
             other = other.app
@@ -265,6 +267,10 @@ class AppCommand(APIObject):
             self.__getattribute__(prop) == other.__getattribute__(prop)
             for prop in self._eq_props
         )
+
+        if (self.options is MISSING and other.options is not MISSING) or \
+                (self.options is not MISSING and other.options is MISSING):
+            return False
 
         if is_equal and len(other.options) == len(self.options):
             for idx, option in enumerate(other.options):
