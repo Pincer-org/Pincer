@@ -15,7 +15,7 @@ pincer.objects.application module
 pincer.objects.application\_command module
 ------------------------------------------
 
-.. automodule:: pincer.objects.application_command
+.. automodule:: pincer.objects.app_command
    :members:
    :undoc-members:
    :show-inheritance:

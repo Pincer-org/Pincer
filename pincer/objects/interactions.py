@@ -26,7 +26,7 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Dict
 
-from ..objects.application_command import AppCommandInteractionDataOption
+from ..objects.app_command import AppCommandInteractionDataOption
 from ..objects.channel import Channel
 from ..objects.guild_member import GuildMember
 from ..objects.interaction_base import InteractionType

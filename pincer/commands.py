@@ -33,7 +33,7 @@ from .exceptions import (
     CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
     InvalidArgumentAnnotation, CommandDescriptionTooLong, NotFoundError
 )
-from .objects.application_command import (
+from .objects.app_command import (
     AppCommand, AppCommandType, ClientCommandStructure,
     AppCommandOption, AppCommandOptionType
 )
