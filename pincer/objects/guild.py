@@ -459,7 +459,7 @@ class Guild(APIObject):
         :raises UnavailableGuildError:
             Exception gets raised when guild is unavailable.
         """
-        if data.get("unavailable", True):
+        if data.get("unavailable", False):
             raise UnavailableGuildError(
                 f"Guild \"{data['id']}\" is unavailable due"
                 " to a discord outage."
