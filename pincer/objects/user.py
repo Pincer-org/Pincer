@@ -24,13 +24,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
-from typing import Optional
+from enum import IntEnum
+from typing import List, Optional
 
+from .integration import Integration
 from ..utils import APIObject, APINullable, MISSING, Snowflake, convert
 
 
-class PremiumTypes(Enum):
+class PremiumTypes(IntEnum):
     """
     The type of Discord premium a user has.
     """
@@ -38,6 +39,53 @@ class PremiumTypes(Enum):
     NITRO_CLASSIC = 1
     NITRO = 2
 
+class VisibilityType(IntEnum):
+    """
+    The type of a connection visibility.
+    """
+    NONE = 0
+    EVERYONE = 1
+
+@dataclass
+class Connection(APIObject):
+    """
+    The connection object that the user has attached.
+
+    :param id:
+        id of the connection account
+
+    :param name:
+        the username of the connection account
+
+    :param type:
+        the service of the connection (twitch, youtube)
+
+    :param revoked:
+        whether the connection is revoked
+
+    :param integrations:
+        an array of partial server integrations
+
+    :param verified:
+        whether the connection is verified
+
+    :param friend_sync:
+        whether friend sync is enabled for this connection
+
+    :param show_activity:
+        whether activities related to this connection
+        will be shown in presence updates
+    """
+    id: str
+    name: str
+    type: str
+    verified: bool
+    friend_sync: bool
+    show_activity: bool
+    visibility: VisibilityType
+
+    revoked: APINullable[bool] = MISSING
+    integrations: APINullable[List[Integration]] = MISSING
 
 @dataclass
 class User(APIObject):

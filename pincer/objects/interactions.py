@@ -26,14 +26,14 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Dict
 
-from ..objects.application_command import AppCommandInteractionDataOption
-from ..objects.channel import Channel
-from ..objects.guild_member import GuildMember
-from ..objects.interaction_base import InteractionType
-from ..objects.message import Message
-from ..objects.role import Role
-from ..objects.select_menu import SelectOption
-from ..objects.user import User
+from .app_command import AppCommandInteractionDataOption
+from .channel import Channel
+from .guild_member import GuildMember
+from .interaction_base import InteractionType
+from .message import Message
+from .role import Role
+from .select_menu import SelectOption
+from .user import User
 from ..utils import APIObject, APINullable, MISSING, Snowflake, convert
 
 

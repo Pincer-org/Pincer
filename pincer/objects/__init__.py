@@ -23,7 +23,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from .application import Application
-from .application_command import AppCommand
+from .app_command import AppCommand
 from .attachment import Attachment
 from .audit_log import AuditLog
 from .ban import Ban

@@ -26,7 +26,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional, List
 
-from ..objects.user import User
+from .user import User
 from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp, \
     convert
 

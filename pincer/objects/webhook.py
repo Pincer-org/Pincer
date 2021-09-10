@@ -24,16 +24,16 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import IntEnum
 from typing import Optional
 
-from ..objects.channel import Channel
-from ..objects.guild import Guild
-from ..objects.user import User
+from .channel import Channel
+from .guild import Guild
+from .user import User
 from ..utils import APIObject, APINullable, MISSING, Snowflake
 
 
-class WebhookType(Enum):
+class WebhookType(IntEnum):
     """
     Represents the type of a webhook.
 

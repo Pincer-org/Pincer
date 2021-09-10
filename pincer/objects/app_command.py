@@ -28,8 +28,10 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import List, Union, Optional
 
-from ..utils import APIObject, APINullable, Coro, convert, MISSING, Snowflake, \
-    get_index
+from ..utils import (
+    APIObject, APINullable, Coro, convert,
+    MISSING, Snowflake, get_index
+)
 
 
 class AppCommandType(IntEnum):

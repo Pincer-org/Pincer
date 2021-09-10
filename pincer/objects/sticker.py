@@ -24,14 +24,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import IntEnum
 from typing import List, Optional
 
-from ..objects.user import User
+from .user import User
 from ..utils import APIObject, APINullable, MISSING, Snowflake
 
 
-class StickerType(Enum):
+class StickerType(IntEnum):
     """
     Displays from where the sticker comes from.
 
@@ -45,7 +45,7 @@ class StickerType(Enum):
     GUILD = 2
 
 
-class StickerFormatType(Enum):
+class StickerFormatType(IntEnum):
     """
     The type of the sticker.
 

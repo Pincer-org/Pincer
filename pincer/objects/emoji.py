@@ -26,8 +26,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional, List
 
-from ..objects.role import Role
-from ..objects.user import User
+from .role import Role
+from .user import User
 from ..utils import APIObject, APINullable, MISSING, Snowflake
 
 
