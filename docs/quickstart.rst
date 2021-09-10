@@ -26,7 +26,7 @@ For a basic bot, creating a :class:`~.client.Client` class works well.
 Inheriting from Client
 ----------------------
 
-Inheriting from :py:class:`~Client` allows more flexibility and enables advance usage for a bot.
+Inheriting from :class:`~.client.Client` allows more flexibility and enables advance usage for a bot.
 
 .. code-block:: python
 
