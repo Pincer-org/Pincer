@@ -27,13 +27,13 @@ from dataclasses import dataclass
 from typing import Optional, List
 
 from ..exceptions import UnavailableGuildError
-from ..objects.channel import Channel
-from ..objects.emoji import Emoji
-from ..objects.guild_member import GuildMember
-from ..objects.role import Role
-from ..objects.stage import StageInstance
-from ..objects.sticker import Sticker
-from ..objects.welcome_screen import WelcomeScreen
+from .channel import Channel
+from .emoji import Emoji
+from .guild_member import GuildMember
+from .role import Role
+from .stage import StageInstance
+from .sticker import Sticker
+from .welcome_screen import WelcomeScreen
 from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
 
 

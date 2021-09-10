@@ -28,10 +28,10 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Any, Optional, List
 
-from ..objects.channel import Channel
-from ..objects.integration import Integration
-from ..objects.user import User
-from ..objects.webhook import Webhook
+from .channel import Channel
+from .integration import Integration
+from .user import User
+from .webhook import Webhook
 from ..utils import APIObject, APINullable, MISSING, Snowflake
 
 

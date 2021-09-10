@@ -25,7 +25,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from ..objects.emoji import Emoji
+from .emoji import Emoji
 from ..utils import APIObject, APINullable, MISSING
 
 

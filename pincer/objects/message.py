@@ -29,18 +29,18 @@ from enum import IntEnum
 from typing import List, Optional, Union
 
 from .._config import GatewayConfig
-from ..objects.application import Application
-from ..objects.attachment import Attachment
-from ..objects.channel import Channel, ChannelMention
-from ..objects.embed import Embed
-from ..objects.guild_member import GuildMember
-from ..objects.interaction_base import MessageInteraction
-from ..objects.message_component import MessageComponent
-from ..objects.message_reference import MessageReference
-from ..objects.reaction import Reaction
-from ..objects.role import Role
-from ..objects.sticker import StickerItem
-from ..objects.user import User
+from .application import Application
+from .attachment import Attachment
+from .channel import Channel, ChannelMention
+from .embed import Embed
+from .guild_member import GuildMember
+from .interaction_base import MessageInteraction
+from .message_component import MessageComponent
+from .message_reference import MessageReference
+from .reaction import Reaction
+from .role import Role
+from .sticker import StickerItem
+from .user import User
 from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
 
 

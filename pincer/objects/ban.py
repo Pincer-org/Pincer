@@ -25,7 +25,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from ..objects.user import User
+from .user import User
 from ..utils import APIObject
 
 

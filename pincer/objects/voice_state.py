@@ -25,7 +25,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from ..objects.guild_member import GuildMember
+from .guild_member import GuildMember
 from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
 
 
