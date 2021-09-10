@@ -1,4 +1,4 @@
-# <img src="../assets/svg/pincer.svg" height="24px" alt="Pincer Logo"> Pincer
+# Pincer
 
 <!--
 ![PyPI - Downloads](https://img.shields.io/badge/dynamic/json?label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2FPincer)](https://pypi.org/project/Pincer)
@@ -18,15 +18,14 @@
 
 An asynchronous Python API wrapper meant to replace discord.py
 
-| :exclamation: | The package is currently within the planning phase |
-| ------------- | :------------------------------------------------- |
+## The package is currently within the planning phase
 
-## :pushpin: Links
+## 📌 Links
 
-> <img src="../assets/svg/discord.svg" width="16px" alt="Discord Logo"> ｜Join the Discord server: https://discord.gg/8WkYz3fNFm <br>
-> <img src="../assets/svg/pypi.svg" width="16px" alt="PyPI Logo"> ｜The PyPI package: https://pypi.org/project/Pincer <br>
-> <img src="../assets/svg/pincer.svg" width="16px" alt="Pincer Logo"> ｜Our website: https://pincer.dev <br>
-> 📝 | ReadTheDoc: https://pincer.readthedocs.io
+> Join the Discord server: <https://discord.gg/8WkYz3fNFm>  
+> The PyPI package: <https://pypi.org/project/Pincer>  
+> Our website: <https://pincer.dev>  
+> ReadTheDocs: <https://pincer.readthedocs.io>
 
 ## ☄️ Installation
 
@@ -77,11 +76,12 @@ following:
 
 ## Current Features
 
-- Dispatcher
-- Logging _Improved_
-- HTTP Client
-- Client base class
-- Basic events _Improved_
+- Discord Gateway communication
+- logging
+- Http Client
+- Events
+- Event middleware
+- Basic commands with basic argument parsing
 
 **Client base class example:**
 
@@ -141,9 +141,6 @@ See an advanced bot implementation:
 > <https://github.com/Pincer-org/Pincer-bot>
 
 ### Advanced Usage
-
-__Warning: These features are meant for advanced developers to make early
-experimentation with Pincer.__
 
 #### Enable the debug mode
 
