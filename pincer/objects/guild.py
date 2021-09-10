@@ -24,7 +24,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import IntEnum
+from enum import auto, IntEnum
 from typing import Optional, List
 
 from ..exceptions import UnavailableGuildError
@@ -63,6 +63,169 @@ class GuildNSFWLevel(IntEnum):
     EXPLICIT = 1
     SAFE = 2
     AGE_RESTRICTED = 3
+
+class ExplicitContentFilterLevel(IntEnum):
+    """
+    :param DISABLED:
+        media content will not be scanned
+
+    :param MEMBERS_WITHOUT_ROLES:
+        media content sent by members without roles will be scanned
+
+    :param ALL_MEMBERS:
+        media content sent by all members will be scanned
+    """
+    DISABLED = 0
+    MEMBERS_WITHOUT_ROLES = 1
+    ALL_MEMBERS = 2
+
+class MFALevel(IntEnum):
+    """
+    :param NONE:
+        guild has no MFA/2FA requirement for moderation actions
+
+    :param ELEVATED:
+        guild has a 2FA requirement for moderation actions
+    """
+    NONE = 0
+    ELEVATED = 1
+
+class VerificationLevel(IntEnum):
+    """
+    :param NONE:
+        unrestricted
+
+    :param LOW:
+        must have verified email on account
+
+    :param MEDIUM:
+        must be registered on Discord for longer than 5 minutes
+
+    :param HIGH:
+        must be a member of the server for longer than 10 minutes
+
+    :param VERY_HIGH:
+        must have a verified phone number
+    """
+    NONE = 0
+    LOW = 1
+    MEDIUM = 2
+    HIGH = 3
+    VERY_HIGH = 4
+
+class DefaultMessageNotificationLevel(IntEnum):
+    """
+    :param ALL_MESSAGES:
+        members will receive notifications for all messages by default
+
+    :param ONLY_MENTIONS:
+        members will receive notifications only
+        for messages that @mention them by default
+    """
+    ALL_MESSAGES = 0
+    ONLY_MENTIONS = 1
+
+class SystemChannelFlags(IntEnum):
+    """
+    :param SUPPRESS_JOIN_NOTIFICATIONS:
+        Suppress member join notifications
+
+    :param SUPPRESS_PREMIUM_SUBSCRIPTIONS:
+        Suppress server boost notifications
+
+    :param SUPPRESS_GUILD_REMINDER_NOTIFICATIONS:
+        Suppress server setup tips
+    """
+    SUPPRESS_JOIN_NOTIFICATIONS = 1 << 0
+    SUPPRESS_PREMIUM_SUBSCRIPTIONS = 1 << 1
+    SUPPRESS_GUILD_REMINDER_NOTIFICATIONS = 1 << 2
+
+class GuildFeature(IntEnum):
+    """
+    :param ANIMATED_ICON:
+        guild has access to set an animated guild icon
+
+    :param BANNER:
+        guild has access to set a guild banner image
+
+    :param COMMERCE:
+        guild has access to use commerce features (i.e. create store channels)
+
+    :param COMMUNITY:
+        guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates
+
+    :param DISCOVERABLE:
+        guild is able to be discovered in the directory
+
+    :param FEATURABLE:
+        guild is able to be featured in the directory
+
+    :param INVITE_SPLASH:
+        guild has access to set an invite splash background
+
+    :param MEMBER_VERIFICATION_GATE_ENABLED:
+        guild has enabled Membership Screening
+
+    :param NEWS:
+        guild has access to create news channels
+
+    :param PARTNERED:
+        guild is partnered
+
+    :param PREVIEW_ENABLED:
+        guild can be previewed before joining via Membership Screening or the directory
+
+    :param VANITY_URL:
+        guild has access to set a vanity URL
+
+    :param VERIFIED:
+        guild is verified
+
+    :param VIP_REGIONS:
+        guild has access to set 384kbps bitrate in voice (previously VIP voice servers)
+
+    :param WELCOME_SCREEN_ENABLED:
+        guild has enabled the welcome screen
+
+    :param TICKETED_EVENTS_ENABLED:
+        guild has enabled ticketed events
+
+    :param MONETIZATION_ENABLED:
+        guild has enabled monetization
+
+    :param MORE_STICKERS:
+        guild has increased custom sticker slots
+
+    :param THREE_DAY_THREAD_ARCHIVE:
+        guild has access to the three day archive time for threads
+
+    :param SEVEN_DAY_THREAD_ARCHIVE:
+        guild has access to the seven day archive time for threads
+
+    :param PRIVATE_THREADS:
+        guild has access to create private threads
+    """
+    ANIMATED_ICON = auto()
+    BANNER = auto()
+    COMMERCE = auto()
+    COMMUNITY = auto()
+    DISCOVERABLE = auto()
+    FEATURABLE = auto()
+    INVITE_SPLASH = auto()
+    MEMBER_VERIFICATION_GATE_ENABLED = auto()
+    NEWS = auto()
+    PARTNERED = auto()
+    PREVIEW_ENABLED = auto()
+    VANITY_URL = auto()
+    VERIFIED = auto()
+    VIP_REGIONS = auto()
+    WELCOME_SCREEN_ENABLED = auto()
+    TICKETED_EVENTS_ENABLED = auto()
+    MONETIZATION_ENABLED = auto()
+    MORE_STICKERS = auto()
+    THREE_DAY_THREAD_ARCHIVE = auto()
+    SEVEN_DAY_THREAD_ARCHIVE = auto()
+    PRIVATE_THREADS = auto()
 
 @dataclass
 class Guild(APIObject):
@@ -235,30 +398,30 @@ class Guild(APIObject):
 
     afk_channel_id: Optional[Snowflake]
     afk_timeout: int
-    application_id: Optional[int]
+    application_id: Optional[Snowflake]
     banner: Optional[str]
-    default_message_notifications: int
+    default_message_notifications: DefaultMessageNotificationLevel
     description: Optional[str]
     discovery_splash: Optional[str]
     emojis: List[Emoji]
-    explicit_content_filter: int
-    features: List[...]
+    explicit_content_filter: ExplicitContentFilterLevel
+    features: List[GuildFeature]
     id: Snowflake
     icon: Optional[str]
-    mfa_level: int
+    mfa_level: MFALevel
     name: str
-    nsfw_level: int
+    nsfw_level: GuildNSFWLevel
     owner_id: Snowflake
     preferred_locale: str
     premium_tier: PremiumTier
     public_updates_channel_id: Optional[Snowflake]
     roles: List[Role]
-    rules_channel_id: Optional[int]
+    rules_channel_id: Optional[Snowflake]
     splash: Optional[str]
-    system_channel_flags: int
-    system_channel_id: Optional[int]
+    system_channel_flags: SystemChannelFlags
+    system_channel_id: Optional[Snowflake]
     vanity_url_code: Optional[str]
-    verification_level: int
+    verification_level: VerificationLevel
 
     approximate_member_count: APINullable[int] = MISSING
     approximate_presence_count: APINullable[int] = MISSING
@@ -296,7 +459,7 @@ class Guild(APIObject):
         :raises UnavailableGuildError:
             Exception gets raised when guild is unavailable.
         """
-        if data.get("unavailable", False):
+        if data.get("unavailable", True):
             raise UnavailableGuildError(
                 f"Guild \"{data['id']}\" is unavailable due"
                 " to a discord outage."
