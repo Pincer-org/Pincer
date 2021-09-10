@@ -1,4 +1,5 @@
 from pincer import command, Client
+from pincer.objects import Message, InteractionFlags
 
 
 @Client.event
@@ -15,6 +16,11 @@ async def say(message: str):
 @command(description="Add two numbers!")
 async def add(first: int, second: int):
     return f"The addition of `{first}` and `{second}` is `{first + second}`"
+
+
+@command(guild=1324567890)
+async def private_say(message: str):
+    return Message(message, flags=InteractionFlags.EPHEMERAL)
 
 
 if __name__ == "__main__":
