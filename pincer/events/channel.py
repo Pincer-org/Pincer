@@ -34,13 +34,13 @@ class ChannelPinsUpdateEvent(APIObject):
     """
     Sent when a message is pinned or unpinned in a text channel.
     This is not sent when a pinned message is deleted.
-    
+
     :param guild_id:
         the id of the guild
-    
+
     :param channel_id:
         the id of the channel
-    
+
     :param last_pin_timestamp:
         the time at which the most recent pinned message was pinned
     """
