@@ -30,6 +30,7 @@ from ..exceptions import UnavailableGuildError
 from .channel import Channel
 from .emoji import Emoji
 from .guild_member import GuildMember
+from .guild_features import GuildFeatures
 from .role import Role
 from .stage import StageInstance
 from .sticker import Sticker
@@ -215,7 +216,7 @@ class Guild(APIObject):
     discovery_splash: Optional[str]
     emojis: List[Emoji]
     explicit_content_filter: int
-    features: List[...]
+    features: List[GuildFeatures]
     id: Snowflake
     icon: Optional[str]
     mfa_level: int
