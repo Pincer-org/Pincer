@@ -35,10 +35,10 @@ class IntegrationDeleteEvent(APIObject):
 
 	:param id:
 		integration id
-	
+
 	:param guild_id:
 		id of the guild
-	
+
 	:param application_id:
 		id of the bot/OAuth2 application for this discord integration
 	"""
