@@ -212,14 +212,6 @@ pincer.objects.overwrite module
    :undoc-members:
    :show-inheritance:
 
-pincer.objects.presence module
-------------------------------
-
-.. automodule:: pincer.objects.presence
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 pincer.objects.reaction module
 ------------------------------
 
