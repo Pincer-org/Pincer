@@ -56,7 +56,7 @@ class ActivityType(IntEnum):
 
     :param COMPETING:
         Competing in {name}
-        e.g. "Competing in Arena World Champions"        
+        e.g. "Competing in Arena World Champions"
     """
     GAME = 0
     STREAMING = 1
