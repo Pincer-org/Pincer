@@ -276,7 +276,7 @@ class ChatCommandHandler:
             async with self.client.http as http:
                 endpoint = f"applications/{self.client.bot.id}"
                 for cmd in commands_to_add:
-                    if cmd.app.guild_id:
+                    if cmd.app.guild_id is not MISSING:
                         endpoint += f"/guilds/{cmd.app.guild_id}"
 
                     await http.post(
