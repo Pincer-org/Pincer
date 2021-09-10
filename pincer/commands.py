@@ -31,7 +31,7 @@ from typing import Optional, Dict, List, Any, Tuple, get_origin, get_args, Union
 from . import __package__
 from .exceptions import (
     CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
-    InvalidArgumentAnnotation, CommandDescriptionTooLong
+    InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild
 )
 from .objects.app_command import (
     AppCommand, AppCommandType, ClientCommandStructure,
@@ -57,10 +57,10 @@ _options_type_link = {
 def command(
         name: Optional[str] = None,
         description: Optional[str] = "Description not set",
-        enable_default: Optional[bool] = True
+        enable_default: Optional[bool] = True,
+        guild: Union[Snowflake, int, str] = None
 ):
     # TODO: Fix docs
-
     def decorator(func: Coro):
         if not iscoroutinefunction(func):
             raise CommandIsNotCoroutine(
@@ -71,6 +71,14 @@ def command(
         cmd = name or func.__name__
 
         # TODO: Perform name check on cmd with r"^[\w-]{1,32}$"
+
+        try:
+            guild_id = int(guild) if guild else MISSING
+        except ValueError:
+            raise InvalidCommandGuild(
+                f"Command with call `{func.__name__}` its `guilds` parameter "
+                "contains a non valid guild id."
+            )
 
         if len(description) > 100:
             raise CommandDescriptionTooLong(
@@ -136,7 +144,8 @@ def command(
                 description=description,
                 type=AppCommandType.CHAT_INPUT,
                 default_permission=enable_default,
-                options=options
+                options=options,
+                guild_id=guild_id
             )
         )
 
@@ -265,9 +274,13 @@ class ChatCommandHandler:
 
         if commands_to_add:
             async with self.client.http as http:
+                endpoint = f"applications/{self.client.bot.id}"
                 for cmd in commands_to_add:
+                    if cmd.app.guild_id:
+                        endpoint += f"/guilds/{cmd.app.guild_id}"
+
                     await http.post(
-                        f"applications/{self.client.bot.id}/commands",
+                        endpoint + "/commands",
                         cmd.app.to_dict()
                     )
 

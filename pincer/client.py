@@ -35,9 +35,9 @@ from .core.dispatch import GatewayDispatch
 from .core.gateway import Dispatcher
 from .core.http import HTTPClient
 from .exceptions import InvalidEventName
-from .objects import User
-from .objects.interaction_base import MessageInteractionCallbackType
-from .objects.interactions import Interaction, InteractionCallbackDataFlags
+from .objects import User, Message
+from .objects.interaction_base import CallbackType
+from .objects.interactions import Interaction, InteractionFlags
 from .utils import get_index, should_pass_cls, Coro, MISSING
 from .utils.extraction import get_params
 
@@ -401,26 +401,19 @@ class Client(Dispatcher):
             if should_pass_cls(command.call):
                 kwargs["self"] = self
 
-            res = await command.call(**kwargs)
+            message = await command.call(**kwargs)
 
-            if res:
-                data = {
-                    "content": str(res)
-                }
-            else:
-                # TODO: Implement data parser/extraction for objects.
-                data = {
-                    "content": self.__received,
-                    "flags": InteractionCallbackDataFlags.EPHEMERAL
-                }
+            if not isinstance(message, Message):
+                message = Message(message) if message else Message(
+                    self.__received,
+                    flags=InteractionFlags.EPHEMERAL
+                )
 
             async with self.http as http:
                 await http.post(
                     f"interactions/{interaction.id}/{interaction.token}/callback",
-                    {
-                        "type": MessageInteractionCallbackType.CHANNEL_MESSAGE_WITH_SOURCE,
-                        "data": data
-                    })
+                    message.to_dict()
+                )
 
         return "on_interaction_create", [interaction]
 

@@ -80,6 +80,18 @@ class InvalidArgumentAnnotation(CommandError):
     """
 
 
+class CommandReturnIsEmpty(CommandError):
+    """
+    Cannot return an empty string to an interaction.
+    """
+
+
+class InvalidCommandGuild(CommandError):
+    """
+    The provided guild id not not valid.
+    """
+
+
 class InvalidEventName(PincerError):
     """
     Exception raised when the event name is not a valid event.

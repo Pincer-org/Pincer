@@ -30,14 +30,14 @@ from .app_command import AppCommandInteractionDataOption
 from .channel import Channel
 from .guild_member import GuildMember
 from .interaction_base import InteractionType
-from .message import Message
+from .user_message import UserMessage
 from .role import Role
 from .select_menu import SelectOption
 from .user import User
 from ..utils import APIObject, APINullable, MISSING, Snowflake, convert
 
 
-class InteractionCallbackDataFlags(IntEnum):
+class InteractionFlags(IntEnum):
     """
     :param EPHEMERAL:
         only the user receiving the message can see it
@@ -69,7 +69,7 @@ class ResolvedData(APIObject):
     members: APINullable[Dict[Snowflake, GuildMember]] = MISSING
     roles: APINullable[Dict[Snowflake, Role]] = MISSING
     channels: APINullable[Dict[Snowflake, Channel]] = MISSING
-    messages: APINullable[Dict[Snowflake, Message]] = MISSING
+    messages: APINullable[Dict[Snowflake, UserMessage]] = MISSING
 
 
 @dataclass
@@ -180,7 +180,7 @@ class Interaction(APIObject):
     channel_id: APINullable[Snowflake] = MISSING
     member: APINullable[GuildMember] = MISSING
     user: APINullable[User] = MISSING
-    message: APINullable[Message] = MISSING
+    message: APINullable[UserMessage] = MISSING
 
     def __post_init__(self):
         self.id = convert(self.id, Snowflake.from_string)
@@ -196,4 +196,4 @@ class Interaction(APIObject):
         self.channel_id = convert(self.channel_id, Snowflake.from_string)
         self.member = convert(self.member, GuildMember.from_dict, GuildMember)
         self.user = convert(self.user, User.from_dict, User)
-        self.message = convert(self.message, Message.from_dict, Message)
+        self.message = convert(self.message, UserMessage.from_dict, UserMessage)

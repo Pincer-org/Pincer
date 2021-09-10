@@ -28,17 +28,17 @@ from .user import User
 from ..utils import APIObject, Snowflake
 
 
-class MessageInteractionCallbackType(IntEnum):
+class CallbackType(IntEnum):
     """
     The types of response a client can give to a interaction.
 
     :param PONG:
         ACK a Ping
 
-    :param CHANNEL_MESSAGE_WITH_SOURCE:
+    :param MESSAGE:
         respond to an interaction with a message
 
-    :param DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE:
+    :param DEFERRED_MESSAGE:
             ACK an interaction and edit a response later, the user sees a loading state
 
     :param DEFERRED_UPDATE_MESSAGE:
@@ -48,8 +48,8 @@ class MessageInteractionCallbackType(IntEnum):
         for components, edit the message the component was attached to
     """
     PONG = 1
-    CHANNEL_MESSAGE_WITH_SOURCE = 4
-    DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE = 5
+    MESSAGE = 4
+    DEFERRED_MESSAGE = 5
     DEFERRED_UPDATE_MESSAGE = 6
     UPDATE_MESSAGE = 7
 
