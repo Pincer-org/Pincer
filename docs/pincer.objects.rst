@@ -108,6 +108,14 @@ pincer.objects.guild module
    :undoc-members:
    :show-inheritance:
 
+pincer.objects.guild\_features module
+-------------------------------------
+
+.. automodule:: pincer.objects.guild_features
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.objects.guild\_member module
 -----------------------------------
 
