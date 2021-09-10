@@ -26,7 +26,7 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Optional
 
-from ..objects.user import User
+from .user import User
 from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
 
 
