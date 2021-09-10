@@ -24,7 +24,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import auto, IntEnum
+from enum import Enum, auto, IntEnum
 from typing import Optional, List
 
 from ..exceptions import UnavailableGuildError
@@ -140,7 +140,7 @@ class SystemChannelFlags(IntEnum):
     SUPPRESS_PREMIUM_SUBSCRIPTIONS = 1 << 1
     SUPPRESS_GUILD_REMINDER_NOTIFICATIONS = 1 << 2
 
-class GuildFeature(IntEnum):
+class GuildFeature(Enum):
     """
     :param ANIMATED_ICON:
         guild has access to set an animated guild icon
