@@ -27,11 +27,11 @@ from dataclasses import dataclass
 from enum import Enum, auto, IntEnum
 from typing import Optional, List
 
+from ..events.presence import PresenceUpdateEvent
 from ..exceptions import UnavailableGuildError
 from .channel import Channel
 from .emoji import Emoji
 from .guild_member import GuildMember
-from .presence import PresenceUpdateEvent
 from .role import Role
 from .stage import StageInstance
 from .sticker import Sticker

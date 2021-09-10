@@ -26,7 +26,7 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import List, Optional, Tuple
 
-from .user import User
+from ..objects.user import User
 from ..utils.api_object import APIObject
 from ..utils.snowflake import Snowflake
 from ..utils.types import MISSING, APINullable
