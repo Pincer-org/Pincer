@@ -11,7 +11,7 @@ __title__ = "Pincer library"
 __package__ = "pincer"
 __author__ = "Sigmanificient, Arthurdw"
 __license__ = "MIT"
-__version__ = "0.6.5-dev"
+__version__ = "0.6.6-dev"
 __description__ = "Discord API wrapper rebuild from scratch."
 
 from pincer.client import Client, Bot
