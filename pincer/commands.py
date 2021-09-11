@@ -172,9 +172,8 @@ class ChatCommandHandler:
 
     async def __init_existing_commands(self):
         # TODO: Fix docs
-        async with self.client.http as http:
-            res = await http.get(f"applications/{self.client.bot.id}/commands")
-            self._api_commands = list(map(AppCommand.from_dict, res))
+        res = await self.client.http.get(f"applications/{self.client.bot.id}/commands")
+        self._api_commands = list(map(AppCommand.from_dict, res))
 
     async def __remove_unused_commands(self):
         # TODO: Fix docs
@@ -189,11 +188,10 @@ class ChatCommandHandler:
             if doesnt_exist:
                 to_remove.append(api_cmd)
 
-        async with self.client.http as http:
-            for cmd in to_remove:
-                await http.delete(
-                    f"applications/{self.client.bot.id}/commands/{cmd.id}"
-                )
+        for cmd in to_remove:
+            await self.client.http.delete(
+                f"applications/{self.client.bot.id}/commands/{cmd.id}"
+            )
 
         self._api_commands = [
             cmd for cmd in self._api_commands if cmd not in to_remove
@@ -265,12 +263,11 @@ class ChatCommandHandler:
                         else:
                             setattr(self._api_commands[idx], key, change)
 
-        async with self.client.http as http:
-            for cmd_id, changes in to_update.items():
-                await http.patch(
-                    f"applications/{self.client.bot.id}/commands/{cmd_id}",
-                    changes
-                )
+        for cmd_id, changes in to_update.items():
+            await http.patch(
+                f"applications/{self.client.bot.id}/commands/{cmd_id}",
+                changes
+            )
 
     async def __add_commands(self):
         # TODO: Fix docs
@@ -280,16 +277,15 @@ class ChatCommandHandler:
         ]
 
         if commands_to_add:
-            async with self.client.http as http:
-                endpoint = f"applications/{self.client.bot.id}"
-                for cmd in commands_to_add:
-                    if cmd.app.guild_id is not MISSING:
-                        endpoint += f"/guilds/{cmd.app.guild_id}"
+            endpoint = f"applications/{self.client.bot.id}"
+            for cmd in commands_to_add:
+                if cmd.app.guild_id is not MISSING:
+                    endpoint += f"/guilds/{cmd.app.guild_id}"
 
-                    await http.post(
-                        endpoint + "/commands",
-                        cmd.app.to_dict()
-                    )
+                await self.client.http.post(
+                    endpoint + "/commands",
+                    cmd.app.to_dict()
+                )
 
     async def initialize(self):
         # TODO: Fix docs

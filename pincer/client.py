@@ -25,6 +25,7 @@
 from __future__ import annotations
 
 import logging
+import asyncio
 from asyncio import iscoroutinefunction
 from typing import Optional, Any, Union, Dict, Tuple, List
 
@@ -178,29 +179,6 @@ class Client(Dispatcher):
         self.__token = token
 
     @property
-    def http(self):
-        """
-        Returns a http client with the current client its
-        authentication credentials.
-
-        :Usage example:
-
-        .. code-block:: pycon
-
-            >>> async with self.http as client:
-            >>>     await client.post(
-            ...         '<endpoint>',
-            ...         {
-            ...             "foo": "bar",
-            ...             "bar": "baz",
-            ...             "baz": "foo"
-            ...         }
-            ...    )
-
-        """
-        return HTTPClient(self.__token)
-
-    @property
     def chat_commands(self):
         """
         Get a list of chat command calls which have been registered in
@@ -282,6 +260,11 @@ class Client(Dispatcher):
 
         _events[name] = coroutine
         return coroutine
+
+    def run(self):
+        self.http = HTTPClient(self.__token)
+        self.start_loop()
+        asyncio.run(self.http.close())
 
     async def handle_middleware(
             self,
