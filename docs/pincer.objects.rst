@@ -236,6 +236,14 @@ pincer.objects.select\_menu module
    :undoc-members:
    :show-inheritance:
 
+pincer.objects.session\_start\_limit module
+-------------------------------------------
+
+.. automodule:: pincer.objects.session_start_limit
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.objects.stage module
 ---------------------------
 
