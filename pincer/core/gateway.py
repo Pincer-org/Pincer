@@ -108,7 +108,7 @@ class Dispatcher:
             await self.close()
 
             Heartbeat.update_sequence(payload.seq)
-            self.run()
+            self.start_loop()
 
         self.__dispatch_handlers: Dict[int, Handler] = {
             **handlers,
@@ -228,7 +228,7 @@ class Dispatcher:
                     if isinstance(exception, _InternalPerformReconnectError):
                         Heartbeat.update_sequence(0)
                         await self.close()
-                        return self.run()
+                        return self.start_loop()
 
                     raise exception or UnhandledException(
                         f"Dispatch error ({exc.code}): {exc.reason}"
@@ -236,7 +236,7 @@ class Dispatcher:
                 except ConnectionClosedOK:
                     _log.debug("Connection closed successfully.")
 
-    def run(self, *, loop: AbstractEventLoop = None):
+    def start_loop(self, *, loop: AbstractEventLoop = None):
         """
         Instantiate the dispatcher, this will create a connection to the
         Discord websocket API on behalf of the client who's token has

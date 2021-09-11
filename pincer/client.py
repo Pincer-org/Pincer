@@ -25,7 +25,7 @@
 from __future__ import annotations
 
 import logging
-from asyncio import iscoroutinefunction
+from asyncio import iscoroutinefunction, run
 from typing import Optional, Any, Union, Dict, Tuple, List
 
 from . import __package__
@@ -175,30 +175,7 @@ class Client(Dispatcher):
 
         self.bot: Optional[User] = None
         self.__received = received or "Command arrived successfully!"
-        self.__token = token
-
-    @property
-    def http(self):
-        """
-        Returns a http client with the current client its
-        authentication credentials.
-
-        :Usage example:
-
-        .. code-block:: pycon
-
-            >>> async with self.http as client:
-            >>>     await client.post(
-            ...         '<endpoint>',
-            ...         {
-            ...             "foo": "bar",
-            ...             "bar": "baz",
-            ...             "baz": "foo"
-            ...         }
-            ...    )
-
-        """
-        return HTTPClient(self.__token)
+        self.http = HTTPClient(token)
 
     @property
     def chat_commands(self):
@@ -282,6 +259,11 @@ class Client(Dispatcher):
 
         _events[name] = coroutine
         return coroutine
+
+    def run(self):
+        """Start the event listener"""
+        self.start_loop()
+        run(self.http.close())
 
     async def handle_middleware(
             self,
@@ -411,8 +393,7 @@ class Client(Dispatcher):
                     flags=InteractionFlags.EPHEMERAL
                 )
 
-            async with self.http as http:
-                await http.post(
+                await self.http.post(
                     f"interactions/{interaction.id}/{interaction.token}/callback",
                     message.to_dict()
                 )
