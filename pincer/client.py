@@ -25,8 +25,7 @@
 from __future__ import annotations
 
 import logging
-import asyncio
-from asyncio import iscoroutinefunction
+from asyncio import iscoroutinefunction, run
 from typing import Optional, Any, Union, Dict, Tuple, List
 
 from . import __package__
@@ -264,7 +263,7 @@ class Client(Dispatcher):
     def run(self):
         """Start the event listener"""
         self.start_loop()
-        asyncio.run(self.http.close())
+        run(self.http.close())
 
     async def handle_middleware(
             self,
