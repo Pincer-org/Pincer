@@ -1,5 +1,5 @@
 from pincer import command, Client
-from pincer.objects import Message, InteractionFlags
+from pincer.objects import Message, InteractionFlags, Embed
 
 
 @Client.event

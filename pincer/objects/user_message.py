@@ -28,6 +28,7 @@ from dataclasses import dataclass
 from enum import IntEnum, Enum
 from typing import List, Optional, Union
 
+from . import Message
 from .application import Application
 from .attachment import Attachment
 from .channel import Channel, ChannelMention

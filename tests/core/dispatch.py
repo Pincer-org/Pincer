@@ -57,4 +57,3 @@ class TestDispatch:
             str(GatewayDispatch.from_string(self.dispatch_string))
             == self.dispatch_string
         )
-

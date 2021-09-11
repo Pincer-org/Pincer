@@ -22,9 +22,6 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from os import path, walk
-from re import search, MULTILINE
-
 from setuptools import setup
 
 if __name__ == '__main__':
