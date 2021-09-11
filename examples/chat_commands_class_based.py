@@ -1,5 +1,5 @@
 from pincer import Client, command
-from pincer.objects import Message, InteractionFlags
+from pincer.objects import Message, InteractionFlags, Embed
 
 
 class Bot(Client):

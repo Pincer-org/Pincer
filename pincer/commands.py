@@ -166,7 +166,7 @@ class ChatCommandHandler:
         self.client = client
         self._api_commands: List[AppCommand] = list()
         logging.debug(
-            f"%i commands registered.",
+            "%i commands registered.",
             len(ChatCommandHandler.register.items())
         )
 

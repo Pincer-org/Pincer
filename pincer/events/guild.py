@@ -81,6 +81,7 @@ class GuildEmojisUpdateEvent(APIObject):
     guild_id: Snowflake
     emojis: List[Emoji]
 
+
 @dataclass
 class GuildStickersUpdateEvent(APIObject):
     """
