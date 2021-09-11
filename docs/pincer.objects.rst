@@ -212,14 +212,6 @@ pincer.objects.overwrite module
    :undoc-members:
    :show-inheritance:
 
-pincer.objects.presence module
-------------------------------
-
-.. automodule:: pincer.objects.presence
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 pincer.objects.reaction module
 ------------------------------
 
@@ -240,6 +232,14 @@ pincer.objects.select\_menu module
 ----------------------------------
 
 .. automodule:: pincer.objects.select_menu
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pincer.objects.session\_start\_limit module
+-------------------------------------------
+
+.. automodule:: pincer.objects.session_start_limit
    :members:
    :undoc-members:
    :show-inheritance:

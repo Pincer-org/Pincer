@@ -27,7 +27,6 @@ from dataclasses import dataclass
 
 from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
 
-
 @dataclass
 class ThreadMetadata(APIObject):
     """
