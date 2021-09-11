@@ -31,18 +31,18 @@ from ..exceptions import InvalidUrlError, EmbedFieldError
 from ..utils import APIObject, APINullable, MISSING
 
 
-def _field_size(field: str) -> int:
+def _field_size(_field: str) -> int:
     """
     The Discord API removes white space
         when counting the length of a field.
 
-    :param field:
+    :param _field:
         The field.
 
     :return:
         Length of the string without white space.
     """
-    return 0 if field == MISSING else len(field.strip())
+    return 0 if _field == MISSING else len(_field.strip())
 
 
 def _is_valid_url(url: str) -> bool:
@@ -56,7 +56,12 @@ def _is_valid_url(url: str) -> bool:
     :return:
         Whether the provided url is valid.
     """
-    stmt = r"(http[s]|attachment)?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
+    stmt = (
+        r"(http[s]|attachment)"
+        r"?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|"
+        r"(?:%[0-9a-fA-F][0-9a-fA-F]))+"
+    )
+
     return bool(match(stmt, url))
 
 
@@ -71,7 +76,8 @@ def _check_if_valid_url(url: str):
     """
     if not _is_valid_url(url):
         raise InvalidUrlError(
-            "Url was malformed or wasn't of protocol http(s)/attachment.")
+            "Url was malformed or wasn't of protocol http(s)/attachment."
+        )
 
 
 @dataclass
@@ -442,7 +448,7 @@ class Embed(APIObject):
 
         :return: self
         """
-        self.video = EmbedImage(
+        self.image = EmbedImage(
             height=height,
             url=url,
             proxy_url=proxy_url,
@@ -476,7 +482,7 @@ class Embed(APIObject):
 
         :return self:
         """
-        self.video = EmbedThumbnail(
+        self.thumbnail = EmbedThumbnail(
             height=height,
             url=url,
             proxy_url=proxy_url,
