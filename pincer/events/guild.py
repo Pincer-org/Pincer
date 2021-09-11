@@ -233,7 +233,7 @@ class GuildRoleUpdateEvent(APIObject):
 class GuildRoleDeleteEvent(APIObject):
     """
     Sent when a guild role is deleted.
-    
+
     :param guild_id:
         id of the guild
 
