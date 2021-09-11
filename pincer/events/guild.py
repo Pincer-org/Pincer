@@ -96,7 +96,7 @@ class GuildStickersUpdateEvent(APIObject):
 class GuildIntegrationsUpdateEvent(APIObject):
     """
     Sent when a guild integration is updated.
-    
+
     :param guild_id:
         id of the guild whose integrations were updated
     """
