@@ -31,27 +31,27 @@ from ..utils.snowflake import Snowflake
 
 @dataclass
 class TypingStartEvent(APIObject):
-	"""
-	Sent when a user starts typing in a channel.
+    """
+    Sent when a user starts typing in a channel.
 
-	:param channel_id:
-		id of the channel
+    :param channel_id:
+        id of the channel
 
-	:param guild_id:
-		id of the guild
+    :param guild_id:
+        id of the guild
 
-	:param user_id:
-		id of the user
+    :param user_id:
+        id of the user
 
-	:param timestamp:
-		unix time (in seconds) of when the user started typing
+    :param timestamp:
+        unix time (in seconds) of when the user started typing
 
-	:param member:
-		the member who started typing if this happened in a guild
-	"""
-	channel_id: Snowflake
-	user_id: Snowflake
-	timestamp: int
+    :param member:
+        the member who started typing if this happened in a guild
+    """
+    channel_id: Snowflake
+    user_id: Snowflake
+    timestamp: int
 
-	guild_id: APINullable[Snowflake] = MISSING
-	member: APINullable[GuildMember] = MISSING
+    guild_id: APINullable[Snowflake] = MISSING
+    member: APINullable[GuildMember] = MISSING

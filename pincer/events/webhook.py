@@ -29,15 +29,15 @@ from ..utils.snowflake import Snowflake
 
 @dataclass
 class WebhookUpdateEvent(APIObject):
-	"""
-	Sent when a guild's channel webhook
-	is created, updated, or deleted.
+    """
+    Sent when a guild's channel webhook
+    is created, updated, or deleted.
 
-	:param guild_id:
-		id of the guild
+    :param guild_id:
+        id of the guild
 
-	:param channel_id:
-		id of the channel
-	"""
-	guild_id: Snowflake
-	channel_id: Snowflake
+    :param channel_id:
+        id of the channel
+    """
+    guild_id: Snowflake
+    channel_id: Snowflake

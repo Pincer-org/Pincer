@@ -71,7 +71,7 @@ class GuildEmojisUpdateEvent(APIObject):
 
     :param guild_id:
         id of the guild
-    
+
     :param emojis:
         array of emojis
     """

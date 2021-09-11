@@ -30,18 +30,18 @@ from ..utils.types import MISSING, APINullable
 
 @dataclass
 class IntegrationDeleteEvent(APIObject):
-	"""
-	Sent when an integration is deleted.
+    """
+    Sent when an integration is deleted.
 
-	:param id:
-		integration id
+    :param id:
+        integration id
 
-	:param guild_id:
-		id of the guild
+    :param guild_id:
+        id of the guild
 
-	:param application_id:
-		id of the bot/OAuth2 application for this discord integration
-	"""
-	id: Snowflake
-	guild_id: Snowflake
-	application_id: APINullable[Snowflake] = MISSING
+    :param application_id:
+        id of the bot/OAuth2 application for this discord integration
+    """
+    id: Snowflake
+    guild_id: Snowflake
+    application_id: APINullable[Snowflake] = MISSING

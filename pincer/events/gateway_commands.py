@@ -143,7 +143,7 @@ class UpdateVoiceState(APIObject):
     guild_id: Snowflake
     self_mute: bool
     self_deaf: bool
-    
+
     channel_id: Optional[Snowflake] = None
 
 class StatusType(Enum):
