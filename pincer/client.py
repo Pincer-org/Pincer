@@ -176,7 +176,7 @@ class Client(Dispatcher):
 
         self.bot: Optional[User] = None
         self.__received = received or "Command arrived successfully!"
-        self.__token = token
+        self.http = HTTPClient(token)
 
     @property
     def chat_commands(self):
@@ -262,7 +262,7 @@ class Client(Dispatcher):
         return coroutine
 
     def run(self):
-        self.http = HTTPClient(self.__token)
+        """Start the event listener"""
         self.start_loop()
         asyncio.run(self.http.close())
 
