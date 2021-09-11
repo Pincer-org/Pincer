@@ -61,7 +61,7 @@ class AllowedMentions(APIObject):
 
 @dataclass
 class Message:
-    content: str
+    content: str = ''
     tts: Optional[bool] = False
     embeds: Optional[List[Embed]] = None
     allowed_mentions: Optional[AllowedMentions] = None
@@ -70,7 +70,7 @@ class Message:
     type: Optional[CallbackType] = None
 
     def to_dict(self):
-        if len(self.content) < 1:
+        if len(self.content) < 1 and not self.embeds:
             raise CommandReturnIsEmpty("Cannot return empty message.")
 
         allowed_mentions = (

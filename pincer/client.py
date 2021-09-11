@@ -35,7 +35,7 @@ from .core.dispatch import GatewayDispatch
 from .core.gateway import Dispatcher
 from .core.http import HTTPClient
 from .exceptions import InvalidEventName
-from .objects import User, Message
+from .objects import User, Message, Embed
 from .objects.interaction_base import CallbackType
 from .objects.interactions import Interaction, InteractionFlags
 from .utils import get_index, should_pass_cls, Coro, MISSING
@@ -403,8 +403,11 @@ class Client(Dispatcher):
 
             message = await command.call(**kwargs)
 
+            if isinstance(message, Embed):
+                message = Message(embeds=[message])
+
             if not isinstance(message, Message):
-                message = Message(message) if message else Message(
+                message = Message(cmessage) if message else Message(
                     self.__received,
                     flags=InteractionFlags.EPHEMERAL
                 )
