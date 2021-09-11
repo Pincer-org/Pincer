@@ -394,8 +394,7 @@ class Client(Dispatcher):
                     flags=InteractionFlags.EPHEMERAL
                 )
 
-            async with self.http as http:
-                await http.post(
+                await self.http.post(
                     f"interactions/{interaction.id}/{interaction.token}/callback",
                     message.to_dict()
                 )

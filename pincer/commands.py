@@ -264,7 +264,7 @@ class ChatCommandHandler:
                             setattr(self._api_commands[idx], key, change)
 
         for cmd_id, changes in to_update.items():
-            await http.patch(
+            await self.client.http.patch(
                 f"applications/{self.client.bot.id}/commands/{cmd_id}",
                 changes
             )
