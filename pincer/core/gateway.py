@@ -55,7 +55,8 @@ class Dispatcher:
     Discord WebSocket API on behalf of the provided token.
 
     This token must be a bot token.
-    (Which can be found on `<https://discord.com/developers/applications/<bot_id>/bot>`_)
+    (Which can be found on
+    `<https://discord.com/developers/applications/<bot_id>/bot>`_)
     """
 
     # TODO: Add intents argument

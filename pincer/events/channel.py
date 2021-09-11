@@ -29,6 +29,7 @@ from ..utils.snowflake import Snowflake
 from ..utils.timestamp import Timestamp
 from ..utils.types import MISSING, APINullable
 
+
 @dataclass
 class ChannelPinsUpdateEvent(APIObject):
     """

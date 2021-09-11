@@ -31,6 +31,7 @@ from ..utils.api_object import APIObject
 from ..utils.snowflake import Snowflake
 from ..utils.types import APINullable, MISSING
 
+
 @dataclass
 class MessageDeleteEvent(APIObject):
     """
@@ -50,13 +51,14 @@ class MessageDeleteEvent(APIObject):
 
     guild_id: APINullable[Snowflake] = MISSING
 
+
 @dataclass
 class MessageDeleteBulkEvent(APIObject):
     """
     Sent when multiple messages are deleted at once.
 
     :param ids:
-        the ids of the msesages
+        the ids of the messages
 
     :param channel_id:
         the id of the channel
@@ -68,6 +70,7 @@ class MessageDeleteBulkEvent(APIObject):
     channel_id: Snowflake
 
     guild_id: APINullable[Snowflake] = MISSING
+
 
 @dataclass
 class MessageReactionAddEvent(APIObject):
@@ -100,6 +103,7 @@ class MessageReactionAddEvent(APIObject):
     guild_id: APINullable[Snowflake] = MISSING
     member: APINullable[GuildMember] = MISSING
 
+
 @dataclass
 class MessageReactionRemoveEvent(APIObject):
     """
@@ -127,6 +131,7 @@ class MessageReactionRemoveEvent(APIObject):
 
     guild_id: APINullable[Snowflake] = MISSING
 
+
 @dataclass
 class MessageReactionRemoveAllEvent(APIObject):
     """
@@ -144,6 +149,7 @@ class MessageReactionRemoveAllEvent(APIObject):
     channel_id: Snowflake
     message_id: Snowflake
     guild_id: APINullable[Snowflake] = MISSING
+
 
 @dataclass
 class MessageReactionRemoveEmojiEvent(APIObject):

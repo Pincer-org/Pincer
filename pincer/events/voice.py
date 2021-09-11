@@ -28,6 +28,7 @@ from typing import Optional
 from ..utils.api_object import APIObject
 from ..utils.snowflake import Snowflake
 
+
 @dataclass
 class VoiceServerUpdateEvent(APIObject):
     """

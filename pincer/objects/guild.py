@@ -39,6 +39,7 @@ from .voice_state import VoiceState
 from .welcome_screen import WelcomeScreen
 from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
 
+
 class PremiumTier(IntEnum):
     """
     :param NONE:
@@ -58,11 +59,13 @@ class PremiumTier(IntEnum):
     TIER_2 = 2
     TIER_3 = 3
 
+
 class GuildNSFWLevel(IntEnum):
     DEFAULT = 0
     EXPLICIT = 1
     SAFE = 2
     AGE_RESTRICTED = 3
+
 
 class ExplicitContentFilterLevel(IntEnum):
     """
@@ -79,6 +82,7 @@ class ExplicitContentFilterLevel(IntEnum):
     MEMBERS_WITHOUT_ROLES = 1
     ALL_MEMBERS = 2
 
+
 class MFALevel(IntEnum):
     """
     :param NONE:
@@ -89,6 +93,7 @@ class MFALevel(IntEnum):
     """
     NONE = 0
     ELEVATED = 1
+
 
 class VerificationLevel(IntEnum):
     """
@@ -113,6 +118,7 @@ class VerificationLevel(IntEnum):
     HIGH = 3
     VERY_HIGH = 4
 
+
 class DefaultMessageNotificationLevel(IntEnum):
     """
     :param ALL_MESSAGES:
@@ -124,6 +130,7 @@ class DefaultMessageNotificationLevel(IntEnum):
     """
     ALL_MESSAGES = 0
     ONLY_MENTIONS = 1
+
 
 class SystemChannelFlags(IntEnum):
     """
@@ -140,6 +147,7 @@ class SystemChannelFlags(IntEnum):
     SUPPRESS_PREMIUM_SUBSCRIPTIONS = 1 << 1
     SUPPRESS_GUILD_REMINDER_NOTIFICATIONS = 1 << 2
 
+
 class GuildFeature(Enum):
     """
     :param ANIMATED_ICON:
@@ -152,7 +160,8 @@ class GuildFeature(Enum):
         guild has access to use commerce features (i.e. create store channels)
 
     :param COMMUNITY:
-        guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates
+        guild can enable welcome screen, Membership Screening, stage channels
+        and discovery, and receives community updates
 
     :param DISCOVERABLE:
         guild is able to be discovered in the directory
@@ -173,7 +182,8 @@ class GuildFeature(Enum):
         guild is partnered
 
     :param PREVIEW_ENABLED:
-        guild can be previewed before joining via Membership Screening or the directory
+        guild can be previewed before joining via Membership Screening
+        or the directory
 
     :param VANITY_URL:
         guild has access to set a vanity URL
@@ -182,7 +192,8 @@ class GuildFeature(Enum):
         guild is verified
 
     :param VIP_REGIONS:
-        guild has access to set 384kbps bitrate in voice (previously VIP voice servers)
+        guild has access to set 384kbps bitrate in voice
+        (previously VIP voice servers)
 
     :param WELCOME_SCREEN_ENABLED:
         guild has enabled the welcome screen
@@ -227,6 +238,7 @@ class GuildFeature(Enum):
     SEVEN_DAY_THREAD_ARCHIVE = auto()
     PRIVATE_THREADS = auto()
 
+
 @dataclass
 class Guild(APIObject):
     """
@@ -251,8 +263,8 @@ class Guild(APIObject):
         the description of a Community guild
 
     :param discovery_splash:
-        discovery splash hash; only present for guilds with the "DISCOVERABLE"
-        feature
+        discovery splash hash;
+        only present for guilds with the "DISCOVERABLE" feature
 
     :param emojis:
         custom guild emojis
@@ -283,22 +295,23 @@ class Guild(APIObject):
         id of owner
 
     :param preferred_locale:
-        the preferred locale of a Community guild; used in server discovery and
-        notices from Discord; defaults to "en-US"
+        the preferred locale of a Community guild;
+        used in server discovery and notices from Discord;
+        defaults to "en-US"
 
     :param premium_tier:
         premium tier (Server Boost level)
 
     :param public_updates_channel_id:
-        the id of the channel where admins and moderators of Community guilds
-        receive notices from Discord
+        the id of the channel where admins
+        and moderators of Community guilds receive notices from Discord
 
     :param roles:
         roles in the guild
 
     :param rules_channel_id:
-        the id of the channel where Community guilds can display rules and/or
-        guidelines
+        the id of the channel where Community guilds can display rules
+        and/or guidelines
 
     :param splash:
         splash hash
@@ -307,8 +320,8 @@ class Guild(APIObject):
         system channel flags
 
     :param system_channel_id:
-        the id of the channel where guild notices such as welcome messages and
-        boost events are posted
+        the id of the channel where guild notices
+        such as welcome messages and boost events are posted
 
     :param vanity_url_code:
         the vanity url code for the guild
@@ -321,8 +334,9 @@ class Guild(APIObject):
         `GET /guilds/<id>` endpoint when with_counts is true
 
     :param approximate_presence_count:
-        approximate number of non-offline members in this guild, returned from
-        the `GET /guilds/<id>` endpoint when with_counts is true
+        approximate number of non-offline members in this guild,
+        returned from the `GET /guilds/<id>`
+        endpoint when with_counts is true
 
     :param channels:
         channels in the guild
@@ -340,8 +354,8 @@ class Guild(APIObject):
         the maximum number of members for the guild
 
     :param max_presences:
-        the maximum number of presences for the guild (null is always returned,
-        apart from the largest of guilds)
+        the maximum number of presences for the guild
+        (null is always returned, apart from the largest of guilds)
 
     :param max_video_channel_users:
         the maximum amount of users in a video channel
@@ -356,14 +370,16 @@ class Guild(APIObject):
         true if the user is the owner of the guild
 
     :param permissions:
-        total permissions for the user in the guild (excludes overwrites)
+        total permissions for the user in the guild
+        (excludes overwrites)
 
     :param premium_subscription_count:
         the number of boosts this guild currently has
 
     :param presences:
-        presences of the members in the guild, will only include non-offline
-        members if the size is greater than large threshold
+        presences of the members in the guild,
+        will only include non-offline members if the size is greater
+        than large threshold
 
     :param stage_instances:
         Stage instances in the guild
@@ -375,25 +391,26 @@ class Guild(APIObject):
         voice region id for the guild (deprecated)
 
     :param threads:
-        all active threads in the guild that current user has permission to
-        view
+        all active threads in the guild that current user
+        has permission to view
 
     :param unavailable:
         true if this guild is unavailable due to an outage
 
     :param voice_states:
-        states of members currently in voice channels; lacks the guild_id key
+        states of members currently in voice channels;
+        lacks the guild_id key
 
     :param widget_enabled:
         true if the server widget is enabled
 
     :param widget_channel_id:
-        the channel id that the widget will generate an invite to, or null if
-        set to no invite
+        the channel id that the widget will generate an invite to,
+        or null if set to no invite
 
     :param welcome_screen:
-        the welcome screen of a Community guild, shown to new members, returned
-        in an Invite's guild object
+        the welcome screen of a Community guild, shown to new members,
+        returned in an Invite's guild object
     """
 
     afk_channel_id: Optional[Snowflake]

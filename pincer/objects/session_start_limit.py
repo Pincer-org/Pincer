@@ -26,6 +26,7 @@ from dataclasses import dataclass
 
 from ..utils.api_object import APIObject
 
+
 @dataclass
 class SessionStartLimit(APIObject):
     """
@@ -35,7 +36,8 @@ class SessionStartLimit(APIObject):
         The total number of session starts the current user is allowed
 
     :param remaining:
-        The remaining number of session starts the current user is allowed
+        The remaining number of session starts
+        the current user is allowed
 
     :param reset_after:
         The number of milliseconds after which the limit resets

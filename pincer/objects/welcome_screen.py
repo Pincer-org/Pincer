@@ -45,8 +45,8 @@ class WelcomeScreenChannel(APIObject):
         the emoji id, if the emoji is custom
 
     :param emoji_name:
-        the emoji name if custom, the unicode character if standard, or null if
-        no emoji is set
+        the emoji name if custom, the unicode character if standard,
+        or null if no emoji is set
     """
 
     channel_id: Snowflake

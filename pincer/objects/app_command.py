@@ -268,8 +268,10 @@ class AppCommand(APIObject):
             for prop in self._eq_props
         )
 
-        if (self.options is MISSING and other.options is not MISSING) or \
-                (self.options is not MISSING and other.options is MISSING):
+        if (
+            (self.options is MISSING and other.options is not MISSING)
+            or (self.options is not MISSING and other.options is MISSING)
+        ):
             return False
 
         if is_equal and len(other.options) == len(self.options):

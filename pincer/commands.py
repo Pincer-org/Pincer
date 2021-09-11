@@ -116,9 +116,12 @@ def command(
                 # two values of the type type and isinstance does NOT
                 # work here.
                 union_args = [t for t in args if t is not type(None)]
-                annotation = get_index(union_args, 0) \
-                    if len(union_args) == 1 \
+
+                annotation = (
+                    get_index(union_args, 0)
+                    if len(union_args) == 1
                     else Union[Tuple[List]]
+                )
 
             param_type = _options_type_link.get(annotation)
             if not param_type:
@@ -224,8 +227,12 @@ class ChatCommandHandler:
                 else:
                     options = local.options
 
-            if api.options is not MISSING and list(
-                    map(AppCommandOption.from_dict, options)) != api.options:
+            if (
+                api.options is not MISSING
+                and list(
+                    map(AppCommandOption.from_dict, options)
+                ) != api.options
+            ):
                 update["options"] = options
 
             return update

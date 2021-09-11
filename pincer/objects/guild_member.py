@@ -84,6 +84,7 @@ class GuildMember(APIObject):
 
     def __post_init__(self):
         self.roles = convert(self.roles, Snowflake.from_string)
-        self.premium_since = convert(self.premium_since, Timestamp.parse,
-                                     Timestamp)
         self.user = convert(self.user, User.from_dict, User)
+        self.premium_since = convert(
+            self.premium_since, Timestamp.parse, Timestamp
+        )

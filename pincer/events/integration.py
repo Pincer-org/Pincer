@@ -28,6 +28,7 @@ from ..utils.api_object import APIObject
 from ..utils.snowflake import Snowflake
 from ..utils.types import MISSING, APINullable
 
+
 @dataclass
 class IntegrationDeleteEvent(APIObject):
     """

@@ -29,6 +29,7 @@ from ..utils.api_object import APIObject
 from ..utils.types import APINullable, MISSING
 from ..utils.snowflake import Snowflake
 
+
 @dataclass
 class TypingStartEvent(APIObject):
     """

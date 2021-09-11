@@ -31,6 +31,7 @@ from ..utils.snowflake import Snowflake
 from ..utils.timestamp import Timestamp
 from ..utils.types import APINullable, MISSING
 
+
 @dataclass
 class InviteCreateEvent(APIObject):
     """
@@ -87,6 +88,7 @@ class InviteCreateEvent(APIObject):
     target_type: APINullable[InviteTargetType] = MISSING
     target_user: APINullable[User] = MISSING
     uses: int = 0
+
 
 @dataclass
 class InviteDeleteEvent(APIObject):

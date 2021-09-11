@@ -29,6 +29,7 @@ from ..objects.channel import Channel
 from ..objects.thread import ThreadMember
 from ..utils import APIObject, APINullable, MISSING, Snowflake
 
+
 @dataclass
 class ThreadListSyncEvent(APIObject):
     """
@@ -57,6 +58,7 @@ class ThreadListSyncEvent(APIObject):
     members: List[ThreadMember]
 
     channel_ids: APINullable[List[Snowflake]] = MISSING
+
 
 @dataclass
 class ThreadMembersUpdateEvent(APIObject):

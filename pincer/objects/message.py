@@ -73,9 +73,10 @@ class Message:
         if len(self.content) < 1:
             raise CommandReturnIsEmpty("Cannot return empty message.")
 
-        allowed_mentions = self.allowed_mentions.to_dict() \
-            if self.allowed_mentions \
-            else {}
+        allowed_mentions = (
+            self.allowed_mentions.to_dict()
+            if self.allowed_mentions else {}
+        )
 
         resp = {
             "content": self.content,

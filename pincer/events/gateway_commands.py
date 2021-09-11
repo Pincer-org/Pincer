@@ -32,6 +32,7 @@ from ..utils.api_object import APIObject
 from ..utils.types import APINullable, MISSING
 from ..utils.snowflake import Snowflake
 
+
 @dataclass
 class Identify(APIObject):
     """
@@ -69,6 +70,7 @@ class Identify(APIObject):
     shard: APINullable[Tuple[int, int]] = MISSING
     presence: APINullable[...] = MISSING  # FIXME
 
+
 @dataclass
 class Resume(APIObject):
     """
@@ -86,6 +88,7 @@ class Resume(APIObject):
     token: str
     session_id: str
     seq: int
+
 
 @dataclass
 class RequestGuildMembers(APIObject):
@@ -121,6 +124,7 @@ class RequestGuildMembers(APIObject):
     user_ids: APINullable[Union[Snowflake, List[Snowflake]]] = MISSING
     nonce: APINullable[str] = MISSING
 
+
 @dataclass
 class UpdateVoiceState(APIObject):
     """
@@ -146,6 +150,7 @@ class UpdateVoiceState(APIObject):
 
     channel_id: Optional[Snowflake] = None
 
+
 class StatusType(Enum):
     """
     :param online:
@@ -168,6 +173,7 @@ class StatusType(Enum):
     idle = auto()
     invisible = auto()
     offline = auto()
+
 
 @dataclass
 class UpdatePresence(APIObject):

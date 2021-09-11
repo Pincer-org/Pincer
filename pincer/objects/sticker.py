@@ -81,16 +81,16 @@ class Sticker(APIObject):
         name of the sticker
 
     :param tags:
-        for guild stickers, the Discord name of a unicode emoji representing
-        the sticker's expression. for standard stickers, a comma-separated list
-        of related expressions.
+        for guild stickers, the Discord name of a unicode emoji
+        representing the sticker's expression. For standard stickers,
+        a comma-separated list of related expressions.
 
     :param type:
         type of sticker
 
     :param available:
-        whether this guild sticker can be used, may be false due to loss of
-        Server Boosts
+        whether this guild sticker can be used,
+        may be false due to loss of Server Boosts
 
     :param guild_id:
         id of the guild that owns this sticker

@@ -31,6 +31,7 @@ from ..objects.user import User
 from ..utils.api_object import APIObject
 from ..utils.types import MISSING, APINullable
 
+
 @dataclass
 class HelloEvent(APIObject):
     """
@@ -38,9 +39,10 @@ class HelloEvent(APIObject):
     Defines the heartbeat interval that the client should heartbeat to.
 
     :param heartbeat_interval:
-        the interval (in milliseconds) the client should hearbeat with
+        the interval (in milliseconds) the client should heartbeat with
     """
     heartbeat_interval: int
+
 
 @dataclass
 class ReadyEvent(APIObject):
@@ -65,7 +67,7 @@ class ReadyEvent(APIObject):
         with this session, if sent when identifying
 
     :param application:
-        containts `id` and `flags`
+        contains `id` and `flags`
     """
     v: int
     user: User

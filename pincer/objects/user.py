@@ -94,8 +94,8 @@ class User(APIObject):
         the public flags on a user's account
 
     :param system:
-        whether the user is an Official Discord System user (part of the urgent
-        message system)
+        whether the user is an Official Discord System user
+        (part of the urgent message system)
 
     :param verified:
         whether the email on this account has been verified
@@ -123,9 +123,11 @@ class User(APIObject):
         """
         The user their premium type in a usable enum.
         """
-        return MISSING \
-            if self.premium_type is MISSING \
+        return (
+            MISSING
+            if self.premium_type is MISSING
             else PremiumTypes(self.premium_type)
+        )
 
     def __str__(self):
         """Return the discord tag when object gets used as a string."""

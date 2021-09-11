@@ -31,6 +31,7 @@ from ..utils.api_object import APIObject
 from ..utils.snowflake import Snowflake
 from ..utils.types import MISSING, APINullable
 
+
 class ActivityType(IntEnum):
     """
     :param GAME:
@@ -65,6 +66,7 @@ class ActivityType(IntEnum):
     CUSTOM = 4
     COMPETING = 5
 
+
 @dataclass
 class ActivityTimestamp(APIObject):
     """
@@ -76,6 +78,7 @@ class ActivityTimestamp(APIObject):
     """
     start: APINullable[int] = MISSING
     end: APINullable[int] = MISSING
+
 
 @dataclass
 class ActivityEmoji(APIObject):
@@ -93,6 +96,7 @@ class ActivityEmoji(APIObject):
     id: APINullable[Snowflake] = MISSING
     animated: APINullable[bool] = MISSING
 
+
 @dataclass
 class ActivityParty(APIObject):
     """
@@ -104,6 +108,7 @@ class ActivityParty(APIObject):
     """
     id: APINullable[str] = MISSING
     size: APINullable[Tuple[int, int]] = MISSING
+
 
 @dataclass
 class ActivityAssets(APIObject):
@@ -127,6 +132,7 @@ class ActivityAssets(APIObject):
     small_image: APINullable[str] = MISSING
     small_text: APINullable[str] = MISSING
 
+
 @dataclass
 class ActivitySecrets(APIObject):
     """
@@ -141,7 +147,8 @@ class ActivitySecrets(APIObject):
     """
     join: APINullable[str] = MISSING
     spectate: APINullable[str] = MISSING
-    match: APINullable[str] = MISSING
+    match_: APINullable[str] = MISSING
+
 
 class ActivityFlags(IntEnum):
     INSTANCE = 1 << 0
@@ -150,6 +157,7 @@ class ActivityFlags(IntEnum):
     JOIN_REQUEST = 1 << 3
     SYNC = 1 << 4
     PLAY = 1 << 5
+
 
 @dataclass
 class ActivityButton(APIObject):
@@ -167,6 +175,7 @@ class ActivityButton(APIObject):
     """
     label: str
     url: str
+
 
 @dataclass
 class Activity(APIObject):
@@ -214,7 +223,8 @@ class Activity(APIObject):
         whether or not the activity is an instanced game session
 
     :param flags:
-        activity flags `OR`d together, describes what the payload includes
+        activity flags `OR`d together,
+        describes what the payload includes
     """
     name: str
     type: ActivityType
@@ -232,6 +242,7 @@ class Activity(APIObject):
     instance: APINullable[bool] = MISSING
     flags: APINullable[ActivityFlags] = MISSING
     buttons: APINullable[List[ActivityButton]] = MISSING
+
 
 @dataclass
 class ClientStatus(APIObject):
@@ -256,6 +267,7 @@ class ClientStatus(APIObject):
     desktop: APINullable[str] = MISSING
     mobile: APINullable[str] = MISSING
     web: APINullable[str] = MISSING
+
 
 @dataclass
 class PresenceUpdateEvent(APIObject):

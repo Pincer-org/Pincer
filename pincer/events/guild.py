@@ -36,6 +36,7 @@ from ..utils.snowflake import Snowflake
 from ..utils.timestamp import Timestamp
 from ..utils.types import MISSING, APINullable
 
+
 @dataclass
 class GuildBanAddEvent(APIObject):
     """
@@ -50,6 +51,7 @@ class GuildBanAddEvent(APIObject):
     guild_id: Snowflake
     user: User
 
+
 @dataclass
 class GuildBanRemoveEvent(APIObject):
     """
@@ -63,6 +65,7 @@ class GuildBanRemoveEvent(APIObject):
     """
     guild_id: Snowflake
     user: User
+
 
 @dataclass
 class GuildEmojisUpdateEvent(APIObject):
@@ -92,6 +95,7 @@ class GuildStickersUpdateEvent(APIObject):
     guild_id: Snowflake
     stickers: List[Sticker]
 
+
 @dataclass
 class GuildIntegrationsUpdateEvent(APIObject):
     """
@@ -101,6 +105,7 @@ class GuildIntegrationsUpdateEvent(APIObject):
         id of the guild whose integrations were updated
     """
     guild_id: Snowflake
+
 
 @dataclass
 class GuildMemberRemoveEvent(APIObject):
@@ -115,6 +120,7 @@ class GuildMemberRemoveEvent(APIObject):
     """
     guild_id: Snowflake
     user: User
+
 
 @dataclass
 class GuildMemberUpdateEvent(APIObject):
@@ -161,6 +167,7 @@ class GuildMemberUpdateEvent(APIObject):
     mute: APINullable[bool] = MISSING
     pending: APINullable[bool] = MISSING
 
+
 @dataclass
 class GuildMembersChunkEvent(APIObject):
     """
@@ -186,7 +193,7 @@ class GuildMembersChunkEvent(APIObject):
         it will be returned here
 
     :param presences:
-        if pasing true to `REQUEST_GUILD_MEMBERS`, presences
+        if passing true to `REQUEST_GUILD_MEMBERS`, presences
         of the returned members will be here
 
     :param nonce:"
@@ -200,6 +207,7 @@ class GuildMembersChunkEvent(APIObject):
     not_found: APINullable[List[Any]] = MISSING
     presences: APINullable[PresenceUpdateEvent] = MISSING
     nonce: APINullable[str] = MISSING
+
 
 @dataclass
 class GuildRoleCreateEvent(APIObject):
@@ -215,6 +223,7 @@ class GuildRoleCreateEvent(APIObject):
     guild_id: Snowflake
     role: Role
 
+
 @dataclass
 class GuildRoleUpdateEvent(APIObject):
     """
@@ -228,6 +237,7 @@ class GuildRoleUpdateEvent(APIObject):
     """
     guild_id: Snowflake
     role: Role
+
 
 @dataclass
 class GuildRoleDeleteEvent(APIObject):
