@@ -172,7 +172,8 @@ class ChatCommandHandler:
 
     async def __init_existing_commands(self):
         # TODO: Fix docs
-        res = await self.client.http.get(f"applications/{self.client.bot.id}/commands")
+        res = await self.client.http.get(
+            f"applications/{self.client.bot.id}/commands")
         self._api_commands = list(map(AppCommand.from_dict, res))
 
     async def __remove_unused_commands(self):
@@ -226,10 +227,10 @@ class ChatCommandHandler:
                     options = local.options
 
             if (
-                api.options is not MISSING
-                and list(
-                    map(AppCommandOption.from_dict, options)
-                ) != api.options
+                    api.options is not MISSING
+                    and list(
+                map(AppCommandOption.from_dict, options)
+            ) != api.options
             ):
                 update["options"] = options
 
@@ -277,8 +278,9 @@ class ChatCommandHandler:
         ]
 
         if commands_to_add:
-            endpoint = f"applications/{self.client.bot.id}"
             for cmd in commands_to_add:
+                endpoint = f"applications/{self.client.bot.id}"
+                
                 if cmd.app.guild_id is not MISSING:
                     endpoint += f"/guilds/{cmd.app.guild_id}"
 
