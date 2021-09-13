@@ -226,12 +226,8 @@ class ChatCommandHandler:
                 else:
                     options = local.options
 
-            if (
-                    api.options is not MISSING
-                    and list(
-                map(AppCommandOption.from_dict, options)
-            ) != api.options
-            ):
+            if api.options is not MISSING and list(
+                    map(AppCommandOption.from_dict, options)) != api.options:
                 update["options"] = options
 
             return update
@@ -280,7 +276,7 @@ class ChatCommandHandler:
         if commands_to_add:
             for cmd in commands_to_add:
                 endpoint = f"applications/{self.client.bot.id}"
-                
+
                 if cmd.app.guild_id is not MISSING:
                     endpoint += f"/guilds/{cmd.app.guild_id}"
 
