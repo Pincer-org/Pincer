@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    pincer.core
+   pincer.middleware
    pincer.objects
    pincer.utils
 
