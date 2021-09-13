@@ -43,6 +43,13 @@ class UnhandledException(PincerError):
         )
 
 
+class NoExportMethod(PincerError):
+    """
+    Exception which gets raised when an `export` method is expected but not
+    found in a module.
+    """
+
+
 class CommandError(PincerError):
     """
     Base class for exceptions which are related to commands.
