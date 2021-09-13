@@ -394,17 +394,16 @@ class Client(Dispatcher):
 
             if isinstance(message, Embed):
                 message = Message(embeds=[message])
-
             elif not isinstance(message, Message):
                 message = Message(message) if message else Message(
                     self.__received,
                     flags=InteractionFlags.EPHEMERAL
                 )
 
-                await self.http.post(
-                    f"interactions/{interaction.id}/{interaction.token}/callback",
-                    message.to_dict()
-                )
+            await self.http.post(
+                f"interactions/{interaction.id}/{interaction.token}/callback",
+                message.to_dict()
+            )
 
         return "on_interaction_create", [interaction]
 
