@@ -24,16 +24,16 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import IntEnum
 from typing import Optional
 
-from ..objects.channel import Channel
-from ..objects.guild import Guild
-from ..objects.user import User
+from .channel import Channel
+from .guild import Guild
+from .user import User
 from ..utils import APIObject, APINullable, MISSING, Snowflake
 
 
-class WebhookType(Enum):
+class WebhookType(IntEnum):
     """
     Represents the type of a webhook.
 
@@ -77,23 +77,24 @@ class Webhook(APIObject):
         the bot/OAuth2 application that created this webhook
 
     :param user:
-        the user this webhook was created by (not returned when getting a
-        webhook with its token)
+        the user this webhook was created by
+        (not returned when getting a webhook with its token)
 
     :param token:
-        the secure token of the webhook (returned for Incoming Webhooks)
+        the secure token of the webhook
+        (returned for Incoming Webhooks)
 
     :param source_guild:
-        the guild of the channel that this webhook is following (returned for
-        Channel Follower Webhooks)
+        the guild of the channel that this webhook is following
+        (returned for Channel Follower Webhooks)
 
     :param source_channel:
-        the channel that this webhook is following (returned for Channel
-        Follower Webhooks)
+        the channel that this webhook is following
+        (returned for Channel Follower Webhooks)
 
     :param url:
-        the url used for executing the webhook (returned by the webhooks OAuth2
-        flow)
+        the url used for executing the webhook
+        (returned by the webhooks OAuth2 flow)
 
     :param guild_id:
         the guild id this webhook is for, if any

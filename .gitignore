@@ -25,3 +25,6 @@ bin
 build
 dist
 MANIFEST
+
+# Pytest coverage db
+.coverage

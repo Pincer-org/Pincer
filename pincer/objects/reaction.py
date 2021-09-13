@@ -24,7 +24,7 @@
 
 from dataclasses import dataclass
 
-from ..objects.emoji import Emoji
+from .emoji import Emoji
 from ..utils.api_object import APIObject
 
 

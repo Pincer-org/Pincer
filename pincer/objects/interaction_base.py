@@ -28,28 +28,31 @@ from .user import User
 from ..utils import APIObject, Snowflake
 
 
-class MessageInteractionCallbackType(IntEnum):
+class CallbackType(IntEnum):
     """
     The types of response a client can give to a interaction.
 
     :param PONG:
         ACK a Ping
 
-    :param CHANNEL_MESSAGE_WITH_SOURCE:
+    :param MESSAGE:
         respond to an interaction with a message
 
-    :param DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE:
-            ACK an interaction and edit a response later, the user sees a loading state
+    :param DEFERRED_MESSAGE:
+        ACK an interaction and edit a response later,
+        the user sees a loading state
 
     :param DEFERRED_UPDATE_MESSAGE:
-        for components, ACK an interaction and edit the original message later; the user does not see a loading state
+        for components, ACK an interaction
+        and edit the original message later;
+        the user does not see a loading state
 
     :param UPDATE_MESSAGE
         for components, edit the message the component was attached to
     """
     PONG = 1
-    CHANNEL_MESSAGE_WITH_SOURCE = 4
-    DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE = 5
+    MESSAGE = 4
+    DEFERRED_MESSAGE = 5
     DEFERRED_UPDATE_MESSAGE = 6
     UPDATE_MESSAGE = 7
 
@@ -60,13 +63,16 @@ class InteractionType(IntEnum):
     can have with a member.
 
     :param CHAT_INPUT:
-        Slash commands; a text-based command that shows up when a user types /
+        Slash commands;
+        a text-based command that shows up when a user types /
 
     :param USER:
-        A UI-based command that shows up when you right click or tap on a user
+        A UI-based command that shows up when you right click
+        or tap on a user
 
     :param MESSAGE:
-        A UI-based command that shows up when you right click or tap on a message
+        A UI-based command that shows up when you right click
+        or tap on a message
     """
     PING = 1
     APPLICATION_COMMAND = 2

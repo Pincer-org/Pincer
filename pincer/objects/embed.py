@@ -26,23 +26,24 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime
 from re import match
+from typing import Any, Callable, Dict, Iterable, Union, Optional
 
 from ..exceptions import InvalidUrlError, EmbedFieldError
 from ..utils import APIObject, APINullable, MISSING
 
 
-def _field_size(field: str) -> int:
+def _field_size(_field: str) -> int:
     """
     The Discord API removes white space
         when counting the length of a field.
 
-    :param field:
+    :param _field:
         The field.
 
     :return:
         Length of the string without white space.
     """
-    return 0 if field == MISSING else len(field.strip())
+    return 0 if _field == MISSING else len(_field.strip())
 
 
 def _is_valid_url(url: str) -> bool:
@@ -56,7 +57,12 @@ def _is_valid_url(url: str) -> bool:
     :return:
         Whether the provided url is valid.
     """
-    stmt = r"(http[s]|attachment)?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
+    stmt = (
+        r"(http[s]|attachment)"
+        r"?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|"
+        r"(?:%[0-9a-fA-F][0-9a-fA-F]))+"
+    )
+
     return bool(match(stmt, url))
 
 
@@ -71,7 +77,8 @@ def _check_if_valid_url(url: str):
     """
     if not _is_valid_url(url):
         raise InvalidUrlError(
-            "Url was malformed or wasn't of protocol http(s)/attachment.")
+            "Url was malformed or wasn't of protocol http(s)/attachment."
+        )
 
 
 @dataclass
@@ -442,7 +449,7 @@ class Embed(APIObject):
 
         :return: self
         """
-        self.video = EmbedImage(
+        self.image = EmbedImage(
             height=height,
             url=url,
             proxy_url=proxy_url,
@@ -476,7 +483,7 @@ class Embed(APIObject):
 
         :return self:
         """
-        self.video = EmbedThumbnail(
+        self.thumbnail = EmbedThumbnail(
             height=height,
             url=url,
             proxy_url=proxy_url,
@@ -547,5 +554,58 @@ class Embed(APIObject):
             )
 
         self.fields += [_field]
+
+        return self
+
+    def add_fields(
+        self,
+        field_list: Union[Dict[Any, Any], Iterable[Iterable[Any, Any]]],
+        checks: Optional[Callable[[Any], Any]] = bool,
+        map_title: Optional[Callable[[Any], str]] = str,
+        map_values: Optional[Callable[[Any], str]] = str,
+        inline: bool = True
+    ) -> Embed:
+        """
+        Add multiple fields from a list,
+        dict or generator of fields with possible mapping.
+
+        :param field_list:
+            A iterable or generator of the fields to add.
+            If the field_list type is a dictionary, will take items.
+
+        :param checks:
+            A filter function to remove embed fields.
+
+        :param map_title:
+            A transform function to change the titles.
+
+        :param map_values:
+            A transform function to change the values.
+
+        :param inline:
+            Whether to create grid or each field on a new line.
+
+        :raises EmbedFieldError:
+            Raised when there are more than 25 fields in the embed
+
+        :return: the embed for chaining methods.
+        """
+
+        if isinstance(field_list, dict):
+            field_list: Iterable[Iterable[Any, Any]] = field_list.items()
+
+        for field_name, field_value in field_list:
+            val = (
+                map_values(field_value)
+                if not isinstance(field_value, tuple)
+                else map_values(*field_value)
+            )
+
+            if checks(val):
+                self.add_field(
+                    name=map_title(field_name),
+                    value=val,
+                    inline=inline
+                )
 
         return self

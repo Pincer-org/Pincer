@@ -24,18 +24,18 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import IntEnum
 from typing import Optional, List
 
-from ..objects.application import Application
-from ..objects.channel import Channel
-from ..objects.guild import Guild
-from ..objects.guild_member import GuildMember
-from ..objects.user import User
+from .application import Application
+from .channel import Channel
+from .guild import Guild
+from .guild_member import GuildMember
+from .user import User
 from ..utils import APIObject, APINullable, MISSING, Timestamp
 
 
-class InviteTargetType(Enum):
+class InviteTargetType(IntEnum):
     """
     Represents the type of the invite.
 

@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=57.0", "wheel>=0.36"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+addopts = "--cov=pincer"
+testpaths = [
+    "tests", "tests/core"
+]
+
+[tool.mypy]
+mypy_path = "pincer"
+check_untyped_defs = true
+disallow_any_generics = true
+no_implicit_optional = true
+show_error_codes = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+no_implicit_reexport = true

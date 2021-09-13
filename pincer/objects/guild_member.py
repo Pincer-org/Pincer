@@ -26,7 +26,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional, List
 
-from ..objects.user import User
+from .user import User
 from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp, \
     convert
 
@@ -84,6 +84,7 @@ class GuildMember(APIObject):
 
     def __post_init__(self):
         self.roles = convert(self.roles, Snowflake.from_string)
-        self.premium_since = convert(self.premium_since, Timestamp.parse,
-                                     Timestamp)
         self.user = convert(self.user, User.from_dict, User)
+        self.premium_since = convert(
+            self.premium_since, Timestamp.parse, Timestamp
+        )

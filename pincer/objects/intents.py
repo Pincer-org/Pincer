@@ -23,10 +23,10 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
-from enum import Enum
+from enum import IntEnum
 
 
-class Intents(Enum):
+class Intents(IntEnum):
     """
     Discord client intents.
 
@@ -35,6 +35,7 @@ class Intents(Enum):
     NOTE: The given Intents must also be enabled for your client on
     the discord dashboard.
     """
+    NONE = 0
     GUILDS = 1 << 0
     GUILD_MEMBERS = 1 << 1
     GUILD_BANS = 1 << 2

@@ -22,39 +22,37 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from pincer.core.dispatch import GatewayDispatch
+from dataclasses import dataclass
+
+from ..objects.guild_member import GuildMember
+from ..utils.api_object import APIObject
+from ..utils.types import APINullable, MISSING
+from ..utils.snowflake import Snowflake
 
 
-class TestDispatch:
-    op = 123
-    data = {
-        "foo": "bar",
-        "bar": "foo"
-    }
-    seq = 456
-    event_name = "test_event"
+@dataclass
+class TypingStartEvent(APIObject):
+    """
+    Sent when a user starts typing in a channel.
 
-    dispatch_string = (
-        '{"op": 123, "d": {"foo": "bar", "bar": "foo"}, '
-        '"s": 456, "t": "test_event"}'
-    )
+    :param channel_id:
+        id of the channel
 
-    dispatch = GatewayDispatch(op, data, seq, event_name)
+    :param guild_id:
+        id of the guild
 
-    def test_string_fmt(self):
-        """
-        Tests whether or not the dispatch class its string conversion
-        is correct.
-        """
-        assert str(self.dispatch) == self.dispatch_string
+    :param user_id:
+        id of the user
 
-    def test_from_string(self):
-        """
-        Tests whether or not the from_string function is properly
-        parsing the string and creating a GatewayDispatch instance.
-        """
-        assert (
-            str(GatewayDispatch.from_string(self.dispatch_string))
-            == self.dispatch_string
-        )
+    :param timestamp:
+        unix time (in seconds) of when the user started typing
 
+    :param member:
+        the member who started typing if this happened in a guild
+    """
+    channel_id: Snowflake
+    user_id: Snowflake
+    timestamp: int
+
+    guild_id: APINullable[Snowflake] = MISSING
+    member: APINullable[GuildMember] = MISSING

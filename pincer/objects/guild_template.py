@@ -25,8 +25,8 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from ..objects.guild import Guild
-from ..objects.user import User
+from .guild import Guild
+from .user import User
 from ..utils import APIObject, Snowflake, Timestamp
 
 

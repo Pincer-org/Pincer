@@ -25,7 +25,7 @@
 from __future__ import annotations
 
 import logging
-from asyncio import iscoroutinefunction
+from asyncio import iscoroutinefunction, run
 from typing import Optional, Any, Union, Dict, Tuple, List
 
 from . import __package__
@@ -35,11 +35,9 @@ from .core.dispatch import GatewayDispatch
 from .core.gateway import Dispatcher
 from .core.http import HTTPClient
 from .exceptions import InvalidEventName
-from .objects import User
-from .objects.interaction_base import MessageInteractionCallbackType
-from .objects.interactions import Interaction, InteractionCallbackDataFlags
-from .utils import get_index, should_pass_cls, Coro, MISSING
-from .utils.extraction import get_params
+from .middleware import middleware
+from .objects import User, Intents
+from .utils import get_index, should_pass_cls, Coro
 
 _log = logging.getLogger(__package__)
 
@@ -67,7 +65,7 @@ for event in events:
     _events[event_final_executor] = None
 
 
-def middleware(call: str, *, override: bool = False):
+def event_middleware(call: str, *, override: bool = False):
     """
     Middleware are methods which can be registered with this decorator.
     These methods are invoked before any ``on_`` event.
@@ -101,7 +99,7 @@ def middleware(call: str, *, override: bool = False):
 
     .. code-block:: pycon
 
-        >>> @middleware("ready", override=True)
+        >>> @event_middleware("ready", override=True)
         >>> async def custom_ready(_, payload: GatewayDispatch):
         >>>     return "on_ready", [User.from_dict(payload.data.get("user"))]
 
@@ -149,8 +147,17 @@ def middleware(call: str, *, override: bool = False):
     return decorator
 
 
+for event, middleware in middleware.items():
+    event_middleware(event)(middleware)
+
+
 class Client(Dispatcher):
-    def __init__(self, token: str, *, received: str = None):
+    def __init__(
+            self,
+            token: str, *,
+            received: str = None,
+            intents: Intents = None
+    ):
         """
         The client is the main instance which is between the programmer
             and the discord API.
@@ -164,42 +171,22 @@ class Client(Dispatcher):
         :param received:
             The default message which will be sent when no response is
             given.
+
+        :param intents:
+            The discord intents for your client.
         """
-        # TODO: Implement intents
         super().__init__(
             token,
             handlers={
                 # Use this event handler for opcode 0.
                 0: self.event_handler
-            }
+            },
+            intents=intents or Intents.NONE
         )
 
         self.bot: Optional[User] = None
         self.__received = received or "Command arrived successfully!"
-        self.__token = token
-
-    @property
-    def http(self):
-        """
-        Returns a http client with the current client its
-        authentication credentials.
-
-        :Usage example:
-
-        .. code-block:: pycon
-
-            >>> async with self.http as client:
-            >>>     await client.post(
-            ...         '<endpoint>',
-            ...         {
-            ...             "foo": "bar",
-            ...             "bar": "baz",
-            ...             "baz": "foo"
-            ...         }
-            ...    )
-
-        """
-        return HTTPClient(self.__token)
+        self.http = HTTPClient(token)
 
     @property
     def chat_commands(self):
@@ -284,6 +271,11 @@ class Client(Dispatcher):
         _events[name] = coroutine
         return coroutine
 
+    def run(self):
+        """Start the event listener"""
+        self.start_loop()
+        run(self.http.close())
+
     async def handle_middleware(
             self,
             payload: GatewayDispatch,
@@ -362,67 +354,6 @@ class Client(Dispatcher):
                 await call(self, *args, **kwargs)
             else:
                 await call(*args, **kwargs)
-
-    @middleware("ready")
-    async def on_ready_middleware(self, payload: GatewayDispatch):
-        """
-        Middleware for ``on_ready`` event.
-
-        :param payload:
-            The data received from the ready event.
-        """
-        self.bot = User.from_dict(payload.data.get("user"))
-        await ChatCommandHandler(self).initialize()
-        return "on_ready",
-
-    @middleware("interaction_create")
-    async def on_interaction_middleware(self, payload: GatewayDispatch):
-        """
-        Middleware for ``on_interaction``, which handles command
-        execution.
-
-        :param payload:
-            The data received from the interaction event.
-        """
-        interaction: Interaction = Interaction.from_dict(payload.data)
-        command = ChatCommandHandler.register.get(interaction.data.name)
-
-        if command:
-            defaults = {param: None for param in get_params(command.call)}
-            params = {}
-
-            if interaction.data.options is not MISSING:
-                params = {
-                    opt.name: opt.value for opt in interaction.data.options
-                }
-
-            kwargs = {**defaults, **params}
-
-            if should_pass_cls(command.call):
-                kwargs["self"] = self
-
-            res = await command.call(**kwargs)
-
-            if res:
-                data = {
-                    "content": str(res)
-                }
-            else:
-                # TODO: Implement data parser/extraction for objects.
-                data = {
-                    "content": self.__received,
-                    "flags": InteractionCallbackDataFlags.EPHEMERAL
-                }
-
-            async with self.http as http:
-                await http.post(
-                    f"interactions/{interaction.id}/{interaction.token}/callback",
-                    {
-                        "type": MessageInteractionCallbackType.CHANNEL_MESSAGE_WITH_SOURCE,
-                        "data": data
-                    })
-
-        return "on_interaction_create", [interaction]
 
 
 Bot = Client

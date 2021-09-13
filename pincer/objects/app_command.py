@@ -28,8 +28,10 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import List, Union, Optional
 
-from ..utils import APIObject, APINullable, Coro, convert, MISSING, Snowflake, \
-    get_index
+from ..utils import (
+    APIObject, APINullable, Coro, convert,
+    MISSING, Snowflake, get_index
+)
 
 
 class AppCommandType(IntEnum):
@@ -266,8 +268,10 @@ class AppCommand(APIObject):
             for prop in self._eq_props
         )
 
-        if (self.options is MISSING and other.options is not MISSING) or \
-                (self.options is not MISSING and other.options is MISSING):
+        if (
+            (self.options is MISSING and other.options is not MISSING)
+            or (self.options is not MISSING and other.options is MISSING)
+        ):
             return False
 
         if is_equal and len(other.options) == len(self.options):

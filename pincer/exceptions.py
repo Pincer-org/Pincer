@@ -43,6 +43,13 @@ class UnhandledException(PincerError):
         )
 
 
+class NoExportMethod(PincerError):
+    """
+    Exception which gets raised when an `export` method is expected but not
+    found in a module.
+    """
+
+
 class CommandError(PincerError):
     """
     Base class for exceptions which are related to commands.
@@ -77,6 +84,18 @@ class TooManyArguments(CommandError):
 class InvalidArgumentAnnotation(CommandError):
     """
     The provided argument annotation is not known, so it cannot be used.
+    """
+
+
+class CommandReturnIsEmpty(CommandError):
+    """
+    Cannot return an empty string to an interaction.
+    """
+
+
+class InvalidCommandGuild(CommandError):
+    """
+    The provided guild id not not valid.
     """
 
 

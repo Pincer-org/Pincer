@@ -24,19 +24,27 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import IntEnum
 from typing import Optional
 
 from ..utils import APIObject, APINullable, MISSING, Snowflake, convert
 
 
-class PremiumTypes(Enum):
+class PremiumTypes(IntEnum):
     """
     The type of Discord premium a user has.
     """
     NONE = 0
     NITRO_CLASSIC = 1
     NITRO = 2
+
+
+class VisibilityType(IntEnum):
+    """
+    The type of a connection visibility.
+    """
+    NONE = 0
+    EVERYONE = 1
 
 
 @dataclass
@@ -86,8 +94,8 @@ class User(APIObject):
         the public flags on a user's account
 
     :param system:
-        whether the user is an Official Discord System user (part of the urgent
-        message system)
+        whether the user is an Official Discord System user
+        (part of the urgent message system)
 
     :param verified:
         whether the email on this account has been verified
@@ -115,9 +123,11 @@ class User(APIObject):
         """
         The user their premium type in a usable enum.
         """
-        return MISSING \
-            if self.premium_type is MISSING \
+        return (
+            MISSING
+            if self.premium_type is MISSING
             else PremiumTypes(self.premium_type)
+        )
 
     def __str__(self):
         """Return the discord tag when object gets used as a string."""

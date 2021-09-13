@@ -24,18 +24,18 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import IntEnum
 from typing import Optional, List
 
 from .._config import GatewayConfig
-from ..objects.guild_member import GuildMember
-from ..objects.thread import ThreadMetadata
-from ..objects.user import User
-from ..objects.overwrite import Overwrite
+from .guild_member import GuildMember
+from .thread import ThreadMetadata
+from .user import User
+from .overwrite import Overwrite
 from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
 
 
-class ChannelType(Enum):
+class ChannelType(IntEnum):
     """Represents a channel its type."""
     GUILD_TEXT = 0
     DM = 1

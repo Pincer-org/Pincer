@@ -31,9 +31,9 @@ from typing import Optional, Dict, List, Any, Tuple, get_origin, get_args, Union
 from . import __package__
 from .exceptions import (
     CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
-    InvalidArgumentAnnotation, CommandDescriptionTooLong
+    InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild
 )
-from .objects.application_command import (
+from .objects.app_command import (
     AppCommand, AppCommandType, ClientCommandStructure,
     AppCommandOption, AppCommandOptionType
 )
@@ -57,10 +57,10 @@ _options_type_link = {
 def command(
         name: Optional[str] = None,
         description: Optional[str] = "Description not set",
-        enable_default: Optional[bool] = True
+        enable_default: Optional[bool] = True,
+        guild: Union[Snowflake, int, str] = None
 ):
     # TODO: Fix docs
-
     def decorator(func: Coro):
         if not iscoroutinefunction(func):
             raise CommandIsNotCoroutine(
@@ -71,6 +71,14 @@ def command(
         cmd = name or func.__name__
 
         # TODO: Perform name check on cmd with r"^[\w-]{1,32}$"
+
+        try:
+            guild_id = int(guild) if guild else MISSING
+        except ValueError:
+            raise InvalidCommandGuild(
+                f"Command with call `{func.__name__}` its `guilds` parameter "
+                "contains a non valid guild id."
+            )
 
         if len(description) > 100:
             raise CommandDescriptionTooLong(
@@ -108,9 +116,12 @@ def command(
                 # two values of the type type and isinstance does NOT
                 # work here.
                 union_args = [t for t in args if t is not type(None)]
-                annotation = get_index(union_args, 0) \
-                    if len(union_args) == 1 \
+
+                annotation = (
+                    get_index(union_args, 0)
+                    if len(union_args) == 1
                     else Union[Tuple[List]]
+                )
 
             param_type = _options_type_link.get(annotation)
             if not param_type:
@@ -136,7 +147,8 @@ def command(
                 description=description,
                 type=AppCommandType.CHAT_INPUT,
                 default_permission=enable_default,
-                options=options
+                options=options,
+                guild_id=guild_id
             )
         )
 
@@ -154,15 +166,15 @@ class ChatCommandHandler:
         self.client = client
         self._api_commands: List[AppCommand] = list()
         logging.debug(
-            f"%i commands registered.",
+            "%i commands registered.",
             len(ChatCommandHandler.register.items())
         )
 
     async def __init_existing_commands(self):
         # TODO: Fix docs
-        async with self.client.http as http:
-            res = await http.get(f"applications/{self.client.bot.id}/commands")
-            self._api_commands = list(map(AppCommand.from_dict, res))
+        res = await self.client.http.get(
+            f"applications/{self.client.bot.id}/commands")
+        self._api_commands = list(map(AppCommand.from_dict, res))
 
     async def __remove_unused_commands(self):
         # TODO: Fix docs
@@ -177,11 +189,10 @@ class ChatCommandHandler:
             if doesnt_exist:
                 to_remove.append(api_cmd)
 
-        async with self.client.http as http:
-            for cmd in to_remove:
-                await http.delete(
-                    f"applications/{self.client.bot.id}/commands/{cmd.id}"
-                )
+        for cmd in to_remove:
+            await self.client.http.delete(
+                f"applications/{self.client.bot.id}/commands/{cmd.id}"
+            )
 
         self._api_commands = [
             cmd for cmd in self._api_commands if cmd not in to_remove
@@ -249,12 +260,11 @@ class ChatCommandHandler:
                         else:
                             setattr(self._api_commands[idx], key, change)
 
-        async with self.client.http as http:
-            for cmd_id, changes in to_update.items():
-                await http.patch(
-                    f"applications/{self.client.bot.id}/commands/{cmd_id}",
-                    changes
-                )
+        for cmd_id, changes in to_update.items():
+            await self.client.http.patch(
+                f"applications/{self.client.bot.id}/commands/{cmd_id}",
+                changes
+            )
 
     async def __add_commands(self):
         # TODO: Fix docs
@@ -264,12 +274,16 @@ class ChatCommandHandler:
         ]
 
         if commands_to_add:
-            async with self.client.http as http:
-                for cmd in commands_to_add:
-                    await http.post(
-                        f"applications/{self.client.bot.id}/commands",
-                        cmd.app.to_dict()
-                    )
+            for cmd in commands_to_add:
+                endpoint = f"applications/{self.client.bot.id}"
+
+                if cmd.app.guild_id is not MISSING:
+                    endpoint += f"/guilds/{cmd.app.guild_id}"
+
+                await self.client.http.post(
+                    endpoint + "/commands",
+                    cmd.app.to_dict()
+                )
 
     async def initialize(self):
         # TODO: Fix docs

@@ -4,18 +4,18 @@ pincer.objects package
 Submodules
 ----------
 
-pincer.objects.application module
----------------------------------
+pincer.objects.app\_command module
+----------------------------------
 
-.. automodule:: pincer.objects.application
+.. automodule:: pincer.objects.app_command
    :members:
    :undoc-members:
    :show-inheritance:
 
-pincer.objects.application\_command module
-------------------------------------------
+pincer.objects.application module
+---------------------------------
 
-.. automodule:: pincer.objects.application_command
+.. automodule:: pincer.objects.application
    :members:
    :undoc-members:
    :show-inheritance:
@@ -60,6 +60,14 @@ pincer.objects.channel module
    :undoc-members:
    :show-inheritance:
 
+pincer.objects.connection module
+--------------------------------
+
+.. automodule:: pincer.objects.connection
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.objects.context module
 -----------------------------
 
@@ -96,6 +104,14 @@ pincer.objects.guild module
 ---------------------------
 
 .. automodule:: pincer.objects.guild
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pincer.objects.guild\_features module
+-------------------------------------
+
+.. automodule:: pincer.objects.guild_features
    :members:
    :undoc-members:
    :show-inheritance:
@@ -220,6 +236,14 @@ pincer.objects.select\_menu module
    :undoc-members:
    :show-inheritance:
 
+pincer.objects.session\_start\_limit module
+-------------------------------------------
+
+.. automodule:: pincer.objects.session_start_limit
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.objects.stage module
 ---------------------------
 
@@ -248,6 +272,14 @@ pincer.objects.user module
 --------------------------
 
 .. automodule:: pincer.objects.user
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pincer.objects.user\_message module
+-----------------------------------
+
+.. automodule:: pincer.objects.user_message
    :members:
    :undoc-members:
    :show-inheritance:

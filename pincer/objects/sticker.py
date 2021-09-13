@@ -24,14 +24,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import IntEnum
 from typing import List, Optional
 
-from ..objects.user import User
+from .user import User
 from ..utils import APIObject, APINullable, MISSING, Snowflake
 
 
-class StickerType(Enum):
+class StickerType(IntEnum):
     """
     Displays from where the sticker comes from.
 
@@ -45,7 +45,7 @@ class StickerType(Enum):
     GUILD = 2
 
 
-class StickerFormatType(Enum):
+class StickerFormatType(IntEnum):
     """
     The type of the sticker.
 
@@ -81,16 +81,16 @@ class Sticker(APIObject):
         name of the sticker
 
     :param tags:
-        for guild stickers, the Discord name of a unicode emoji representing
-        the sticker's expression. for standard stickers, a comma-separated list
-        of related expressions.
+        for guild stickers, the Discord name of a unicode emoji
+        representing the sticker's expression. For standard stickers,
+        a comma-separated list of related expressions.
 
     :param type:
         type of sticker
 
     :param available:
-        whether this guild sticker can be used, may be false due to loss of
-        Server Boosts
+        whether this guild sticker can be used,
+        may be false due to loss of Server Boosts
 
     :param guild_id:
         id of the guild that owns this sticker
