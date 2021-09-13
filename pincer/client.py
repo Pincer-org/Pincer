@@ -35,7 +35,7 @@ from .core.dispatch import GatewayDispatch
 from .core.gateway import Dispatcher
 from .core.http import HTTPClient
 from .exceptions import InvalidEventName
-from .objects import User, Message, Embed
+from .objects import User, Message, Embed, Intents
 from .objects.interactions import Interaction, InteractionFlags
 from .utils import get_index, should_pass_cls, Coro, MISSING
 from .utils.extraction import get_params
@@ -149,7 +149,12 @@ def middleware(call: str, *, override: bool = False):
 
 
 class Client(Dispatcher):
-    def __init__(self, token: str, *, received: str = None):
+    def __init__(
+            self,
+            token: str, *,
+            received: str = None,
+            intents: Intents = None
+    ):
         """
         The client is the main instance which is between the programmer
             and the discord API.
@@ -163,14 +168,17 @@ class Client(Dispatcher):
         :param received:
             The default message which will be sent when no response is
             given.
+
+        :param intents:
+            The discord intents for your client.
         """
-        # TODO: Implement intents
         super().__init__(
             token,
             handlers={
                 # Use this event handler for opcode 0.
                 0: self.event_handler
-            }
+            },
+            intents=intents or Intents.NONE
         )
 
         self.bot: Optional[User] = None

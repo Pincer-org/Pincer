@@ -41,6 +41,7 @@ from ..exceptions import (
     PincerError, InvalidTokenError, UnhandledException,
     _InternalPerformReconnectError, DisallowedIntentsError
 )
+from ..objects import Intents
 
 Handler = Callable[[WebSocketClientProtocol, GatewayDispatch], Awaitable[None]]
 _log = logging.getLogger(__package__)
@@ -59,12 +60,20 @@ class Dispatcher:
     `<https://discord.com/developers/applications/<bot_id>/bot>`_)
     """
 
-    # TODO: Add intents argument
     # TODO: Implement compression
-    def __init__(self, token: str, *, handlers: Dict[int, Handler]) -> None:
+    def __init__(self, token: str, *,
+                 handlers: Dict[int, Handler],
+                 intents: Intents) -> None:
         """
         :param token:
             Bot token for discord's API.
+
+        :param intents:
+            Represents the discord bot intents.
+
+        :param handlers:
+            A hashmap of coroutines with as key the gateway opcode.
+
         :raises InvalidTokenError:
             Discord Token length is not 59 characters.
         """
@@ -77,6 +86,7 @@ class Dispatcher:
         self.__token = token
         self.__keep_alive = True
         self.__socket: Optional[WebSocketClientProtocol] = None
+        self.__intents = intents
 
         async def identify_and_handle_hello(
                 socket: WebSocketClientProtocol,
@@ -127,12 +137,16 @@ class Dispatcher:
         }
 
     @property
+    def intents(self):
+        return self.__intents
+
+    @property
     def __hello_socket(self) -> str:
         return str(
             GatewayDispatch(
                 2, {
                     "token": self.__token,
-                    "intents": 0,
+                    "intents": self.__intents,
                     "properties": {
                         "$os": system(),
                         "$browser": __package__,
@@ -227,7 +241,6 @@ class Dispatcher:
 
                     if isinstance(exception, _InternalPerformReconnectError):
                         Heartbeat.update_sequence(0)
-                        await self.close()
                         return self.start_loop()
 
                     raise exception or UnhandledException(

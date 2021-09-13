@@ -35,6 +35,7 @@ class Intents(IntEnum):
     NOTE: The given Intents must also be enabled for your client on
     the discord dashboard.
     """
+    NONE = 0
     GUILDS = 1 << 0
     GUILD_MEMBERS = 1 << 1
     GUILD_BANS = 1 << 2
