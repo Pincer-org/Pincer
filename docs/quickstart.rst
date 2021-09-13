@@ -45,3 +45,22 @@ Inheriting from :class:`~.client.Client` allows more flexibility and enables adv
 	bot.run()
 
 
+Implementing Slash Commands
+---------------------------
+
+Using slash commands is as easy as adding the :func:`~.pincer.commands.command` decorator on a function and using Python annotations to specify the argument types.
+
+.. code-block:: python
+
+	from pincer import Client, command
+
+	class Bot(Client):
+	    def __init__(self, token):
+	        super(Bot, self).__init__(token)
+
+	    @command(description="Add two numbers!")
+	    async def add(self, first: int, second: int):
+	        return f"The addition of `{first}` and `{second}` is `{first + second}`"
+
+	bot = Bot("TOKEN")
+	bot.run()
