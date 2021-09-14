@@ -29,6 +29,7 @@ from pathlib import Path
 from typing import Dict
 
 from pincer.exceptions import NoExportMethod
+from pincer.middleware.message_create import message_create_middleware
 from pincer.utils import Coro
 
 

@@ -23,3 +23,14 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """sent when a message is created in a subscribed text channel"""
+
+from pincer.core.dispatch import GatewayDispatch
+from pincer.objects import UserMessage
+
+
+async def message_create_middleware(self, payload: GatewayDispatch):
+    return "on_message", [UserMessage.from_dict(payload.data)]
+
+
+def export():
+    return message_create_middleware

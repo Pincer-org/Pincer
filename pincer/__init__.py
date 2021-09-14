@@ -16,5 +16,6 @@ __description__ = "Discord API wrapper rebuild from scratch."
 
 from pincer.client import Client, Bot
 from pincer.commands import command
+from pincer.objects import Intents
 
-__all__ = ("Client", "Bot", "command")
+__all__ = ("Client", "Bot", "command", "Intents")
