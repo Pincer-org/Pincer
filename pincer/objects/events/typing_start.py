@@ -24,28 +24,35 @@
 
 from dataclasses import dataclass
 
-from ..utils.api_object import APIObject
-from ..utils.snowflake import Snowflake
-from ..utils.timestamp import Timestamp
-from ..utils.types import MISSING, APINullable
+from pincer.objects.guild_member import GuildMember
+from pincer.utils.api_object import APIObject
+from pincer.utils.types import APINullable, MISSING
+from pincer.utils.snowflake import Snowflake
 
 
 @dataclass
-class ChannelPinsUpdateEvent(APIObject):
+class TypingStartEvent(APIObject):
     """
-    Sent when a message is pinned or unpinned in a text channel.
-    This is not sent when a pinned message is deleted.
-
-    :param guild_id:
-        the id of the guild
+    Sent when a user starts typing in a channel.
 
     :param channel_id:
-        the id of the channel
+        id of the channel
 
-    :param last_pin_timestamp:
-        the time at which the most recent pinned message was pinned
+    :param guild_id:
+        id of the guild
+
+    :param user_id:
+        id of the user
+
+    :param timestamp:
+        unix time (in seconds) of when the user started typing
+
+    :param member:
+        the member who started typing if this happened in a guild
     """
     channel_id: Snowflake
+    user_id: Snowflake
+    timestamp: int
 
     guild_id: APINullable[Snowflake] = MISSING
-    last_pin_timestamp: APINullable[Timestamp] = MISSING
+    member: APINullable[GuildMember] = MISSING

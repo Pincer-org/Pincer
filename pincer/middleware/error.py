@@ -21,39 +21,26 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-from glob import glob
-from importlib import import_module
-from os import chdir
-from pathlib import Path
-from typing import Dict
-
-from pincer.exceptions import NoExportMethod
-from pincer.utils import Coro
+"""
+non-subscription event sent when there is an error,
+including command responses
+"""
+from pincer.core.dispatch import GatewayDispatch
+from pincer.objects.events.error import DiscordError
 
 
-def get_middleware() -> Dict[str, Coro]:
-    middleware_list: Dict[str, Coro] = {}
-    chdir(Path(__file__).parent.resolve())
+def error_middleware(_, payload: GatewayDispatch):
+    """
+    Middleware for ``on_error`` event.
 
-    for middleware_path in glob("*.py"):
-        if middleware_path.startswith("__"):
-            continue
+    :param _:
+        Filler param for client.
 
-        event = middleware_path[:-3]
-
-        try:
-            middleware_list[event] = getattr(
-                import_module(f".{event}", package=__name__),
-                "export"
-            )()
-        except AttributeError:
-            raise NoExportMethod(
-                f"Middleware module `{middleware_path}` expected an "
-                "`export` method but none was found!"
-            )
-
-    return middleware_list
+    :param payload:
+        The data received from the ready event.
+    """
+    return "on_error", [DiscordError.from_dict(payload.data)]
 
 
-middleware: Dict[str, Coro] = get_middleware()
+def export():
+    return error_middleware

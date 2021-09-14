@@ -24,35 +24,25 @@
 
 from dataclasses import dataclass
 
-from ..objects.guild_member import GuildMember
-from ..utils.api_object import APIObject
-from ..utils.types import APINullable, MISSING
-from ..utils.snowflake import Snowflake
+from pincer.utils.api_object import APIObject
+from pincer.utils.snowflake import Snowflake
+from pincer.utils.types import MISSING, APINullable
 
 
 @dataclass
-class TypingStartEvent(APIObject):
+class IntegrationDeleteEvent(APIObject):
     """
-    Sent when a user starts typing in a channel.
+    Sent when an integration is deleted.
 
-    :param channel_id:
-        id of the channel
+    :param id:
+        integration id
 
     :param guild_id:
         id of the guild
 
-    :param user_id:
-        id of the user
-
-    :param timestamp:
-        unix time (in seconds) of when the user started typing
-
-    :param member:
-        the member who started typing if this happened in a guild
+    :param application_id:
+        id of the bot/OAuth2 application for this discord integration
     """
-    channel_id: Snowflake
-    user_id: Snowflake
-    timestamp: int
-
-    guild_id: APINullable[Snowflake] = MISSING
-    member: APINullable[GuildMember] = MISSING
+    id: Snowflake
+    guild_id: Snowflake
+    application_id: APINullable[Snowflake] = MISSING

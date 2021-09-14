@@ -21,28 +21,22 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 from dataclasses import dataclass
 
-from ..utils.api_object import APIObject
-from ..utils.snowflake import Snowflake
-from ..utils.types import MISSING, APINullable
+from pincer.exceptions import PincerError
+from pincer.utils import APIObject
 
 
 @dataclass
-class IntegrationDeleteEvent(APIObject):
+class DiscordError(PincerError, APIObject):
     """
-    Sent when an integration is deleted.
+    Represents an error event in the Discord Gateway.
 
-    :param id:
-        integration id
+    :param code:
+        The RPC error code.
 
-    :param guild_id:
-        id of the guild
-
-    :param application_id:
-        id of the bot/OAuth2 application for this discord integration
+    :param message:
+        The error description..
     """
-    id: Snowflake
-    guild_id: Snowflake
-    application_id: APINullable[Snowflake] = MISSING
+    code: int
+    message: str

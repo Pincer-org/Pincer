@@ -22,38 +22,30 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from glob import glob
-from importlib import import_module
-from os import chdir
-from pathlib import Path
-from typing import Dict
+from dataclasses import dataclass
 
-from pincer.exceptions import NoExportMethod
-from pincer.utils import Coro
+from pincer.utils.api_object import APIObject
+from pincer.utils.snowflake import Snowflake
+from pincer.utils.timestamp import Timestamp
+from pincer.utils.types import MISSING, APINullable
 
 
-def get_middleware() -> Dict[str, Coro]:
-    middleware_list: Dict[str, Coro] = {}
-    chdir(Path(__file__).parent.resolve())
+@dataclass
+class ChannelPinsUpdateEvent(APIObject):
+    """
+    Sent when a message is pinned or unpinned in a text channel.
+    This is not sent when a pinned message is deleted.
 
-    for middleware_path in glob("*.py"):
-        if middleware_path.startswith("__"):
-            continue
+    :param guild_id:
+        the id of the guild
 
-        event = middleware_path[:-3]
+    :param channel_id:
+        the id of the channel
 
-        try:
-            middleware_list[event] = getattr(
-                import_module(f".{event}", package=__name__),
-                "export"
-            )()
-        except AttributeError:
-            raise NoExportMethod(
-                f"Middleware module `{middleware_path}` expected an "
-                "`export` method but none was found!"
-            )
+    :param last_pin_timestamp:
+        the time at which the most recent pinned message was pinned
+    """
+    channel_id: Snowflake
 
-    return middleware_list
-
-
-middleware: Dict[str, Coro] = get_middleware()
+    guild_id: APINullable[Snowflake] = MISSING
+    last_pin_timestamp: APINullable[Timestamp] = MISSING
