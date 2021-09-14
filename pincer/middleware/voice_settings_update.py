@@ -23,3 +23,5 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """sent when the client's voice settings update"""
+
+# TODO: Implement event

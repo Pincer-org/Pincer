@@ -23,3 +23,5 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """sent when the user receives a Rich Presence Ask to Join request"""
+
+# TODO: Implement event

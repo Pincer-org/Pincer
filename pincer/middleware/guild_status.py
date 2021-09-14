@@ -23,3 +23,5 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """Event sent when a subscribed server's state changes"""
+
+# TODO: Implement event

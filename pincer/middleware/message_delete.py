@@ -23,3 +23,5 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """sent when a message is deleted in a subscribed text channel"""
+
+# TODO: Implement event

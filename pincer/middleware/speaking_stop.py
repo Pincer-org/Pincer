@@ -23,3 +23,5 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """sent when a user in a subscribed voice channel stops speaking"""
+
+# TODO: Implement event

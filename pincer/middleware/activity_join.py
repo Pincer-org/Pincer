@@ -25,3 +25,6 @@
 """
 sent when the user clicks a Rich Presence join invite in chat to join a game
 """
+
+# TODO: Implement event
+

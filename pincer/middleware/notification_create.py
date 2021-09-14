@@ -26,3 +26,5 @@
 sent when the client receives a notification
 (mention or new message in eligible channels)
 """
+
+# TODO: Implement event
