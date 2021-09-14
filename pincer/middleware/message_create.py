@@ -28,7 +28,7 @@ from pincer.core.dispatch import GatewayDispatch
 from pincer.objects import UserMessage
 
 
-async def message_create_middleware(self, payload: GatewayDispatch):
+async def message_create_middleware(payload: GatewayDispatch):
     return "on_message", [UserMessage.from_dict(payload.data)]
 
 

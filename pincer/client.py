@@ -135,10 +135,12 @@ def event_middleware(call: str, *, override: bool = False):
         async def wrapper(cls, payload: GatewayDispatch):
             _log.debug("`%s` middleware has been invoked", call)
 
+            print(func, should_pass_cls(func))
+
             return await (
                 func(cls, payload)
                 if should_pass_cls(func)
-                else await func(payload)
+                else func(payload)
             )
 
         _events[call] = wrapper

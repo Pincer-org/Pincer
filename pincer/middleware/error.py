@@ -29,12 +29,9 @@ from pincer.core.dispatch import GatewayDispatch
 from pincer.objects.events.error import DiscordError
 
 
-def error_middleware(self, payload: GatewayDispatch):
+def error_middleware(payload: GatewayDispatch):
     """
     Middleware for ``on_error`` event.
-
-    :param self:
-        Filler param for client.
 
     :param payload:
         The data received from the ready event.
