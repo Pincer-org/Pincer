@@ -62,7 +62,7 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
             message = Message(embeds=[message])
         elif not isinstance(message, Message):
             message = Message(message) if message else Message(
-                self.__received,
+                self.received_message,
                 flags=InteractionFlags.EPHEMERAL
             )
 
