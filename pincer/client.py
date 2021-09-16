@@ -187,7 +187,7 @@ class Client(Dispatcher):
         )
 
         self.bot: Optional[User] = None
-        self.__received = received or "Command arrived successfully!"
+        self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
 
     @property
