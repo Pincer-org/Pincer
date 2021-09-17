@@ -26,15 +26,15 @@ from dataclasses import dataclass
 from typing import Any, List, Optional
 
 from .presence import PresenceUpdateEvent
-from ..objects.guild_member import GuildMember
-from ..objects.emoji import Emoji
-from ..objects.role import Role
-from ..objects.sticker import Sticker
-from ..objects.user import User
-from ..utils.api_object import APIObject
-from ..utils.snowflake import Snowflake
-from ..utils.timestamp import Timestamp
-from ..utils.types import MISSING, APINullable
+from pincer.objects.guild_member import GuildMember
+from pincer.objects.emoji import Emoji
+from pincer.objects.role import Role
+from pincer.objects.sticker import Sticker
+from pincer.objects.user import User
+from pincer.utils.api_object import APIObject
+from pincer.utils.snowflake import Snowflake
+from pincer.utils.timestamp import Timestamp
+from pincer.utils.types import MISSING, APINullable
 
 
 @dataclass

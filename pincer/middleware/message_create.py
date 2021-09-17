@@ -21,30 +21,16 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
-non-subscription event sent immediately after connecting,
-contains server information
-"""
-from pincer.commands import ChatCommandHandler
+
+"""sent when a message is created in a subscribed text channel"""
+
 from pincer.core.dispatch import GatewayDispatch
-from pincer.objects import User
-from pincer.utils import Coro
+from pincer.objects import UserMessage
 
 
-async def on_ready_middleware(self, payload: GatewayDispatch):
-    """
-    Middleware for ``on_ready`` event.
-
-    :param self:
-        The current client.
-
-    :param payload:
-        The data received from the ready event.
-    """
-    self.bot = User.from_dict(payload.data.get("user"))
-    await ChatCommandHandler(self).initialize()
-    return "on_ready",
+async def message_create_middleware(payload: GatewayDispatch):
+    return "on_message", [UserMessage.from_dict(payload.data)]
 
 
-def export() -> Coro:
-    return on_ready_middleware
+def export():
+    return message_create_middleware

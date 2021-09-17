@@ -21,30 +21,38 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
-non-subscription event sent immediately after connecting,
-contains server information
-"""
-from pincer.commands import ChatCommandHandler
-from pincer.core.dispatch import GatewayDispatch
-from pincer.objects import User
-from pincer.utils import Coro
+
+from dataclasses import dataclass
+
+from pincer.objects.guild_member import GuildMember
+from pincer.utils.api_object import APIObject
+from pincer.utils.types import APINullable, MISSING
+from pincer.utils.snowflake import Snowflake
 
 
-async def on_ready_middleware(self, payload: GatewayDispatch):
+@dataclass
+class TypingStartEvent(APIObject):
     """
-    Middleware for ``on_ready`` event.
+    Sent when a user starts typing in a channel.
 
-    :param self:
-        The current client.
+    :param channel_id:
+        id of the channel
 
-    :param payload:
-        The data received from the ready event.
+    :param guild_id:
+        id of the guild
+
+    :param user_id:
+        id of the user
+
+    :param timestamp:
+        unix time (in seconds) of when the user started typing
+
+    :param member:
+        the member who started typing if this happened in a guild
     """
-    self.bot = User.from_dict(payload.data.get("user"))
-    await ChatCommandHandler(self).initialize()
-    return "on_ready",
+    channel_id: Snowflake
+    user_id: Snowflake
+    timestamp: int
 
-
-def export() -> Coro:
-    return on_ready_middleware
+    guild_id: APINullable[Snowflake] = MISSING
+    member: APINullable[GuildMember] = MISSING

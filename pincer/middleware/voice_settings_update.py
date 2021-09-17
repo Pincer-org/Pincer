@@ -22,23 +22,6 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from dataclasses import dataclass
+"""sent when the client's voice settings update"""
 
-from ..utils.api_object import APIObject
-from ..utils.snowflake import Snowflake
-
-
-@dataclass
-class WebhookUpdateEvent(APIObject):
-    """
-    Sent when a guild's channel webhook
-    is created, updated, or deleted.
-
-    :param guild_id:
-        id of the guild
-
-    :param channel_id:
-        id of the channel
-    """
-    guild_id: Snowflake
-    channel_id: Snowflake
+# TODO: Implement event

@@ -22,37 +22,23 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from dataclasses import dataclass
+"""sent when a message is deleted in a subscribed text channel"""
 
-from ..objects.guild_member import GuildMember
-from ..utils.api_object import APIObject
-from ..utils.types import APINullable, MISSING
-from ..utils.snowflake import Snowflake
+from pincer.core.dispatch import GatewayDispatch
+from pincer.objects.events.message import MessageDeleteEvent
 
-
-@dataclass
-class TypingStartEvent(APIObject):
+async def on_message_delete_middleware(payload: GatewayDispatch):
     """
-    Sent when a user starts typing in a channel.
+    Middleware for ``on_message_delete`` event.
 
-    :param channel_id:
-        id of the channel
+    :param self:
+        The current client.
 
-    :param guild_id:
-        id of the guild
-
-    :param user_id:
-        id of the user
-
-    :param timestamp:
-        unix time (in seconds) of when the user started typing
-
-    :param member:
-        the member who started typing if this happened in a guild
+    :param payload:
+        The data received from the delete message event.
     """
-    channel_id: Snowflake
-    user_id: Snowflake
-    timestamp: int
+    return "on_message_delete", [MessageDeleteEvent.from_dict(payload.data)]
 
-    guild_id: APINullable[Snowflake] = MISSING
-    member: APINullable[GuildMember] = MISSING
+
+def export():
+    return on_message_delete_middleware

@@ -22,10 +22,9 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
-
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Optional, List
+from typing import Dict, Optional, List, TYPE_CHECKING
 
 from .._config import GatewayConfig
 from .guild_member import GuildMember
@@ -33,6 +32,12 @@ from .thread import ThreadMetadata
 from .user import User
 from .overwrite import Overwrite
 from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
+
+if TYPE_CHECKING:
+    from pincer import Client
+    from ..core.http import HTTPClient
+
+
 
 
 class ChannelType(IntEnum):
@@ -148,6 +153,9 @@ class Channel(APIObject):
         the camera video quality mode of the voice channel, 1 when not present
     """
 
+    _client: Client
+    _http: HTTPClient
+
     id: Snowflake
     type: ChannelType
 
@@ -156,11 +164,15 @@ class Channel(APIObject):
     default_auto_archive_duration: APINullable[int] = MISSING
     guild_id: APINullable[Snowflake] = MISSING
     icon: APINullable[Optional[str]] = MISSING
+
     last_message_id: APINullable[Optional[Snowflake]] = MISSING
     last_pin_timestamp: APINullable[Optional[Timestamp]] = MISSING
     member: APINullable[GuildMember] = MISSING
+
     member_count: APINullable[int] = MISSING
+
     message_count: APINullable[int] = MISSING
+
     name: APINullable[str] = MISSING
     nsfw: APINullable[bool] = MISSING
     owner_id: APINullable[Snowflake] = MISSING
@@ -176,10 +188,38 @@ class Channel(APIObject):
     user_limit: APINullable[int] = MISSING
     video_quality_mode: APINullable[int] = MISSING
 
+    @classmethod
+    async def from_id(cls, client: Client, id: int) -> Channel:
+        data = (await client.http.get(f"/guilds/{id}")) or {}
+        data.update({"_client": client, "_http": client.http, "type": ChannelType(data.pop("type"))})
+        channel_cls = _channel_type_map.get(data["type"], Channel)
+        return channel_cls.from_dict(data)
+
 
 def __str__(self):
     """return the discord tag when object gets used as a string."""
     return self.name or str(self.id)
+
+
+@dataclass
+class TextChannel(Channel):
+    pass
+
+
+@dataclass
+class VoiceChannel(Channel):
+    pass
+
+
+@dataclass
+class CategoryChannel(Channel):
+    pass
+
+
+@dataclass
+class NewsChannel(Channel):
+    pass
+
 
 
 @dataclass
@@ -203,3 +243,11 @@ class ChannelMention(APIObject):
     guild_id: Snowflake
     type: ChannelType
     name: str
+
+
+_channel_type_map: Dict[ChannelType, Channel] = {
+    ChannelType.GUILD_TEXT: TextChannel,
+    ChannelType.GUILD_VOICE: VoiceChannel,
+    ChannelType.GUILD_CATEGORY: CategoryChannel,
+    ChannelType.GUILD_NEWS: NewsChannel
+}

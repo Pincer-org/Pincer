@@ -74,6 +74,7 @@ class GuildMember(APIObject):
     mute: bool
     roles: List[Snowflake]
 
+    hoisted_role: APINullable[Snowflake] = MISSING
     nick: APINullable[Optional[str]] = MISSING
     pending: APINullable[bool] = MISSING
     is_pending: APINullable[bool] = MISSING

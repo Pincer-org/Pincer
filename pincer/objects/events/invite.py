@@ -24,12 +24,12 @@
 
 from dataclasses import dataclass
 
-from ..objects.invite import InviteTargetType
-from ..objects.user import User
-from ..utils.api_object import APIObject
-from ..utils.snowflake import Snowflake
-from ..utils.timestamp import Timestamp
-from ..utils.types import APINullable, MISSING
+from pincer.objects.invite import InviteTargetType
+from pincer.objects.user import User
+from pincer.utils.api_object import APIObject
+from pincer.utils.snowflake import Snowflake
+from pincer.utils.timestamp import Timestamp
+from pincer.utils.types import APINullable, MISSING
 
 
 @dataclass

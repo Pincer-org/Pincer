@@ -129,6 +129,10 @@ class User(APIObject):
             else PremiumTypes(self.premium_type)
         )
 
+    @property
+    def mention(self) -> str:
+        return f"<@!{self.id}>"
+
     def __str__(self):
         """Return the discord tag when object gets used as a string."""
         return self.username + '#' + self.discriminator

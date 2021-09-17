@@ -21,30 +21,30 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
-non-subscription event sent immediately after connecting,
-contains server information
-"""
-from pincer.commands import ChatCommandHandler
-from pincer.core.dispatch import GatewayDispatch
-from pincer.objects import User
-from pincer.utils import Coro
+
+from dataclasses import dataclass
+from typing import Optional
+
+from pincer.utils.api_object import APIObject
+from pincer.utils.snowflake import Snowflake
 
 
-async def on_ready_middleware(self, payload: GatewayDispatch):
+@dataclass
+class VoiceServerUpdateEvent(APIObject):
     """
-    Middleware for ``on_ready`` event.
+    Sent when a guild's voice server is updated.
+    This is sent when initially connecting to voice,
+    and when the current voice instance fails over to a new server.
 
-    :param self:
-        The current client.
+    :param token:
+        voice connection token
 
-    :param payload:
-        The data received from the ready event.
+    :param guild_id:
+        the guild this voice server update is for
+
+    :param endpoint:
+        the voice server host
     """
-    self.bot = User.from_dict(payload.data.get("user"))
-    await ChatCommandHandler(self).initialize()
-    return "on_ready",
-
-
-def export() -> Coro:
-    return on_ready_middleware
+    token: str
+    guild_id: Snowflake
+    endpoint: Optional[str] = None
