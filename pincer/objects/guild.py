@@ -460,7 +460,8 @@ class Guild(APIObject):
     max_video_channel_users: APINullable[int] = MISSING
     members: APINullable[List[GuildMember]] = MISSING
     member_count: APINullable[bool] = MISSING
-    nsfw: APINullable[bool] = MISSING # Note: This is missing from discord's docs but in the api
+    nsfw: APINullable[bool] = MISSING 
+    # Note: This is missing from discord's docs but in the api
     owner: APINullable[bool] = MISSING
     permissions: APINullable[str] = MISSING
     premium_subscription_count: APINullable[int] = MISSING
@@ -482,13 +483,24 @@ class Guild(APIObject):
         data = await client.http.get(f"/guilds/{id}")
         channel_data = await client.http.get(f"/guilds/{id}/channels")
 
-        channels: List[Channel] = [Channel.from_dict(i | {"_client": client, "_http": client.http}) for i in (channel_data or [])]
+        channels: List[Channel] = [
+            Channel.from_dict(i | {"_client": client, "_http": client.http})
+            for i in (channel_data or [])
+        ]
 
-        data.update({"_client": client, "_http": client.http, "channels": channels})
+        data.update(
+            {
+                "_client": client, 
+                "_http": client.http, 
+                "channels": channels
+            }
+        )
 
-        return Guild(**data) # Once below is fixed. Change this to Guild.from_dict
+        # Once below is fixed. Change this to Guild.from_dict
+        return Guild(**data) 
 
-    # TODO: Fix this function. It causes a RecursionError because ot keeps calling itself
+    # TODO: Fix this function. 
+    # It causes a RecursionError because ot keeps calling itself
     @classmethod
     def from_dict(cls, data) -> Guild:
         """
