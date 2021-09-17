@@ -194,7 +194,7 @@ class Channel(APIObject):
         data.update({"_client": client, "_http": client.http, "type": ChannelType(data.pop("type"))})
         channel_cls = _channel_type_map.get(data["type"], Channel)
         return channel_cls.from_dict(data)
-    
+
 
 def __str__(self):
     """return the discord tag when object gets used as a string."""
