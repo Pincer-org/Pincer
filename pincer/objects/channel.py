@@ -170,7 +170,7 @@ class Channel(APIObject):
     member: APINullable[GuildMember] = MISSING
 
     member_count: APINullable[int] = MISSING
-    
+
     message_count: APINullable[int] = MISSING
 
     name: APINullable[str] = MISSING
