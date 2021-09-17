@@ -22,7 +22,6 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
-from json import dump
 from dataclasses import dataclass
 from enum import IntEnum
 from typing import Dict, Optional, List, TYPE_CHECKING
@@ -165,7 +164,7 @@ class Channel(APIObject):
     default_auto_archive_duration: APINullable[int] = MISSING
     guild_id: APINullable[Snowflake] = MISSING
     icon: APINullable[Optional[str]] = MISSING
-    
+
     last_message_id: APINullable[Optional[Snowflake]] = MISSING
     last_pin_timestamp: APINullable[Optional[Timestamp]] = MISSING
     member: APINullable[GuildMember] = MISSING

@@ -26,7 +26,6 @@ from __future__ import annotations
 
 import logging
 from asyncio import iscoroutinefunction, run
-from pincer.objects.channel import Channel
 from pincer.objects.guild import Guild
 from typing import Optional, Any, Union, Dict, Tuple, List
 

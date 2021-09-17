@@ -487,7 +487,7 @@ class Guild(APIObject):
         data.update({"_client": client, "_http": client.http, "channels": channels})
 
         return Guild(**data) # Once below is fixed. Change this to Guild.from_dict
-        
+
     # TODO: Fix this function. It causes a RecursionError because ot keeps calling itself
     @classmethod
     def from_dict(cls, data) -> Guild:
@@ -505,4 +505,4 @@ class Guild(APIObject):
                 " to a discord outage."
             )
 
-        return cls.from_dict(data) 
+        return cls.from_dict(data)
