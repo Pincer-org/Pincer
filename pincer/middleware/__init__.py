@@ -22,6 +22,7 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import logging
 from glob import glob
 from importlib import import_module
 from os import chdir
@@ -30,6 +31,8 @@ from typing import Dict
 
 from pincer.exceptions import NoExportMethod
 from pincer.utils import Coro
+
+_log = logging.getLogger(__package__)
 
 
 def get_middleware() -> Dict[str, Coro]:
@@ -48,6 +51,7 @@ def get_middleware() -> Dict[str, Coro]:
                 "export"
             )()
         except AttributeError:
+            _log.warning(f"Middleware {middleware_path} excpected an `export` method.")
             continue # TODO: Fix this. Always raises error because some modules are empty
             raise NoExportMethod(
                 f"Middleware module `{middleware_path}` expected an "
