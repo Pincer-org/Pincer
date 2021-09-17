@@ -23,28 +23,26 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from dataclasses import dataclass
-from typing import Optional
 
-from ..utils.api_object import APIObject
-from ..utils.snowflake import Snowflake
+from pincer.utils.api_object import APIObject
+from pincer.utils.snowflake import Snowflake
+from pincer.utils.types import MISSING, APINullable
 
 
 @dataclass
-class VoiceServerUpdateEvent(APIObject):
+class IntegrationDeleteEvent(APIObject):
     """
-    Sent when a guild's voice server is updated.
-    This is sent when initially connecting to voice,
-    and when the current voice instance fails over to a new server.
+    Sent when an integration is deleted.
 
-    :param token:
-        voice connection token
+    :param id:
+        integration id
 
     :param guild_id:
-        the guild this voice server update is for
+        id of the guild
 
-    :param endpoint:
-        the voice server host
+    :param application_id:
+        id of the bot/OAuth2 application for this discord integration
     """
-    token: str
+    id: Snowflake
     guild_id: Snowflake
-    endpoint: Optional[str] = None
+    application_id: APINullable[Snowflake] = MISSING

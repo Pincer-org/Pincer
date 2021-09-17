@@ -21,30 +21,31 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
-non-subscription event sent immediately after connecting,
-contains server information
-"""
-from pincer.commands import ChatCommandHandler
-from pincer.core.dispatch import GatewayDispatch
-from pincer.objects import User
-from pincer.utils import Coro
+
+from dataclasses import dataclass
+
+from pincer.utils.api_object import APIObject
+from pincer.utils.snowflake import Snowflake
+from pincer.utils.timestamp import Timestamp
+from pincer.utils.types import MISSING, APINullable
 
 
-async def on_ready_middleware(self, payload: GatewayDispatch):
+@dataclass
+class ChannelPinsUpdateEvent(APIObject):
     """
-    Middleware for ``on_ready`` event.
+    Sent when a message is pinned or unpinned in a text channel.
+    This is not sent when a pinned message is deleted.
 
-    :param self:
-        The current client.
+    :param guild_id:
+        the id of the guild
 
-    :param payload:
-        The data received from the ready event.
+    :param channel_id:
+        the id of the channel
+
+    :param last_pin_timestamp:
+        the time at which the most recent pinned message was pinned
     """
-    self.bot = User.from_dict(payload.data.get("user"))
-    await ChatCommandHandler(self).initialize()
-    return "on_ready",
+    channel_id: Snowflake
 
-
-def export() -> Coro:
-    return on_ready_middleware
+    guild_id: APINullable[Snowflake] = MISSING
+    last_pin_timestamp: APINullable[Timestamp] = MISSING

@@ -34,7 +34,17 @@ import sphinx_rtd_dark_mode
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx_rtd_theme', 'sphinx_rtd_dark_mode']
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.intersphinx',
+    'sphinx_rtd_theme',
+    'sphinx_rtd_dark_mode'
+]
+
+intersphinx_mapping = {
+    'py': ('https://docs.python.org/3', None),
+    'ws': ('https://websockets.readthedocs.io/en/stable', None)
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -55,6 +65,7 @@ with open('../requirements.txt') as f:
 # a list of builtin themes.
 #
 html_theme = 'sphinx_rtd_theme'
+pygments_style = 'monokai'
 default_dark_mode = False
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

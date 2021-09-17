@@ -24,7 +24,7 @@
 from pincer.commands import ChatCommandHandler
 from pincer.core.dispatch import GatewayDispatch
 from pincer.objects import Interaction, Embed, Message, InteractionFlags
-from pincer.utils import MISSING, should_pass_cls
+from pincer.utils import MISSING, should_pass_cls, Coro
 from pincer.utils.extraction import get_params
 
 
@@ -62,7 +62,7 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
             message = Message(embeds=[message])
         elif not isinstance(message, Message):
             message = Message(message) if message else Message(
-                self.__received,
+                self.received_message,
                 flags=InteractionFlags.EPHEMERAL
             )
 
@@ -72,3 +72,7 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
         )
 
     return "on_interaction_create", [interaction]
+
+
+def export() -> Coro:
+    return interaction_create_middleware

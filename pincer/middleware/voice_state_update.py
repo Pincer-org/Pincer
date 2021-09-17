@@ -22,27 +22,9 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from dataclasses import dataclass
+"""
+sent when a user's voice state changes in a subscribed voice channel
+(mute, volume, etc.)
+"""
 
-from ..utils.api_object import APIObject
-from ..utils.snowflake import Snowflake
-from ..utils.types import MISSING, APINullable
-
-
-@dataclass
-class IntegrationDeleteEvent(APIObject):
-    """
-    Sent when an integration is deleted.
-
-    :param id:
-        integration id
-
-    :param guild_id:
-        id of the guild
-
-    :param application_id:
-        id of the bot/OAuth2 application for this discord integration
-    """
-    id: Snowflake
-    guild_id: Snowflake
-    application_id: APINullable[Snowflake] = MISSING
+# TODO: Implement event

@@ -1,6 +1,14 @@
 pincer.objects package
 ======================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   pincer.objects.events
+
 Submodules
 ----------
 

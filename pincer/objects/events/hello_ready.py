@@ -25,11 +25,11 @@
 from dataclasses import dataclass
 from typing import List, Tuple
 
-from ..objects.application import Application
-from ..objects.guild import Guild
-from ..objects.user import User
-from ..utils.api_object import APIObject
-from ..utils.types import MISSING, APINullable
+from pincer.objects.application import Application
+from pincer.objects.guild import Guild
+from pincer.objects.user import User
+from pincer.utils.api_object import APIObject
+from pincer.utils.types import MISSING, APINullable
 
 
 @dataclass

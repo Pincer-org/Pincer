@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import logging
 from asyncio import iscoroutinefunction, run
+from pincer.objects.guild import Guild
 from typing import Optional, Any, Union, Dict, Tuple, List
 
 from . import __package__
@@ -135,10 +136,12 @@ def event_middleware(call: str, *, override: bool = False):
         async def wrapper(cls, payload: GatewayDispatch):
             _log.debug("`%s` middleware has been invoked", call)
 
+            print(func, should_pass_cls(func))
+
             return await (
                 func(cls, payload)
                 if should_pass_cls(func)
-                else await func(payload)
+                else func(payload)
             )
 
         _events[call] = wrapper
@@ -185,7 +188,7 @@ class Client(Dispatcher):
         )
 
         self.bot: Optional[User] = None
-        self.__received = received or "Command arrived successfully!"
+        self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
 
     @property
@@ -355,5 +358,8 @@ class Client(Dispatcher):
             else:
                 await call(*args, **kwargs)
 
+    async def get_guild(self, id: int) -> Guild:
+        # TODO: docs
+        return await Guild.from_id(self, id)
 
 Bot = Client

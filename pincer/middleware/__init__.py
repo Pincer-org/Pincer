@@ -22,40 +22,43 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import logging
+from glob import glob
+from importlib import import_module
+from os import chdir
+from pathlib import Path
 from typing import Dict
 
+from pincer.exceptions import NoExportMethod
 from pincer.utils import Coro
-from .interaction_create import interaction_create_middleware
-from .ready import on_ready_middleware
 
-# TODO: Make imports dynamic.
-# from glob import glob
-# from importlib import import_module
-# from os import path
-# from pathlib import Path
-# from pincer.exceptions import NoExportMethod
+_log = logging.getLogger(__package__)
 
-# def get_middleware() -> Dict[str, Coro]:
-#     middleware_list: Dict[str, Coro] = {}
-#
-#     for middleware_path in glob(path.join(
-#             Path(__file__).parent.resolve(),
-#             "[!__init__]*.py")
-#     ):
-#         event = middleware_path[:-3]
-#
-#         try:
-#             middleware_list[event] = getattr(import_module(f"event"), "export")
-#         except AttributeError:
-#             raise NoExportMethod(
-#                 f"Middleware module `{middleware_path}` expected an "
-#                 "`export` method but none was found!"
-#             )
-#
-#     return middleware_list
-# middleware: Dict[str, Coro] = get_middleware()
 
-middleware: Dict[str, Coro] = {
-    "ready": on_ready_middleware,
-    "interaction_create": interaction_create_middleware
-}
+def get_middleware() -> Dict[str, Coro]:
+    middleware_list: Dict[str, Coro] = {}
+    chdir(Path(__file__).parent.resolve())
+
+    for middleware_path in glob("*.py"):
+        if middleware_path.startswith("__"):
+            continue
+
+        event = middleware_path[:-3]
+
+        try:
+            middleware_list[event] = getattr(
+                import_module(f".{event}", package=__name__),
+                "export"
+            )()
+        except AttributeError:
+            _log.warning(f"Middleware {middleware_path} excpected an `export` method.")
+            continue # TODO: Fix this. Always raises error because some modules are empty
+            raise NoExportMethod(
+                f"Middleware module `{middleware_path}` expected an "
+                "`export` method but none was found!"
+            )
+
+    return middleware_list
+
+
+middleware: Dict[str, Coro] = get_middleware()

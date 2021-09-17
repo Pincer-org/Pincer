@@ -21,31 +21,22 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 from dataclasses import dataclass
 
-from ..utils.api_object import APIObject
-from ..utils.snowflake import Snowflake
-from ..utils.timestamp import Timestamp
-from ..utils.types import MISSING, APINullable
+from pincer.exceptions import PincerError
+from pincer.utils import APIObject
 
 
 @dataclass
-class ChannelPinsUpdateEvent(APIObject):
+class DiscordError(PincerError, APIObject):
     """
-    Sent when a message is pinned or unpinned in a text channel.
-    This is not sent when a pinned message is deleted.
+    Represents an error event in the Discord Gateway.
 
-    :param guild_id:
-        the id of the guild
+    :param code:
+        The RPC error code.
 
-    :param channel_id:
-        the id of the channel
-
-    :param last_pin_timestamp:
-        the time at which the most recent pinned message was pinned
+    :param message:
+        The error description..
     """
-    channel_id: Snowflake
-
-    guild_id: APINullable[Snowflake] = MISSING
-    last_pin_timestamp: APINullable[Timestamp] = MISSING
+    code: int
+    message: str

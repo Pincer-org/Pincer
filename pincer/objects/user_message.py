@@ -41,7 +41,8 @@ from .role import Role
 from .sticker import StickerItem
 from .user import User
 from .._config import GatewayConfig
-from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
+from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp, \
+    convert
 
 
 class MessageActivityType(IntEnum):
@@ -278,12 +279,12 @@ class UserMessage(APIObject):
     mention_everyone: bool
     mentions: List[User]
     mention_roles: List[Role]
-    mention_channels: List[ChannelMention]
     attachments: List[Attachment]
     embeds: List[Embed]
     pinned: bool
     type: MessageType
 
+    mention_channels: APINullable[List[ChannelMention]] = MISSING
     guild_id: APINullable[Snowflake] = MISSING
     member: APINullable[GuildMember] = MISSING
     reactions: APINullable[List[Reaction]] = MISSING
@@ -299,3 +300,45 @@ class UserMessage(APIObject):
     thread: APINullable[Channel] = MISSING
     components: APINullable[List[MessageComponent]] = MISSING
     sticker_items: APINullable[List[StickerItem]] = MISSING
+
+    def __post_init__(self):
+        self.id = convert(self.id, Snowflake.from_string)
+        self.channel_id = convert(self.channel_id, Snowflake.from_string)
+        self.author = convert(self.author, User.from_dict)
+        self.timestamp = convert(self.timestamp, Timestamp)
+        self.edited_timestamp = convert(self.edited_timestamp, Timestamp)
+        self.mentions = convert(self.mentions, User.from_dict)
+        self.mention_roles = convert(self.mention_roles, Role.from_dict)
+        self.attachments = convert(self.attachments, Attachment.from_dict)
+        self.embeds = convert(self.embeds, Embed.from_dict)
+        self.mention_channels = convert(
+            self.mention_channels,
+            ChannelMention.from_dict
+        )
+        self.guild_id = convert(self.guild_id, Snowflake.from_string)
+        self.member = convert(self.member, GuildMember.from_dict)
+        self.reactions = convert(self.reactions, Reaction.from_dict)
+        self.webhook_id = convert(self.webhook_id, Snowflake.from_string)
+        self.activity = convert(self.activity, MessageActivity.from_dict)
+        self.application = convert(self.application, Application.from_dict)
+        self.application_id = convert(
+            self.application_id,
+            Snowflake.from_string
+        )
+        self.message_reference = convert(
+            self.message_reference,
+            MessageReference.from_dict
+        )
+        # self.flags = convert(self.flags, MessageFlags.from_bytes)
+        # self.referenced_message = convert(
+        #     self.referenced_message,
+        #     Message.from_dict
+        # )
+        self.interaction = convert(
+            self.interaction,
+            MessageInteraction.from_dict
+        )
+        self.thread = convert(self.thread, Channel.from_dict)
+        self.components = convert(self.components, MessageComponent.from_dict)
+        self.sticker_items = convert(self.sticker_items, StickerItem.from_dict)
+
