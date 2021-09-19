@@ -23,9 +23,10 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from dataclasses import dataclass
 from enum import IntEnum
+from typing import Dict
 
 from .user import User
-from ..utils import APIObject, Snowflake
+from ..utils import APIObject, Snowflake, APINullable, MISSING
 
 
 class CallbackType(IntEnum):
@@ -96,3 +97,5 @@ class MessageInteraction(APIObject):
     type: InteractionType
     name: str
     user: User
+
+    member: APINullable[Dict] = MISSING
