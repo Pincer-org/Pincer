@@ -21,11 +21,19 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+from typing import Union
+from asyncio import sleep
+from inspect import isasyncgenfunction
+import logging
+
 from pincer.commands import ChatCommandHandler
 from pincer.core.dispatch import GatewayDispatch
 from pincer.objects import Interaction, Embed, Message, InteractionFlags
+from pincer.exceptions import RateLimitError
 from pincer.utils import MISSING, should_pass_cls, Coro
 from pincer.utils.extraction import get_params
+
+_log = logging.getLogger(__name__)
 
 
 async def interaction_create_middleware(self, payload: GatewayDispatch):
@@ -56,22 +64,58 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
         if should_pass_cls(command.call):
             kwargs["self"] = self
 
-        message = await command.call(**kwargs)
+        if isasyncgenfunction(command.call):
+            message = command.call(**kwargs)
+            started = False
 
-        if isinstance(message, Embed):
-            message = Message(embeds=[message])
-        elif not isinstance(message, Message):
-            message = Message(message) if message else Message(
-                self.received_message,
-                flags=InteractionFlags.EPHEMERAL
+            async for msg in message:
+
+                msg = convert_message(self, msg)
+                if started:
+                    try:
+                        await self.http.post(
+                            f"webhooks/{interaction.application_id}/{interaction.token}",
+                            msg.to_dict().get("data")
+                        )
+                    except RateLimitError as e:
+                        _log.exception(
+                            f"RateLimitError: {e}. Retrying in {e.json.get('retry_after', 40)} seconds")
+                        await sleep(e.json.get("retry_after", 40))
+                        await self.http.post(
+                            f"webhooks/{interaction.application_id}/{interaction.token}",
+                            msg.to_dict().get("data")
+                        )
+
+                else:
+                    started = True
+
+                    await self.http.post(
+                        f"interactions/{interaction.id}/{interaction.token}/callback",
+                        msg.to_dict()
+                    )
+                await sleep(0.3)
+        else:
+            message = await command.call(**kwargs)
+            message = convert_message(self, message)
+
+            await self.http.post(
+                f"interactions/{interaction.id}/{interaction.token}/callback",
+                message.to_dict()
             )
 
-        await self.http.post(
-            f"interactions/{interaction.id}/{interaction.token}/callback",
-            message.to_dict()
-        )
-
     return "on_interaction_create", [interaction]
+
+
+def convert_message(self, message: Union[Embed, Message, str]) -> Message:
+    """Converts a message to a Message object"""
+    if isinstance(message, Embed):
+        message = Message(embeds=[message])
+    elif not isinstance(message, Message):
+        message = Message(message) if message else Message(
+            self.received_message,
+            flags=InteractionFlags.EPHEMERAL
+        )
+    return message
 
 
 def export() -> Coro:
