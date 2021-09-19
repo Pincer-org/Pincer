@@ -358,8 +358,9 @@ class Client(Dispatcher):
             else:
                 await call(*args, **kwargs)
 
-    async def get_guild(self, id: int) -> Guild:
+    async def get_guild(self, _id: int) -> Guild:
         # TODO: docs
-        return await Guild.from_id(self, id)
+        return await Guild.from_id(self, _id)
+
 
 Bot = Client

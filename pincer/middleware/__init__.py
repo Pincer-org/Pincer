@@ -51,12 +51,18 @@ def get_middleware() -> Dict[str, Coro]:
                 "export"
             )()
         except AttributeError:
-            _log.warning(f"Middleware {middleware_path} excpected an `export` method.")
-            continue # TODO: Fix this. Always raises error because some modules are empty
-            raise NoExportMethod(
-                f"Middleware module `{middleware_path}` expected an "
-                "`export` method but none was found!"
+            _log.warning(
+                f"Middleware {middleware_path} expected an `export` method."
             )
+
+            continue
+
+            # TODO: Fix this. Always raises error because some modules are empty
+
+            # raise NoExportMethod(
+            #    f"Middleware module `{middleware_path}` expected an "
+            #    "`export` method but none was found!"
+            # )
 
     return middleware_list
 

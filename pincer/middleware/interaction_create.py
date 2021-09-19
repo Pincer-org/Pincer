@@ -21,6 +21,7 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 from typing import Union
 from asyncio import sleep
 from inspect import isasyncgenfunction
@@ -74,15 +75,21 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
                 if started:
                     try:
                         await self.http.post(
-                            f"webhooks/{interaction.application_id}/{interaction.token}",
+                            f"webhooks/{interaction.application_id}"
+                            f"/{interaction.token}",
                             msg.to_dict().get("data")
                         )
                     except RateLimitError as e:
                         _log.exception(
-                            f"RateLimitError: {e}. Retrying in {e.json.get('retry_after', 40)} seconds")
+                            f"RateLimitError: {e}."
+                            f" Retrying in {e.json.get('retry_after', 40)}"
+                            f" seconds"
+                        )
+
                         await sleep(e.json.get("retry_after", 40))
                         await self.http.post(
-                            f"webhooks/{interaction.application_id}/{interaction.token}",
+                            f"webhooks/{interaction.application_id}"
+                            f"/{interaction.token}",
                             msg.to_dict().get("data")
                         )
 
@@ -90,7 +97,8 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
                     started = True
 
                     await self.http.post(
-                        f"interactions/{interaction.id}/{interaction.token}/callback",
+                        f"interactions/{interaction.id}"
+                        f"/{interaction.token}/callback",
                         msg.to_dict()
                     )
                 await sleep(0.3)

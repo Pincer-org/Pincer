@@ -43,6 +43,7 @@ if TYPE_CHECKING:
     from pincer import Client
     from pincer.core.http import HTTPClient
 
+
 class PremiumTier(IntEnum):
     """
     :param NONE:
@@ -476,7 +477,6 @@ class Guild(APIObject):
     widget_enabled: APINullable[bool] = MISSING
     widget_channel_id: APINullable[Optional[Snowflake]] = MISSING
     welcome_screen: APINullable[WelcomeScreen] = MISSING
-
 
     @classmethod
     async def from_id(cls, client: Client, id: int) -> Guild:

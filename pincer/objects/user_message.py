@@ -341,4 +341,3 @@ class UserMessage(APIObject):
         self.thread = convert(self.thread, Channel.from_dict)
         self.components = convert(self.components, MessageComponent.from_dict)
         self.sticker_items = convert(self.sticker_items, StickerItem.from_dict)
-

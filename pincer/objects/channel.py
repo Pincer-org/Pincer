@@ -38,8 +38,6 @@ if TYPE_CHECKING:
     from ..core.http import HTTPClient
 
 
-
-
 class ChannelType(IntEnum):
     """Represents a channel its type."""
     GUILD_TEXT = 0
@@ -191,7 +189,14 @@ class Channel(APIObject):
     @classmethod
     async def from_id(cls, client: Client, id: int) -> Channel:
         data = (await client.http.get(f"/guilds/{id}")) or {}
-        data.update({"_client": client, "_http": client.http, "type": ChannelType(data.pop("type"))})
+        data.update(
+            {
+                "_client": client,
+                "_http": client.http,
+                "type": ChannelType(data.pop("type"))
+            }
+        )
+
         channel_cls = _channel_type_map.get(data["type"], Channel)
         return channel_cls.from_dict(data)
 
@@ -219,7 +224,6 @@ class CategoryChannel(Channel):
 @dataclass
 class NewsChannel(Channel):
     pass
-
 
 
 @dataclass
