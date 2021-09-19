@@ -25,7 +25,7 @@ from __future__ import annotations
 
 import logging
 from asyncio import iscoroutinefunction
-from inspect import Signature
+from inspect import Signature, isasyncgenfunction
 from typing import Optional, Dict, List, Any, Tuple, get_origin, get_args, Union
 
 from . import __package__
@@ -62,7 +62,7 @@ def command(
 ):
     # TODO: Fix docs
     def decorator(func: Coro):
-        if not iscoroutinefunction(func):
+        if not iscoroutinefunction(func) and not isasyncgenfunction(func):
             raise CommandIsNotCoroutine(
                 f"Command with call `{func.__name__}` is not a coroutine, "
                 "which is required for commands."
