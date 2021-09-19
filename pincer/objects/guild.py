@@ -440,7 +440,7 @@ class Guild(APIObject):
     nsfw_level: GuildNSFWLevel
     owner_id: Snowflake
     preferred_locale: str
-    premium_tier: InitVar[PremiumTier]
+    premium_tier: PremiumTier
     public_updates_channel_id: Optional[Snowflake]
     roles: List[Role]
     rules_channel_id: Optional[Snowflake]
@@ -479,9 +479,9 @@ class Guild(APIObject):
     welcome_screen: APINullable[WelcomeScreen] = MISSING
 
     @classmethod
-    async def from_id(cls, client: Client, id: int) -> Guild:
-        data = await client.http.get(f"/guilds/{id}")
-        channel_data = await client.http.get(f"/guilds/{id}/channels")
+    async def from_id(cls, client: Client, _id: int) -> Guild:
+        data = await client.http.get(f"/guilds/{_id}")
+        channel_data = await client.http.get(f"/guilds/{_id}/channels")
 
         channels: List[Channel] = [
             Channel.from_dict(i | {"_client": client, "_http": client.http})
