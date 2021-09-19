@@ -25,7 +25,7 @@ from dataclasses import dataclass
 from enum import IntEnum
 
 from .user import User
-from ..utils import APIObject, Snowflake
+from ..utils import APIObject, Snowflake, APINullable, MISSING
 
 
 class CallbackType(IntEnum):
@@ -96,3 +96,5 @@ class MessageInteraction(APIObject):
     type: InteractionType
     name: str
     user: User
+
+    member: APINullable[Dict] = MISSING
