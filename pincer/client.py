@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import logging
 from asyncio import iscoroutinefunction, run
+from pincer.objects.guild import Guild
 from typing import Optional, Any, Union, Dict, Tuple, List
 
 from . import __package__
@@ -356,6 +357,10 @@ class Client(Dispatcher):
                 await call(self, *args, **kwargs)
             else:
                 await call(*args, **kwargs)
+
+    async def get_guild(self, _id: int) -> Guild:
+        # TODO: docs
+        return await Guild.from_id(self, _id)
 
 
 Bot = Client

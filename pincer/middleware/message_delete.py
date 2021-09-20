@@ -27,6 +27,7 @@
 from pincer.core.dispatch import GatewayDispatch
 from pincer.objects.events.message import MessageDeleteEvent
 
+
 async def on_message_delete_middleware(payload: GatewayDispatch):
     """
     Middleware for ``on_message_delete`` event.

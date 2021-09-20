@@ -25,6 +25,7 @@
 non-subscription event sent immediately after connecting,
 contains server information
 """
+
 from pincer.commands import ChatCommandHandler
 from pincer.core.dispatch import GatewayDispatch
 from pincer.objects import User

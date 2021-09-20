@@ -23,9 +23,9 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, InitVar, field
 from enum import Enum, auto, IntEnum
-from typing import Optional, List
+from typing import Optional, List, TYPE_CHECKING
 
 from pincer.objects.events.presence import PresenceUpdateEvent
 from ..exceptions import UnavailableGuildError
@@ -38,6 +38,10 @@ from .sticker import Sticker
 from .voice_state import VoiceState
 from .welcome_screen import WelcomeScreen
 from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
+
+if TYPE_CHECKING:
+    from pincer import Client
+    from pincer.core.http import HTTPClient
 
 
 class PremiumTier(IntEnum):
@@ -366,6 +370,9 @@ class Guild(APIObject):
     :param member_count:
         total number of members in this guild
 
+    :param nsfw:
+        boolean if the server is NSFW
+
     :param owner:
         true if the user is the owner of the guild
 
@@ -413,6 +420,9 @@ class Guild(APIObject):
         returned in an Invite's guild object
     """
 
+    _client: Client
+    _http: HTTPClient
+
     afk_channel_id: Optional[Snowflake]
     afk_timeout: int
     application_id: Optional[Snowflake]
@@ -442,7 +452,7 @@ class Guild(APIObject):
 
     approximate_member_count: APINullable[int] = MISSING
     approximate_presence_count: APINullable[int] = MISSING
-    channels: APINullable[List[Channel]] = MISSING
+    channels: APINullable[List[Channel]] = field(default_factory=list)
     icon_hash: APINullable[Optional[str]] = MISSING
     joined_at: APINullable[Timestamp] = MISSING
     large: APINullable[bool] = MISSING
@@ -451,6 +461,8 @@ class Guild(APIObject):
     max_video_channel_users: APINullable[int] = MISSING
     members: APINullable[List[GuildMember]] = MISSING
     member_count: APINullable[bool] = MISSING
+    nsfw: APINullable[bool] = MISSING 
+    # Note: This is missing from discord's docs but in the api
     owner: APINullable[bool] = MISSING
     permissions: APINullable[str] = MISSING
     premium_subscription_count: APINullable[int] = MISSING
@@ -466,6 +478,29 @@ class Guild(APIObject):
     widget_channel_id: APINullable[Optional[Snowflake]] = MISSING
     welcome_screen: APINullable[WelcomeScreen] = MISSING
 
+    @classmethod
+    async def from_id(cls, client: Client, _id: int) -> Guild:
+        data = await client.http.get(f"/guilds/{_id}")
+        channel_data = await client.http.get(f"/guilds/{_id}/channels")
+
+        channels: List[Channel] = [
+            Channel.from_dict(i | {"_client": client, "_http": client.http})
+            for i in (channel_data or [])
+        ]
+
+        data.update(
+            {
+                "_client": client, 
+                "_http": client.http, 
+                "channels": channels
+            }
+        )
+
+        # Once below is fixed. Change this to Guild.from_dict
+        return Guild(**data) 
+
+    # TODO: Fix this function. 
+    # It causes a RecursionError because ot keeps calling itself
     @classmethod
     def from_dict(cls, data) -> Guild:
         """
