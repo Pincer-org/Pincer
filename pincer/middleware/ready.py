@@ -42,7 +42,7 @@ async def on_ready_middleware(self, payload: GatewayDispatch):
     :param payload:
         The data received from the ready event.
     """
-    self.bot = User.from_dict(payload.data.get("user"))
+    self.bot = User.from_dict({"_client": self, "_http": self.http} | payload.data.get("user"))
     await ChatCommandHandler(self).initialize()
     return "on_ready",
 

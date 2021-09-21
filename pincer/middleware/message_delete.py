@@ -28,7 +28,7 @@ from pincer.core.dispatch import GatewayDispatch
 from pincer.objects.events.message import MessageDeleteEvent
 
 
-async def on_message_delete_middleware(payload: GatewayDispatch):
+async def on_message_delete_middleware(self, payload: GatewayDispatch):
     """
     Middleware for ``on_message_delete`` event.
 
@@ -38,7 +38,7 @@ async def on_message_delete_middleware(payload: GatewayDispatch):
     :param payload:
         The data received from the delete message event.
     """
-    return "on_message_delete", [MessageDeleteEvent.from_dict(payload.data)]
+    return "on_message_delete", [MessageDeleteEvent.from_dict({"_client": self, "_http": self.http} | payload.data)]
 
 
 def export():
