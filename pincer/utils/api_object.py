@@ -27,7 +27,7 @@ from __future__ import annotations
 import copy
 from dataclasses import dataclass, fields, _is_dataclass_instance
 from enum import Enum
-from typing import Dict, Union, Generic, TypeVar
+from typing import Dict, Union, Generic, TypeVar, Any
 
 from .types import MissingType
 
@@ -92,7 +92,7 @@ class APIObject:
     #     print("Post init", self)
 
     @classmethod
-    def from_dict(cls: Generic[T], data: Dict[str, Union[str, bool, int]]) -> T:
+    def from_dict(cls: Generic[T], data: Dict[str, Union[str, bool, int, Any]]) -> T:
         """
         Parse an API object from a dictionary.
         """
