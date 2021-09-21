@@ -26,7 +26,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum, Enum
-from typing import List, Optional, Union
+from typing import List, Optional, Union, TYPE_CHECKING
+
 
 from .application import Application
 from .attachment import Attachment
@@ -40,9 +41,13 @@ from .reaction import Reaction
 from .role import Role
 from .sticker import StickerItem
 from .user import User
+from ..core.http import HTTPClient
 from .._config import GatewayConfig
 from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp, \
     convert
+
+if TYPE_CHECKING:
+    from .. import Client
 
 
 class MessageActivityType(IntEnum):
@@ -174,6 +179,10 @@ class UserMessage(APIObject):
     """
     Represents a message sent in a channel within Discord.
 
+    :param _client:
+
+    :param _http:
+
     :param id:
         id of the message
 
@@ -269,6 +278,9 @@ class UserMessage(APIObject):
     :param sticker_items:
         sent if the message contains stickers
     """
+    _client: Client
+    _http: HTTPClient
+
     id: Snowflake
     channel_id: Snowflake
     author: User
@@ -304,10 +316,10 @@ class UserMessage(APIObject):
     def __post_init__(self):
         self.id = convert(self.id, Snowflake.from_string)
         self.channel_id = convert(self.channel_id, Snowflake.from_string)
-        self.author = convert(self.author, User.from_dict)
+        self.author = convert(self.author, User.from_dict, client=self._client)
         self.timestamp = convert(self.timestamp, Timestamp)
         self.edited_timestamp = convert(self.edited_timestamp, Timestamp)
-        self.mentions = convert(self.mentions, User.from_dict)
+        self.mentions = convert(self.mentions, User.from_dict, client=self._client)
         self.mention_roles = convert(self.mention_roles, Role.from_dict)
         self.attachments = convert(self.attachments, Attachment.from_dict)
         self.embeds = convert(self.embeds, Embed.from_dict)
@@ -316,7 +328,7 @@ class UserMessage(APIObject):
             ChannelMention.from_dict
         )
         self.guild_id = convert(self.guild_id, Snowflake.from_string)
-        self.member = convert(self.member, GuildMember.from_dict)
+        self.member = convert(self.member, GuildMember.from_dict, client=self._client)
         self.reactions = convert(self.reactions, Reaction.from_dict)
         self.webhook_id = convert(self.webhook_id, Snowflake.from_string)
         self.activity = convert(self.activity, MessageActivity.from_dict)
@@ -338,6 +350,6 @@ class UserMessage(APIObject):
             self.interaction,
             MessageInteraction.from_dict
         )
-        self.thread = convert(self.thread, Channel.from_dict)
+        self.thread = convert(self.thread, Channel.from_dict, client=self._client)
         self.components = convert(self.components, MessageComponent.from_dict)
         self.sticker_items = convert(self.sticker_items, StickerItem.from_dict)
