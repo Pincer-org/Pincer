@@ -21,15 +21,19 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from typing import Callable, Any, Optional
+from __future__ import annotations
 
+from typing import Callable, Any, Optional, TYPE_CHECKING
 from .types import T, MISSING
 
+if TYPE_CHECKING:
+    from pincer.client import Client
 
 def convert(
         value: Any,
         factory: Callable[[Any], T],
-        check: Optional[type] = None
+        check: Optional[type] = None,
+        client: Optional[Client] = None
 ) -> T:
     """
     Convert a value to T if its not MISSING.
@@ -38,7 +42,7 @@ def convert(
         def fin_fac(v: Any):
             return (
                 v if check is not None and isinstance(v, check)
-                else factory(v)
+                else factory(v) if client is None else factory(v | {"_client": client, "_http": client.http})
             )
 
         return (
