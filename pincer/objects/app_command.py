@@ -311,3 +311,4 @@ class ClientCommandStructure:
     """
     app: AppCommand
     call: Coro
+    cooldown: Optional[float] = None

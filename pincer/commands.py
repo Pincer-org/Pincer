@@ -41,6 +41,7 @@ from .utils import (
     get_signature_and_params, get_index, should_pass_ctx, Coro, Snowflake,
     MISSING
 )
+from .utils.slidingwindow import SlidingWindow
 
 _log = logging.getLogger(__package__)
 
@@ -58,7 +59,8 @@ def command(
         name: Optional[str] = None,
         description: Optional[str] = "Description not set",
         enable_default: Optional[bool] = True,
-        guild: Union[Snowflake, int, str] = None
+        guild: Union[Snowflake, int, str] = None,
+        cooldown: Optional[float] = 0
 ):
     # TODO: Fix docs
     def decorator(func: Coro):
@@ -142,6 +144,7 @@ def command(
 
         ChatCommandHandler.register[cmd] = ClientCommandStructure(
             call=func,
+            cooldown=cooldown,
             app=AppCommand(
                 name=cmd,
                 description=description,
@@ -158,6 +161,7 @@ def command(
 
 
 class ChatCommandHandler:
+    throttle: Dict[Any, SlidingWindow] = {}
     register: Dict[str, ClientCommandStructure] = {}
 
     # TODO: Fix docs
