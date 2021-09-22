@@ -24,6 +24,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from asyncio import iscoroutinefunction
 from inspect import Signature, isasyncgenfunction
 from typing import Optional, Dict, List, Any, Tuple, get_origin, get_args, Union
@@ -42,6 +43,8 @@ from .utils import (
     MISSING
 )
 from .utils.slidingwindow import SlidingWindow
+
+COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 
 _log = logging.getLogger(__package__)
 
@@ -72,7 +75,12 @@ def command(
 
         cmd = name or func.__name__
 
-        # TODO: Perform name check on cmd with r"^[\w-]{1,32}$"
+        if not re.match(COMMAND_NAME_REGEX, cmd):
+            raise InvalidCommandName(
+                f"Command `{cmd}` doesn't follow the name requirements."
+                "Ensure to match the following regex:"
+                f" {COMMAND_NAME_REGEX.pattern}"
+            )
 
         try:
             guild_id = int(guild) if guild else MISSING

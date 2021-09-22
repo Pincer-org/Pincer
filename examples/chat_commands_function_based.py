@@ -45,4 +45,4 @@ async def pincer_embed():
     )
 
 if __name__ == "__main__":
-    Client("XXXYOURBOTTOKENHEREXXX").run()
+    Client("ODgxNTgzMzc5NTA0NTgyNzI3.YSu8gA.fYcO6INp54-TA4xdVL7hjltTr2c").run()
