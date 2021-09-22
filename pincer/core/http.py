@@ -206,6 +206,7 @@ class HTTPClient:
             )
 
             exception.__init__(res.reason)
+            exception.json = await res.json()
             raise exception
 
         # status code is guaranteed to be 5xx

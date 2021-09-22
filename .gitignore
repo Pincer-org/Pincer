@@ -6,6 +6,7 @@
 *.py[dcw]
 __pycache__
 venv
+virtualenv
 pyvenv
 Pipfile.lock
 
