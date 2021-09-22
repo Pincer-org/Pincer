@@ -18,7 +18,7 @@ class Bot(Client):
     async def add(self, first: int, second: int):
         return f"The addition of `{first}` and `{second}` is `{first + second}`"
 
-    # @command(guild=1324567890)
+    @command(guild=1324567890)
     async def private_say(self, message: str):
         return Message(message, flags=InteractionFlags.EPHEMERAL)
 
@@ -45,4 +45,4 @@ class Bot(Client):
 
 
 if __name__ == "__main__":
-    Bot("ODgxNTgzMzc5NTA0NTgyNzI3.YSu8gA.fYcO6INp54-TA4xdVL7hjltTr2c").run()
+    Bot("XXXYOURBOTTOKENHEREXXX").run()
