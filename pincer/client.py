@@ -358,9 +358,15 @@ class Client(Dispatcher):
             else:
                 await call(*args, **kwargs)
 
-    async def get_guild(self, _id: int) -> Guild:
-        # TODO: docs
-        return await Guild.from_id(self, _id)
+    async def get_guild(self, guild_id: int) -> Guild:
+        """
+        Fetch a guild object by the guild identifier.
+
+        :param guild_id:
+            The id of the guild which should be fetched from the Discord
+            gateway.
+        """
+        return await Guild.from_id(self, guild_id)
 
 
 Bot = Client
