@@ -517,4 +517,4 @@ class Guild(APIObject):
                 " to a discord outage."
             )
 
-        return cls.from_dict(data)
+        return super().from_dict(data)
