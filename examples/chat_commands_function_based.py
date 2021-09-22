@@ -4,8 +4,10 @@ from pincer.objects import Message, InteractionFlags, Embed
 
 @Client.event
 async def on_ready(self):
-    print(f"Started client on {self.bot}\n"
-          "Registered commands: " + ", ".join(self.chat_commands))
+    print(
+        f"Started client on {self.bot}\n"
+        "Registered commands: " + ", ".join(self.chat_commands)
+    )
 
 
 @command(description="Say something as the bot!")

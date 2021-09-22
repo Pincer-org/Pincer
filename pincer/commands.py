@@ -251,26 +251,28 @@ class ChatCommandHandler:
 
                 changes = get_changes(api_cmd, loc_cmd.app)
 
-                if changes:
-                    api_update = []
-                    if changes.get("options"):
-                        for option in changes["options"]:
-                            api_update.append(
-                                option.to_dict()
-                                if isinstance(option, AppCommandOption)
-                                else option
-                            )
+                if not changes:
+                    continue
 
-                    to_update[api_cmd.id] = {"options": api_update}
+                api_update = []
+                if changes.get("options"):
+                    for option in changes["options"]:
+                        api_update.append(
+                            option.to_dict()
+                            if isinstance(option, AppCommandOption)
+                            else option
+                        )
 
-                    for key, change in changes.items():
-                        if key == "options":
-                            self._api_commands[idx].options = [
-                                AppCommandOption.from_dict(option)
-                                for option in change
-                            ]
-                        else:
-                            setattr(self._api_commands[idx], key, change)
+                to_update[api_cmd.id] = {"options": api_update}
+
+                for key, change in changes.items():
+                    if key == "options":
+                        self._api_commands[idx].options = [
+                            AppCommandOption.from_dict(option)
+                            for option in change
+                        ]
+                    else:
+                        setattr(self._api_commands[idx], key, change)
 
         for cmd_id, changes in to_update.items():
             await self.client.http.patch(

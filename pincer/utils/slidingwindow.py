@@ -25,6 +25,7 @@ from time import time
 
 
 class SlidingWindow:
+
     def __init__(self, capacity: int, time_unit: float):
         self.capacity: int = capacity
         self.time_unit: float = time_unit
@@ -41,8 +42,8 @@ class SlidingWindow:
             self.__cur_count = 0
 
         # Calculate the estimated count
-        est_cnt = (self.__pre_count * (
-                self.time_unit - (time() - self.__cur_time)
+        est_cnt = (
+            self.__pre_count * (self.time_unit - (time() - self.__cur_time)
         ) / self.time_unit) + self.__cur_count
 
         # Request has passed the capacity

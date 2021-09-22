@@ -248,8 +248,10 @@ class AppCommand(APIObject):
     def __post_init__(self):
         self.id = convert(self.id, Snowflake.from_string)
         self.version = convert(self.version, Snowflake.from_string)
-        self.application_id = convert(self.application_id,
-                                      Snowflake.from_string)
+        self.application_id = convert(
+            self.application_id, Snowflake.from_string
+        )
+
         self.options = convert(
             self.options,
             AppCommandOption.from_dict,
