@@ -26,7 +26,6 @@ from __future__ import annotations
 
 import logging
 from asyncio import iscoroutinefunction, run
-from pincer.objects.guild import Guild
 from typing import Optional, Any, Union, Dict, Tuple, List
 
 from . import __package__
@@ -37,7 +36,7 @@ from .core.gateway import Dispatcher
 from .core.http import HTTPClient
 from .exceptions import InvalidEventName
 from .middleware import middleware
-from .objects import User, Intents
+from .objects import User, Intents, Guild
 from .utils import get_index, should_pass_cls, Coro
 
 _log = logging.getLogger(__package__)

@@ -24,9 +24,9 @@
 from dataclasses import dataclass, MISSING
 from typing import List
 
-from pincer.objects import Integration
-from pincer.objects.user import VisibilityType
-from pincer.utils import APIObject, APINullable
+from ..objects import Integration
+from ..objects.user import VisibilityType
+from ..utils import APIObject, APINullable
 
 
 @dataclass
