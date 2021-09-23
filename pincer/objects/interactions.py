@@ -21,10 +21,12 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Dict
+from typing import Dict, TYPE_CHECKING
+
 
 from .app_command import AppCommandInteractionDataOption
 from .channel import Channel
@@ -35,7 +37,10 @@ from .role import Role
 from .select_menu import SelectOption
 from .user import User
 from ..utils import APIObject, APINullable, MISSING, Snowflake, convert
+from ..core.http import HTTPClient
 
+if TYPE_CHECKING:
+    from .. import Client
 
 class InteractionFlags(IntEnum):
     """
@@ -136,6 +141,10 @@ class Interaction(APIObject):
     """
     Represents a Discord Interaction object
 
+    :param _client:
+
+    :param _http:
+
     :param id:
         id of the interaction
 
@@ -169,6 +178,10 @@ class Interaction(APIObject):
     :param message:
         for components, the message they were attached to
     """
+
+    _client: Client
+    _http: HTTPClient
+
     id: Snowflake
     application_id: Snowflake
     type: InteractionType
@@ -195,6 +208,6 @@ class Interaction(APIObject):
         )
         self.guild_id = convert(self.guild_id, Snowflake.from_string)
         self.channel_id = convert(self.channel_id, Snowflake.from_string)
-        self.member = convert(self.member, GuildMember.from_dict, GuildMember)
-        self.user = convert(self.user, User.from_dict, User)
-        self.message = convert(self.message, UserMessage.from_dict, UserMessage)
+        self.member = convert(self.member, GuildMember.from_dict, GuildMember, client=self._client)
+        self.user = convert(self.user, User.from_dict, User, client=self._client)
+        self.message = convert(self.message, UserMessage.from_dict, UserMessage, client=self._client)
