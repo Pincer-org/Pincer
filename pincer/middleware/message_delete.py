@@ -38,8 +38,8 @@ async def on_message_delete_middleware(self, payload: GatewayDispatch):
     :param payload:
         The data received from the delete message event.
     """
-    return "on_message_delete", [MessageDeleteEvent.from_dict({"_client": self, "_http": self.http} | payload.data)]
-
-
-def export():
-    return on_message_delete_middleware
+    return "on_message_delete", [
+        MessageDeleteEvent.from_dict(
+            {"_client": self, "_http": self.http} | payload.data
+        )
+    ]
