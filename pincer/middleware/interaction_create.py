@@ -27,12 +27,12 @@ from asyncio import sleep
 from inspect import isasyncgenfunction
 import logging
 
-from pincer.commands import ChatCommandHandler
-from pincer.core.dispatch import GatewayDispatch
-from pincer.objects import Interaction, Embed, Message, InteractionFlags
-from pincer.exceptions import RateLimitError
-from pincer.utils import MISSING, should_pass_cls, Coro
-from pincer.utils.extraction import get_params
+from .commands import ChatCommandHandler
+from .exceptions import RateLimitError
+from ..core.dispatch import GatewayDispatch
+from ..objects import Interaction, Embed, Message, InteractionFlags
+from ..utils import MISSING, should_pass_cls, Coro
+from ..utils.extraction import get_params
 
 _log = logging.getLogger(__name__)
 

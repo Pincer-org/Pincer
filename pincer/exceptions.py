@@ -99,6 +99,13 @@ class InvalidCommandGuild(CommandError):
     """
 
 
+class InvalidCommandName(PincerError):
+    """
+    Exception raised when the command is considered invalid.
+    This is caused by a name that doesn't match the command name regex.
+    """
+
+
 class InvalidEventName(PincerError):
     """
     Exception raised when the event name is not a valid event.

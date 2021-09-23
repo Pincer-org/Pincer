@@ -21,51 +21,34 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from dataclasses import dataclass, MISSING
-from typing import List
-
-from ..objects import Integration
-from ..objects.user import VisibilityType
-from ..utils import APIObject, APINullable
+from time import time
 
 
-@dataclass
-class Connection(APIObject):
-    """
-    The connection object that the user has attached.
+class SlidingWindow:
 
-    :param id:
-        id of the connection account
+    def __init__(self, capacity: int, time_unit: float):
+        self.capacity: int = capacity
+        self.time_unit: float = time_unit
 
-    :param name:
-        the username of the connection account
+        self.__cur_time: float = time()
+        self.__pre_count: int = capacity
+        self.__cur_count: int = 0
 
-    :param type:
-        the service of the connection (twitch, youtube)
+    def allow(self) -> bool:
+        # Reset rate limit:
+        if (time() - self.__cur_time) > self.time_unit:
+            self.__cur_time = time()
+            self.__pre_count = self.__cur_count
+            self.__cur_count = 0
 
-    :param revoked:
-        whether the connection is revoked
+        # Calculate the estimated count
+        est_cnt = (
+            self.__pre_count * (self.time_unit - (time() - self.__cur_time)
+        ) / self.time_unit) + self.__cur_count
 
-    :param integrations:
-        an array of partial server integrations
+        # Request has passed the capacity
+        if est_cnt > self.capacity:
+            return False
 
-    :param verified:
-        whether the connection is verified
-
-    :param friend_sync:
-        whether friend sync is enabled for this connection
-
-    :param show_activity:
-        whether activities related to this connection
-        will be shown in presence updates
-    """
-    id: str
-    name: str
-    type: str
-    verified: bool
-    friend_sync: bool
-    show_activity: bool
-    visibility: VisibilityType
-
-    revoked: APINullable[bool] = MISSING
-    integrations: APINullable[List[Integration]] = MISSING
+        self.__cur_count += 1
+        return True

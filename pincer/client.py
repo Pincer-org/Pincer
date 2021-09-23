@@ -26,7 +26,6 @@ from __future__ import annotations
 
 import logging
 from asyncio import iscoroutinefunction, run
-from pincer.objects.guild import Guild
 from typing import Optional, Any, Union, Dict, Tuple, List
 
 from . import __package__
@@ -37,7 +36,7 @@ from .core.gateway import Dispatcher
 from .core.http import HTTPClient
 from .exceptions import InvalidEventName
 from .middleware import middleware
-from .objects import User, Intents
+from .objects import User, Intents, Guild
 from .utils import get_index, should_pass_cls, Coro
 
 _log = logging.getLogger(__package__)
@@ -358,9 +357,15 @@ class Client(Dispatcher):
             else:
                 await call(*args, **kwargs)
 
-    async def get_guild(self, _id: int) -> Guild:
-        # TODO: docs
-        return await Guild.from_id(self, _id)
+    async def get_guild(self, guild_id: int) -> Guild:
+        """
+        Fetch a guild object by the guild identifier.
+
+        :param guild_id:
+            The id of the guild which should be fetched from the Discord
+            gateway.
+        """
+        return await Guild.from_id(self, guild_id)
 
 
 Bot = Client

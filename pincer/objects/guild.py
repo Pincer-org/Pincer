@@ -499,8 +499,6 @@ class Guild(APIObject):
         # Once below is fixed. Change this to Guild.from_dict
         return Guild(**data) 
 
-    # TODO: Fix this function. 
-    # It causes a RecursionError because ot keeps calling itself
     @classmethod
     def from_dict(cls, data) -> Guild:
         """
@@ -517,4 +515,4 @@ class Guild(APIObject):
                 " to a discord outage."
             )
 
-        return cls.from_dict(data)
+        return super().from_dict(data)

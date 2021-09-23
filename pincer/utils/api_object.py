@@ -102,10 +102,13 @@ class APIObject:
         # Disable inspection for IDE because this is valid code for the
         # inherited classes:
         # noinspection PyArgumentList
-        return cls(**{
-            key: (value.value if isinstance(value, Enum)
-                  else value) for key, value in data.items()
-        })
+        return cls(
+            **{
+                key: (
+                    value.value if isinstance(value, Enum) else value
+                ) for key, value in data.items()
+            }
+        )
 
     def to_dict(self) -> Dict:
         """

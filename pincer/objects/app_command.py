@@ -248,8 +248,10 @@ class AppCommand(APIObject):
     def __post_init__(self):
         self.id = convert(self.id, Snowflake.from_string)
         self.version = convert(self.version, Snowflake.from_string)
-        self.application_id = convert(self.application_id,
-                                      Snowflake.from_string)
+        self.application_id = convert(
+            self.application_id, Snowflake.from_string
+        )
+
         self.options = convert(
             self.options,
             AppCommandOption.from_dict,
@@ -271,18 +273,17 @@ class AppCommand(APIObject):
         if (
             (self.options is MISSING and other.options is not MISSING)
             or (self.options is not MISSING and other.options is MISSING)
+            and not is_equal
         ):
             return False
 
-        if is_equal and len(other.options) == len(self.options):
-            for idx, option in enumerate(other.options):
-                option_comp: Optional[AppCommandOption] = \
-                    get_index(self.options, idx)
+        if len(other.options) != len(self.options):
+            return False
 
-                if not option_comp or option != option_comp:
-                    is_equal = False
-
-        return is_equal
+        return not any(
+            option != get_index(self.options, idx)
+            for idx, option in enumerate(other.options)
+        )
 
     def add_option(self, option: AppCommandOption):
         """
@@ -311,3 +312,4 @@ class ClientCommandStructure:
     """
     app: AppCommand
     call: Coro
+    cooldown: Optional[float] = None

@@ -61,9 +61,11 @@ class Dispatcher:
     """
 
     # TODO: Implement compression
-    def __init__(self, token: str, *,
-                 handlers: Dict[int, Handler],
-                 intents: Intents) -> None:
+    def __init__(
+            self, token: str, *,
+            handlers: Dict[int, Handler],
+            intents: Intents
+    ) -> None:
         """
         :param token:
             Bot token for discord's API.

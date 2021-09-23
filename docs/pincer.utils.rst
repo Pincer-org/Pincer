@@ -36,6 +36,14 @@ pincer.utils.insertion module
    :undoc-members:
    :show-inheritance:
 
+pincer.utils.slidingwindow module
+---------------------------------
+
+.. automodule:: pincer.utils.slidingwindow
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.utils.snowflake module
 -----------------------------
 

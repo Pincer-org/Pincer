@@ -24,6 +24,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from asyncio import iscoroutinefunction
 from inspect import Signature, isasyncgenfunction
 from typing import Optional, Dict, List, Any, Tuple, get_origin, get_args, Union
@@ -41,6 +42,9 @@ from .utils import (
     get_signature_and_params, get_index, should_pass_ctx, Coro, Snowflake,
     MISSING
 )
+from .utils.slidingwindow import SlidingWindow
+
+COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 
 _log = logging.getLogger(__package__)
 
@@ -58,7 +62,8 @@ def command(
         name: Optional[str] = None,
         description: Optional[str] = "Description not set",
         enable_default: Optional[bool] = True,
-        guild: Union[Snowflake, int, str] = None
+        guild: Union[Snowflake, int, str] = None,
+        cooldown: Optional[float] = 0
 ):
     # TODO: Fix docs
     def decorator(func: Coro):
@@ -70,7 +75,12 @@ def command(
 
         cmd = name or func.__name__
 
-        # TODO: Perform name check on cmd with r"^[\w-]{1,32}$"
+        if not re.match(COMMAND_NAME_REGEX, cmd):
+            raise InvalidCommandName(
+                f"Command `{cmd}` doesn't follow the name requirements."
+                "Ensure to match the following regex:"
+                f" {COMMAND_NAME_REGEX.pattern}"
+            )
 
         try:
             guild_id = int(guild) if guild else MISSING
@@ -142,6 +152,7 @@ def command(
 
         ChatCommandHandler.register[cmd] = ClientCommandStructure(
             call=func,
+            cooldown=cooldown,
             app=AppCommand(
                 name=cmd,
                 description=description,
@@ -158,6 +169,7 @@ def command(
 
 
 class ChatCommandHandler:
+    throttle: Dict[Any, SlidingWindow] = {}
     register: Dict[str, ClientCommandStructure] = {}
 
     # TODO: Fix docs
@@ -239,26 +251,28 @@ class ChatCommandHandler:
 
                 changes = get_changes(api_cmd, loc_cmd.app)
 
-                if changes:
-                    api_update = []
-                    if changes.get("options"):
-                        for option in changes["options"]:
-                            api_update.append(
-                                option.to_dict()
-                                if isinstance(option, AppCommandOption)
-                                else option
-                            )
+                if not changes:
+                    continue
 
-                    to_update[api_cmd.id] = {"options": api_update}
+                api_update = []
+                if changes.get("options"):
+                    for option in changes["options"]:
+                        api_update.append(
+                            option.to_dict()
+                            if isinstance(option, AppCommandOption)
+                            else option
+                        )
 
-                    for key, change in changes.items():
-                        if key == "options":
-                            self._api_commands[idx].options = [
-                                AppCommandOption.from_dict(option)
-                                for option in change
-                            ]
-                        else:
-                            setattr(self._api_commands[idx], key, change)
+                to_update[api_cmd.id] = {"options": api_update}
+
+                for key, change in changes.items():
+                    if key == "options":
+                        self._api_commands[idx].options = [
+                            AppCommandOption.from_dict(option)
+                            for option in change
+                        ]
+                    else:
+                        setattr(self._api_commands[idx], key, change)
 
         for cmd_id, changes in to_update.items():
             await self.client.http.patch(
