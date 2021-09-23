@@ -29,7 +29,11 @@ from ..objects import UserMessage
 
 
 async def message_create_middleware(self, payload: GatewayDispatch):
-    return "on_message", [UserMessage.from_dict({"_client": self, "_http": self.http} | payload.data)]
+    return "on_message", [
+        UserMessage.from_dict(
+            {"_client": self, "_http": self.http} | payload.data
+        )
+    ]
 
 
 def export():
