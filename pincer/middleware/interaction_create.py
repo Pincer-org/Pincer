@@ -27,8 +27,8 @@ from asyncio import sleep
 from inspect import isasyncgenfunction
 import logging
 
-from .commands import ChatCommandHandler
-from .exceptions import RateLimitError
+from ..commands import ChatCommandHandler
+from ..exceptions import RateLimitError
 from ..core.dispatch import GatewayDispatch
 from ..objects import Interaction, Embed, Message, InteractionFlags
 from ..utils import MISSING, should_pass_cls, Coro
