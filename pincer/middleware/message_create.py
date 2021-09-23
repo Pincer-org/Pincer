@@ -24,8 +24,8 @@
 
 """sent when a message is created in a subscribed text channel"""
 
-from pincer.core.dispatch import GatewayDispatch
-from pincer.objects import UserMessage
+from ..core.dispatch import GatewayDispatch
+from ..objects import UserMessage
 
 
 async def message_create_middleware(self, payload: GatewayDispatch):
