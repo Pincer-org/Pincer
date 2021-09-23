@@ -26,10 +26,10 @@ non-subscription event sent immediately after connecting,
 contains server information
 """
 
-from pincer.commands import ChatCommandHandler
-from pincer.core.dispatch import GatewayDispatch
-from pincer.objects import User
-from pincer.utils import Coro
+from ..commands import ChatCommandHandler
+from ..core.dispatch import GatewayDispatch
+from ..objects import User
+from ..utils import Coro
 
 
 async def on_ready_middleware(self, payload: GatewayDispatch):
