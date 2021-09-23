@@ -48,7 +48,11 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
     :param payload:
         The data received from the interaction event.
     """
-    interaction: Interaction = Interaction.from_dict(payload.data | {"_client": self, "_http": self.http })
+
+    interaction: Interaction = Interaction.from_dict(
+        payload.data | {"_client": self, "_http": self.http }
+    )
+
     command = ChatCommandHandler.register.get(interaction.data.name)
 
     if command:
