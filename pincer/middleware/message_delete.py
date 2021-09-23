@@ -24,8 +24,8 @@
 
 """sent when a message is deleted in a subscribed text channel"""
 
-from pincer.core.dispatch import GatewayDispatch
-from pincer.objects.events.message import MessageDeleteEvent
+from ..core.dispatch import GatewayDispatch
+from ..objects.events.message import MessageDeleteEvent
 
 
 async def on_message_delete_middleware(self, payload: GatewayDispatch):
