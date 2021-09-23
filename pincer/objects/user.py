@@ -25,9 +25,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from ..utils import APIObject, APINullable, MISSING, Snowflake, convert
+from ..core.http import HTTPClient
+
+if TYPE_CHECKING:
+    from pincer import Client
 
 
 class PremiumTypes(IntEnum):
@@ -53,6 +57,10 @@ class User(APIObject):
     Represents a Discord user. This can be a bot account or a
     human account.
 
+    :param _client:
+
+    :param _http:
+
     :param avatar:
         the user's avatar hash
 
@@ -74,6 +82,9 @@ class User(APIObject):
 
     :param banner:
         the user's banner, or null if unset
+
+    :param banner_color:
+        the color of the user's banner
 
     :param bot:
         whether the user belongs to an OAuth2 application
@@ -101,6 +112,9 @@ class User(APIObject):
         whether the email on this account has been verified
     """
 
+    _client: Client
+    _http: HTTPClient
+
     avatar: Optional[str]
     discriminator: str
     id: Snowflake
@@ -109,6 +123,7 @@ class User(APIObject):
     flags: APINullable[int] = MISSING
     accent_color: APINullable[Optional[int]] = MISSING
     banner: APINullable[Optional[str]] = MISSING
+    banner_color: APINullable[Optional[int]] = MISSING
     bot: APINullable[bool] = MISSING
     email: APINullable[Optional[str]] = MISSING
     locale: APINullable[str] = MISSING
@@ -139,3 +154,8 @@ class User(APIObject):
 
     def __post_init__(self):
         self.id = convert(self.id, Snowflake.from_string)
+
+    @classmethod
+    async def from_id(cls, client: Client, _id: int) -> User:
+        data = await client.http.get(f"users/{_id}")
+        return cls.from_dict(data)
