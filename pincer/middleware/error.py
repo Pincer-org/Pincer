@@ -38,8 +38,9 @@ def error_middleware(self, payload: GatewayDispatch):
     :param payload:
         The data received from the ready event.
     """
-    return "on_error", [DiscordError.from_dict({"_client": self, "_http": self.http} | payload.data)]
 
-
-def export():
-    return error_middleware
+    return "on_error",  [
+        DiscordError.from_dict(
+            {"_client": self, "_http": self.http} | payload.data
+        )
+    ]
