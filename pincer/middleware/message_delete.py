@@ -43,3 +43,7 @@ async def on_message_delete_middleware(self, payload: GatewayDispatch):
             {"_client": self, "_http": self.http} | payload.data
         )
     ]
+
+
+def export():
+    return on_message_delete_middleware
