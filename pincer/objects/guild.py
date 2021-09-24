@@ -514,6 +514,9 @@ class Guild(APIObject):
             The id of the guild member which should be fetched from the Discord
             gateway.
 
+        :returns:
+            A GuildMember objects.
+
         """
         return await GuildMember.from_id(self._client, self.id, _id)
 
@@ -522,6 +525,9 @@ class Guild(APIObject):
         """
         Modifies a member in the guild from its identifier and based on the 
         keyword arguments provided.
+
+        :returns:
+            The GuildMember that has been modified.
         """
 
     async def modify_member(self, _id: int, **kwargs) -> GuildMember:
