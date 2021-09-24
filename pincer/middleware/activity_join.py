@@ -23,7 +23,8 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """
-sent when the user clicks a Rich Presence join invite in chat to join a game
+Sent when the user clicks a Rich Presence join invite in chat
+to join a game.
 """
 
 # TODO: Implement event

@@ -101,7 +101,9 @@ def event_middleware(call: str, *, override: bool = False):
 
         >>> @event_middleware("ready", override=True)
         >>> async def custom_ready(_, payload: GatewayDispatch):
-        >>>     return "on_ready", [User.from_dict(payload.data.get("user"))]
+        >>>     return "on_ready", [
+        >>>         User.from_dict(payload.data.get("user"))
+        >>>     ]
 
         >>> @Client.event
         >>> async def on_ready(bot: User):
@@ -206,8 +208,8 @@ class Client(Dispatcher):
         which matches the event name.
 
         The event name gets pulled from your method name, and this must
-        start with ``on_``. This forces you to write clean and consistent
-        code.
+        start with ``on_``.
+        This forces you to write clean and consistent code.
 
         This decorator can be used in and out of a class, and all
         event methods must be coroutines. *(async)*
@@ -303,8 +305,10 @@ class Client(Dispatcher):
 
         :return:
             A tuple where the first element is the final executor
-            (so the event) its index in ``_events``. The second and third
-            element are the ``*args`` and ``**kwargs`` for the event.
+            (so the event) its index in ``_events``.
+
+            The second and third element are the ``*args``
+            and ``**kwargs`` for the event.
         """
         ware: MiddlewareType = _events.get(key)
         next_call, arguments, params = ware, [], {}

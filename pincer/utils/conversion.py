@@ -29,6 +29,7 @@ from .types import T, MISSING
 if TYPE_CHECKING:
     from pincer.client import Client
 
+
 def convert(
         value: Any,
         factory: Callable[[Any], T],

@@ -57,8 +57,6 @@ def get_middleware() -> Dict[str, Coro]:
 
             continue
 
-            # TODO: Fix this. Always raises error because some modules are empty
-
             # raise NoExportMethod(
             #    f"Middleware module `{middleware_path}` expected an "
             #    "`export` method but none was found!"

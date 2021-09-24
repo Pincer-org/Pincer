@@ -459,7 +459,8 @@ class Guild(APIObject):
     approximate_member_count: APINullable[int] = MISSING
     approximate_presence_count: APINullable[int] = MISSING
     channels: APINullable[List[Channel]] = field(default_factory=list)
-    hub_type: APINullable[...] = MISSING # TODO: Add type when type is known
+    # TODO: Add type when type is known
+    hub_type: APINullable[...] = MISSING
     icon_hash: APINullable[Optional[str]] = MISSING
     joined_at: APINullable[Timestamp] = MISSING
     large: APINullable[bool] = MISSING
@@ -521,7 +522,15 @@ class Guild(APIObject):
         return await GuildMember.from_id(self._client, self.id, _id)
 
     @overload
-    async def modify_member(self, *, _id: int, nick: Optional[str] = None, roles: Optional[List[Snowflake]] = None, mute: Optional[bool] = None, deaf: Optional[bool] = None, channel_id: Optional[Snowflake] = None) -> GuildMember:
+    async def modify_member(
+            self, *,
+            _id: int,
+            nick: Optional[str] = None,
+            roles: Optional[List[Snowflake]] = None,
+            mute: Optional[bool] = None,
+            deaf: Optional[bool] = None,
+            channel_id: Optional[Snowflake] = None
+    ) -> GuildMember:
         """
         Modifies a member in the guild from its identifier and based on the 
         keyword arguments provided.
@@ -532,7 +541,9 @@ class Guild(APIObject):
 
     async def modify_member(self, _id: int, **kwargs) -> GuildMember:
         data = await self._http.patch(f"guilds/{self.id}/members/{_id}", kwargs)
-        return GuildMember.from_dict(data | {"_client": self._client, "_http": self._http})
+        return GuildMember.from_dict(
+            data | {"_client": self._client, "_http": self._http}
+        )
 
     @classmethod
     def from_dict(cls, data) -> Guild:

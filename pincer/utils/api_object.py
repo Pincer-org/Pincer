@@ -92,7 +92,10 @@ class APIObject:
     #     print("Post init", self)
 
     @classmethod
-    def from_dict(cls: Generic[T], data: Dict[str, Union[str, bool, int, Any]]) -> T:
+    def from_dict(
+            cls: Generic[T],
+            data: Dict[str, Union[str, bool, int, Any]]
+    ) -> T:
         """
         Parse an API object from a dictionary.
         """

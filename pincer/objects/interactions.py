@@ -42,6 +42,7 @@ from ..core.http import HTTPClient
 if TYPE_CHECKING:
     from .. import Client
 
+
 class InteractionFlags(IntEnum):
     """
     :param EPHEMERAL:
@@ -208,6 +209,24 @@ class Interaction(APIObject):
         )
         self.guild_id = convert(self.guild_id, Snowflake.from_string)
         self.channel_id = convert(self.channel_id, Snowflake.from_string)
-        self.member = convert(self.member, GuildMember.from_dict, GuildMember, client=self._client)
-        self.user = convert(self.user, User.from_dict, User, client=self._client)
-        self.message = convert(self.message, UserMessage.from_dict, UserMessage, client=self._client)
+
+        self.member = convert(
+            self.member,
+            GuildMember.from_dict,
+            GuildMember,
+            client=self._client
+        )
+
+        self.user = convert(
+            self.user,
+            User.from_dict,
+            User,
+            client=self._client
+        )
+
+        self.message = convert(
+            self.message,
+            UserMessage.from_dict,
+            UserMessage,
+            client=self._client
+        )

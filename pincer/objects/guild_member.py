@@ -35,6 +35,7 @@ from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp, \
 if TYPE_CHECKING:
     from .. import Client
 
+
 @dataclass
 class GuildMember(APIObject):
     """
@@ -62,15 +63,15 @@ class GuildMember(APIObject):
         this users guild nickname
 
     :param pending:
-        whether the user has not yet passed the guild's Membership Screening
-        requirements
+        whether the user has not yet passed the guild's Membership
+        Screening requirements
 
     :param is_pending:
         Deprecated version of pending.
 
     :param permissions:
-        total permissions of the member in the channel, including overwrites,
-        returned when in the interaction object
+        total permissions of the member in the channel,
+        including overwrites, returned when in the interaction object
 
     :param premium_since:
         when the user started boosting the guild
@@ -104,6 +105,11 @@ class GuildMember(APIObject):
         )
 
     @classmethod
-    async def from_id(cls, client: Client, guild_id: int, _id: int) -> GuildMember:
+    async def from_id(
+            cls,
+            client: Client,
+            guild_id: int,
+            _id: int
+    ) -> GuildMember:
         data = await client.http.get(f"guilds/{guild_id}/members/{_id}")
         return cls.from_dict(data | {"_client": client, "_http": client.http})
