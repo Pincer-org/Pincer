@@ -40,6 +40,12 @@ class GuildMember(APIObject):
     """
     Represents a member which resides in a guild/server.
 
+    :param _client:
+        reference to the Client
+
+    :param _http:
+        reference to the HTTPClient
+
     :param deaf:
         whether the user is deafened in voice channels
 

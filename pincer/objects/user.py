@@ -58,8 +58,10 @@ class User(APIObject):
     human account.
 
     :param _client:
+        reference to the Client
 
     :param _http:
+        reference to the HTTPClient
 
     :param avatar:
         the user's avatar hash
