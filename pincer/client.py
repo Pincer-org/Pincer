@@ -364,8 +364,24 @@ class Client(Dispatcher):
         :param guild_id:
             The id of the guild which should be fetched from the Discord
             gateway.
+
+        :returns:
+            A Guild object.
         """
         return await Guild.from_id(self, guild_id)
+
+    async def get_user(self, _id: int) -> User:
+        """
+        Fetch a User from its identifier
+
+        :param _id:
+            The id of the user which should be fetched from the Discord
+            gateway.
+
+        :returns:
+            A User object.
+        """
+        return await User.from_id(self, _id)
 
 
 Bot = Client

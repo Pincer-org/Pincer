@@ -25,19 +25,22 @@
 non-subscription event sent when there is an error,
 including command responses
 """
-from pincer.core.dispatch import GatewayDispatch
-from pincer.objects.events.error import DiscordError
+from ..core.dispatch import GatewayDispatch
+from ..objects.events.error import DiscordError
 
 
-def error_middleware(payload: GatewayDispatch):
+def error_middleware(self, payload: GatewayDispatch):
     """
     Middleware for ``on_error`` event.
+
+    :param client:
 
     :param payload:
         The data received from the ready event.
     """
-    return "on_error", [DiscordError.from_dict(payload.data)]
 
-
-def export():
-    return error_middleware
+    return "on_error",  [
+        DiscordError.from_dict(
+            {"_client": self, "_http": self.http} | payload.data
+        )
+    ]

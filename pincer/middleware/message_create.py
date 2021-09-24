@@ -28,8 +28,12 @@ from ..core.dispatch import GatewayDispatch
 from ..objects import UserMessage
 
 
-async def message_create_middleware(payload: GatewayDispatch):
-    return "on_message", [UserMessage.from_dict(payload.data)]
+async def message_create_middleware(self, payload: GatewayDispatch):
+    return "on_message", [
+        UserMessage.from_dict(
+            {"_client": self, "_http": self.http} | payload.data
+        )
+    ]
 
 
 def export():

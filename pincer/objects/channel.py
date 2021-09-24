@@ -61,6 +61,12 @@ class Channel(APIObject):
     """
     Represents a Discord Channel Mention object
 
+    :param _client:
+        reference to the Client
+
+    :param _http:
+        reference to the HTTPClient
+
     :param id:
         the id of this channel
 

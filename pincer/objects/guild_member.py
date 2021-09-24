@@ -24,17 +24,27 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional, List
+from typing import Optional, List, TYPE_CHECKING
+
+from pincer.core.http import HTTPClient
 
 from .user import User
 from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp, \
     convert
 
+if TYPE_CHECKING:
+    from .. import Client
 
 @dataclass
 class GuildMember(APIObject):
     """
     Represents a member which resides in a guild/server.
+
+    :param _client:
+        reference to the Client
+
+    :param _http:
+        reference to the HTTPClient
 
     :param deaf:
         whether the user is deafened in voice channels
@@ -69,6 +79,9 @@ class GuildMember(APIObject):
         the user this guild member represents
     """
 
+    _client: Client
+    _http: HTTPClient
+
     deaf: bool
     joined_at: Timestamp
     mute: bool
@@ -85,7 +98,12 @@ class GuildMember(APIObject):
 
     def __post_init__(self):
         self.roles = convert(self.roles, Snowflake.from_string)
-        self.user = convert(self.user, User.from_dict, User)
+        self.user = convert(self.user, User.from_dict, User, self._client)
         self.premium_since = convert(
             self.premium_since, Timestamp.parse, Timestamp
         )
+
+    @classmethod
+    async def from_id(cls, client: Client, guild_id: int, _id: int) -> GuildMember:
+        data = await client.http.get(f"guilds/{guild_id}/members/{_id}")
+        return cls.from_dict(data | {"_client": client, "_http": client.http})

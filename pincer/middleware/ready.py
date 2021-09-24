@@ -26,7 +26,7 @@ non-subscription event sent immediately after connecting,
 contains server information
 """
 
-from .commands import ChatCommandHandler
+from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
 from ..objects import User
 from ..utils import Coro
@@ -42,7 +42,9 @@ async def on_ready_middleware(self, payload: GatewayDispatch):
     :param payload:
         The data received from the ready event.
     """
-    self.bot = User.from_dict(payload.data.get("user"))
+    self.bot = User.from_dict(
+        {"_client": self, "_http": self.http} | payload.data.get("user")
+    )
     await ChatCommandHandler(self).initialize()
     return "on_ready",
 
