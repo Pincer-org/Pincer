@@ -41,11 +41,13 @@ def convert(
     """
     def handle_factory() -> T:
         def fin_fac(v: Any):
-            return (
-                v if check is not None and isinstance(v, check)
-                else factory(v) if client is None
-                else factory(v | {"_client": client, "_http": client.http})
-            )
+            if check is not None and isinstance(v, check):
+                return v
+
+            if client is None:
+                return factory(v)
+
+            return factory(v | {"_client": client, "_http": client.http})
 
         return (
             list(map(fin_fac, value))
