@@ -22,9 +22,7 @@ from ..exceptions import (
     _InternalPerformReconnectError, DisallowedIntentsError
 )
 from ..objects import Intents
-from ..middleware.payload import (
-    payload_middleware
-)
+from ..middleware.payload import payload_middleware
 
 Handler = Callable[[WebSocketClientProtocol, GatewayDispatch], Awaitable[None]]
 _log = logging.getLogger(__package__)
