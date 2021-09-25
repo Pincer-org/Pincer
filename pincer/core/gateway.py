@@ -108,7 +108,7 @@ class Dispatcher:
             7: handle_reconnect,
             9: handle_reconnect,
             10: identify_and_handle_hello,
-            11: Heartbeat.handle_heartbeat,
+            11: Heartbeat.handle_heartbeat
         }
 
         self.__dispatch_errors: Dict[int, PincerError] = {
