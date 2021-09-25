@@ -100,6 +100,14 @@ pincer.middleware.notification\_create module
    :undoc-members:
    :show-inheritance:
 
+pincer.middleware.payload module
+--------------------------------
+
+.. automodule:: pincer.middleware.payload
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.middleware.ready module
 ------------------------------
 
