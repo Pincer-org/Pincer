@@ -1,0 +1,32 @@
+name: "PyPI Upload"
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "master", "main" ]
+
+jobs:
+  uploader:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          python-version: '3.x'
+          architecture: 'x64'
+
+      - name: install requirements_dev
+        run: pip install -r requirements_dev.txt
+
+      - name: generate setup.cfg
+        run: python -m gen.setup_generator
+
+      - name: compile lib
+        run: python setup.py sdist bdist_wheel
+
+      - name: upload lib
+        run: python -m twine upload dist/* --skip-existing -u ${{ secrets.u }} -p ${{ secrets.p }}
