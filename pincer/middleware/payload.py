@@ -4,13 +4,11 @@
 from ..core.dispatch import GatewayDispatch
 
 
-async def payload_middleware(payload: GatewayDispatch):
+async def payload_middleware(self, payload: GatewayDispatch):
     """Invoked when basically anything is received from gateway.."""
-
-    return "on_payload", payload
+    return "on_payload", [payload]
 
 
 def export():
     """Export the middleware"""
-
     return payload_middleware
