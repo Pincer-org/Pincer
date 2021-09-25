@@ -182,7 +182,7 @@ class Dispatcher:
         )
 
         ensure_future(handler(socket, payload), loop=loop)
-        ensure_future(payload_middleware(socket, payload), loop=loop)
+        ensure_future(payload_middleware(payload), loop=loop)
 
     async def __dispatcher(self, loop: AbstractEventLoop):
         """
