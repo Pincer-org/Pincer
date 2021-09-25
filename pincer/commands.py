@@ -32,7 +32,8 @@ from typing import Optional, Dict, List, Any, Tuple, get_origin, get_args, Union
 from . import __package__
 from .exceptions import (
     CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
-    InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild
+    InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
+    InvalidCommandName
 )
 from .objects.app_command import (
     AppCommand, AppCommandType, ClientCommandStructure,

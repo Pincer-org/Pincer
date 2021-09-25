@@ -42,9 +42,9 @@ class SlidingWindow:
             self.__cur_count = 0
 
         # Calculate the estimated count
-        est_cnt = (
-            self.__pre_count * (self.time_unit - (time() - self.__cur_time)
-        ) / self.time_unit) + self.__cur_count
+        passed_time = time() - self.__cur_time
+        time_cnt = (self.time_unit - passed_time) / self.time_unit
+        est_cnt = (self.__pre_count * time_cnt) + self.__cur_count
 
         # Request has passed the capacity
         if est_cnt > self.capacity:
