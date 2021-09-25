@@ -22,6 +22,9 @@ from ..exceptions import (
     _InternalPerformReconnectError, DisallowedIntentsError
 )
 from ..objects import Intents
+from ..middleware.payload import (
+    payload_middleware
+)
 
 Handler = Callable[[WebSocketClientProtocol, GatewayDispatch], Awaitable[None]]
 _log = logging.getLogger(__package__)
@@ -107,7 +110,7 @@ class Dispatcher:
             7: handle_reconnect,
             9: handle_reconnect,
             10: identify_and_handle_hello,
-            11: Heartbeat.handle_heartbeat
+            11: Heartbeat.handle_heartbeat,
         }
 
         self.__dispatch_errors: Dict[int, PincerError] = {
@@ -181,6 +184,7 @@ class Dispatcher:
         )
 
         ensure_future(handler(socket, payload), loop=loop)
+        ensure_future(payload_middleware(socket, payload), loop=loop)
 
     async def __dispatcher(self, loop: AbstractEventLoop):
         """
