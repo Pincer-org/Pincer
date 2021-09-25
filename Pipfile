@@ -11,6 +11,7 @@ aiohttp = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
 sphinx-rtd-dark-mode = "*"
+flake8 = "*"
 
 [requires]
 python_version = "3.8"
