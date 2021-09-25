@@ -116,7 +116,7 @@ def event_middleware(call: str, *, override: bool = False):
         async def wrapper(cls, payload: GatewayDispatch):
             _log.debug("`%s` middleware has been invoked", call)
 
-            print(func, should_pass_cls(func))
+            # print(func, should_pass_cls(func))
 
             return await (
                 func(cls, payload)
@@ -162,9 +162,10 @@ class Client(Dispatcher):
             token,
             handlers={
                 # Use this event handler for opcode 0.
+                -1: self.payload_event_handler,
                 0: self.event_handler
             },
-            intents=intents or Intents.NONE
+            intents=intents or Intents.NONE,
         )
 
         self.bot: Optional[User] = None
@@ -315,6 +316,29 @@ class Client(Dispatcher):
             )
         )
 
+    async def process_event(self, event_name: str, payload: GatewayDispatch):
+        """
+        Processes and invokes an event and its middleware.
+
+        :param event_name:
+            The name of the event, this is also the filename in the
+            middleware directory.
+
+        :param payload:
+            The payload sent from the Discord gateway, this contains the
+            required data for the client to know what event it is and
+            what specifically happened.
+        """
+        key, args, kwargs = await self.handle_middleware(payload, event_name)
+
+        call = _events.get(key)
+
+        if iscoroutinefunction(call):
+            if should_pass_cls(call):
+                await call(self, *args, **kwargs)
+            else:
+                await call(*args, **kwargs)
+
     async def event_handler(self, _, payload: GatewayDispatch):
         """
         Handles all payload events with opcode 0.
@@ -328,17 +352,22 @@ class Client(Dispatcher):
             required data for the client to know what event it is and
             what specifically happened.
         """
-        event_name = payload.event_name.lower()
+        await self.process_event(payload.event_name.lower(), payload)
 
-        key, args, kwargs = await self.handle_middleware(payload, event_name)
+    async def payload_event_handler(self, _, payload: GatewayDispatch):
+        """
+        Special event which activates on_payload event!
 
-        call = _events.get(key)
+        :param _:
+            Socket param, but this isn't required for this handler. So
+            its just a filler parameter, doesn't matter what is passed.
 
-        if iscoroutinefunction(call):
-            if should_pass_cls(call):
-                await call(self, *args, **kwargs)
-            else:
-                await call(*args, **kwargs)
+        :param payload:
+            The payload sent from the Discord gateway, this contains the
+            required data for the client to know what event it is and
+            what specifically happened.
+        """
+        await self.process_event("payload", payload)
 
     async def get_guild(self, guild_id: int) -> Guild:
         """

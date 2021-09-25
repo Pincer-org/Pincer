@@ -167,6 +167,7 @@ class Dispatcher:
         )
 
         handler: Handler = self.__dispatch_handlers.get(payload.op)
+        all_handler: Handler = self.__dispatch_handlers.get(-1)
 
         if not handler:
             _log.error(
@@ -174,13 +175,19 @@ class Dispatcher:
                 "pincer dev team!", payload.op
             )
 
-            raise UnhandledException(f"Unhandled payload: {payload}")
+            if not all_handler:
+                raise UnhandledException(f"Unhandled payload: {payload}")
 
         _log.debug(
             "Event handler found, ensuring async future in current loop."
         )
 
-        ensure_future(handler(socket, payload), loop=loop)
+        def execute_handler(event_handler: Handler):
+            if event_handler:
+                ensure_future(event_handler(socket, payload), loop=loop)
+
+        execute_handler(handler)
+        execute_handler(all_handler)
 
     async def __dispatcher(self, loop: AbstractEventLoop):
         """
