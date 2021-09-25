@@ -276,6 +276,14 @@ pincer.objects.thread module
    :undoc-members:
    :show-inheritance:
 
+pincer.objects.throttling module
+--------------------------------
+
+.. automodule:: pincer.objects.throttling
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.objects.user module
 --------------------------
 
