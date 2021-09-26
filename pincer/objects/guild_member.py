@@ -94,4 +94,4 @@ class GuildMember(APIObject):
             _id: int
     ) -> GuildMember:
         data = await client.http.get(f"guilds/{guild_id}/members/{_id}")
-        return cls.from_dict(data | {"_client": client, "_http": client.http})
+        return cls.from_dict({**data, "_client": client, "_http": client.http})

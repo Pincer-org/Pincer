@@ -472,7 +472,7 @@ class Guild(APIObject):
         channel_data = await client.http.get(f"/guilds/{_id}/channels")
 
         channels: List[Channel] = [
-            Channel.from_dict(i | {"_client": client, "_http": client.http})
+            Channel.from_dict({**i, "_client": client, "_http": client.http})
             for i in (channel_data or [])
         ]
 
@@ -522,7 +522,7 @@ class Guild(APIObject):
     async def modify_member(self, _id: int, **kwargs) -> GuildMember:
         data = await self._http.patch(f"guilds/{self.id}/members/{_id}", kwargs)
         return GuildMember.from_dict(
-            data | {"_client": self._client, "_http": self._http}
+            {**data, "_client": self._client, "_http": self._http}
         )
 
     @classmethod

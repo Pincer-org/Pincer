@@ -27,7 +27,7 @@ def convert(
             if client is None:
                 return factory(v)
 
-            return factory(v | {"_client": client, "_http": client.http})
+            return factory({**v, "_client": client, "_http": client.http})
 
         return (
             list(map(fin_fac, value))
