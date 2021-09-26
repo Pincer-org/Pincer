@@ -76,14 +76,6 @@ pincer.objects.connection module
    :undoc-members:
    :show-inheritance:
 
-pincer.objects.context module
------------------------------
-
-.. automodule:: pincer.objects.context
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 pincer.objects.embed module
 ---------------------------
 
@@ -208,6 +200,14 @@ pincer.objects.message\_reference module
 ----------------------------------------
 
 .. automodule:: pincer.objects.message_reference
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pincer.objects.messagecontext module
+------------------------------------
+
+.. automodule:: pincer.objects.messagecontext
    :members:
    :undoc-members:
    :show-inheritance:
