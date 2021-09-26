@@ -23,6 +23,7 @@ from .invite import Invite
 from .message import Message, AllowedMentions, AllowedMentionTypes
 from .message_component import MessageComponent
 from .message_reference import MessageReference
+from .message_context import MessageContext
 from .overwrite import Overwrite
 from .reaction import Reaction
 from .role import Role
@@ -43,7 +44,7 @@ __all__ = (
     "GuildTemplate", "GuildWidget", "Guild", "Integration", "Interaction",
     "MessageInteraction", "Invite", "MessageComponent", "MessageReference",
     "UserMessage", "Overwrite", "Reaction", "Role", "SelectMenu",
-    "SelectOption", "Message",
+    "SelectOption", "Message", "MessageContext",
     "StageInstance", "Sticker", "ThreadMember", "ThreadMetadata", "User",
     "VoiceRegion", "VoiceState", "Webhook", "WelcomeScreen", "Intents",
     "UserMessage", "AllowedMentions", "AllowedMentionTypes", "InteractionFlags"

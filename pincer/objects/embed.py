@@ -284,11 +284,11 @@ class Embed(APIObject):
     :property author:
         Author information.
 
-    :param color:
-        Embed color code.
-
     :param description:
         Embed description.
+
+    :param color:
+        Embed color code.
 
     :param fields:
         Fields information.
@@ -316,11 +316,14 @@ class Embed(APIObject):
 
     :param video:
         Video information.
+
+    :param type:
+        type of message
     """
 
     author: APINullable[EmbedAuthor] = MISSING
-    color: APINullable[int] = MISSING
     description: APINullable[str] = MISSING
+    color: APINullable[int] = MISSING
     fields: list[EmbedField] = field(default_factory=list)
     footer: APINullable[EmbedFooter] = MISSING
     image: APINullable[EmbedImage] = MISSING
@@ -330,6 +333,7 @@ class Embed(APIObject):
     title: APINullable[str] = MISSING
     url: APINullable[str] = MISSING
     video: APINullable[EmbedVideo] = MISSING
+    type: APINullable[int] = MISSING
 
     def __post_init__(self):
         """

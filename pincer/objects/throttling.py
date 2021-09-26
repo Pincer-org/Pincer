@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from enum import Enum, auto
 from typing import Dict, Any, Optional
 
-from .messagecontext import MessageContext
+from .message_context import MessageContext
 from ..utils.slidingwindow import SlidingWindow
 
 

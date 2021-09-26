@@ -11,7 +11,7 @@ from .app_command import AppCommandInteractionDataOption
 from .channel import Channel
 from .guild_member import GuildMember
 from .interaction_base import InteractionType
-from .messagecontext import MessageContext
+from .message_context import MessageContext
 from .role import Role
 from .select_menu import SelectOption
 from .user import User
