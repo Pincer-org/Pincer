@@ -21,6 +21,6 @@ def error_middleware(self, payload: GatewayDispatch):
 
     return "on_error",  [
         DiscordError.from_dict(
-            {"_client": self, "_http": self.http} | payload.data
+            {"_client": self, "_http": self.http, **payload.data}
         )
     ]

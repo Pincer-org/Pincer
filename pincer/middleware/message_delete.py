@@ -19,7 +19,7 @@ async def on_message_delete_middleware(self, payload: GatewayDispatch):
     """
     return "on_message_delete", [
         MessageDeleteEvent.from_dict(
-            {"_client": self, "_http": self.http} | payload.data
+            {"_client": self, "_http": self.http, **payload.data}
         )
     ]
 
