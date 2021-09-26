@@ -7,10 +7,9 @@ from typing import Optional, Union, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .app_command import ClientCommandStructure
-
-from .guild_member import GuildMember
-from .user import User
-from ..utils.snowflake import Snowflake
+    from .guild_member import GuildMember
+    from .user import User
+    from ..utils.snowflake import Snowflake
 
 
 @dataclass
@@ -38,7 +37,7 @@ class MessageContext:
     """
     id: Snowflake
     author: Union[GuildMember, User]
-    command: "ClientCommandStructure"
+    command: ClientCommandStructure
 
     guild_id: Optional[Snowflake] = None
     channel_id: Optional[Snowflake] = None
