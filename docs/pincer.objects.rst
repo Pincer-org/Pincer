@@ -196,18 +196,18 @@ pincer.objects.message\_component module
    :undoc-members:
    :show-inheritance:
 
-pincer.objects.message\_reference module
-----------------------------------------
+pincer.objects.message\_context module
+--------------------------------------
 
-.. automodule:: pincer.objects.message_reference
+.. automodule:: pincer.objects.message_context
    :members:
    :undoc-members:
    :show-inheritance:
 
-pincer.objects.messagecontext module
-------------------------------------
+pincer.objects.message\_reference module
+----------------------------------------
 
-.. automodule:: pincer.objects.messagecontext
+.. automodule:: pincer.objects.message_reference
    :members:
    :undoc-members:
    :show-inheritance:
