@@ -67,7 +67,7 @@ class DefaultThrottleHandler(ThrottleInterface, ABC):
 
     @staticmethod
     def handle(ctx: MessageContext, **kwargs):
-        if ctx.command.cooldown < 0:
+        if ctx.command.cooldown <= 0:
             return
 
         throttle_key = DefaultThrottleHandler.get_key_from_scope(ctx)
