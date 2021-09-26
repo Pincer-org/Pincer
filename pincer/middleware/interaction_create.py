@@ -35,6 +35,9 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
     command = ChatCommandHandler.register.get(interaction.data.name)
 
     if command:
+        context = interaction.convert_to_message_context(command)
+        self.throttler.handle(context)
+
         defaults = {param: None for param in get_params(command.call)}
         params = {}
 
@@ -50,7 +53,7 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
 
         sig, params = get_signature_and_params(command.call)
         if should_pass_ctx(sig, params):
-            kwargs[params[0]] = interaction.convert_to_message_context(command)
+            kwargs[params[0]] = context
 
         if isasyncgenfunction(command.call):
             message = command.call(**kwargs)

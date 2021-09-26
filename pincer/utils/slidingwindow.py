@@ -5,7 +5,6 @@ from time import time
 
 
 class SlidingWindow:
-
     def __init__(self, capacity: int, time_unit: float):
         self.capacity: int = capacity
         self.time_unit: float = time_unit

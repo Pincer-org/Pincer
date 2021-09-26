@@ -37,6 +37,8 @@ from .voice_region import VoiceRegion
 from .voice_state import VoiceState
 from .webhook import Webhook
 from .welcome_screen import WelcomeScreen
+from .throttle_scope import ThrottleScope
+from .throttling import ThrottleInterface
 
 __all__ = (
     "AppCommand", "Application", "Attachment", "AuditLog", "Ban", "Button",
@@ -47,5 +49,6 @@ __all__ = (
     "SelectOption", "Message", "MessageContext",
     "StageInstance", "Sticker", "ThreadMember", "ThreadMetadata", "User",
     "VoiceRegion", "VoiceState", "Webhook", "WelcomeScreen", "Intents",
-    "UserMessage", "AllowedMentions", "AllowedMentionTypes", "InteractionFlags"
+    "UserMessage", "AllowedMentions", "AllowedMentionTypes", "InteractionFlags",
+    "ThrottleScope", "ThrottleInterface"
 )

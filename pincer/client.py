@@ -15,7 +15,8 @@ from .core.gateway import Dispatcher
 from .core.http import HTTPClient
 from .exceptions import InvalidEventName
 from .middleware import middleware
-from .objects import User, Intents, Guild
+from .objects import User, Intents, Guild, ThrottleInterface
+from .objects.throttling import DefaultThrottleHandler
 from .utils import get_index, should_pass_cls, Coro
 
 _log = logging.getLogger(__package__)
@@ -137,7 +138,8 @@ class Client(Dispatcher):
             self,
             token: str, *,
             received: str = None,
-            intents: Intents = None
+            intents: Intents = None,
+            throttler: ThrottleInterface = DefaultThrottleHandler
     ):
         """
         The client is the main instance which is between the programmer
@@ -170,6 +172,7 @@ class Client(Dispatcher):
         self.bot: Optional[User] = None
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
+        self.throttler = throttler
 
     @property
     def chat_commands(self):

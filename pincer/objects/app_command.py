@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import List, Union, Optional
+from typing import List, Union
 
 from .throttle_scope import ThrottleScope
 from ..utils.api_object import APIObject
@@ -293,5 +293,6 @@ class ClientCommandStructure:
     """
     app: AppCommand
     call: Coro
-    cooldown: Optional[float] = None
-    cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER
+    cooldown: int
+    cooldown_scale: float
+    cooldown_scope: ThrottleScope

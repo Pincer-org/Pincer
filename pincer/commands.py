@@ -15,6 +15,7 @@ from .exceptions import (
     InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
     InvalidCommandName
 )
+from .objects import ThrottleScope
 from .objects.app_command import (
     AppCommand, AppCommandType, ClientCommandStructure,
     AppCommandOption, AppCommandOptionType
@@ -43,7 +44,9 @@ def command(
         description: Optional[str] = "Description not set",
         enable_default: Optional[bool] = True,
         guild: Union[Snowflake, int, str] = None,
-        cooldown: Optional[float] = 0
+        cooldown: Optional[int] = 0,
+        cooldown_scale: Optional[float] = 10,
+        cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER
 ):
     # TODO: Fix docs
     def decorator(func: Coro):
@@ -136,6 +139,8 @@ def command(
         ChatCommandHandler.register[cmd] = ClientCommandStructure(
             call=func,
             cooldown=cooldown,
+            cooldown_scale=cooldown_scale,
+            cooldown_scope=cooldown_scope,
             app=AppCommand(
                 name=cmd,
                 description=description,
@@ -163,6 +168,9 @@ class ChatCommandHandler:
             "%i commands registered.",
             len(ChatCommandHandler.register.items())
         )
+        self.client.throttler.throttle = {
+            cmd.call: {} for cmd in ChatCommandHandler.register.values()
+        }
 
     async def __init_existing_commands(self):
         # TODO: Fix docs
