@@ -211,17 +211,11 @@ class Interaction(APIObject):
             client=self._client
         )
 
-    def convert_to_message_context(self):
+    def convert_to_message_context(self, command):
         return MessageContext(
             self.id,
             self.member or self.user,
+            command,
             self.guild_id,
             self.channel_id
         )
-
-    def to_context(self):
-        context_convertors = {
-            InteractionType.APPLICATION_COMMAND: self.convert_to_message_context
-        }
-
-        return context_convertors[self.type]()

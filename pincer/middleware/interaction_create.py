@@ -50,7 +50,7 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
 
         sig, params = get_signature_and_params(command.call)
         if should_pass_ctx(sig, params):
-            kwargs[params[0]] = interaction.to_context()
+            kwargs[params[0]] = interaction.convert_to_message_context(command)
 
         if isasyncgenfunction(command.call):
             message = command.call(**kwargs)

@@ -35,6 +35,17 @@ class CommandError(PincerError):
     """
 
 
+class CommandCooldownError(CommandError):
+    """
+    Exception which gets raised when a command cooldown has not been
+    breached.
+    """
+
+    def __init__(self, message: str, context):
+        self.ctx = context
+        super(CommandCooldownError, self).__init__(message)
+
+
 class CommandIsNotCoroutine(CommandError):
     """
     Exception raised when the provided command call is not a coroutine.

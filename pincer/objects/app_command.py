@@ -7,10 +7,12 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import List, Union, Optional
 
-from ..utils import (
-    APIObject, APINullable, Coro, convert,
-    MISSING, Snowflake, get_index
-)
+from .throttle_scope import ThrottleScope
+from ..utils.api_object import APIObject
+from ..utils.conversion import convert
+from ..utils.extraction import get_index
+from ..utils.snowflake import Snowflake
+from ..utils.types import APINullable, MISSING, Coro
 
 
 class AppCommandType(IntEnum):
@@ -250,9 +252,9 @@ class AppCommand(APIObject):
         )
 
         if (
-            (self.options is MISSING and other.options is not MISSING)
-            or (self.options is not MISSING and other.options is MISSING)
-            and not is_equal
+                (self.options is MISSING and other.options is not MISSING)
+                or (self.options is not MISSING and other.options is MISSING)
+                and not is_equal
         ):
             return False
 
@@ -292,3 +294,4 @@ class ClientCommandStructure:
     app: AppCommand
     call: Coro
     cooldown: Optional[float] = None
+    cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER
