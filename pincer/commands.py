@@ -45,7 +45,7 @@ def command(
         enable_default: Optional[bool] = True,
         guild: Union[Snowflake, int, str] = None,
         cooldown: Optional[int] = 0,
-        cooldown_scale: Optional[float] = 10,
+        cooldown_scale: Optional[float] = 60,
         cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER
 ):
     # TODO: Fix docs
