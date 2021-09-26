@@ -1,17 +1,17 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from typing import Union
+import logging
 from asyncio import sleep
 from inspect import isasyncgenfunction
-import logging
+from typing import Union
 
 from ..commands import ChatCommandHandler
-from ..exceptions import RateLimitError
 from ..core.dispatch import GatewayDispatch
+from ..exceptions import RateLimitError
 from ..objects import Interaction, Embed, Message, InteractionFlags
-from ..utils import MISSING, should_pass_cls, Coro
-from ..utils.extraction import get_params
+from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
+from ..utils.extraction import get_params, get_signature_and_params
 
 _log = logging.getLogger(__name__)
 
@@ -47,6 +47,10 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
 
         if should_pass_cls(command.call):
             kwargs["self"] = self
+
+        sig, params = get_signature_and_params(command.call)
+        if should_pass_ctx(sig, params):
+            kwargs[params[0]] = interaction.to_context()
 
         if isasyncgenfunction(command.call):
             message = command.call(**kwargs)

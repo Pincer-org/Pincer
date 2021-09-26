@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from enum import Enum, auto
 from typing import Dict, Any, Optional
 
-from .context import Context
+from .messagecontext import MessageContext
 from ..utils.slidingwindow import SlidingWindow
 
 
@@ -46,7 +46,7 @@ class ThrottleInterface(ABC):
         self.client = client
 
     @abstractmethod
-    async def handle(self, ctx: Context, **kwargs):
+    async def handle(self, ctx: MessageContext, **kwargs):
         """
         Handles a context. This method is executed before the command is.
 
@@ -72,7 +72,7 @@ class DefaultThrottleHandler(ThrottleInterface, ABC):
 
     def get_key_from_scope(
             self,
-            ctx: Context,
+            ctx: MessageContext,
             scope: ThrottleScope
     ) -> Optional[int]:
         """
@@ -81,5 +81,5 @@ class DefaultThrottleHandler(ThrottleInterface, ABC):
         """
         ...
 
-    async def handle(self, ctx: Context, **kwargs):
+    async def handle(self, ctx: MessageContext, **kwargs):
         ...

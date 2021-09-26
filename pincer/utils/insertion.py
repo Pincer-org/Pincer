@@ -4,8 +4,8 @@
 from inspect import getfullargspec, Parameter, Signature
 from typing import Any, Union, Callable, Mapping, List
 
-from ..objects.context import Context
 from .types import Coro
+from ..objects.messagecontext import MessageContext
 
 
 def should_pass_cls(call: Union[Coro, Callable[..., Any]]) -> bool:
@@ -22,7 +22,7 @@ def should_pass_cls(call: Union[Coro, Callable[..., Any]]) -> bool:
     return len(args) >= 1 and args[0] in ["self", "cls"]
 
 
-context_types = [Signature.empty, Context]
+context_types = [Signature.empty, MessageContext]
 
 
 def should_pass_ctx(sig: Mapping[str, Parameter], params: List[str]) -> bool:

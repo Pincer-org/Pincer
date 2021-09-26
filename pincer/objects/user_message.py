@@ -286,7 +286,7 @@ class UserMessage(APIObject):
     application_id: APINullable[Snowflake] = MISSING
     message_reference: APINullable[MessageReference] = MISSING
     flags: APINullable[MessageFlags] = MISSING
-    referenced_message: APINullable[Optional[Message]] = MISSING
+    referenced_message: APINullable[Optional[UserMessage]] = MISSING
     interaction: APINullable[MessageInteraction] = MISSING
     thread: APINullable[Channel] = MISSING
     components: APINullable[List[MessageComponent]] = MISSING

@@ -7,10 +7,12 @@ from dataclasses import dataclass
 from typing import Optional, List, TYPE_CHECKING
 
 from pincer.core.http import HTTPClient
-
 from .user import User
-from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp, \
-    convert
+from ..utils.api_object import APIObject
+from ..utils.conversion import convert
+from ..utils.snowflake import Snowflake
+from ..utils.timestamp import Timestamp
+from ..utils.types import APINullable, MISSING
 
 if TYPE_CHECKING:
     from .. import Client

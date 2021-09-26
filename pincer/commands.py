@@ -94,7 +94,10 @@ def command(
 
         options: List[AppCommandOption] = []
 
-        for param in params:
+        for idx, param in enumerate(params):
+            if idx == 0 and pass_context:
+                continue
+
             annotation, required = sig[param].annotation, True
 
             if get_origin(annotation) is Union:

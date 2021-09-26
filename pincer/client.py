@@ -159,8 +159,9 @@ class Client(Dispatcher):
         super().__init__(
             token,
             handlers={
-                # Use this event handler for opcode 0.
+                # Gets triggered on all events
                 -1: self.payload_event_handler,
+                # Use this event handler for opcode 0.
                 0: self.event_handler
             },
             intents=intents or Intents.NONE
