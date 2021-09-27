@@ -281,8 +281,8 @@ class Embed(APIObject):
     """
     Representation of the discord Embed class
 
-    :property author:
-        Author information.
+    :param title:
+        Embed title.
 
     :param description:
         Embed description.
@@ -308,8 +308,8 @@ class Embed(APIObject):
     :param timestamp:
         Timestamp of embed content in ISO format.
 
-    :param title:
-        Embed title.
+    :property author:
+        Author information.
 
     :param url:
         Embed url.
@@ -321,7 +321,7 @@ class Embed(APIObject):
         type of message
     """
 
-    author: APINullable[EmbedAuthor] = MISSING
+    title: APINullable[str] = MISSING
     description: APINullable[str] = MISSING
     color: APINullable[int] = MISSING
     fields: list[EmbedField] = field(default_factory=list)
@@ -330,7 +330,7 @@ class Embed(APIObject):
     provider: APINullable[EmbedProvider] = MISSING
     thumbnail: APINullable[EmbedThumbnail] = MISSING
     timestamp: APINullable[str] = MISSING
-    title: APINullable[str] = MISSING
+    author: APINullable[EmbedAuthor] = MISSING
     url: APINullable[str] = MISSING
     video: APINullable[EmbedVideo] = MISSING
     type: APINullable[int] = MISSING
@@ -411,9 +411,9 @@ class Embed(APIObject):
 
     def set_image(
             self,
-            height: APINullable[int] = MISSING,
             url: APINullable[str] = MISSING,
             proxy_url: APINullable[str] = MISSING,
+            height: APINullable[int] = MISSING,
             width: APINullable[int] = MISSING
     ) -> Embed:
         """
