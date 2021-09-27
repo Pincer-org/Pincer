@@ -19,6 +19,9 @@ jobs:
           python-version: '3.x'
           architecture: 'x64'
 
+      - name: install requirements
+        run: pip install -r requirements.txt
+
       - name: install requirements_dev
         run: pip install -r requirements_dev.txt
 
