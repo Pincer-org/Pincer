@@ -23,6 +23,7 @@ from .invite import Invite
 from .message import Message, AllowedMentions, AllowedMentionTypes
 from .message_component import MessageComponent
 from .message_reference import MessageReference
+from .message_context import MessageContext
 from .overwrite import Overwrite
 from .reaction import Reaction
 from .role import Role
@@ -36,6 +37,8 @@ from .voice_region import VoiceRegion
 from .voice_state import VoiceState
 from .webhook import Webhook
 from .welcome_screen import WelcomeScreen
+from .throttle_scope import ThrottleScope
+from .throttling import ThrottleInterface
 
 __all__ = (
     "AppCommand", "Application", "Attachment", "AuditLog", "Ban", "Button",
@@ -43,8 +46,9 @@ __all__ = (
     "GuildTemplate", "GuildWidget", "Guild", "Integration", "Interaction",
     "MessageInteraction", "Invite", "MessageComponent", "MessageReference",
     "UserMessage", "Overwrite", "Reaction", "Role", "SelectMenu",
-    "SelectOption", "Message",
+    "SelectOption", "Message", "MessageContext",
     "StageInstance", "Sticker", "ThreadMember", "ThreadMetadata", "User",
     "VoiceRegion", "VoiceState", "Webhook", "WelcomeScreen", "Intents",
-    "UserMessage", "AllowedMentions", "AllowedMentionTypes", "InteractionFlags"
+    "UserMessage", "AllowedMentions", "AllowedMentionTypes", "InteractionFlags",
+    "ThrottleScope", "ThrottleInterface"
 )

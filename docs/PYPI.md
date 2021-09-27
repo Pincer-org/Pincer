@@ -82,6 +82,7 @@ following:
 - Events
 - Event middleware
 - Basic commands with basic argument parsing
+- Command cool downs (Using WindowSliding technique)
 
 **Client base class example:**
 
@@ -136,7 +137,8 @@ class Bot(Client):
         return f"The addition of `{first}` and `{second}` is `{first + second}`"
 ```
 
-See an advanced bot implementation:
+For more examples you can take a look at the examples folder or check out our
+bot on GitHub:
 
 > <https://github.com/Pincer-org/Pincer-bot>
 

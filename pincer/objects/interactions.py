@@ -7,17 +7,17 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Dict, TYPE_CHECKING
 
-
 from .app_command import AppCommandInteractionDataOption
 from .channel import Channel
 from .guild_member import GuildMember
 from .interaction_base import InteractionType
-from .user_message import UserMessage
+from .message_context import MessageContext
 from .role import Role
 from .select_menu import SelectOption
 from .user import User
-from ..utils import APIObject, APINullable, MISSING, Snowflake, convert
+from .user_message import UserMessage
 from ..core.http import HTTPClient
+from ..utils import APIObject, APINullable, MISSING, Snowflake, convert
 
 if TYPE_CHECKING:
     from .. import Client
@@ -209,4 +209,13 @@ class Interaction(APIObject):
             UserMessage.from_dict,
             UserMessage,
             client=self._client
+        )
+
+    def convert_to_message_context(self, command):
+        return MessageContext(
+            self.id,
+            self.member or self.user,
+            command,
+            self.guild_id,
+            self.channel_id
         )

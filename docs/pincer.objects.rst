@@ -76,14 +76,6 @@ pincer.objects.connection module
    :undoc-members:
    :show-inheritance:
 
-pincer.objects.context module
------------------------------
-
-.. automodule:: pincer.objects.context
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 pincer.objects.embed module
 ---------------------------
 
@@ -204,6 +196,14 @@ pincer.objects.message\_component module
    :undoc-members:
    :show-inheritance:
 
+pincer.objects.message\_context module
+--------------------------------------
+
+.. automodule:: pincer.objects.message_context
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.objects.message\_reference module
 ----------------------------------------
 
@@ -272,6 +272,14 @@ pincer.objects.thread module
 ----------------------------
 
 .. automodule:: pincer.objects.thread
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pincer.objects.throttle\_scope module
+-------------------------------------
+
+.. automodule:: pincer.objects.throttle_scope
    :members:
    :undoc-members:
    :show-inheritance:

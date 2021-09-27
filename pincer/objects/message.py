@@ -41,6 +41,7 @@ class AllowedMentions(APIObject):
 
 @dataclass
 class Message:
+    # TODO: Write docs
     content: str = ''
     tts: Optional[bool] = False
     embeds: Optional[List[Embed]] = None

@@ -4,7 +4,7 @@
 import logging
 from glob import glob
 from importlib import import_module
-from os import chdir
+from os import chdir, getcwd
 from pathlib import Path
 from typing import Dict
 
@@ -16,6 +16,7 @@ _log = logging.getLogger(__package__)
 
 def get_middleware() -> Dict[str, Coro]:
     middleware_list: Dict[str, Coro] = {}
+    original_path = getcwd()
     chdir(Path(__file__).parent.resolve())
 
     for middleware_path in glob("*.py"):
@@ -40,7 +41,7 @@ def get_middleware() -> Dict[str, Coro]:
             #    f"Middleware module `{middleware_path}` expected an "
             #    "`export` method but none was found!"
             # )
-
+    chdir(original_path)
     return middleware_list
 
 

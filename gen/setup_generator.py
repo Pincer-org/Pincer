@@ -1,3 +1,4 @@
+from pincer import __version__
 from os import walk
 
 
@@ -18,20 +19,9 @@ def get_testing_requires():
         return '\n\t'.join(f.read().strip().splitlines())
 
 
-def get_version():
-    with open("pincer/__init__.py") as f:
-        init_file = f.read().strip().splitlines()
-
-    for line in init_file:
-        if line.startswith('__version__'):
-            return line[15:-1].replace('-dev', '')
-
-
 def main():
-    version = get_version()
-
     with open("VERSION", "w") as f:
-        f.write(version)
+        f.write(repr(__version__))
 
     packages = get_packages()
 
