@@ -35,7 +35,7 @@ class VersionInfo(NamedTuple):
         )
 
 
-__version__ = VersionInfo(0, 6, 11, 'dev', 0)
+__version__ = VersionInfo(0, 7, 0, 'dev', 0)
 __all__ = (
     "__version__", "__title__", "__package__",
     "__author__", "__email__",
