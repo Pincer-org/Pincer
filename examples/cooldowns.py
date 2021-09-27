@@ -1,7 +1,7 @@
 from random import randint
 from typing import Tuple
 
-import aiohttp
+from aiohttp import ClientSession
 
 from pincer import Client, command
 from pincer.exceptions import CommandCooldownError
@@ -29,7 +29,7 @@ class Bot(Client):
         Get a random meme from our configured MEME_URL!
         """
         # Standard aiohttp session setup:
-        async with aiohttp.ClientSession() as session:
+        async with ClientSession() as session:
             # Send our HTTP get request!
             async with session.get(self.MEME_URL) as response:
                 # To extract the data we need to have the json as a dict!
