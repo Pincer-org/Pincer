@@ -3,6 +3,7 @@
 
 import asyncio
 import logging
+from asyncio import sleep
 from json import dumps
 from typing import Dict, Any, Optional, Protocol
 
@@ -179,13 +180,22 @@ class HTTPClient:
         exception = self.__http_exceptions.get(res.status)
 
         if exception:
+            if isinstance(exception, RateLimitError):
+                timeout = (await res.json()).get("retry_after", 40)
+
+                _log.exception(
+                    f"RateLimitError: {res.reason}."
+                    f" Retrying in {timeout} seconds"
+                )
+                await sleep(timeout)
+                return await self.__send(method, endpoint, data=data)
+
             _log.error(
                 f"An http exception occurred while trying to send "
                 f"a request to {endpoint}. ({res.status}, {res.reason})"
             )
 
             exception.__init__(res.reason)
-            exception.json = await res.json()
             raise exception
 
         # status code is guaranteed to be 5xx

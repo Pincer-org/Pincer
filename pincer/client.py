@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import logging
 from asyncio import iscoroutinefunction, run
+from inspect import isasyncgenfunction
 from typing import Optional, Any, Union, Dict, Tuple, List
 
 from . import __package__
@@ -236,7 +237,8 @@ class Client(Dispatcher):
             been registered or is not a valid event name.
         """
 
-        if not iscoroutinefunction(coroutine):
+        if not iscoroutinefunction(coroutine) \
+                and not isasyncgenfunction(coroutine):
             raise TypeError(
                 "Any event which is registered must be a coroutine function"
             )
@@ -256,6 +258,12 @@ class Client(Dispatcher):
 
         _events[name] = coroutine
         return coroutine
+
+    @staticmethod
+    def get_event_coro(name: str) -> Optional[Coro]:
+        call = _events.get(name.strip().lower())
+        if iscoroutinefunction(call) or isasyncgenfunction(call):
+            return call
 
     def run(self):
         """Start the event listener"""
@@ -318,11 +326,57 @@ class Client(Dispatcher):
             )
         )
 
-    async def process_event(self, event_name: str, payload: GatewayDispatch):
+    async def execute_error(
+            self,
+            error: Exception,
+            name: str = "on_error",
+            *args,
+            **kwargs
+    ):
+        """
+        Raises an error if no appropriate error event has been found.
+
+        :param error:
+            The error which should be raised or passed to the event.
+
+        :param name:
+            The name of the event, and how it is registered by the client.
+
+        :param \\*args:
+            The arguments for the event.
+
+        :param \\*kwargs:
+            The named arguments for the event.
+        """
+        if call := self.get_event_coro(name):
+            await self.execute_event(call, error, *args, **kwargs)
+        else:
+            raise error
+
+    async def execute_event(self, call: Coro, *args, **kwargs):
+        """
+        Invokes an event.
+
+        :param call:
+            The call (method) to which the event is registered.
+
+        :param \\*args:
+            The arguments for the event.
+
+        :param \\*kwargs:
+            The named arguments for the event.
+        """
+
+        if should_pass_cls(call):
+            await call(self, *args, **kwargs)
+        else:
+            await call(*args, **kwargs)
+
+    async def process_event(self, name: str, payload: GatewayDispatch):
         """
         Processes and invokes an event and its middleware.
 
-        :param event_name:
+        :param name:
             The name of the event, this is also the filename in the
             middleware directory.
 
@@ -331,15 +385,14 @@ class Client(Dispatcher):
             required data for the client to know what event it is and
             what specifically happened.
         """
-        key, args, kwargs = await self.handle_middleware(payload, event_name)
+        try:
+            key, args, kwargs = await self.handle_middleware(payload, name)
 
-        call = _events.get(key)
+            if call := self.get_event_coro(key):
+                await self.execute_event(call, *args, **kwargs)
 
-        if iscoroutinefunction(call):
-            if should_pass_cls(call):
-                await call(self, *args, **kwargs)
-            else:
-                await call(*args, **kwargs)
+        except Exception as e:
+            await self.execute_error(e)
 
     async def event_handler(self, _, payload: GatewayDispatch):
         """
