@@ -30,7 +30,8 @@ class Bot(Client):
 
     @command(
         cooldown=1,
-        cooldown_scale=3
+        cooldown_scale=3,
+        description="Get a random meme!"
     )
     async def meme(self):
         caption, image = await self.get_meme()
