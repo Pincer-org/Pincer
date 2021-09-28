@@ -25,9 +25,11 @@ ReleaseType = Optional[Literal["alpha", "beta", "candidate", "final", "dev"]]
 
 
 class VersionInfo(NamedTuple):
+    """A Class representing the version of the Pincer library."""
     major: int
     minor: int
     micro: int
+
     release_level: ReleaseType = None
     serial: int = 0
 
