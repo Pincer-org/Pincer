@@ -34,7 +34,7 @@ def main():
     with open("setup.cfg", "w") as f:
         f.write(
             base.format(
-                version=version,
+                version=repr(__version__),
                 packages=packages,
                 requires=requires,
                 testing_requires=testing_requires
