@@ -23,6 +23,7 @@ __license__ = "MIT"
 
 ReleaseType = Optional[Literal["alpha", "beta", "candidate", "final", "dev"]]
 
+
 class VersionInfo(NamedTuple):
     major: int
     minor: int
@@ -33,13 +34,15 @@ class VersionInfo(NamedTuple):
     def __repr__(self) -> str:
         return (
             f'{self.major}.{self.minor}.{self.micro}'
-            + f'-{self.release_level}{self.serial}' * (self.release_level is not None)
+            + (
+                f'-{self.release_level}{self.serial}'
+                * (self.release_level is not None)
+            )
         )
 
 
 __version__ = VersionInfo(0, 7, 0)
 __all__ = (
-    "__version__", "__title__", "__package__",
-    "__author__", "__email__",
-    "Client", "Bot", "command", "Intents"
+    "__author__", "__email__", "__package__", "__title__",  "__version__",
+    "Bot", "Client", "command", "Intents"
 )

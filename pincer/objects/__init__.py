@@ -41,14 +41,14 @@ from .throttle_scope import ThrottleScope
 from .throttling import ThrottleInterface
 
 __all__ = (
-    "AppCommand", "Application", "Attachment", "AuditLog", "Ban", "Button",
-    "Channel", "Embed", "Emoji", "FollowedChannel", "GuildMember",
-    "GuildTemplate", "GuildWidget", "Guild", "Integration", "Interaction",
-    "MessageInteraction", "Invite", "MessageComponent", "MessageReference",
-    "UserMessage", "Overwrite", "Reaction", "Role", "SelectMenu",
-    "SelectOption", "Message", "MessageContext",
-    "StageInstance", "Sticker", "ThreadMember", "ThreadMetadata", "User",
-    "VoiceRegion", "VoiceState", "Webhook", "WelcomeScreen", "Intents",
-    "UserMessage", "AllowedMentions", "AllowedMentionTypes", "InteractionFlags",
-    "ThrottleScope", "ThrottleInterface"
+    "AllowedMentions", "AllowedMentionTypes", "AppCommand", "Application",
+    "Attachment", "AuditLog", "Ban", "Button", "Channel", "Embed", "Emoji",
+    "FollowedChannel", "Guild", "GuildMember", "GuildTemplate", "GuildWidget",
+    "Integration", "Intents", "Interaction", "InteractionFlags", "Invite",
+    "Message", "MessageComponent", "MessageContext", "MessageInteraction",
+    "MessageReference", "Overwrite", "Reaction", "Role", "SelectMenu",
+    "SelectOption", "StageInstance", "Sticker", "ThreadMember",
+    "ThreadMetadata", "ThrottleInterface", "ThrottleScope", "User",
+    "UserMessage", "UserMessage", "VoiceRegion", "VoiceState", "Webhook",
+    "WelcomeScreen"
 )
