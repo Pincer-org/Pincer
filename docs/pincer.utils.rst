@@ -20,6 +20,14 @@ pincer.utils.conversion module
    :undoc-members:
    :show-inheritance:
 
+pincer.utils.directory module
+-----------------------------
+
+.. automodule:: pincer.utils.directory
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.utils.extraction module
 ------------------------------
 
