@@ -5,13 +5,16 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Any, Optional, List
+from typing import Any, Optional, List, TYPE_CHECKING
 
-from .channel import Channel
-from .integration import Integration
-from .user import User
-from .webhook import Webhook
-from ..utils import APIObject, APINullable, MISSING, Snowflake
+from ..utils import APIObject, MISSING
+
+if TYPE_CHECKING:
+    from .channel import Channel
+    from .integration import Integration
+    from .user import User
+    from .webhook import Webhook
+    from ..utils import APINullable, Snowflake
 
 
 class AuditLogEvent(IntEnum):

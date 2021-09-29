@@ -5,10 +5,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import List, Optional
+from typing import List, Optional, TYPE_CHECKING
 
 from .user import User
-from ..utils import APIObject, APINullable, MISSING, Snowflake
+from ..utils import APIObject, MISSING
+
+if TYPE_CHECKING:
+    from ..utils import APINullable, Snowflake
 
 
 class StickerType(IntEnum):

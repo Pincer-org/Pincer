@@ -8,7 +8,6 @@ from enum import Enum, auto, IntEnum
 from typing import Optional, List, overload, TYPE_CHECKING
 
 from pincer.objects.events.presence import PresenceUpdateEvent
-from ..exceptions import UnavailableGuildError
 from .channel import Channel
 from .emoji import Emoji
 from .guild_member import GuildMember
@@ -17,11 +16,13 @@ from .stage import StageInstance
 from .sticker import Sticker
 from .voice_state import VoiceState
 from .welcome_screen import WelcomeScreen
-from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
+from ..exceptions import UnavailableGuildError
+from ..utils import APIObject, MISSING
 
 if TYPE_CHECKING:
     from pincer import Client
     from pincer.core.http import HTTPClient
+    from ..utils import APINullable, Snowflake, Timestamp
 
 
 class PremiumTier(IntEnum):

@@ -6,10 +6,13 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime
 from re import match
-from typing import Any, Callable, Dict, Iterable, Union, Optional
+from typing import Any, Callable, Dict, Iterable, Union, Optional, TYPE_CHECKING
 
 from ..exceptions import InvalidUrlError, EmbedFieldError
-from ..utils import APIObject, APINullable, MISSING
+from ..utils import APIObject, MISSING
+
+if TYPE_CHECKING:
+    from ..utils import APINullable
 
 
 def _field_size(_field: str) -> int:

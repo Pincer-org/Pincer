@@ -4,12 +4,12 @@
 import logging
 from glob import glob
 from importlib import import_module
-from os import chdir
 from pathlib import Path
 from typing import Dict
 
 from pincer.exceptions import NoExportMethod
-from pincer.utils import Coro
+from ..utils import Coro
+from ..utils.directory import chdir
 
 _log = logging.getLogger(__package__)
 
