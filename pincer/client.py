@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import logging
-from asyncio import iscoroutinefunction, run
+from asyncio import iscoroutinefunction, run, ensure_future
 from inspect import isasyncgenfunction
 from typing import Optional, Any, Union, Dict, Tuple, List
 
@@ -349,11 +349,11 @@ class Client(Dispatcher):
             The named arguments for the event.
         """
         if call := self.get_event_coro(name):
-            await self.execute_event(call, error, *args, **kwargs)
+            self.execute_event(call, error, *args, **kwargs)
         else:
             raise error
 
-    async def execute_event(self, call: Coro, *args, **kwargs):
+    def execute_event(self, call: Coro, *args, **kwargs):
         """
         Invokes an event.
 
@@ -366,11 +366,12 @@ class Client(Dispatcher):
         :param \\*kwargs:
             The named arguments for the event.
         """
+        def execute(*_args, **_kwargs):
+            ensure_future(call(*_args, **_kwargs))
 
-        if should_pass_cls(call):
-            await call(self, *args, **kwargs)
-        else:
-            await call(*args, **kwargs)
+        execute(self, *args, **kwargs) \
+            if should_pass_cls(call) \
+            else execute(*args, **kwargs)
 
     async def process_event(self, name: str, payload: GatewayDispatch):
         """
@@ -389,7 +390,7 @@ class Client(Dispatcher):
             key, args, kwargs = await self.handle_middleware(payload, name)
 
             if call := self.get_event_coro(key):
-                await self.execute_event(call, *args, **kwargs)
+                self.execute_event(call, *args, **kwargs)
 
         except Exception as e:
             await self.execute_error(e)
