@@ -5,7 +5,10 @@ from pincer.objects import Embed
 class Bot(Client):
 
     @command(description="Say something as the bot!")
-    async def say(self, ctx, content: str) -> Embed:
+    async def say(
+            self, ctx,
+            content: (str, "The content of the message")
+    ) -> Embed:
         # Using the ctx to get the command author
         return Embed(
             description=f"{ctx.author.user.mention} said {content}"
@@ -18,4 +21,4 @@ class Bot(Client):
 
 
 if __name__ == "__main__":
-    Bot("XXXYOURBOTTOKENHEREXXX").run()
+    Bot("ODkxNzM4NTExMzExNTE1NzA4.YVCuNA.GVYmEEyeksT7N0EeaP2TsT5fbvo").run()
