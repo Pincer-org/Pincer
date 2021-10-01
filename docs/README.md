@@ -134,7 +134,11 @@ class Bot(Client):
         return message
 
     @command(description="Add two numbers!")
-    async def add(self, first: int, second: int):
+    async def add(
+            self, 
+            first: (int, "The first number"), # support arg annotations!
+            second: (int, "The second number") # since 0.7.1
+    ): 
         return f"The addition of `{first}` and `{second}` is `{first + second}`"
 ```
 
