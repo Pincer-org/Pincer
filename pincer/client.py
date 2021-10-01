@@ -366,12 +366,14 @@ class Client(Dispatcher):
         :param \\*kwargs:
             The named arguments for the event.
         """
+
         def execute(*_args, **_kwargs):
             ensure_future(call(*_args, **_kwargs))
 
-        execute(self, *args, **kwargs) \
-            if should_pass_cls(call) \
-            else execute(*args, **kwargs)
+        if should_pass_cls(call):
+            args = [self, *args]
+
+        execute(*args, **kwargs)
 
     async def process_event(self, name: str, payload: GatewayDispatch):
         """
