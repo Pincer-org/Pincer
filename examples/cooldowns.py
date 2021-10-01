@@ -66,10 +66,12 @@ class Bot(Client):
         caption, image = await self.get_meme()
 
         # Respond with an embed which contains the meme and caption!
-        return Embed(caption, color=self.random_color()) \
-            .set_image(image) \
-            .set_footer("Provided by some-random-api.ml",
-                        "https://i.some-random-api.ml/logo.png")
+        return Embed(
+            caption, color=self.random_color()
+        ).set_image(image).set_footer(
+            "Provided by some-random-api.ml",
+            "https://i.some-random-api.ml/logo.png"
+        )
 
     @Client.event
     async def on_command_error(self, ctx: MessageContext, error: Exception):
