@@ -21,4 +21,4 @@ class Bot(Client):
 
 
 if __name__ == "__main__":
-    Bot("ODkxNzM4NTExMzExNTE1NzA4.YVCuNA.GVYmEEyeksT7N0EeaP2TsT5fbvo").run()
+    Bot("XXXYOURBOTTOKENHEREXXX").run()
