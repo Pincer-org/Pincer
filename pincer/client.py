@@ -371,7 +371,7 @@ class Client(Dispatcher):
             ensure_future(call(*_args, **_kwargs))
 
         if should_pass_cls(call):
-            args = [self, *args]
+            args = (self, *args)
 
         execute(*args, **kwargs)
 
