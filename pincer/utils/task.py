@@ -3,14 +3,20 @@
 # TODO: Documentation
 
 import asyncio
-import warnings
+import logging
 from asyncio import TimerHandle, iscoroutinefunction
 from datetime import timedelta
 from inspect import getfullargspec
 from typing import Callable, Set
 
-from ..exceptions import TaskAlreadyRunning, TaskCancelError, TaskInvalidDelay, TaskIsNotCoroutine
+from ..exceptions import (
+    TaskAlreadyRunning, TaskCancelError, TaskInvalidDelay,
+    TaskIsNotCoroutine
+)
+from . import __package__
 from .types import Coro
+
+_log = logging.getLogger(__package__)
 
 
 class Task:
@@ -26,8 +32,10 @@ class Task:
             self.cancel()
         else:
             # Did the user forgot to call task.start() ?
-            # TODO: warn user the task was not scheduled.
-            pass
+            _log.warn(
+                "Task `%s` was not scheduled. Did you forget to start it ?",
+                self.coro.__name__
+            )
 
     @property
     def cancelled(self):
