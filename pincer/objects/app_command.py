@@ -15,7 +15,7 @@ from ..utils.snowflake import Snowflake
 
 if TYPE_CHECKING:
     from .throttle_scope import ThrottleScope
-    from ..utils.types import APINullable, Coro
+    from ..utils.types import APINullable, Coro, choice_value_types
 
 
 class AppCommandType(IntEnum):
@@ -129,7 +129,7 @@ class AppCommandOptionChoice(APIObject):
         value of the choice, up to 100 characters if string
     """
     name: str
-    value: Union[str, int, float]
+    value: Union[choice_value_types]
 
 
 @dataclass

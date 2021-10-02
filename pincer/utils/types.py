@@ -1,7 +1,7 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from typing import TypeVar, Callable, Coroutine, Any, Union
+from typing import TypeVar, Callable, Coroutine, Any, Union, Literal
 
 
 class MissingType:
@@ -18,3 +18,7 @@ APINullable = Union[T, MissingType]
 
 # Represents a coroutine.
 Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
+
+Choices = Literal
+
+choice_value_types = (str, int, float)

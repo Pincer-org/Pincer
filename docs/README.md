@@ -82,7 +82,10 @@ following:
 - Http Client
 - Events
 - Event middleware
-- Basic commands with basic argument parsing
+- Commands
+- Command arguments *(for types: str, int, float, bool)*
+- Command argument choices
+- Command argument descriptions
 - Command cool downs (Using WindowSliding technique)
 
 **Client base class example:**
