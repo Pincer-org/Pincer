@@ -121,6 +121,14 @@ def command(
                     )
                 annotation, argument_description = annotation
 
+                if len(argument_description) > 100:
+                    raise CommandDescriptionTooLong(
+                        f"Tuple annotation `{annotation}` on parameter "
+                        f"`{param}` in command `{cmd}` (`{func.__name__}`), "
+                        "argument description too long. (maximum length is 100 "
+                        "characters)"
+                    )
+
             if get_origin(annotation) is Union:
                 args = get_args(annotation)
                 if type(None) in args:
