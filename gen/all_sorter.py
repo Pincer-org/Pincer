@@ -15,7 +15,7 @@ def split_80_space(string: str, goal_list: List[str] = None) -> str:
     first_space = left.find(' ')
     left_left, left_right = left[first_space:], left[:first_space]
 
-    goal_list.append(left_left[::-1])
+    goal_list.append(left_left[::-1].rstrip())
     return split_80_space('    ' + left_right[::-1] + right, goal_list)
 
 
@@ -49,7 +49,7 @@ def sort_all(file_content: str) -> str:
 
 
 def main():
-    for directory, sub_folders, files in os.walk('pincer'):
+    for directory, _sub_folders, files in os.walk('pincer'):
         if '__' in directory:
             continue
 
