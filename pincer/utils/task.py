@@ -22,6 +22,10 @@ _log = logging.getLogger(__package__)
 
 class Task:
     def __init__(self, scheduler: 'TaskScheduler', coro: Coro, delay: float):
+        """
+        A Task is a coroutine that is scheduled to repeat every x seconds.
+        Use a TaskScheduler in order to create a task.
+        """
         self._scheduler = scheduler
         self.coro = coro
         self.delay = delay
@@ -40,13 +44,16 @@ class Task:
 
     @property
     def cancelled(self):
+        """Check if the task has been cancelled or not."""
         return self.running and self._handle.cancelled()
 
     @property
     def running(self):
+        """Check if the task is running."""
         return self._handle is not None
 
     def start(self):
+        """Register the task in the TaskScheduler and start the execution of the task."""
         if self.running:
             raise TaskAlreadyRunning(
                 f'Task `{self.coro.__name__}` is already running.'
@@ -55,6 +62,7 @@ class Task:
         self._scheduler.register(self)
 
     def cancel(self):
+        """Cancel the task."""
         if not self.running:
             raise TaskCancelError(
                 f'Task `{self.coro.__name__}` is not running.'
@@ -81,6 +89,25 @@ class TaskScheduler:
         microseconds=0,
         milliseconds=0
     ) -> Callable[[Coro], Task]:
+        """
+        Create a task that repeat the given amount of time.
+
+        :Example usage:
+
+        .. code-block:: python
+            from pincer import Client
+            from pincer.utils import TaskScheduler
+
+            client = Client("token")
+            task = TaskScheduler(client)
+
+            @task.loop(minutes=3)
+            async def my_task(self):
+                ...
+
+            my_task.start()
+            client.run()
+        """
         def decorator(func: Coro) -> Task:
             if not iscoroutinefunction(func):
                 raise TaskIsNotCoroutine(
