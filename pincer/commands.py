@@ -110,6 +110,17 @@ def command(
             argument_description: Optional[str] = None
             choices: List[AppCommandOptionChoice] = []
 
+            if isinstance(annotation, tuple):
+                if len(annotation) != 2:
+                    raise InvalidArgumentAnnotation(
+                        f"Tuple annotation `{annotation}` on parameter "
+                        f"`{param}` in command `{cmd}` (`{func.__name__}`) "
+                        "does not consist of two elements. Please follow the "
+                        "correct format where the first element is the type"
+                        " and the second element is the description."
+                    )
+                annotation, argument_description = annotation
+
             if get_origin(annotation) is Union:
                 args = get_args(annotation)
                 if type(None) in args:
@@ -125,17 +136,6 @@ def command(
                     if len(union_args) == 1
                     else Union[Tuple[List]]
                 )
-
-            if isinstance(annotation, tuple):
-                if len(annotation) != 2:
-                    raise InvalidArgumentAnnotation(
-                        f"Tuple annotation `{annotation}` on parameter "
-                        f"`{param}` in command `{cmd}` (`{func.__name__}`) "
-                        "does not consist of two elements. Please follow the "
-                        "correct format where the first element is the type"
-                        " and the second element is the description."
-                    )
-                annotation, argument_description = annotation
 
             if get_origin(annotation) is Choices:
                 args = get_args(annotation)
