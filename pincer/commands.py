@@ -35,7 +35,7 @@ _options_type_link = {
     str: AppCommandOptionType.STRING,
     int: AppCommandOptionType.INTEGER,
     bool: AppCommandOptionType.BOOLEAN,
-    float: AppCommandOptionType.NUMBER,
+    float: AppCommandOptionType.NUMBER
 }
 
 
