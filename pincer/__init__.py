@@ -20,6 +20,7 @@ __author__ = "Sigmanificient, Arthurdw"
 __email__ = "contact@pincer.org"
 __license__ = "MIT"
 
+from pincer.utils import Choices
 
 ReleaseType = Optional[Literal["alpha", "beta", "candidate", "final", "dev"]]
 
@@ -43,8 +44,8 @@ class VersionInfo(NamedTuple):
         )
 
 
-__version__ = VersionInfo(0, 7, 0)
+__version__ = VersionInfo(0, 7, 1)
 __all__ = (
     "__author__", "__email__", "__package__", "__title__",  "__version__",
-    "Bot", "Client", "command", "Intents"
+    "Bot", "Client", "command", "Intents", "Choices"
 )

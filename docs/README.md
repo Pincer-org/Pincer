@@ -82,7 +82,10 @@ following:
 - Http Client
 - Events
 - Event middleware
-- Basic commands with basic argument parsing
+- Commands
+- Command arguments *(for types: str, int, float, bool)*
+- Command argument choices
+- Command argument descriptions
 - Command cool downs (Using WindowSliding technique)
 
 **Client base class example:**
@@ -134,7 +137,11 @@ class Bot(Client):
         return message
 
     @command(description="Add two numbers!")
-    async def add(self, first: int, second: int):
+    async def add(
+            self, 
+            first: (int, "The first number"), # support arg descriptions!
+            second: (int, "The second number") # since 0.7.1
+    ): 
         return f"The addition of `{first}` and `{second}` is `{first + second}`"
 ```
 

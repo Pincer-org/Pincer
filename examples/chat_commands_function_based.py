@@ -11,17 +11,20 @@ async def on_ready(self):
 
 
 @command(description="Say something as the bot!")
-async def say(message: str):
+async def say(message: (str, "The content of the message")):
     return message
 
 
 @command(description="Add two numbers!")
-async def add(first: int, second: int):
+async def add(
+        first: (int, "The first number"),
+        second: (int, "The second number")
+):
     return f"The addition of `{first}` and `{second}` is `{first + second}`"
 
 
 @command(guild=1324567890)
-async def private_say(message: str):
+async def private_say(message: (str, "The content of the message")):
     return Message(message, flags=InteractionFlags.EPHEMERAL)
 
 

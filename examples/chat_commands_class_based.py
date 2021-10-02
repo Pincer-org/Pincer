@@ -15,11 +15,15 @@ class Bot(Client):
         return message
 
     @command(description="Add two numbers!")
-    async def add(self, first: int, second: int):
+    async def add(
+            self,
+            first: (int, "The first number"),
+            second: (int, "The second number")
+    ):
         return f"The addition of `{first}` and `{second}` is `{first + second}`"
 
     @command(guild=1324567890)
-    async def private_say(self, message: str):
+    async def private_say(self, message: (str, "The content of the message")):
         return Message(message, flags=InteractionFlags.EPHEMERAL)
 
     @command(description="How to make embed!")
