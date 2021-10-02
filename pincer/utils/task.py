@@ -6,14 +6,15 @@ import asyncio
 import logging
 from asyncio import TimerHandle, iscoroutinefunction
 from datetime import timedelta
-from inspect import getfullargspec
 from typing import Callable, Set
+
 
 from ..exceptions import (
     TaskAlreadyRunning, TaskCancelError, TaskInvalidDelay,
     TaskIsNotCoroutine
 )
 from . import __package__
+from .insertion import should_pass_cls
 from .types import Coro
 
 _log = logging.getLogger(__package__)
@@ -25,7 +26,7 @@ class Task:
         self.coro = coro
         self.delay = delay
         self._handle: TimerHandle = None
-        self._client_required = len(getfullargspec(coro).args) == 1
+        self._client_required = should_pass_cls(coro)
 
     def __del__(self):
         if self.running:
