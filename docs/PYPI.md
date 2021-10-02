@@ -3,7 +3,7 @@
 <!--
 ![PyPI - Downloads](https://img.shields.io/badge/dynamic/json?label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2FPincer)](https://pypi.org/project/Pincer)
 ![PyPI](https://img.shields.io/pypi/v/Pincer)
-![PyPI - Format](http~s://img.shields.io/pypi/format/Pincer)
+![PyPI - Format](https://img.shields.io/pypi/format/Pincer)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Pincer)
 -->
 
