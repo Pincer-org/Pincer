@@ -29,6 +29,7 @@ jobs:
 
       - name: add to git
         run: |
+          git pull
           git add .
           git diff-index --quiet HEAD || git commit -m "🎨 Automatic `__all__` sorting"
           git push origin main
