@@ -1,0 +1,34 @@
+name: Sort alls
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          python-version: '3.x'
+          architecture: 'x64'
+
+      - name: running script
+        run: python -m gen.all_sorter
+
+      - name: setup git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@pincer.dev"
+
+      - name: add to git
+        run: |
+          git add .
+          git diff-index --quiet HEAD || git commit -m "🎨 Automatic `__all__` sorting"
+          git push origin main
