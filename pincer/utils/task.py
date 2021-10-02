@@ -4,13 +4,12 @@
 
 import asyncio
 import warnings
-from asyncio import iscoroutinefunction
-from asyncio.events import TimerHandle
+from asyncio import TimerHandle, iscoroutinefunction
 from datetime import timedelta
 from inspect import getfullargspec
-from time import tzname
 from typing import Callable, Set
 
+from ..exceptions import TaskAlreadyRunning, TaskCancelError, TaskInvalidDelay, TaskIsNotCoroutine
 from .types import Coro
 
 
@@ -40,15 +39,17 @@ class Task:
 
     def start(self):
         if self.running:
-            # TODO: New exception with more debug info
-            raise Exception('Task is already running')
+            raise TaskAlreadyRunning(
+                f'Task `{self.coro.__name__}` is already running.'
+            )
 
         self._scheduler.register(self)
 
     def cancel(self):
         if not self.running:
-            # TODO: New exception with more debug info
-            raise Exception('Task is not running')
+            raise TaskCancelError(
+                f'Task `{self.coro.__name__}` is not running.'
+            )
 
         self._handle.cancel()
         if self in self._scheduler.tasks:
@@ -73,8 +74,10 @@ class TaskScheduler:
     ) -> Callable[[Coro], Task]:
         def decorator(func: Coro) -> Task:
             if not iscoroutinefunction(func):
-                # TODO: New exception with more debug info
-                raise Exception('Not a coroutine.')
+                raise TaskIsNotCoroutine(
+                    f'Task `{func.__name__}` is not a coroutine, '
+                    'which is required for tasks.'
+                )
 
             delay = timedelta(
                 days=days,
@@ -85,6 +88,12 @@ class TaskScheduler:
                 microseconds=microseconds,
                 milliseconds=milliseconds
             ).total_seconds()
+
+            if delay <= 0:
+                raise TaskInvalidDelay(
+                    f'Task `{func.__name__}` has a delay of {delay} seconds, '
+                    'which is invalid. Delay must be greater than zero.'
+                )
 
             return Task(self, func, delay)
 

@@ -133,6 +133,22 @@ class EmbedFieldError(PincerError, ValueError):
         )
 
 
+class TaskAlreadyRunning(PincerError):
+    """Exception that is raised when the user tries to start a running task"""
+
+
+class TaskCancelError(PincerError):
+    """Exception that is raised when a task cannot be cancelled."""
+
+
+class TaskIsNotCoroutine(PincerError):
+    """Exception that is raised when the provided function for a task is not a coroutine."""
+
+
+class TaskInvalidDelay(PincerError):
+    """Exception that is raised when the provided delay is invalid."""
+
+
 class DispatchError(PincerError):
     """
     Base exception class for all errors which are specifically related
