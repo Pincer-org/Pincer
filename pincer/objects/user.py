@@ -11,10 +11,11 @@ from ..core.http import HTTPClient
 from ..utils.api_object import APIObject
 from ..utils.conversion import convert
 from ..utils.snowflake import Snowflake
-from ..utils.types import APINullable, MISSING
+from ..utils.types import MISSING
 
 if TYPE_CHECKING:
     from pincer import Client
+    from ..utils import APINullable
 
 
 class PremiumTypes(IntEnum):

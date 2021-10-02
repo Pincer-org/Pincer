@@ -5,12 +5,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from .channel import Channel
 from .guild import Guild
 from .user import User
-from ..utils import APIObject, APINullable, MISSING, Snowflake
+from ..utils import APIObject, MISSING, Snowflake
+
+if TYPE_CHECKING:
+    from ..utils import APINullable
 
 
 class WebhookType(IntEnum):

@@ -1,12 +1,18 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
+
+from __future__ import annotations
+
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Dict
+from typing import Dict, TYPE_CHECKING
 
-from .user import User
-from ..utils import APIObject, Snowflake, APINullable, MISSING
+from ..utils import APIObject, MISSING
+
+if TYPE_CHECKING:
+    from ..utils import Snowflake, APINullable
+    from .user import User
 
 
 class CallbackType(IntEnum):

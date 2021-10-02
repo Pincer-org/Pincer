@@ -4,17 +4,20 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Union, List, Optional
+from typing import Union, List, Optional, TYPE_CHECKING
 
 from .embed import Embed
 from .interaction_base import CallbackType
-from .interactions import InteractionFlags
-from .message_component import MessageComponent
+
 from .role import Role
 from .user import User
 from .user_message import AllowedMentionTypes
 from ..exceptions import CommandReturnIsEmpty
 from ..utils import APIObject, Snowflake
+
+if TYPE_CHECKING:
+    from .interactions import InteractionFlags
+    from .message_component import MessageComponent
 
 
 @dataclass

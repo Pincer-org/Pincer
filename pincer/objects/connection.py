@@ -1,12 +1,16 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
+from __future__ import annotations
 from dataclasses import dataclass, MISSING
-from typing import List
+from typing import List, TYPE_CHECKING
 
-from ..objects import Integration
-from ..objects.user import VisibilityType
-from ..utils import APIObject, APINullable
+from ..utils import APIObject
+
+if TYPE_CHECKING:
+    from ..objects import Integration
+    from ..objects.user import VisibilityType
+    from ..utils import APINullable
 
 
 @dataclass

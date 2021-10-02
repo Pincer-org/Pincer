@@ -22,11 +22,11 @@ from .sticker import StickerItem
 from .user import User
 from ..core.http import HTTPClient
 from .._config import GatewayConfig
-from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp, \
-    convert
+from ..utils import APIObject, MISSING, Snowflake, Timestamp, convert
 
 if TYPE_CHECKING:
     from .. import Client
+    from ..utils import APINullable
 
 
 class MessageActivityType(IntEnum):

@@ -1,11 +1,15 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
+from __future__ import annotations
 from dataclasses import dataclass
-from typing import List
+from typing import List, TYPE_CHECKING
 
 from .emoji import Emoji
-from ..utils import APIObject, APINullable, MISSING
+from ..utils import APIObject, MISSING
+
+if TYPE_CHECKING:
+    from ..utils import APINullable
 
 
 @dataclass

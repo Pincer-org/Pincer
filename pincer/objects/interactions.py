@@ -8,11 +8,11 @@ from enum import IntEnum
 from typing import Dict, TYPE_CHECKING
 
 from .app_command import AppCommandInteractionDataOption
-from .channel import Channel
+
 from .guild_member import GuildMember
 from .interaction_base import InteractionType
 from .message_context import MessageContext
-from .role import Role
+
 from .select_menu import SelectOption
 from .user import User
 from .user_message import UserMessage
@@ -21,6 +21,9 @@ from ..utils import APIObject, APINullable, MISSING, Snowflake, convert
 
 if TYPE_CHECKING:
     from .. import Client
+    from ..utils import APINullable
+    from .channel import Channel
+    from .role import Role
 
 
 class InteractionFlags(IntEnum):

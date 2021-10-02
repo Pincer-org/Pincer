@@ -4,12 +4,15 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List
+from typing import List, TYPE_CHECKING
 
-from .button import ButtonStyle
-from .emoji import Emoji
-from .select_menu import SelectOption
-from ..utils import APIObject, MISSING, APINullable
+from ..utils import APIObject, MISSING
+
+if TYPE_CHECKING:
+    from ..utils import APINullable
+    from .button import ButtonStyle
+    from .emoji import Emoji
+    from .select_menu import SelectOption
 
 
 @dataclass

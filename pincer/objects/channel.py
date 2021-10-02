@@ -2,20 +2,23 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 from __future__ import annotations
+
 from dataclasses import dataclass
 from enum import IntEnum
 from typing import Dict, Optional, List, TYPE_CHECKING
 
-from .._config import GatewayConfig
 from .guild_member import GuildMember
-from .thread import ThreadMetadata
-from .user import User
-from .overwrite import Overwrite
-from ..utils import APIObject, APINullable, MISSING, Snowflake, Timestamp
+
+from .._config import GatewayConfig
+from ..utils import APIObject, MISSING
 
 if TYPE_CHECKING:
-    from pincer import Client
+    from .. import Client
     from ..core.http import HTTPClient
+    from ..utils import APINullable, Snowflake, Timestamp
+    from .overwrite import Overwrite
+    from .thread import ThreadMetadata
+    from .user import User
 
 
 class ChannelType(IntEnum):

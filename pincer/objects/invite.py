@@ -5,14 +5,18 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Optional, List
+from typing import Optional, List, TYPE_CHECKING
 
 from .application import Application
 from .channel import Channel
-from .guild import Guild
-from .guild_member import GuildMember
-from .user import User
-from ..utils import APIObject, APINullable, MISSING, Timestamp
+
+from ..utils import APIObject, APINullable, MISSING
+
+if TYPE_CHECKING:
+    from .guild import Guild
+    from .user import User
+    from .guild_member import GuildMember
+    from ..utils import APINullable, Timestamp
 
 
 class InviteTargetType(IntEnum):

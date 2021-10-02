@@ -5,14 +5,17 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import List, Union
+from typing import List, Union, TYPE_CHECKING
 
-from .throttle_scope import ThrottleScope
-from ..utils.api_object import APIObject
 from ..utils.conversion import convert
 from ..utils.extraction import get_index
+from ..utils.api_object import APIObject
+from ..utils.types import MISSING
 from ..utils.snowflake import Snowflake
-from ..utils.types import APINullable, MISSING, Coro
+
+if TYPE_CHECKING:
+    from .throttle_scope import ThrottleScope
+    from ..utils.types import APINullable, Coro
 
 
 class AppCommandType(IntEnum):
