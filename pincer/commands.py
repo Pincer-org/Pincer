@@ -18,11 +18,11 @@ from .exceptions import (
 from .objects import ThrottleScope
 from .objects.app_command import (
     AppCommand, AppCommandType, ClientCommandStructure,
-    AppCommandOption, AppCommandOptionType
+    AppCommandOption, AppCommandOptionType, AppCommandOptionChoice
 )
 from .utils import (
     get_signature_and_params, get_index, should_pass_ctx, Coro, Snowflake,
-    MISSING
+    MISSING, choice_value_types, Choices
 )
 
 COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
@@ -49,6 +49,11 @@ def command(
         cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER
 ):
     # TODO: Fix docs
+    # TODO: Fix docs w guild
+    # TODO: Fix docs w cooldown
+    # TODO: Fix docs w context
+    # TODO: Fix docs w argument descriptions
+    # TODO: Fix docs w argument choices
     def decorator(func: Coro):
         if not iscoroutinefunction(func) and not isasyncgenfunction(func):
             raise CommandIsNotCoroutine(
@@ -103,6 +108,26 @@ def command(
 
             annotation, required = sig[param].annotation, True
             argument_description: Optional[str] = None
+            choices: List[AppCommandOptionChoice] = []
+
+            if isinstance(annotation, tuple):
+                if len(annotation) != 2:
+                    raise InvalidArgumentAnnotation(
+                        f"Tuple annotation `{annotation}` on parameter "
+                        f"`{param}` in command `{cmd}` (`{func.__name__}`) "
+                        "does not consist of two elements. Please follow the "
+                        "correct format where the first element is the type"
+                        " and the second element is the description."
+                    )
+                annotation, argument_description = annotation
+
+                if len(argument_description) > 100:
+                    raise CommandDescriptionTooLong(
+                        f"Tuple annotation `{annotation}` on parameter "
+                        f"`{param}` in command `{cmd}` (`{func.__name__}`), "
+                        "argument description too long. (maximum length is 100 "
+                        "characters)"
+                    )
 
             if get_origin(annotation) is Union:
                 args = get_args(annotation)
@@ -120,16 +145,65 @@ def command(
                     else Union[Tuple[List]]
                 )
 
-            if isinstance(annotation, tuple):
-                if len(annotation) != 2:
+            if get_origin(annotation) is Choices:
+                args = get_args(annotation)
+
+                if len(args) > 25:
                     raise InvalidArgumentAnnotation(
-                        f"Tuple annotation `{annotation}` on parameter "
-                        f"`{param}` in command `{cmd}` (`{func.__name__}`) "
-                        "does not consist of two elements. Please follow the "
-                        "correct format where the first element is the type"
-                        " and the second element is the description."
+                        f"Choices/Literal annotation `{annotation}` on "
+                        f"parameter `{param}` in command `{cmd}` "
+                        f"(`{func.__name__}`) amount exceeds limit of 25 items!"
                     )
-                annotation, argument_description = annotation
+
+                choice_type = type(args[0])
+
+                for choice in args:
+                    choice_name = choice
+
+                    if isinstance(choice, tuple):
+                        if len(choice) != 2:
+                            raise InvalidArgumentAnnotation(
+                                f"Choices/Literal annotation `{annotation}` on "
+                                f"parameter `{param}` in command `{cmd}` "
+                                f"(`{func.__name__}`), specific choice "
+                                "declaration through tuple's must consist of "
+                                "2 items. First value is the name and the "
+                                "second value is the value."
+                            )
+
+                        choice_name, choice = str(choice[0]), choice[1]
+
+                        if choice_type is tuple:
+                            choice_type = type(choice)
+
+                    if type(choice) not in choice_value_types:
+                        # Properly get all the names of the types
+                        valid_types = list(map(
+                            lambda x: x.__name__,
+                            choice_value_types
+                        ))
+                        raise InvalidArgumentAnnotation(
+                            f"Choices/Literal annotation `{annotation}` on "
+                            f"parameter `{param}` in command `{cmd}` "
+                            f"(`{func.__name__}`), invalid type received. "
+                            "Value must be a member of "
+                            f"{', '.join(valid_types)} but "
+                            f"{type(choice).__name__} was given!"
+                        )
+                    elif not isinstance(choice, choice_type):
+                        raise InvalidArgumentAnnotation(
+                            f"Choices/Literal annotation `{annotation}` on "
+                            f"parameter `{param}` in command `{cmd}` "
+                            f"(`{func.__name__}`), all values must be of the "
+                            "same type!"
+                        )
+
+                    choices.append(AppCommandOptionChoice(
+                        name=choice_name,
+                        value=choice
+                    ))
+
+                annotation = choice_type
 
             param_type = _options_type_link.get(annotation)
             if not param_type:
@@ -144,7 +218,8 @@ def command(
                     type=param_type,
                     name=param,
                     description=argument_description or "Description not set",
-                    required=required
+                    required=required,
+                    choices=choices or MISSING
                 )
             )
 

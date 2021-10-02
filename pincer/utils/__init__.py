@@ -7,11 +7,11 @@ from .extraction import get_index, get_signature_and_params
 from .insertion import should_pass_cls, should_pass_ctx
 from .snowflake import Snowflake
 from .timestamp import Timestamp
-from .types import APINullable, Coro, MISSING
-
+from .types import APINullable, Coro, MISSING, Choices, choice_value_types
 
 __all__ = (
     "APINullable", "APIObject", "convert", "Coro", "get_index",
     "get_signature_and_params", "MISSING", "should_pass_cls",
-    "should_pass_ctx", "Snowflake", "Timestamp"
+    "should_pass_ctx", "Snowflake", "Timestamp", "Choices",
+    "choice_value_types"
 )
