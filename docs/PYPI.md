@@ -3,7 +3,7 @@
 <!--
 ![PyPI - Downloads](https://img.shields.io/badge/dynamic/json?label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2FPincer)](https://pypi.org/project/Pincer)
 ![PyPI](https://img.shields.io/pypi/v/Pincer)
-![PyPI - Format](https://img.shields.io/pypi/format/Pincer)
+![PyPI - Format](http~s://img.shields.io/pypi/format/Pincer)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Pincer)
 -->
 
@@ -135,7 +135,7 @@ class Bot(Client):
     @command(description="Add two numbers!")
     async def add(
             self, 
-            first: (int, "The first number"), # support arg annotations!
+            first: (int, "The first number"), # support arg descriptions
             second: (int, "The second number") # since 0.7.1
     ): 
         return f"The addition of `{first}` and `{second}` is `{first + second}`"
