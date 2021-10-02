@@ -8,24 +8,27 @@ from asyncio import iscoroutinefunction
 from asyncio.events import TimerHandle
 from datetime import timedelta
 from inspect import getfullargspec
+from time import tzname
 from typing import Callable, Set
 
 from .types import Coro
 
 
 class Task:
-    def __init__(self, coro: Coro, delay: float, client=None):
+    def __init__(self, scheduler: 'TaskScheduler', coro: Coro, delay: float):
+        self._scheduler = scheduler
         self.coro = coro
         self.delay = delay
-        self.client = client
         self._handle: TimerHandle = None
         self._client_required = len(getfullargspec(coro).args) == 1
 
     def __del__(self):
-        # Did the user forgot to call task.start() ?
-        if self._handle is None:
-            pass
+        if self.running:
+            self.cancel()
+        else:
+            # Did the user forgot to call task.start() ?
             # TODO: warn user the task was not scheduled.
+            pass
 
     @property
     def cancelled(self):
@@ -35,18 +38,12 @@ class Task:
     def running(self):
         return self._handle is not None
 
-    def start(self, client=None):
+    def start(self):
         if self.running:
             # TODO: New exception with more debug info
             raise Exception('Task is already running')
 
-        if client is not None:
-            self.client = client
-
-        if self.client is None and self._client_required:
-            raise Exception('No client bound to the task')
-
-        self.__execute()
+        self._scheduler.register(self)
 
     def cancel(self):
         if not self.running:
@@ -54,28 +51,15 @@ class Task:
             raise Exception('Task is not running')
 
         self._handle.cancel()
-
-    def __execute(self):
-        if self._client_required:
-            coro = self.coro(self.client)
-        else:
-            coro = self.coro()
-
-        # Execute the coroutine
-        asyncio.ensure_future(coro)
-
-        # Schedule the coroutine's next execution
-        loop = asyncio.get_event_loop()
-        self._handle = loop.call_later(self.delay, self.__execute)
+        if self in self._scheduler.tasks:
+            self._scheduler.tasks.remove(self)
 
 
 class TaskScheduler:
     def __init__(self, client):
         self.client = client
-        self.register: Set[Task] = set()
-
-    def __del__(self):
-        self.close()
+        self.tasks: Set[Task] = set()
+        self._loop = asyncio.get_event_loop()
 
     def loop(
         self,
@@ -101,14 +85,30 @@ class TaskScheduler:
                 microseconds=microseconds,
                 milliseconds=milliseconds
             ).total_seconds()
-            self.register.add(task := Task(func, delay, self.client))
 
-            return task
+            return Task(self, func, delay)
 
         return decorator
 
+    def register(self, task: Task):
+        """Register a task"""
+        self.tasks.add(task)
+        self.__execute(task)
+
+    def __execute(self, task: Task):
+        if task._client_required:
+            coro = task.coro(self.client)
+        else:
+            coro = task.coro()
+
+        # Execute the coroutine
+        asyncio.ensure_future(coro)
+
+        # Schedule the coroutine's next execution
+        task._handle = self._loop.call_later(task.delay, self.__execute, task)
+
     def close(self):
         """Gracefully stops any running task."""
-        for task in self.register:
+        for task in self.tasks.copy():
             if task.running:
                 task.cancel()
