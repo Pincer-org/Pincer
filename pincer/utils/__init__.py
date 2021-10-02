@@ -6,6 +6,7 @@ from .conversion import convert
 from .extraction import get_index, get_signature_and_params
 from .insertion import should_pass_cls, should_pass_ctx
 from .snowflake import Snowflake
+from .task import Task, TaskScheduler
 from .timestamp import Timestamp
 from .types import APINullable, Coro, MISSING
 
@@ -13,5 +14,5 @@ from .types import APINullable, Coro, MISSING
 __all__ = (
     "APINullable", "APIObject", "convert", "Coro", "get_index",
     "get_signature_and_params", "MISSING", "should_pass_cls",
-    "should_pass_ctx", "Snowflake", "Timestamp"
+    "should_pass_ctx", "Snowflake", "Task", "TaskScheduler", "Timestamp"
 )
