@@ -77,6 +77,9 @@ class Task:
 
 class TaskScheduler:
     def __init__(self, client):
+        """
+        Used to create tasks
+        """
         self.client = client
         self.tasks: Set[Task] = set()
         self._loop = asyncio.get_event_loop()
@@ -138,11 +141,12 @@ class TaskScheduler:
         return decorator
 
     def register(self, task: Task):
-        """Register a task"""
+        """Register a task."""
         self.tasks.add(task)
         self.__execute(task)
 
     def __execute(self, task: Task):
+        """Execute a task."""
         if task._client_required:
             coro = task.coro(self.client)
         else:
