@@ -60,6 +60,14 @@ pincer.utils.snowflake module
    :undoc-members:
    :show-inheritance:
 
+pincer.utils.tasks module
+-------------------------
+
+.. automodule:: pincer.utils.tasks
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.utils.timestamp module
 -----------------------------
 
