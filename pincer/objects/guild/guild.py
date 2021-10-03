@@ -514,12 +514,13 @@ class Guild(APIObject):
             channel_id: Optional[Snowflake] = None
     ) -> GuildMember:
         """
-        Modifies a member in the guild from its identifier and based on the 
+        Modifies a member in the guild from its identifier and based on the
         keyword arguments provided.
 
         :returns:
             The GuildMember that has been modified.
         """
+        ...
 
     async def modify_member(self, _id: int, **kwargs) -> GuildMember:
         data = await self._http.patch(f"guilds/{self.id}/members/{_id}", kwargs)

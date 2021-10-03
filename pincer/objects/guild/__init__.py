@@ -31,6 +31,7 @@ from .welcome_screen import WelcomeScreenChannel, WelcomeScreen
 
 __all__ = (
     "AuditEntryInfo", "AuditLog", "AuditLogChange", "AuditLogEvent",
+    "AuditLogEntry",
     "Ban", "CategoryChannel", "Channel", "ChannelMention", "ChannelType",
     "DefaultMessageNotificationLevel", "ExplicitContentFilterLevel",
     "FollowedChannel", "Guild", "GuildFeature", "GuildFeatures", "GuildMember",
