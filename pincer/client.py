@@ -17,7 +17,7 @@ from .core.http import HTTPClient
 from .exceptions import InvalidEventName
 from .middleware import middleware
 from .objects import User, Intents, Guild, ThrottleInterface
-from .objects.throttling import DefaultThrottleHandler
+from pincer.objects.app.throttling import DefaultThrottleHandler
 from .utils import get_index, should_pass_cls, Coro
 
 _log = logging.getLogger(__package__)

@@ -1,50 +1,56 @@
 import os
 from typing import List
 
+LINE_WRAP: int = 80
+
 
 def split_80_space(string: str, goal_list: List[str] = None) -> str:
     if goal_list is None:
         goal_list = []
 
-    if len(string) < 80:
+    if len(string) < LINE_WRAP:
         goal_list.append(string)
         return '\n'.join(goal_list)
 
-    left, right = string[:80], string[80:]
-    left = left[::-1]
-    first_space = left.find(' ')
-    left_left, left_right = left[first_space:], left[:first_space]
+    to_reduce = string[:LINE_WRAP][::-1]
+    first_space = to_reduce.find(' ')
 
-    goal_list.append(left_left[::-1].rstrip())
-    return split_80_space('    ' + left_right[::-1] + right, goal_list)
+    reduced, next_parse = to_reduce[first_space:], to_reduce[:first_space]
+
+    goal_list.append(reduced[::-1].rstrip())
+
+    return split_80_space(
+        '    ' + next_parse[::-1] + string[LINE_WRAP:],
+        goal_list
+    )
 
 
-def sort_all(file_content: str) -> str:
-    all_pos = file_content.index('__all__')
+def parse_list(string: str) -> List[str]:
+    return (
+        string.replace('\n', '')
+            .replace('"', '')
+            .replace(' ', '')
+            .split(',')
+    )
 
-    left_parsed_var = file_content[all_pos:]
-    end_parenthesis_pos = left_parsed_var.index(')') - 1
 
-    right_parsed = left_parsed_var[:end_parenthesis_pos]
-    left_parsed = right_parsed[right_parsed.index('(') + 1:]
+def sort__all__(content: str) -> str:
+    pos__all__ = content.index('__all__')
 
-    sorted_parsed = [
-        f'"{w}"' for w in sorted(
-            left_parsed.replace('\n', '')
-                .replace('"', '')
-                .replace(' ', '')
-                .split(',')
-        )
-    ]
+    left_parsed__all__ = content[pos__all__:]
+    end_parenthesis_pos = left_parsed__all__.index(')') - 1
 
-    joined_string = ', '.join(sorted_parsed)
-    with_all_name = '__all__ = (\n\t' + joined_string + '\n)'
-    all_formatted = split_80_space(with_all_name)
+    right_parsed = left_parsed__all__[:end_parenthesis_pos]
+    __all__list = right_parsed[right_parsed.index('(') + 1:]
+
+    __all__declaration = '__all__ = (\n\t%s\n)' % ', '.join(
+        f'"{w}"' for w in sorted(parse_list(__all__list))
+    )
 
     return (
-            file_content[:all_pos]
-            + all_formatted
-            + file_content[all_pos + end_parenthesis_pos + 2:]
+            content[:pos__all__]
+            + split_80_space(__all__declaration)
+            + content[pos__all__ + end_parenthesis_pos + 2:]
     ).replace('\t', '    ')
 
 
@@ -63,7 +69,7 @@ def main():
             continue
 
         with open(os.path.join(directory, '__init__.py'), 'w') as f:
-            f.write(sort_all(file_content))
+            f.write(sort__all__(file_content))
 
 
 if __name__ == '__main__':

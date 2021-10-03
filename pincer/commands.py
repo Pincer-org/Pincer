@@ -15,10 +15,10 @@ from .exceptions import (
     InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
     InvalidCommandName
 )
-from .objects import ThrottleScope
-from .objects.app_command import (
-    AppCommand, AppCommandType, ClientCommandStructure,
-    AppCommandOption, AppCommandOptionType, AppCommandOptionChoice
+from .objects import ThrottleScope, AppCommand
+from .objects.app import (
+    AppCommandOptionType, AppCommandOption, AppCommandOptionChoice,
+    ClientCommandStructure, AppCommandType
 )
 from .utils import (
     get_signature_and_params, get_index, should_pass_ctx, Coro, Snowflake,
