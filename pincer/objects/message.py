@@ -58,7 +58,7 @@ class Message:
     type: Optional[CallbackType] = None
 
     def to_dict(self):
-        if len(self.content) < 1 and not self.embeds:
+        if len(self.content) < 1 and not self.embeds and not self.attachments:
             raise CommandReturnIsEmpty("Cannot return empty message.")
 
         allowed_mentions = (
@@ -91,10 +91,16 @@ class Message:
         if self.attachments:
             form = aiohttp.FormData()
             form.add_field("payload_json",json.dumps(self.to_dict()))
-            
-            for file in self.attachments:
-                form.add_field("file",file.content,filename=file.filename)
 
+            if type(self.attachments) in (list, tuple):
+                for file in self.attachments:
+                    form.add_field("file",file.content,filename=file.filename)
+            else:
+                form.add_field(
+                    "file",
+                    self.attachments.content,
+                    filename=self.attachments.filename
+                )
 
             payload = form()
             return payload.headers["Content-Type"], payload
