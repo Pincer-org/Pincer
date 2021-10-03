@@ -141,12 +141,12 @@ class TaskScheduler:
         return decorator
 
     def register(self, task: Task):
-        """Register a task"""
+        """Register a task."""
         self.tasks.add(task)
         self.__execute(task)
 
     def __execute(self, task: Task):
-        """Execute a task"""
+        """Execute a task."""
         if task._client_required:
             coro = task.coro(self.client)
         else:

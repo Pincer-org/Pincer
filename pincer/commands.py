@@ -270,10 +270,10 @@ class ChatCommandHandler:
 
     async def __remove_unused_commands(self):
         """
-        Remove commands that are not used
+        Remove commands that are not used.
 
         :param to_remove:
-            The command which should be removed
+            The command which should be removed.
         """
         to_remove: List[AppCommand] = list()
 
@@ -297,10 +297,10 @@ class ChatCommandHandler:
 
     async def __update_existing_commands(self):
         """
-        Edit (or) Update any existing command
+        Edit (or) Update any existing command.
 
         :param: to_update:
-            The command which should be updated
+            The command which should be updated.
         """
         to_update: Dict[Snowflake, Dict[str, Any]] = {}
 
@@ -372,10 +372,10 @@ class ChatCommandHandler:
 
     async def __add_commands(self):
         """
-        Add a new command
+        Add a new command.
 
         :param commands_to_add:
-            The command which should be added
+            The command which should be added.
         """
         commands_to_add: List[ClientCommandStructure] = [
             cmd for cmd in ChatCommandHandler.register.values()
