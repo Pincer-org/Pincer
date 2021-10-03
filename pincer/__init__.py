@@ -9,9 +9,11 @@ Full MIT License can be found in `LICENSE` at the project root.
 
 from typing import NamedTuple, Literal, Optional
 
-from pincer.client import Client, Bot
-from pincer.commands import command
-from pincer.objects import Intents
+from ._config import *
+from .client import *
+from .commands import *
+from .exceptions import *
+from . import core, middleware, objects, utils
 
 __package__ = "pincer"
 __title__ = "Pincer library"
@@ -20,7 +22,6 @@ __author__ = "Sigmanificient, Arthurdw"
 __email__ = "contact@pincer.org"
 __license__ = "MIT"
 
-from pincer.utils import Choices
 
 ReleaseType = Optional[Literal["alpha", "beta", "candidate", "final", "dev"]]
 
@@ -43,9 +44,9 @@ class VersionInfo(NamedTuple):
             )
         )
 
-
-__version__ = VersionInfo(0, 8, 0)
+version_info = VersionInfo(0, 8, 0, release_level="alpha")
+__version__ = "0.7.1a"
 __all__ = (
-    "Bot", "Choices", "Client", "Intents", "__author__", "__email__",
-    "__package__", "__title__", "__version__", "command"
+    "__author__", "__email__", "__package__", "__title__",  "__version__",
+    "Bot", "Client", "command", "Intents", "Choices"
 )
