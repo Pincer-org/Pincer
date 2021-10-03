@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional, TYPE_CHECKING
 
+from PIL.Image import Image
+
 from ..utils import APIObject, MISSING
 
 if TYPE_CHECKING:

@@ -58,7 +58,6 @@ class HTTPClient:
 
         headers: Dict[str, str] = {
             "Authorization": f"Bot {token}",
-            "Content-Type": "application/json"
         }
         self.__session: ClientSession = ClientSession(headers=headers)
 
@@ -87,6 +86,7 @@ class HTTPClient:
             self,
             method: HttpCallable,
             endpoint: str, *,
+            content_type: str = "application/json",
             data: Optional[Dict] = None,
             __ttl: int = None
     ) -> Optional[Dict]:
@@ -125,9 +125,13 @@ class HTTPClient:
         _log.debug(f"{method.__name__.upper()} {endpoint} | {dumps(data)}")
 
         url = f"{self.url}/{endpoint}"
-        async with method(url, json=data) as res:
+        async with method(
+            url,
+            json=data,
+            headers={"Content-Type":content_type}
+            ) as res:
             return await self.__handle_response(
-                res, method, endpoint, data, ttl
+                res, method, endpoint, content_type, data, ttl
             )
 
     async def __handle_response(
@@ -135,6 +139,7 @@ class HTTPClient:
             res: ClientResponse,
             method: HttpCallable,
             endpoint: str,
+            content_type: str,
             data: Optional[Dict],
             __ttl: int,
     ) -> Optional[Dict]:
@@ -188,7 +193,7 @@ class HTTPClient:
                     f" Retrying in {timeout} seconds"
                 )
                 await sleep(timeout)
-                return await self.__send(method, endpoint, data=data)
+                return await self.__send(method, endpoint, content_type=content_type, data=data)
 
             _log.error(
                 f"An http exception occurred while trying to send "
@@ -209,7 +214,7 @@ class HTTPClient:
         await asyncio.sleep(retry_in)
 
         # try sending it again
-        return await self.__send(method, endpoint, __ttl=__ttl - 1, data=data)
+        return await self.__send(method, endpoint, content_type=content_type, __ttl=__ttl - 1, data=data)
 
     async def delete(self, route: str) -> Optional[Dict]:
         """
@@ -259,7 +264,7 @@ class HTTPClient:
         """
         return await self.__send(self.__session.options, route)
 
-    async def patch(self, route: str, data: Dict) -> Optional[Dict]:
+    async def patch(self, route: str, data: Dict, content_type: str = "application/json") -> Optional[Dict]:
         """
         Sends a patch request to a Discord REST endpoint.
 
@@ -272,9 +277,9 @@ class HTTPClient:
         :return:
             JSON response from the discord API.
         """
-        return await self.__send(self.__session.patch, route, data=data)
+        return await self.__send(self.__session.patch, route, content_type=content_type, data=data)
 
-    async def post(self, route: str, data: Dict) -> Optional[Dict]:
+    async def post(self, route: str, data: Dict, content_type: str = "application/json") -> Optional[Dict]:
         """
         Sends a post request to a Discord REST endpoint.
 
@@ -287,9 +292,9 @@ class HTTPClient:
         :return:
             JSON response from the discord API.
         """
-        return await self.__send(self.__session.post, route, data=data)
+        return await self.__send(self.__session.post, route, content_type=content_type, data=data)
 
-    async def put(self, route: str, data: Dict) -> Optional[Dict]:
+    async def put(self, route: str, data: Dict, content_type: str = "application/json") -> Optional[Dict]:
         """
         Sends a put request to a Discord REST endpoint.
 
@@ -302,4 +307,4 @@ class HTTPClient:
         :return:
             JSON response from the discord API.
         """
-        return await self.__send(self.__session.put, route, data=data)
+        return await self.__send(self.__session.put, route, content_type=content_type, data=data)
