@@ -10,7 +10,7 @@ from ...utils import APIObject
 
 if TYPE_CHECKING:
     from ..guild import Guild
-    from ..user import User
+    from ..user.user import User
     from ...utils import Snowflake, Timestamp
 
 

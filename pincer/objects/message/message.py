@@ -10,7 +10,7 @@ from ..app.interaction_base import CallbackType
 from ..guild.role import Role
 from ..message.embed import Embed
 from ..message.user_message import AllowedMentionTypes
-from ..user import User
+from ..user.user import User
 from ...exceptions import CommandReturnIsEmpty
 from ...utils.api_object import APIObject
 from ...utils.snowflake import Snowflake

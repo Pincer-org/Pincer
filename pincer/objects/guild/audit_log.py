@@ -13,7 +13,7 @@ from ...utils.types import MISSING
 if TYPE_CHECKING:
     from ..guild.channel import Channel
     from ..user.integration import Integration
-    from ..user import User
+    from ..user.user import User
     from ..guild.webhook import Webhook
     from ...utils import APINullable, Snowflake
 

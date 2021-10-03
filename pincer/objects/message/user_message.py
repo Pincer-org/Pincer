@@ -18,7 +18,7 @@ from ..message.component import MessageComponent
 from ..message.reference import MessageReference
 from ..message.reaction import Reaction
 from ..message.sticker import StickerItem
-from ..user import User
+from ..user.user import User
 from ..._config import GatewayConfig
 from ...core.http import HTTPClient
 from ...utils.api_object import APIObject

@@ -11,7 +11,7 @@ from ...utils.api_object import APIObject
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from ..user import User
+    from ..user.user import User
     from ...utils import Snowflake, APINullable
 
 

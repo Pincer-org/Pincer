@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional, List, TYPE_CHECKING
 
-from ..user import User
+from ..user.user import User
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
 

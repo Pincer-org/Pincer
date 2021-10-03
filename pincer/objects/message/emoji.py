@@ -12,7 +12,7 @@ from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from ..guild.role import Role
-    from ..user import User
+    from ..user.user import User
     from ...utils import APINullable
 
 

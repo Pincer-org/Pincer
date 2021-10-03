@@ -13,7 +13,7 @@ from ..app.select_menu import SelectOption
 from ..guild.member import GuildMember
 from ..message.context import MessageContext
 from ..message.user_message import UserMessage
-from ..user import User
+from ..user.user import User
 from ...core.http import HTTPClient
 from ...utils import APIObject, MISSING, Snowflake, convert
 

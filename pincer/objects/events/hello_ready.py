@@ -6,7 +6,7 @@ from typing import List, Tuple
 
 from ..app.application import Application
 from ..guild import Guild
-from ..user import User
+from ..user.user import User
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING, APINullable
 

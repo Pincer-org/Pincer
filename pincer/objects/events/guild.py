@@ -9,7 +9,7 @@ from ..guild.member import GuildMember
 from ..guild.role import Role
 from ..message.emoji import Emoji
 from ..message.sticker import Sticker
-from ..user import User
+from ..user.user import User
 from ...utils.api_object import APIObject
 from ...utils.snowflake import Snowflake
 from ...utils.timestamp import Timestamp
