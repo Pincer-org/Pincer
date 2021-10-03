@@ -4,7 +4,7 @@
 from dataclasses import dataclass
 from typing import List, Tuple
 
-from ...objects.application import Application
+from pincer.objects.app.application import Application
 from ...objects.guild import Guild
 from ...objects.user import User
 from ...utils.api_object import APIObject

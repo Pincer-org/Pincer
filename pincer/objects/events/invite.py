@@ -3,7 +3,7 @@
 
 from dataclasses import dataclass
 
-from pincer.objects.invite import InviteTargetType
+from pincer.objects.guild.invite import InviteTargetType
 from pincer.objects.user import User
 from pincer.utils.api_object import APIObject
 from pincer.utils.snowflake import Snowflake
