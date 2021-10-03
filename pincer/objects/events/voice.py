@@ -4,8 +4,8 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from pincer.utils.api_object import APIObject
-from pincer.utils.snowflake import Snowflake
+from ...utils.api_object import APIObject
+from ...utils.snowflake import Snowflake
 
 
 @dataclass
