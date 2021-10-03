@@ -9,6 +9,7 @@ from .user import User, PremiumTypes, VisibilityType
 from .voice_state import VoiceState
 
 __all__ = (
-    "IntegrationExpireBehavior", "IntegrationApplication", "Integration",
-    "User", "PremiumTypes", "VisibilityType", "Connection", "VoiceState"
+    "Connection", "Integration", "IntegrationApplication",
+    "IntegrationExpireBehavior", "PremiumTypes", "User", "VisibilityType",
+    "VoiceState"
 )

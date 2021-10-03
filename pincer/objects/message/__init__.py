@@ -22,11 +22,11 @@ from .user_message import (
 )
 
 __all__ = (
-    "Attachment", "ButtonStyle", "Button", "Embed", "EmbedField", "EmbedImage",
-    "EmbedAuthor", "EmbedProvider", "EmbedThumbnail", "EmbedVideo",
-    "EmbedFooter", "Emoji", "AllowedMentions", "Message", "MessageComponent",
-    "MessageContext", "MessageReference", "Reaction", "StickerType",
-    "StickerFormatType", "Sticker", "StickerItem", "StickerPack",
-    "MessageActivityType", "MessageFlags", "MessageType", "MessageActivity",
-    "AllowedMentionTypes", "UserMessage"
+    "AllowedMentionTypes", "AllowedMentions", "Attachment", "Button",
+    "ButtonStyle", "Embed", "EmbedAuthor", "EmbedField", "EmbedFooter",
+    "EmbedImage", "EmbedProvider", "EmbedThumbnail", "EmbedVideo", "Emoji",
+    "Message", "MessageActivity", "MessageActivityType", "MessageComponent",
+    "MessageContext", "MessageFlags", "MessageReference", "MessageType",
+    "Reaction", "Sticker", "StickerFormatType", "StickerItem", "StickerPack",
+    "StickerType", "UserMessage"
 )
