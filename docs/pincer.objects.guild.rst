@@ -28,6 +28,14 @@ pincer.objects.guild.channel module
    :undoc-members:
    :show-inheritance:
 
+pincer.objects.guild.features module
+------------------------------------
+
+.. automodule:: pincer.objects.guild.features
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.objects.guild.followed\_channel module
 ---------------------------------------------
 
@@ -44,42 +52,18 @@ pincer.objects.guild.guild module
    :undoc-members:
    :show-inheritance:
 
-pincer.objects.guild.guild\_features module
--------------------------------------------
-
-.. automodule:: pincer.objects.guild.guild_features
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pincer.objects.guild.guild\_member module
------------------------------------------
-
-.. automodule:: pincer.objects.guild.guild_member
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pincer.objects.guild.guild\_template module
--------------------------------------------
-
-.. automodule:: pincer.objects.guild.guild_template
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pincer.objects.guild.guild\_widget module
------------------------------------------
-
-.. automodule:: pincer.objects.guild.guild_widget
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 pincer.objects.guild.invite module
 ----------------------------------
 
 .. automodule:: pincer.objects.guild.invite
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pincer.objects.guild.member module
+----------------------------------
+
+.. automodule:: pincer.objects.guild.member
    :members:
    :undoc-members:
    :show-inheritance:
@@ -108,6 +92,14 @@ pincer.objects.guild.stage module
    :undoc-members:
    :show-inheritance:
 
+pincer.objects.guild.template module
+------------------------------------
+
+.. automodule:: pincer.objects.guild.template
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.objects.guild.thread module
 ----------------------------------
 
@@ -128,6 +120,14 @@ pincer.objects.guild.welcome\_screen module
 -------------------------------------------
 
 .. automodule:: pincer.objects.guild.welcome_screen
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pincer.objects.guild.widget module
+----------------------------------
+
+.. automodule:: pincer.objects.guild.widget
    :members:
    :undoc-members:
    :show-inheritance:

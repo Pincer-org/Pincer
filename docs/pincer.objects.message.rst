@@ -20,6 +20,22 @@ pincer.objects.message.button module
    :undoc-members:
    :show-inheritance:
 
+pincer.objects.message.component module
+---------------------------------------
+
+.. automodule:: pincer.objects.message.component
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pincer.objects.message.context module
+-------------------------------------
+
+.. automodule:: pincer.objects.message.context
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.objects.message.embed module
 -----------------------------------
 
@@ -44,34 +60,18 @@ pincer.objects.message.message module
    :undoc-members:
    :show-inheritance:
 
-pincer.objects.message.message\_component module
-------------------------------------------------
-
-.. automodule:: pincer.objects.message.message_component
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pincer.objects.message.message\_context module
-----------------------------------------------
-
-.. automodule:: pincer.objects.message.message_context
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pincer.objects.message.message\_reference module
-------------------------------------------------
-
-.. automodule:: pincer.objects.message.message_reference
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 pincer.objects.message.reaction module
 --------------------------------------
 
 .. automodule:: pincer.objects.message.reaction
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pincer.objects.message.reference module
+---------------------------------------
+
+.. automodule:: pincer.objects.message.reference
    :members:
    :undoc-members:
    :show-inheritance:

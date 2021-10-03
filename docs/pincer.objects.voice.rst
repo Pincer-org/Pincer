@@ -4,10 +4,10 @@ pincer.objects.voice package
 Submodules
 ----------
 
-pincer.objects.voice.voice\_region module
------------------------------------------
+pincer.objects.voice.region module
+----------------------------------
 
-.. automodule:: pincer.objects.voice.voice_region
+.. automodule:: pincer.objects.voice.region
    :members:
    :undoc-members:
    :show-inheritance:
