@@ -244,6 +244,9 @@ def command(
 
 
 class ChatCommandHandler:
+    """
+    Class containing methods used to handle various commands
+    """
     register: Dict[str, ClientCommandStructure] = {}
 
     # TODO: Fix docs
@@ -266,7 +269,12 @@ class ChatCommandHandler:
         self._api_commands = list(map(AppCommand.from_dict, res))
 
     async def __remove_unused_commands(self):
-        # TODO: Fix docs
+        """
+        Remove commands that are not used
+
+        :param to_remove:
+            The command which should be removed
+        """
         to_remove: List[AppCommand] = list()
 
         for api_cmd in self._api_commands:
@@ -288,7 +296,12 @@ class ChatCommandHandler:
         ]
 
     async def __update_existing_commands(self):
-        # TODO: Fix docs
+        """
+        Edit (or) Update any existing command
+
+        :param: to_update:
+            The command which should be updated
+        """
         to_update: Dict[Snowflake, Dict[str, Any]] = {}
 
         def get_changes(
@@ -358,7 +371,12 @@ class ChatCommandHandler:
             )
 
     async def __add_commands(self):
-        # TODO: Fix docs
+        """
+        Add a new command
+
+        :param commands_to_add:
+            The command which should be added
+        """
         commands_to_add: List[ClientCommandStructure] = [
             cmd for cmd in ChatCommandHandler.register.values()
             if cmd.app not in self._api_commands
