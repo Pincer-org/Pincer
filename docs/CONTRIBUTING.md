@@ -34,4 +34,4 @@ pull request might not get approved and will be asked for modifications.
 * Make sure to respect the pep8 rules (including E501), or will be requested.
 
 If you are on our discord, a successful pull request will give you the 
-contributor role! (expect of typos pr)
+contributor role! (except of typos pr)
