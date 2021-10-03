@@ -1,54 +1,49 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from .app_command import AppCommand
-from .application import Application
-from .attachment import Attachment
-from .audit_log import AuditLog
-from .ban import Ban
-from .button import Button
-from .channel import Channel
-from .embed import Embed
-from .emoji import Emoji
-from .followed_channel import FollowedChannel
-from .guild import Guild
-from .guild_member import GuildMember
-from .guild_template import GuildTemplate
-from .guild_widget import GuildWidget
-from .integration import Integration
-from .intents import Intents
-from .interaction_base import MessageInteraction
-from .interactions import Interaction, InteractionFlags
-from .invite import Invite
-from .message import Message, AllowedMentions, AllowedMentionTypes
-from .message_component import MessageComponent
-from .message_reference import MessageReference
-from .message_context import MessageContext
-from .overwrite import Overwrite
-from .reaction import Reaction
-from .role import Role
-from .select_menu import SelectMenu, SelectOption
-from .stage import StageInstance
-from .sticker import Sticker
-from .thread import ThreadMember, ThreadMetadata
+from .app import AppCommand, Interaction, InteractionFlags, ThrottleInterface
+from .app.application import Application
+from .app.intents import Intents
+from .app.interaction_base import MessageInteraction
+from .app.select_menu import SelectMenu, SelectOption
+from .app.throttle_scope import ThrottleScope
+from .guild import Guild, GuildMember, GuildWidget
+from .guild.audit_log import AuditLog
+from .guild.ban import Ban
+from .guild.channel import Channel
+from .guild.followed_channel import FollowedChannel
+from .guild.template import GuildTemplate
+from .guild.invite import Invite
+from .guild.overwrite import Overwrite
+from .guild.role import Role
+from .guild.stage import StageInstance
+from .guild.thread import ThreadMember, ThreadMetadata
+from .guild.webhook import Webhook
+from .guild.welcome_screen import WelcomeScreen
+from .message import AllowedMentions, MessageComponent, Message
+from .message.attachment import Attachment
+from .message.button import Button
+from .message.embed import Embed
+from .message.emoji import Emoji
+from .message.context import MessageContext
+from .message.reference import MessageReference
+from .message.reaction import Reaction
+from .message.sticker import Sticker
+from .message.user_message import UserMessage, AllowedMentionTypes
 from .user import User
-from .user_message import UserMessage
-from .voice_region import VoiceRegion
-from .voice_state import VoiceState
-from .webhook import Webhook
-from .welcome_screen import WelcomeScreen
-from .throttle_scope import ThrottleScope
-from .throttling import ThrottleInterface
+from .user.integration import Integration
+from .user.voice_state import VoiceState
+from .voice.region import VoiceRegion
 
 __all__ = (
-    "AllowedMentions", "AllowedMentionTypes", "AppCommand", "Application",
-    "Attachment", "AuditLog", "Ban", "Button", "Channel", "Embed", "Emoji",
-    "FollowedChannel", "Guild", "GuildMember", "GuildTemplate", "GuildWidget",
-    "Integration", "Intents", "Interaction", "InteractionFlags", "Invite",
-    "Message", "MessageComponent", "MessageContext", "MessageInteraction",
-    "MessageReference", "Overwrite", "Reaction", "Role", "SelectMenu",
-    "SelectOption", "StageInstance", "Sticker", "ThreadMember",
-    "ThreadMetadata", "ThrottleInterface", "ThrottleScope", "User",
-    "UserMessage", "UserMessage", "VoiceRegion", "VoiceState", "Webhook",
-    "WelcomeScreen"
+    "AllowedMentionTypes", "AllowedMentions", "AppCommand",
+    "Application", "Attachment", "AuditLog", "Ban", "Button", "Channel",
+    "Embed", "Emoji", "FollowedChannel", "Guild", "GuildMember",
+    "GuildTemplate", "GuildWidget", "Integration", "Intents", "Interaction",
+    "InteractionFlags", "Invite", "Message", "MessageComponent",
+    "MessageContext", "MessageInteraction", "MessageReference", "Overwrite",
+    "Reaction", "Role", "SelectMenu", "SelectOption", "StageInstance",
+    "Sticker", "ThreadMember", "ThreadMetadata", "ThrottleInterface",
+    "ThrottleScope", "User", "UserMessage", "UserMessage", "VoiceRegion",
+    "VoiceState", "Webhook", "WelcomeScreen"
 )

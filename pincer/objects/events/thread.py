@@ -4,9 +4,9 @@
 from dataclasses import dataclass
 from typing import List
 
-from pincer.objects.channel import Channel
-from pincer.objects.thread import ThreadMember
-from pincer.utils import APIObject, APINullable, MISSING, Snowflake
+from ..guild.channel import Channel
+from ..guild.thread import ThreadMember
+from ...utils import APIObject, APINullable, MISSING, Snowflake
 
 
 @dataclass
