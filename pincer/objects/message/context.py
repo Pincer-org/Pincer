@@ -7,7 +7,7 @@ from typing import Optional, Union, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ..app import ClientCommandStructure
-    from ..guild.guild_member import GuildMember
+    from ..guild.member import GuildMember
     from ..user import User
     from ...utils.snowflake import Snowflake
 

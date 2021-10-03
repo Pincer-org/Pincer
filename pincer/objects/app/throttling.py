@@ -11,7 +11,7 @@ from ...utils.slidingwindow import SlidingWindow
 
 if TYPE_CHECKING:
     from typing import Dict, Optional
-    from ..message.message_context import MessageContext
+    from ..message.context import MessageContext
     from ...utils import Coro
 
 

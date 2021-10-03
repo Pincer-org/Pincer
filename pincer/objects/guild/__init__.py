@@ -15,10 +15,10 @@ from .guild import (
     VerificationLevel, DefaultMessageNotificationLevel, SystemChannelFlags,
     GuildFeature, Guild
 )
-from .guild_features import GuildFeatures
-from .guild_member import GuildMember
-from .guild_template import GuildTemplate
-from .guild_widget import GuildWidget
+from .features import GuildFeatures
+from .member import GuildMember
+from .template import GuildTemplate
+from .widget import GuildWidget
 from .invite import (
     InviteTargetType, InviteStageInstance, InviteMetadata, Invite
 )

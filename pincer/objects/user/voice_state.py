@@ -10,7 +10,7 @@ from ...utils.api_object import APIObject
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from ..guild.guild_member import GuildMember
+    from ..guild.member import GuildMember
     from ...utils import APINullable
     from ...utils.snowflake import Snowflake
     from ...utils.timestamp import Timestamp

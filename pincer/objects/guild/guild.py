@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from enum import Enum, auto, IntEnum
 from typing import Optional, List, overload, TYPE_CHECKING
 
-from .guild_member import GuildMember
+from .member import GuildMember
 from ..events.presence import PresenceUpdateEvent
 from ..guild.channel import Channel
 from ..guild.role import Role

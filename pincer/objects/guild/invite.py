@@ -15,7 +15,7 @@ from ...utils.types import MISSING
 if TYPE_CHECKING:
     from ..guild import Guild
     from ..user import User
-    from ..guild.guild_member import GuildMember
+    from ..guild.member import GuildMember
     from ...utils import APINullable, Timestamp
 
 

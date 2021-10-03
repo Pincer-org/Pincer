@@ -7,11 +7,11 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Dict, TYPE_CHECKING
 
-from .app_command import AppCommandInteractionDataOption
+from .command import AppCommandInteractionDataOption
 from .interaction_base import InteractionType
 from ..app.select_menu import SelectOption
-from ..guild.guild_member import GuildMember
-from ..message.message_context import MessageContext
+from ..guild.member import GuildMember
+from ..message.context import MessageContext
 from ..message.user_message import UserMessage
 from ..user import User
 from ...core.http import HTTPClient

@@ -3,7 +3,7 @@
 
 from dataclasses import dataclass
 
-from ..guild.guild_member import GuildMember
+from ..guild.member import GuildMember
 from ...utils.api_object import APIObject
 from ...utils.snowflake import Snowflake
 from ...utils.types import APINullable, MISSING

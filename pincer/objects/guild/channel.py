@@ -14,7 +14,7 @@ from ...utils.types import MISSING
 if TYPE_CHECKING:
     from ..guild.overwrite import Overwrite
     from ..guild.thread import ThreadMetadata
-    from ..guild.guild_member import GuildMember
+    from ..guild.member import GuildMember
     from ..user import User
     from ... import Client
     from ...core.http import HTTPClient

@@ -4,7 +4,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from ..guild.guild_member import GuildMember
+from ..guild.member import GuildMember
 from ..message.emoji import Emoji
 from ...utils.api_object import APIObject
 from ...utils.snowflake import Snowflake

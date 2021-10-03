@@ -1,7 +1,7 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from .app_command import (
+from .command import (
     AppCommandType, AppCommandOptionType, AppCommandInteractionDataOption,
     AppCommandOptionChoice, AppCommandOption, AppCommand,
     ClientCommandStructure

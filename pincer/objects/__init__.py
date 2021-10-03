@@ -12,7 +12,7 @@ from .guild.audit_log import AuditLog
 from .guild.ban import Ban
 from .guild.channel import Channel
 from .guild.followed_channel import FollowedChannel
-from .guild.guild_template import GuildTemplate
+from .guild.template import GuildTemplate
 from .guild.invite import Invite
 from .guild.overwrite import Overwrite
 from .guild.role import Role
@@ -25,15 +25,15 @@ from .message.attachment import Attachment
 from .message.button import Button
 from .message.embed import Embed
 from .message.emoji import Emoji
-from .message.message_context import MessageContext
-from .message.message_reference import MessageReference
+from .message.context import MessageContext
+from .message.reference import MessageReference
 from .message.reaction import Reaction
 from .message.sticker import Sticker
 from .message.user_message import UserMessage, AllowedMentionTypes
 from .user import User
 from .user.integration import Integration
 from .user.voice_state import VoiceState
-from .voice.voice_region import VoiceRegion
+from .voice.region import VoiceRegion
 
 __all__ = (
     "AllowedMentionTypes", "AllowedMentions", "AppCommand",

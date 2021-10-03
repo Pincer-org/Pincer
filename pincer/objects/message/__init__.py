@@ -9,9 +9,9 @@ from .embed import (
 )
 from .emoji import Emoji
 from .message import AllowedMentions, Message
-from .message_component import MessageComponent
-from .message_context import MessageContext
-from .message_reference import MessageReference
+from .component import MessageComponent
+from .context import MessageContext
+from .reference import MessageReference
 from .reaction import Reaction
 from .sticker import (
     StickerType, StickerFormatType, Sticker, StickerItem, StickerPack

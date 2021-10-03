@@ -10,12 +10,12 @@ from typing import List, Optional, Union, TYPE_CHECKING
 from ..app.application import Application
 from ..app.interaction_base import MessageInteraction
 from ..guild.channel import Channel, ChannelMention
-from ..guild.guild_member import GuildMember
+from ..guild.member import GuildMember
 from ..guild.role import Role
 from ..message.attachment import Attachment
 from ..message.embed import Embed
-from ..message.message_component import MessageComponent
-from ..message.message_reference import MessageReference
+from ..message.component import MessageComponent
+from ..message.reference import MessageReference
 from ..message.reaction import Reaction
 from ..message.sticker import StickerItem
 from ..user import User

@@ -17,7 +17,7 @@ from ...utils.snowflake import Snowflake
 
 if TYPE_CHECKING:
     from ..app import InteractionFlags
-    from .message_component import MessageComponent
+    from .component import MessageComponent
 
 
 @dataclass

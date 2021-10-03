@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import Any, List, Optional
 
 from .presence import PresenceUpdateEvent
-from ..guild.guild_member import GuildMember
+from ..guild.member import GuildMember
 from ..guild.role import Role
 from ..message.emoji import Emoji
 from ..message.sticker import Sticker
