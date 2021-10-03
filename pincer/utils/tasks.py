@@ -58,7 +58,7 @@ class Task:
         """
         if self.running:
             raise TaskAlreadyRunning(
-                f'Task `{self.coro.__name__}` is already running.'
+                f'Task `{self.coro.__name__}` is already running.', self
             )
 
         self._scheduler.register(self)
@@ -67,7 +67,7 @@ class Task:
         """Cancel the task."""
         if not self.running:
             raise TaskCancelError(
-                f'Task `{self.coro.__name__}` is not running.'
+                f'Task `{self.coro.__name__}` is not running.', self
             )
 
         self._handle.cancel()

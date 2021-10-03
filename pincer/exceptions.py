@@ -133,22 +133,29 @@ class EmbedFieldError(PincerError, ValueError):
         )
 
 
-class TaskAlreadyRunning(PincerError):
+class TaskError(PincerError):
+    """Base class for exceptions that are related to tasks."""
+    def __init__(self, message: str, task=None):
+        self.task = task
+        super().__init__(message)
+
+
+class TaskAlreadyRunning(TaskError):
     """Exception that is raised when the user tries to start a running task"""
 
 
-class TaskCancelError(PincerError):
+class TaskCancelError(TaskError):
     """Exception that is raised when a task cannot be cancelled."""
 
 
-class TaskIsNotCoroutine(PincerError):
+class TaskIsNotCoroutine(TaskError):
     """
     Exception that is raised when the provided function for a task is not
     a coroutine.
     """
 
 
-class TaskInvalidDelay(PincerError):
+class TaskInvalidDelay(TaskError):
     """Exception that is raised when the provided delay is invalid."""
 
 
