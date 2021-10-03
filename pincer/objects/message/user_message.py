@@ -7,29 +7,29 @@ from dataclasses import dataclass
 from enum import IntEnum, Enum
 from typing import List, Optional, Union, TYPE_CHECKING
 
-from pincer._config import GatewayConfig
-from pincer.core.http import HTTPClient
-from pincer.objects.app.application import Application
-from pincer.objects.app.interaction_base import MessageInteraction
-from pincer.objects.guild.channel import Channel, ChannelMention
-from pincer.objects.guild.guild_member import GuildMember
-from pincer.objects.guild.role import Role
-from pincer.objects.message.attachment import Attachment
-from pincer.objects.message.embed import Embed
-from pincer.objects.message.message_component import MessageComponent
-from pincer.objects.message.message_reference import MessageReference
-from pincer.objects.message.reaction import Reaction
-from pincer.objects.message.sticker import StickerItem
-from pincer.objects.user import User
-from pincer.utils.api_object import APIObject
-from pincer.utils.conversion import convert
-from pincer.utils.snowflake import Snowflake
-from pincer.utils.timestamp import Timestamp
-from pincer.utils.types import MISSING
+from ..app.application import Application
+from ..app.interaction_base import MessageInteraction
+from ..guild.channel import Channel, ChannelMention
+from ..guild.guild_member import GuildMember
+from ..guild.role import Role
+from ..message.attachment import Attachment
+from ..message.embed import Embed
+from ..message.message_component import MessageComponent
+from ..message.message_reference import MessageReference
+from ..message.reaction import Reaction
+from ..message.sticker import StickerItem
+from ..user import User
+from ..._config import GatewayConfig
+from ...core.http import HTTPClient
+from ...utils.api_object import APIObject
+from ...utils.conversion import convert
+from ...utils.snowflake import Snowflake
+from ...utils.timestamp import Timestamp
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from pincer import Client
-    from pincer.utils import APINullable
+    from ... import Client
+    from ...utils import APINullable
 
 
 class MessageActivityType(IntEnum):

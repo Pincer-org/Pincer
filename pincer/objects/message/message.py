@@ -6,14 +6,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Union, List, Optional, TYPE_CHECKING
 
-from pincer.exceptions import CommandReturnIsEmpty
-from pincer.objects.app.interaction_base import CallbackType
-from pincer.objects.guild.role import Role
-from pincer.objects.message.embed import Embed
-from pincer.objects.message.user_message import AllowedMentionTypes
-from pincer.objects.user import User
-from pincer.utils.api_object import APIObject
-from pincer.utils.snowflake import Snowflake
+from ..app.interaction_base import CallbackType
+from ..guild.role import Role
+from ..message.embed import Embed
+from ..message.user_message import AllowedMentionTypes
+from ..user import User
+from ...exceptions import CommandReturnIsEmpty
+from ...utils.api_object import APIObject
+from ...utils.snowflake import Snowflake
 
 if TYPE_CHECKING:
     from ..app import InteractionFlags

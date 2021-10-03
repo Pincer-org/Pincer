@@ -6,10 +6,10 @@ from enum import auto, Enum
 from typing import List, Optional, Tuple, Union
 
 from .presence import Activity
-from pincer.objects.app.intents import Intents
-from pincer.utils.api_object import APIObject
-from pincer.utils.types import APINullable, MISSING
-from pincer.utils.snowflake import Snowflake
+from ..app.intents import Intents
+from ...utils.api_object import APIObject
+from ...utils.snowflake import Snowflake
+from ...utils.types import APINullable, MISSING
 
 
 @dataclass

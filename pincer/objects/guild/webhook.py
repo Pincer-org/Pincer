@@ -7,15 +7,15 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Optional, TYPE_CHECKING
 
-from pincer.objects.guild import Guild
-from pincer.objects.guild.channel import Channel
-from pincer.objects.user import User
-from pincer.utils.api_object import APIObject
-from pincer.utils.snowflake import Snowflake
-from pincer.utils.types import MISSING
+from ..guild import Guild
+from ..guild.channel import Channel
+from ..user import User
+from ...utils.api_object import APIObject
+from ...utils.snowflake import Snowflake
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from pincer.utils import APINullable
+    from ...utils import APINullable
 
 
 class WebhookType(IntEnum):

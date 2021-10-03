@@ -7,23 +7,23 @@ from dataclasses import dataclass, field
 from enum import Enum, auto, IntEnum
 from typing import Optional, List, overload, TYPE_CHECKING
 
-from pincer.exceptions import UnavailableGuildError
-from pincer.objects.events.presence import PresenceUpdateEvent
-from pincer.objects.guild.channel import Channel
-from pincer.objects.guild.role import Role
-from pincer.objects.guild.stage import StageInstance
-from pincer.objects.guild.welcome_screen import WelcomeScreen
-from pincer.objects.message.emoji import Emoji
-from pincer.objects.message.sticker import Sticker
-from pincer.objects.user.voice_state import VoiceState
-from pincer.utils.api_object import APIObject
-from pincer.utils.types import MISSING
 from .guild_member import GuildMember
+from ..events.presence import PresenceUpdateEvent
+from ..guild.channel import Channel
+from ..guild.role import Role
+from ..guild.stage import StageInstance
+from ..guild.welcome_screen import WelcomeScreen
+from ..message.emoji import Emoji
+from ..message.sticker import Sticker
+from ..user.voice_state import VoiceState
+from ...exceptions import UnavailableGuildError
+from ...utils.api_object import APIObject
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from pincer import Client
-    from pincer.core.http import HTTPClient
-    from pincer.utils import APINullable, Snowflake, Timestamp
+    from ... import Client
+    from ...core.http import HTTPClient
+    from ...utils import APINullable, Snowflake, Timestamp
 
 
 class PremiumTier(IntEnum):

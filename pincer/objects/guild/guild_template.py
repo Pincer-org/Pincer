@@ -2,15 +2,16 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Optional, TYPE_CHECKING
 
-from pincer.utils import APIObject
+from ...utils import APIObject
 
 if TYPE_CHECKING:
-    from pincer.objects.guild import Guild
-    from pincer.objects.user import User
-    from pincer.utils import Snowflake, Timestamp
+    from ..guild import Guild
+    from ..user import User
+    from ...utils import Snowflake, Timestamp
 
 
 @dataclass

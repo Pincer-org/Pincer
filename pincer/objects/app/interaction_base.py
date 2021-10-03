@@ -1,19 +1,18 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-
 from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
 from typing import Dict, TYPE_CHECKING
 
-from pincer.utils.api_object import APIObject
-from pincer.utils.types import MISSING
+from ...utils.api_object import APIObject
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from pincer.utils import Snowflake, APINullable
-    from pincer.objects.user import User
+    from ..user import User
+    from ...utils import Snowflake, APINullable
 
 
 class CallbackType(IntEnum):

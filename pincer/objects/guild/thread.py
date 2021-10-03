@@ -6,11 +6,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from pincer.utils.api_object import APIObject
-from pincer.utils.types import MISSING
+from ...utils.api_object import APIObject
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from pincer.utils import APINullable, Snowflake, Timestamp
+    from ...utils import APINullable, Snowflake, Timestamp
 
 
 @dataclass

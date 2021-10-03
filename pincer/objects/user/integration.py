@@ -7,12 +7,12 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Optional, TYPE_CHECKING
 
-from pincer.utils.api_object import APIObject
-from pincer.utils.types import MISSING
+from ...utils.api_object import APIObject
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from pincer.utils import APINullable, Snowflake, Timestamp
-    from pincer.objects.user import User
+    from .user import User
+    from ...utils import APINullable, Snowflake, Timestamp
 
 
 class IntegrationExpireBehavior(IntEnum):

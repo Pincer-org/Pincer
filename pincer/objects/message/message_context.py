@@ -7,9 +7,9 @@ from typing import Optional, Union, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ..app import ClientCommandStructure
-    from pincer.objects.guild.guild_member import GuildMember
-    from pincer.objects.user import User
-    from pincer.utils.snowflake import Snowflake
+    from ..guild.guild_member import GuildMember
+    from ..user import User
+    from ...utils.snowflake import Snowflake
 
 
 @dataclass

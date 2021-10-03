@@ -6,17 +6,17 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional, List, TYPE_CHECKING
 
-from pincer.core.http import HTTPClient
-from pincer.objects.user import User
-from pincer.utils.api_object import APIObject
-from pincer.utils.conversion import convert
-from pincer.utils.snowflake import Snowflake
-from pincer.utils.timestamp import Timestamp
-from pincer.utils.types import MISSING
+from ..user import User
+from ...core.http import HTTPClient
+from ...utils.api_object import APIObject
+from ...utils.conversion import convert
+from ...utils.snowflake import Snowflake
+from ...utils.timestamp import Timestamp
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from pincer import Client
-    from pincer.utils.types import APINullable
+    from ... import Client
+    from ...utils.types import APINullable
 
 
 @dataclass

@@ -7,15 +7,15 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Optional, TYPE_CHECKING
 
-from pincer.core.http import HTTPClient
-from pincer.utils.api_object import APIObject
-from pincer.utils.conversion import convert
-from pincer.utils.snowflake import Snowflake
-from pincer.utils.types import MISSING
+from ...core.http import HTTPClient
+from ...utils.api_object import APIObject
+from ...utils.conversion import convert
+from ...utils.snowflake import Snowflake
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from pincer import Client
-    from pincer.utils import APINullable
+    from ... import Client
+    from ...utils import APINullable
 
 
 class PremiumTypes(IntEnum):

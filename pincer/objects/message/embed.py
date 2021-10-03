@@ -8,12 +8,12 @@ from datetime import datetime
 from re import match
 from typing import Any, Callable, Dict, Iterable, Union, Optional, TYPE_CHECKING
 
-from pincer.exceptions import InvalidUrlError, EmbedFieldError
-from pincer.utils.api_object import APIObject
-from pincer.utils.types import MISSING
+from ...exceptions import InvalidUrlError, EmbedFieldError
+from ...utils.api_object import APIObject
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from pincer.utils import APINullable
+    from ...utils import APINullable
 
 
 def _field_size(_field: str) -> int:

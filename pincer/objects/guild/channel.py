@@ -7,18 +7,18 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Dict, Optional, List, TYPE_CHECKING
 
-from pincer._config import GatewayConfig
-from pincer.utils.api_object import APIObject
-from pincer.utils.types import MISSING
+from ..._config import GatewayConfig
+from ...utils.api_object import APIObject
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from pincer import Client
-    from pincer.core.http import HTTPClient
-    from pincer.utils import APINullable, Snowflake, Timestamp
-    from pincer.objects.guild.overwrite import Overwrite
-    from pincer.objects.guild.thread import ThreadMetadata
-    from pincer.objects.guild.guild_member import GuildMember
-    from pincer.objects.user import User
+    from ..guild.overwrite import Overwrite
+    from ..guild.thread import ThreadMetadata
+    from ..guild.guild_member import GuildMember
+    from ..user import User
+    from ... import Client
+    from ...core.http import HTTPClient
+    from ...utils import APINullable, Snowflake, Timestamp
 
 
 class ChannelType(IntEnum):

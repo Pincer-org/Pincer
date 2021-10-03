@@ -6,13 +6,13 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 from .throttle_scope import ThrottleScope
-from pincer.exceptions import CommandCooldownError
-from pincer.utils.slidingwindow import SlidingWindow
+from ...exceptions import CommandCooldownError
+from ...utils.slidingwindow import SlidingWindow
 
 if TYPE_CHECKING:
     from typing import Dict, Optional
-    from pincer.objects.message.message_context import MessageContext
-    from pincer.utils import Coro
+    from ..message.message_context import MessageContext
+    from ...utils import Coro
 
 
 class ThrottleInterface(ABC):

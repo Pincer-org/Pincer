@@ -7,15 +7,15 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import List, Union, TYPE_CHECKING
 
-from pincer.utils.conversion import convert
-from pincer.utils.extraction import get_index
-from pincer.utils.api_object import APIObject
-from pincer.utils.types import MISSING
-from pincer.utils.snowflake import Snowflake
+from ...utils.api_object import APIObject
+from ...utils.conversion import convert
+from ...utils.extraction import get_index
+from ...utils.snowflake import Snowflake
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from pincer.objects.app.throttle_scope import ThrottleScope
-    from pincer.utils.types import APINullable, Coro, choice_value_types
+    from ..app.throttle_scope import ThrottleScope
+    from ...utils.types import APINullable, Coro, choice_value_types
 
 
 class AppCommandType(IntEnum):

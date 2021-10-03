@@ -7,16 +7,16 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Optional, List, TYPE_CHECKING
 
-from pincer.objects.app.application import Application
-from pincer.objects.guild.channel import Channel
-from pincer.utils.api_object import APIObject
-from pincer.utils.types import MISSING
+from ..app.application import Application
+from ..guild.channel import Channel
+from ...utils.api_object import APIObject
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from pincer.objects.guild import Guild
-    from pincer.objects.user import User
-    from pincer.objects.guild.guild_member import GuildMember
-    from pincer.utils import APINullable, Timestamp
+    from ..guild import Guild
+    from ..user import User
+    from ..guild.guild_member import GuildMember
+    from ...utils import APINullable, Timestamp
 
 
 class InviteTargetType(IntEnum):

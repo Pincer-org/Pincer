@@ -2,14 +2,15 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import List, TYPE_CHECKING
 
-from pincer.objects.message.emoji import Emoji
-from pincer.utils import APIObject, MISSING
+from ..message.emoji import Emoji
+from ...utils import APIObject, MISSING
 
 if TYPE_CHECKING:
-    from pincer.utils import APINullable
+    from ...utils import APINullable
 
 
 @dataclass

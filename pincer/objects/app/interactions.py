@@ -8,22 +8,20 @@ from enum import IntEnum
 from typing import Dict, TYPE_CHECKING
 
 from .app_command import AppCommandInteractionDataOption
-
-from pincer.objects.guild.guild_member import GuildMember
 from .interaction_base import InteractionType
-from pincer.objects.message.message_context import MessageContext
-
-from pincer.objects.app.select_menu import SelectOption
-from pincer.objects.user import User
-from pincer.objects.message.user_message import UserMessage
-from pincer.core.http import HTTPClient
-from pincer.utils import APIObject, MISSING, Snowflake, convert
+from ..app.select_menu import SelectOption
+from ..guild.guild_member import GuildMember
+from ..message.message_context import MessageContext
+from ..message.user_message import UserMessage
+from ..user import User
+from ...core.http import HTTPClient
+from ...utils import APIObject, MISSING, Snowflake, convert
 
 if TYPE_CHECKING:
-    from pincer import Client
-    from pincer.utils import APINullable
-    from pincer.objects.guild.channel import Channel
-    from pincer.objects.guild.role import Role
+    from ..guild.channel import Channel
+    from ..guild.role import Role
+    from ... import Client
+    from ...utils import APINullable
 
 
 class InteractionFlags(IntEnum):

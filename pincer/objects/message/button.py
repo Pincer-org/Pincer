@@ -7,12 +7,12 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import TYPE_CHECKING
 
-from pincer.utils.api_object import APIObject
-from pincer.utils.types import MISSING
+from ...utils.api_object import APIObject
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from pincer.objects.message.emoji import Emoji
-    from pincer.utils import APINullable
+    from ..message.emoji import Emoji
+    from ...utils import APINullable
 
 
 class ButtonStyle(IntEnum):

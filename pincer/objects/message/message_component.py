@@ -6,14 +6,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, TYPE_CHECKING
 
-from pincer.utils.api_object import APIObject
-from pincer.utils.types import MISSING
+from ...utils.api_object import APIObject
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from pincer.utils import APINullable
-    from pincer.objects.message.button import ButtonStyle
-    from pincer.objects.message.emoji import Emoji
-    from pincer.objects.app.select_menu import SelectOption
+    from ..app.select_menu import SelectOption
+    from ..message.button import ButtonStyle
+    from ..message.emoji import Emoji
+    from ...utils import APINullable
 
 
 @dataclass

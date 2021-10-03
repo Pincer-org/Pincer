@@ -7,15 +7,15 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Any, Optional, List, TYPE_CHECKING
 
-from pincer.utils.api_object import APIObject
-from pincer.utils.types import MISSING
+from ...utils.api_object import APIObject
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from pincer.objects.guild.channel import Channel
-    from pincer.objects.user.integration import Integration
-    from pincer.objects.user import User
-    from pincer.objects.guild.webhook import Webhook
-    from pincer.utils import APINullable, Snowflake
+    from ..guild.channel import Channel
+    from ..user.integration import Integration
+    from ..user import User
+    from ..guild.webhook import Webhook
+    from ...utils import APINullable, Snowflake
 
 
 class AuditLogEvent(IntEnum):

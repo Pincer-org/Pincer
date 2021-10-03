@@ -2,15 +2,15 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 from __future__ import annotations
+
 from dataclasses import dataclass, MISSING
 from typing import List, TYPE_CHECKING
 
-from pincer.utils import APIObject
+from ...utils import APIObject
 
 if TYPE_CHECKING:
-    from pincer.objects import Integration
-    from pincer.objects.user import VisibilityType
-    from pincer.utils import APINullable
+    from . import Integration, VisibilityType
+    from ...utils import APINullable
 
 
 @dataclass
