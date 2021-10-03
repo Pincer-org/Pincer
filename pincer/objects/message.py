@@ -4,12 +4,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from pincer.utils.types import MISSING
-from PIL.Image import Image
 from typing import Union, List, Optional, TYPE_CHECKING
 
 from .embed import Embed
-from .attachment import Attachment
 from .interaction_base import CallbackType
 
 from .role import Role
@@ -51,7 +48,6 @@ class Message:
     content: str = ''
     tts: Optional[bool] = False
     embeds: Optional[List[Embed]] = None
-    attachments: Optional[List[Union[Attachment,Image]]] = MISSING
     allowed_mentions: Optional[AllowedMentions] = None
     components: Optional[List[MessageComponent]] = None
     flags: Optional[InteractionFlags] = None
@@ -81,3 +77,6 @@ class Message:
             "type": self.type or CallbackType.MESSAGE,
             "data": {k: i for k, i in resp.items() if i}
         }
+
+    def serialize_to_form_data(self):
+        pass

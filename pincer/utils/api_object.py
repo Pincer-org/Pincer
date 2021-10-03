@@ -6,7 +6,7 @@ from __future__ import annotations
 import copy
 from dataclasses import dataclass, fields, _is_dataclass_instance
 from enum import Enum
-from typing import Dict, Union, Generic, TypeVar, Any
+from typing import Dict, Tuple, Union, Generic, TypeVar, Any
 
 from .types import MissingType
 

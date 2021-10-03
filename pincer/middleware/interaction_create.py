@@ -41,6 +41,7 @@ async def reply(self, interaction: Interaction, message):
     :param message:
         The message to reply with.
     """
+
     await self.http.post(
         f"interactions/{interaction.id}/{interaction.token}/callback",
         message.to_dict()
