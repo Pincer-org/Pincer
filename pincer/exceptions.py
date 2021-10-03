@@ -142,7 +142,10 @@ class TaskCancelError(PincerError):
 
 
 class TaskIsNotCoroutine(PincerError):
-    """Exception that is raised when the provided function for a task is not a coroutine."""
+    """
+    Exception that is raised when the provided function for a task is not
+    a coroutine.
+    """
 
 
 class TaskInvalidDelay(PincerError):

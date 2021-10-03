@@ -52,7 +52,10 @@ class Task:
         return self._handle is not None
 
     def start(self):
-        """Register the task in the TaskScheduler and start the execution of the task."""
+        """
+        Register the task in the TaskScheduler and start
+        the execution of the task.
+        """
         if self.running:
             raise TaskAlreadyRunning(
                 f'Task `{self.coro.__name__}` is already running.'
