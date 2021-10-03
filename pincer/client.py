@@ -6,7 +6,14 @@ from __future__ import annotations
 import logging
 from asyncio import iscoroutinefunction, run, ensure_future
 from inspect import isasyncgenfunction
-from typing import Optional, Any, Union, Dict, Tuple, List
+from typing import (
+    Any,
+    Dict,
+    List,
+    Optional,
+    Tuple,
+    Union
+)
 
 from . import __package__
 from ._config import events
@@ -16,12 +23,13 @@ from .core.gateway import Dispatcher
 from .core.http import HTTPClient
 from .exceptions import InvalidEventName
 from .middleware import middleware
-from .objects.user.user import User
-from .objects.app.intents import Intents
-from .objects.guild.guild import Guild
+from .objects.user import User
+from .objects.guild import Guild
 from .objects.app.throttling import ThrottleInterface
+from .objects.app.intents import Intents
 from pincer.objects.app.throttling import DefaultThrottleHandler
-from .utils import get_index, should_pass_cls, Coro
+from .utils import get_index, should_pass_cls
+from .utils.types import Coro
 
 _log = logging.getLogger(__package__)
 
@@ -50,8 +58,7 @@ for event in events:
 
 
 def event_middleware(call: str, *, override: bool = False):
-    """
-    Middleware are methods which can be registered with this decorator.
+    """Middleware are methods which can be registered with this decorator.
     These methods are invoked before any ``on_`` event.
     As the ``on_`` event is the final call.
 
@@ -93,18 +100,14 @@ def event_middleware(call: str, *, override: bool = False):
         >>> async def on_ready(bot: User):
         >>>     print(f"Signed in as {bot}")
 
-
-    :param call:
-        The call where the method should be registered.
-
-    Keyword Arguments:
-
-    :param override:
-        Setting this to True will allow you to override existing
-        middleware. Usage of this is discouraged, but can help you out
-        of some situations.
+    Parameters
+    ----------
+    call : str
+        The call that the function should tie to
+    override : bool, optional
+        If it should override default middleware, 
+        usually shouldn't be used, by default False
     """
-
     def decorator(func: Coro):
         if override:
             _log.warning(
@@ -138,29 +141,41 @@ for event, middleware in middleware.items():
 
 
 class Client(Dispatcher):
+    """The client is the main instance which is between the programmer
+    and the discord API.
+
+    This client represents your bot.
+
+    Attributes
+    ----------
+    bot: :class:`~objects.user.User`
+        THe user object of the client
+    recieved_message: :class:`str`
+        The default message which will be sent when no response is given.
+    http: :class:`~core.http.HTTPClient`
+        The http client used to comminicate with the discord API
+    """
     def __init__(
             self,
             token: str, *,
             received: str = None,
             intents: Intents = None,
-            throttler: ThrottleInterface = DefaultThrottleHandler
+            throttler: ThrottleInterface = None
     ):
-        """
-        The client is the main instance which is between the programmer
-            and the discord API.
+        """Create a new client instance
 
-        This client represents your bot.
-
-        :param token:
-            The secret bot token which can be found in
-            `<https://discord.com/developers/applications/<bot_id>/bot>`_
-
-        :param received:
-            The default message which will be sent when no response is
-            given.
-
-        :param intents:
-            The discord intents for your client.
+        Parameters
+        ----------
+        token :
+            the token to login with your bot from the developer portal
+        received 0:
+            The default message which will be sent when no response is given., 
+            by default None
+        intents :
+            The discord intents to use, by default None
+        throttler :
+            The throttler for your client (generally not used), 
+            by default None
         """
         super().__init__(
             token,
@@ -174,22 +189,25 @@ class Client(Dispatcher):
         )
 
         self.bot: Optional[User] = None
-        self.received_message = received or "Command arrived successfully!"
-        self.http = HTTPClient(token)
-        self.throttler = throttler
+        self.received_message: str = received or \
+            "Command arrived successfully!"
+        self.http: HTTPClient = HTTPClient(token)
+        self.throttler: ThrottleInterface = (
+            throttler or DefaultThrottleHandler)
 
     @property
-    def chat_commands(self):
-        """
+    def chat_commands(self) -> List[str]:
+        """List of chat commands
+        
         Get a list of chat command calls which have been registered in
-        the ChatCommandHandler.
+        the :class:`~.ChatCommandHandler`\.
         """
         return [cmd.app.name for cmd in ChatCommandHandler.register.values()]
 
+
     @staticmethod
-    def event(coroutine: Coro):
-        """
-        Register a Discord gateway event listener. This event will get
+    def event(coroutine: Coro) -> Coro:
+        """Register a Discord gateway event listener. This event will get
         called when the client receives a new event update from Discord
         which matches the event name.
 
@@ -229,17 +247,21 @@ class Client(Dispatcher):
             >>> if __name__ == "__main__":
             ...     BotClient("token").run()
 
+        Parameters
+        ----------
+        coroutine :
+            The coroutine function to register 
+            (the decorator does this automatically)
 
-        :param coroutine: # TODO: add info
-
-        :raises TypeError:
-            If the method is not a coroutine.
-
-        :raises InvalidEventName:
-            If the event name does not start with ``on_``, has already
-            been registered or is not a valid event name.
+        Raises
+        ------
+        TypeError
+            If the function is not a coro
+        InvalidEventName
+            If the function name is not a valid event (on_x)
+        InvalidEventName
+            If it is not a valid event name
         """
-
         if not iscoroutinefunction(coroutine) \
                 and not isasyncgenfunction(coroutine):
             raise TypeError(
@@ -264,12 +286,20 @@ class Client(Dispatcher):
 
     @staticmethod
     def get_event_coro(name: str) -> Optional[Coro]:
+        """get the coroutine for an event
+
+        Parameters
+        ----------
+        name :
+            name of the event
+        """
         call = _events.get(name.strip().lower())
         if iscoroutinefunction(call) or isasyncgenfunction(call):
             return call
 
     def run(self):
-        """Start the event listener"""
+        """start the event listener
+        """
         self.start_loop()
         run(self.http.close())
 
@@ -280,28 +310,28 @@ class Client(Dispatcher):
             *args,
             **kwargs
     ) -> Tuple[Optional[Coro], List[Any], Dict[str, Any]]:
-        """
-        Handles all middleware recursively. Stops when it has found an
+        """Handles all middleware recursively. Stops when it has found an
         event name which starts with ``on_``.
+        
+        Returns a tuple where the first element is the final executor
+        (so the event) its index in ``_events``.
 
-        :param payload:
-            The original payload for the event.
+        The second and third element are the ``*args``
+        and ``**kwargs`` for the event.
 
-        :param key:
-            The index of the middleware in ``_events``.
+        Parameters
+        ----------
+        payload :
+            The original payload for the event
+        key :
+            The index of the middleware in ``_events``
 
-        :param \\*args:
-            The arguments which will be passed to the middleware.
-
-        :param \\*\\*kwargs:
-            The named arguments which will be passed to the middleware.
-
-        :return:
-            A tuple where the first element is the final executor
-            (so the event) its index in ``_events``.
-
-            The second and third element are the ``*args``
-            and ``**kwargs`` for the event.
+        Raises
+        ------
+        RuntimeError
+            The return type must be a tuple
+        RuntimeError
+            Middleware has not been registered
         """
         ware: MiddlewareType = _events.get(key)
         next_call, arguments, params = ware, [], {}
@@ -336,20 +366,20 @@ class Client(Dispatcher):
             *args,
             **kwargs
     ):
-        """
+        """|coro|
         Raises an error if no appropriate error event has been found.
 
-        :param error:
-            The error which should be raised or passed to the event.
+        Parameters
+        ----------
+        error :
+            The error that should be passed to the event
+        name :
+            the name of the event, by default "on_error"
 
-        :param name:
-            The name of the event, and how it is registered by the client.
-
-        :param \\*args:
-            The arguments for the event.
-
-        :param \\*kwargs:
-            The named arguments for the event.
+        Raises
+        ------
+        error
+            if ``call := self.get_event_coro(name)`` is ``False``
         """
         if call := self.get_event_coro(name):
             self.execute_event(call, error, *args, **kwargs)
@@ -357,19 +387,13 @@ class Client(Dispatcher):
             raise error
 
     def execute_event(self, call: Coro, *args, **kwargs):
-        """
-        Invokes an event.
+        """Invoke an event
 
-        :param call:
+        Parameters
+        ----------
+        call :
             The call (method) to which the event is registered.
-
-        :param \\*args:
-            The arguments for the event.
-
-        :param \\*kwargs:
-            The named arguments for the event.
         """
-
         def execute(*_args, **_kwargs):
             ensure_future(call(*_args, **_kwargs))
 
@@ -379,14 +403,15 @@ class Client(Dispatcher):
         execute(*args, **kwargs)
 
     async def process_event(self, name: str, payload: GatewayDispatch):
-        """
-        Processes and invokes an event and its middleware.
+        """|coro|
+        Processes and invokes an event and its middleware
 
-        :param name:
-            The name of the event, this is also the filename in the
+        Parameters
+        ----------
+        name :
+            The name of the event, this is also the filename in the 
             middleware directory.
-
-        :param payload:
+        payload :
             The payload sent from the Discord gateway, this contains the
             required data for the client to know what event it is and
             what specifically happened.
@@ -401,14 +426,15 @@ class Client(Dispatcher):
             await self.execute_error(e)
 
     async def event_handler(self, _, payload: GatewayDispatch):
-        """
+        """|coro|
         Handles all payload events with opcode 0.
 
-        :param _:
+        Parameters
+        ----------
+        _ :
             Socket param, but this isn't required for this handler. So
             its just a filler parameter, doesn't matter what is passed.
-
-        :param payload:
+        payload :
             The payload sent from the Discord gateway, this contains the
             required data for the client to know what event it is and
             what specifically happened.
@@ -416,14 +442,15 @@ class Client(Dispatcher):
         await self.process_event(payload.event_name.lower(), payload)
 
     async def payload_event_handler(self, _, payload: GatewayDispatch):
-        """
+        """|coro|
         Special event which activates on_payload event!
 
-        :param _:
+        Parameters
+        ----------
+        _ :
             Socket param, but this isn't required for this handler. So
             its just a filler parameter, doesn't matter what is passed.
-
-        :param payload:
+        payload :
             The payload sent from the Discord gateway, this contains the
             required data for the client to know what event it is and
             what specifically happened.
@@ -431,28 +458,26 @@ class Client(Dispatcher):
         await self.process_event("payload", payload)
 
     async def get_guild(self, guild_id: int) -> Guild:
-        """
+        """|coro|
         Fetch a guild object by the guild identifier.
 
-        :param guild_id:
+        Parameters
+        ----------
+        guild_id :
             The id of the guild which should be fetched from the Discord
             gateway.
-
-        :returns:
-            A Guild object.
         """
         return await Guild.from_id(self, guild_id)
 
     async def get_user(self, _id: int) -> User:
-        """
+        """|coro|
         Fetch a User from its identifier
 
-        :param _id:
+        Parameters
+        ----------
+        _id :
             The id of the user which should be fetched from the Discord
             gateway.
-
-        :returns:
-            A User object.
         """
         return await User.from_id(self, _id)
 
