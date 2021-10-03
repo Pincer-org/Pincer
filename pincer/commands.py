@@ -15,7 +15,8 @@ from .exceptions import (
     InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
     InvalidCommandName
 )
-from .objects import ThrottleScope, AppCommand
+from .objects.app.throttle_scope import ThrottleScope
+from .objects.app.command import AppCommand
 from .objects.app import (
     AppCommandOptionType, AppCommandOption, AppCommandOptionChoice,
     ClientCommandStructure, AppCommandType

@@ -4,7 +4,7 @@
 """sent when a message is created in a subscribed text channel"""
 
 from ..core.dispatch import GatewayDispatch
-from ..objects import UserMessage
+from ..objects.message.user_message import UserMessage
 
 
 async def message_create_middleware(self, payload: GatewayDispatch):

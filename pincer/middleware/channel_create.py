@@ -3,7 +3,7 @@
 
 """sent when a channel is created/joined on the client"""
 from pincer.core.dispatch import GatewayDispatch
-from pincer.objects import Channel
+from ..objects.guild.channel import Channel
 
 
 def channel_create_middleware(self, payload: GatewayDispatch):

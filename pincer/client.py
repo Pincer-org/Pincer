@@ -16,7 +16,10 @@ from .core.gateway import Dispatcher
 from .core.http import HTTPClient
 from .exceptions import InvalidEventName
 from .middleware import middleware
-from .objects import User, Intents, Guild, ThrottleInterface
+from .objects.user.user import User
+from .objects.app.intents import Intents
+from .objects.guild.guild import Guild
+from .objects.app.throttling import ThrottleInterface
 from pincer.objects.app.throttling import DefaultThrottleHandler
 from .utils import get_index, should_pass_cls, Coro
 

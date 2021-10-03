@@ -21,7 +21,7 @@ from ..exceptions import (
     PincerError, InvalidTokenError, UnhandledException,
     _InternalPerformReconnectError, DisallowedIntentsError
 )
-from ..objects import Intents
+from ..objects.app.intents import Intents
 
 Handler = Callable[[WebSocketClientProtocol, GatewayDispatch], Awaitable[None]]
 _log = logging.getLogger(__package__)

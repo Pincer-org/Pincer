@@ -8,7 +8,7 @@ contains server information
 
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
-from ..objects import User
+from ..objects.user.user import User
 from ..utils import Coro
 
 

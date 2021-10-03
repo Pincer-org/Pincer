@@ -7,9 +7,11 @@ from typing import Union, Dict, Any
 
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
-from ..objects import (
-    Interaction, Embed, Message, InteractionFlags, MessageContext
-)
+from ..objects.app.interactions import Interaction
+from ..objects.message.embed import Embed
+from ..objects.message.message import Message
+from ..objects.app.interactions import InteractionFlags
+from ..objects.message.context import MessageContext
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 from ..utils.extraction import get_params, get_signature_and_params
 
