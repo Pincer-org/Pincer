@@ -28,7 +28,7 @@ def convert_message(self, message: Union[Embed, Message, str]) -> Message:
     return message
 
 
-async def reply(self, interaction: Interaction, message):
+async def reply(self, interaction: Interaction, message: Message):
     """
     Sends a reply to an interaction.
 
@@ -42,9 +42,12 @@ async def reply(self, interaction: Interaction, message):
         The message to reply with.
     """
 
+    content_type, data = message.serialize()
+
     await self.http.post(
         f"interactions/{interaction.id}/{interaction.token}/callback",
-        message.to_dict()
+        data,
+        content_type=content_type
     )
 
 

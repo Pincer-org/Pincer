@@ -4,11 +4,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Union, List, Optional, TYPE_CHECKING
+import json
+from typing import Dict, Tuple, Union, List, Optional, TYPE_CHECKING
+
+import aiohttp
 
 from .embed import Embed
 from .interaction_base import CallbackType
-
+from .file import File
 from .role import Role
 from .user import User
 from .user_message import AllowedMentionTypes
@@ -46,6 +49,7 @@ class AllowedMentions(APIObject):
 class Message:
     # TODO: Write docs
     content: str = ''
+    attachments: Optional[File] = None
     tts: Optional[bool] = False
     embeds: Optional[List[Embed]] = None
     allowed_mentions: Optional[AllowedMentions] = None
@@ -78,5 +82,22 @@ class Message:
             "data": {k: i for k, i in resp.items() if i}
         }
 
-    def serialize_to_form_data(self):
-        pass
+    def serialize(self) -> Tuple[str,Union[bytes,Dict]]:
+        """
+        Creates the information that the discord API wants for the message
+        object
+        """
+
+        if self.attachments:
+            form = aiohttp.FormData()
+            form.add_field("payload_json",json.dumps(self.to_dict()))
+            
+            for file in self.attachments:
+                form.add_field("file",file.content,filename=file.filename)
+
+
+            payload = form()
+            return payload.headers["Content-Type"], payload
+
+        else:
+            return "application/json", self.to_dict()

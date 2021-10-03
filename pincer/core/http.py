@@ -122,12 +122,13 @@ class HTTPClient:
             raise ServerError(f"Maximum amount of retries for `{endpoint}`.")
 
         # TODO: print better method name
-        _log.debug(f"{method.__name__.upper()} {endpoint} | {dumps(data)}")
+        # TODO: Adjust to work non-json types
+        # _log.debug(f"{method.__name__.upper()} {endpoint} | {dumps(data)}")
 
         url = f"{self.url}/{endpoint}"
         async with method(
             url,
-            json=data,
+            data=data,
             headers={"Content-Type":content_type}
             ) as res:
             return await self.__handle_response(
@@ -274,6 +275,9 @@ class HTTPClient:
         :param data:
             The update data for the patch request.
 
+        :param content_type:
+            Body content type. 
+
         :return:
             JSON response from the discord API.
         """
@@ -289,6 +293,9 @@ class HTTPClient:
         :param data:
             The data for the post request.
 
+        :param content_type:
+            Body content type.
+
         :return:
             JSON response from the discord API.
         """
@@ -303,6 +310,9 @@ class HTTPClient:
 
         :param data:
             The data for the put request.
+
+        :param content_type:
+            Body content type.
 
         :return:
             JSON response from the discord API.
