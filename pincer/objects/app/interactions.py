@@ -15,13 +15,14 @@ from ..message.context import MessageContext
 from ..message.user_message import UserMessage
 from ..user.user import User
 from ...core.http import HTTPClient
-from ...utils import APIObject, MISSING, Snowflake, convert
-
-if TYPE_CHECKING:
-    from ..guild.channel import Channel
-    from ..guild.role import Role
-    from ... import Client
-    from ...utils import APINullable
+from ...utils.conversion import convert
+from ...utils.snowflake import Snowflake
+from ...utils.api_object import APIObject
+from ...utils.types import MISSING
+from ..guild.channel import Channel
+from ..guild.role import Role
+from ... import client
+from ...utils.types import APINullable
 
 
 class InteractionFlags(IntEnum):
@@ -161,7 +162,7 @@ class Interaction(APIObject):
         for components, the message they were attached to
     """
 
-    _client: Client
+    _client: client.Client
     _http: HTTPClient
 
     id: Snowflake

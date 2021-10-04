@@ -4,13 +4,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-
-if TYPE_CHECKING:
-    from ...utils import APINullable, Snowflake
+from ...utils import types
+from ...utils import snowflake
 
 
 @dataclass
@@ -32,7 +30,7 @@ class MessageReference(APIObject):
         exist instead of sending as a normal (non-reply) message,
         default true
     """
-    message_id: APINullable[Snowflake] = MISSING
-    channel_id: APINullable[Snowflake] = MISSING
-    guild_id: APINullable[Snowflake] = MISSING
-    fail_if_not_exists: APINullable[bool] = True
+    message_id: types.APINullable[snowflake.Snowflake] = MISSING
+    channel_id: types.APINullable[snowflake.Snowflake] = MISSING
+    guild_id: types.APINullable[snowflake.Snowflake] = MISSING
+    fail_if_not_exists: types.APINullable[bool] = True

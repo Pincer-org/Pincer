@@ -10,15 +10,15 @@ from typing import Dict, Optional, List, TYPE_CHECKING, Union, overload
 from ..._config import GatewayConfig
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-
-if TYPE_CHECKING:
-    from ..guild.overwrite import Overwrite
-    from ..guild.thread import ThreadMetadata
-    from ..guild.member import GuildMember
-    from ..user.user import User
-    from ... import Client
-    from ...core.http import HTTPClient
-    from ...utils import APINullable, Snowflake, Timestamp
+from ..guild.overwrite import Overwrite
+from ..guild.thread import ThreadMetadata
+from ..guild.member import GuildMember
+from ..user.user import User
+from ... import client
+from ...core.http import HTTPClient
+from ...utils.types import APINullable
+from ...utils.snowflake import Snowflake
+from ...utils.timestamp import Timestamp
 
 
 class ChannelType(IntEnum):
@@ -140,7 +140,7 @@ class Channel(APIObject):
         the camera video quality mode of the voice channel, 1 when not present
     """
 
-    _client: Client
+    _client: client.Client
     _http: HTTPClient
 
     id: Snowflake
@@ -176,7 +176,7 @@ class Channel(APIObject):
     video_quality_mode: APINullable[int] = MISSING
 
     @classmethod
-    async def from_id(cls, client: Client, id: int) -> Channel:
+    async def from_id(cls, client: client.Client, id: int) -> Channel:
         data = (await client.http.get(f"channels/{id}")) or {}
         data.update(
             {

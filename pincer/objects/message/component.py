@@ -8,12 +8,10 @@ from typing import List, TYPE_CHECKING
 
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-
-if TYPE_CHECKING:
-    from ..app.select_menu import SelectOption
-    from ..message.button import ButtonStyle
-    from ..message.emoji import Emoji
-    from ...utils import APINullable
+from ..app.select_menu import SelectOption
+from ..message.button import ButtonStyle
+from ..message.emoji import Emoji
+from ...utils.types import APINullable
 
 
 @dataclass

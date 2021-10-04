@@ -5,14 +5,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Dict, TYPE_CHECKING
+from typing import Dict
 
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-
-if TYPE_CHECKING:
-    from ..user.user import User
-    from ...utils import Snowflake, APINullable
+from ..user.user import User
+from ...utils.snowflake import Snowflake
+from ...utils.types import APINullable
 
 
 class CallbackType(IntEnum):

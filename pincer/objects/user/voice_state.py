@@ -8,12 +8,10 @@ from typing import Optional, TYPE_CHECKING
 
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-
-if TYPE_CHECKING:
-    from ..guild.member import GuildMember
-    from ...utils import APINullable
-    from ...utils.snowflake import Snowflake
-    from ...utils.timestamp import Timestamp
+from ..guild.member import GuildMember
+from ...utils.types import APINullable
+from ...utils.snowflake import Snowflake
+from ...utils.timestamp import Timestamp
 
 
 @dataclass

@@ -100,6 +100,7 @@ class TaskScheduler:
         :Example usage:
 
         .. code-block:: python
+
             from pincer import Client
             from pincer.utils import TaskScheduler
 

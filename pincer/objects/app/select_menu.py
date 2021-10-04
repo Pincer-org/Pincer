@@ -8,9 +8,7 @@ from typing import List, TYPE_CHECKING
 
 from ..message.emoji import Emoji
 from ...utils import APIObject, MISSING
-
-if TYPE_CHECKING:
-    from ...utils import APINullable
+from ...utils.types import APINullable
 
 
 @dataclass

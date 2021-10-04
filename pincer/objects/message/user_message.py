@@ -5,9 +5,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum, Enum
-from typing import List, Optional, Union, TYPE_CHECKING
+from typing import List, Optional, Union
 
-from ..app.application import Application
+from ..app import application
 from ..app.interaction_base import MessageInteraction
 from ..guild.channel import Channel, ChannelMention
 from ..guild.member import GuildMember
@@ -26,10 +26,9 @@ from ...utils.conversion import convert
 from ...utils.snowflake import Snowflake
 from ...utils.timestamp import Timestamp
 from ...utils.types import MISSING
+from ...utils import types
 
-if TYPE_CHECKING:
-    from ... import Client
-    from ...utils import APINullable
+from ... import client
 
 
 class MessageActivityType(IntEnum):
@@ -135,7 +134,7 @@ class MessageActivity(APIObject):
         party_id from a Rich Presence event
     """
     type: MessageActivityType
-    party_id: APINullable[str] = MISSING
+    party_id: types.APINullable[str] = MISSING
 
 
 class AllowedMentionTypes(str, Enum):
@@ -260,7 +259,7 @@ class UserMessage(APIObject):
     :param sticker_items:
         sent if the message contains stickers
     """
-    _client: Client
+    _client: client.Client
     _http: HTTPClient
 
     id: Snowflake
@@ -278,22 +277,22 @@ class UserMessage(APIObject):
     pinned: bool
     type: MessageType
 
-    mention_channels: APINullable[List[ChannelMention]] = MISSING
-    guild_id: APINullable[Snowflake] = MISSING
-    member: APINullable[GuildMember] = MISSING
-    reactions: APINullable[List[Reaction]] = MISSING
-    nonce: APINullable[Union[int, str]] = MISSING
-    webhook_id: APINullable[Snowflake] = MISSING
-    activity: APINullable[MessageActivity] = MISSING
-    application: APINullable[Application] = MISSING
-    application_id: APINullable[Snowflake] = MISSING
-    message_reference: APINullable[MessageReference] = MISSING
-    flags: APINullable[MessageFlags] = MISSING
-    referenced_message: APINullable[Optional[UserMessage]] = MISSING
-    interaction: APINullable[MessageInteraction] = MISSING
-    thread: APINullable[Channel] = MISSING
-    components: APINullable[List[MessageComponent]] = MISSING
-    sticker_items: APINullable[List[StickerItem]] = MISSING
+    mention_channels: types.APINullable[List[ChannelMention]] = MISSING
+    guild_id: types.APINullable[Snowflake] = MISSING
+    member: types.APINullable[GuildMember] = MISSING
+    reactions: types.APINullable[List[Reaction]] = MISSING
+    nonce: types.APINullable[Union[int, str]] = MISSING
+    webhook_id: types.APINullable[Snowflake] = MISSING
+    activity: types.APINullable[MessageActivity] = MISSING
+    application: types.APINullable['application.Application'] = MISSING
+    application_id: types.APINullable[Snowflake] = MISSING
+    message_reference: types.APINullable[MessageReference] = MISSING
+    flags: types.APINullable[MessageFlags] = MISSING
+    referenced_message: types.APINullable[Optional[UserMessage]] = MISSING
+    interaction: types.APINullable[MessageInteraction] = MISSING
+    thread: types.APINullable[Channel] = MISSING
+    components: types.APINullable[List[MessageComponent]] = MISSING
+    sticker_items: types.APINullable[List[StickerItem]] = MISSING
 
     def __post_init__(self):
         self.id = convert(self.id, Snowflake.from_string)
@@ -316,7 +315,8 @@ class UserMessage(APIObject):
         self.reactions = convert(self.reactions, Reaction.from_dict)
         self.webhook_id = convert(self.webhook_id, Snowflake.from_string)
         self.activity = convert(self.activity, MessageActivity.from_dict)
-        self.application = convert(self.application, Application.from_dict)
+        self.application = convert(
+            self.application, application.Application.from_dict)
         self.application_id = convert(
             self.application_id,
             Snowflake.from_string

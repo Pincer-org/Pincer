@@ -5,14 +5,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import TYPE_CHECKING
 
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
 
-if TYPE_CHECKING:
-    from ..message.emoji import Emoji
-    from ...utils import APINullable
+from ..message.emoji import Emoji
+from ...utils import types
 
 
 class ButtonStyle(IntEnum):
@@ -77,8 +75,8 @@ class Button(APIObject):
     type: int
     style: ButtonStyle
 
-    label: APINullable[str] = MISSING
-    emoji: APINullable[Emoji] = MISSING
-    custom_id: APINullable[str] = MISSING
-    url: APINullable[str] = MISSING
-    disabled: APINullable[bool] = False
+    label: types.APINullable[str] = MISSING
+    emoji: types.APINullable[Emoji] = MISSING
+    custom_id: types.APINullable[str] = MISSING
+    url: types.APINullable[str] = MISSING
+    disabled: types.APINullable[bool] = False

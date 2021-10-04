@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import List
 
 from ..guild.member import GuildMember
-from ..message.emoji import Emoji
+from ..message import emoji
 from ...utils.api_object import APIObject
 from ...utils.snowflake import Snowflake
 from ...utils.types import APINullable, MISSING
@@ -77,7 +77,7 @@ class MessageReactionAddEvent(APIObject):
     user_id: Snowflake
     channel_id: Snowflake
     message_id: Snowflake
-    emoji: Emoji
+    emoji: 'emoji.Emoji'
 
     guild_id: APINullable[Snowflake] = MISSING
     member: APINullable[GuildMember] = MISSING
@@ -106,7 +106,7 @@ class MessageReactionRemoveEvent(APIObject):
     user_id: Snowflake
     channel_id: Snowflake
     message_id: Snowflake
-    emoji: Emoji
+    emoji: 'emoji.Emoji'
 
     guild_id: APINullable[Snowflake] = MISSING
 
@@ -150,6 +150,6 @@ class MessageReactionRemoveEmojiEvent(APIObject):
     """
     channel_id: Snowflake
     message_id: Snowflake
-    emoji: Emoji
+    emoji: 'emoji.Emoji'
 
     guild_id: APINullable[Snowflake] = MISSING

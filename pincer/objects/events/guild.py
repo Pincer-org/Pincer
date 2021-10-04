@@ -7,7 +7,7 @@ from typing import Any, List, Optional
 from .presence import PresenceUpdateEvent
 from ..guild.member import GuildMember
 from ..guild.role import Role
-from ..message.emoji import Emoji
+from ..message import emoji
 from ..message.sticker import Sticker
 from ..user.user import User
 from ...utils.api_object import APIObject
@@ -58,7 +58,7 @@ class GuildEmojisUpdateEvent(APIObject):
         array of emojis
     """
     guild_id: Snowflake
-    emojis: List[Emoji]
+    emojis: List['emoji.Emoji']
 
 
 @dataclass

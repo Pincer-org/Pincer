@@ -4,13 +4,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-
-if TYPE_CHECKING:
-    from ...utils import APINullable, Snowflake, Timestamp
+from ...utils import types, snowflake, timestamp
 
 
 @dataclass
@@ -39,10 +36,10 @@ class ThreadMetadata(APIObject):
     """
     archived: bool
     auto_archive_duration: int
-    archive_timestamp: Timestamp
+    archive_timestamp: timestamp.Timestamp
     locked: bool
 
-    invitable: APINullable[bool] = MISSING
+    invitable: types.APINullable[bool] = MISSING
 
 
 @dataclass
@@ -62,8 +59,8 @@ class ThreadMember(APIObject):
     :param user_id:
         id of the user
     """
-    join_timestamp: Timestamp
+    join_timestamp: timestamp.Timestamp
     flags: int
 
-    id: APINullable[Snowflake] = MISSING
-    user_id: APINullable[Snowflake] = MISSING
+    id: types.APINullable[snowflake.Snowflake] = MISSING
+    user_id: types.APINullable[snowflake.Snowflake] = MISSING

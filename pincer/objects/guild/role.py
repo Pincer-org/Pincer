@@ -4,13 +4,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-
-if TYPE_CHECKING:
-    from ...utils import APINullable, Snowflake
+from ...utils.types import APINullable
+from ...utils.snowflake import Snowflake
 
 
 @dataclass

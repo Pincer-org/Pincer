@@ -12,10 +12,8 @@ from ...utils.api_object import APIObject
 from ...utils.conversion import convert
 from ...utils.snowflake import Snowflake
 from ...utils.types import MISSING
-
-if TYPE_CHECKING:
-    from ... import Client
-    from ...utils import APINullable
+from ... import client
+from ...utils.types import APINullable
 
 
 class PremiumTypes(IntEnum):
@@ -98,7 +96,7 @@ class User(APIObject):
         whether the email on this account has been verified
     """
 
-    _client: Client
+    _client: client.Client
     _http: HTTPClient
 
     avatar: Optional[str]
@@ -142,6 +140,6 @@ class User(APIObject):
         self.id = convert(self.id, Snowflake.from_string)
 
     @classmethod
-    async def from_id(cls, client: Client, _id: int) -> User:
+    async def from_id(cls, client: client.Client, _id: int) -> User:
         data = await client.http.get(f"users/{_id}")
         return cls.from_dict(data)

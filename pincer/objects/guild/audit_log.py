@@ -9,13 +9,12 @@ from typing import Any, Optional, List, TYPE_CHECKING
 
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-
-if TYPE_CHECKING:
-    from ..guild.channel import Channel
-    from ..user.integration import Integration
-    from ..user.user import User
-    from ..guild.webhook import Webhook
-    from ...utils import APINullable, Snowflake
+from ...utils import types
+from ...utils import snowflake
+from ..guild.channel import Channel
+from ..user.integration import Integration
+from ..user.user import User
+from ..guild.webhook import Webhook
 
 
 class AuditLogEvent(IntEnum):
@@ -120,10 +119,10 @@ class AuditEntryInfo(APIObject):
     """
     delete_member_days: str
     members_removed: str
-    channel_id: Snowflake
-    message_id: Snowflake
+    channel_id: snowflake.Snowflake
+    message_id: snowflake.Snowflake
     count: str
-    id: Snowflake
+    id: snowflake.Snowflake
     type: str
     role_name: str
 
@@ -155,13 +154,13 @@ class AuditLogEntry(APIObject):
         the reason for the change x(0-512 characters)
     """
     target_id: Optional[str]
-    user_id: Optional[Snowflake]
-    id: Snowflake
+    user_id: Optional[snowflake.Snowflake]
+    id: snowflake.Snowflake
     action_type: AuditLogEvent
 
-    changes: APINullable[List[AuditLogChange]] = MISSING
-    options: APINullable[AuditEntryInfo] = MISSING
-    reason: APINullable[str] = MISSING
+    changes: types.APINullable[List[AuditLogChange]] = MISSING
+    options: types.APINullable[AuditEntryInfo] = MISSING
+    reason: types.APINullable[str] = MISSING
 
 
 @dataclass

@@ -4,13 +4,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, MISSING
-from typing import List, TYPE_CHECKING
+from typing import List
 
 from ...utils.api_object import APIObject
-
-if TYPE_CHECKING:
-    from . import Integration, VisibilityType
-    from ...utils import APINullable
+from .integration import Integration
+from .user import VisibilityType
+from ...utils.types import APINullable
 
 
 @dataclass

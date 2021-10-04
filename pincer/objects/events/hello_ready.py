@@ -4,8 +4,8 @@
 from dataclasses import dataclass
 from typing import List, Tuple
 
-from ..app.application import Application
-from ..guild import Guild
+from ..app import application
+from ..guild import guild
 from ..user.user import User
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING, APINullable
@@ -50,8 +50,8 @@ class ReadyEvent(APIObject):
     """
     v: int
     user: User
-    guilds: List[Guild]
+    guilds: List['guild.Guild']
     session_id: str
-    application: Application
+    application: 'application.Application'
 
     shard: APINullable[Tuple[int, int]] = MISSING

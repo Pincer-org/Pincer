@@ -3,16 +3,13 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+from typing import Dict, Optional
 
 from .throttle_scope import ThrottleScope
 from ...exceptions import CommandCooldownError
 from ...utils.slidingwindow import SlidingWindow
-
-if TYPE_CHECKING:
-    from typing import Dict, Optional
-    from ..message.context import MessageContext
-    from ...utils import Coro
+from ..message.context import MessageContext
+from ...utils.types import Coro
 
 
 class ThrottleInterface(ABC):

@@ -9,10 +9,10 @@ from typing import Optional, TYPE_CHECKING
 
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-
-if TYPE_CHECKING:
-    from .user import User
-    from ...utils import APINullable, Snowflake, Timestamp
+from .user import User
+from ...utils.types import APINullable
+from ...utils.snowflake import Snowflake
+from ...utils.timestamp import Timestamp
 
 
 class IntegrationExpireBehavior(IntEnum):

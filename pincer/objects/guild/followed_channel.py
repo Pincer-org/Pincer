@@ -4,12 +4,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
-from ...utils import APIObject
-
-if TYPE_CHECKING:
-    from ...utils import Snowflake
+from ...utils.api_object import APIObject
+from ...utils.snowflake import Snowflake
 
 
 @dataclass

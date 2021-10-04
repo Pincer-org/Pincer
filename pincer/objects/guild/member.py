@@ -13,10 +13,8 @@ from ...utils.conversion import convert
 from ...utils.snowflake import Snowflake
 from ...utils.timestamp import Timestamp
 from ...utils.types import MISSING
-
-if TYPE_CHECKING:
-    from ... import Client
-    from ...utils.types import APINullable
+from ... import client
+from ...utils.types import APINullable
 
 
 @dataclass
@@ -63,7 +61,7 @@ class GuildMember(APIObject):
         the user this guild member represents
     """
 
-    _client: Client
+    _client: client.Client
     _http: HTTPClient
 
     deaf: bool
@@ -90,7 +88,7 @@ class GuildMember(APIObject):
     @classmethod
     async def from_id(
             cls,
-            client: Client,
+            client: client.Client,
             guild_id: int,
             _id: int
     ) -> GuildMember:

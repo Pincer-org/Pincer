@@ -9,9 +9,8 @@ from typing import Optional, List, TYPE_CHECKING
 from ..user.user import User
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-
-if TYPE_CHECKING:
-    from ...utils import APINullable, Snowflake
+from ...utils import types
+from ...utils import snowflake
 
 
 @dataclass
@@ -80,18 +79,18 @@ class Application(APIObject):
     bot_public: bool
     bot_require_code_grant: bool
     description: str
-    id: Snowflake
+    id: snowflake.Snowflake
     icon: Optional[str]
     name: str
-    privacy_policy_url: APINullable[str]
+    privacy_policy_url: types.APINullable[str]
     summary: str
     verify_key: str
 
-    cover_image: APINullable[str] = MISSING
-    flags: APINullable[int] = MISSING
-    guild_id: APINullable[Snowflake] = MISSING
-    owner: APINullable[User] = MISSING
-    primary_sku_id: APINullable[Snowflake] = MISSING
-    rpc_origins: APINullable[List[str]] = MISSING
-    slug: APINullable[str] = MISSING
-    terms_of_service_url: APINullable[str] = MISSING
+    cover_image: types.APINullable[str] = MISSING
+    flags: types.APINullable[int] = MISSING
+    guild_id: types.APINullable[snowflake.Snowflake] = MISSING
+    owner: types.APINullable[User] = MISSING
+    primary_sku_id: types.APINullable[snowflake.Snowflake] = MISSING
+    rpc_origins: types.APINullable[List[str]] = MISSING
+    slug: types.APINullable[str] = MISSING
+    terms_of_service_url: types.APINullable[str] = MISSING

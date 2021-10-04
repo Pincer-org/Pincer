@@ -14,10 +14,8 @@ from ..user.user import User
 from ...exceptions import CommandReturnIsEmpty
 from ...utils.api_object import APIObject
 from ...utils.snowflake import Snowflake
-
-if TYPE_CHECKING:
-    from ..app import InteractionFlags
-    from .component import MessageComponent
+from ..app.interactions import InteractionFlags
+from .component import MessageComponent
 
 
 @dataclass

@@ -6,8 +6,9 @@ from typing import List
 
 from ..guild.channel import Channel
 from ..guild.thread import ThreadMember
-from ...utils import APIObject, APINullable, MISSING, Snowflake
-
+from ...utils.types import APINullable, MISSING
+from ...utils.api_object import APIObject
+from ...utils.snowflake import Snowflake
 
 @dataclass
 class ThreadListSyncEvent(APIObject):

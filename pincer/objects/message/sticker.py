@@ -5,14 +5,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import List, Optional, TYPE_CHECKING
+from typing import List, Optional
 
 from ..user.user import User
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-
-if TYPE_CHECKING:
-    from ...utils import APINullable, Snowflake
+from ...utils import types
+from ...utils import snowflake
 
 
 class StickerType(IntEnum):
@@ -91,16 +90,16 @@ class Sticker(APIObject):
 
     description: Optional[str]
     format_type: StickerFormatType
-    id: Snowflake
+    id: snowflake.Snowflake
     name: str
     tags: str
     type: StickerType
 
-    available: APINullable[bool] = MISSING
-    guild_id: APINullable[Snowflake] = MISSING
-    pack_id: APINullable[Snowflake] = MISSING
-    sort_value: APINullable[int] = MISSING
-    user: APINullable[User] = MISSING
+    available: types.APINullable[bool] = MISSING
+    guild_id: types.APINullable[snowflake.Snowflake] = MISSING
+    pack_id: types.APINullable[snowflake.Snowflake] = MISSING
+    sort_value: types.APINullable[int] = MISSING
+    user: types.APINullable[User] = MISSING
 
 
 @dataclass
@@ -119,7 +118,7 @@ class StickerItem(APIObject):
         type of sticker format
     """
 
-    id: Snowflake
+    id: snowflake.Snowflake
     name: str
     format_type: StickerFormatType
 
@@ -151,11 +150,11 @@ class StickerPack(APIObject):
         id of the sticker pack's banner image
     """
 
-    id: Snowflake
+    id: snowflake.Snowflake
     stickers: List[Sticker]
     name: str
-    sku_id: Snowflake
+    sku_id: snowflake.Snowflake
     description: str
 
-    cover_sticker_id: APINullable[Snowflake] = MISSING
-    banner_asset_id: APINullable[Snowflake] = MISSING
+    cover_sticker_id: types.APINullable[snowflake.Snowflake] = MISSING
+    banner_asset_id: types.APINullable[snowflake.Snowflake] = MISSING

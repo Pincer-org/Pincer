@@ -13,17 +13,17 @@ from ..guild.channel import Channel
 from ..guild.role import Role
 from ..guild.stage import StageInstance
 from ..guild.welcome_screen import WelcomeScreen
-from ..message.emoji import Emoji
+from ..message import emoji
 from ..message.sticker import Sticker
 from ..user.voice_state import VoiceState
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-
-if TYPE_CHECKING:
-    from ... import Client
-    from ...core.http import HTTPClient
-    from ...utils import APINullable, Snowflake, Timestamp
+from ... import client
+from ...core.http import HTTPClient
+from ...utils.types import APINullable
+from ...utils.snowflake import Snowflake
+from ...utils.timestamp import Timestamp
 
 
 class PremiumTier(IntEnum):
@@ -408,7 +408,7 @@ class Guild(APIObject):
         returned in an Invite's guild object
     """
 
-    _client: Client
+    _client: client.Client
     _http: HTTPClient
 
     afk_channel_id: Optional[Snowflake]
@@ -418,7 +418,7 @@ class Guild(APIObject):
     default_message_notifications: DefaultMessageNotificationLevel
     description: Optional[str]
     discovery_splash: Optional[str]
-    emojis: List[Emoji]
+    emojis: List[emoji.Emoji]
     explicit_content_filter: ExplicitContentFilterLevel
     features: List[GuildFeature]
     id: Snowflake
@@ -469,7 +469,7 @@ class Guild(APIObject):
     welcome_screen: APINullable[WelcomeScreen] = MISSING
 
     @classmethod
-    async def from_id(cls, client: Client, _id: int) -> Guild:
+    async def from_id(cls, client: client.Client, _id: int) -> Guild:
         data = await client.http.get(f"/guilds/{_id}")
         channel_data = await client.http.get(f"/guilds/{_id}/channels")
 

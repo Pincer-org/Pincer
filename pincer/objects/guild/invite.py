@@ -7,16 +7,15 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Optional, List, TYPE_CHECKING
 
-from ..app.application import Application
+from ..app import application
 from ..guild.channel import Channel
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-
-if TYPE_CHECKING:
-    from ..guild import Guild
-    from ..user.user import User
-    from ..guild.member import GuildMember
-    from ...utils import APINullable, Timestamp
+from ...utils import types
+from . import guild
+from ..user.user import User
+from ..guild.member import GuildMember
+from ...utils.timestamp import Timestamp
 
 
 class InviteTargetType(IntEnum):
@@ -131,12 +130,12 @@ class Invite(APIObject):
     channel: Channel
     code: str
 
-    approximate_member_count: APINullable[int] = MISSING
-    approximate_presence_count: APINullable[int] = MISSING
-    expires_at: APINullable[Optional[Timestamp]] = MISSING
-    inviter: APINullable[User] = MISSING
-    guild: APINullable[Guild] = MISSING
-    stage_instance: APINullable[InviteStageInstance] = MISSING
-    target_type: APINullable[InviteTargetType] = MISSING
-    target_user: APINullable[User] = MISSING
-    target_application: APINullable[Application] = MISSING
+    approximate_member_count: types.APINullable[int] = MISSING
+    approximate_presence_count: types.APINullable[int] = MISSING
+    expires_at: types.APINullable[Optional[Timestamp]] = MISSING
+    inviter: types.APINullable[User] = MISSING
+    guild: types.APINullable[guild.Guild] = MISSING
+    stage_instance: types.APINullable[InviteStageInstance] = MISSING
+    target_type: types.APINullable[InviteTargetType] = MISSING
+    target_user: types.APINullable[User] = MISSING
+    target_application: types.APINullable[application.Application] = MISSING

@@ -3,13 +3,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional, Union, TYPE_CHECKING
+from typing import Optional, Union
 
-if TYPE_CHECKING:
-    from ..app import ClientCommandStructure
-    from ..guild.member import GuildMember
-    from ..user.user import User
-    from ...utils.snowflake import Snowflake
+from ..app.command import ClientCommandStructure
+from ..guild.member import GuildMember
+from ..user.user import User
+from ...utils.snowflake import Snowflake
 
 
 @dataclass
