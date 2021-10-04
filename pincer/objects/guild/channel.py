@@ -177,7 +177,7 @@ class Channel(APIObject):
 
     @classmethod
     async def from_id(cls, client: Client, id: int) -> Channel:
-        data = (await client.http.get(f"/channels/{id}")) or {}
+        data = (await client.http.get(f"channels/{id}")) or {}
         data.update(
             {
                 "_client": client,
