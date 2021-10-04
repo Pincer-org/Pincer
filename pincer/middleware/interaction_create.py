@@ -12,7 +12,9 @@ from ..objects.message.embed import Embed
 from ..objects.message.message import Message
 from ..objects.app.interactions import InteractionFlags
 from ..objects.message.context import MessageContext
-from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
+from ..utils.insertion import should_pass_cls, should_pass_ctx
+from ..utils.types import MISSING
+from ..utils.types import Coro
 from ..utils.extraction import get_params, get_signature_and_params
 
 _log = logging.getLogger(__name__)

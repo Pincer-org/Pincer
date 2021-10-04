@@ -27,8 +27,9 @@ from .objects.user import User
 from .objects.guild import Guild
 from .objects.app.throttling import ThrottleInterface
 from .objects.app.intents import Intents
-from pincer.objects.app.throttling import DefaultThrottleHandler
-from .utils import get_index, should_pass_cls
+from .objects.app.throttling import DefaultThrottleHandler
+from .utils.extraction import get_index
+from .utils.insertion import should_pass_cls
 from .utils.types import Coro
 
 _log = logging.getLogger(__package__)

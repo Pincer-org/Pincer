@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Dict
 
 from ..exceptions import NoExportMethod, NotFoundError
-from ..utils import Coro
+from ..utils.types import Coro
 from ..utils.directory import chdir
 
 from .activity_join_request import *

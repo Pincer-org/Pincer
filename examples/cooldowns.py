@@ -6,7 +6,7 @@ from aiohttp import ClientSession
 from pincer import Client, command
 from pincer.exceptions import CommandCooldownError
 from pincer.objects import Embed, MessageContext, Message, InteractionFlags
-from pincer.utils import MISSING
+from pincer.utils.types import MISSING
 
 
 # Create our base bot client, if you want to you can use an init an
