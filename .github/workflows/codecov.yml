@@ -16,7 +16,7 @@ jobs:
         run: pip install -r requirements_dev.txt
       - name: Run tests and collect coverage
         run: |
-          pytest --cov=./pincer
+          pytest --cov=./tests
           coverage xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
