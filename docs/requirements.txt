@@ -1,2 +1,2 @@
 furo
-sphinx-autodoc-typehints
+https://github.com/agronholm/sphinx-autodoc-typehints
