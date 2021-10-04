@@ -24,8 +24,22 @@ class UnhandledException(PincerError):
 
 class NoExportMethod(PincerError):
     """
-    Exception which gets raised when an `export` method is expected but not
-    found in a module.
+    Exception which gets raised when an `export` method is expected but
+    not found in a module.
+    """
+
+
+class NoValidSetupMethod(PincerError):
+    """
+    Exception which gets raised when an `setup` method is expected but
+    not found in a cog.
+    """
+
+
+class TooManySetupArguments(PincerError):
+    """
+    Exception which gets raised when too many arguments were requested
+    in a cog its setup method.
     """
 
 
@@ -135,6 +149,7 @@ class EmbedFieldError(PincerError, ValueError):
 
 class TaskError(PincerError):
     """Base class for exceptions that are related to tasks."""
+
     def __init__(self, message: str, task=None):
         self.task = task
         super().__init__(message)

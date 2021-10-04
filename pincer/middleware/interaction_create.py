@@ -11,7 +11,7 @@ from ..objects import (
     Interaction, Embed, Message, InteractionFlags, MessageContext
 )
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
-from ..utils.extraction import get_params, get_signature_and_params
+from ..utils.signature import get_params, get_signature_and_params
 
 _log = logging.getLogger(__name__)
 
