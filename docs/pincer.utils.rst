@@ -44,6 +44,14 @@ pincer.utils.insertion module
    :undoc-members:
    :show-inheritance:
 
+pincer.utils.signature module
+-----------------------------
+
+.. automodule:: pincer.utils.signature
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.utils.slidingwindow module
 ---------------------------------
 
