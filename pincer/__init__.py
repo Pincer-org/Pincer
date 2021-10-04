@@ -22,7 +22,6 @@ __author__ = "Sigmanificient, Arthurdw"
 __email__ = "contact@pincer.org"
 __license__ = "MIT"
 
-
 ReleaseType = Optional[Literal["alpha", "beta", "candidate", "final", "dev"]]
 
 
@@ -37,14 +36,14 @@ class VersionInfo(NamedTuple):
 
     def __repr__(self) -> str:
         return (
-            f'{self.major}.{self.minor}.{self.micro}'
-            + (
-                f'-{self.release_level}{self.serial}'
-                * (self.release_level is not None)
-            )
+                f'{self.major}.{self.minor}.{self.micro}'
+                + (
+                        f'-{self.release_level}{self.serial}'
+                        * (self.release_level is not None)
+                )
         )
 
-version_info = VersionInfo(0, 8, 0, release_level="alpha")
+version_info = VersionInfo(0, 9, 0, release_level="alpha")
 __version__ = "0.7.1a"
 __all__ = (
     "__author__", "__email__", "__package__", "__title__",  "__version__",

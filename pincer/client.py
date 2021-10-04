@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import logging
 from asyncio import iscoroutinefunction, run, ensure_future
+from importlib import import_module
 from inspect import isasyncgenfunction
 from typing import (
     Any,
@@ -15,13 +16,17 @@ from typing import (
     Union
 )
 
+from pincer.objects import AppCommand
 from . import __package__
 from ._config import events
 from .commands import ChatCommandHandler
 from .core.dispatch import GatewayDispatch
 from .core.gateway import Dispatcher
 from .core.http import HTTPClient
-from .exceptions import InvalidEventName
+from .exceptions import (
+    InvalidEventName, TooManySetupArguments, NoValidSetupMethod,
+    NoCogManagerReturnFound, CogAlreadyExists, CogNotFound
+)
 from .middleware import middleware
 from .objects.user import User
 from .objects.guild import Guild
@@ -31,6 +36,7 @@ from .objects.app.throttling import DefaultThrottleHandler
 from .utils.extraction import get_index
 from .utils.insertion import should_pass_cls
 from .utils.types import Coro
+from .utils.signature import get_params
 
 _log = logging.getLogger(__package__)
 
@@ -190,11 +196,10 @@ class Client(Dispatcher):
         )
 
         self.bot: Optional[User] = None
-        self.received_message: str = received or \
-            "Command arrived successfully!"
-        self.http: HTTPClient = HTTPClient(token)
-        self.throttler: ThrottleInterface = (
-            throttler or DefaultThrottleHandler)
+        self.received_message = received or "Command arrived successfully!"
+        self.http = HTTPClient(token)
+        self.throttler = throttler
+        ChatCommandHandler.managers["__main__"] = self
 
     @property
     def chat_commands(self) -> List[str]:
@@ -297,6 +302,109 @@ class Client(Dispatcher):
         call = _events.get(name.strip().lower())
         if iscoroutinefunction(call) or isasyncgenfunction(call):
             return call
+
+    def load_cog(self, path: str):
+        """
+        Load a cog from a string path, setup method in COG may
+        optionally have a first argument which will contain the client!
+
+        :Example usage:
+
+        run.py
+
+        .. code-block:: pycon
+
+            >>> from pincer import Client
+            >>>
+            >>> class BotClient(Client):
+            ...     def __init__(self, *args, **kwargs):
+            ...         self.load_cog("cogs.say")
+            ...         super().__init__(*args, **kwargs)
+
+        cogs/say.py
+
+        .. code-block:: pycon
+
+            >>> from pincer import command
+            >>>
+            >>> class SayCommand:
+            ...     @command()
+            ...     async def say(self, message: str) -> str:
+            ...         return message
+            >>>
+            >>> setup = SayCommand
+
+
+        :param path:
+            The import path for the cog.
+        """
+
+        if ChatCommandHandler.managers.get(path):
+            raise CogAlreadyExists(
+                f"Cog `{path}` is trying to be loaded but already exists."
+            )
+
+        try:
+            module = import_module(path)
+        except ModuleNotFoundError:
+            raise CogNotFound(f"Cog `{path}` could not be found!")
+
+        setup = getattr(module, "setup", None)
+
+        if not callable(setup):
+            raise NoValidSetupMethod(
+                f"`setup` method was expected in `{path}` but none was found!"
+            )
+
+        args, params = [], get_params(setup)
+
+        if len(params) == 1:
+            args.append(self)
+        elif (length := len(params)) > 1:
+            raise TooManySetupArguments(
+                f"Setup method in `{path}` requested {length} arguments "
+                f"but the maximum is 1!"
+            )
+
+        cog_manager = setup(*args)
+
+        if not cog_manager:
+            raise NoCogManagerReturnFound(
+                f"Setup method in `{path}` didn't return a cog manager! "
+                "(Did you forget to return the cog?)"
+            )
+
+        ChatCommandHandler.managers[path] = cog_manager
+
+    @staticmethod
+    def get_cogs():
+        """
+        Get a dictionary of all loaded cogs.
+
+        The key/value pair is import path/cog class.
+        """
+        return ChatCommandHandler.managers
+
+    async def unload_cog(self, path: str):
+        """
+        Unload an already loaded cog! This removes all of its commands!
+
+        :param path:
+            The path to the cog.
+        """
+        if not ChatCommandHandler.managers.get(path):
+            raise CogNotFound(f"Cog `{path}` could not be found!")
+
+        to_remove: List[AppCommand] = []
+
+        for command in ChatCommandHandler.register.values():
+            if not command:
+                continue
+
+            if command.call.__module__ == path:
+                to_remove.append(command.app)
+
+        await ChatCommandHandler(self).remove_commands(to_remove)
 
     def run(self):
         """start the event listener

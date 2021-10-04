@@ -270,6 +270,9 @@ class AppCommand(APIObject):
             for idx, option in enumerate(other.options)
         )
 
+    def __hash__(self):
+        return hash((self.id, self.name, self.description))
+
     def add_option(self, option: AppCommandOption):
         """
         Add a new option field to the current application command.
