@@ -1,19 +1,21 @@
+.. currentmodule:: pincer
+
 Pincer module
 =============
 
 Client
 ------
 
-.. autoclass:: pincer.Client
+.. autoclass:: Client
     :members:
     :show-inheritance:
 
 Commands
 --------
 
-.. autofunction:: pincer.command
+.. autofunction:: command
 
-.. autoclass:: pincer.ChatCommandHandler
+.. autoclass:: ChatCommandHandler
     :members:
     :show-inheritance:
     :private-members:
