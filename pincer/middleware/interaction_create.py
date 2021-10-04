@@ -22,7 +22,7 @@ def convert_message(self, message: Union[Embed, Message, str]) -> Message:
     """Converts a message to a Message object"""
     if isinstance(message, Embed):
         message = Message(embeds=[message])
-    elif isinstance(message,File) or isinstance(message,Image):
+    elif isinstance(message, (File, Image)):
         message = Message(attachments=[message])
     elif not isinstance(message, Message):
         message = Message(message) if message else Message(

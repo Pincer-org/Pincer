@@ -20,10 +20,10 @@ class File(APIObject):
     API.
 
     :param content:
-        file bytes
+        File bytes.
 
     :param filename:
-        the name of the file when its uploaded to discord
+        The name of the file when its uploaded to discord.
     """
 
     content: bytes
@@ -31,6 +31,15 @@ class File(APIObject):
 
     @classmethod
     def from_file(cls, filepath: str, filename: str = None) -> File:
+        """
+        :param filepath:
+            The path to the file you want to send. Must be string. The file's
+            name in the file path is used as the name when uploaded discord by
+            default.
+
+        :param filename:
+            The name of the file. Will override the default name.
+        """
 
         file = open(filepath, "rb").read()
 
@@ -44,23 +53,36 @@ class File(APIObject):
         cls,
         img: Image,
         filename: str,
-        format: Optional[str] = None
+        image_format: Optional[str] = None
     ) -> File:
         """
         Creates a file object from a PIL image
         Supports PNG and JPEG
 
+        :param img:
+            Pillow image object.
+
+        :param filename:
+            The filename to be used when uploaded to discord. The extension is
+            used as image_format unless otherwise specified.
+
+        Keyword Arguments:
+
+        :param image_format:
+            The image_format to be used if you want to override the file
+            extension.
+
         :return: File
         """
 
-        if format is None:
-            format = os.path.splitext(filename)[1][1:]
+        if image_format is None:
+            image_format = os.path.splitext(filename)[1][1:]
 
-            if format == "jpg":
-                format = "jpeg"
+            if image_format == "jpg":
+                image_format = "jpeg"
 
         imgByteArr = BytesIO()
-        img.save(imgByteArr, format=format)
+        img.save(imgByteArr, format=image_format)
         img_bytes = imgByteArr.getvalue()
 
         return cls(
