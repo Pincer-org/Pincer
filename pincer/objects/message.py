@@ -6,12 +6,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 import json
 from typing import Dict, Tuple, Union, List, Optional, TYPE_CHECKING
-from PIL.Image import Image
 
 import aiohttp
 from aiohttp.payload import Payload
-
-from pincer.objects.attachment import Attachment
+from PIL.Image import Image
 
 from .embed import Embed
 from .interaction_base import CallbackType
@@ -72,8 +70,11 @@ class Message:
                 attch += [File.from_image(
                     value,
                     f"file{count}.png",
-                    "PNG"
                 )]
+            elif isinstance(value,str):
+                attch += [
+                    File.from_file(value)
+                ]
             else:
                 raise ValueError(f"Attachment {count} is invalid type")
 
@@ -120,7 +121,7 @@ class Message:
 
             for file in self.attachments:
                 form.add_field("file",file.content,filename=file.filename)
-                
+
             payload = form()
             return payload.headers["Content-Type"], payload
 

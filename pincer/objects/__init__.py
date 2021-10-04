@@ -10,6 +10,7 @@ from .button import Button
 from .channel import Channel
 from .embed import Embed
 from .emoji import Emoji
+from .file import File
 from .followed_channel import FollowedChannel
 from .guild import Guild
 from .guild_member import GuildMember
@@ -43,11 +44,11 @@ from .throttling import ThrottleInterface
 __all__ = (
     "AllowedMentions", "AllowedMentionTypes", "AppCommand", "Application",
     "Attachment", "AuditLog", "Ban", "Button", "Channel", "Embed", "Emoji",
-    "FollowedChannel", "Guild", "GuildMember", "GuildTemplate", "GuildWidget",
-    "Integration", "Intents", "Interaction", "InteractionFlags", "Invite",
-    "Message", "MessageComponent", "MessageContext", "MessageInteraction",
-    "MessageReference", "Overwrite", "Reaction", "Role", "SelectMenu",
-    "SelectOption", "StageInstance", "Sticker", "ThreadMember",
+    "File", "FollowedChannel", "Guild", "GuildMember", "GuildTemplate",
+    "GuildWidget", "Integration", "Intents", "Interaction", "InteractionFlags",
+    "Invite", "Message", "MessageComponent", "MessageContext",
+    "MessageInteraction", "MessageReference", "Overwrite", "Reaction", "Role",
+    "SelectMenu", "SelectOption", "StageInstance", "Sticker", "ThreadMember",
     "ThreadMetadata", "ThrottleInterface", "ThrottleScope", "User",
     "UserMessage", "UserMessage", "VoiceRegion", "VoiceState", "Webhook",
     "WelcomeScreen"
