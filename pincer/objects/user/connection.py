@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass, MISSING
 from typing import List, TYPE_CHECKING
 
-from ...utils import APIObject
+from ...utils.api_object import APIObject
 
 if TYPE_CHECKING:
     from . import Integration, VisibilityType
