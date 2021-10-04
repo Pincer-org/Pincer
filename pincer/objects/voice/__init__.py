@@ -4,5 +4,5 @@
 from .region import *
 
 __all__ = (
-    "VoiceRegion"
+    "VoiceRegion",
 )
