@@ -63,15 +63,15 @@ class Message:
 
         attch = []
 
-        for count,value in enumerate(self.attachments):
-            if isinstance(value,File):
+        for count, value in enumerate(self.attachments):
+            if isinstance(value, File):
                 attch += [value]
-            elif isinstance(value,Image):
+            elif isinstance(value, Image):
                 attch += [File.from_image(
                     value,
                     f"file{count}.png",
                 )]
-            elif isinstance(value,str):
+            elif isinstance(value, str):
                 attch += [
                     File.from_file(value)
                 ]
@@ -79,7 +79,6 @@ class Message:
                 raise ValueError(f"Attachment {count} is invalid type")
 
         self.attachments = attch
-
 
     def to_dict(self):
         if len(self.content) < 1 and not self.embeds and not self.attachments:
@@ -90,8 +89,8 @@ class Message:
             if self.allowed_mentions else {}
         )
 
-
-        # Attachments aren't serialized because they are not sent as part of the json
+        # Attachments aren't serialized
+        # because they are not sent as part of the json
         resp = {
             "content": self.content,
             "tts": self.tts,
@@ -108,7 +107,7 @@ class Message:
             "data": {k: i for k, i in resp.items() if i}
         }
 
-    def serialize(self) -> Tuple[str,Union[Payload,Dict]]:
+    def serialize(self) -> Tuple[str, Union[Payload, Dict]]:
         """
         Creates the data that the discord API wants for the message object
 
@@ -117,10 +116,10 @@ class Message:
 
         if self.attachments:
             form = FormData()
-            form.add_field("payload_json",json.dumps(self.to_dict()))
+            form.add_field("payload_json", json.dumps(self.to_dict()))
 
             for file in self.attachments:
-                form.add_field("file",file.content,filename=file.filename)
+                form.add_field("file", file.content, filename=file.filename)
 
             payload = form()
             return payload.headers["Content-Type"], payload
