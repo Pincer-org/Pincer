@@ -29,7 +29,9 @@ class HttpCallable(Protocol):
 
     def __call__(
             self, url: StrOrURL, *,
-            allow_redirects: bool = True, json: Dict = None, **kwargs: Any
+            allow_redirects: bool = True,
+            method: Optional[Union[Dict, str, Payload]] = None,
+            **kwargs: Any
     ) -> _RequestContextManager:
         ...
 
@@ -104,6 +106,9 @@ class HTTPClient:
 
         Keyword Arguments:
 
+        :param content_type:
+            The request's content type.
+
         :param data:
             The data which will be added to the request.
 
@@ -165,6 +170,9 @@ class HTTPClient:
         :param endpoint:
             The endpoint to which the request was sent.
 
+        :param content_type:
+            The request's content type.
+
         :param data:
             The data which was added to the request.
 
@@ -198,7 +206,12 @@ class HTTPClient:
                     f" Retrying in {timeout} seconds"
                 )
                 await sleep(timeout)
-                return await self.__send(method, endpoint, content_type=content_type, data=data)
+                return await self.__send(
+                    method,
+                    endpoint,
+                    content_type=content_type,
+                    data=data
+                )
 
             _log.error(
                 f"An http exception occurred while trying to send "
@@ -219,7 +232,13 @@ class HTTPClient:
         await asyncio.sleep(retry_in)
 
         # try sending it again
-        return await self.__send(method, endpoint, content_type=content_type, __ttl=__ttl - 1, data=data)
+        return await self.__send(
+            method,
+            endpoint,
+            content_type=content_type,
+            __ttl=__ttl - 1,
+            data=data
+        )
 
     async def delete(self, route: str) -> Optional[Dict]:
         """
@@ -269,7 +288,12 @@ class HTTPClient:
         """
         return await self.__send(self.__session.options, route)
 
-    async def patch(self, route: str, data: Dict, content_type: str = "application/json") -> Optional[Dict]:
+    async def patch(
+        self,
+        route: str,
+        data: Dict,
+        content_type: str = "application/json"
+    ) -> Optional[Dict]:
         """
         Sends a patch request to a Discord REST endpoint.
 
@@ -280,14 +304,24 @@ class HTTPClient:
             The update data for the patch request.
 
         :param content_type:
-            Body content type. 
+            Body content type.
 
         :return:
             JSON response from the discord API.
         """
-        return await self.__send(self.__session.patch, route, content_type=content_type, data=data)
+        return await self.__send(
+            self.__session.patch,
+            route,
+            content_type=content_type,
+            data=data
+        )
 
-    async def post(self, route: str, data: Dict, content_type: str = "application/json") -> Optional[Dict]:
+    async def post(
+        self,
+        route: str,
+        data: Dict,
+        content_type: str = "application/json"
+    ) -> Optional[Dict]:
         """
         Sends a post request to a Discord REST endpoint.
 
@@ -303,9 +337,19 @@ class HTTPClient:
         :return:
             JSON response from the discord API.
         """
-        return await self.__send(self.__session.post, route, content_type=content_type, data=data)
+        return await self.__send(
+            self.__session.post,
+            route,
+            content_type=content_type,
+            data=data
+        )
 
-    async def put(self, route: str, data: Dict, content_type: str = "application/json") -> Optional[Dict]:
+    async def put(
+        self,
+        route: str,
+        data: Dict,
+        content_type: str = "application/json"
+    ) -> Optional[Dict]:
         """
         Sends a put request to a Discord REST endpoint.
 
@@ -321,4 +365,9 @@ class HTTPClient:
         :return:
             JSON response from the discord API.
         """
-        return await self.__send(self.__session.put, route, content_type=content_type, data=data)
+        return await self.__send(
+            self.__session.put,
+            route,
+            content_type=content_type,
+            data=data
+        )
