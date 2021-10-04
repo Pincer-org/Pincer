@@ -199,7 +199,8 @@ class Channel(APIObject):
             permissions_overwrites: List[Overwrite] = None,
             parent_id: Snowflake = None, rtc_region: str = None,
             video_quality_mod: int = None,
-            default_auto_archive_duration: int = None) -> Channel:
+            default_auto_archive_duration: int = None
+    ) -> Channel:
         ...
 
     async def edit(self, **kwargs):
@@ -231,7 +232,8 @@ class TextChannel(Channel):
             rate_limit_per_user: int = None,
             permissions_overwrites: List[Overwrite] = None,
             parent_id: Snowflake = None,
-            default_auto_archive_duration: int = None) -> Union[TextChannel, NewsChannel]:
+            default_auto_archive_duration: int = None
+    ) -> Union[TextChannel, NewsChannel]:
         ...
 
     async def edit(self, **kwargs):
@@ -247,7 +249,8 @@ class VoiceChannel(Channel):
             self, name: str = None, position: int = None, bitrate: int = None,
             user_limit: int = None,
             permissions_overwrites: List[Overwrite] = None,
-            rtc_region: str = None, video_quality_mod: int = None, ) -> VoiceChannel:
+            rtc_region: str = None, video_quality_mod: int = None
+    ) -> VoiceChannel:
         ...
 
     async def edit(self, **kwargs):
@@ -269,7 +272,8 @@ class NewsChannel(Channel):
             position: int = None, topic: str = None, nsfw: bool = None,
             permissions_overwrites: List[Overwrite] = None,
             parent_id: Snowflake = None,
-            default_auto_archive_duration: int = None) -> Union[TextChannel, NewsChannel]:
+            default_auto_archive_duration: int = None
+    ) -> Union[TextChannel, NewsChannel]:
         ...
 
     async def edit(self, **kwargs):
