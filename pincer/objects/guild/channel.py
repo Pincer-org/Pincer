@@ -221,7 +221,7 @@ def __str__(self):
 
 class TextChannel(Channel):
     def __init__(self, *args, **kwargs):
-        return super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     @overload
     async def edit(
@@ -239,7 +239,7 @@ class TextChannel(Channel):
 
 class VoiceChannel(Channel):
     def __init__(self, *args, **kwargs):
-        return super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     @overload
     async def edit(
@@ -255,12 +255,12 @@ class VoiceChannel(Channel):
 
 class CategoryChannel(Channel):
     def __init__(self, *args, **kwargs):
-        return super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class NewsChannel(Channel):
     def __init__(self, *args, **kwargs):
-        return super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     @overload
     async def edit(
