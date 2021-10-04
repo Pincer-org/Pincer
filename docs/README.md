@@ -9,7 +9,6 @@
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Pincer-org/pincer/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/Pincer-org/pincer/?branch=main)
 [![Build Status](https://scrutinizer-ci.com/g/Pincer-org/Pincer/badges/build.png?b=main)](https://scrutinizer-ci.com/g/Pincer-org/Pincer/build-status/main)
-[![codecov](https://codecov.io/gh/Pincer-org/Pincer/branch/main/graph/badge.svg?token=T15T34KOQW)](https://codecov.io/gh/Pincer-org/Pincer)
 ![Lines of code](https://img.shields.io/tokei/lines/github/Pincer-org/Pincer)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Pincer-org/Pincer)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Pincer-org/Pincer)
@@ -88,8 +87,6 @@ following:
 - Command argument choices
 - Command argument descriptions
 - Command cool downs (Using WindowSliding technique)
-- Tasks
-- Cogs
 
 **Client base class example:**
 

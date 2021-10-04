@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Dict, Optional, List, TYPE_CHECKING, Union, overload
+from typing import Dict, Optional, List, TYPE_CHECKING
 
 from ..._config import GatewayConfig
 from ...utils.api_object import APIObject
@@ -177,7 +177,7 @@ class Channel(APIObject):
 
     @classmethod
     async def from_id(cls, client: Client, id: int) -> Channel:
-        data = (await client.http.get(f"channels/{id}")) or {}
+        data = (await client.http.get(f"/guilds/{id}")) or {}
         data.update(
             {
                 "_client": client,
@@ -189,95 +189,30 @@ class Channel(APIObject):
         channel_cls = _channel_type_map.get(data["type"], Channel)
         return channel_cls.from_dict(data)
 
-    @overload
-    async def edit(
-            self, *, name: str = None,
-            type: ChannelType = None,
-            position: int = None, topic: str = None, nsfw: bool = None,
-            rate_limit_per_user: int = None, bitrate: int = None,
-            user_limit: int = None,
-            permissions_overwrites: List[Overwrite] = None,
-            parent_id: Snowflake = None, rtc_region: str = None,
-            video_quality_mod: int = None,
-            default_auto_archive_duration: int = None
-    ) -> Channel:
-        ...
-
-    async def edit(self, **kwargs):
-        data = await self._http.patch(f"channels/{self.id}", kwargs)
-        data.update(
-            {
-                "_client": self.client,
-                "_http": self._http,
-                "type": ChannelType(data.pop("type"))
-            }
-        )
-        channel_cls = _channel_type_map.get(data["type"], Channel)
-        return channel_cls.from_dict(data)
-
 
 def __str__(self):
     """return the discord tag when object gets used as a string."""
     return self.name or str(self.id)
 
 
+@dataclass
 class TextChannel(Channel):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    @overload
-    async def edit(
-            self, name: str = None, type: ChannelType = None,
-            position: int = None, topic: str = None, nsfw: bool = None,
-            rate_limit_per_user: int = None,
-            permissions_overwrites: List[Overwrite] = None,
-            parent_id: Snowflake = None,
-            default_auto_archive_duration: int = None
-    ) -> Union[TextChannel, NewsChannel]:
-        ...
-
-    async def edit(self, **kwargs):
-        return await super().edit(**kwargs)
+    pass
 
 
+@dataclass
 class VoiceChannel(Channel):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    @overload
-    async def edit(
-            self, name: str = None, position: int = None, bitrate: int = None,
-            user_limit: int = None,
-            permissions_overwrites: List[Overwrite] = None,
-            rtc_region: str = None, video_quality_mod: int = None
-    ) -> VoiceChannel:
-        ...
-
-    async def edit(self, **kwargs):
-        return await super().edit(**kwargs)
+    pass
 
 
+@dataclass
 class CategoryChannel(Channel):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    pass
 
 
+@dataclass
 class NewsChannel(Channel):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    @overload
-    async def edit(
-            self, name: str = None, type: ChannelType = None,
-            position: int = None, topic: str = None, nsfw: bool = None,
-            permissions_overwrites: List[Overwrite] = None,
-            parent_id: Snowflake = None,
-            default_auto_archive_duration: int = None
-    ) -> Union[TextChannel, NewsChannel]:
-        ...
-
-    async def edit(self, **kwargs):
-        return await super().edit(**kwargs)
+    pass
 
 
 @dataclass
