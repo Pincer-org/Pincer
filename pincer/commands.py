@@ -358,10 +358,10 @@ class ChatCommandHandler(metaclass=Singleton):
         to_remove: List[AppCommand] = []
 
         for api_cmd in self._api_commands:
-            doesnt_exist = all(list(map(
+            doesnt_exist = all(map(
                 lambda loc_cmd: api_cmd.name != loc_cmd.app.name,
                 ChatCommandHandler.register.values()
-            )))
+            ))
 
             if doesnt_exist:
                 to_remove.append(api_cmd)
