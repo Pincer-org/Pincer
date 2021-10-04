@@ -6,7 +6,7 @@ from .conversion import *
 from .directory import *
 from .extraction import *
 from .insertion import *
-from signature import *
+from .signature import *
 from .slidingwindow import *
 from .snowflake import *
 from .timestamp import *
