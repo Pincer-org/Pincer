@@ -9,9 +9,7 @@ class Bot(Client):
         super().__init__(*args, **kwargs)
 
     def load_cogs(self):
-        """
-        Load all cogs from the `cogs` directory.
-        """
+        """Load all cogs from the `cogs` directory."""
         for cog in glob("cogs/*.py"):
             self.load_cog(cog.replace("/", ".").replace("\\", ".")[:-3])
 
