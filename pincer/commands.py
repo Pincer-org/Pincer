@@ -48,6 +48,72 @@ def command(
         cooldown_scale: Optional[float] = 60,
         cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER
 ):
+    """This is the decorator to create a command to register and respond to
+    with the discord API from a function.
+
+    .. code-block:: python3
+
+        class Bot(Client):
+            @command(
+                name="test",
+                description="placeholder"
+            )
+            async def test_command(
+                self,
+                ctx,
+                amount: int,
+                name: (str, "ah yes"),
+                letter: Choices["a", "b", "c"]
+            ):
+                return Message(
+                    f"You chose {amount}, {name}, {letter}",
+                    flags=InteractionFlags.EPHEMERAL
+                )
+
+    References from above:
+        :class:`Client`, 
+        :class:`objects.Message`, 
+        :class:`utils.Choices`, 
+        :class:`objects.InteractionFlags`
+
+    Parameters
+    ----------
+    name :
+        The name of the command, by default None
+    description :
+        The description of the command, by default "Description not set"
+    enable_default :
+        Whether the command is enabled by default, by default True
+    guild :
+        What guild to add it to (don't specify for global), by default None
+    cooldown :
+        The amount of times in the cooldown_scale the command can be invoked, 
+        by default 0
+    cooldown_scale :
+        The 'checking time' of the cooldown, by default 60
+    cooldown_scope :
+        What type of cooldown strategy to use, by default ThrottleScope.USER
+
+    Raises
+    ------
+    CommandIsNotCoroutine
+        If the command function is not a coro
+    InvalidCommandName
+        If the command name does not follow the regex ``^[\w-]{1,32}$``
+    InvalidCommandGuild
+        If the guild id is invalid
+    CommandDescriptionTooLong
+        Descriptions max 100 characters
+        If the annotation on an argument is too long (also max 100)
+    CommandAlreadyRegistered
+        If the command already exists
+    TooManyArguments
+        Max 25 arguments to pass for commands
+    InvalidArgumentAnnotation
+        Annotation amount is max 25, 
+        Not a valid argument type, 
+        Annotations must consist of name and value
+    """
     # TODO: Fix docs
     # TODO: Fix docs w guild
     # TODO: Fix docs w cooldown
@@ -246,6 +312,11 @@ def command(
 class ChatCommandHandler:
     """
     Class containing methods used to handle various commands
+    
+    Attributes
+    ----------
+    client: :class:`Client`
+        The client object
     """
     register: Dict[str, ClientCommandStructure] = {}
 
