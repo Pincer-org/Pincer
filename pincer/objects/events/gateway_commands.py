@@ -3,7 +3,7 @@
 
 from dataclasses import dataclass
 from enum import auto, Enum
-from typing import Any, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from .presence import Activity
 from ..app.intents import Intents
@@ -41,7 +41,7 @@ class Identify(APIObject):
         the Gateway Intents you wish to receive
     """
     token: str
-    properties: dict[str, str]
+    properties: Dict[str, str]
     intents: Intents
 
     compress: APINullable[bool] = MISSING
