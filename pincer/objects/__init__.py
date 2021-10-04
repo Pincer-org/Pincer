@@ -23,6 +23,7 @@ from .guild.welcome_screen import WelcomeScreen
 from .message import AllowedMentions, MessageComponent, Message
 from .message.attachment import Attachment
 from .message.button import Button
+from .message.file import File
 from .message.embed import Embed
 from .message.emoji import Emoji
 from .message.context import MessageContext
