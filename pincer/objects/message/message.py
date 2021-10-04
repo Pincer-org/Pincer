@@ -81,7 +81,12 @@ class Message:
 
         self.attachments = attch
 
-    def is_empty(self):
+    def is_empty(self) -> bool:
+        """
+        :return:
+            Returns true if a message is empty.
+        """
+
         return (
             len(self.content) < 1
             and not self.embeds
