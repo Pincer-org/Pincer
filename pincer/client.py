@@ -15,8 +15,10 @@ from .commands import ChatCommandHandler
 from .core.dispatch import GatewayDispatch
 from .core.gateway import Dispatcher
 from .core.http import HTTPClient
-from .exceptions import InvalidEventName, TooManySetupArguments, \
-    NoValidSetupMethod, NoCogManagerReturnFound, CogAlreadyExists
+from .exceptions import (
+    InvalidEventName, TooManySetupArguments, NoValidSetupMethod,
+    NoCogManagerReturnFound, CogAlreadyExists
+)
 from .middleware import middleware
 from .objects import User, Intents, Guild, ThrottleInterface
 from .objects.app.throttling import DefaultThrottleHandler
