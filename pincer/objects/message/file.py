@@ -41,7 +41,8 @@ class File(APIObject):
             The name of the file. Will override the default name.
         """
 
-        file = open(filepath, "rb").read()
+        with open(filepath, "rb") as data:
+            file = data.read()
 
         return cls(
             content=file,

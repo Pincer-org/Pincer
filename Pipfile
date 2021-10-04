@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 websockets = "*"
 aiohttp = "*"
+Pillow = "*"
 
 [dev-packages]
 sphinx = "*"
