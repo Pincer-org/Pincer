@@ -250,6 +250,7 @@ class ChatCommandHandler:
     """
     Class containing methods used to handle various commands
     """
+    managers: Dict[str, Any] = {}
     register: Dict[str, ClientCommandStructure] = {}
 
     # TODO: Fix docs

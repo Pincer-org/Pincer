@@ -16,7 +16,7 @@ from .core.dispatch import GatewayDispatch
 from .core.gateway import Dispatcher
 from .core.http import HTTPClient
 from .exceptions import InvalidEventName, TooManySetupArguments, \
-    NoValidSetupMethod
+    NoValidSetupMethod, NoCogManagerReturnFound, CogAlreadyExists
 from .middleware import middleware
 from .objects import User, Intents, Guild, ThrottleInterface
 from .objects.app.throttling import DefaultThrottleHandler
@@ -177,6 +177,7 @@ class Client(Dispatcher):
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
         self.throttler = throttler
+        ChatCommandHandler.managers["__main__"] = self
 
     @property
     def chat_commands(self):
@@ -301,12 +302,18 @@ class Client(Dispatcher):
             ...     async def say(self, message: str) -> str:
             ...         return message
             >>>
-            >>> setup = SayCommand()
+            >>> setup = SayCommand
 
 
         :param path:
             The import path for the cog.
         """
+
+        if ChatCommandHandler.managers.get(path):
+            raise CogAlreadyExists(
+                f"Cog `{path}` is trying to be loaded but already exists."
+            )
+
         setup = getattr(import_module(path), "setup", None)
 
         if not callable(setup):
@@ -324,7 +331,15 @@ class Client(Dispatcher):
                 f"but the maximum is 1!"
             )
 
-        setup(*args)
+        cog_manager = setup(*args)
+
+        if not cog_manager:
+            raise NoCogManagerReturnFound(
+                f"Setup method in `{path}` didn't return a cog manager! "
+                "(Did you forget to return the cog?)"
+            )
+
+        ChatCommandHandler.managers[path] = cog_manager
 
     def run(self):
         """Start the event listener"""

@@ -29,17 +29,37 @@ class NoExportMethod(PincerError):
     """
 
 
-class NoValidSetupMethod(PincerError):
+class CogError(PincerError):
     """
-    Exception which gets raised when an `setup` method is expected but
-    not found in a cog.
+    Exception base class for errors related to Cogs.
     """
 
 
-class TooManySetupArguments(PincerError):
+class CogAlreadyExists(CogError):
+    """
+    Exception which gets raised when a cog is already loaded, but is
+    trying to be reloaded!
+    """
+
+
+class NoValidSetupMethod(CogError):
+    """
+    Exception which gets raised when an `setup` function is expected but
+    none was found!
+    """
+
+
+class TooManySetupArguments(CogError):
     """
     Exception which gets raised when too many arguments were requested
-    in a cog its setup method.
+    in a cog its setup function.
+    """
+
+
+class NoCogManagerReturnFound(CogError):
+    """
+    Exception which gets raised when no cog return was found from the
+    setup function. (are you missing a return statement?)
     """
 
 
