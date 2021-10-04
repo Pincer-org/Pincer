@@ -24,8 +24,49 @@ class UnhandledException(PincerError):
 
 class NoExportMethod(PincerError):
     """
-    Exception which gets raised when an `export` method is expected but not
-    found in a module.
+    Exception which gets raised when an `export` method is expected but
+    not found in a module.
+    """
+
+
+class CogError(PincerError):
+    """
+    Exception base class for errors related to Cogs.
+    """
+
+
+class CogNotFound(CogError):
+    """
+    Exception which gets raised when a cog is trying to be
+    loaded/unloaded but is nonexistent.
+    """
+
+
+class CogAlreadyExists(CogError):
+    """
+    Exception which gets raised when a cog is already loaded, but is
+    trying to be reloaded!
+    """
+
+
+class NoValidSetupMethod(CogError):
+    """
+    Exception which gets raised when an `setup` function is expected but
+    none was found!
+    """
+
+
+class TooManySetupArguments(CogError):
+    """
+    Exception which gets raised when too many arguments were requested
+    in a cog its setup function.
+    """
+
+
+class NoCogManagerReturnFound(CogError):
+    """
+    Exception which gets raised when no cog return was found from the
+    setup function. (are you missing a return statement?)
     """
 
 
@@ -135,6 +176,7 @@ class EmbedFieldError(PincerError, ValueError):
 
 class TaskError(PincerError):
     """Base class for exceptions that are related to tasks."""
+
     def __init__(self, message: str, task=None):
         self.task = task
         super().__init__(message)
