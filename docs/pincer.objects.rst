@@ -92,6 +92,14 @@ pincer.objects.emoji module
    :undoc-members:
    :show-inheritance:
 
+pincer.objects.file module
+--------------------------
+
+.. automodule:: pincer.objects.file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.objects.followed\_channel module
 ---------------------------------------
 
