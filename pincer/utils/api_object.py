@@ -13,7 +13,7 @@ from .types import MissingType
 T = TypeVar("T")
 
 
-def _asdict_ignore_none(obj: Generic[T]) -> Union[tuple, dict, T]:
+def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
     """
     Returns a dict from a dataclass that ignores
     all values that are None

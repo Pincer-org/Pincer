@@ -12,6 +12,7 @@ from PIL.Image import Image
 
 from ...utils import APIObject
 
+
 @dataclass
 class File(APIObject):
     """
@@ -29,9 +30,9 @@ class File(APIObject):
     filename: str
 
     @classmethod
-    def from_file(cls, filepath: str, filename: str=None) -> File:
+    def from_file(cls, filepath: str, filename: str = None) -> File:
 
-        file = open(filepath,"rb").read()
+        file = open(filepath, "rb").read()
 
         return cls(
             content=file,
@@ -39,18 +40,24 @@ class File(APIObject):
         )
 
     @classmethod
-    def from_image(cls, img: Image, filename: str, format: Optional[str]=None) -> File:
+    def from_image(
+        cls,
+        img: Image,
+        filename: str,
+        format: Optional[str] = None
+    ) -> File:
         """
         Creates a file object from a PIL image
         Supports PNG and JPEG
-        
+
         :return: File
         """
 
         if format is None:
             format = os.path.splitext(filename)[1][1:]
 
-            if format == "jpg": format = "jpeg"
+            if format == "jpg":
+                format = "jpeg"
 
         imgByteArr = BytesIO()
         img.save(imgByteArr, format=format)

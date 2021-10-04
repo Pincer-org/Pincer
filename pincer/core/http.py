@@ -2,7 +2,6 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 import asyncio
-import json
 import logging
 from asyncio import sleep
 from json import dumps
@@ -89,7 +88,7 @@ class HTTPClient:
             method: HttpCallable,
             endpoint: str, *,
             content_type: str = "application/json",
-            data: Optional[Union[Dict,str,Payload]] = None,
+            data: Optional[Union[Dict, str, Payload]] = None,
             __ttl: int = None
     ) -> Optional[Dict]:
         """
@@ -123,8 +122,8 @@ class HTTPClient:
 
             raise ServerError(f"Maximum amount of retries for `{endpoint}`.")
 
-        if isinstance(data,dict):
-            data = json.dumps(data)
+        if isinstance(data, dict):
+            data = dumps(data)
 
         # TODO: print better method name
         # TODO: Adjust to work non-json types
@@ -134,8 +133,8 @@ class HTTPClient:
         async with method(
             url,
             data=data,
-            headers={"Content-Type":content_type}
-            ) as res:
+            headers={"Content-Type": content_type}
+        ) as res:
             return await self.__handle_response(
                 res, method, endpoint, content_type, data, ttl
             )
