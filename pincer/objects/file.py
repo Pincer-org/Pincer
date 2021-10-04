@@ -5,14 +5,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from io import BytesIO
 import os
-from typing import TYPE_CHECKING, Optional
+from typing import Optional
 
 from PIL.Image import Image
 
-from ..utils import APIObject, MISSING
-
-if TYPE_CHECKING:
-    from ..utils import APINullable
+from ..utils import APIObject
 
 @dataclass
 class File(APIObject):
