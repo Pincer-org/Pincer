@@ -88,6 +88,8 @@ following:
 - Command argument choices
 - Command argument descriptions
 - Command cool downs (Using WindowSliding technique)
+- Tasks
+- Cogs
 
 **Client base class example:**
 
