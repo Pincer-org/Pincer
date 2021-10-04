@@ -7,7 +7,8 @@ import logging
 import re
 from asyncio import iscoroutinefunction
 from inspect import Signature, isasyncgenfunction
-from typing import Optional, Dict, List, Any, Tuple, get_origin, get_args, Union
+from typing import Optional, Dict, List, Any, Tuple, get_origin, get_args, \
+    Union, TYPE_CHECKING
 
 from . import __package__
 from .exceptions import (
@@ -24,6 +25,9 @@ from .utils import (
     get_signature_and_params, get_index, should_pass_ctx, Coro, Snowflake,
     MISSING, choice_value_types, Choices
 )
+
+if TYPE_CHECKING:
+    pass
 
 COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 
@@ -54,6 +58,7 @@ def command(
     # TODO: Fix docs w context
     # TODO: Fix docs w argument descriptions
     # TODO: Fix docs w argument choices
+
     def decorator(func: Coro):
         if not iscoroutinefunction(func) and not isasyncgenfunction(func):
             raise CommandIsNotCoroutine(

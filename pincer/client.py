@@ -5,9 +5,11 @@ from __future__ import annotations
 
 import logging
 from asyncio import iscoroutinefunction, run, ensure_future
+from importlib import import_module
 from inspect import isasyncgenfunction
 from typing import Optional, Any, Union, Dict, Tuple, List
 
+from pincer.objects.app.throttling import DefaultThrottleHandler
 from . import __package__
 from ._config import events
 from .commands import ChatCommandHandler
@@ -17,7 +19,6 @@ from .core.http import HTTPClient
 from .exceptions import InvalidEventName
 from .middleware import middleware
 from .objects import User, Intents, Guild, ThrottleInterface
-from pincer.objects.app.throttling import DefaultThrottleHandler
 from .utils import get_index, should_pass_cls, Coro
 
 _log = logging.getLogger(__package__)
@@ -227,7 +228,11 @@ class Client(Dispatcher):
             ...     BotClient("token").run()
 
 
-        :param coroutine: # TODO: add info
+        :param coroutine:
+            The event its coroutine, this is the method which will be
+            invoked when the event is received. Also the name of this
+            coroutine is the name of the event and must always start
+            with ``on_``.
 
         :raises TypeError:
             If the method is not a coroutine.
@@ -264,6 +269,43 @@ class Client(Dispatcher):
         call = _events.get(name.strip().lower())
         if iscoroutinefunction(call) or isasyncgenfunction(call):
             return call
+
+    def load_cog(self, path: str):
+        """
+        Load a cog from a string path.
+
+        :Example usage:
+
+        run.py
+
+        .. code-block:: pycon
+
+            >>> from pincer import Client
+            >>>
+            >>> class BotClient(Client):
+            ...     def __init__(self, *args, **kwargs):
+            ...         self.load_cog("cogs.say")
+            ...         super().__init__(*args, **kwargs)
+
+        cogs/say.py
+
+        .. code-block:: pycon
+
+            >>> from pincer import Cog, command
+            >>>
+            >>> class SayCommand(Cog):
+            ...     @command()
+            ...     async def say(self, message: str) -> str:
+            ...         return message
+            >>>
+            >>> def setup(client):
+            ...     SayCommand(client)
+
+
+        :param path:
+            The import path for the cog.
+        """
+        getattr(import_module(path), "setup")(self)
 
     def run(self):
         """Start the event listener"""
