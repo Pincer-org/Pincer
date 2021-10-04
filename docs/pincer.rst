@@ -23,6 +23,14 @@ pincer.client module
    :undoc-members:
    :show-inheritance:
 
+pincer.cogs module
+------------------
+
+.. automodule:: pincer.cogs
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.commands module
 ----------------------
 
