@@ -50,10 +50,10 @@ class File(APIObject):
 
     @classmethod
     def from_image(
-        cls,
-        img: Image,
-        filename: str,
-        image_format: Optional[str] = None
+            cls,
+            img: Image,
+            filename: str,
+            image_format: Optional[str] = None
     ) -> File:
         """
         Creates a file object from a PIL image

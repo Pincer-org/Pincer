@@ -136,9 +136,9 @@ class HTTPClient:
 
         url = f"{self.url}/{endpoint}"
         async with method(
-            url,
-            data=data,
-            headers={"Content-Type": content_type}
+                url,
+                data=data,
+                headers={"Content-Type": content_type}
         ) as res:
             return await self.__handle_response(
                 res, method, endpoint, content_type, data, ttl
@@ -289,10 +289,10 @@ class HTTPClient:
         return await self.__send(self.__session.options, route)
 
     async def patch(
-        self,
-        route: str,
-        data: Dict,
-        content_type: str = "application/json"
+            self,
+            route: str,
+            data: Dict,
+            content_type: str = "application/json"
     ) -> Optional[Dict]:
         """
         Sends a patch request to a Discord REST endpoint.
@@ -317,10 +317,10 @@ class HTTPClient:
         )
 
     async def post(
-        self,
-        route: str,
-        data: Dict,
-        content_type: str = "application/json"
+            self,
+            route: str,
+            data: Dict,
+            content_type: str = "application/json"
     ) -> Optional[Dict]:
         """
         Sends a post request to a Discord REST endpoint.
@@ -345,10 +345,10 @@ class HTTPClient:
         )
 
     async def put(
-        self,
-        route: str,
-        data: Dict,
-        content_type: str = "application/json"
+            self,
+            route: str,
+            data: Dict,
+            content_type: str = "application/json"
     ) -> Optional[Dict]:
         """
         Sends a put request to a Discord REST endpoint.

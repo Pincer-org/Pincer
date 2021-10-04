@@ -90,8 +90,8 @@ class Message:
             if self.allowed_mentions else {}
         )
 
-        # Attachments aren't serialized because they are not sent as part of
-        # the json
+        # Attachments aren't serialized
+        # because they are not sent as part of the json
         resp = {
             "content": self.content,
             "tts": self.tts,
