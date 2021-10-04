@@ -36,9 +36,9 @@ import sphinx_autodoc_typehints
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.napoleon',
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
-    'sphinx.ext.napoleon',
     'exception_hierarchy',
     'attributetable',
     'silence',

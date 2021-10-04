@@ -21,18 +21,23 @@ class ButtonStyle(IntEnum):
     Primary:
         - color: blurple
         - required_field: custom_id
+
     Secondary:
         - color: gray
         - required_field: custom_id
+
     Success:
         - color: green
         - required_field: custom_id
+
     Danger:
         - color: red
         - required_field: custom_id
+
     Link:
         - color: gray, navigates to a URL
         - required_field: url
+
     """
     PRIMARY = 1
     SECONDARY = 2

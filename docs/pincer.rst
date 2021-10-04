@@ -13,3 +13,9 @@ Commands
 --------
 
 .. autofunction:: pincer.command
+
+.. autoclass:: pincer.ChatCommandHandler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :private-members:

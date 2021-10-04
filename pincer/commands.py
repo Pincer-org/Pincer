@@ -22,11 +22,13 @@ from .objects.app.command import (
     AppCommand, AppCommandOptionType, AppCommandOption, 
     AppCommandOptionChoice, ClientCommandStructure, AppCommandType
 )
-from .utils.extraction import get_index, get_signature_and_params
+from .utils.extraction import get_index
+from .utils.signature import get_signature_and_params
 from .utils.insertion import should_pass_ctx
 from .utils.types import Coro, MISSING, choice_value_types, Choices
 from .utils.snowflake import Snowflake
 from .utils.types import Singleton
+from . import client
 
 COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 
@@ -314,13 +316,28 @@ def command(
 
 
 class ChatCommandHandler(metaclass=Singleton):
-    """
-    Class containing methods used to handle various commands
+    """Metaclass containing methods used to handle various commands
     
     Attributes
     ----------
     client: :class:`Client`
         The client object
+    __get: :class:`str`
+        ``/commands`` route
+    __delete: :class:`str`
+        ``/commands/{command.id}`` route
+    __update: :class:`str`
+        ``/commands/{command.id}`` route
+    __add: :class:`str`
+        ``/commands`` route
+    __add_guild: :class:`str`
+        ``/guilds/{command.app.guild_id}/commands`` route
+    _api_commands: :class:`~typing.List`
+        List of :class:`objects.AppCommand`
+    managers: :class:`~typing.Dict`
+        Dictionary of managers
+    register: :class:`~typing.Dict`
+        Dictionary of :class:`objects.ClientCommandStructure`
     """
     managers: Dict[str, Any] = {}
     register: Dict[str, ClientCommandStructure] = {}
@@ -332,9 +349,14 @@ class ChatCommandHandler(metaclass=Singleton):
     __add = "/commands"
     __add_guild = "/guilds/{command.app.guild_id}/commands"
 
-    # TODO: Fix docs
-    def __init__(self, client):
-        # TODO: Fix docs
+    def __init__(self, client: client.Client):
+        """Create a new instance
+
+        Parameters
+        ----------
+        client :
+            The client object
+        """
         self.client = client
         self._api_commands: List[AppCommand] = list()
         logging.debug(
@@ -348,14 +370,25 @@ class ChatCommandHandler(metaclass=Singleton):
         self.__prefix = f"applications/{self.client.bot.id}"
 
     async def get_commands(self) -> List[AppCommand]:
-        # TODO: Fix docs
+        """|coro|
+
+        Get a list of app commands
+        """
         return list(map(
             AppCommand.from_dict,
             await self.client.http.get(self.__prefix + self.__get)
         ))
 
     async def remove_command(self, cmd: AppCommand):
-        # TODO: Fix docs
+        """|coro|
+
+        Remove a specific command
+
+        Parameters
+        ----------
+        cmd :
+            What command to delete
+        """
         await self.client.http.delete(
             self.__prefix + self.__delete.format(command=cmd)
         )
@@ -364,14 +397,32 @@ class ChatCommandHandler(metaclass=Singleton):
             del ChatCommandHandler.register[cmd.name]
 
     async def remove_commands(self, commands: List[AppCommand]):
-        # TODO: Fix docs
+        """|coro|
+
+        Remove a list of commands
+
+        Parameters
+        ----------
+        commands :
+            List of commands to delete
+        """
         await gather(*list(map(
             lambda cmd: self.remove_command(cmd),
             commands
         )))
 
     async def update_command(self, cmd: AppCommand, changes: Dict[str, Any]):
-        # TODO: Fix docs
+        """|coro|
+
+        Update a command with changes
+
+        Parameters
+        ----------
+        cmd :
+            What command to update
+        changes :
+            Dictionary of changes
+        """
         await self.client.http.patch(
             self.__prefix + self.__update.format(command=cmd),
             changes
@@ -384,14 +435,30 @@ class ChatCommandHandler(metaclass=Singleton):
             self,
             to_update: Dict[AppCommand, Dict[str, Any]]
     ):
-        # TODO: Fix docs
+        """|coro|
+
+        Update a list of app commands with changes
+
+        Parameters
+        ----------
+        to_update :
+            Dictionary of commands to changes where changes is a dictionary too
+        """
         await gather(*list(map(
             lambda cmd: self.update_command(cmd[0], cmd[1]),
             to_update.items()
         )))
 
     async def add_command(self, cmd: AppCommand):
-        # TODO: Fix docs
+        """|coro|
+
+        Add an app command
+
+        Parameters
+        ----------
+        cmd :
+            Command to add
+        """
         add_endpoint = self.__add
 
         if cmd.guild_id is not MISSING:
@@ -405,14 +472,25 @@ class ChatCommandHandler(metaclass=Singleton):
         ChatCommandHandler.register[cmd.name].app.id = Snowflake(res['id'])
 
     async def add_commands(self, commands: List[AppCommand]):
-        # TODO: Fix docs
+        """|coro|
+
+        Add a list of app commands
+
+        Parameters
+        ----------
+        commands :
+            List of command objects to add
+        """
         await gather(*list(map(
             lambda cmd: self.add_command(cmd),
             commands
         )))
 
     async def __init_existing_commands(self):
-        # TODO: Fix docs
+        """|coro|
+
+        Initiate existing commands
+        """
         self._api_commands = await self.get_commands()
 
         for api_cmd in self._api_commands:
@@ -422,9 +500,10 @@ class ChatCommandHandler(metaclass=Singleton):
                 loc_cmd.app.id = api_cmd.id
 
     async def __remove_unused_commands(self):
-        """
+        """|coro|
+
         Remove commands that are registered by discord but not in use
-        by the current client!
+        by the current client
         """
         to_remove: List[AppCommand] = []
 
@@ -444,7 +523,8 @@ class ChatCommandHandler(metaclass=Singleton):
         ]
 
     async def __update_existing_commands(self):
-        """
+        """|coro|
+
         Update all commands where its structure doesn't match the
         structure that discord has registered.
         """
@@ -513,9 +593,10 @@ class ChatCommandHandler(metaclass=Singleton):
         await self.update_commands(to_update)
 
     async def __add_commands(self):
-        """
+        """|coro|
+
         Add all new commands which have been registered by the decorator
-        to Discord!
+        to Discord
         """
         commands_to_add: List[AppCommand] = [
             cmd.app for cmd in ChatCommandHandler.register.values()
@@ -525,7 +606,10 @@ class ChatCommandHandler(metaclass=Singleton):
         await self.add_commands(commands_to_add)
 
     async def initialize(self):
-        # TODO: Fix docs
+        """|coro|
+
+        Call methods of this class to refresh all app commands
+        """
         await self.__init_existing_commands()
         await self.__remove_unused_commands()
         await self.__update_existing_commands()

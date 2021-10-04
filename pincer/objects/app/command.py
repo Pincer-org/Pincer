@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import List, Union, TYPE_CHECKING
+from typing import List, Union
 
 from ...utils.api_object import APIObject
 from ...utils.conversion import convert
@@ -13,10 +13,8 @@ from ...utils import extraction
 from ...utils.snowflake import Snowflake
 from ...utils.types import MISSING
 from ...utils import types
-
-if TYPE_CHECKING:
-    from ..app.throttle_scope import ThrottleScope
-    from ...utils.types import Coro, choice_value_types
+from ..app.throttle_scope import ThrottleScope
+from ...utils.types import Coro, choice_value_types
 
 
 class AppCommandType(IntEnum):
