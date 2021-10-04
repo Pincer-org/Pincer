@@ -6,7 +6,6 @@ Client
 
 .. autoclass:: pincer.Client
     :members:
-    :undoc-members:
     :show-inheritance:
 
 Commands
@@ -16,6 +15,5 @@ Commands
 
 .. autoclass:: pincer.ChatCommandHandler
     :members:
-    :undoc-members:
     :show-inheritance:
     :private-members:
