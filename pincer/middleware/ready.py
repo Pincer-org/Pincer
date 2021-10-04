@@ -9,7 +9,7 @@ contains server information
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
 from ..objects.user.user import User
-from ..utils import Coro
+from ..utils.types import Coro
 
 
 async def on_ready_middleware(self, payload: GatewayDispatch):

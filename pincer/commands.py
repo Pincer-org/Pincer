@@ -16,15 +16,14 @@ from .exceptions import (
     InvalidCommandName
 )
 from .objects.app.throttle_scope import ThrottleScope
-from .objects.app.command import AppCommand
-from .objects.app import (
-    AppCommandOptionType, AppCommandOption, AppCommandOptionChoice,
-    ClientCommandStructure, AppCommandType
+from .objects.app.command import (
+    AppCommand, AppCommandOptionType, AppCommandOption, 
+    AppCommandOptionChoice, ClientCommandStructure, AppCommandType
 )
-from .utils import (
-    get_signature_and_params, get_index, should_pass_ctx, Coro, Snowflake,
-    MISSING, choice_value_types, Choices
-)
+from .utils.extraction import get_index, get_signature_and_params
+from .utils.insertion import should_pass_ctx
+from .utils.types import Coro, MISSING, choice_value_types, Choices
+from .utils.snowflake import Snowflake
 
 COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 

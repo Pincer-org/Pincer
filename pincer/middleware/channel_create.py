@@ -2,7 +2,7 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 """sent when a channel is created/joined on the client"""
-from pincer.core.dispatch import GatewayDispatch
+from ..core.dispatch import GatewayDispatch
 from ..objects.guild.channel import Channel
 
 
