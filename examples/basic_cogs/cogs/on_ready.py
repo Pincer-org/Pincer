@@ -7,8 +7,10 @@ class OnReadyCog:
 
     @Client.event
     async def on_ready(self):
-        print(f"Started client on {self.client.bot}\n"
-              "Registered commands: " + ", ".join(self.client.chat_commands))
+        print(
+            f"Started client on {self.client.bot}\n"
+            "Registered commands: " + ", ".join(self.client.chat_commands)
+        )
 
 
 setup = OnReadyCog
