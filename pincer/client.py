@@ -9,6 +9,7 @@ from importlib import import_module
 from inspect import isasyncgenfunction
 from typing import Optional, Any, Union, Dict, Tuple, List
 
+from pincer.objects import AppCommand
 from . import __package__
 from ._config import events
 from .commands import ChatCommandHandler
@@ -17,7 +18,7 @@ from .core.gateway import Dispatcher
 from .core.http import HTTPClient
 from .exceptions import (
     InvalidEventName, TooManySetupArguments, NoValidSetupMethod,
-    NoCogManagerReturnFound, CogAlreadyExists
+    NoCogManagerReturnFound, CogAlreadyExists, CogNotFound
 )
 from .middleware import middleware
 from .objects import User, Intents, Guild, ThrottleInterface
@@ -316,7 +317,12 @@ class Client(Dispatcher):
                 f"Cog `{path}` is trying to be loaded but already exists."
             )
 
-        setup = getattr(import_module(path), "setup", None)
+        try:
+            module = import_module(path)
+        except ModuleNotFoundError:
+            raise CogNotFound(f"Cog `{path}` could not be found!")
+
+        setup = getattr(module, "setup", None)
 
         if not callable(setup):
             raise NoValidSetupMethod(
@@ -342,6 +348,36 @@ class Client(Dispatcher):
             )
 
         ChatCommandHandler.managers[path] = cog_manager
+
+    @staticmethod
+    def get_cogs():
+        """
+        Get a dictionary of all loaded cogs.
+
+        The key/value pair is import path/cog class.
+        """
+        return ChatCommandHandler.managers
+
+    async def unload_cog(self, path: str):
+        """
+        Unload an already loaded cog! This removes all of its commands!
+
+        :param path:
+            The path to the cog.
+        """
+        if not ChatCommandHandler.managers.get(path):
+            raise CogNotFound(f"Cog `{path}` could not be found!")
+
+        to_remove: List[AppCommand] = []
+
+        for command in ChatCommandHandler.register.values():
+            if not command:
+                continue
+
+            if command.call.__module__ == path:
+                to_remove.append(command.app)
+
+        await ChatCommandHandler(self).remove_commands(to_remove)
 
     def run(self):
         """Start the event listener"""

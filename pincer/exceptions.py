@@ -35,6 +35,13 @@ class CogError(PincerError):
     """
 
 
+class CogNotFound(CogError):
+    """
+    Exception which gets raised when a cog is trying to be
+    loaded/unloaded but is nonexistent.
+    """
+
+
 class CogAlreadyExists(CogError):
     """
     Exception which gets raised when a cog is already loaded, but is
