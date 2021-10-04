@@ -81,9 +81,14 @@ class Message:
 
         self.attachments = attch
 
+    def is_empty(self):
+        return (
+            len(self.content) < 1
+            and not self.embeds
+            and not self.attachments
+        )
+
     def to_dict(self):
-        if len(self.content) < 1 and not self.embeds and not self.attachments:
-            raise CommandReturnIsEmpty("Cannot return empty message.")
 
         allowed_mentions = (
             self.allowed_mentions.to_dict()
@@ -113,22 +118,22 @@ class Message:
         Creates the data that the discord API wants for the message object
 
         :return: (content_type, data)
+
+        :raises CommandReturnIsEmpty:
+            Command does not have content, an embed, or attachment.
         """
+
+        if self.is_empty():
+            raise CommandReturnIsEmpty("Cannot return empty message.")
 
         if not self.attachments:
             return "application/json", self.to_dict()
 
         form = FormData()
         form.add_field("payload_json", json.dumps(self.to_dict()))
-        form.add_fields(
-            *(
-                (file.filename, file.content)
-                for file in self.attachments
-            )
-        )
 
-        # for file in self.attachments:
-        #     form.add_field("file", file.content, filename=file.filename)
+        for file in self.attachments:
+            form.add_field("file", file.content, filename=file.filename)
 
         payload = form()
         return payload.headers["Content-Type"], payload
