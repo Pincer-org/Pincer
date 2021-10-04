@@ -2,13 +2,15 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 import asyncio
+import json
 import logging
 from asyncio import sleep
 from json import dumps
-from typing import Dict, Any, Optional, Protocol
+from typing import Dict, Any, Optional, Protocol, Union
 
 from aiohttp import ClientSession, ClientResponse
 from aiohttp.client import _RequestContextManager
+from aiohttp.payload import Payload
 from aiohttp.typedefs import StrOrURL
 
 from . import __package__
@@ -87,7 +89,7 @@ class HTTPClient:
             method: HttpCallable,
             endpoint: str, *,
             content_type: str = "application/json",
-            data: Optional[Dict] = None,
+            data: Optional[Union[Dict,str,Payload]] = None,
             __ttl: int = None
     ) -> Optional[Dict]:
         """
@@ -121,9 +123,12 @@ class HTTPClient:
 
             raise ServerError(f"Maximum amount of retries for `{endpoint}`.")
 
+        if isinstance(data,dict):
+            data = json.dumps(data)
+
         # TODO: print better method name
         # TODO: Adjust to work non-json types
-        # _log.debug(f"{method.__name__.upper()} {endpoint} | {dumps(data)}")
+        _log.debug(f"{method.__name__.upper()} {endpoint} | {data}")
 
         url = f"{self.url}/{endpoint}"
         async with method(
@@ -141,7 +146,7 @@ class HTTPClient:
             method: HttpCallable,
             endpoint: str,
             content_type: str,
-            data: Optional[Dict],
+            data: Optional[str],
             __ttl: int,
     ) -> Optional[Dict]:
         """

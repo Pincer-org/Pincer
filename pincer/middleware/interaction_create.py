@@ -5,6 +5,10 @@ import logging
 from inspect import isasyncgenfunction
 from typing import Union, Dict, Any
 
+from PIL.Image import Image
+
+from pincer.objects.file import File
+
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
 from ..objects import (
@@ -20,6 +24,8 @@ def convert_message(self, message: Union[Embed, Message, str]) -> Message:
     """Converts a message to a Message object"""
     if isinstance(message, Embed):
         message = Message(embeds=[message])
+    elif isinstance(message,File) or isinstance(message,Image):
+        message = Message(attachments=[message])
     elif not isinstance(message, Message):
         message = Message(message) if message else Message(
             self.received_message,
