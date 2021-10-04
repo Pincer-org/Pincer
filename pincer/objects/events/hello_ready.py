@@ -4,9 +4,9 @@
 from dataclasses import dataclass
 from typing import List, Tuple
 
-from ...objects.application import Application
-from ...objects.guild import Guild
-from ...objects.user import User
+from ..app.application import Application
+from ..guild import Guild
+from ..user import User
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING, APINullable
 

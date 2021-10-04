@@ -7,7 +7,9 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   pincer.objects.app
    pincer.objects.events
+<<<<<<< HEAD
 
 Submodules
 ----------
@@ -347,6 +349,12 @@ pincer.objects.welcome\_screen module
    :members:
    :undoc-members:
    :show-inheritance:
+=======
+   pincer.objects.guild
+   pincer.objects.message
+   pincer.objects.user
+   pincer.objects.voice
+>>>>>>> 8d24ce37d82ed994dd685817e35f31c14b0df104
 
 Module contents
 ---------------
