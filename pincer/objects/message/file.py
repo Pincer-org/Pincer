@@ -82,8 +82,10 @@ class File(APIObject):
             if image_format == "jpg":
                 image_format = "jpeg"
 
-        imgByteArr = BytesIO()
-        img.save(imgByteArr, format=image_format)
+        # https://stackoverflow.com/questions/33101935/convert-pil-image-to-byte-array
+        # Credit goes to second answer
+        img_byte_arr = BytesIO()
+        img.save(img_byte_arr, format=image_format)
         img_bytes = imgByteArr.getvalue()
 
         return cls(
