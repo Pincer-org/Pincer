@@ -86,7 +86,7 @@ class File(APIObject):
         # Credit goes to second answer
         img_byte_arr = BytesIO()
         img.save(img_byte_arr, format=image_format)
-        img_bytes = imgByteArr.getvalue()
+        img_bytes = img_byte_arr.getvalue()
 
         return cls(
             content=img_bytes,
