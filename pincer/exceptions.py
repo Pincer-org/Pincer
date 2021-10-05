@@ -24,7 +24,7 @@ class UnhandledException(PincerError):
 
 class NoExportMethod(PincerError):
     """
-    Exception which gets raised when an `export` method is expected but
+    Exception which gets raised when an ``export`` method is expected but
     not found in a module.
     """
 
@@ -51,7 +51,7 @@ class CogAlreadyExists(CogError):
 
 class NoValidSetupMethod(CogError):
     """
-    Exception which gets raised when an `setup` function is expected but
+    Exception which gets raised when an ``setup`` function is expected but
     none was found!
     """
 
@@ -101,7 +101,8 @@ class CommandAlreadyRegistered(CommandError):
 
 class CommandDescriptionTooLong(CommandError):
     """
-    The provided command description is too long, as it exceeds 100 characters.
+    The provided command description is too long, as it exceeds 100
+    characters.
     """
 
 
