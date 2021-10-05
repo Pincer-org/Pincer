@@ -377,20 +377,27 @@ class Client(Dispatcher):
         ChatCommandHandler.managers[path] = cog_manager
 
     @staticmethod
-    def get_cogs():
-        """
-        Get a dictionary of all loaded cogs.
+    def get_cogs() -> Dict[str, Any]:
+        """Get a dictionary of all loaded cogs.
 
         The key/value pair is import path/cog class.
         """
         return ChatCommandHandler.managers
 
     async def unload_cog(self, path: str):
-        """
+        """|coro|
+
         Unload an already loaded cog! This removes all of its commands!
 
-        :param path:
-            The path to the cog.
+        Parameters
+        ----------
+        path :
+            The path to the cog
+
+        Raises
+        ------
+        CogNotFound
+            When the cog is not in that path
         """
         if not ChatCommandHandler.managers.get(path):
             raise CogNotFound(f"Cog `{path}` could not be found!")
@@ -419,9 +426,11 @@ class Client(Dispatcher):
             *args,
             **kwargs
     ) -> Tuple[Optional[Coro], List[Any], Dict[str, Any]]:
-        """Handles all middleware recursively. Stops when it has found an
+        """|coro|
+
+        Handles all middleware recursively. Stops when it has found an
         event name which starts with ``on_``.
-        
+
         Returns a tuple where the first element is the final executor
         (so the event) its index in ``_events``.
 
@@ -476,6 +485,7 @@ class Client(Dispatcher):
             **kwargs
     ):
         """|coro|
+
         Raises an error if no appropriate error event has been found.
 
         Parameters
@@ -513,6 +523,7 @@ class Client(Dispatcher):
 
     async def process_event(self, name: str, payload: GatewayDispatch):
         """|coro|
+
         Processes and invokes an event and its middleware
 
         Parameters
@@ -536,6 +547,7 @@ class Client(Dispatcher):
 
     async def event_handler(self, _, payload: GatewayDispatch):
         """|coro|
+
         Handles all payload events with opcode 0.
 
         Parameters
@@ -552,6 +564,7 @@ class Client(Dispatcher):
 
     async def payload_event_handler(self, _, payload: GatewayDispatch):
         """|coro|
+
         Special event which activates on_payload event!
 
         Parameters
@@ -568,6 +581,7 @@ class Client(Dispatcher):
 
     async def get_guild(self, guild_id: int) -> Guild:
         """|coro|
+
         Fetch a guild object by the guild identifier.
 
         Parameters
@@ -580,6 +594,7 @@ class Client(Dispatcher):
 
     async def get_user(self, _id: int) -> User:
         """|coro|
+
         Fetch a User from its identifier
 
         Parameters
