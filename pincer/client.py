@@ -5,8 +5,9 @@ from __future__ import annotations
 
 import logging
 from asyncio import iscoroutinefunction, run, ensure_future
+from importlib import import_module
 from inspect import isasyncgenfunction
-from typing import Optional, Any, Union, Dict, Tuple, List
+from typing import Optional, Any, Union, Dict, Tuple, List, TYPE_CHECKING
 
 from . import __package__
 from ._config import events
@@ -14,11 +15,18 @@ from .commands import ChatCommandHandler
 from .core.dispatch import GatewayDispatch
 from .core.gateway import Dispatcher
 from .core.http import HTTPClient
-from .exceptions import InvalidEventName
+from .exceptions import (
+    InvalidEventName, TooManySetupArguments, NoValidSetupMethod,
+    NoCogManagerReturnFound, CogAlreadyExists, CogNotFound
+)
 from .middleware import middleware
 from .objects import User, Intents, Guild, ThrottleInterface
-from pincer.objects.app.throttling import DefaultThrottleHandler
+from .objects.app.throttling import DefaultThrottleHandler
 from .utils import get_index, should_pass_cls, Coro
+from .utils.signature import get_params
+
+if TYPE_CHECKING:
+    from .objects.app import AppCommand
 
 _log = logging.getLogger(__package__)
 
@@ -174,6 +182,7 @@ class Client(Dispatcher):
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
         self.throttler = throttler
+        ChatCommandHandler.managers["__main__"] = self
 
     @property
     def chat_commands(self):
@@ -227,7 +236,11 @@ class Client(Dispatcher):
             ...     BotClient("token").run()
 
 
-        :param coroutine: # TODO: add info
+        :param coroutine:
+            The event its coroutine, this is the method which will be
+            invoked when the event is received. Also the name of this
+            coroutine is the name of the event and must always start
+            with ``on_``.
 
         :raises TypeError:
             If the method is not a coroutine.
@@ -264,6 +277,129 @@ class Client(Dispatcher):
         call = _events.get(name.strip().lower())
         if iscoroutinefunction(call) or isasyncgenfunction(call):
             return call
+
+    def load_cog(self, path: str):
+        """
+        Load a cog from a string path, setup method in COG may
+        optionally have a first argument which will contain the client!
+
+        :Example usage:
+
+        run.py
+
+        .. code-block:: pycon
+
+            >>> from pincer import Client
+            >>>
+            >>> class BotClient(Client):
+            ...     def __init__(self, *args, **kwargs):
+            ...         self.load_cog("cogs.say")
+            ...         super().__init__(*args, **kwargs)
+
+        cogs/say.py
+
+        .. code-block:: pycon
+
+            >>> from pincer import command
+            >>>
+            >>> class SayCommand:
+            ...     @command()
+            ...     async def say(self, message: str) -> str:
+            ...         return message
+            >>>
+            >>> setup = SayCommand
+
+
+        :param path:
+            The import path for the cog.
+        """
+
+        if ChatCommandHandler.managers.get(path):
+            raise CogAlreadyExists(
+                f"Cog `{path}` is trying to be loaded but already exists."
+            )
+
+        try:
+            module = import_module(path)
+        except ModuleNotFoundError:
+            raise CogNotFound(f"Cog `{path}` could not be found!")
+
+        setup = getattr(module, "setup", None)
+
+        if not callable(setup):
+            raise NoValidSetupMethod(
+                f"`setup` method was expected in `{path}` but none was found!"
+            )
+
+        args, params = [], get_params(setup)
+
+        if len(params) == 1:
+            args.append(self)
+        elif (length := len(params)) > 1:
+            raise TooManySetupArguments(
+                f"Setup method in `{path}` requested {length} arguments "
+                f"but the maximum is 1!"
+            )
+
+        cog_manager = setup(*args)
+
+        if not cog_manager:
+            raise NoCogManagerReturnFound(
+                f"Setup method in `{path}` didn't return a cog manager! "
+                "(Did you forget to return the cog?)"
+            )
+
+        ChatCommandHandler.managers[path] = cog_manager
+
+    @staticmethod
+    def get_cogs():
+        """
+        Get a dictionary of all loaded cogs.
+
+        The key/value pair is import path/cog class.
+        """
+        return ChatCommandHandler.managers
+
+    async def unload_cog(self, path: str):
+        """
+        Unload an already loaded cog! This removes all of its commands!
+
+        :param path:
+            The path to the cog.
+        """
+        if not ChatCommandHandler.managers.get(path):
+            raise CogNotFound(f"Cog `{path}` could not be found!")
+
+        to_remove: List[AppCommand] = []
+
+        for command in ChatCommandHandler.register.values():
+            if not command:
+                continue
+
+            if command.call.__module__ == path:
+                to_remove.append(command.app)
+
+        await ChatCommandHandler(self).remove_commands(to_remove)
+
+    @staticmethod
+    def execute_event(call: Coro, *args, **kwargs):
+        """
+        Invokes an event.
+
+        :param call:
+            The call (method) to which the event is registered.
+
+        :param \\*args:
+            The arguments for the event.
+
+        :param \\*kwargs:
+            The named arguments for the event.
+        """
+
+        if should_pass_cls(call):
+            args = (ChatCommandHandler.managers[call.__module__], *args)
+
+        ensure_future(call(*args, **kwargs))
 
     def run(self):
         """Start the event listener"""
@@ -352,28 +488,6 @@ class Client(Dispatcher):
             self.execute_event(call, error, *args, **kwargs)
         else:
             raise error
-
-    def execute_event(self, call: Coro, *args, **kwargs):
-        """
-        Invokes an event.
-
-        :param call:
-            The call (method) to which the event is registered.
-
-        :param \\*args:
-            The arguments for the event.
-
-        :param \\*kwargs:
-            The named arguments for the event.
-        """
-
-        def execute(*_args, **_kwargs):
-            ensure_future(call(*_args, **_kwargs))
-
-        if should_pass_cls(call):
-            args = (self, *args)
-
-        execute(*args, **kwargs)
 
     async def process_event(self, name: str, payload: GatewayDispatch):
         """

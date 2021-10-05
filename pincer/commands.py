@@ -5,9 +5,11 @@ from __future__ import annotations
 
 import logging
 import re
-from asyncio import iscoroutinefunction
+from asyncio import iscoroutinefunction, gather
 from inspect import Signature, isasyncgenfunction
-from typing import Optional, Dict, List, Any, Tuple, get_origin, get_args, Union
+from typing import (
+    Optional, Dict, List, Any, Tuple, get_origin, get_args, Union
+)
 
 from . import __package__
 from .exceptions import (
@@ -24,6 +26,7 @@ from .utils import (
     get_signature_and_params, get_index, should_pass_ctx, Coro, Snowflake,
     MISSING, choice_value_types, Choices
 )
+from .utils.types import Singleton
 
 COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 
@@ -54,6 +57,7 @@ def command(
     # TODO: Fix docs w context
     # TODO: Fix docs w argument descriptions
     # TODO: Fix docs w argument choices
+
     def decorator(func: Coro):
         if not iscoroutinefunction(func) and not isasyncgenfunction(func):
             raise CommandIsNotCoroutine(
@@ -243,8 +247,19 @@ def command(
     return decorator
 
 
-class ChatCommandHandler:
+class ChatCommandHandler(metaclass=Singleton):
+    """
+    Class containing methods used to handle various commands
+    """
+    managers: Dict[str, Any] = {}
     register: Dict[str, ClientCommandStructure] = {}
+
+    # Endpoints:
+    __get = "/commands"
+    __delete = "/commands/{command.id}"
+    __update = "/commands/{command.id}"
+    __add = "/commands"
+    __add_guild = "/guilds/{command.app.guild_id}/commands"
 
     # TODO: Fix docs
     def __init__(self, client):
@@ -259,37 +274,110 @@ class ChatCommandHandler:
             cmd.call: {} for cmd in ChatCommandHandler.register.values()
         }
 
+        self.__prefix = f"applications/{self.client.bot.id}"
+
+    async def get_commands(self) -> List[AppCommand]:
+        # TODO: Fix docs
+        return list(map(
+            AppCommand.from_dict,
+            await self.client.http.get(self.__prefix + self.__get)
+        ))
+
+    async def remove_command(self, cmd: AppCommand):
+        # TODO: Fix docs
+        await self.client.http.delete(
+            self.__prefix + self.__delete.format(command=cmd)
+        )
+
+        if ChatCommandHandler.register.get(cmd.name):
+            del ChatCommandHandler.register[cmd.name]
+
+    async def remove_commands(self, commands: List[AppCommand]):
+        # TODO: Fix docs
+        await gather(*list(map(
+            lambda cmd: self.remove_command(cmd),
+            commands
+        )))
+
+    async def update_command(self, cmd: AppCommand, changes: Dict[str, Any]):
+        # TODO: Fix docs
+        await self.client.http.patch(
+            self.__prefix + self.__update.format(command=cmd),
+            changes
+        )
+
+        for key, value in changes.items():
+            setattr(ChatCommandHandler.register[cmd.name], key, value)
+
+    async def update_commands(
+            self,
+            to_update: Dict[AppCommand, Dict[str, Any]]
+    ):
+        # TODO: Fix docs
+        await gather(*list(map(
+            lambda cmd: self.update_command(cmd[0], cmd[1]),
+            to_update.items()
+        )))
+
+    async def add_command(self, cmd: AppCommand):
+        # TODO: Fix docs
+        add_endpoint = self.__add
+
+        if cmd.guild_id is not MISSING:
+            add_endpoint = self.__add_guild.format(command=cmd)
+
+        res = await self.client.http.post(
+            self.__prefix + add_endpoint,
+            cmd.to_dict()
+        )
+
+        ChatCommandHandler.register[cmd.name].app.id = Snowflake(res['id'])
+
+    async def add_commands(self, commands: List[AppCommand]):
+        # TODO: Fix docs
+        await gather(*list(map(
+            lambda cmd: self.add_command(cmd),
+            commands
+        )))
+
     async def __init_existing_commands(self):
         # TODO: Fix docs
-        res = await self.client.http.get(
-            f"applications/{self.client.bot.id}/commands")
-        self._api_commands = list(map(AppCommand.from_dict, res))
-
-    async def __remove_unused_commands(self):
-        # TODO: Fix docs
-        to_remove: List[AppCommand] = list()
+        self._api_commands = await self.get_commands()
 
         for api_cmd in self._api_commands:
-            doesnt_exist = all(
-                api_cmd.name != loc_cmd.app.name
-                for loc_cmd in ChatCommandHandler.register.values()
-            )
+            loc_cmd = ChatCommandHandler.register.get(api_cmd.name)
+
+            if loc_cmd:
+                loc_cmd.app.id = api_cmd.id
+
+    async def __remove_unused_commands(self):
+        """
+        Remove commands that are registered by discord but not in use
+        by the current client!
+        """
+        to_remove: List[AppCommand] = []
+
+        for api_cmd in self._api_commands:
+            doesnt_exist = all(map(
+                lambda loc_cmd: api_cmd.name != loc_cmd.app.name,
+                ChatCommandHandler.register.values()
+            ))
 
             if doesnt_exist:
                 to_remove.append(api_cmd)
 
-        for cmd in to_remove:
-            await self.client.http.delete(
-                f"applications/{self.client.bot.id}/commands/{cmd.id}"
-            )
+        await self.remove_commands(to_remove)
 
         self._api_commands = [
             cmd for cmd in self._api_commands if cmd not in to_remove
         ]
 
     async def __update_existing_commands(self):
-        # TODO: Fix docs
-        to_update: Dict[Snowflake, Dict[str, Any]] = {}
+        """
+        Update all commands where its structure doesn't match the
+        structure that discord has registered.
+        """
+        to_update: Dict[AppCommand, Dict[str, Any]] = {}
 
         def get_changes(
                 api: AppCommand,
@@ -340,7 +428,7 @@ class ChatCommandHandler:
                             else option
                         )
 
-                to_update[api_cmd.id] = {"options": api_update}
+                to_update[api_cmd] = {"options": api_update}
 
                 for key, change in changes.items():
                     if key == "options":
@@ -351,30 +439,19 @@ class ChatCommandHandler:
                     else:
                         setattr(self._api_commands[idx], key, change)
 
-        for cmd_id, changes in to_update.items():
-            await self.client.http.patch(
-                f"applications/{self.client.bot.id}/commands/{cmd_id}",
-                changes
-            )
+        await self.update_commands(to_update)
 
     async def __add_commands(self):
-        # TODO: Fix docs
-        commands_to_add: List[ClientCommandStructure] = [
-            cmd for cmd in ChatCommandHandler.register.values()
+        """
+        Add all new commands which have been registered by the decorator
+        to Discord!
+        """
+        commands_to_add: List[AppCommand] = [
+            cmd.app for cmd in ChatCommandHandler.register.values()
             if cmd.app not in self._api_commands
         ]
 
-        if commands_to_add:
-            for cmd in commands_to_add:
-                endpoint = f"applications/{self.client.bot.id}"
-
-                if cmd.app.guild_id is not MISSING:
-                    endpoint += f"/guilds/{cmd.app.guild_id}"
-
-                await self.client.http.post(
-                    endpoint + "/commands",
-                    cmd.app.to_dict()
-                )
+        await self.add_commands(commands_to_add)
 
     async def initialize(self):
         # TODO: Fix docs
