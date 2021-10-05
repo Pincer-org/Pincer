@@ -99,6 +99,7 @@ class Message:
 
         self.attachments = attch
 
+    @property
     def isempty(self) -> bool:
         """
         :return:
@@ -146,7 +147,7 @@ class Message:
             Command does not have content, an embed, or attachment.
         """
 
-        if self.isempty():
+        if self.isempty:
             raise CommandReturnIsEmpty("Cannot return empty message.")
 
         if not self.attachments:
