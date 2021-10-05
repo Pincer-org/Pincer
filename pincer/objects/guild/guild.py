@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum, auto, IntEnum
-from typing import Optional, List, overload, TYPE_CHECKING
+from typing import Optional, List, Dict, overload, TYPE_CHECKING
 
 from .member import GuildMember
 from ..events.presence import PresenceUpdateEvent
@@ -414,6 +414,9 @@ class Guild(APIObject):
     afk_channel_id: Optional[Snowflake]
     afk_timeout: int
     application_id: Optional[Snowflake]
+    application_command_counts: Optional[Dict]
+    application_command_count: Optional[int]
+    embedded_activities: Optional[List]
     banner: Optional[str]
     default_message_notifications: DefaultMessageNotificationLevel
     description: Optional[str]
@@ -437,6 +440,10 @@ class Guild(APIObject):
     system_channel_id: Optional[Snowflake]
     vanity_url_code: Optional[str]
     verification_level: VerificationLevel
+    guild_scheduled_events: Optional[List]
+    lazy: Optional[bool]
+    premium_progress_bar_enabled: Optional[bool]
+    guild_hashes: Optional[Dict]
 
     approximate_member_count: APINullable[int] = MISSING
     approximate_presence_count: APINullable[int] = MISSING
