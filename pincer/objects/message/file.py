@@ -59,7 +59,7 @@ class File(APIObject):
     ) -> File:
         """
         Creates a file object from a PIL image
-        Supports PNG, JPEG, and WEBP.
+        Supports GIF, PNG, JPEG, and WEBP.
 
         :param img:
             Pillow image object.
