@@ -25,7 +25,7 @@ author = __author__
 # The full version, including alpha/beta/rc tags
 release = __version__
 
-branch = 'master' if __version__.endswith('a') else 'v' + __version__
+branch = 'main' if __version__.endswith('a') else 'v' + __version__
 
 # -- General configuration ---------------------------------------------------
 
