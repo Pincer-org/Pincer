@@ -22,6 +22,15 @@ class UnhandledException(PincerError):
         )
 
 
+class InvalidPayload(PincerError):
+    """
+    Exception which gets thrown if an invalid payload has been received.
+
+    This means that the data of the payload did not match the expected
+    format and/or didn't contain the the expected values.
+    """
+
+
 class NoExportMethod(PincerError):
     """
     Exception which gets raised when an ``export`` method is expected but
