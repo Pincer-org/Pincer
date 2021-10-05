@@ -19,4 +19,3 @@ async def voice_state_update_middleware(self, payload: GatewayDispatch):
 
 def export():
     return voice_state_update_middleware
-    
