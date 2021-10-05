@@ -37,7 +37,7 @@ class Dispatcher:
 
     This token must be a bot token.
     (Which can be found on
-    `<https://discord.com/developers/applications/<bot_id>/bot>`_)
+    `<https://discord.com/developers/applications/`_)
     """
 
     # TODO: Implement compression
