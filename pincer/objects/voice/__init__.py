@@ -2,7 +2,3 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 from .region import *
-
-__all__ = (
-    "VoiceRegion",
-)
