@@ -34,8 +34,8 @@ class File(APIObject):
         """
         :param filepath:
             The path to the file you want to send. Must be string. The file's
-            name in the file path is used as the name when uploaded discord by
-            default.
+            name in the file path is used as the name when uploaded to discord
+            by default.
 
         :param filename:
             The name of the file. Will override the default name.
@@ -50,15 +50,16 @@ class File(APIObject):
         )
 
     @classmethod
-    def from_image(
+    def from_pillow_image(
             cls,
             img: Image,
             filename: str,
-            image_format: Optional[str] = None
+            image_format: Optional[str] = None,
+            **kwargs
     ) -> File:
         """
         Creates a file object from a PIL image
-        Supports PNG and JPEG
+        Supports PNG, JPEG, and WEBP.
 
         :param img:
             Pillow image object.
@@ -83,7 +84,7 @@ class File(APIObject):
                 image_format = "jpeg"
 
         imgByteArr = BytesIO()
-        img.save(imgByteArr, format=image_format)
+        img.save(imgByteArr, format=image_format, **kwargs)
         img_bytes = imgByteArr.getvalue()
 
         return cls(
