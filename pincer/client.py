@@ -481,13 +481,10 @@ class Client(Dispatcher):
             The named arguments for the event.
         """
 
-        def execute(*_args, **_kwargs):
-            ensure_future(call(*_args, **_kwargs))
-
         if should_pass_cls(call):
-            args = (self, *args)
+            args = (ChatCommandHandler.managers[call.__module__], *args)
 
-        execute(*args, **kwargs)
+        ensure_future(call(*args, **kwargs))
 
     async def process_event(self, name: str, payload: GatewayDispatch):
         """
