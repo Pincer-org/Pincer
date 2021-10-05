@@ -414,8 +414,6 @@ class Guild(APIObject):
     afk_channel_id: Optional[Snowflake]
     afk_timeout: int
     application_id: Optional[Snowflake]
-    application_command_counts: Optional[Dict]
-    application_command_count: Optional[int]
     embedded_activities: Optional[List]
     banner: Optional[str]
     default_message_notifications: DefaultMessageNotificationLevel
@@ -445,6 +443,8 @@ class Guild(APIObject):
     premium_progress_bar_enabled: Optional[bool]
     guild_hashes: Optional[Dict]
 
+    application_command_counts: APINullable[Dict] = MISSING
+    application_command_count: APINullable[int] = MISSING
     approximate_member_count: APINullable[int] = MISSING
     approximate_presence_count: APINullable[int] = MISSING
     channels: APINullable[List[Channel]] = field(default_factory=list)
