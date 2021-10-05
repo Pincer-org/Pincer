@@ -107,10 +107,13 @@ html_static_path = ['_static']
 html_css_files = ["custom.css"]
 
 rst_prolog = '''
-.. |coro| replace:: This function is a |coroutine_link|_.
+.. |coro| replace:: This function is a |coroutine_link|_.\n\n
 .. |maybecoro| replace:: This function *could be a* |coroutine_link|_.
 .. |coroutine_link| replace:: *coroutine*
 .. _coroutine_link: https://docs.python.org/3/library/asyncio-task.html#coroutine
+.. |default| raw:: html
+
+    <div class="default-value-section"> <span class="default-value-label">Default:</span>
 '''
 
 # The suffix of source filenames.

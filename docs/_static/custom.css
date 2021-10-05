@@ -101,3 +101,14 @@ main .py-attribute-table-column > ul {
     -webkit-user-select: none;
     user-select: none;
 }
+
+/* Defaults to... */
+.default-value-section {
+    margin-bottom: 6px;
+}
+.default-value-section .default-value-label {
+    font-style: italic;
+}
+.default-value-section code {
+    color: #306998;
+}

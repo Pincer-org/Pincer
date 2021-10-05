@@ -84,20 +84,20 @@ def command(
     Parameters
     ----------
     name :
-        The name of the command, by default None
+        The name of the command |default| ``None``
     description :
-        The description of the command, by default "Description not set"
+        The description of the command |default| ``Description not set``
     enable_default :
-        Whether the command is enabled by default, by default True
+        Whether the command is enabled by default |default| ``True``
     guild :
-        What guild to add it to (don't specify for global), by default None
+        What guild to add it to (don't specify for global) |default| ``None``
     cooldown :
-        The amount of times in the cooldown_scale the command can be invoked, 
-        by default 0
+        The amount of times in the cooldown_scale the command can be invoked 
+        |default| ``0``
     cooldown_scale :
-        The 'checking time' of the cooldown, by default 60
+        The 'checking time' of the cooldown |default| ``60``
     cooldown_scope :
-        What type of cooldown strategy to use, by default ThrottleScope.USER
+        What type of cooldown strategy to use |default| :attr:`ThrottleScope.USER`
 
     Raises
     ------
