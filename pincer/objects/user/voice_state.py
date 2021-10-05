@@ -11,6 +11,8 @@ from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from ..guild.member import GuildMember
+    from ... import Client
+    from ...core.http import HTTPClient
     from ...utils import APINullable
     from ...utils.snowflake import Snowflake
     from ...utils.timestamp import Timestamp
@@ -60,6 +62,8 @@ class VoiceState(APIObject):
     :param request_to_speak_timestamp:
         the time at which the user requested to speak
     """
+    _client: Client
+    _http: HTTPClient
     channel_id: Optional[Snowflake]
     user_id: Snowflake
     session_id: str

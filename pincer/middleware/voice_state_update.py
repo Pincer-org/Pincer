@@ -6,4 +6,17 @@ sent when a user's voice state changes in a subscribed voice channel
 (mute, volume, etc.)
 """
 
-# TODO: Implement event
+from ..core.dispatch import GatewayDispatch
+from ..objects.user import VoiceState
+
+
+async def voice_state_update_middleware(self, payload: GatewayDispatch):
+    return "on_voice_state_update", [
+        VoiceState.from_dict(
+            {"_client": self, "_http": self.http, **payload.data}
+        )
+    ]
+
+def export():
+    return voice_state_update_middleware
+    
