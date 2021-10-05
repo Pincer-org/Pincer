@@ -49,7 +49,24 @@ class AllowedMentions(APIObject):
 
 @dataclass
 class Message:
-    # TODO: Write docs
+    # TODO: Docs for tts, allowed_mentions, components, flags, and type.
+
+    """
+    A discord message that will be send to discord
+
+    :param content:
+        The text in the message.
+
+    :param attachments:
+        Attachments on the message. This is a File object. You can also attach
+        a Pillow Image or string. Pillow images will be converted to PNGs. They
+        will use the naming sceme ``image%`` where % is the images index in the
+        attachments array. Strings will be read as a filepath. The name of the
+        file that the string points to will be used as the name.
+
+    :param embeds:
+        Embed attached to the message. This is an Embed object.
+    """
 
     content: str = ''
     attachments: Optional[List[File]] = None
