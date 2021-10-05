@@ -88,7 +88,7 @@ class Message:
             if isinstance(value, File):
                 attch.append(value)
             elif isinstance(value, Image):
-                attch.append(File.from_image(
+                attch.append(File.from_pillow_image(
                     value,
                     f"image{count}.png",
                 ))
