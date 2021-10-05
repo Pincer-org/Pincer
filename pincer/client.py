@@ -278,7 +278,7 @@ class Client(Dispatcher):
         if iscoroutinefunction(call) or isasyncgenfunction(call):
             return call
 
-    def load_cog(self, path: str):
+    def load_cog(self, path: str, package: Optional[str] = None):
         """
         Load a cog from a string path, setup method in COG may
         optionally have a first argument which will contain the client!
@@ -312,6 +312,9 @@ class Client(Dispatcher):
 
         :param path:
             The import path for the cog.
+
+        :param package:
+            The package name for relative based imports.
         """
 
         if ChatCommandHandler.managers.get(path):
@@ -320,7 +323,7 @@ class Client(Dispatcher):
             )
 
         try:
-            module = import_module(path)
+            module = import_module(path, package=package)
         except ModuleNotFoundError:
             raise CogNotFound(f"Cog `{path}` could not be found!")
 
