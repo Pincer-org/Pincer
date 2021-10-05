@@ -15,4 +15,3 @@ async def guild_create_middleware(self, payload: GatewayDispatch):
 
 def export():
     return guild_create_middleware
-    
