@@ -7,9 +7,8 @@ import logging
 from asyncio import iscoroutinefunction, run, ensure_future
 from importlib import import_module
 from inspect import isasyncgenfunction
-from typing import Optional, Any, Union, Dict, Tuple, List
+from typing import Optional, Any, Union, Dict, Tuple, List, TYPE_CHECKING
 
-from pincer.objects import AppCommand
 from . import __package__
 from ._config import events
 from .commands import ChatCommandHandler
@@ -25,6 +24,9 @@ from .objects import User, Intents, Guild, ThrottleInterface
 from .objects.app.throttling import DefaultThrottleHandler
 from .utils import get_index, should_pass_cls, Coro
 from .utils.signature import get_params
+
+if TYPE_CHECKING:
+    from .objects.app import AppCommand
 
 _log = logging.getLogger(__package__)
 
@@ -379,6 +381,26 @@ class Client(Dispatcher):
 
         await ChatCommandHandler(self).remove_commands(to_remove)
 
+    @staticmethod
+    def execute_event(call: Coro, *args, **kwargs):
+        """
+        Invokes an event.
+
+        :param call:
+            The call (method) to which the event is registered.
+
+        :param \\*args:
+            The arguments for the event.
+
+        :param \\*kwargs:
+            The named arguments for the event.
+        """
+
+        if should_pass_cls(call):
+            args = (ChatCommandHandler.managers[call.__module__], *args)
+
+        ensure_future(call(*args, **kwargs))
+
     def run(self):
         """Start the event listener"""
         self.start_loop()
@@ -466,25 +488,6 @@ class Client(Dispatcher):
             self.execute_event(call, error, *args, **kwargs)
         else:
             raise error
-
-    def execute_event(self, call: Coro, *args, **kwargs):
-        """
-        Invokes an event.
-
-        :param call:
-            The call (method) to which the event is registered.
-
-        :param \\*args:
-            The arguments for the event.
-
-        :param \\*kwargs:
-            The named arguments for the event.
-        """
-
-        if should_pass_cls(call):
-            args = (ChatCommandHandler.managers[call.__module__], *args)
-
-        ensure_future(call(*args, **kwargs))
 
     async def process_event(self, name: str, payload: GatewayDispatch):
         """
