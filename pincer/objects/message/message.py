@@ -50,6 +50,7 @@ class AllowedMentions(APIObject):
 @dataclass
 class Message:
     # TODO: Write docs
+
     content: str = ''
     attachments: Optional[List[File]] = None
     tts: Optional[bool] = False
@@ -72,7 +73,7 @@ class Message:
             elif isinstance(value, Image):
                 attch.append(File.from_image(
                     value,
-                    f"file{count}.png",
+                    f"image{count}.png",
                 ))
             elif isinstance(value, str):
                 attch.append(File.from_file(value))
@@ -81,7 +82,7 @@ class Message:
 
         self.attachments = attch
 
-    def is_empty(self) -> bool:
+    def isempty(self) -> bool:
         """
         :return:
             Returns true if a message is empty.
@@ -128,7 +129,7 @@ class Message:
             Command does not have content, an embed, or attachment.
         """
 
-        if self.is_empty():
+        if self.isempty():
             raise CommandReturnIsEmpty("Cannot return empty message.")
 
         if not self.attachments:
