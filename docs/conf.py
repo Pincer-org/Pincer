@@ -69,6 +69,11 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 autoclass_content = 'both'
 
+autodoc_default_options = {
+    'members': True,
+    'show-inheritance': True
+}
+
 with open('../requirements.txt') as f:
     autodoc_mock_imports = f.read().splitlines()
 
