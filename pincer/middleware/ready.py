@@ -8,14 +8,8 @@ contains server information
 
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
-<<<<<<< HEAD
 from ..objects.user.user import User
 from ..utils.types import Coro
-=======
-from ..exceptions import InvalidPayload
-from ..objects import User
-from ..utils import Coro
->>>>>>> main
 
 
 async def on_ready_middleware(self, payload: GatewayDispatch):

@@ -9,7 +9,6 @@ from PIL.Image import Image
 
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
-<<<<<<< HEAD
 from ..objects.app.interactions import Interaction
 from ..objects.message.embed import Embed
 from ..objects.message.message import Message
@@ -18,12 +17,6 @@ from ..objects.message.context import MessageContext
 from ..utils.insertion import should_pass_cls, should_pass_ctx
 from ..utils.types import MISSING
 from ..utils.types import Coro
-=======
-from ..objects import (
-    File, Interaction, Embed, Message, InteractionFlags, MessageContext
-)
-from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
->>>>>>> main
 from ..utils.signature import get_params, get_signature_and_params
 
 _log = logging.getLogger(__name__)
