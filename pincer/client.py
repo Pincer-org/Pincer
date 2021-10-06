@@ -175,7 +175,7 @@ class Client(Dispatcher):
         ----------
         token :
             the token to login with your bot from the developer portal
-        received 0:
+        received :
             The default message which will be sent when no response is given. 
             |default| ``None``
         intents :
@@ -213,9 +213,9 @@ class Client(Dispatcher):
 
     @staticmethod
     def event(coroutine: Coro) -> Coro:
-        """Register a Discord gateway event listener. This event will get
-        called when the client receives a new event update from Discord
-        which matches the event name.
+        """A decorator to register a Discord gateway event listener. 
+        This event will get called when the client receives a new event 
+        update from Discord which matches the event name.
 
         The event name gets pulled from your method name, and this must
         start with ``on_``.

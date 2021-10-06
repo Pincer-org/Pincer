@@ -200,8 +200,14 @@ def get_class_results(lookup, modulename, name, fullname):
                 label = f'{name}.{attr}'
                 badge = attributetablebadge('cls', 'cls')
                 badge['badge-type'] = _('classmethod')
-            elif inspect.isfunction(value):
-                if doc.startswith(('A decorator', 'A shortcut decorator')):
+            elif (
+                inspect.isfunction(value) 
+                or isinstance(value, staticmethod)
+            ):
+                if (
+                    doc.startswith(('A decorator', 'A shortcut decorator')) 
+                    or label == "event"
+                ):
                     # finicky but surprisingly consistent
                     badge = attributetablebadge('@', '@')
                     badge['badge-type'] = _('decorator')

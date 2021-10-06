@@ -15,7 +15,6 @@ Client
     :exclude-members: event
 
     .. automethod:: Client.event()
-        :decorator:
 
 Commands
 --------
