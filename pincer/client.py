@@ -30,15 +30,13 @@ from .middleware import middleware
 from .objects.user import User
 from .objects.guild import Guild
 from .objects.app.throttling import ThrottleInterface
+from .objects.app.command import AppCommand
 from .objects.app.intents import Intents
 from .objects.app.throttling import DefaultThrottleHandler
 from .utils.extraction import get_index
 from .utils.insertion import should_pass_cls
 from .utils.types import Coro
 from .utils.signature import get_params
-
-if TYPE_CHECKING:
-    from .objects.app import AppCommand
 
 _log = logging.getLogger(__package__)
 
