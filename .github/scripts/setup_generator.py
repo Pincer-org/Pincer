@@ -25,7 +25,7 @@ def main():
 
     packages = get_packages()
 
-    with open("gen/setup_base.cfg") as f:
+    with open(".github/scripts/setup_base.cfg") as f:
         base = f.read()
 
     requires = get_requires()
