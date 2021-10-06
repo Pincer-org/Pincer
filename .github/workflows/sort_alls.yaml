@@ -20,7 +20,7 @@ jobs:
           architecture: 'x64'
 
       - name: running script
-        run: python -m gen.all_sorter
+        run: python ./.github/scripts/all_sorter.py
 
       - name: setup git
         run: |
