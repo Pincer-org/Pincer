@@ -26,7 +26,7 @@ jobs:
         run: pip install -r requirements_dev.txt
 
       - name: generate setup.cfg
-        run: python -m gen.setup_generator
+        run: python ./.github/scripts/setup_generator.py
 
       - name: compile lib
         run: python setup.py sdist bdist_wheel
