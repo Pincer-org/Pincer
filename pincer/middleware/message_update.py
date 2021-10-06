@@ -3,4 +3,17 @@
 
 """sent when a message is updated in a subscribed text channel"""
 
-# TODO: Implement event
+from ..core.dispatch import GatewayDispatch
+from ..objects import UserMessage
+
+
+async def message_update_middleware(self, payload: GatewayDispatch):
+    return "on_message_update", [
+        UserMessage.from_dict(
+            {"_client": self, "_http": self.http, **payload.data}
+        )
+    ]
+
+
+def export():
+    return message_update_middleware

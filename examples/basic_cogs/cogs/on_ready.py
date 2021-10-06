@@ -2,7 +2,7 @@ from pincer import Client
 
 
 class OnReadyCog:
-    def __init(self, client: Client):
+    def __init__(self, client: Client):
         self.client = client
 
     @Client.event

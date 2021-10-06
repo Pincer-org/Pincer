@@ -52,6 +52,14 @@ pincer.objects.message.emoji module
    :undoc-members:
    :show-inheritance:
 
+pincer.objects.message.file module
+----------------------------------
+
+.. automodule:: pincer.objects.message.file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.objects.message.message module
 -------------------------------------
 

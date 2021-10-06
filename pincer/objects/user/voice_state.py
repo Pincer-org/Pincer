@@ -58,6 +58,8 @@ class VoiceState(APIObject):
     :param request_to_speak_timestamp:
         the time at which the user requested to speak
     """
+    _client: Client
+    _http: HTTPClient
     channel_id: Optional[Snowflake]
     user_id: Snowflake
     session_id: str
