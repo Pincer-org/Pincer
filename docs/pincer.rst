@@ -12,9 +12,6 @@ Client
 .. attributetable:: Client
 
 .. autoclass:: Client
-    :exclude-members: event
-
-    .. automethod:: Client.event()
 
 Commands
 --------
@@ -30,7 +27,6 @@ ChatCommandHandler
 .. attributetable:: ChatCommandHandler
 
 .. autoclass:: ChatCommandHandler()
-    :private-members:
 
 Exceptions
 ----------

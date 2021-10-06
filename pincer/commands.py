@@ -322,18 +322,6 @@ class ChatCommandHandler(metaclass=Singleton):
     ----------
     client: :class:`Client`
         The client object
-    __get: :class:`str`
-        ``/commands`` route
-    __delete: :class:`str`
-        ``/commands/{command.id}`` route
-    __update: :class:`str`
-        ``/commands/{command.id}`` route
-    __add: :class:`str`
-        ``/commands`` route
-    __add_guild: :class:`str`
-        ``/guilds/{command.app.guild_id}/commands`` route
-    _api_commands: :class:`~typing.List`
-        List of :class:`objects.AppCommand`
     managers: :class:`~typing.Dict`
         Dictionary of managers
     register: :class:`~typing.Dict`
