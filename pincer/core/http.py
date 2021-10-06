@@ -5,10 +5,11 @@ import asyncio
 import logging
 from asyncio import sleep
 from json import dumps
-from typing import Dict, Any, Optional, Protocol
+from typing import Dict, Any, Optional, Protocol, Union
 
 from aiohttp import ClientSession, ClientResponse
 from aiohttp.client import _RequestContextManager
+from aiohttp.payload import Payload
 from aiohttp.typedefs import StrOrURL
 
 from . import __package__
@@ -28,7 +29,9 @@ class HttpCallable(Protocol):
 
     def __call__(
             self, url: StrOrURL, *,
-            allow_redirects: bool = True, json: Dict = None, **kwargs: Any
+            allow_redirects: bool = True,
+            method: Optional[Union[Dict, str, Payload]] = None,
+            **kwargs: Any
     ) -> _RequestContextManager:
         ...
 
@@ -58,7 +61,6 @@ class HTTPClient:
 
         headers: Dict[str, str] = {
             "Authorization": f"Bot {token}",
-            "Content-Type": "application/json"
         }
         self.__session: ClientSession = ClientSession(headers=headers)
 
@@ -87,7 +89,8 @@ class HTTPClient:
             self,
             method: HttpCallable,
             endpoint: str, *,
-            data: Optional[Dict] = None,
+            content_type: str = "application/json",
+            data: Optional[Union[Dict, str, Payload]] = None,
             __ttl: int = None
     ) -> Optional[Dict]:
         """
@@ -102,6 +105,9 @@ class HTTPClient:
             The endpoint to which the request will be sent.
 
         Keyword Arguments:
+
+        :param content_type:
+            The request's content type.
 
         :param data:
             The data which will be added to the request.
@@ -121,13 +127,21 @@ class HTTPClient:
 
             raise ServerError(f"Maximum amount of retries for `{endpoint}`.")
 
+        if isinstance(data, dict):
+            data = dumps(data)
+
         # TODO: print better method name
-        _log.debug(f"{method.__name__.upper()} {endpoint} | {dumps(data)}")
+        # TODO: Adjust to work non-json types
+        _log.debug(f"{method.__name__.upper()} {endpoint} | {data}")
 
         url = f"{self.url}/{endpoint}"
-        async with method(url, json=data) as res:
+        async with method(
+                url,
+                data=data,
+                headers={"Content-Type": content_type}
+        ) as res:
             return await self.__handle_response(
-                res, method, endpoint, data, ttl
+                res, method, endpoint, content_type, data, ttl
             )
 
     async def __handle_response(
@@ -135,7 +149,8 @@ class HTTPClient:
             res: ClientResponse,
             method: HttpCallable,
             endpoint: str,
-            data: Optional[Dict],
+            content_type: str,
+            data: Optional[str],
             __ttl: int,
     ) -> Optional[Dict]:
         """
@@ -154,6 +169,9 @@ class HTTPClient:
 
         :param endpoint:
             The endpoint to which the request was sent.
+
+        :param content_type:
+            The request's content type.
 
         :param data:
             The data which was added to the request.
@@ -188,7 +206,12 @@ class HTTPClient:
                     f" Retrying in {timeout} seconds"
                 )
                 await sleep(timeout)
-                return await self.__send(method, endpoint, data=data)
+                return await self.__send(
+                    method,
+                    endpoint,
+                    content_type=content_type,
+                    data=data
+                )
 
             _log.error(
                 f"An http exception occurred while trying to send "
@@ -209,7 +232,13 @@ class HTTPClient:
         await asyncio.sleep(retry_in)
 
         # try sending it again
-        return await self.__send(method, endpoint, __ttl=__ttl - 1, data=data)
+        return await self.__send(
+            method,
+            endpoint,
+            content_type=content_type,
+            __ttl=__ttl - 1,
+            data=data
+        )
 
     async def delete(self, route: str) -> Optional[Dict]:
         """
@@ -259,7 +288,12 @@ class HTTPClient:
         """
         return await self.__send(self.__session.options, route)
 
-    async def patch(self, route: str, data: Dict) -> Optional[Dict]:
+    async def patch(
+            self,
+            route: str,
+            data: Dict,
+            content_type: str = "application/json"
+    ) -> Optional[Dict]:
         """
         Sends a patch request to a Discord REST endpoint.
 
@@ -269,12 +303,25 @@ class HTTPClient:
         :param data:
             The update data for the patch request.
 
+        :param content_type:
+            Body content type.
+
         :return:
             JSON response from the discord API.
         """
-        return await self.__send(self.__session.patch, route, data=data)
+        return await self.__send(
+            self.__session.patch,
+            route,
+            content_type=content_type,
+            data=data
+        )
 
-    async def post(self, route: str, data: Dict) -> Optional[Dict]:
+    async def post(
+            self,
+            route: str,
+            data: Dict,
+            content_type: str = "application/json"
+    ) -> Optional[Dict]:
         """
         Sends a post request to a Discord REST endpoint.
 
@@ -284,12 +331,25 @@ class HTTPClient:
         :param data:
             The data for the post request.
 
+        :param content_type:
+            Body content type.
+
         :return:
             JSON response from the discord API.
         """
-        return await self.__send(self.__session.post, route, data=data)
+        return await self.__send(
+            self.__session.post,
+            route,
+            content_type=content_type,
+            data=data
+        )
 
-    async def put(self, route: str, data: Dict) -> Optional[Dict]:
+    async def put(
+            self,
+            route: str,
+            data: Dict,
+            content_type: str = "application/json"
+    ) -> Optional[Dict]:
         """
         Sends a put request to a Discord REST endpoint.
 
@@ -299,7 +359,15 @@ class HTTPClient:
         :param data:
             The data for the put request.
 
+        :param content_type:
+            Body content type.
+
         :return:
             JSON response from the discord API.
         """
-        return await self.__send(self.__session.put, route, data=data)
+        return await self.__send(
+            self.__session.put,
+            route,
+            content_type=content_type,
+            data=data
+        )

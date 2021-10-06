@@ -5,6 +5,8 @@ import logging
 from inspect import isasyncgenfunction
 from typing import Union, Dict, Any
 
+from PIL.Image import Image
+
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
 from ..objects.app.interactions import Interaction
@@ -24,6 +26,8 @@ def convert_message(self, message: Union[Embed, Message, str]) -> Message:
     """Converts a message to a Message object"""
     if isinstance(message, Embed):
         message = Message(embeds=[message])
+    elif isinstance(message, (File, Image)):
+        message = Message(attachments=[message])
     elif not isinstance(message, Message):
         message = Message(message) if message else Message(
             self.received_message,
@@ -32,7 +36,7 @@ def convert_message(self, message: Union[Embed, Message, str]) -> Message:
     return message
 
 
-async def reply(self, interaction: Interaction, message):
+async def reply(self, interaction: Interaction, message: Message):
     """
     Sends a reply to an interaction.
 
@@ -45,9 +49,13 @@ async def reply(self, interaction: Interaction, message):
     :param message:
         The message to reply with.
     """
+
+    content_type, data = message.serialize()
+
     await self.http.post(
         f"interactions/{interaction.id}/{interaction.token}/callback",
-        message.to_dict()
+        data,
+        content_type=content_type
     )
 
 

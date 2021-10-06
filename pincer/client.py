@@ -16,7 +16,6 @@ from typing import (
     Union
 )
 
-from pincer.objects import AppCommand
 from . import __package__
 from ._config import events
 from .commands import ChatCommandHandler
@@ -31,6 +30,7 @@ from .middleware import middleware
 from .objects.user import User
 from .objects.guild import Guild
 from .objects.app.throttling import ThrottleInterface
+from .objects.app.command import AppCommand
 from .objects.app.intents import Intents
 from .objects.app.throttling import DefaultThrottleHandler
 from .utils.extraction import get_index
@@ -303,7 +303,7 @@ class Client(Dispatcher):
         if iscoroutinefunction(call) or isasyncgenfunction(call):
             return call
 
-    def load_cog(self, path: str):
+    def load_cog(self, path: str, package: Optional[str] = None):
         """
         Load a cog from a string path, setup method in COG may
         optionally have a first argument which will contain the client!
@@ -337,6 +337,9 @@ class Client(Dispatcher):
 
         :param path:
             The import path for the cog.
+
+        :param package:
+            The package name for relative based imports.
         """
 
         if ChatCommandHandler.managers.get(path):
@@ -345,7 +348,7 @@ class Client(Dispatcher):
             )
 
         try:
-            module = import_module(path)
+            module = import_module(path, package=package)
         except ModuleNotFoundError:
             raise CogNotFound(f"Cog `{path}` could not be found!")
 
@@ -412,6 +415,26 @@ class Client(Dispatcher):
                 to_remove.append(command.app)
 
         await ChatCommandHandler(self).remove_commands(to_remove)
+
+    @staticmethod
+    def execute_event(call: Coro, *args, **kwargs):
+        """
+        Invokes an event.
+
+        :param call:
+            The call (method) to which the event is registered.
+
+        :param \\*args:
+            The arguments for the event.
+
+        :param \\*kwargs:
+            The named arguments for the event.
+        """
+
+        if should_pass_cls(call):
+            args = (ChatCommandHandler.managers[call.__module__], *args)
+
+        ensure_future(call(*args, **kwargs))
 
     def run(self):
         """start the event listener
@@ -504,22 +527,6 @@ class Client(Dispatcher):
             self.execute_event(call, error, *args, **kwargs)
         else:
             raise error
-
-    def execute_event(self, call: Coro, *args, **kwargs):
-        """Invoke an event
-
-        Parameters
-        ----------
-        call :
-            The call (method) to which the event is registered.
-        """
-        def execute(*_args, **_kwargs):
-            ensure_future(call(*_args, **_kwargs))
-
-        if should_pass_cls(call):
-            args = (self, *args)
-
-        execute(*args, **kwargs)
 
     async def process_event(self, name: str, payload: GatewayDispatch):
         """|coro|
