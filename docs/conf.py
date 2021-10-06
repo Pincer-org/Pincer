@@ -83,6 +83,7 @@ with open('../requirements.txt') as f:
 # a list of builtin themes.
 #
 html_logo = '../assets/img/icon_smol.png'
+html_favicon = '../assets/img/icon.ico'
 html_theme = 'furo'
 # Material theme options (see theme.conf for more information)
 html_theme_options = {
