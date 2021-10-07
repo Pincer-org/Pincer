@@ -23,7 +23,7 @@ copyright = '2021, Pincer'
 author = __author__
 
 # The full version, including alpha/beta/rc tags
-release = __version__
+release = str(__version__)
 
 branch = 'main' if __version__.endswith('a') else 'v' + __version__
 
