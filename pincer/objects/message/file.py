@@ -3,14 +3,27 @@
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from io import BytesIO
-import os
-from typing import Optional
-
-from PIL.Image import Image
+from typing import Optional, TYPE_CHECKING
 
 from ...utils import APIObject
+
+PILLOW_IMPORT = True
+
+try:
+    from PIL.Image import Image
+
+    if TYPE_CHECKING:
+        IMAGE_TYPE = Image
+except (ModuleNotFoundError, ImportError):
+    PILLOW_IMPORT = False
+
+    if TYPE_CHECKING:
+        from ...utils import MISSING
+
+        IMAGE_TYPE = MISSING
 
 
 @dataclass
@@ -52,7 +65,7 @@ class File(APIObject):
     @classmethod
     def from_pillow_image(
             cls,
-            img: Image,
+            img: IMAGE_TYPE,
             filename: str,
             image_format: Optional[str] = None,
             **kwargs
@@ -76,6 +89,12 @@ class File(APIObject):
 
         :return: File
         """
+
+        if not PILLOW_IMPORT:
+            raise ModuleNotFoundError(
+                "The `Pillow` library is required for sending and converting "
+                "pillow images,"
+            )
 
         if image_format is None:
             image_format = os.path.splitext(filename)[1][1:]
