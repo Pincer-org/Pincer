@@ -74,7 +74,6 @@ Exceptions
 .. autoexception:: InvalidUrlError()
 
 .. autoexception:: EmbedFieldError()
-    :exclude-members: __init__
 
 .. autoexception:: TaskError()
 
@@ -91,7 +90,6 @@ Exceptions
 .. autoexception:: DisallowedIntentsError()
 
 .. autoexception:: InvalidTokenError()
-    :exclude-members: __init__
 
 .. autoexception:: HeartbeatError()
 

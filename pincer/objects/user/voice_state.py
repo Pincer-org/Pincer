@@ -12,7 +12,8 @@ from ..guild.member import GuildMember
 from ...utils.types import APINullable
 from ...utils.snowflake import Snowflake
 from ...utils.timestamp import Timestamp
-
+from ... import client
+from ...core.http import HTTPClient
 
 @dataclass
 class VoiceState(APIObject):
@@ -58,7 +59,7 @@ class VoiceState(APIObject):
     :param request_to_speak_timestamp:
         the time at which the user requested to speak
     """
-    _client: Client
+    _client: client.Client
     _http: HTTPClient
     channel_id: Optional[Snowflake]
     user_id: Snowflake

@@ -15,7 +15,7 @@ from ..guild.stage import StageInstance
 from ..guild.welcome_screen import WelcomeScreen
 from ..message import emoji
 from ..message.sticker import Sticker
-from ..user.voice_state import VoiceState
+from ..user import voice_state
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
@@ -470,7 +470,7 @@ class Guild(APIObject):
     threads: APINullable[List[Channel]] = MISSING
     # Guilds are considered available unless otherwise specified
     unavailable: APINullable[bool] = False
-    voice_states: APINullable[List[VoiceState]] = MISSING
+    voice_states: APINullable[List[voice_state.VoiceState]] = MISSING
     widget_enabled: APINullable[bool] = MISSING
     widget_channel_id: APINullable[Optional[Snowflake]] = MISSING
     welcome_screen: APINullable[WelcomeScreen] = MISSING

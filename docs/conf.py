@@ -38,14 +38,16 @@ import sphinx_autodoc_typehints
 extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.autodoc',
+    'sphinx_autodoc_typehints',
     'sphinx.ext.intersphinx',
     'exception_hierarchy',
     'attributetable',
     'silence',
-    'sphinx_autodoc_typehints'
 ]
 
 autodoc_typehints = 'none'
+
+set_type_checking_flag = True
 
 resource_links = {
     'discord': 'https://discord.gg/et54DgVjMX',

@@ -8,27 +8,33 @@ import re
 from asyncio import iscoroutinefunction, gather
 from inspect import Signature, isasyncgenfunction
 from typing import (
-    Optional, Dict, List, Any, Tuple, get_origin, get_args, Union
+    Optional, Dict, List,
+    Any, Tuple, get_origin,
+    get_args, TYPE_CHECKING,
+    Union
 )
 
 from . import __package__
-from .exceptions import (
-    CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
-    InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
-    InvalidCommandName
-)
+from .objects.app.command import AppCommandOptionType, AppCommand
 from .objects.app.throttle_scope import ThrottleScope
-from .objects.app.command import (
-    AppCommand, AppCommandOptionType, AppCommandOption, 
-    AppCommandOptionChoice, ClientCommandStructure, AppCommandType
-)
-from .utils.extraction import get_index
-from .utils.signature import get_signature_and_params
-from .utils.insertion import should_pass_ctx
-from .utils.types import Coro, MISSING, choice_value_types, Choices
-from .utils.snowflake import Snowflake
 from .utils.types import Singleton
+from .utils.snowflake import Snowflake
 from . import client
+
+if TYPE_CHECKING:
+    from .exceptions import (
+        CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
+        InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
+        InvalidCommandName
+    )
+    from .objects.app.command import (
+        AppCommandOption, 
+        AppCommandOptionChoice, ClientCommandStructure, AppCommandType
+    )
+    from .utils.extraction import get_index
+    from .utils.signature import get_signature_and_params
+    from .utils.insertion import should_pass_ctx
+    from .utils.types import Coro, MISSING, choice_value_types, Choices
 
 COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 
