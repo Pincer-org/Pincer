@@ -9,7 +9,6 @@ from logging import NOTSET
 from typing import Dict, TYPE_CHECKING
 
 import asyncio
-from functools import partial
 
 from .command import AppCommandInteractionDataOption, AppCommandOptionType
 from .interaction_base import InteractionType
