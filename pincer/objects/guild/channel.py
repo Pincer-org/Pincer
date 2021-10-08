@@ -207,7 +207,7 @@ class Channel(APIObject):
         data = await self._http.patch(f"channels/{self.id}", kwargs)
         data.update(
             {
-                "_client": self.client,
+                "_client": self._client,
                 "_http": self._http,
                 "type": ChannelType(data.pop("type"))
             }
