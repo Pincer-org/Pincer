@@ -203,12 +203,11 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
 
 
 async def gather_args(self, interaction):
-    options = interaction.data.options
 
     await asyncio.gather(
         *(
             set_arg(self, option, interaction)
-            for option in options
+            for option in interaction.data.options
         )
     )
 
