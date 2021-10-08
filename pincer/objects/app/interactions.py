@@ -5,9 +5,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
+from logging import NOTSET
 from typing import Dict, TYPE_CHECKING
 
 import asyncio
+from functools import partial
 
 from .command import AppCommandInteractionDataOption, AppCommandOptionType
 from .interaction_base import InteractionType
@@ -226,7 +228,7 @@ class Interaction(APIObject):
             )
         )
 
-    async def set_param(self, option):
+    async def set_param(self, option: AppCommandInteractionDataOption):
         if option.type == AppCommandOptionType.SUB_COMMAND:
             pass
         elif option.type == AppCommandOptionType.SUB_COMMAND_GROUP:
@@ -243,13 +245,17 @@ class Interaction(APIObject):
             option.value = float(option.value)
 
         elif option.type == AppCommandOptionType.USER:
-            option.value = await self._client.get_user(convert(option.value, Snowflake))
+            option.value = await self._client.get_user(
+                convert(option.value, Snowflake.from_string)
+            )
         elif option.type == AppCommandOptionType.CHANNEL:
-            option.value = await self._client.get_channel(convert(option.value, Snowflake))
+            option.value = await self._client.get_channel(
+                convert(option.value, Snowflake.from_string)
+            )
         elif option.type == AppCommandOptionType.ROLE:
             option.value = await self._client.get_role(
-                convert(self.guild_id, Snowflake),
-                convert(option.value, Snowflake)
+                convert(self.guild_id, Snowflake.from_string),
+                convert(option.value, Snowflake.from_string)
             )
         elif option.type == AppCommandOptionType.MENTIONABLE:
             # TODO: Implement this garbage. Maybe we can just not put it in the lib :).

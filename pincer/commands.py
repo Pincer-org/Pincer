@@ -33,7 +33,7 @@ COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 _log = logging.getLogger(__package__)
 
 _options_type_link = {
-    # TODO: Implement other types:
+    # TODO: Implement mentionable:
     Signature.empty: AppCommandOptionType.STRING,
     str: AppCommandOptionType.STRING,
     int: AppCommandOptionType.INTEGER,
@@ -43,7 +43,6 @@ _options_type_link = {
     User: AppCommandOptionType.USER,
     Channel: AppCommandOptionType.CHANNEL,
     Role: AppCommandOptionType.ROLE,
-    Union[User,Role]: AppCommandOptionType.MENTIONABLE,
   
 }
 
