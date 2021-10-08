@@ -170,12 +170,11 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
     interaction: Interaction = Interaction.from_dict(
         {**payload.data, "_client": self, "_http": self.http}
     )
+    await interaction.build()
     command = ChatCommandHandler.register.get(interaction.data.name)
 
     if command:
         context = interaction.convert_to_message_context(command)
-
-        await gather_args(self, interaction)
 
         try:
             await interaction_handler(self, interaction, context,
@@ -200,45 +199,6 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
                 raise e
 
     return "on_interaction_create", [interaction]
-
-
-async def gather_args(self, interaction):
-
-    await asyncio.gather(
-        *(
-            set_arg(self, option, interaction)
-            for option in interaction.data.options
-        )
-    )
-
-
-async def set_arg(self, option, interaction):
-    if option.type == AppCommandOptionType.SUB_COMMAND:
-        pass
-    elif option.type == AppCommandOptionType.SUB_COMMAND_GROUP:
-        pass
-
-    elif option.type == AppCommandOptionType.STRING:
-        # Option is string by default
-        ...
-    elif option.type == AppCommandOptionType.INTEGER:
-        option.value = int(option.value)
-    elif option.type == AppCommandOptionType.BOOLEAN:
-        option.value = bool(option.value)
-    elif option.type == AppCommandOptionType.NUMBER:
-        option.value = float(option.value)
-
-    elif option.type == AppCommandOptionType.USER:
-        option.value = await self.get_user(Snowflake(option.value))
-    elif option.type == AppCommandOptionType.CHANNEL:
-        option.value = await self.get_channel(Snowflake(option.value))
-    elif option.type == AppCommandOptionType.ROLE:
-        option.value = await self.get_role(
-            Snowflake(interaction.guild_id),
-            Snowflake(option.value)
-        )
-    elif option.type == AppCommandOptionType.MENTIONABLE:
-        pass
 
 
 def export() -> Coro:

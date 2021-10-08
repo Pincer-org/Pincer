@@ -7,7 +7,9 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Dict, TYPE_CHECKING
 
-from .command import AppCommandInteractionDataOption
+import asyncio
+
+from .command import AppCommandInteractionDataOption, AppCommandOptionType
 from .interaction_base import InteractionType
 from ..app.select_menu import SelectOption
 from ..guild.member import GuildMember
@@ -211,6 +213,47 @@ class Interaction(APIObject):
             UserMessage,
             client=self._client
         )
+
+    async def build(self):
+        """
+        Sets the parameters in the interaction that need information from the
+        discord API.
+        """
+        await asyncio.gather(
+            *(
+                self.set_param(option)
+                for option in self.data.options
+            )
+        )
+
+    async def set_param(self, option):
+        if option.type == AppCommandOptionType.SUB_COMMAND:
+            pass
+        elif option.type == AppCommandOptionType.SUB_COMMAND_GROUP:
+            pass
+
+        elif option.type == AppCommandOptionType.STRING:
+            # Option is string by default
+            ...
+        elif option.type == AppCommandOptionType.INTEGER:
+            option.value = int(option.value)
+        elif option.type == AppCommandOptionType.BOOLEAN:
+            option.value = bool(option.value)
+        elif option.type == AppCommandOptionType.NUMBER:
+            option.value = float(option.value)
+
+        elif option.type == AppCommandOptionType.USER:
+            option.value = await self._client.get_user(convert(option.value, Snowflake))
+        elif option.type == AppCommandOptionType.CHANNEL:
+            option.value = await self._client.get_channel(convert(option.value, Snowflake))
+        elif option.type == AppCommandOptionType.ROLE:
+            option.value = await self._client.get_role(
+                convert(self.guild_id, Snowflake),
+                convert(option.value, Snowflake)
+            )
+        elif option.type == AppCommandOptionType.MENTIONABLE:
+            # TODO: Implement this garbage. Maybe we can just not put it in the lib :).
+            pass
 
     def convert_to_message_context(self, command):
         return MessageContext(

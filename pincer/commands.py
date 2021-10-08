@@ -10,10 +10,6 @@ from inspect import Signature, isasyncgenfunction
 from typing import (
     Optional, Dict, List, Any, Tuple, get_origin, get_args, Union
 )
-from pincer.objects.guild.channel import Channel
-from pincer.objects.guild.role import Role
-
-from pincer.objects.user.user import User
 
 from . import __package__
 from .exceptions import (
@@ -21,7 +17,7 @@ from .exceptions import (
     InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
     InvalidCommandName
 )
-from .objects import ThrottleScope, AppCommand
+from .objects import ThrottleScope, AppCommand, Role, User, Channel
 from .objects.app import (
     AppCommandOptionType, AppCommandOption, AppCommandOptionChoice,
     ClientCommandStructure, AppCommandType
@@ -47,7 +43,8 @@ _options_type_link = {
     User: AppCommandOptionType.USER,
     Channel: AppCommandOptionType.CHANNEL,
     Role: AppCommandOptionType.ROLE,
-    
+    Union[User,Role]: AppCommandOptionType.MENTIONABLE,
+  
 }
 
 
@@ -217,7 +214,7 @@ def command(
                     ))
 
                 annotation = choice_type
-                
+
             param_type = _options_type_link.get(annotation)
             if not param_type:
                 raise InvalidArgumentAnnotation(
