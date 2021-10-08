@@ -238,6 +238,11 @@ class TextChannel(Channel):
     async def edit(self, **kwargs):
         return await super().edit(**kwargs)
 
+    @property
+    def mention(self) -> str:
+        """Return a channel mention."""
+        return f"<#{self.id}>"
+
 
 class VoiceChannel(Channel):
     def __init__(self, *args, **kwargs):
