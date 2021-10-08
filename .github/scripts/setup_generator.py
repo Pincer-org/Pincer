@@ -15,7 +15,12 @@ def get_requires():
 
 
 def get_testing_requires():
-    with open("requirements_dev.txt") as f:
+    with open("packages/dev.txt") as f:
+        return '\n\t'.join(f.read().strip().splitlines())
+
+
+def get_images_requires():
+    with open("packages/img.txt") as f:
         return '\n\t'.join(f.read().strip().splitlines())
 
 
@@ -30,6 +35,7 @@ def main():
 
     requires = get_requires()
     testing_requires = get_testing_requires()
+    images_requires = get_images_requires()
 
     with open("setup.cfg", "w") as f:
         f.write(
@@ -37,7 +43,8 @@ def main():
                 version=repr(__version__),
                 packages=packages,
                 requires=requires,
-                testing_requires=testing_requires
+                testing_requires=testing_requires,
+                images_requires=images_requires
             )
         )
 

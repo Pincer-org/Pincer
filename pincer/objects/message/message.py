@@ -3,22 +3,28 @@
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from typing import Dict, Tuple, Union, List, Optional, TYPE_CHECKING
 
 from aiohttp import FormData, Payload
-import json
-from PIL.Image import Image
 
 from ..app.interaction_base import CallbackType
 from ..guild.role import Role
-from ..message.file import File
 from ..message.embed import Embed
+from ..message.file import File
 from ..message.user_message import AllowedMentionTypes
 from ..user import User
 from ...exceptions import CommandReturnIsEmpty
 from ...utils.api_object import APIObject
 from ...utils.snowflake import Snowflake
+
+PILLOW_IMPORT = True
+
+try:
+    from PIL.Image import Image
+except (ModuleNotFoundError, ImportError):
+    PILLOW_IMPORT = False
 
 if TYPE_CHECKING:
     from ..app import InteractionFlags
@@ -87,7 +93,7 @@ class Message:
         for count, value in enumerate(self.attachments):
             if isinstance(value, File):
                 attch.append(value)
-            elif isinstance(value, Image):
+            elif PILLOW_IMPORT and isinstance(value, Image):
                 attch.append(File.from_pillow_image(
                     value,
                     f"image{count}.png",
@@ -107,9 +113,9 @@ class Message:
         """
 
         return (
-            len(self.content) < 1
-            and not self.embeds
-            and not self.attachments
+                len(self.content) < 1
+                and not self.embeds
+                and not self.attachments
         )
 
     def to_dict(self):
