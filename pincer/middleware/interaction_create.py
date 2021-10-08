@@ -3,9 +3,17 @@
 
 import logging
 from inspect import isasyncgenfunction
+import json
 from typing import Union, Dict, Any
 
+
 from PIL.Image import Image
+
+from pincer.objects.app.command import AppCommandOptionType
+from pincer.objects.guild.channel import Channel
+from pincer.objects.guild.role import Role
+from pincer.objects.user.user import User
+from pincer.utils.snowflake import Snowflake
 
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
@@ -165,6 +173,37 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
 
     if command:
         context = interaction.convert_to_message_context(command)
+
+        options = interaction.data.options
+
+        for option in options:
+
+            if option.type == AppCommandOptionType.SUB_COMMAND:
+                pass
+            elif option.type == AppCommandOptionType.SUB_COMMAND_GROUP:
+                pass
+
+            elif option.type == AppCommandOptionType.STRING:
+                # Option is string by default
+                ...
+            elif option.type == AppCommandOptionType.INTEGER:
+                option.value = int(option.value)
+            elif option.type == AppCommandOptionType.BOOLEAN:
+                option.value = bool(option.value)
+            elif option.type == AppCommandOptionType.NUMBER:
+                option.value = float(option.value)
+
+            elif option.type == AppCommandOptionType.USER:
+                option.value = await self.get_user(Snowflake(option.value))
+            elif option.type == AppCommandOptionType.CHANNEL:
+                option.value = await self.get_channel(Snowflake(option.value))
+            elif option.type == AppCommandOptionType.ROLE:
+                option.value = await self.get_role(
+                    Snowflake(interaction.guild_id),
+                    Snowflake(option.value)
+                )
+            elif option.type == AppCommandOptionType.MENTIONABLE:
+                pass
 
         try:
             await interaction_handler(self, interaction, context,

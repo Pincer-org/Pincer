@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Generator
 
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
@@ -76,4 +76,14 @@ class Role(APIObject):
     permissions: str
     position: int
 
+    icon: APINullable[str] = MISSING
+    unicode_emoji: APINullable[str] = MISSING
     tags: APINullable[RoleTags] = MISSING
+
+    @classmethod
+    async def from_id(cls, client, guild_id: int, role_id: int) -> Role:
+        roles: list = await client.http.get(f"/guilds/{guild_id}/roles")
+
+        for role in roles:
+            if int(role['id']) == role_id:
+                return cls.from_dict(role)

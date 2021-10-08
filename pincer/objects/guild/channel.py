@@ -176,8 +176,8 @@ class Channel(APIObject):
     video_quality_mode: APINullable[int] = MISSING
 
     @classmethod
-    async def from_id(cls, client: Client, id: int) -> Channel:
-        data = (await client.http.get(f"channels/{id}")) or {}
+    async def from_id(cls, client: Client, channel_id: int) -> Channel:
+        data = (await client.http.get(f"channels/{channel_id}")) or {}
         data.update(
             {
                 "_client": client,
@@ -207,7 +207,7 @@ class Channel(APIObject):
         data = await self._http.patch(f"channels/{self.id}", kwargs)
         data.update(
             {
-                "_client": self.client,
+                "_client": self._client,
                 "_http": self._http,
                 "type": ChannelType(data.pop("type"))
             }

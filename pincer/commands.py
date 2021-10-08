@@ -10,6 +10,10 @@ from inspect import Signature, isasyncgenfunction
 from typing import (
     Optional, Dict, List, Any, Tuple, get_origin, get_args, Union
 )
+from pincer.objects.guild.channel import Channel
+from pincer.objects.guild.role import Role
+
+from pincer.objects.user.user import User
 
 from . import __package__
 from .exceptions import (
@@ -38,7 +42,12 @@ _options_type_link = {
     str: AppCommandOptionType.STRING,
     int: AppCommandOptionType.INTEGER,
     bool: AppCommandOptionType.BOOLEAN,
-    float: AppCommandOptionType.NUMBER
+    float: AppCommandOptionType.NUMBER,
+
+    User: AppCommandOptionType.USER,
+    Channel: AppCommandOptionType.CHANNEL,
+    Role: AppCommandOptionType.ROLE,
+    
 }
 
 
@@ -208,7 +217,7 @@ def command(
                     ))
 
                 annotation = choice_type
-
+                
             param_type = _options_type_link.get(annotation)
             if not param_type:
                 raise InvalidArgumentAnnotation(
