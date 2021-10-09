@@ -6,14 +6,14 @@ from __future__ import annotations
 import copy
 from dataclasses import dataclass, fields, _is_dataclass_instance
 from enum import Enum
-from typing import Dict, Union, Generic, TypeVar, Any
+from typing import Dict, Tuple, Union, Generic, TypeVar, Any
 
 from .types import MissingType
 
 T = TypeVar("T")
 
 
-def _asdict_ignore_none(obj: Generic[T]) -> Union[tuple, dict, T]:
+def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
     """
     Returns a dict from a dataclass that ignores
     all values that are None

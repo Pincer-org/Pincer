@@ -1,2 +1,3 @@
-websockets
-aiohttp
+websockets==10.0
+aiohttp==3.7.4.post0
+Pillow==8.3.2

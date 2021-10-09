@@ -23,6 +23,7 @@ from .guild.welcome_screen import WelcomeScreen
 from .message import AllowedMentions, MessageComponent, Message
 from .message.attachment import Attachment
 from .message.button import Button
+from .message.file import File
 from .message.embed import Embed
 from .message.emoji import Emoji
 from .message.context import MessageContext
@@ -38,7 +39,7 @@ from .voice.region import VoiceRegion
 __all__ = (
     "AllowedMentionTypes", "AllowedMentions", "AppCommand",
     "Application", "Attachment", "AuditLog", "Ban", "Button", "Channel",
-    "Embed", "Emoji", "FollowedChannel", "Guild", "GuildMember",
+    "Embed", "Emoji", "File", "FollowedChannel", "Guild", "GuildMember",
     "GuildTemplate", "GuildWidget", "Integration", "Intents", "Interaction",
     "InteractionFlags", "Invite", "Message", "MessageComponent",
     "MessageContext", "MessageInteraction", "MessageReference", "Overwrite",
