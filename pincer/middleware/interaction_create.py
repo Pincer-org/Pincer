@@ -13,7 +13,7 @@ from ..objects import (
     File, Interaction, Embed, Message, InteractionFlags, MessageContext
 )
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
-from ..utils.extraction import get_params, get_signature_and_params
+from ..utils.signature import get_params, get_signature_and_params
 
 _log = logging.getLogger(__name__)
 
@@ -80,9 +80,9 @@ async def interaction_response_handler(
     :param kwargs:
         The arguments to be passed to the command.
     """
-    # TODO: Make response thread based (eg a new thread per response handler)
+
     if should_pass_cls(command):
-        kwargs["self"] = self
+        kwargs["self"] = ChatCommandHandler.managers[command.__module__]
 
     sig, params = get_signature_and_params(command)
     if should_pass_ctx(sig, params):

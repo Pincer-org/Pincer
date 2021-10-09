@@ -7,4 +7,3 @@ to join a game.
 """
 
 # TODO: Implement event
-
