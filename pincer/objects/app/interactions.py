@@ -6,6 +6,7 @@ from __future__ import annotations
 from contextlib import suppress
 from dataclasses import dataclass
 from enum import IntEnum
+from types import coroutine
 from typing import Dict, TYPE_CHECKING
 
 import asyncio
@@ -25,31 +26,6 @@ if TYPE_CHECKING:
     from ..guild.role import Role
     from ... import Client
     from ...utils import APINullable
-
-_convert_functions = {
-    AppCommandOptionType.SUB_COMMAND: None,
-    AppCommandOptionType.SUB_COMMAND_GROUP: None,
-
-    AppCommandOptionType.STRING: str,
-    AppCommandOptionType.INTEGER: int,
-    AppCommandOptionType.BOOLEAN: bool,
-    AppCommandOptionType.NUMBER: float,
-
-    AppCommandOptionType.USER: lambda option, obj:
-        obj._client.get_user(
-            convert(option.value, Snowflake.from_string)
-        ),
-    AppCommandOptionType.CHANNEL: lambda option, obj:
-        obj._client.get_channel(
-            convert(option.value, Snowflake.from_string)
-        ),
-    AppCommandOptionType.ROLE: lambda option, obj:
-        obj._client.get_role(
-            convert(obj.guild_id, Snowflake.from_string),
-            convert(option.value, Snowflake.from_string)
-        ),
-    AppCommandOptionType.MENTIONABLE: None
-}
 
 
 class InteractionFlags(IntEnum):
@@ -244,6 +220,31 @@ class Interaction(APIObject):
             client=self._client
         )
 
+        self._convert_functions = {
+            AppCommandOptionType.SUB_COMMAND: None,
+            AppCommandOptionType.SUB_COMMAND_GROUP: None,
+
+            AppCommandOptionType.STRING: str,
+            AppCommandOptionType.INTEGER: int,
+            AppCommandOptionType.BOOLEAN: bool,
+            AppCommandOptionType.NUMBER: float,
+
+            AppCommandOptionType.USER: lambda value:
+                self._client.get_user(
+                    convert(value, Snowflake.from_string)
+                ),
+            AppCommandOptionType.CHANNEL: lambda value:
+                self._client.get_channel(
+                    convert(value, Snowflake.from_string)
+                ),
+            AppCommandOptionType.ROLE: lambda value:
+                self._client.get_role(
+                    convert(self.guild_id, Snowflake.from_string),
+                    convert(value, Snowflake.from_string)
+                ),
+            AppCommandOptionType.MENTIONABLE: None
+        }
+
     async def build(self):
         """
         Sets the parameters in the interaction that need information from the
@@ -266,19 +267,21 @@ class Interaction(APIObject):
         type
         """
 
-        converter = _convert_functions.get(option.type)
+        converter = self._convert_functions.get(option.type)
 
-        with suppress(TypeError):
-            option.value = converter(option.value)
-            return
-        with suppress(TypeError):
-            option.value = await converter(option, self)
+        if not converter:
+            raise NotImplementedError(
+                f"Handling for AppCommandOptionType {option.type} is not "
+                "implemented"
+            )
+
+        res = converter(option.value)
+
+        if asyncio.iscoroutine(res):
+            option.value = await res
             return
 
-        raise NotImplementedError(
-            f"Handling for AppCommandOptionType {option.type} is not "
-            "implemented"
-        )
+        option.value = res
 
     def convert_to_message_context(self, command):
         return MessageContext(
