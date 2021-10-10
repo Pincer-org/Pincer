@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from contextlib import suppress
 from dataclasses import dataclass
 from enum import IntEnum
 from logging import NOTSET
@@ -226,47 +227,54 @@ class Interaction(APIObject):
 
         await asyncio.gather(
             *(
-                self.set_param(option)
+                self.convert(option)
                 for option in self.data.options
             )
         )
 
-    async def set_param(self, option: AppCommandInteractionDataOption):
+    async def convert(self, option: AppCommandInteractionDataOption):
         """
         Sets an AppCommandInteractionDataOption value paramater to the payload
         type
         """
-        if option.type == AppCommandOptionType.SUB_COMMAND:
-            pass
-        elif option.type == AppCommandOptionType.SUB_COMMAND_GROUP:
-            pass
+        convert_functions = {
+            AppCommandOptionType.SUB_COMMAND: None,
+            AppCommandOptionType.SUB_COMMAND_GROUP: None,
 
-        elif option.type == AppCommandOptionType.STRING:
-            # Option is string by default
-            ...
-        elif option.type == AppCommandOptionType.INTEGER:
-            option.value = int(option.value)
-        elif option.type == AppCommandOptionType.BOOLEAN:
-            option.value = bool(option.value)
-        elif option.type == AppCommandOptionType.NUMBER:
-            option.value = float(option.value)
+            AppCommandOptionType.STRING: str,
+            AppCommandOptionType.INTEGER: int,
+            AppCommandOptionType.BOOLEAN: bool,
+            AppCommandOptionType.NUMBER: float,
 
-        elif option.type == AppCommandOptionType.USER:
-            option.value = await self._client.get_user(
-                convert(option.value, Snowflake.from_string)
+            AppCommandOptionType.USER: lambda option, obj:
+                obj._client.get_user(
+                    convert(option.value, Snowflake.from_string)
+                ),
+            AppCommandOptionType.CHANNEL: lambda option, obj:
+                obj._client.get_channel(
+                    convert(option.value, Snowflake.from_string)
+                ),
+            AppCommandOptionType.ROLE: lambda option, obj:
+                obj._client.get_role(
+                    convert(obj.guild_id, Snowflake.from_string),
+                    convert(option.value, Snowflake.from_string)
+                ),
+            AppCommandOptionType.MENTIONABLE: None
+        }
+
+        converter = convert_functions.get(option.type)
+
+        with suppress(TypeError):
+            option.value = converter(option.value)
+            return
+        with suppress(TypeError):
+            option.value = await converter(option, self)
+            return
+        if not option.value:
+            raise NotImplementedError(
+                "Handling for AppCommandOptionType {option.type} is not "
+                "implemented"
             )
-        elif option.type == AppCommandOptionType.CHANNEL:
-            option.value = await self._client.get_channel(
-                convert(option.value, Snowflake.from_string)
-            )
-        elif option.type == AppCommandOptionType.ROLE:
-            option.value = await self._client.get_role(
-                convert(self.guild_id, Snowflake.from_string),
-                convert(option.value, Snowflake.from_string)
-            )
-        elif option.type == AppCommandOptionType.MENTIONABLE:
-            # TODO: Implement this. Maybe we can just not put it in the lib :).
-            pass
 
     def convert_to_message_context(self, command):
         return MessageContext(
