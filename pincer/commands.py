@@ -90,13 +90,13 @@ def command(
     Parameters
     ----------
     name :
-        The name of the command |default| ``None``
+        The name of the command |default| :data:`None`
     description :
         The description of the command |default| ``Description not set``
     enable_default :
-        Whether the command is enabled by default |default| ``True``
+        Whether the command is enabled by default |default| :data:`True`
     guild :
-        What guild to add it to (don't specify for global) |default| ``None``
+        What guild to add it to (don't specify for global) |default| :data:`None`
     cooldown :
         The amount of times in the cooldown_scale the command can be invoked 
         |default| ``0``

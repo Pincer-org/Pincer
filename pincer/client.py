@@ -111,11 +111,11 @@ def event_middleware(call: str, *, override: bool = False):
 
     Parameters
     ----------
-    call : str
+    call :
         The call that the function should tie to
-    override : bool, optional
+    override :
         If it should override default middleware, 
-        usually shouldn't be used |default| ``False``
+        usually shouldn't be used |default| :data:`False`
     """
     def decorator(func: Coro):
         if override:
@@ -170,12 +170,12 @@ class Client(Dispatcher):
         the token to login with your bot from the developer portal
     received :
         The default message which will be sent when no response is given. 
-        |default| ``None``
+        |default| :data:`None`
     intents :
-        The discord intents to use |default| ``None``
+        The discord intents to use |default| :data:`None`
     throttler :
         The throttler for your client (generally not used) 
-        |default| ``None``
+        |default| :data:`None`
     """
     def __init__(
             self,
