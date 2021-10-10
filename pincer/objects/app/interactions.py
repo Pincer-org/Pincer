@@ -220,6 +220,10 @@ class Interaction(APIObject):
         Sets the parameters in the interaction that need information from the
         discord API.
         """
+
+        if not self.data.options:
+            return
+
         await asyncio.gather(
             *(
                 self.set_param(option)
