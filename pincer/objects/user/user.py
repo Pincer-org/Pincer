@@ -144,4 +144,4 @@ class User(APIObject):
     @classmethod
     async def from_id(cls, client: Client, user_id: int) -> User:
         data = await client.http.get(f"users/{user_id}")
-        return cls(_client=client,_http=client.http,**data)
+        return cls(_client=client, _http=client.http, **data)

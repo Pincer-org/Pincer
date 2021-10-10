@@ -5,9 +5,6 @@ import logging
 from inspect import isasyncgenfunction
 from typing import Union, Dict, Any
 
-
-from PIL.Image import Image
-
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
 from ..objects import (
@@ -16,6 +13,13 @@ from ..objects import (
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 from ..utils.signature import get_params, get_signature_and_params
 
+PILLOW_IMPORT = True
+
+try:
+    from PIL.Image import Image
+except (ModuleNotFoundError, ImportError):
+    PILLOW_IMPORT = False
+
 _log = logging.getLogger(__name__)
 
 
@@ -23,7 +27,7 @@ def convert_message(self, message: Union[Embed, Message, str]) -> Message:
     """Converts a message to a Message object"""
     if isinstance(message, Embed):
         message = Message(embeds=[message])
-    elif isinstance(message, (File, Image)):
+    elif PILLOW_IMPORT and isinstance(message, (File, Image)):
         message = Message(attachments=[message])
     elif not isinstance(message, Message):
         message = Message(message) if message else Message(

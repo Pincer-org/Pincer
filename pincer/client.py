@@ -9,8 +9,6 @@ from importlib import import_module
 from inspect import isasyncgenfunction
 from typing import Optional, Any, Union, Dict, Tuple, List, TYPE_CHECKING
 
-from pincer.objects.guild.role import Role
-
 from . import __package__
 from ._config import events
 from .commands import ChatCommandHandler
@@ -22,7 +20,7 @@ from .exceptions import (
     NoCogManagerReturnFound, CogAlreadyExists, CogNotFound
 )
 from .middleware import middleware
-from .objects import Channel, User, Intents, Guild, ThrottleInterface
+from .objects import Role, User, Intents, Guild, ThrottleInterface, Channel
 from .objects.app.throttling import DefaultThrottleHandler
 from .utils import get_index, should_pass_cls, Coro
 from .utils.signature import get_params
@@ -546,19 +544,6 @@ class Client(Dispatcher):
         """
         await self.process_event("payload", payload)
 
-    async def get_channel(self, channel_id: int) -> Channel:
-        """
-        Fetch a channel object by the channel identifier.
-
-        :param channel_id:
-            The id of the channel which should be fetched from the Discord
-            gateway.
-
-        :returns:
-            A channel object.
-        """
-        return await Channel.from_id(self, channel_id)
-
     async def get_guild(self, guild_id: int) -> Guild:
         """
         Fetch a guild object by the guild identifier.
@@ -571,6 +556,19 @@ class Client(Dispatcher):
             A Guild object.
         """
         return await Guild.from_id(self, guild_id)
+
+    async def get_user(self, _id: int) -> User:
+        """
+        Fetch a User from its identifier
+
+        :param _id:
+            The id of the user which should be fetched from the Discord
+            gateway.
+
+        :returns:
+            A User object.
+        """
+        return await User.from_id(self, _id)
 
     async def get_role(self, guild_id, role_id: int) -> Role:
         """
@@ -585,18 +583,18 @@ class Client(Dispatcher):
         """
         return await Role.from_id(self, guild_id, role_id)
 
-    async def get_user(self, _id: int) -> User:
+    async def get_channel(self, _id: int) -> Channel:
         """
-        Fetch a User from its identifier
+        Fetch a Channel from its identifier.
 
         :param _id:
             The id of the user which should be fetched from the Discord
             gateway.
 
         :returns:
-            A User object.
+            A Channel object.
         """
-        return await User.from_id(self, _id)
+        return await Channel.from_id(self, _id)
 
 
 Bot = Client
