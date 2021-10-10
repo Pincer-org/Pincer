@@ -228,6 +228,10 @@ class Interaction(APIObject):
         )
 
     async def set_param(self, option: AppCommandInteractionDataOption):
+        """
+        Sets an AppCommandInteractionDataOption value paramater to the payload
+        type
+        """
         if option.type == AppCommandOptionType.SUB_COMMAND:
             pass
         elif option.type == AppCommandOptionType.SUB_COMMAND_GROUP:
@@ -257,7 +261,7 @@ class Interaction(APIObject):
                 convert(option.value, Snowflake.from_string)
             )
         elif option.type == AppCommandOptionType.MENTIONABLE:
-            # TODO: Implement this garbage. Maybe we can just not put it in the lib :).
+            # TODO: Implement this. Maybe we can just not put it in the lib :).
             pass
 
     def convert_to_message_context(self, command):
