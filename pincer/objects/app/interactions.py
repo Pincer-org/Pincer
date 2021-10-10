@@ -27,6 +27,30 @@ if TYPE_CHECKING:
     from ... import Client
     from ...utils import APINullable
 
+_convert_functions = {
+    AppCommandOptionType.SUB_COMMAND: None,
+    AppCommandOptionType.SUB_COMMAND_GROUP: None,
+
+    AppCommandOptionType.STRING: str,
+    AppCommandOptionType.INTEGER: int,
+    AppCommandOptionType.BOOLEAN: bool,
+    AppCommandOptionType.NUMBER: float,
+
+    AppCommandOptionType.USER: lambda option, obj:
+        obj._client.get_user(
+            convert(option.value, Snowflake.from_string)
+        ),
+    AppCommandOptionType.CHANNEL: lambda option, obj:
+        obj._client.get_channel(
+            convert(option.value, Snowflake.from_string)
+        ),
+    AppCommandOptionType.ROLE: lambda option, obj:
+        obj._client.get_role(
+            convert(obj.guild_id, Snowflake.from_string),
+            convert(option.value, Snowflake.from_string)
+        ),
+    AppCommandOptionType.MENTIONABLE: None
+}
 
 class InteractionFlags(IntEnum):
     """
@@ -237,32 +261,8 @@ class Interaction(APIObject):
         Sets an AppCommandInteractionDataOption value paramater to the payload
         type
         """
-        convert_functions = {
-            AppCommandOptionType.SUB_COMMAND: None,
-            AppCommandOptionType.SUB_COMMAND_GROUP: None,
 
-            AppCommandOptionType.STRING: str,
-            AppCommandOptionType.INTEGER: int,
-            AppCommandOptionType.BOOLEAN: bool,
-            AppCommandOptionType.NUMBER: float,
-
-            AppCommandOptionType.USER: lambda option, obj:
-                obj._client.get_user(
-                    convert(option.value, Snowflake.from_string)
-                ),
-            AppCommandOptionType.CHANNEL: lambda option, obj:
-                obj._client.get_channel(
-                    convert(option.value, Snowflake.from_string)
-                ),
-            AppCommandOptionType.ROLE: lambda option, obj:
-                obj._client.get_role(
-                    convert(obj.guild_id, Snowflake.from_string),
-                    convert(option.value, Snowflake.from_string)
-                ),
-            AppCommandOptionType.MENTIONABLE: None
-        }
-
-        converter = convert_functions.get(option.type)
+        converter = _convert_functions.get(option.type)
 
         with suppress(TypeError):
             option.value = converter(option.value)
