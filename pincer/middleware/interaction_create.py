@@ -1,29 +1,41 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
+from __future__ import annotations
+
 import logging
 from inspect import isasyncgenfunction
-from typing import Union, Dict, Any
+from typing import Union, Dict, Any, Tuple, List, TYPE_CHECKING
 
-from PIL.Image import Image
-
-from ..commands import ChatCommandHandler
-from ..core.dispatch import GatewayDispatch
-from ..objects.app.interactions import Interaction
-from ..objects.message.embed import Embed
-from ..objects.message.message import Message
-from ..objects.app.interactions import InteractionFlags
-from ..objects.message.context import MessageContext
-from ..utils.insertion import should_pass_cls, should_pass_ctx
-from ..utils.types import MISSING
 from ..utils.types import Coro
-from ..utils.signature import get_params, get_signature_and_params
+from ..objects.message.embed import Embed
+from ..core.dispatch import GatewayDispatch
+from ..objects.message.message import Message
+from ..objects.app.interactions import Interaction
+from ..objects.message.context import MessageContext
+
+if TYPE_CHECKING:
+    from PIL.Image import Image
+
+    from ..commands import ChatCommandHandler
+    from ..objects.message.file import File
+    from ..objects.app.interactions import InteractionFlags
+    from ..utils.insertion import should_pass_cls, should_pass_ctx
+    from ..utils.types import MISSING
+    from ..utils.signature import get_params, get_signature_and_params
+
 
 _log = logging.getLogger(__name__)
 
 
 def convert_message(self, message: Union[Embed, Message, str]) -> Message:
-    """Converts a message to a Message object"""
+    """Converts a message to a Message object
+
+    Parameters
+    ----------
+    message :
+        Message to convert
+    """
     if isinstance(message, Embed):
         message = Message(embeds=[message])
     elif isinstance(message, (File, Image)):
@@ -37,16 +49,15 @@ def convert_message(self, message: Union[Embed, Message, str]) -> Message:
 
 
 async def reply(self, interaction: Interaction, message: Message):
-    """
+    """|coro|
+
     Sends a reply to an interaction.
 
-    :param self:
-        The current client.
-
-    :param interaction:
+    Parameters
+    ----------
+    interaction :
         The interaction from whom the reply is.
-
-    :param message:
+    message :
         The message to reply with.
     """
 
@@ -66,25 +77,21 @@ async def interaction_response_handler(
         interaction: Interaction,
         kwargs: Dict[str, Any]
 ):
-    """
+    """|coro|
+
     Handle any coroutine as a command.
 
-    :param self:
-        The current client.
-
-    :param command:
+    Parameters
+    ----------
+    command :
         The coroutine which will be seen as a command.
-
-    :param context:
+    context :
         The context of the command.
-
-    :param interaction:
+    interaction :
         The interaction which is linked to the command.
-
-    :param kwargs:
+    kwargs :
         The arguments to be passed to the command.
     """
-
     if should_pass_cls(command):
         kwargs["self"] = ChatCommandHandler.managers[command.__module__]
 
@@ -119,19 +126,17 @@ async def interaction_handler(
         context: MessageContext,
         command: Coro
 ):
-    """
+    """|coro|
+
     Processes an interaction.
 
-    :param self:
-        The current client.
-
-    :param interaction:
+    Parameters
+    ----------
+    interaction :
         The interaction which is linked to the command.
-
-    :param context:
+    context :
         The context of the command.
-
-    :param command:
+    command :
         The coroutine which will be seen as a command.
     """
     self.throttler.handle(context)
@@ -150,18 +155,24 @@ async def interaction_handler(
                                        kwargs)
 
 
-async def interaction_create_middleware(self, payload: GatewayDispatch):
-    """
-    Middleware for ``on_interaction``, which handles command
+async def interaction_create_middleware(
+    self,
+    payload: GatewayDispatch
+) -> Tuple[str, List[Interaction]]:
+    """Middleware for ``on_interaction``, which handles command
     execution.
 
-    :param self:
-        The current client.
-
-    :param payload:
+    Parameters
+    ----------
+    payload :
         The data received from the interaction event.
-    """
 
+    Raises
+    ------
+    e
+        Generic try except on ``await interaction_handler`` and
+        ``if 0 < len(params) < 3``
+    """
     interaction: Interaction = Interaction.from_dict(
         {**payload.data, "_client": self, "_http": self.http}
     )

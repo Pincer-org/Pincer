@@ -40,8 +40,10 @@ error_middleware
 Guild Create
 ------------
 
-.. note::
-   Not implemented yet.
+guild_create_middleware
+~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autofunction:: guild_create_middleware
 
 Guild Status
 ------------
@@ -52,26 +54,54 @@ Guild Status
 Interaction Create
 ------------------
 
-.. note::
-   Not implemented yet.
+convert_message
+~~~~~~~~~~~~~~~
+
+.. autofunction:: convert_message
+
+reply
+~~~~~
+
+.. autofunction:: reply
+
+interaction_response_handler
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autofunction:: interaction_response_handler
+
+interaction_handler
+~~~~~~~~~~~~~~~~~~~
+
+.. autofunction:: interaction_handler
+
+interaction_create_middleware
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autofunction:: interaction_create_middleware
 
 Message Create
 --------------
 
-.. note::
-   Not implemented yet.
+message_create_middleware
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autofunction:: message_create_middleware
 
 Message Delete
 --------------
 
-.. note::
-   Not implemented yet.
+on_message_delete_middleware
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autofunction:: on_message_delete_middleware
 
 Message Update
 --------------
 
-.. note::
-   Not implemented yet.
+message_update_middleware
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autofunction:: message_update_middleware
 
 Notification Create
 -------------------
@@ -82,14 +112,18 @@ Notification Create
 Payload
 -------
 
-.. note::
-   Not implemented yet.
+payload_middleware
+~~~~~~~~~~~~~~~~~~
+
+.. autofunction:: payload_middleware
 
 Ready
 -----
 
-.. note::
-   Not implemented yet.
+on_ready_middleware
+~~~~~~~~~~~~~~~~~~~
+
+.. autofunction:: on_ready_middleware
 
 Speaking Start
 --------------
@@ -127,14 +161,16 @@ Voice State Create
 .. note::
    Not implemented yet.
 
-Voice State Update
-------------------
-
-.. note::
-   Not implemented yet.
-
 Voice State Delete
 ------------------
 
 .. note::
    Not implemented yet.
+
+Voice State Update
+------------------
+
+voice_state_update_middleware
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autofunction:: voice_state_update_middleware

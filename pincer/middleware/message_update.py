@@ -3,11 +3,27 @@
 
 """sent when a message is updated in a subscribed text channel"""
 
+from __future__ import annotations
+
+from typing import List, Tuple
+
 from ..core.dispatch import GatewayDispatch
 from ..objects import UserMessage
 
 
-async def message_update_middleware(self, payload: GatewayDispatch):
+async def message_update_middleware(
+    self,
+    payload: GatewayDispatch
+) -> Tuple[str, List[UserMessage]]:
+    """|coro|
+
+    Middleware for ``?`` event. # TODO ``?`` here because idk what it is
+
+    Parameters
+    ----------
+    payload : GatewayDispatch
+        The data received from the ready event.
+    """
     return "on_message_update", [
         UserMessage.from_dict(
             {"_client": self, "_http": self.http, **payload.data}

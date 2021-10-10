@@ -2,13 +2,9 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 """sent when a channel is created/joined on the client"""
-from __future__ import annotations
+from typing import List, Tuple
 
-from typing import List, Tuple, TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from ..core.dispatch import GatewayDispatch
-
+from ..core.dispatch import GatewayDispatch
 from ..objects.guild.channel import Channel
 
 
@@ -16,7 +12,9 @@ def channel_create_middleware(
     self,
     payload: GatewayDispatch
 ) -> Tuple[str, List[Channel]]:
-    """Middleware for ``on_error`` event.
+    """|coro|
+
+    Middleware for ``?`` event. # TODO ``?`` here because idk what it is
 
     Parameters
     ----------

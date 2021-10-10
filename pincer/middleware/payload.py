@@ -1,11 +1,24 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
+from __future__ import annotations
+
+from typing import List, Tuple
+
 from ..core.dispatch import GatewayDispatch
 
 
-async def payload_middleware(self, payload: GatewayDispatch):
-    """Invoked when basically anything is received from gateway.."""
+async def payload_middleware(
+    self,
+    payload: GatewayDispatch
+) -> Tuple[str, List[GatewayDispatch]]:
+    """Invoked when basically anything is received from gateway.
+
+    Parameters
+    ----------
+    payload : GatewayDispatch
+        The data received from the ready event.
+    """
     return "on_payload", [payload]
 
 

@@ -5,21 +5,29 @@
 non-subscription event sent immediately after connecting,
 contains server information
 """
+from __future__ import annotations
+
+from typing import Tuple, TYPE_CHECKING
 
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
-from ..objects.user.user import User
-from ..utils.types import Coro
+
+if TYPE_CHECKING:
+    from ..objects.user.user import User
+    from ..utils.types import Coro
 
 
-async def on_ready_middleware(self, payload: GatewayDispatch):
-    """
+async def on_ready_middleware(
+    self,
+    payload: GatewayDispatch
+) -> Tuple[str]:
+    """|coro|
+
     Middleware for ``on_ready`` event.
 
-    :param self:
-        The current client.
-
-    :param payload:
+    Parameters
+    ----------
+    payload : GatewayDispatch
         The data received from the ready event.
     """
     user = payload.data.get("user")
@@ -28,7 +36,7 @@ async def on_ready_middleware(self, payload: GatewayDispatch):
         raise InvalidPayload(
             "A `user` key/value pair is expected on the `ready` payload "
             "event."
-        )
+        ) # TODO this error doesn't exist???
 
     self.bot = User.from_dict(
         {"_client": self, "_http": self.http, **user}
