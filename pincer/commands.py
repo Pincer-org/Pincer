@@ -59,7 +59,7 @@ def command(
         cooldown_scale: Optional[float] = 60,
         cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER
 ):
-    """This is the decorator to create a command to register and respond to
+    """A decorator to create a command to register and respond to
     with the discord API from a function.
 
     .. code-block:: python3
@@ -344,13 +344,6 @@ class ChatCommandHandler(metaclass=Singleton):
     __add_guild = "/guilds/{command.app.guild_id}/commands"
 
     def __init__(self, client: client.Client):
-        """Create a new instance
-
-        Parameters
-        ----------
-        client :
-            The client object
-        """
         self.client = client
         self._api_commands: List[AppCommand] = list()
         logging.debug(

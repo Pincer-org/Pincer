@@ -163,6 +163,19 @@ class Client(Dispatcher):
         The default message which will be sent when no response is given.
     http: :class:`~core.http.HTTPClient`
         The http client used to comminicate with the discord API
+
+    Parameters
+    ----------
+    token :
+        the token to login with your bot from the developer portal
+    received :
+        The default message which will be sent when no response is given. 
+        |default| ``None``
+    intents :
+        The discord intents to use |default| ``None``
+    throttler :
+        The throttler for your client (generally not used) 
+        |default| ``None``
     """
     def __init__(
             self,
@@ -171,21 +184,6 @@ class Client(Dispatcher):
             intents: Intents = None,
             throttler: ThrottleInterface = None
     ):
-        """Create a new client instance
-
-        Parameters
-        ----------
-        token :
-            the token to login with your bot from the developer portal
-        received :
-            The default message which will be sent when no response is given. 
-            |default| ``None``
-        intents :
-            The discord intents to use |default| ``None``
-        throttler :
-            The throttler for your client (generally not used) 
-            |default| ``None``
-        """
         super().__init__(
             token,
             handlers={

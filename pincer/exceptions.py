@@ -142,17 +142,6 @@ class EmbedFieldError(PincerError, ValueError):
 
     @classmethod
     def from_desc(cls, _type: str, max_size: int, cur_size: int):
-        """Create an instance by description.
-
-        Parameters
-        ----------
-        _type :
-            The type/name of the field.
-        max_size :
-            The maximum size of the field.
-        cur_size :
-            The current size of the field.
-        """
         return cls(
             f"{_type} can have a maximum length of {max_size}."
             f" (Current size: {cur_size})"
@@ -184,8 +173,7 @@ class TaskCancelError(TaskError):
 
 
 class TaskIsNotCoroutine(TaskError):
-    """
-    Exception that is raised when the provided function for a task is not
+    """Exception that is raised when the provided function for a task is not
     a coroutine.
     """
 
@@ -217,13 +205,6 @@ class InvalidTokenError(DispatchError, ValueError):
     """
 
     def __init__(self, hint: Optional[str] = None):
-        """Create a mew instance
-
-        Parameters
-        ----------
-        hint :
-            Additional information about the exception cause., by default None
-        """
         hint = hint or ''
 
         super(InvalidTokenError, self).__init__(
