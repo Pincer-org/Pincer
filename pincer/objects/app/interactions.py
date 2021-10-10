@@ -272,7 +272,7 @@ class Interaction(APIObject):
             return
 
         raise NotImplementedError(
-            "Handling for AppCommandOptionType {option.type} is not "
+            f"Handling for AppCommandOptionType {option.type} is not "
             "implemented"
         )
 
