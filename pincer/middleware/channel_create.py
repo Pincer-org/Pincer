@@ -8,7 +8,7 @@ from pincer.objects import Channel
 
 def channel_create_middleware(self, payload: GatewayDispatch):
     """
-    Middleware for ``on_error`` event.
+    Middleware for ``on_channel_creation`` event.
 
     :param client:
 
