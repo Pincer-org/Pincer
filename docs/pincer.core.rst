@@ -22,3 +22,23 @@ Dispatcher
 .. attributetable:: Dispatcher
 
 .. autoclass:: Dispatcher()
+
+Heartbeat
+---------
+
+Heartbeat
+~~~~~~~~~
+
+.. attributetable:: Heartbeat
+
+.. autoclass:: Heartbeat()
+
+Http
+----
+
+HTTPClient
+~~~~~~~~~~
+
+.. attributetable:: HTTPClient
+
+.. autoclass:: HTTPClient()

@@ -1,30 +1,35 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
+from __future__ import annotations
 
 import asyncio
 import logging
-from asyncio import sleep
 from json import dumps
-from typing import Dict, Any, Optional, Protocol, Union
+from typing import TYPE_CHECKING, Dict, Any, Optional, Protocol, Union
 
-from aiohttp import ClientSession, ClientResponse
-from aiohttp.client import _RequestContextManager
-from aiohttp.payload import Payload
-from aiohttp.typedefs import StrOrURL
 
 from . import __package__
-from .._config import GatewayConfig
-from ..exceptions import (
-    NotFoundError, BadRequestError, NotModifiedError, UnauthorizedError,
-    ForbiddenError, MethodNotAllowedError, RateLimitError, ServerError,
-    HTTPError
-)
+if TYPE_CHECKING:
+    from asyncio import sleep
+    
+    from aiohttp import ClientSession, ClientResponse
+    from aiohttp.client import _RequestContextManager
+    from aiohttp.payload import Payload
+    from aiohttp.typedefs import StrOrURL
+
+    from .._config import GatewayConfig
+    from ..exceptions import (
+        NotFoundError, BadRequestError, NotModifiedError, UnauthorizedError,
+        ForbiddenError, MethodNotAllowedError, RateLimitError, ServerError,
+        HTTPError
+    )
 
 _log = logging.getLogger(__package__)
 
 
 class HttpCallable(Protocol):
-    """aiohttp HTTP method"""
+    """aiohttp HTTP method
+    """
     __name__: str
 
     def __call__(
@@ -37,24 +42,15 @@ class HttpCallable(Protocol):
 
 
 class HTTPClient:
-    """Interacts with Discord API through HTTP protocol"""
+    """Interacts with Discord API through HTTP protocol
+
+    Attributes
+    ----------
+    url: :class:`str`
+        ``f"https://discord.com/api/v{version}"``
+    """
 
     def __init__(self, token: str, *, version: int = None, ttl: int = 5):
-        """
-        Instantiate a new HttpApi object.
-
-        :param token:
-            Discord API token
-
-        Keyword Arguments:
-
-        :param version:
-            The discord API version.
-            See `<https://discord.com/developers/docs/reference#api-versioning>`_.
-
-        :param ttl:
-            Max amount of attempts after error code 5xx
-        """
         version = version or GatewayConfig.version
         self.url: str = f"https://discord.com/api/v{version}"
         self.max_ttl: int = ttl
@@ -82,7 +78,10 @@ class HTTPClient:
         await self.close()
 
     async def close(self):
-        """Closes :attr:`~.HTTPClient.__session`"""
+        """|coro|
+
+        Closes the aiohttp session
+        """
         await self.__session.close()
 
     async def __send(
@@ -93,27 +92,6 @@ class HTTPClient:
             data: Optional[Union[Dict, str, Payload]] = None,
             __ttl: int = None
     ) -> Optional[Dict]:
-        """
-        Send an api request to the Discord REST API.
-
-        :param method:
-            The method for the request. (eg GET or POST)
-
-        :param endpoint:
-            The endpoint to which the request will be sent.
-
-        Keyword Arguments:
-
-        :param content_type:
-            The request's content type.
-
-        :param data:
-            The data which will be added to the request.
-
-        :param __ttl:
-            Private param used for recursively setting the retry amount.
-            (Eg set to 1 for 1 max retry)
-        """
         ttl = __ttl or self.max_ttl
 
         if ttl == 0:
@@ -151,31 +129,6 @@ class HTTPClient:
             data: Optional[str],
             __ttl: int,
     ) -> Optional[Dict]:
-        """
-        Handle responses from the discord API.
-
-        Side effects:
-            If a 5xx error code is returned it will retry the request.
-
-        :param res:
-            The response from the discord API.
-
-        :param method:
-            The method which was used to call the endpoint.
-
-        :param endpoint:
-            The endpoint to which the request was sent.
-
-        :param content_type:
-            The request's content type.
-
-        :param data:
-            The data which was added to the request.
-
-        :param __ttl:
-            Private param used for recursively setting the retry amount.
-            (Eg set to 1 for 1 max retry)
-        """
         _log.debug(f"Received response for {endpoint} | {await res.text()}")
         if res.ok:
             if res.status == 204:
@@ -237,50 +190,50 @@ class HTTPClient:
         )
 
     async def delete(self, route: str) -> Optional[Dict]:
-        """
+        """|coro|
+
         Sends a delete request to a Discord REST endpoint.
 
-        :param route:
+        Parameters
+        ----------
+        route :
             The Discord REST endpoint to send a delete request to.
-
-        :return:
-            JSON response from the discord API.
         """
         return await self.__send(self.__session.delete, route)
 
     async def get(self, route: str) -> Optional[Dict]:
-        """
+        """|coro|
+
         Sends a get request to a Discord REST endpoint.
 
-        :param route:
+        Parameters
+        ----------
+        route :
             The Discord REST endpoint to send a get request to.
-
-        :return:
-            JSON response from the discord API.
         """
         return await self.__send(self.__session.get, route)
 
     async def head(self, route: str) -> Optional[Dict]:
-        """
+        """|coro|
+
         Sends a head request to a Discord REST endpoint.
 
-        :param route:
+        Parameters
+        ----------
+        route :
             The Discord REST endpoint to send a head request to.
-
-        :return:
-            JSON response from the discord API.
         """
         return await self.__send(self.__session.head, route)
 
     async def options(self, route: str) -> Optional[Dict]:
-        """
+        """|coro|
+
         Sends a options request to a Discord REST endpoint.
 
-        :param route:
+        Parameters
+        ----------
+        route :
             The Discord REST endpoint to send a options request to.
-
-        :return:
-            JSON response from the discord API.
         """
         return await self.__send(self.__session.options, route)
 
@@ -290,20 +243,18 @@ class HTTPClient:
             data: Dict,
             content_type: str = "application/json"
     ) -> Optional[Dict]:
-        """
-        Sends a patch request to a Discord REST endpoint.
+        """|coro|
 
-        :param route:
+        Sends a patch request to a Discord REST endpoint
+
+        Parameters
+        ----------
+        route :
             The Discord REST endpoint to send a patch request to.
-
-        :param data:
+        data :
             The update data for the patch request.
-
-        :param content_type:
-            Body content type.
-
-        :return:
-            JSON response from the discord API.
+        content_type :
+            Body content type. |default| ``application/json``
         """
         return await self.__send(
             self.__session.patch,
@@ -318,20 +269,18 @@ class HTTPClient:
             data: Dict,
             content_type: str = "application/json"
     ) -> Optional[Dict]:
-        """
-        Sends a post request to a Discord REST endpoint.
+        """|coro|
 
-        :param route:
-            The Discord REST endpoint to send a post request to.
+        Sends a post request to a Discord REST endpoint
 
-        :param data:
-            The data for the post request.
-
-        :param content_type:
-            Body content type.
-
-        :return:
-            JSON response from the discord API.
+        Parameters
+        ----------
+        route :
+            The Discord REST endpoint to send a patch request to.
+        data :
+            The update data for the patch request.
+        content_type :
+            Body content type. |default| ``application/json``
         """
         return await self.__send(
             self.__session.post,
@@ -346,20 +295,18 @@ class HTTPClient:
             data: Dict,
             content_type: str = "application/json"
     ) -> Optional[Dict]:
-        """
-        Sends a put request to a Discord REST endpoint.
+        """|coro|
 
-        :param route:
-            The Discord REST endpoint to send a put request to.
+        Sends a put request to a Discord REST endpoint
 
-        :param data:
-            The data for the put request.
-
-        :param content_type:
-            Body content type.
-
-        :return:
-            JSON response from the discord API.
+        Parameters
+        ----------
+        route :
+            The Discord REST endpoint to send a patch request to.
+        data :
+            The update data for the patch request.
+        content_type :
+            Body content type. |default| ``application/json``
         """
         return await self.__send(
             self.__session.put,
