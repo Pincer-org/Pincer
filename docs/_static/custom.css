@@ -112,3 +112,12 @@ main .py-attribute-table-column > ul {
 .default-value-section code {
     color: #306998;
 }
+
+/* note styling */
+.admonition.note {
+    border-left-color: #FFFF00;
+    color: #FFFFFF;
+}
+.admonition {
+    background-color: #0000FF;
+}
