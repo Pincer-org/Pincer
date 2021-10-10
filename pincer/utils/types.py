@@ -8,6 +8,9 @@ class MissingType:
     def __repr__(self):
         return "<MISSING>"
 
+    def __bool__(self) -> bool:
+        return False
+
 
 MISSING = MissingType()
 
