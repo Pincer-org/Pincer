@@ -253,12 +253,6 @@ class Client(Dispatcher):
             >>> if __name__ == "__main__":
             ...     BotClient("token").run()
 
-        Parameters
-        ----------
-        coroutine :
-            The coroutine function to register 
-            (the decorator does this automatically)
-
         Raises
         ------
         TypeError
