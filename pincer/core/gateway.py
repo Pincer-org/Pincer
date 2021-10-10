@@ -5,15 +5,17 @@
 from __future__ import annotations
 
 import logging
+import asyncio
 from typing import Dict, Callable, Awaitable, Optional, TYPE_CHECKING
 
 from websockets.legacy.client import WebSocketClientProtocol
 
 from . import __package__
 from ..core.dispatch import GatewayDispatch
+from ..objects.app.intents import Intents
 
 if TYPE_CHECKING:
-    from asyncio import get_event_loop, AbstractEventLoop, ensure_future
+    from asyncio import get_event_loop, ensure_future
     from platform import system
 
     from websockets import connect
@@ -25,7 +27,6 @@ if TYPE_CHECKING:
         PincerError, InvalidTokenError, UnhandledException,
         _InternalPerformReconnectError, DisallowedIntentsError
     )
-    from ..objects.app.intents import Intents
 
 Handler = Callable[[WebSocketClientProtocol, GatewayDispatch], Awaitable[None]]
 _log = logging.getLogger(__package__)
@@ -136,7 +137,7 @@ class Dispatcher:
             self,
             socket: WebSocketClientProtocol,
             payload: GatewayDispatch,
-            loop: AbstractEventLoop
+            loop: asyncio.AbstractEventLoop
     ):
         _log.debug(
             "New event received, checking if handler exists for opcode: %i",
@@ -166,7 +167,7 @@ class Dispatcher:
         execute_handler(handler)
         execute_handler(all_handler)
 
-    async def __dispatcher(self, loop: AbstractEventLoop):
+    async def __dispatcher(self, loop: asyncio.AbstractEventLoop):
         _log.debug(
             "Establishing websocket connection with `%s`", GatewayConfig.uri()
         )
@@ -206,7 +207,7 @@ class Dispatcher:
                 except ConnectionClosedOK:
                     _log.debug("Connection closed successfully.")
 
-    def start_loop(self, *, loop: AbstractEventLoop = None):
+    def start_loop(self, *, loop: asyncio.AbstractEventLoop = None):
         """Instantiate the dispatcher, this will create a connection to the
         Discord websocket API on behalf of the client who's token has
         been passed.
