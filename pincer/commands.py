@@ -56,6 +56,16 @@ def command(
         cooldown_scale: Optional[float] = 60,
         cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER
 ):
+    """
+    Command option types are designated by using type hints.
+    str - String
+    int - Integer
+    bool - Boolean
+    float - Number
+    pincer.User - User
+    pincer.Channel - Channel
+    pincer.Role - Role
+    """
     # TODO: Fix docs
     # TODO: Fix docs w guild
     # TODO: Fix docs w cooldown
