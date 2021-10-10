@@ -52,6 +52,7 @@ _convert_functions = {
     AppCommandOptionType.MENTIONABLE: None
 }
 
+
 class InteractionFlags(IntEnum):
     """
     :param EPHEMERAL:
@@ -142,7 +143,11 @@ class InteractionData(APIObject):
             AppCommandInteractionDataOption.from_dict,
             AppCommandInteractionDataOption
         )
-        self.values = convert(self.values, SelectOption.from_dict, SelectOption)
+        self.values = convert(
+            self.values,
+            SelectOption.from_dict,
+            SelectOption
+        )
         self.target_id = convert(self.target_id, Snowflake.from_string)
 
 
