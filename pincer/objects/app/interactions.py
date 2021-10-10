@@ -270,11 +270,11 @@ class Interaction(APIObject):
         with suppress(TypeError):
             option.value = await converter(option, self)
             return
-        if not option.value:
-            raise NotImplementedError(
-                "Handling for AppCommandOptionType {option.type} is not "
-                "implemented"
-            )
+
+        raise NotImplementedError(
+            "Handling for AppCommandOptionType {option.type} is not "
+            "implemented"
+        )
 
     def convert_to_message_context(self, command):
         return MessageContext(
