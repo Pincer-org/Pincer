@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Union, List, Optional, TYPE_CHECKING
 
-from ..app.interaction_base import CallbackType
+from ..app import interaction_base
 from ..guild.role import Role
 from ..message.embed import Embed
 from ..message.user_message import AllowedMentionTypes
@@ -49,7 +49,7 @@ class Message:
     allowed_mentions: Optional[AllowedMentions] = None
     components: Optional[List[MessageComponent]] = None
     flags: Optional[InteractionFlags] = None
-    type: Optional[CallbackType] = None
+    type: Optional[interaction_base.CallbackType] = None
 
     def to_dict(self):
         if len(self.content) < 1 and not self.embeds:
@@ -72,6 +72,6 @@ class Message:
         }
 
         return {
-            "type": self.type or CallbackType.MESSAGE,
+            "type": self.type or interaction_base.CallbackType.MESSAGE,
             "data": {k: i for k, i in resp.items() if i}
         }

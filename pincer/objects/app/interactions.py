@@ -8,7 +8,7 @@ from enum import IntEnum
 from typing import Dict, TYPE_CHECKING
 
 from .command import AppCommandInteractionDataOption
-from .interaction_base import InteractionType
+from . import interaction_base
 from ..app.select_menu import SelectOption
 from ..guild.member import GuildMember
 from ..message.context import MessageContext
@@ -167,7 +167,7 @@ class Interaction(APIObject):
 
     id: Snowflake
     application_id: Snowflake
-    type: InteractionType
+    type: interaction_base.InteractionType
     token: str
 
     version: int = 1
@@ -183,7 +183,7 @@ class Interaction(APIObject):
         self.application_id = convert(
             self.application_id, Snowflake.from_string
         )
-        self.type = convert(self.type, InteractionType)
+        self.type = convert(self.type, interaction_base.InteractionType)
         self.data = convert(
             self.data,
             InteractionData.from_dict,

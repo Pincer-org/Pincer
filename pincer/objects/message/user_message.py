@@ -8,7 +8,7 @@ from enum import IntEnum, Enum
 from typing import List, Optional, Union
 
 from ..app import application
-from ..app.interaction_base import MessageInteraction
+from ..app import interaction_base
 from ..guild.channel import Channel, ChannelMention
 from ..guild.member import GuildMember
 from ..guild.role import Role
@@ -289,7 +289,7 @@ class UserMessage(APIObject):
     message_reference: types.APINullable[MessageReference] = MISSING
     flags: types.APINullable[MessageFlags] = MISSING
     referenced_message: types.APINullable[Optional[UserMessage]] = MISSING
-    interaction: types.APINullable[MessageInteraction] = MISSING
+    interaction: types.APINullable[interaction_base.MessageInteraction] = MISSING
     thread: types.APINullable[Channel] = MISSING
     components: types.APINullable[List[MessageComponent]] = MISSING
     sticker_items: types.APINullable[List[StickerItem]] = MISSING
@@ -332,7 +332,7 @@ class UserMessage(APIObject):
         # )
         self.interaction = convert(
             self.interaction,
-            MessageInteraction.from_dict
+            interaction_base.MessageInteraction.from_dict
         )
         self.thread = convert(self.thread, Channel.from_dict,
                               client=self._client)
