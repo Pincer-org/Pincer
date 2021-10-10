@@ -3,10 +3,8 @@
 
 from __future__ import annotations
 
-from contextlib import suppress
 from dataclasses import dataclass
 from enum import IntEnum
-from types import coroutine
 from typing import Dict, TYPE_CHECKING
 
 import asyncio
