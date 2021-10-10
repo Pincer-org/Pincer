@@ -43,8 +43,10 @@ extensions = [
     'exception_hierarchy',
     'attributetable',
     'silence',
-    'sphinxcontrib-trio'
+    'sphinxcontrib_trio'
 ]
+
+add_module_names = False
 
 autodoc_typehints = 'none'
 

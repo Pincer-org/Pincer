@@ -12,6 +12,10 @@ Client
 .. attributetable:: Client
 
 .. autoclass:: Client
+    :exclude-members: event
+
+    .. automethod:: Client.event
+        :decorator:
 
 Commands
 --------
@@ -20,6 +24,7 @@ command
 ~~~~~~~
 
 .. autofunction:: command
+    :decorator:
 
 ChatCommandHandler
 ~~~~~~~~~~~~~~~~~~

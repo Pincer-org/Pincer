@@ -149,8 +149,6 @@ class Dispatcher:
         This method gets invoked for every message that is received from
         Discord.
 
-        :meta public:
-
         :param socket:
             The current socket, which can be used to interact with
             the Discord API.
@@ -193,8 +191,6 @@ class Dispatcher:
         """
         The main event loop.
         This handles all interactions with the websocket API.
-
-        :meta public:
 
         :param loop:
             The loop in which the dispatcher is running.

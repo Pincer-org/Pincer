@@ -96,8 +96,6 @@ class HTTPClient:
         """
         Send an api request to the Discord REST API.
 
-        :meta public:
-
         :param method:
             The method for the request. (eg GET or POST)
 
@@ -155,8 +153,6 @@ class HTTPClient:
     ) -> Optional[Dict]:
         """
         Handle responses from the discord API.
-
-        :meta public:
 
         Side effects:
             If a 5xx error code is returned it will retry the request.
