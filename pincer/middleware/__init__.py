@@ -1,15 +1,17 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
+from __future__ import annotations
 
 import logging
 from glob import glob
 from importlib import import_module
 from pathlib import Path
-from typing import Dict
+from typing import TYPE_CHECKING, Dict
 
-from ..exceptions import NoExportMethod, NotFoundError
-from ..utils.types import Coro
 from ..utils.directory import chdir
+
+if TYPE_CHECKING:
+    from ..utils.types import Coro
 
 from .activity_join_request import *
 from .activity_join import *
