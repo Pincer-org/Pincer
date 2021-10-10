@@ -212,7 +212,7 @@ class Client(Dispatcher):
 
 
     @staticmethod
-    def event(coroutine: Coro) -> Coro:
+    def event(coroutine: Coro):
         """A decorator to register a Discord gateway event listener. 
         This event will get called when the client receives a new event 
         update from Discord which matches the event name.
