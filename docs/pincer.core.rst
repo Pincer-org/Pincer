@@ -1,6 +1,6 @@
 .. currentmodule:: pincer.core
 
-Pincer core module
+Pincer Core Module
 ==================
 
 Dispatching

@@ -1,6 +1,6 @@
 .. currentmodule:: pincer
 
-Pincer module
+Pincer Module
 =============
 
 Clients
