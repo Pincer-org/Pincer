@@ -28,8 +28,7 @@ _log = logging.getLogger(__package__)
 
 
 class Dispatcher:
-    """
-    The Dispatcher handles all interactions with discord websocket API.
+    """The Dispatcher handles all interactions with discord websocket API.
     This also contains the main event loop, and handles the heartbeat.
 
     Running the dispatcher will create a connection with the
@@ -46,23 +45,9 @@ class Dispatcher:
             handlers: Dict[int, Handler],
             intents: Intents
     ) -> None:
-        """
-        :param token:
-            Bot token for discord's API.
-
-        :param intents:
-            Represents the discord bot intents.
-
-        :param handlers:
-            A hashmap of coroutines with as key the gateway opcode.
-
-        :raises InvalidTokenError:
-            Discord Token length is not 59 characters.
-        """
-
         if len(token) != 59:
             raise InvalidTokenError(
-                "Discord Token must have exactly 59 characters."
+                "Disfcord Token must have exactly 59 characters."
             )
 
         self.__token = token
@@ -74,17 +59,19 @@ class Dispatcher:
                 socket: WebSocketClientProtocol,
                 payload: GatewayDispatch
         ):
-            """
+            """|coro|
+
             Identifies the client to the Discord Websocket API, this
             gets done when the client receives the ``hello`` (opcode 10)
             message from discord. Right after we send our identification
             the heartbeat starts.
 
-            :param socket:
+            Parameters
+            ----------
+            socket :
                 The current socket, which can be used to interact
                 with the Discord API.
-
-            :param payload:
+            payload :
                 The received payload from Discord.
             """
             _log.debug("Sending authentication/identification message.")
@@ -93,7 +80,8 @@ class Dispatcher:
             await Heartbeat.handle_hello(socket, payload)
 
         async def handle_reconnect(_, payload: GatewayDispatch):
-            """
+            """|coro|
+
             Closes the client and then reconnects it.
             """
             _log.debug("Reconnecting client...")
@@ -120,6 +108,8 @@ class Dispatcher:
 
     @property
     def intents(self):
+        """:class:`app.Intents`
+        """
         return self.__intents
 
     @property
@@ -144,21 +134,6 @@ class Dispatcher:
             payload: GatewayDispatch,
             loop: AbstractEventLoop
     ):
-        """
-        This manages all handles for given OP codes.
-        This method gets invoked for every message that is received from
-        Discord.
-
-        :param socket:
-            The current socket, which can be used to interact with
-            the Discord API.
-
-        :param payload:
-            The received payload from Discord.
-
-        :param loop:
-            The current async loop on which the future is bound.
-        """
         _log.debug(
             "New event received, checking if handler exists for opcode: %i",
             payload.op
@@ -188,13 +163,6 @@ class Dispatcher:
         execute_handler(all_handler)
 
     async def __dispatcher(self, loop: AbstractEventLoop):
-        """
-        The main event loop.
-        This handles all interactions with the websocket API.
-
-        :param loop:
-            The loop in which the dispatcher is running.
-        """
         _log.debug(
             "Establishing websocket connection with `%s`", GatewayConfig.uri()
         )
@@ -235,16 +203,15 @@ class Dispatcher:
                     _log.debug("Connection closed successfully.")
 
     def start_loop(self, *, loop: AbstractEventLoop = None):
-        """
-        Instantiate the dispatcher, this will create a connection to the
+        """Instantiate the dispatcher, this will create a connection to the
         Discord websocket API on behalf of the client who's token has
         been passed.
 
-        Keyword Arguments:
-
-        :param loop:
+        Parameters
+        ----------
+        loop :
             The loop in which the Dispatcher will run. If no loop is
-            provided it will get a new one.
+            provided it will get a new one. |default| :data:`None`
         """
         _log.debug("Starting GatewayDispatcher")
         loop = loop or get_event_loop()
@@ -252,7 +219,8 @@ class Dispatcher:
         loop.close()
 
     async def close(self):
-        """
+        """|coro|
+
         Stop the dispatcher from listening and responding to gateway
         events. This should let the client close on itself.
         """
