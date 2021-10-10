@@ -1,8 +1,3 @@
-<<<<<<< HEAD
 furo
 git+https://github.com/ooliver1/sphinx-autodoc-typehints
 sphinxcontrib-trio
-=======
-sphinx_rtd_theme
-sphinx-rtd-dark-mode
->>>>>>> main
