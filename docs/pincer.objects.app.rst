@@ -57,3 +57,13 @@ ClientCommandStructure
 .. attributetable:: ClientCommandStructure
 
 .. autoclass:: ClientCommandStructure()
+
+Intents
+-------
+
+Intents
+~~~~~~~
+
+.. attributetable:: Intents
+
+.. autoclass:: Intents()
