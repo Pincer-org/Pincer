@@ -259,7 +259,7 @@ class ChatCommandHandler(metaclass=Singleton):
     __delete = "/commands/{command.id}"
     __update = "/commands/{command.id}"
     __add = "/commands"
-    __add_guild = "/guilds/{command.app.guild_id}/commands"
+    __add_guild = "/guilds/{command.guild_id}/commands"
 
     # TODO: Fix docs
     def __init__(self, client):
@@ -446,12 +446,18 @@ class ChatCommandHandler(metaclass=Singleton):
         Add all new commands which have been registered by the decorator
         to Discord!
         """
-        commands_to_add: List[AppCommand] = [
-            cmd.app for cmd in ChatCommandHandler.register.values()
-            if cmd.app not in self._api_commands
-        ]
+        to_add = ChatCommandHandler.register
 
-        await self.add_commands(commands_to_add)
+        for reg_cmd in self._api_commands:
+            try:
+                del to_add[reg_cmd.name]
+            except IndexError:
+                pass
+
+        await self.add_commands(list(map(
+            lambda cmd: cmd.app,
+            to_add.values()
+        )))
 
     async def initialize(self):
         # TODO: Fix docs

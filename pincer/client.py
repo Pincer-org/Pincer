@@ -182,7 +182,7 @@ class Client(Dispatcher):
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
         self.throttler = throttler
-        ChatCommandHandler.managers["__main__"] = self
+        ChatCommandHandler.managers[self.__module__] = self
 
     @property
     def chat_commands(self):
