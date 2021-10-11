@@ -5,101 +5,56 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import List, Union
+from typing import List, Union, TYPE_CHECKING
 
+from ...utils.types import Coro, choice_value_types
+from ..app.throttle_scope import ThrottleScope
 from ...utils.api_object import APIObject
-from ...utils.conversion import convert
-from ...utils import extraction
 from ...utils.snowflake import Snowflake
 from ...utils.types import MISSING
 from ...utils import types
-from ..app.throttle_scope import ThrottleScope
-from ...utils.types import Coro, choice_value_types
+
+if TYPE_CHECKING:
+    from ...utils.conversion import convert
+    from ...utils import extraction
 
 
 class AppCommandType(IntEnum):
+    """Defines the different types of application commands.
     """
-    Defines the different types of application commands.
-
-    :param CHAT_INPUT:
-        Slash commands; a text-based command that shows up when a user
-        types /
-
-    :param USER:
-        A UI-based command that shows up when you right click or tap on
-        a user
-
-    :param MESSAGE:
-        A UI-based command that shows up when you right click or tap on
-        a message
-    """
-    CHAT_INPUT = 1
-    USER = 2
-    MESSAGE = 3
+    CHAT_INPUT = 1 #: Slash commands; a text-based command that shows up when a user types /
+    USER = 2 #: A UI-based command that shows up when you right click or tap on a user
+    MESSAGE = 3 #: A UI-based command that shows up when you right click or tap on a message
 
 
 class AppCommandOptionType(IntEnum):
+    """Represents a parameter type.
     """
-    Represents a parameter type.
-
-    :param SUB_COMMAND:
-        The parameter will be a subcommand.
-
-    :param SUB_COMMAND_GROUP:
-        The parameter will be a group of subcommands.
-
-    :param STRING:
-        The parameter will be a string.
-
-    :param INTEGER:
-        The parameter will be an integer/number. (-2^53 and 2^53)
-
-    :param BOOLEAN:
-        The parameter will be a boolean.
-
-    :param USER:
-        The parameter will be a Discord user object.
-
-    :param CHANNEL:
-        The parameter will be a Discord channel object.
-
-    :param ROLE:
-        The parameter will be a Discord role object.
-
-    :param MENTIONABLE:
-        The parameter will be mentionable.
-
-    :param NUMBER:
-        The parameter will be a float. (-2^53 and 2^53)
-    """
-    SUB_COMMAND = 1
-    SUB_COMMAND_GROUP = 2
-    STRING = 3
-    INTEGER = 4  # 54-bit
-    BOOLEAN = 5
-    USER = 6
-    CHANNEL = 7
-    ROLE = 8
-    MENTIONABLE = 9
-    NUMBER = 10  # 54-bit
-
+    SUB_COMMAND = 1 #: The parameter will be a subcommand.
+    SUB_COMMAND_GROUP = 2 #: The parameter will be a group of subcommands.
+    STRING = 3 #: The parameter will be a string.
+    INTEGER = 4 #: The parameter will be an integer/number. (-2^53 and 2^53)
+    BOOLEAN = 5 #: The parameter will be a boolean.
+    USER = 6 #: The parameter will be a Discord user object.
+    CHANNEL = 7 #: The parameter will be a Discord channel object.
+    ROLE = 8 #: The parameter will be a Discord role object.
+    MENTIONABLE = 9 #: The parameter will be mentionable.
+    NUMBER = 10  #: The parameter will be a float. (-2^53 and 2^53)
 
 @dataclass
 class AppCommandInteractionDataOption(APIObject):
-    """
-    Represents a Discord Application Command Interaction Data Option
+    """Represents a Discord Application Command Interaction Data Option
 
-    :param name:
-        the name of the parameter
-
-    :param type:
-        value of application command option type
-
-    :param value:
-        the value of the pair
-
-    :param options:
-        present if this option is a group or subcommand
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the parameter
+    value: :class:`str`
+        The value of the pair
+    type: :data:`~pincer.utils.types.APINullable`\\[:class:`str`]
+        Value of application command option type
+    options: :data:`~pincer.utils.types.APINullable`\\[:class:`~typing.List`\\[:data:`~pincer.objects.app.command.AppCommandInteractionDataOption`]]
+        Present if this option is a group or subcommand
     """
     name: str
     value: types.APINullable[str] = MISSING
@@ -118,14 +73,14 @@ class AppCommandInteractionDataOption(APIObject):
 
 @dataclass
 class AppCommandOptionChoice(APIObject):
-    """
-    Represents a Discord Application Command Option Choice object
+    """Represents a Discord Application Command Option Choice object
 
-    :param name:
+    Attributes
+    ----------
+    name: :class:`str`
         1-100 character choice name
-
-    :param value:
-        value of the choice, up to 100 characters if string
+    value: :data:`~typing.Union`\\[:data:`~pincer.utils.types.choice_value_types`]
+        Value of the choice, up to 100 characters if string
     """
     name: str
     value: Union[choice_value_types]
@@ -133,27 +88,23 @@ class AppCommandOptionChoice(APIObject):
 
 @dataclass
 class AppCommandOption(APIObject):
-    """
-    Represents a Discord Application Command Option object
+    """Represents a Discord Application Command Option object
 
-    :param type:
-        the type of option
-
-    :param name:
+    Attributes
+    ----------
+    type: :class:`~pincer.objects.AppCommandOptionType`
+        The type of option
+    name: :class:`str`
         1-32 lowercase character name matching `^[\\w-]{1,32}$`
-
-    :param description:
+    description: :class:`str`
         1-100 character description
-
-    :param required:
-        if the parameter is required or optional--default `False`
-
-    :param choices:
-        choices for `STRING`, `INTEGER`, and `NUMBER`
+    required: :data:`~pincer.utils.types.APINullable`\\[:class:`bool`]
+        If the parameter is required or optional |default| :data:`False`
+    choices: :data:`~pincer.utils.types.APINullable`\\[:data:`typing.List`\\[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
+        Choices for `STRING`, `INTEGER`, and `NUMBER`
         types for the user to pick from, max 25
-
-    :param options:
-        if the option is a subcommand or subcommand group type,
+    options: :data:`~pincer.utils.types.APINullable`\\[:class:`~typing.List`\\[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
+        If the option is a subcommand or subcommand group type,
         this nested options will be the parameters
     """
     type: AppCommandOptionType
@@ -180,38 +131,31 @@ class AppCommandOption(APIObject):
 
 @dataclass
 class AppCommand(APIObject):
-    """
-    Represents a Discord Application Command object
+    """Represents a Discord Application Command object
 
-    :param id:
-        unique id of the command
-
-    :param type:
-        the type of command, defaults `1` if not set
-
-    :param application_id:
-        unique id of the parent application
-
-    :param guild_id:
-        guild id of the command, if not global
-
-    :param name:
+    Attributes
+    ----------
+    type: :class:`~pincer.objects.app.command.AppCommandType`
+        The type of command, defaults ``1`` if not set
+    name: :class:`str`
         1-32 character name
-
-    :param description:
-        1-100 character description for `CHAT_INPUT` commands,
-        empty string for `USER` and `MESSAGE` commands
-
-    :param options:
-        the parameters for the command, max 25
-
-    :param default_permission:
-        whether the command is enabled by default
-        when the app is added to a guild
-
-    :param version:
-        autoincrementing version identifier updated during substantial
+    description: :class:`str`
+        1-100 character description for ``CHAT_INPUT`` commands,
+        empty string for ``USER`` and ``MESSAGE`` commands
+    id: :data:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
+        Unique id of the command
+    version: :data:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
+        Autoincrementing version identifier updated during substantial
         record changes
+    application_id: :data:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
+        Unique id of the parent application
+    options: :data:`~pincer.utils.types.APINullable`\\[:class:`~typing.List`\\[:class:`~pincer.objects.app.command.AppCommandOption`]]
+        The parameters for the command, max 25
+    guild_id: :data:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
+        Guild id of the command, if not global
+    default_permission: :data:`~pincer.utils.types.APINullable`\\[:class:`bool`]
+        Whether the command is enabled by default
+        when the app is added to a guild
     """
     type: AppCommandType
     name: str
@@ -272,10 +216,12 @@ class AppCommand(APIObject):
         return hash((self.id, self.name, self.description))
 
     def add_option(self, option: AppCommandOption):
-        """
-        Add a new option field to the current application command.
+        """Add a new option field to the current application command.
 
-        :param option: The option which will be appended.
+        Parameters
+        ----------
+        option :
+            The option which will be appended.
         """
         if self.options:
             self.options.append(option)
@@ -285,16 +231,22 @@ class AppCommand(APIObject):
 
 @dataclass
 class ClientCommandStructure:
-    """
-    Represents the structure of how the client saves the existing
+    """Represents the structure of how the client saves the existing
     commands in the register.
 
-    :param app:
+    Attributes
+    ----------
+    app: :class:`~pincer.objects.app.command.AppCommand`
         The command application.
-
-    :param call:
+    call: :class:`~pincer.utils.types.Coro`
         The coroutine which should be called when the command gets
         executed.
+    cooldown: :class:`int`
+        Amount of times for cooldown
+    cooldown_scale: :class:`float`
+        Search time for cooldown
+    cooldown_scope: :class:`~pincer.objects.app.throttle_scope.ThrottleScope`
+        The type of cooldown
     """
     app: AppCommand
     call: Coro
