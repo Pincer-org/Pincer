@@ -1,2 +1,2 @@
-websockets
-aiohttp
+websockets == 10.0
+aiohttp == 3.7.4post0

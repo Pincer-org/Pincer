@@ -20,7 +20,7 @@ from .exceptions import (
     NoCogManagerReturnFound, CogAlreadyExists, CogNotFound
 )
 from .middleware import middleware
-from .objects import User, Intents, Guild, ThrottleInterface
+from .objects import User, Intents, Guild, ThrottleInterface, Channel
 from .objects.app.throttling import DefaultThrottleHandler
 from .utils import get_index, should_pass_cls, Coro
 from .utils.signature import get_params
@@ -569,6 +569,19 @@ class Client(Dispatcher):
             A User object.
         """
         return await User.from_id(self, _id)
+
+    async def get_chanel(self, _id: int) -> Channel:
+        """
+        Fetch a Channel from its identifier.
+
+        :param _id:
+            The id of the user which should be fetched from the Discord
+            gateway.
+
+        :returns:
+            A Channel object.
+        """
+        return await Channel.from_id(self, _id)
 
 
 Bot = Client

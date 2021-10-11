@@ -207,7 +207,7 @@ class Channel(APIObject):
         data = await self._http.patch(f"channels/{self.id}", kwargs)
         data.update(
             {
-                "_client": self.client,
+                "_client": self._client,
                 "_http": self._http,
                 "type": ChannelType(data.pop("type"))
             }
@@ -215,10 +215,9 @@ class Channel(APIObject):
         channel_cls = _channel_type_map.get(data["type"], Channel)
         return channel_cls.from_dict(data)
 
-
-def __str__(self):
-    """return the discord tag when object gets used as a string."""
-    return self.name or str(self.id)
+    def __str__(self):
+        """return the discord tag when object gets used as a string."""
+        return self.name or str(self.id)
 
 
 class TextChannel(Channel):
@@ -238,6 +237,11 @@ class TextChannel(Channel):
 
     async def edit(self, **kwargs):
         return await super().edit(**kwargs)
+
+    @property
+    def mention(self) -> str:
+        """Return a channel mention."""
+        return f"<#{self.id}>"
 
 
 class VoiceChannel(Channel):
