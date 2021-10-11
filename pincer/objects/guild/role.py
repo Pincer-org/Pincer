@@ -80,6 +80,7 @@ class Role(APIObject):
     unicode_emoji: APINullable[str] = MISSING
     tags: APINullable[RoleTags] = MISSING
 
+    # TODO: Implement Caching
     @classmethod
     async def from_id(cls, client, guild_id: int, role_id: int) -> Role:
         roles: list = await client.http.get(f"/guilds/{guild_id}/roles")

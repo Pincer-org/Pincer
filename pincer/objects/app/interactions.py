@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Dict, TYPE_CHECKING
 
-import asyncio
+from asyncio import gather, iscoroutine
 
 from .command import AppCommandInteractionDataOption, AppCommandOptionType
 from .interaction_base import InteractionType
@@ -252,11 +252,8 @@ class Interaction(APIObject):
         if not self.data.options:
             return
 
-        await asyncio.gather(
-            *(
-                self.convert(option)
-                for option in self.data.options
-            )
+        await gather(
+            *map(self.convert, self.data.options)
         )
 
     async def convert(self, option: AppCommandInteractionDataOption):
@@ -275,7 +272,7 @@ class Interaction(APIObject):
 
         res = converter(option.value)
 
-        if asyncio.iscoroutine(res):
+        if iscoroutine(res):
             option.value = await res
             return
 
