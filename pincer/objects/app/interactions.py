@@ -5,17 +5,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Dict, TYPE_CHECKING
-
-<<<<<<< HEAD
-from .command import AppCommandInteractionDataOption
-from . import interaction_base
-=======
+from typing import Dict
 from asyncio import gather, iscoroutine
 
 from .command import AppCommandInteractionDataOption, AppCommandOptionType
-from .interaction_base import InteractionType
->>>>>>> main
+from . import interaction_base
 from ..app.select_menu import SelectOption
 from ..guild.member import GuildMember
 from ..message.context import MessageContext
