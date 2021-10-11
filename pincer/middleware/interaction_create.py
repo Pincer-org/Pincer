@@ -166,6 +166,7 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
     interaction: Interaction = Interaction.from_dict(
         {**payload.data, "_client": self, "_http": self.http}
     )
+    await interaction.build()
     command = ChatCommandHandler.register.get(interaction.data.name)
 
     if command:

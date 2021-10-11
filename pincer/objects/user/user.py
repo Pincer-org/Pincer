@@ -142,6 +142,6 @@ class User(APIObject):
         self.id = convert(self.id, Snowflake.from_string)
 
     @classmethod
-    async def from_id(cls, client: Client, _id: int) -> User:
-        data = await client.http.get(f"users/{_id}")
-        return cls.from_dict(data)
+    async def from_id(cls, client: Client, user_id: int) -> User:
+        data = await client.http.get(f"users/{user_id}")
+        return cls(_client=client, _http=client.http, **data)

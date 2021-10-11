@@ -17,7 +17,7 @@ from .exceptions import (
     InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
     InvalidCommandName
 )
-from .objects import ThrottleScope, AppCommand
+from .objects import ThrottleScope, AppCommand, Role, User, Channel
 from .objects.app import (
     AppCommandOptionType, AppCommandOption, AppCommandOptionChoice,
     ClientCommandStructure, AppCommandType
@@ -33,12 +33,17 @@ COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 _log = logging.getLogger(__package__)
 
 _options_type_link = {
-    # TODO: Implement other types:
+    # TODO: Implement mentionable:
     Signature.empty: AppCommandOptionType.STRING,
     str: AppCommandOptionType.STRING,
     int: AppCommandOptionType.INTEGER,
     bool: AppCommandOptionType.BOOLEAN,
-    float: AppCommandOptionType.NUMBER
+    float: AppCommandOptionType.NUMBER,
+
+    User: AppCommandOptionType.USER,
+    Channel: AppCommandOptionType.CHANNEL,
+    Role: AppCommandOptionType.ROLE,
+  
 }
 
 
@@ -51,6 +56,16 @@ def command(
         cooldown_scale: Optional[float] = 60,
         cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER
 ):
+    """
+    Command option types are designated by using type hints.
+    str - String
+    int - Integer
+    bool - Boolean
+    float - Number
+    pincer.User - User
+    pincer.Channel - Channel
+    pincer.Role - Role
+    """
     # TODO: Fix docs
     # TODO: Fix docs w guild
     # TODO: Fix docs w cooldown
