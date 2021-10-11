@@ -157,7 +157,7 @@ class Client(Dispatcher):
 
     Attributes
     ----------
-    bot: :class:`~objects.user.User`
+    bot: :class:`~objects.user.user.User`
         THe user object of the client
     recieved_message: :class:`str`
         The default message which will be sent when no response is given.
@@ -171,9 +171,9 @@ class Client(Dispatcher):
     received :
         The default message which will be sent when no response is given. 
         |default| :data:`None`
-    intents :
+    intents : :class:`~objects.app.intents.Intents`
         The discord intents to use |default| :data:`None`
-    throttler :
+    throttler : :class:`~objects.app.throttling.ThrottleInterface`
         The throttler for your client (generally not used) 
         |default| :data:`None`
     """
@@ -298,8 +298,7 @@ class Client(Dispatcher):
             return call
 
     def load_cog(self, path: str, package: Optional[str] = None):
-        """
-        Load a cog from a string path, setup method in COG may
+        """Load a cog from a string path, setup method in COG may
         optionally have a first argument which will contain the client!
 
         :Example usage:
@@ -328,11 +327,11 @@ class Client(Dispatcher):
             >>>
             >>> setup = SayCommand
 
-
-        :param path:
+        Parameters
+        ----------
+        path:
             The import path for the cog.
-
-        :param package:
+        package:
             The package name for relative based imports.
         """
 
@@ -412,16 +411,17 @@ class Client(Dispatcher):
 
     @staticmethod
     def execute_event(call: Coro, *args, **kwargs):
-        """
-        Invokes an event.
+        """Invokes an event.
 
-        :param call:
+        Parameters
+        ----------
+        call:
             The call (method) to which the event is registered.
 
-        :param \\*args:
+        \\*args:
             The arguments for the event.
 
-        :param \\*kwargs:
+        \\*\\*kwargs:
             The named arguments for the event.
         """
 
@@ -515,7 +515,7 @@ class Client(Dispatcher):
         Raises
         ------
         error
-            if ``call := self.get_event_coro(name)`` is ``False``
+            if ``call := self.get_event_coro(name)`` is :data:`False`
         """
         if call := self.get_event_coro(name):
             self.execute_event(call, error, *args, **kwargs)

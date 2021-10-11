@@ -82,10 +82,10 @@ def command(
                 )
 
     References from above:
-        :class:`Client`, 
-        :class:`objects.Message`, 
-        :class:`utils.Choices`, 
-        :class:`objects.InteractionFlags`
+        :class:`~client.Client`, 
+        :class:`~objects.message.message.Message`, 
+        :class:`~utils.types.Choices`, 
+        :class:`~objects.app.interactions.InteractionFlags`
 
     Parameters
     ----------
@@ -102,7 +102,7 @@ def command(
         |default| ``0``
     cooldown_scale :
         The 'checking time' of the cooldown |default| ``60``
-    cooldown_scope :
+    cooldown_scope : :class:`~objects.app.throttle_scope.ThrottleScope`
         What type of cooldown strategy to use |default| :attr:`ThrottleScope.USER`
 
     Raises
@@ -125,13 +125,6 @@ def command(
         Not a valid argument type, 
         Annotations must consist of name and value
     """
-    # TODO: Fix docs
-    # TODO: Fix docs w guild
-    # TODO: Fix docs w cooldown
-    # TODO: Fix docs w context
-    # TODO: Fix docs w argument descriptions
-    # TODO: Fix docs w argument choices
-
     def decorator(func: Coro):
         if not iscoroutinefunction(func) and not isasyncgenfunction(func):
             raise CommandIsNotCoroutine(
@@ -331,7 +324,7 @@ class ChatCommandHandler(metaclass=Singleton):
     managers: :class:`~typing.Dict`
         Dictionary of managers
     register: :class:`~typing.Dict`
-        Dictionary of :class:`objects.ClientCommandStructure`
+        Dictionary of :class:`~objects.app.command.ClientCommandStructure`
     """
     managers: Dict[str, Any] = {}
     register: Dict[str, ClientCommandStructure] = {}
@@ -405,7 +398,7 @@ class ChatCommandHandler(metaclass=Singleton):
 
         Parameters
         ----------
-        cmd :
+        cmd : :class:`~objects.app.command.AppCommand`
             What command to update
         changes :
             Dictionary of changes
@@ -428,7 +421,7 @@ class ChatCommandHandler(metaclass=Singleton):
 
         Parameters
         ----------
-        to_update :
+        to_update : :class:`~typing.Dict`\\[:class:`~objects.app.command.AppCommand`, :class:`~typing.Dict`\\[:class:`str`, :data:`~typing.Any`]]
             Dictionary of commands to changes where changes is a dictionary too
         """
         await gather(*list(map(
@@ -443,7 +436,7 @@ class ChatCommandHandler(metaclass=Singleton):
 
         Parameters
         ----------
-        cmd :
+        cmd : :class:`~objects.app.command.AppCommand`
             Command to add
         """
         add_endpoint = self.__add
@@ -465,7 +458,7 @@ class ChatCommandHandler(metaclass=Singleton):
 
         Parameters
         ----------
-        commands :
+        commands : :class:`~typing.List`\\[:class:`~objects.app.command.AppCommand`]
             List of command objects to add
         """
         await gather(*list(map(

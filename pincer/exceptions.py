@@ -74,7 +74,7 @@ class CommandCooldownError(CommandError):
 
     Attributes
     ----------
-    ctx: :class:`objects.MessageContext`
+    ctx: :class:`~objects.message.context.MessageContext`
         The context of the error
     """
     def __init__(self, message: str, context):
@@ -153,7 +153,7 @@ class TaskError(PincerError):
     
     Attributes
     ----------
-    task: :class:`utils.Task`
+    task: :class:`~utils.tasks.Task`
         The task that raised the exception.
     """
 
