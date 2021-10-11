@@ -6,11 +6,13 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 from io import BytesIO
-from typing import Optional, TYPE_CHECKING
+from typing import Any, Optional, TYPE_CHECKING
 
 from ...utils import APIObject
 
 PILLOW_IMPORT = True
+
+IMAGE_TYPE = Any
 
 try:
     from PIL.Image import Image
