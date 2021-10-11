@@ -67,3 +67,27 @@ Intents
 .. attributetable:: Intents
 
 .. autoclass:: Intents()
+
+Interaction Base
+----------------
+
+CallbackType
+~~~~~~~~~~~~
+
+.. attributetable:: CallbackType
+
+.. autoclass:: CallbackType()
+
+InteractionType
+~~~~~~~~~~~~~~~
+
+.. attributetable:: InteractionType
+
+.. autoclass:: InteractionType()
+
+MessageInteraction
+~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageInteraction
+
+.. autoclass:: MessageInteraction()

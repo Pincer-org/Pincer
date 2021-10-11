@@ -7,76 +7,51 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Dict
 
-from ...utils.api_object import APIObject
-from ...utils.types import MISSING
 from ..user.user import User
-from ...utils.snowflake import Snowflake
+from ...utils.types import MISSING
 from ...utils.types import APINullable
+from ...utils.snowflake import Snowflake
+from ...utils.api_object import APIObject
 
 
 class CallbackType(IntEnum):
+    """The types of response a client can give to a interaction.
     """
-    The types of response a client can give to a interaction.
-
-    :param PONG:
-        ACK a Ping
-
-    :param MESSAGE:
-        respond to an interaction with a message
-
-    :param DEFERRED_MESSAGE:
-        ACK an interaction and edit a response later,
-        the user sees a loading state
-
-    :param DEFERRED_UPDATE_MESSAGE:
-        for components, ACK an interaction
-        and edit the original message later;
-        the user does not see a loading state
-
-    :param UPDATE_MESSAGE
-        for components, edit the message the component was attached to
-    """
-    PONG = 1
-    MESSAGE = 4
-    DEFERRED_MESSAGE = 5
-    DEFERRED_UPDATE_MESSAGE = 6
-    UPDATE_MESSAGE = 7
+    PONG = 1 #: ACK a Ping
+    MESSAGE = 4 #: Respond to an interaction with a message
+    DEFERRED_MESSAGE = 5 #: ACK an interaction and edit a response later, the user sees a loading state
+    DEFERRED_UPDATE_MESSAGE = 6 #: For components, ACK an interaction and edit the original message later; the user does not see a loading state
+    UPDATE_MESSAGE = 7 #: For components, edit the message the component was attached to
 
 
 class InteractionType(IntEnum):
-    """
-    Represents the different types of interactions the client
+    """Represents the different types of interactions the client
     can have with a member.
-
-    :param CHAT_INPUT:
-        Slash commands;
-        a text-based command that shows up when a user types /
-
-    :param USER:
-        A UI-based command that shows up when you right click
-        or tap on a user
-
-    :param MESSAGE:
-        A UI-based command that shows up when you right click
-        or tap on a message
     """
-    PING = 1
-    APPLICATION_COMMAND = 2
-    MESSAGE_COMPONENT = 3
+    PING = 1 #: Ping an interaction
+    APPLICATION_COMMAND = 2 #: A "slash" command
+    MESSAGE_COMPONENT = 3 #: A ui compoment like buttons and selects
 
 
 @dataclass
 class MessageInteraction(APIObject):
-    """
-    Represents a Discord Message Interaction object
+    """Represents a Discord Message Interaction object
 
     This is sent on the message object when the message
     is a response to an Interaction without an existing message.
 
-    :param id: id of the interaction
-    :param type: the type of interaction
-    :param name: the name of the application command
-    :param user: the user who invoked the interaction
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        Id of the interaction
+    type: :class:`~pincer.objects.app.interaction_base.InteractionType`
+        The type of interaction
+    name: :class:`str`
+        The name of the application command
+    user: :class:`~pincer.objects.user.user.User`
+        The user who invoked the interaction
+    member: :class:`~pincer.utios.types.APINullable`\\[:class:`~typing.Dict`]
+        The member who invoked the interaction
     """
     id: Snowflake
     type: InteractionType
