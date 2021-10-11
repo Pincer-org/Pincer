@@ -24,6 +24,12 @@ if TYPE_CHECKING:
     from ..utils.types import MISSING
     from ..utils.signature import get_params, get_signature_and_params
 
+PILLOW_IMPORT = True
+
+try:
+    from PIL.Image import Image
+except (ModuleNotFoundError, ImportError):
+    PILLOW_IMPORT = False
 
 _log = logging.getLogger(__name__)
 
@@ -38,7 +44,7 @@ def convert_message(self, message: Union[Embed, Message, str]) -> Message:
     """
     if isinstance(message, Embed):
         message = Message(embeds=[message])
-    elif isinstance(message, (File, Image)):
+    elif PILLOW_IMPORT and isinstance(message, (File, Image)):
         message = Message(attachments=[message])
     elif not isinstance(message, Message):
         message = Message(message) if message else Message(

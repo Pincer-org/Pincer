@@ -14,7 +14,7 @@ def channel_create_middleware(
 ) -> Tuple[str, List[Channel]]:
     """|coro|
 
-    Middleware for ``?`` event. # TODO ``?`` here because idk what it is
+    Middleware for ``on_channel_creation`` event.
 
     Parameters
     ----------

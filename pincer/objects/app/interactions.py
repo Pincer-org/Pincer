@@ -7,8 +7,15 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Dict, TYPE_CHECKING
 
+<<<<<<< HEAD
 from .command import AppCommandInteractionDataOption
 from . import interaction_base
+=======
+from asyncio import gather, iscoroutine
+
+from .command import AppCommandInteractionDataOption, AppCommandOptionType
+from .interaction_base import InteractionType
+>>>>>>> main
 from ..app.select_menu import SelectOption
 from ..guild.member import GuildMember
 from ..message.context import MessageContext
@@ -115,7 +122,11 @@ class InteractionData(APIObject):
             AppCommandInteractionDataOption.from_dict,
             AppCommandInteractionDataOption
         )
-        self.values = convert(self.values, SelectOption.from_dict, SelectOption)
+        self.values = convert(
+            self.values,
+            SelectOption.from_dict,
+            SelectOption
+        )
         self.target_id = convert(self.target_id, Snowflake.from_string)
 
 
@@ -212,6 +223,66 @@ class Interaction(APIObject):
             UserMessage,
             client=self._client
         )
+
+        self._convert_functions = {
+            AppCommandOptionType.SUB_COMMAND: None,
+            AppCommandOptionType.SUB_COMMAND_GROUP: None,
+
+            AppCommandOptionType.STRING: str,
+            AppCommandOptionType.INTEGER: int,
+            AppCommandOptionType.BOOLEAN: bool,
+            AppCommandOptionType.NUMBER: float,
+
+            AppCommandOptionType.USER: lambda value:
+                self._client.get_user(
+                    convert(value, Snowflake.from_string)
+                ),
+            AppCommandOptionType.CHANNEL: lambda value:
+                self._client.get_channel(
+                    convert(value, Snowflake.from_string)
+                ),
+            AppCommandOptionType.ROLE: lambda value:
+                self._client.get_role(
+                    convert(self.guild_id, Snowflake.from_string),
+                    convert(value, Snowflake.from_string)
+                ),
+            AppCommandOptionType.MENTIONABLE: None
+        }
+
+    async def build(self):
+        """
+        Sets the parameters in the interaction that need information from the
+        discord API.
+        """
+
+        if not self.data.options:
+            return
+
+        await gather(
+            *map(self.convert, self.data.options)
+        )
+
+    async def convert(self, option: AppCommandInteractionDataOption):
+        """
+        Sets an AppCommandInteractionDataOption value paramater to the payload
+        type
+        """
+
+        converter = self._convert_functions.get(option.type)
+
+        if not converter:
+            raise NotImplementedError(
+                f"Handling for AppCommandOptionType {option.type} is not "
+                "implemented"
+            )
+
+        res = converter(option.value)
+
+        if iscoroutine(res):
+            option.value = await res
+            return
+
+        option.value = res
 
     def convert_to_message_context(self, command):
         return MessageContext(
