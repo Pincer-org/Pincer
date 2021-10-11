@@ -5,53 +5,50 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Dict
+from typing import Dict, TYPE_CHECKING
 from asyncio import gather, iscoroutine
 
-from .command import AppCommandInteractionDataOption, AppCommandOptionType
-from . import interaction_base
-from ..app.select_menu import SelectOption
-from ..guild.member import GuildMember
-from ..message.context import MessageContext
-from ..message.user_message import UserMessage
+from ... import client
 from ..user.user import User
+from ..guild.role import Role
+from . import interaction_base
+from ...utils.types import MISSING
 from ...core.http import HTTPClient
-from ...utils.conversion import convert
+from ..guild.channel import Channel
+from ..guild.member import GuildMember
+from ...utils.types import APINullable
 from ...utils.snowflake import Snowflake
 from ...utils.api_object import APIObject
-from ...utils.types import MISSING
-from ..guild.channel import Channel
-from ..guild.role import Role
-from ... import client
-from ...utils.types import APINullable
+from ..app.select_menu import SelectOption
+from ..message.user_message import UserMessage
+from .command import AppCommandInteractionDataOption, AppCommandOptionType
+
+if TYPE_CHECKING:
+    from ...utils.conversion import convert
+    from ..message.context import MessageContext
 
 
 class InteractionFlags(IntEnum):
+    """Represents the valid flags for interactions
     """
-    :param EPHEMERAL:
-        only the user receiving the message can see it
-    """
-    EPHEMERAL = 1 << 6
+    EPHEMERAL = 1 << 6 #: Only the user receiving the message can see it
 
 
 @dataclass
 class ResolvedData(APIObject):
-    """
-    Represents a Discord Resolved Data structure
+    """Represents a Discord Resolved Data structure
 
-    :param users:
+    Attributes
+    ----------
+    users: :data:`~pincer.utils.types.APINullable`\\[:class:`~typing.Dict`\\[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.user.user.User`]]
         Map of Snowflakes to user objects
-
-    :param members:
+    members: :data:`~pincer.utils.types.APINullable`\\[:class:`~typing.Dict`\\[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.guild.member.GuildMember`]]
         Map of Snowflakes to partial member objects
-
-    :param roles:
+    roles: :data:`~pincer.utils.types.APINullable`\\[:class:`~typing.Dict`\\[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.guild.role.Role`]]
         Map of Snowflakes to role objects
-
-    :param channels:
+    channels: :data:`~pincer.utils.types.APINullable`\\[:class:`~typing.Dict`\\[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.guild.channel.Channel`]]
         Map of Snowflakes to partial channel objects
-
-    :param messages:
+    messages: :data:`~pincer.utils.types.APINullable`\\[:class:`~typing.Dict`\\[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.message.user_message.UserMessage`]]
         Map of Snowflakes to partial message objects
     """
     users: APINullable[Dict[Snowflake, User]] = MISSING
@@ -63,35 +60,28 @@ class ResolvedData(APIObject):
 
 @dataclass
 class InteractionData(APIObject):
-    """
-    Represents a Discord Interaction Data structure
+    """Represents a Discord Interaction Data structure
 
-    :param id:
-        the `ID` of the invoked command
-
-    :param name:
-        the `name` of the invoked command
-
-    :param type:
-        the `type` of the invoked command
-
-    :param resolved:
-        converted users + roles + channels
-
-    :param options:
-        the params + values from the user
-
-    :param custom_id:
-        the `custom_id` of the component
-
-    :param component_type:
-        the type of the component
-
-    :param values:
-        the values the user selected
-
-    :param target_id:
-        id of the user or message targeted by a user or message command
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        The `ID` of the invoked command
+    name: :class:`str`
+        The `name` of the invoked command
+    type: :class:`int`
+        The `type` of the invoked command
+    resolved: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.objects.app.interactions.ResolvedData`]
+        Converted users + roles + channels
+    options: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.objects.app.command.AppCommandInteractionDataOption`]
+        The params + values from the user
+    custom_id: :class:`~pincer.utils.types.APINullable`\\[:class:`str`]
+        The `custom_id` of the component
+    component_type: :class:`~pincer.utils.types.APINullable`\\[:class:`int`]
+        The type of the component
+    values: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.objects.app.select_menu.SelectOption`]
+        The values the user selected
+    target_id: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
+        Id of the user or message targeted by a user or message command
     """
     id: Snowflake
     name: str
@@ -126,45 +116,32 @@ class InteractionData(APIObject):
 
 @dataclass
 class Interaction(APIObject):
-    """
-    Represents a Discord Interaction object
+    """Represents a Discord Interaction object
 
-    :param _client:
-
-    :param _http:
-
-    :param id:
-        id of the interaction
-
-    :param application_id:
-        id of the application this interaction is for
-
-    :param type:
-        the type of interaction
-
-    :param data:
-        the command data payload
-
-    :param guild_id:
-        the guild it was sent from
-
-    :param channel_id:
-        the channel it was sent from
-
-    :param member:
-        guild member data for the invoking user, including permissions
-
-    :param user:
-        user object for the invoking user, if invoked in a DM
-
-    :param token:
-        a continuation token for responding to the interaction
-
-    :param version:
-        read-only property, always `1`
-
-    :param message:
-        for components, the message they were attached to
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        Id of the interaction
+    application_id: :class:`~pincer.utils.snowflake.Snowflake`
+        Id of the application this interaction is for
+    type: :class:`~pincer.objects.app.interaction_base.InteractionType`
+        The type of interaction
+    token: :class:`str`
+        A continuation token for responding to the interaction
+    version: :class:`int`
+        Read-only property, always ``1``
+    data: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.objects.app.interactions.InteractionData`]
+        The command data payload
+    guild_id: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
+        The guild it was sent from
+    channel_id: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
+        The channel it was sent from
+    member: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.objects.guild.member.GuildMember`]
+        Guild member data for the invoking user, including permissions
+    user: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.objects.user.user.User`]
+        User object for the invoking user, if invoked in a DM
+    message: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.objects.message.user_message.UserMessage`]
+        For components, the message they were attached to
     """
 
     _client: client.Client
@@ -244,7 +221,8 @@ class Interaction(APIObject):
         }
 
     async def build(self):
-        """
+        """|coro|
+
         Sets the parameters in the interaction that need information from the
         discord API.
         """
@@ -257,7 +235,8 @@ class Interaction(APIObject):
         )
 
     async def convert(self, option: AppCommandInteractionDataOption):
-        """
+        """|coro|
+
         Sets an AppCommandInteractionDataOption value paramater to the payload
         type
         """

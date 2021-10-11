@@ -91,3 +91,34 @@ MessageInteraction
 .. attributetable:: MessageInteraction
 
 .. autoclass:: MessageInteraction()
+
+interactions
+------------
+
+InteractionFlags
+~~~~~~~~~~~~~~~~
+
+.. attributetable:: InteractionFlags
+
+.. autoclass:: InteractionFlags()
+
+ResolvedData
+~~~~~~~~~~~~
+
+.. attributetable:: ResolvedData
+
+.. autoclass:: ResolvedData()
+
+InteractionData
+~~~~~~~~~~~~~~~
+
+.. attributetable:: InteractionData
+
+.. autoclass:: InteractionData()
+
+Interaction
+~~~~~~~~~~~
+
+.. attributetable:: Interaction
+
+.. autoclass:: Interaction()
