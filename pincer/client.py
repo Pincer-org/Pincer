@@ -538,7 +538,7 @@ class Client(Dispatcher):
         name : :class:`str`
             The name of the event, this is also the filename in the 
             middleware directory.
-        payload : :class:`~pincer.core.dspatch.GatewayDispatch`
+        payload : :class:`~pincer.core.dispatch.GatewayDispatch`
             The payload sent from the Discord gateway, this contains the
             required data for the client to know what event it is and
             what specifically happened.
