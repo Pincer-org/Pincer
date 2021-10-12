@@ -100,7 +100,7 @@ class AppCommandOption(APIObject):
         1-100 character description
     required: :data:`~pincer.utils.types.APINullable`\\[:class:`bool`]
         If the parameter is required or optional |default| :data:`False`
-    choices: :data:`~pincer.utils.types.APINullable`\\[:data:`typing.List`\\[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
+    choices: :data:`~pincer.utils.types.APINullable`\\[List[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
         Choices for `STRING`, `INTEGER`, and `NUMBER`
         types for the user to pick from, max 25
     options: :data:`~pincer.utils.types.APINullable`\\[List[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
