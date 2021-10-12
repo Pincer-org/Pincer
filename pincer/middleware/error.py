@@ -24,6 +24,8 @@ def error_middleware(
     payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the ready event.
 
+    Returns
+    -------
     Tuple[str, List[:class:`~pincer.objects.events.error.DiscordError`]]
         ``"on_error"`` and a ``DiscordError``
     """
