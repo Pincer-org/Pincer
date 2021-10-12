@@ -3,27 +3,31 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from typing import overload, TYPE_CHECKING
 from enum import Enum, auto, IntEnum
-from typing import Optional, List, Dict, overload, TYPE_CHECKING
+from dataclasses import dataclass, field
 
-from .member import GuildMember
-from ..events.presence import PresenceUpdateEvent
-from ..guild.channel import Channel
-from ..guild.role import Role
-from ..guild.stage import StageInstance
-from ..guild.welcome_screen import WelcomeScreen
-from ..message import emoji
-from ..message.sticker import Sticker
-from ..user import voice_state
-from ...exceptions import UnavailableGuildError
-from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-from ... import client
-from ...core.http import HTTPClient
-from ...utils.types import APINullable
-from ...utils.snowflake import Snowflake
-from ...utils.timestamp import Timestamp
+from ...utils.api_object import APIObject
+
+if TYPE_CHECKING:
+    from typing import Dict, List, Optional
+
+    from ...client import Client
+    from ..guild.role import Role
+    from ..user import voice_state
+    from .member import GuildMember
+    from ..message.emoji import Emoji
+    from ...core.http import HTTPClient
+    from ..guild.channel import Channel
+    from ..message.sticker import Sticker
+    from ...utils.types import APINullable
+    from ..guild.stage import StageInstance
+    from ...utils.snowflake import Snowflake
+    from ...utils.timestamp import Timestamp
+    from ...exceptions import UnavailableGuildError
+    from ..guild.welcome_screen import WelcomeScreen
+    from ..events.presence import PresenceUpdateEvent
 
 
 class PremiumTier(IntEnum):
@@ -408,7 +412,7 @@ class Guild(APIObject):
         returned in an Invite's guild object
     """
 
-    _client: client.Client
+    _client: Client
     _http: HTTPClient
 
     afk_channel_id: Optional[Snowflake]
@@ -419,7 +423,7 @@ class Guild(APIObject):
     default_message_notifications: DefaultMessageNotificationLevel
     description: Optional[str]
     discovery_splash: Optional[str]
-    emojis: List[emoji.Emoji]
+    emojis: List[Emoji]
     explicit_content_filter: ExplicitContentFilterLevel
     features: List[GuildFeature]
     id: Snowflake
@@ -476,7 +480,7 @@ class Guild(APIObject):
     welcome_screen: APINullable[WelcomeScreen] = MISSING
 
     @classmethod
-    async def from_id(cls, client: client.Client, _id: int) -> Guild:
+    async def from_id(cls, client: Client, _id: int) -> Guild:
         data = await client.http.get(f"/guilds/{_id}")
         channel_data = await client.http.get(f"/guilds/{_id}/channels")
 

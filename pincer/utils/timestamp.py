@@ -2,6 +2,7 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 from __future__ import annotations
+
 from datetime import datetime
 from typing import Optional, TypeVar, Union
 

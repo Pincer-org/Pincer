@@ -1,14 +1,20 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from dataclasses import dataclass
-from typing import List
+from __future__ import annotations
 
-from ..guild.channel import Channel
-from ..guild.thread import ThreadMember
-from ...utils.types import APINullable, MISSING
+from typing import TYPE_CHECKING
+from dataclasses import dataclass
+
 from ...utils.api_object import APIObject
-from ...utils.snowflake import Snowflake
+from ...utils.types import APINullable, MISSING
+
+if TYPE_CHECKING:
+    from typing import List
+
+    from ..guild.channel import Channel
+    from ..guild.thread import ThreadMember
+    from ...utils.snowflake import Snowflake
 
 @dataclass
 class ThreadListSyncEvent(APIObject):

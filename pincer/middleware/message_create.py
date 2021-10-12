@@ -4,9 +4,13 @@
 """sent when a message is created in a subscribed text channel"""
 from __future__ import annotations
 
-from typing import List, Tuple
-from ..core.dispatch import GatewayDispatch
-from ..objects.message.user_message import UserMessage
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typing import List, Tuple
+
+    from ..core.dispatch import GatewayDispatch
+    from ..objects.message.user_message import UserMessage
 
 
 async def message_create_middleware(

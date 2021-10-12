@@ -5,7 +5,10 @@
 from __future__ import annotations
 
 from json import dumps, loads
-from typing import Optional, Union, Dict, Any
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typing import Any, Dict, Optional, Union
 
 
 class GatewayDispatch:

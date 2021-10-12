@@ -4,22 +4,26 @@
 from __future__ import annotations
 
 import json
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from typing import Dict, Union, List, Optional, Tuple
 
-from aiohttp import FormData, Payload
-
-from ..app import interaction_base
-from ..guild.role import Role
-from ..message.embed import Embed
-from ..message.user_message import AllowedMentionTypes
-from ..user.user import User
-from ...exceptions import CommandReturnIsEmpty
 from ...utils.api_object import APIObject
-from ...utils.snowflake import Snowflake
-from ..app.interactions import InteractionFlags
-from .component import MessageComponent
-from ..message.file import File
+
+if TYPE_CHECKING:
+    from typing import Dict, Union, List, Optional, Tuple
+
+    from aiohttp import FormData, Payload
+
+    from ..user.user import User
+    from ..guild.role import Role
+    from ..message.file import File
+    from ..message.embed import Embed
+    from ..app import interaction_base
+    from .component import MessageComponent
+    from ...utils.snowflake import Snowflake
+    from ...exceptions import CommandReturnIsEmpty
+    from ..app.interactions import InteractionFlags
+    from ..message.user_message import AllowedMentionTypes
 
 PILLOW_IMPORT = True
 

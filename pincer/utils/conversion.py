@@ -3,16 +3,19 @@
 
 from __future__ import annotations
 
-from typing import Callable, Any, Optional
-from .types import T, MISSING
-from .. import client
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..client import Client
+    from .types import T, MISSING
+    from typing import Callable, Any, Optional
 
 
 def convert(
         value: Any,
         factory: Callable[[Any], T],
         check: Optional[type] = None,
-        client: Optional[client.Client] = None
+        client: Optional[Client] = None
 ) -> T:
     """
     Convert a value to T if its not MISSING.

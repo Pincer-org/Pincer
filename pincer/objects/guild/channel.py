@@ -3,22 +3,26 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from enum import IntEnum
-from typing import Dict, Optional, List, TYPE_CHECKING, Union, overload
+from dataclasses import dataclass
+from typing import overload, TYPE_CHECKING
 
+from ...utils.types import MISSING
 from ..._config import GatewayConfig
 from ...utils.api_object import APIObject
-from ...utils.types import MISSING
-from ..guild.overwrite import Overwrite
-from ..guild.thread import ThreadMetadata
-from ..guild.member import GuildMember
-from ..user.user import User
-from ... import client
-from ...core.http import HTTPClient
-from ...utils.types import APINullable
-from ...utils.snowflake import Snowflake
-from ...utils.timestamp import Timestamp
+
+if TYPE_CHECKING:
+    from typing import Dict, List, Optional, Union
+
+    from ...client import Client
+    from ..user.user import User
+    from ...core.http import HTTPClient
+    from ..guild.member import GuildMember
+    from ...utils.types import APINullable
+    from ..guild.overwrite import Overwrite
+    from ...utils.snowflake import Snowflake
+    from ...utils.timestamp import Timestamp
+    from ..guild.thread import ThreadMetadata
 
 
 class ChannelType(IntEnum):
@@ -140,7 +144,7 @@ class Channel(APIObject):
         the camera video quality mode of the voice channel, 1 when not present
     """
 
-    _client: client.Client
+    _client: Client
     _http: HTTPClient
 
     id: Snowflake
@@ -176,7 +180,7 @@ class Channel(APIObject):
     video_quality_mode: APINullable[int] = MISSING
 
     @classmethod
-    async def from_id(cls, client: client.Client, channel_id: int) -> Channel:
+    async def from_id(cls, client: Client, channel_id: int) -> Channel:
         data = (await client.http.get(f"channels/{channel_id}")) or {}
         data.update(
             {

@@ -7,14 +7,18 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Any, Optional, List, TYPE_CHECKING
 
-from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-from ...utils import types
-from ...utils import snowflake
-from ..guild.channel import Channel
-from ..user.integration import Integration
-from ..user.user import User
-from ..guild.webhook import Webhook
+from ...utils.api_object import APIObject
+
+if TYPE_CHECKING:
+    from typing import Any, List, Optional
+
+    from ..user.user import User
+    from ..guild.channel import Channel
+    from ..guild.webhook import Webhook
+    from ...utils.types import APINullable
+    from ...utils.snowflake import Snowflake
+    from ..user.integration import Integration
 
 
 class AuditLogEvent(IntEnum):
@@ -119,10 +123,10 @@ class AuditEntryInfo(APIObject):
     """
     delete_member_days: str
     members_removed: str
-    channel_id: snowflake.Snowflake
-    message_id: snowflake.Snowflake
+    channel_id: Snowflake#
+    message_id: Snowflake#
     count: str
-    id: snowflake.Snowflake
+    id: Snowflake#
     type: str
     role_name: str
 
@@ -154,13 +158,13 @@ class AuditLogEntry(APIObject):
         the reason for the change x(0-512 characters)
     """
     target_id: Optional[str]
-    user_id: Optional[snowflake.Snowflake]
-    id: snowflake.Snowflake
+    user_id: Optional[Snowflake]
+    id: Snowflake#
     action_type: AuditLogEvent
 
-    changes: types.APINullable[List[AuditLogChange]] = MISSING
-    options: types.APINullable[AuditEntryInfo] = MISSING
-    reason: types.APINullable[str] = MISSING
+    changes: APINullable[List[AuditLogChange]] = MISSING
+    options: APINullable[AuditEntryInfo] = MISSING
+    reason: APINullable[str] = MISSING
 
 
 @dataclass

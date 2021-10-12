@@ -1,14 +1,19 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
+from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List, Tuple
+from typing import TYPE_CHECKING
 
-from ..app import application
-from ..guild import guild
-from ..user.user import User
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING, APINullable
+
+if TYPE_CHECKING:
+    from typing import List, Tuple
+
+    from ..user.user import User
+    from ..guild.guild import Guild
+    from ..app.application import Application
 
 
 @dataclass
@@ -50,8 +55,8 @@ class ReadyEvent(APIObject):
     """
     v: int
     user: User
-    guilds: List['guild.Guild']
+    guilds: List[Guild]
     session_id: str
-    application: 'application.Application'
+    application: Application
 
     shard: APINullable[Tuple[int, int]] = MISSING

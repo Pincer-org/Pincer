@@ -1,12 +1,17 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 
+from typing import TYPE_CHECKING
 from ...utils.api_object import APIObject
-from ...utils.snowflake import Snowflake
-from ...utils.timestamp import Timestamp
 from ...utils.types import MISSING, APINullable
+
+if TYPE_CHECKING:
+    from ...utils.snowflake import Snowflake
+    from ...utils.timestamp import Timestamp
 
 
 @dataclass

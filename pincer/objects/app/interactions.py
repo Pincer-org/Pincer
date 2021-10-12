@@ -3,29 +3,29 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from enum import IntEnum
+from dataclasses import dataclass
 from typing import Dict, TYPE_CHECKING
 from asyncio import gather, iscoroutine
 
-from ... import client
-from ..user.user import User
-from ..guild.role import Role
-from . import interaction_base
 from ...utils.types import MISSING
-from ...core.http import HTTPClient
-from ..guild.channel import Channel
-from ..guild.member import GuildMember
-from ...utils.types import APINullable
-from ...utils.snowflake import Snowflake
 from ...utils.api_object import APIObject
-from ..app.select_menu import SelectOption
-from ..message.user_message import UserMessage
-from .command import AppCommandInteractionDataOption, AppCommandOptionType
 
 if TYPE_CHECKING:
+    from ...client import Client
+    from ..user.user import User
+    from ..guild.role import Role
+    from . import interaction_base
+    from ...core.http import HTTPClient
+    from ..guild.channel import Channel
+    from ..guild.member import GuildMember
+    from ...utils.types import APINullable
     from ...utils.conversion import convert
+    from ...utils.snowflake import Snowflake
+    from ..app.select_menu import SelectOption
     from ..message.context import MessageContext
+    from ..message.user_message import UserMessage
+    from .command import AppCommandInteractionDataOption, AppCommandOptionType
 
 
 class InteractionFlags(IntEnum):
@@ -144,7 +144,7 @@ class Interaction(APIObject):
         For components, the message they were attached to
     """
 
-    _client: client.Client
+    _client: Client
     _http: HTTPClient
 
     id: Snowflake

@@ -3,12 +3,17 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from typing import List, TYPE_CHECKING
 
-from ..message.emoji import Emoji
-from ...utils import APIObject, MISSING
-from ...utils.types import APINullable
+from ...utils.types import MISSING
+from ...utils.api_object import APIObject
+
+if TYPE_CHECKING:
+    from typing import List
+
+    from ..message.emoji import Emoji
+    from ...utils.types import APINullable
 
 
 @dataclass

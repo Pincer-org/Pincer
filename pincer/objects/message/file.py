@@ -4,11 +4,14 @@
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass
 from io import BytesIO
-from typing import Any, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
+from dataclasses import dataclass
 
-from ...utils import APIObject
+if TYPE_CHECKING:
+    from typing import Any, Optional
+
+    from ...utils import APIObject
 
 PILLOW_IMPORT = True
 

@@ -7,12 +7,14 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Optional, TYPE_CHECKING
 
-from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-from .user import User
-from ...utils.types import APINullable
-from ...utils.snowflake import Snowflake
-from ...utils.timestamp import Timestamp
+from ...utils.api_object import APIObject
+
+if TYPE_CHECKING:
+    from .user import User
+    from ...utils.types import APINullable
+    from ...utils.snowflake import Snowflake
+    from ...utils.timestamp import Timestamp
 
 
 class IntegrationExpireBehavior(IntEnum):

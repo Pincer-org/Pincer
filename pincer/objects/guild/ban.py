@@ -7,7 +7,9 @@ from dataclasses import dataclass
 from typing import Optional, TYPE_CHECKING
 
 from ...utils import APIObject
-from ..user.user import User
+
+if TYPE_CHECKING:
+    from ..user.user import User
 
 
 @dataclass

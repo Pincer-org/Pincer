@@ -7,10 +7,13 @@ sent when a user's voice state changes in a subscribed voice channel
 """
 from __future__ import annotations
 
-from typing import List, Tuple
+from typing import TYPE_CHECKING
 
-from ..core.dispatch import GatewayDispatch
-from ..objects.user.voice_state import VoiceState
+if TYPE_CHECKING:
+    from typing import List, Tuple
+
+    from ..core.dispatch import GatewayDispatch
+    from ..objects.user.voice_state import VoiceState
 
 
 async def voice_state_update_middleware(

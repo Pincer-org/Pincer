@@ -1,14 +1,19 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from dataclasses import dataclass
-from enum import IntEnum
-from typing import List, Optional, Tuple
+from __future__ import annotations
 
-from ..user.user import User
+from enum import IntEnum
+from typing import TYPE_CHECKING
+from dataclasses import dataclass
+
 from ...utils.api_object import APIObject
-from ...utils.snowflake import Snowflake
 from ...utils.types import MISSING, APINullable
+
+if TYPE_CHECKING:
+    from typing import List, Optional, Tuple
+    from ..user.user import User
+    from ...utils.snowflake import Snowflake
 
 
 class ActivityType(IntEnum):

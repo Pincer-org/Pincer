@@ -5,36 +5,37 @@ from __future__ import annotations
 
 import logging
 import re
+from typing import TYPE_CHECKING
 from asyncio import iscoroutinefunction, gather
 from inspect import Signature, isasyncgenfunction
-from typing import (
-    Optional, Dict, List,
-    Any, Tuple, get_origin,
-    get_args, TYPE_CHECKING,
-    Union
-)
 
 from . import __package__
-from .objects.app.command import AppCommandOptionType, AppCommand
-from .objects.app.throttle_scope import ThrottleScope
 from .utils.types import Singleton
-from .utils.snowflake import Snowflake
-from . import client
+from .objects.app.throttle_scope import ThrottleScope
+from .objects.app.command import AppCommandOptionType, AppCommand
 
 if TYPE_CHECKING:
+    from typing import (
+    Optional, Dict, List,
+    Any, Tuple, get_origin,
+    get_args, Union
+    )
+
+    from .client import Client
+    from .utils.snowflake import Snowflake
+    from .utils.extraction import get_index
+    from .utils.insertion import should_pass_ctx
+    from .utils.signature import get_signature_and_params
+    from .utils.types import Coro, MISSING, choice_value_types, Choices
+    from .objects.app.command import (
+        AppCommandOption, 
+        AppCommandOptionChoice, ClientCommandStructure, AppCommandType
+    )
     from .exceptions import (
         CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
         InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
         InvalidCommandName
     )
-    from .objects.app.command import (
-        AppCommandOption, 
-        AppCommandOptionChoice, ClientCommandStructure, AppCommandType
-    )
-    from .utils.extraction import get_index
-    from .utils.signature import get_signature_and_params
-    from .utils.insertion import should_pass_ctx
-    from .utils.types import Coro, MISSING, choice_value_types, Choices
 
 COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 
@@ -336,7 +337,7 @@ class ChatCommandHandler(metaclass=Singleton):
     __add = "/commands"
     __add_guild = "/guilds/{command.app.guild_id}/commands"
 
-    def __init__(self, client: client.Client):
+    def __init__(self, client: Client):
         self.client = client
         self._api_commands: List[AppCommand] = list()
         logging.debug(

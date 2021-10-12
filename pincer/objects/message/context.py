@@ -2,13 +2,16 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from typing import Optional, Union
 
-from ..app.command import ClientCommandStructure
-from ..guild.member import GuildMember
-from ..user.user import User
-from ...utils.snowflake import Snowflake
+if TYPE_CHECKING:
+    from typing import Optional, Union
+
+    from ..user.user import User
+    from ..guild.member import GuildMember
+    from ...utils.snowflake import Snowflake
+    from ..app.command import ClientCommandStructure
 
 
 @dataclass

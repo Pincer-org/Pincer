@@ -3,15 +3,19 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from datetime import datetime
 from re import match
-from typing import Any, Callable, Dict, Iterable, Union, Optional, TYPE_CHECKING
+from datetime import datetime
+from typing import TYPE_CHECKING
+from dataclasses import dataclass, field
 
-from ...exceptions import InvalidUrlError, EmbedFieldError
-from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-from ...utils import types
+from ...utils.api_object import APIObject
+
+if TYPE_CHECKING:
+    from typing import Any, Callable, Dict, Iterable, Union, Optional
+
+    from ...utils.types import APINullable
+    from ...exceptions import InvalidUrlError, EmbedFieldError
 
 
 def _field_size(_field: str) -> int:
@@ -80,10 +84,10 @@ class EmbedAuthor:
     :param proxy_icon_url:
         A proxied url of the author icon
     """
-    icon_url: types.APINullable[str] = MISSING
-    name: types.APINullable[str] = MISSING
-    proxy_icon_url: types.APINullable[str] = MISSING
-    url: types.APINullable[str] = MISSING
+    icon_url: APINullable[str] = MISSING
+    name: APINullable[str] = MISSING
+    proxy_icon_url: APINullable[str] = MISSING
+    url: APINullable[str] = MISSING
 
     def __post_init__(self):
         """
@@ -119,10 +123,10 @@ class EmbedImage:
         Width of the image
     """
 
-    height: types.APINullable[int] = MISSING
-    proxy_url: types.APINullable[str] = MISSING
-    url: types.APINullable[str] = MISSING
-    width: types.APINullable[int] = MISSING
+    height: APINullable[int] = MISSING
+    proxy_url: APINullable[str] = MISSING
+    url: APINullable[str] = MISSING
+    width: APINullable[int] = MISSING
 
     def __post_init__(self):
         """
@@ -145,8 +149,8 @@ class EmbedProvider:
     :param url:
         Url of the provider
     """
-    name: types.APINullable[str] = MISSING
-    url: types.APINullable[str] = MISSING
+    name: APINullable[str] = MISSING
+    url: APINullable[str] = MISSING
 
 
 @dataclass
@@ -168,10 +172,10 @@ class EmbedThumbnail:
 
     """
 
-    height: types.APINullable[int] = MISSING
-    proxy_url: types.APINullable[str] = MISSING
-    url: types.APINullable[str] = MISSING
-    width: types.APINullable[int] = MISSING
+    height: APINullable[int] = MISSING
+    proxy_url: APINullable[str] = MISSING
+    url: APINullable[str] = MISSING
+    width: APINullable[int] = MISSING
 
     def __post_init__(self):
         """
@@ -200,10 +204,10 @@ class EmbedVideo:
     :param width:
         Width of the video
     """
-    height: types.APINullable[int] = MISSING
-    url: types.APINullable[str] = MISSING
-    proxy_url: types.APINullable[str] = MISSING
-    width: types.APINullable[int] = MISSING
+    height: APINullable[int] = MISSING
+    url: APINullable[str] = MISSING
+    proxy_url: APINullable[str] = MISSING
+    width: APINullable[int] = MISSING
 
 
 @dataclass
@@ -226,8 +230,8 @@ class EmbedFooter:
 
     text: str
 
-    icon_url: types.APINullable[str] = MISSING
-    proxy_icon_url: types.APINullable[str] = MISSING
+    icon_url: APINullable[str] = MISSING
+    proxy_icon_url: APINullable[str] = MISSING
 
     def __post_init__(self):
         if _field_size(self.text) > 2048:
@@ -260,7 +264,7 @@ class EmbedField:
     name: str
     value: str
 
-    inline: types.APINullable[bool] = MISSING
+    inline: APINullable[bool] = MISSING
 
     def __post_init__(self):
         if _field_size(self.name) > 256:
@@ -323,19 +327,19 @@ class Embed(APIObject):
         type of message
     """
 
-    title: types.APINullable[str] = MISSING
-    description: types.APINullable[str] = MISSING
-    color: types.APINullable[int] = MISSING
+    title: APINullable[str] = MISSING
+    description: APINullable[str] = MISSING
+    color: APINullable[int] = MISSING
     fields: list[EmbedField] = field(default_factory=list)
-    footer: types.APINullable[EmbedFooter] = MISSING
-    image: types.APINullable[EmbedImage] = MISSING
-    provider: types.APINullable[EmbedProvider] = MISSING
-    thumbnail: types.APINullable[EmbedThumbnail] = MISSING
-    timestamp: types.APINullable[str] = MISSING
-    author: types.APINullable[EmbedAuthor] = MISSING
-    url: types.APINullable[str] = MISSING
-    video: types.APINullable[EmbedVideo] = MISSING
-    type: types.APINullable[int] = MISSING
+    footer: APINullable[EmbedFooter] = MISSING
+    image: APINullable[EmbedImage] = MISSING
+    provider: APINullable[EmbedProvider] = MISSING
+    thumbnail: APINullable[EmbedThumbnail] = MISSING
+    timestamp: APINullable[str] = MISSING
+    author: APINullable[EmbedAuthor] = MISSING
+    url: APINullable[str] = MISSING
+    video: APINullable[EmbedVideo] = MISSING
+    type: APINullable[int] = MISSING
 
     def __post_init__(self):
         """
@@ -377,10 +381,10 @@ class Embed(APIObject):
 
     def set_author(
             self,
-            icon_url: types.APINullable[str] = MISSING,
-            name: types.APINullable[str] = MISSING,
-            proxy_icon_url: types.APINullable[str] = MISSING,
-            url: types.APINullable[str] = MISSING
+            icon_url: APINullable[str] = MISSING,
+            name: APINullable[str] = MISSING,
+            proxy_icon_url: APINullable[str] = MISSING,
+            url: APINullable[str] = MISSING
     ) -> Embed:
         """
         Set the author message for the embed. This is the top
@@ -413,10 +417,10 @@ class Embed(APIObject):
 
     def set_image(
             self,
-            url: types.APINullable[str] = MISSING,
-            proxy_url: types.APINullable[str] = MISSING,
-            height: types.APINullable[int] = MISSING,
-            width: types.APINullable[int] = MISSING
+            url: APINullable[str] = MISSING,
+            proxy_url: APINullable[str] = MISSING,
+            height: APINullable[int] = MISSING,
+            width: APINullable[int] = MISSING
     ) -> Embed:
         """
         Sets an image for your embed.
@@ -446,10 +450,10 @@ class Embed(APIObject):
 
     def set_thumbnail(
             self,
-            height: types.APINullable[int] = MISSING,
-            url: types.APINullable[str] = MISSING,
-            proxy_url: types.APINullable[str] = MISSING,
-            width: types.APINullable[int] = MISSING
+            height: APINullable[int] = MISSING,
+            url: APINullable[str] = MISSING,
+            proxy_url: APINullable[str] = MISSING,
+            width: APINullable[int] = MISSING
     ) -> Embed:
         """
         Sets the thumbnail of the embed.
@@ -481,8 +485,8 @@ class Embed(APIObject):
     def set_footer(
             self,
             text: str,
-            icon_url: types.APINullable[str] = MISSING,
-            proxy_icon_url: types.APINullable[str] = MISSING
+            icon_url: APINullable[str] = MISSING,
+            proxy_icon_url: APINullable[str] = MISSING
     ) -> Embed:
         """
         Sets the embed footer. This is at the bottom of your embed.
@@ -510,7 +514,7 @@ class Embed(APIObject):
             self,
             name: str,
             value: str,
-            inline: types.APINullable[bool] = MISSING
+            inline: APINullable[bool] = MISSING
     ) -> Embed:
         """
         Adds a field to the embed.

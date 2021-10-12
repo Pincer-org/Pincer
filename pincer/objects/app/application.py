@@ -3,14 +3,18 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from typing import Optional, List
 
-from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-from ...utils import snowflake
-from ...utils import types
-from ..user.user import User
+from ...utils.api_object import APIObject
+
+if TYPE_CHECKING:
+    from typing import List, Optional
+
+    from ..user.user import User
+    from ...utils.types import APINullable
+    from ...utils.snowflake import Snowflake
 
 
 @dataclass
@@ -63,18 +67,18 @@ class Application(APIObject):
     bot_public: bool
     bot_require_code_grant: bool
     description: str
-    id: snowflake.Snowflake
+    id: Snowflake#
     icon: Optional[str]
     name: str
-    privacy_policy_url: types.APINullable[str]
+    privacy_policy_url: APINullable[str]
     summary: str
     verify_key: str
 
-    cover_image: types.APINullable[str] = MISSING
-    flags: types.APINullable[int] = MISSING
-    guild_id: types.APINullable[snowflake.Snowflake] = MISSING
-    owner: types.APINullable[User] = MISSING
-    primary_sku_id: types.APINullable[snowflake.Snowflake] = MISSING
-    rpc_origins: types.APINullable[List[str]] = MISSING
-    slug: types.APINullable[str] = MISSING
-    terms_of_service_url: types.APINullable[str] = MISSING
+    cover_image: APINullable[str] = MISSING
+    flags: APINullable[int] = MISSING
+    guild_id: APINullable[Snowflake] = MISSING
+    owner: APINullable[User] = MISSING
+    primary_sku_id: APINullable[Snowflake] = MISSING
+    rpc_origins: APINullable[List[str]] = MISSING
+    slug: APINullable[str] = MISSING
+    terms_of_service_url: APINullable[str] = MISSING

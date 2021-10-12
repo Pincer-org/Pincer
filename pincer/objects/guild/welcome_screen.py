@@ -3,11 +3,15 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from typing import Optional, List
 
 from ...utils.api_object import APIObject
-from ...utils.snowflake import Snowflake
+
+if TYPE_CHECKING:
+    from typing import Optional, List
+
+    from ...utils.snowflake import Snowflake
 
 
 @dataclass

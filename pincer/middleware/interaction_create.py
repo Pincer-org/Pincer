@@ -5,23 +5,24 @@ from __future__ import annotations
 
 import logging
 from inspect import isasyncgenfunction
-from typing import Union, Dict, Any, Tuple, List, TYPE_CHECKING
-
-from ..utils.types import Coro
-from ..objects.message.embed import Embed
-from ..core.dispatch import GatewayDispatch
-from ..objects.message.message import Message
-from ..objects.app.interactions import Interaction
-from ..objects.message.context import MessageContext
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from typing import Union, Dict, Any, Tuple, List
+
     from PIL.Image import Image
 
-    from ..commands import ChatCommandHandler
+    from ..utils.types import Coro
+    from ..utils.types import MISSING
     from ..objects.message.file import File
+    from ..commands import ChatCommandHandler
+    from ..objects.message.embed import Embed
+    from ..core.dispatch import GatewayDispatch
+    from ..objects.message.message import Message
+    from ..objects.app.interactions import Interaction
+    from ..objects.message.context import MessageContext
     from ..objects.app.interactions import InteractionFlags
     from ..utils.insertion import should_pass_cls, should_pass_ctx
-    from ..utils.types import MISSING
     from ..utils.signature import get_params, get_signature_and_params
 
 PILLOW_IMPORT = True

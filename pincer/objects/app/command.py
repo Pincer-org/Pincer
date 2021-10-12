@@ -3,20 +3,20 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from enum import IntEnum
+from dataclasses import dataclass
 from typing import List, Union, TYPE_CHECKING
 
-from ...utils.types import Coro, choice_value_types
-from ..app.throttle_scope import ThrottleScope
-from ...utils.api_object import APIObject
-from ...utils.snowflake import Snowflake
 from ...utils.types import MISSING
-from ...utils import types
+from ...utils.api_object import APIObject
 
 if TYPE_CHECKING:
-    from ...utils.conversion import convert
     from ...utils import extraction
+    from ...utils.types import APINullable
+    from ...utils.conversion import convert
+    from ...utils.snowflake import Snowflake
+    from ..app.throttle_scope import ThrottleScope
+    from ...utils.types import Coro, choice_value_types
 
 
 class AppCommandType(IntEnum):
@@ -57,9 +57,9 @@ class AppCommandInteractionDataOption(APIObject):
         Present if this option is a group or subcommand
     """
     name: str
-    value: types.APINullable[str] = MISSING
-    type: types.APINullable[AppCommandOptionType] = MISSING
-    options: types.APINullable[
+    value: APINullable[str] = MISSING
+    type: APINullable[AppCommandOptionType] = MISSING
+    options: APINullable[
         List[AppCommandInteractionDataOption]] = MISSING
 
     def __post_init__(self):
@@ -111,9 +111,9 @@ class AppCommandOption(APIObject):
     name: str
     description: str
 
-    required: types.APINullable[bool] = False
-    choices: types.APINullable[List[AppCommandOptionChoice]] = MISSING
-    options: types.APINullable[List[AppCommandOption]] = MISSING
+    required: APINullable[bool] = False
+    choices: APINullable[List[AppCommandOptionChoice]] = MISSING
+    options: APINullable[List[AppCommandOption]] = MISSING
 
     def __post_init__(self):
         self.type = AppCommandOptionType(self.type)
@@ -161,12 +161,12 @@ class AppCommand(APIObject):
     name: str
     description: str
 
-    id: types.APINullable[Snowflake] = MISSING
-    version: types.APINullable[Snowflake] = MISSING
-    application_id: types.APINullable[Snowflake] = MISSING
-    options: types.APINullable[List[AppCommandOption]] = MISSING
-    guild_id: types.APINullable[Snowflake] = MISSING
-    default_permission: types.APINullable[bool] = True
+    id: APINullable[Snowflake] = MISSING
+    version: APINullable[Snowflake] = MISSING
+    application_id: APINullable[Snowflake] = MISSING
+    options: APINullable[List[AppCommandOption]] = MISSING
+    guild_id: APINullable[Snowflake] = MISSING
+    default_permission: APINullable[bool] = True
 
     _eq_props = [
         "type", "name", "description", "guild_id", "default_permission"

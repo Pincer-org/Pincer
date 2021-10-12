@@ -3,15 +3,19 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from enum import IntEnum
-from typing import List, Optional
+from typing import TYPE_CHECKING
+from dataclasses import dataclass
 
-from ..user.user import User
-from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-from ...utils import types
-from ...utils import snowflake
+from ...utils.api_object import APIObject
+
+if TYPE_CHECKING:
+    from typing import List, Optional
+
+    from ...utils.types import APINullable
+    from ..user.user import User
+    from ...utils.snowflake import Snowflake
 
 
 class StickerType(IntEnum):
@@ -90,16 +94,16 @@ class Sticker(APIObject):
 
     description: Optional[str]
     format_type: StickerFormatType
-    id: snowflake.Snowflake
+    id: Snowflake#
     name: str
     tags: str
     type: StickerType
 
-    available: types.APINullable[bool] = MISSING
-    guild_id: types.APINullable[snowflake.Snowflake] = MISSING
-    pack_id: types.APINullable[snowflake.Snowflake] = MISSING
-    sort_value: types.APINullable[int] = MISSING
-    user: types.APINullable[User] = MISSING
+    available: APINullable[bool] = MISSING
+    guild_id: APINullable[Snowflake] = MISSING
+    pack_id: APINullable[Snowflake] = MISSING
+    sort_value: APINullable[int] = MISSING
+    user: APINullable[User] = MISSING
 
 
 @dataclass
@@ -118,7 +122,7 @@ class StickerItem(APIObject):
         type of sticker format
     """
 
-    id: snowflake.Snowflake
+    id: Snowflake#
     name: str
     format_type: StickerFormatType
 
@@ -150,11 +154,11 @@ class StickerPack(APIObject):
         id of the sticker pack's banner image
     """
 
-    id: snowflake.Snowflake
+    id: Snowflake#
     stickers: List[Sticker]
     name: str
-    sku_id: snowflake.Snowflake
+    sku_id: Snowflake#
     description: str
 
-    cover_sticker_id: types.APINullable[snowflake.Snowflake] = MISSING
-    banner_asset_id: types.APINullable[snowflake.Snowflake] = MISSING
+    cover_sticker_id: APINullable[Snowflake] = MISSING
+    banner_asset_id: APINullable[Snowflake] = MISSING

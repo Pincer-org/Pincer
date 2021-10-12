@@ -4,14 +4,18 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-from ..app.select_menu import SelectOption
-from ..message.button import ButtonStyle
-from ..message.emoji import Emoji
-from ...utils.types import APINullable
+from ...utils.api_object import APIObject
+
+if TYPE_CHECKING:
+    from typing import List
+
+    from ..message.emoji import Emoji
+    from ...utils.types import APINullable
+    from ..message.button import ButtonStyle
+    from ..app.select_menu import SelectOption
 
 
 @dataclass

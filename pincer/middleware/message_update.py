@@ -5,10 +5,13 @@
 
 from __future__ import annotations
 
-from typing import List, Tuple
+from typing import TYPE_CHECKING
 
-from ..core.dispatch import GatewayDispatch
-from ..objects import UserMessage
+if TYPE_CHECKING:
+    from typing import List, Tuple
+
+    from ..core.dispatch import GatewayDispatch
+    from ..objects import UserMessage
 
 
 async def message_update_middleware(

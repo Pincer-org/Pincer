@@ -3,13 +3,17 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from typing import Optional
 
-from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-from ...utils import types
-from ...utils.snowflake import Snowflake
+from ...utils.api_object import APIObject
+
+if TYPE_CHECKING:
+    from typing import Optional
+
+    from ...utils.types import APINullable
+    from ...utils.snowflake import Snowflake
 
 
 @dataclass
@@ -47,6 +51,6 @@ class Attachment(APIObject):
     url: str
     proxy_url: str
 
-    content_type: types.APINullable[str] = MISSING
-    height: types.APINullable[Optional[int]] = MISSING
-    width: types.APINullable[Optional[int]] = MISSING
+    content_type: APINullable[str] = MISSING
+    height: APINullable[Optional[int]] = MISSING
+    width: APINullable[Optional[int]] = MISSING

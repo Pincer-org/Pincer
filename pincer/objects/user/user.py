@@ -3,17 +3,21 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from enum import IntEnum
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
+from dataclasses import dataclass
 
-from ...core.http import HTTPClient
-from ...utils.api_object import APIObject
-from ...utils.conversion import convert
-from ...utils.snowflake import Snowflake
 from ...utils.types import MISSING
-from ... import client
-from ...utils.types import APINullable
+from ...utils.api_object import APIObject
+
+if TYPE_CHECKING:
+    from typing import Optional
+
+    from ...client import Client
+    from ...core.http import HTTPClient
+    from ...utils.types import APINullable
+    from ...utils.conversion import convert
+    from ...utils.snowflake import Snowflake
 
 
 class PremiumTypes(IntEnum):
@@ -96,7 +100,7 @@ class User(APIObject):
         whether the email on this account has been verified
     """
 
-    _client: client.Client
+    _client: Client
     _http: HTTPClient
 
     avatar: Optional[str]
@@ -140,6 +144,6 @@ class User(APIObject):
         self.id = convert(self.id, Snowflake.from_string)
 
     @classmethod
-    async def from_id(cls, client: client.Client, user_id: int) -> User:
+    async def from_id(cls, client: Client, user_id: int) -> User:
         data = await client.http.get(f"/users/{user_id}")
         return cls(_client=client, _http=client.http, **data)

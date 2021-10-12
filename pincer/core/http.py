@@ -5,13 +5,14 @@ from __future__ import annotations
 import asyncio
 import logging
 from json import dumps
-from typing import TYPE_CHECKING, Dict, Any, Optional, Protocol, Union
+from typing import Protocol, TYPE_CHECKING
 
 
 from . import __package__
 if TYPE_CHECKING:
+    from typing import Any, Dict, Optional, Union
     from asyncio import sleep
-    
+
     from aiohttp import ClientSession, ClientResponse
     from aiohttp.client import _RequestContextManager
     from aiohttp.payload import Payload

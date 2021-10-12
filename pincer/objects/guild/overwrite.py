@@ -7,7 +7,9 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from ...utils import APIObject
-from ...utils import snowflake
+
+if TYPE_CHECKING:
+    from ...utils.snowflake import Snowflake
 
 
 @dataclass
@@ -27,7 +29,7 @@ class Overwrite(APIObject):
     :param deny:
         permission bit set
     """
-    id: snowflake.Snowflake
+    id: Snowflake#
     type: int
     allow: str
     deny: str

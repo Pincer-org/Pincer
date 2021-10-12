@@ -3,11 +3,13 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
 from ...utils.api_object import APIObject
 
-from ..message.emoji import Emoji
+if TYPE_CHECKING:
+    from ..message.emoji import Emoji
 
 
 @dataclass

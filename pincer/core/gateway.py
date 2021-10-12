@@ -6,23 +6,24 @@ from __future__ import annotations
 
 import logging
 import asyncio
-from typing import Dict, Callable, Awaitable, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
+from typing import Dict, Callable, Awaitable, Optional
 
 from websockets.legacy.client import WebSocketClientProtocol
 
 from . import __package__
 from ..core.dispatch import GatewayDispatch
-from ..objects.app.intents import Intents
 
 if TYPE_CHECKING:
-    from asyncio import get_event_loop, ensure_future
     from platform import system
+    from asyncio import get_event_loop, ensure_future
 
     from websockets import connect
     from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
 
     from .._config import GatewayConfig
     from ..core.heartbeat import Heartbeat
+    from ..objects.app.intents import Intents
     from ..exceptions import (
         PincerError, InvalidTokenError, UnhandledException,
         _InternalPerformReconnectError, DisallowedIntentsError

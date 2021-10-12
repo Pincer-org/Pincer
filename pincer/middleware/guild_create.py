@@ -2,10 +2,15 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 """sent when a guild is created/joined on the client"""
-from typing import List, Tuple
+from __future__ import annotations
 
-from ..core.dispatch import GatewayDispatch
-from ..objects.guild import Guild
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typing import List, Tuple
+
+    from ..core.dispatch import GatewayDispatch
+    from ..objects.guild import Guild
 
 def guild_create_middleware(
     self,

@@ -3,14 +3,18 @@
 
 from __future__ import annotations
 
-from typing import Optional
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
 from ...utils import APIObject
-from ..guild import Guild
-from ..user.user import User
-from ...utils.snowflake import Snowflake
-from ...utils.timestamp import Timestamp
+
+if TYPE_CHECKING:
+    from typing import Optional
+
+    from ..guild import Guild
+    from ..user.user import User
+    from ...utils.snowflake import Snowflake
+    from ...utils.timestamp import Timestamp
 
 
 @dataclass

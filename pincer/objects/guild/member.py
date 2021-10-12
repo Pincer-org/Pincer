@@ -4,17 +4,21 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional, List, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
-from ..user.user import User
-from ...core.http import HTTPClient
-from ...utils.api_object import APIObject
-from ...utils.conversion import convert
-from ...utils.snowflake import Snowflake
-from ...utils.timestamp import Timestamp
 from ...utils.types import MISSING
-from ... import client
-from ...utils.types import APINullable
+from ...utils.api_object import APIObject
+
+if TYPE_CHECKING:
+    from typing import List, Optional
+
+    from ...client import Client
+    from ..user.user import User
+    from ...core.http import HTTPClient
+    from ...utils.types import APINullable
+    from ...utils.conversion import convert
+    from ...utils.snowflake import Snowflake
+    from ...utils.timestamp import Timestamp
 
 
 @dataclass
@@ -61,7 +65,7 @@ class GuildMember(APIObject):
         the user this guild member represents
     """
 
-    _client: client.Client
+    _client: Client
     _http: HTTPClient
 
     deaf: bool
@@ -88,7 +92,7 @@ class GuildMember(APIObject):
     @classmethod
     async def from_id(
             cls,
-            client: client.Client,
+            client: Client,
             guild_id: int,
             _id: int
     ) -> GuildMember:

@@ -1,14 +1,20 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from dataclasses import dataclass
-from typing import List
+from __future__ import annotations
 
-from ..guild.member import GuildMember
-from ..message import emoji
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
+
 from ...utils.api_object import APIObject
-from ...utils.snowflake import Snowflake
 from ...utils.types import APINullable, MISSING
+
+if TYPE_CHECKING:
+    from typing import List
+
+    from ..message.emoji import Emoji
+    from ..guild.member import GuildMember
+    from ...utils.snowflake import Snowflake
 
 
 @dataclass
@@ -77,7 +83,7 @@ class MessageReactionAddEvent(APIObject):
     user_id: Snowflake
     channel_id: Snowflake
     message_id: Snowflake
-    emoji: 'emoji.Emoji'
+    emoji: Emoji
 
     guild_id: APINullable[Snowflake] = MISSING
     member: APINullable[GuildMember] = MISSING
@@ -106,7 +112,7 @@ class MessageReactionRemoveEvent(APIObject):
     user_id: Snowflake
     channel_id: Snowflake
     message_id: Snowflake
-    emoji: 'emoji.Emoji'
+    emoji: Emoji
 
     guild_id: APINullable[Snowflake] = MISSING
 
@@ -150,6 +156,6 @@ class MessageReactionRemoveEmojiEvent(APIObject):
     """
     channel_id: Snowflake
     message_id: Snowflake
-    emoji: 'emoji.Emoji'
+    emoji: Emoji
 
     guild_id: APINullable[Snowflake] = MISSING

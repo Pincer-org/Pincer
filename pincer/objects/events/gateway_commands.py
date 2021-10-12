@@ -1,15 +1,21 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from dataclasses import dataclass
-from enum import auto, Enum
-from typing import Any, Dict, List, Optional, Tuple, Union
+from __future__ import annotations
 
-from .presence import Activity
-from ..app.intents import Intents
+from enum import auto, Enum
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
+
 from ...utils.api_object import APIObject
-from ...utils.snowflake import Snowflake
 from ...utils.types import APINullable, MISSING
+
+if TYPE_CHECKING:
+    from typing import Any, Dict, List, Optional, Tuple, Union
+
+    from .presence import Activity
+    from ..app.intents import Intents
+    from ...utils.snowflake import Snowflake
 
 
 @dataclass

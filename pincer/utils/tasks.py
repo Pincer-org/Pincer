@@ -5,16 +5,19 @@ import asyncio
 import logging
 from asyncio import TimerHandle, iscoroutinefunction
 from datetime import timedelta
-from typing import Callable, Set
+from typing import TYPE_CHECKING
 
-
-from ..exceptions import (
-    TaskAlreadyRunning, TaskCancelError, TaskInvalidDelay,
-    TaskIsNotCoroutine
-)
 from . import __package__
-from .insertion import should_pass_cls
-from .types import Coro
+
+if TYPE_CHECKING:
+    from typing import Callable, Set
+
+    from .types import Coro
+    from ..exceptions import (
+        TaskAlreadyRunning, TaskCancelError, TaskInvalidDelay,
+        TaskIsNotCoroutine
+    )
+    from .insertion import should_pass_cls
 
 _log = logging.getLogger(__package__)
 

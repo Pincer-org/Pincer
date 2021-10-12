@@ -7,14 +7,14 @@ contains server information
 """
 from __future__ import annotations
 
-from typing import Tuple, TYPE_CHECKING
-
-from ..commands import ChatCommandHandler
-from ..core.dispatch import GatewayDispatch
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ..objects.user.user import User
+    from typing import Tuple
     from ..utils.types import Coro
+    from ..objects.user.user import User
+    from ..commands import ChatCommandHandler
+    from ..core.dispatch import GatewayDispatch
 
 
 async def on_ready_middleware(

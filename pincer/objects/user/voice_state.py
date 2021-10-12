@@ -3,17 +3,21 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from typing import Optional, TYPE_CHECKING
 
-from ...utils.api_object import APIObject
 from ...utils.types import MISSING
-from ..guild.member import GuildMember
-from ...utils.types import APINullable
-from ...utils.snowflake import Snowflake
-from ...utils.timestamp import Timestamp
-from ... import client
-from ...core.http import HTTPClient
+from ...utils.api_object import APIObject
+
+if TYPE_CHECKING:
+    from typing import Optional
+
+    from ...client import Client
+    from ...core.http import HTTPClient
+    from ..guild.member import GuildMember
+    from ...utils.types import APINullable
+    from ...utils.snowflake import Snowflake
+    from ...utils.timestamp import Timestamp
 
 @dataclass
 class VoiceState(APIObject):
@@ -59,7 +63,7 @@ class VoiceState(APIObject):
     :param request_to_speak_timestamp:
         the time at which the user requested to speak
     """
-    _client: client.Client
+    _client: Client
     _http: HTTPClient
     channel_id: Optional[Snowflake]
     user_id: Snowflake

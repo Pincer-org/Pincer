@@ -5,11 +5,15 @@
 non-subscription event sent when there is an error,
 including command responses
 """
-from typing import List, Tuple
+from __future__ import annotations
 
-from ..core.dispatch import GatewayDispatch
-from ..objects.events.error import DiscordError
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from typing import List, Tuple
+
+    from ..core.dispatch import GatewayDispatch
+    from ..objects.events.error import DiscordError
 
 def error_middleware(
     self,

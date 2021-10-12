@@ -1,7 +1,11 @@
-import os
+from __future__ import annotations
 
+import os
+from typing import TYPE_CHECKING
 from contextlib import contextmanager
-from typing import Generator, Any
+
+if TYPE_CHECKING:
+    from typing import Generator, Any
 
 
 @contextmanager

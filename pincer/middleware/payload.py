@@ -3,9 +3,12 @@
 
 from __future__ import annotations
 
-from typing import List, Tuple
+from typing import TYPE_CHECKING
 
-from ..core.dispatch import GatewayDispatch
+if TYPE_CHECKING:
+    from typing import List, Tuple
+
+    from ..core.dispatch import GatewayDispatch
 
 
 async def payload_middleware(

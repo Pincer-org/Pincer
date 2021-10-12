@@ -3,15 +3,19 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from typing import Optional, List
 
-from ...utils.api_object import APIObject
-from ...utils.snowflake import Snowflake
 from ...utils.types import MISSING
-from ...utils import types
-from ..guild.role import Role
-from ..user.user import User
+from ...utils.api_object import APIObject
+
+if TYPE_CHECKING:
+    from typing import Optional, List
+
+    from ..user.user import User
+    from ..guild.role import Role
+    from ...utils.types import APINullable
+    from ...utils.snowflake import Snowflake
 
 
 @dataclass
@@ -46,9 +50,9 @@ class Emoji(APIObject):
     id: Optional[Snowflake]
     name: Optional[str]
 
-    animated: types.APINullable[bool] = MISSING
-    available: types.APINullable[bool] = MISSING
-    managed: types.APINullable[bool] = MISSING
-    require_colons: types.APINullable[bool] = MISSING
-    roles: types.APINullable[List[Role]] = MISSING
-    user: types.APINullable[User] = MISSING
+    animated: APINullable[bool] = MISSING
+    available: APINullable[bool] = MISSING
+    managed: APINullable[bool] = MISSING
+    require_colons: APINullable[bool] = MISSING
+    roles: APINullable[List[Role]] = MISSING
+    user: APINullable[User] = MISSING

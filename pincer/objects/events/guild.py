@@ -1,19 +1,24 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
+from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, List, Optional
+from typing import TYPE_CHECKING
 
-from .presence import PresenceUpdateEvent
-from ..guild.member import GuildMember
-from ..guild.role import Role
-from ..message import emoji
-from ..message.sticker import Sticker
-from ..user.user import User
 from ...utils.api_object import APIObject
-from ...utils.snowflake import Snowflake
-from ...utils.timestamp import Timestamp
 from ...utils.types import MISSING, APINullable
+
+if TYPE_CHECKING:
+    from typing import Any, List, Optional
+
+    from ..message import emoji
+    from ..user.user import User
+    from ..guild.role import Role
+    from ..message.sticker import Sticker
+    from ..guild.member import GuildMember
+    from ...utils.snowflake import Snowflake
+    from ...utils.timestamp import Timestamp
+    from .presence import PresenceUpdateEvent
 
 
 @dataclass

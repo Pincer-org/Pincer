@@ -4,9 +4,6 @@
 from __future__ import annotations
 
 import logging
-from asyncio import iscoroutinefunction, run, ensure_future
-from importlib import import_module
-from inspect import isasyncgenfunction
 from typing import (
     Any,
     Dict,
@@ -16,29 +13,32 @@ from typing import (
     TYPE_CHECKING,
     Union
 )
+from importlib import import_module
+from inspect import isasyncgenfunction
+from asyncio import iscoroutinefunction, run, ensure_future
 
 from . import __package__
-from .utils.types import Coro
 from ._config import events
+from .utils.types import Coro
 from .middleware import middleware
 from .core.gateway import Dispatcher
-from .objects.app.intents import Intents
-from .core.dispatch import GatewayDispatch
-from .objects.user import User
-from .objects.guild import Guild
-from .objects.app.throttling import ThrottleInterface
 
 if TYPE_CHECKING:
-    from .commands import ChatCommandHandler
+    from .objects.user import User
+    from .objects.guild import Guild
     from .core.http import HTTPClient
+    from .utils.extraction import get_index
+    from .utils.signature import get_params
+    from .commands import ChatCommandHandler
+    from .objects.app.intents import Intents
+    from .core.dispatch import GatewayDispatch
+    from .objects.app.command import AppCommand
+    from .utils.insertion import should_pass_cls
+    from .objects.app.throttling import ThrottleInterface
     from .exceptions import (
         InvalidEventName, TooManySetupArguments, NoValidSetupMethod,
         NoCogManagerReturnFound, CogAlreadyExists, CogNotFound
     )
-    from .objects.app.command import AppCommand
-    from .utils.extraction import get_index
-    from .utils.insertion import should_pass_cls
-    from .utils.signature import get_params
 
 _log = logging.getLogger(__package__)
 

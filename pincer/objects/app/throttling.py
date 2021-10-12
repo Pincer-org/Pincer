@@ -2,14 +2,18 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from abc import ABC, abstractmethod
-from typing import Dict, Optional
 
 from .throttle_scope import ThrottleScope
-from ...exceptions import CommandCooldownError
-from ...utils.slidingwindow import SlidingWindow
-from ..message.context import MessageContext
-from ...utils.types import Coro
+
+if TYPE_CHECKING:
+    from typing import Dict, Optional
+
+    from ...utils.types import Coro
+    from ..message.context import MessageContext
+    from ...exceptions import CommandCooldownError
+    from ...utils.slidingwindow import SlidingWindow
 
 
 class ThrottleInterface(ABC):
