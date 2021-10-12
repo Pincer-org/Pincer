@@ -1,6 +1,8 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
+from __future__ import annotations
+
 import asyncio
 import logging
 from asyncio import TimerHandle, iscoroutinefunction
@@ -23,7 +25,7 @@ _log = logging.getLogger(__package__)
 
 
 class Task:
-    def __init__(self, scheduler: 'TaskScheduler', coro: Coro, delay: float):
+    def __init__(self, scheduler: TaskScheduler, coro: Coro, delay: float):
         """
         A Task is a coroutine that is scheduled to repeat every x seconds.
         Use a TaskScheduler in order to create a task.
