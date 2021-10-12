@@ -3,9 +3,8 @@
 
 from __future__ import annotations
 
-import json
-
 from dataclasses import dataclass
+from json import dumps
 from typing import Dict, Tuple, Union, List, Optional, TYPE_CHECKING
 
 from aiohttp import FormData, Payload
@@ -19,7 +18,6 @@ from ..user import User
 from ...exceptions import CommandReturnIsEmpty
 from ...utils.api_object import APIObject
 from ...utils.snowflake import Snowflake
-
 
 PILLOW_IMPORT = True
 
@@ -161,7 +159,7 @@ class Message:
             return "application/json", self.to_dict()
 
         form = FormData()
-        form.add_field("payload_json", json.dumps(self.to_dict()))
+        form.add_field("payload_json", dumps(self.to_dict()))
 
         for file in self.attachments:
             form.add_field("file", file.content, filename=file.filename)
