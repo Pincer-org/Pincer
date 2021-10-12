@@ -28,7 +28,7 @@ class Application(APIObject):
         the description of the app
     id: :class:`~pincer.utils.snowflake.Snowflake`
         the id of the app
-    icon: :data:`~typing.Optional`\\[:class:`str`]
+    icon: Optional[:class:`str`]
         the icon hash of the app
     name: :class:`str`
         the name of the app
@@ -52,7 +52,7 @@ class Application(APIObject):
     primary_sku_id: :data:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
         if this application is a game sold on Discord, this field will be the
         id of the "Game SKU" that is created, if exists
-    rpc_origins: :data:`~pincer.utils.types.APINullable`\\[:class:`~typing.List`\\[:class:`str`]]
+    rpc_origins: :data:`~pincer.utils.types.APINullable`\\[List[:class:`str`]]
         an array of rpc origin urls, if rpc is enabled
     slug: :data:`~pincer.utils.types.APINullable`\\[:class:`str`]
         if this application is a game sold on Discord, this field will be the

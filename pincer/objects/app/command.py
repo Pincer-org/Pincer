@@ -53,7 +53,7 @@ class AppCommandInteractionDataOption(APIObject):
         The value of the pair
     type: :data:`~pincer.utils.types.APINullable`\\[:class:`str`]
         Value of application command option type
-    options: :data:`~pincer.utils.types.APINullable`\\[:class:`~typing.List`\\[:data:`~pincer.objects.app.command.AppCommandInteractionDataOption`]]
+    options: :data:`~pincer.utils.types.APINullable`\\[List[:data:`~pincer.objects.app.command.AppCommandInteractionDataOption`]]
         Present if this option is a group or subcommand
     """
     name: str
@@ -79,7 +79,7 @@ class AppCommandOptionChoice(APIObject):
     ----------
     name: :class:`str`
         1-100 character choice name
-    value: :data:`~typing.Union`\\[:data:`~pincer.utils.types.choice_value_types`]
+    value: Union[:data:`~pincer.utils.types.choice_value_types`]
         Value of the choice, up to 100 characters if string
     """
     name: str
@@ -103,7 +103,7 @@ class AppCommandOption(APIObject):
     choices: :data:`~pincer.utils.types.APINullable`\\[:data:`typing.List`\\[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
         Choices for `STRING`, `INTEGER`, and `NUMBER`
         types for the user to pick from, max 25
-    options: :data:`~pincer.utils.types.APINullable`\\[:class:`~typing.List`\\[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
+    options: :data:`~pincer.utils.types.APINullable`\\[List[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
         If the option is a subcommand or subcommand group type,
         this nested options will be the parameters
     """
@@ -149,7 +149,7 @@ class AppCommand(APIObject):
         record changes
     application_id: :data:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
         Unique id of the parent application
-    options: :data:`~pincer.utils.types.APINullable`\\[:class:`~typing.List`\\[:class:`~pincer.objects.app.command.AppCommandOption`]]
+    options: :data:`~pincer.utils.types.APINullable`\\[List[:class:`~pincer.objects.app.command.AppCommandOption`]]
         The parameters for the command, max 25
     guild_id: :data:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
         Guild id of the command, if not global

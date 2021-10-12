@@ -15,12 +15,12 @@ class GatewayDispatch:
     ----------
     op: :class:`int`
         The discord opcode which represents what the message means.
-    data: :data:`~typing.Optional`\\[:data:`~typing.Union`\\[:class:`int`, :class:`~typing.Dict`\\[:class:`str`, :data:`~typing.Any`]]]
+    data: Optional[Union[:class:`int`, Dict[:class:`str`, Any]]]
         The event data that has been sent/received.
-    seq: :data:`~typing.Optional`\\[:class:`int`]
+    seq: Optional[:class:`int`]
         The sequence number of a message, which can be used
         for resuming sessions and heartbeats.
-    event_name: :data:`~typing.Optional`\\[:class:`str`]
+    event_name: Optional[:class:`str`]
         The event name for the payload.
     """
 

@@ -321,9 +321,9 @@ class ChatCommandHandler(metaclass=Singleton):
     ----------
     client: :class:`Client`
         The client object
-    managers: :class:`~typing.Dict`
+    managers: Dict
         Dictionary of managers
-    register: :class:`~typing.Dict`
+    register: Dict
         Dictionary of :class:`~objects.app.command.ClientCommandStructure`
     """
     managers: Dict[str, Any] = {}
@@ -421,7 +421,7 @@ class ChatCommandHandler(metaclass=Singleton):
 
         Parameters
         ----------
-        to_update : :class:`~typing.Dict`\\[:class:`~objects.app.command.AppCommand`, :class:`~typing.Dict`\\[:class:`str`, :data:`~typing.Any`]]
+        to_update : Dict[:class:`~objects.app.command.AppCommand`, Dict[:class:`str`, Any]]
             Dictionary of commands to changes where changes is a dictionary too
         """
         await gather(*list(map(
@@ -458,7 +458,7 @@ class ChatCommandHandler(metaclass=Singleton):
 
         Parameters
         ----------
-        commands : :class:`~typing.List`\\[:class:`~objects.app.command.AppCommand`]
+        commands : List[:class:`~objects.app.command.AppCommand`]
             List of command objects to add
         """
         await gather(*list(map(

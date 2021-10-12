@@ -40,15 +40,15 @@ class ResolvedData(APIObject):
 
     Attributes
     ----------
-    users: :data:`~pincer.utils.types.APINullable`\\[:class:`~typing.Dict`\\[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.user.user.User`]]
+    users: :data:`~pincer.utils.types.APINullable`\\[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.user.user.User`]]
         Map of Snowflakes to user objects
-    members: :data:`~pincer.utils.types.APINullable`\\[:class:`~typing.Dict`\\[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.guild.member.GuildMember`]]
+    members: :data:`~pincer.utils.types.APINullable`\\[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.guild.member.GuildMember`]]
         Map of Snowflakes to partial member objects
-    roles: :data:`~pincer.utils.types.APINullable`\\[:class:`~typing.Dict`\\[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.guild.role.Role`]]
+    roles: :data:`~pincer.utils.types.APINullable`\\[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.guild.role.Role`]]
         Map of Snowflakes to role objects
-    channels: :data:`~pincer.utils.types.APINullable`\\[:class:`~typing.Dict`\\[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.guild.channel.Channel`]]
+    channels: :data:`~pincer.utils.types.APINullable`\\[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.guild.channel.Channel`]]
         Map of Snowflakes to partial channel objects
-    messages: :data:`~pincer.utils.types.APINullable`\\[:class:`~typing.Dict`\\[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.message.user_message.UserMessage`]]
+    messages: :data:`~pincer.utils.types.APINullable`\\[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.message.user_message.UserMessage`]]
         Map of Snowflakes to partial message objects
     """
     users: APINullable[Dict[Snowflake, User]] = MISSING
