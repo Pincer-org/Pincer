@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+
 from dataclasses import dataclass
 from typing import Dict, Tuple, Union, List, Optional, TYPE_CHECKING
 
@@ -18,6 +19,7 @@ from ..user import User
 from ...exceptions import CommandReturnIsEmpty
 from ...utils.api_object import APIObject
 from ...utils.snowflake import Snowflake
+
 
 PILLOW_IMPORT = True
 
@@ -73,7 +75,6 @@ class Message:
     :param embeds:
         Embed attached to the message. This is an Embed object.
     """
-
     content: str = ''
     attachments: Optional[List[File]] = None
     tts: Optional[bool] = False
