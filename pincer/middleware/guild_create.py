@@ -17,8 +17,13 @@ def guild_create_middleware(
 
     Parameters
     ----------
-    payload : GatewayDispatch
+    payload : :class:¬pincer.core.dispatch.GatewayDispatch`
         The data received from the ready event.
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.guild.Guild`]]
+        ``on_guild_create`` and a ``Guild``
     """
     return "on_guild_create", [
         Guild.from_dict(

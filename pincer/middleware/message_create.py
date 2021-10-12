@@ -19,8 +19,13 @@ async def message_create_middleware(
 
     Parameters
     ----------
-    payload : GatewayDispatch
+    payload : :class:¬pincer.core.dispatch.GatewayDispatch`
         The data received from the ready event.
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.message.user_message.UserMessage`]]
+        ``on_message`` and a ``UserMessage``
     """
     return "on_message", [
         UserMessage.from_dict(

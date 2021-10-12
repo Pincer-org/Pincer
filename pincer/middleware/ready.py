@@ -27,8 +27,13 @@ async def on_ready_middleware(
 
     Parameters
     ----------
-    payload : GatewayDispatch
+    payload : :class:¬pincer.core.dispatch.GatewayDispatch`
         The data received from the ready event.
+
+    Returns
+    -------
+    :class:`str`
+        ``on_ready``
     """
     user = payload.data.get("user")
 

@@ -196,8 +196,13 @@ class HTTPClient:
 
         Parameters
         ----------
-        route :
+        route : :class:`str`
             The Discord REST endpoint to send a delete request to.
+
+        Returns
+        -------
+        Optional[Dict]
+            The response from discord.
         """
         return await self.__send(self.__session.delete, route)
 
@@ -208,8 +213,13 @@ class HTTPClient:
 
         Parameters
         ----------
-        route :
+        route : :class:`str`
             The Discord REST endpoint to send a get request to.
+
+        Returns
+        -------
+        Optional[Dict]
+            The response from discord.
         """
         return await self.__send(self.__session.get, route)
 
@@ -220,8 +230,13 @@ class HTTPClient:
 
         Parameters
         ----------
-        route :
+        route : :class:`str`
             The Discord REST endpoint to send a head request to.
+
+        Returns
+        -------
+        Optional[Dict]
+            The response from discord.
         """
         return await self.__send(self.__session.head, route)
 
@@ -232,8 +247,13 @@ class HTTPClient:
 
         Parameters
         ----------
-        route :
+        route : :class:`str`
             The Discord REST endpoint to send a options request to.
+
+        Returns
+        -------
+        Optional[Dict]
+            The response from discord.
         """
         return await self.__send(self.__session.options, route)
 
@@ -249,11 +269,11 @@ class HTTPClient:
 
         Parameters
         ----------
-        route :
+        route : :class:str`
             The Discord REST endpoint to send a patch request to.
-        data :
+        data : Dict
             The update data for the patch request.
-        content_type :
+        content_type : :class:`str`
             Body content type. |default| ``application/json``
         """
         return await self.__send(
@@ -275,11 +295,11 @@ class HTTPClient:
 
         Parameters
         ----------
-        route :
+        route : :class:`str`
             The Discord REST endpoint to send a patch request to.
-        data :
+        data : Dict
             The update data for the patch request.
-        content_type :
+        content_type : :class:`str`
             Body content type. |default| ``application/json``
         """
         return await self.__send(
@@ -301,11 +321,11 @@ class HTTPClient:
 
         Parameters
         ----------
-        route :
+        route : :class:`str
             The Discord REST endpoint to send a patch request to.
-        data :
+        data : Dict
             The update data for the patch request.
-        content_type :
+        content_type : :class:`str`
             Body content type. |default| ``application/json``
         """
         return await self.__send(

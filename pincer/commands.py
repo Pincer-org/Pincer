@@ -89,20 +89,20 @@ def command(
 
     Parameters
     ----------
-    name :
+    name : Optional[:class:`str`]
         The name of the command |default| :data:`None`
-    description :
+    description : Optional[:class:`str`]
         The description of the command |default| ``Description not set``
-    enable_default :
+    enable_default : Optional[:class:`bool`]
         Whether the command is enabled by default |default| :data:`True`
-    guild :
+    guild : Optional[Union[:class:`~pincer.utils.snowflake.Snowflake`, :class:`int`, :class:`str`]]
         What guild to add it to (don't specify for global) |default| :data:`None`
-    cooldown :
+    cooldown : Optional[:class:`int`]
         The amount of times in the cooldown_scale the command can be invoked 
         |default| ``0``
-    cooldown_scale :
+    cooldown_scale : Optional[:class:`float`]
         The 'checking time' of the cooldown |default| ``60``
-    cooldown_scope : :class:`~objects.app.throttle_scope.ThrottleScope`
+    cooldown_scope : :class:`~pincer.objects.app.throttle_scope.ThrottleScope`
         What type of cooldown strategy to use |default| :attr:`ThrottleScope.USER`
 
     Raises
@@ -366,7 +366,7 @@ class ChatCommandHandler(metaclass=Singleton):
 
         Parameters
         ----------
-        cmd :
+        cmd : :class:`~pincer.objects.app.command.AppCommand`
             What command to delete
         """
         await self.client.http.delete(
@@ -383,7 +383,7 @@ class ChatCommandHandler(metaclass=Singleton):
 
         Parameters
         ----------
-        commands :
+        commands : List[:class:`~pincer.objects.app.command.AppCommand`]
             List of commands to delete
         """
         await gather(*list(map(
@@ -400,7 +400,7 @@ class ChatCommandHandler(metaclass=Singleton):
         ----------
         cmd : :class:`~objects.app.command.AppCommand`
             What command to update
-        changes :
+        changes : Dict[:class:`str`, Any]
             Dictionary of changes
         """
         await self.client.http.patch(
@@ -436,7 +436,7 @@ class ChatCommandHandler(metaclass=Singleton):
 
         Parameters
         ----------
-        cmd : :class:`~objects.app.command.AppCommand`
+        cmd : :class:`~pincer.objects.app.command.AppCommand`
             Command to add
         """
         add_endpoint = self.__add
@@ -458,7 +458,7 @@ class ChatCommandHandler(metaclass=Singleton):
 
         Parameters
         ----------
-        commands : List[:class:`~objects.app.command.AppCommand`]
+        commands : List[:class:`~pincer.objects.app.command.AppCommand`]
             List of command objects to add
         """
         await gather(*list(map(

@@ -220,7 +220,7 @@ class AppCommand(APIObject):
 
         Parameters
         ----------
-        option :
+        option : :class:`~pincer.objects.app.command.AppCommandOption`
             The option which will be appended.
         """
         if self.options:

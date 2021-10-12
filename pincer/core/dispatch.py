@@ -53,8 +53,13 @@ class GatewayDispatch:
 
         Parameters
         ----------
-        payload :
+        payload : :class:`str`
             The payload to parse.
+
+        Returns
+        -------
+        :class:`~pincer.core.dispatch.GatewayDispatch`
+            The new class.
         """
         payload: Dict[str, Union[int, str, Dict[str, Any]]] = loads(payload)
         return cls(

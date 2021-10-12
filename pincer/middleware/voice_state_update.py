@@ -10,7 +10,7 @@ from __future__ import annotations
 from typing import List, Tuple
 
 from ..core.dispatch import GatewayDispatch
-from ..objects.user import VoiceState
+from ..objects.user.voice_state import VoiceState
 
 
 async def voice_state_update_middleware(
@@ -23,8 +23,13 @@ async def voice_state_update_middleware(
 
     Parameters
     ----------
-    payload : GatewayDispatch
+    payload : :class:¬pincer.core.dispatch.GatewayDispatch`
         The data received from the ready event.
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.user.voice_state.VoiceState`]]
+        ``on_voice_state_update`` and a ``VoiceState``
     """
     return "on_voice_state_update", [
         VoiceState.from_dict(

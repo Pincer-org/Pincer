@@ -39,7 +39,7 @@ def convert_message(self, message: Union[Embed, Message, str]) -> Message:
 
     Parameters
     ----------
-    message :
+    message : Union[:class:`~pincer.objects.message.embed.Embed`, :class:`~pincer.objects.message.message.Message`, :class:`str`]
         Message to convert
     """
     if isinstance(message, Embed):
@@ -61,9 +61,9 @@ async def reply(self, interaction: Interaction, message: Message):
 
     Parameters
     ----------
-    interaction :
+    interaction : :class:`~pincer.objects.app.interactions.Interaction`
         The interaction from whom the reply is.
-    message :
+    message : :class:`~pincer.objects.message.message.Message`
         The message to reply with.
     """
 
@@ -89,13 +89,13 @@ async def interaction_response_handler(
 
     Parameters
     ----------
-    command :
+    command : :data:`~pincer.utils.types.Coro`
         The coroutine which will be seen as a command.
-    context :
+    context : :class:`~pincer.objects.message.context.MessageContext`
         The context of the command.
-    interaction :
+    interaction : :class:`~pincer.objects.app.interactions.Interaction`
         The interaction which is linked to the command.
-    kwargs :
+    \\*\\*kwargs :
         The arguments to be passed to the command.
     """
     if should_pass_cls(command):
@@ -138,11 +138,11 @@ async def interaction_handler(
 
     Parameters
     ----------
-    interaction :
+    interaction : :class:`~pincer.objects.app.interactions.Interaction`
         The interaction which is linked to the command.
-    context :
+    context : :class:`~pincer.objects.message.context.MessageContext`
         The context of the command.
-    command :
+    command : :data:`~pincer.utils.types.Coro`
         The coroutine which will be seen as a command.
     """
     self.throttler.handle(context)
@@ -170,7 +170,7 @@ async def interaction_create_middleware(
 
     Parameters
     ----------
-    payload :
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the interaction event.
 
     Raises
@@ -178,6 +178,11 @@ async def interaction_create_middleware(
     e
         Generic try except on ``await interaction_handler`` and
         ``if 0 < len(params) < 3``
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.app.interactions.Interaction`]]
+        ``on_interaction_create`` and an ``Interaction``
     """
     interaction: Interaction = Interaction.from_dict(
         {**payload.data, "_client": self, "_http": self.http}

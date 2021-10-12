@@ -73,10 +73,10 @@ class Dispatcher:
 
             Parameters
             ----------
-            socket :
+            socket : :class:`ws:~websockets.legacy.client.WebSocketClientProtocol`
                 The current socket, which can be used to interact
                 with the Discord API.
-            payload :
+            payload : :class:`~pincer.core.dispatch.GatewayDispatch`
                 The received payload from Discord.
             """
             _log.debug("Sending authentication/identification message.")
@@ -214,7 +214,7 @@ class Dispatcher:
 
         Parameters
         ----------
-        loop :
+        loop : :class:`~asyncio.AbstractEventLoop`
             The loop in which the Dispatcher will run. If no loop is
             provided it will get a new one. |default| :data:`None`
         """

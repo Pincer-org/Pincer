@@ -18,8 +18,13 @@ def channel_create_middleware(
 
     Parameters
     ----------
-    payload : GatewayDispatch
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the ready event.
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.channel.Channel`]]
+        ``"on_channel_creation"`` and a channel.
     """
     return "on_channel_creation",  [
         Channel.from_dict(

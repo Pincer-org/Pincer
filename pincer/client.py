@@ -111,9 +111,9 @@ def event_middleware(call: str, *, override: bool = False):
 
     Parameters
     ----------
-    call :
+    call : :class:`str`
         The call that the function should tie to
-    override :
+    override : :class:`bool`
         If it should override default middleware, 
         usually shouldn't be used |default| :data:`False`
     """
@@ -166,14 +166,14 @@ class Client(Dispatcher):
 
     Parameters
     ----------
-    token :
+    token : :class:`str`
         the token to login with your bot from the developer portal
-    received :
+    received : Optional[:class:`str`]
         The default message which will be sent when no response is given. 
         |default| :data:`None`
-    intents : :class:`~objects.app.intents.Intents`
+    intents : Optional[:class:`~objects.app.intents.Intents`]
         The discord intents to use |default| :data:`None`
-    throttler : :class:`~objects.app.throttling.ThrottleInterface`
+    throttler : Optional[:class:`~objects.app.throttling.ThrottleInterface`]
         The throttler for your client (generally not used) 
         |default| :data:`None`
     """
@@ -203,10 +203,10 @@ class Client(Dispatcher):
 
     @property
     def chat_commands(self) -> List[str]:
-        """List of chat commands
+        """List[:class:`str`]: List of chat commands
         
         Get a list of chat command calls which have been registered in
-        the :class:`~.ChatCommandHandler`\.
+        the :class:`~pincer.commands.ChatCommandHandler`\\.
         """
         return [cmd.app.name for cmd in ChatCommandHandler.register.values()]
 
@@ -290,7 +290,7 @@ class Client(Dispatcher):
 
         Parameters
         ----------
-        name :
+        name : :class:`str`
             name of the event
         """
         call = _events.get(name.strip().lower())
@@ -329,9 +329,9 @@ class Client(Dispatcher):
 
         Parameters
         ----------
-        path:
+        path : :class:`str`
             The import path for the cog.
-        package:
+        package : :class:`str` |default| :data:`None`
             The package name for relative based imports.
         """
 
@@ -377,6 +377,11 @@ class Client(Dispatcher):
         """Get a dictionary of all loaded cogs.
 
         The key/value pair is import path/cog class.
+
+        Returns
+        -------
+        Dict[:class:`str`, Any]
+            The dictionary of cogs
         """
         return ChatCommandHandler.managers
 
@@ -387,7 +392,7 @@ class Client(Dispatcher):
 
         Parameters
         ----------
-        path :
+        path : :class:`str`
             The path to the cog
 
         Raises
@@ -415,7 +420,7 @@ class Client(Dispatcher):
 
         Parameters
         ----------
-        call:
+        call: :data:`~pincer.utils.types.Coro`
             The call (method) to which the event is registered.
 
         \\*args:
@@ -456,9 +461,9 @@ class Client(Dispatcher):
 
         Parameters
         ----------
-        payload :
+        payload : :class:`~pincer.core.dispatch.GatewayDispatch`
             The original payload for the event
-        key :
+        key : :class:`str`
             The index of the middleware in ``_events``
 
         Raises
@@ -507,9 +512,9 @@ class Client(Dispatcher):
 
         Parameters
         ----------
-        error :
+        error : :class:`Exception`
             The error that should be passed to the event
-        name :
+        name : :class:`str` |default| ``on_error``
             the name of the event |default| ``on_error``
 
         Raises
@@ -529,10 +534,10 @@ class Client(Dispatcher):
 
         Parameters
         ----------
-        name :
+        name : :class:`str`
             The name of the event, this is also the filename in the 
             middleware directory.
-        payload :
+        payload : :class:`~pincer.core.dspatch.GatewayDispatch`
             The payload sent from the Discord gateway, this contains the
             required data for the client to know what event it is and
             what specifically happened.
@@ -556,7 +561,7 @@ class Client(Dispatcher):
         _ :
             Socket param, but this isn't required for this handler. So
             its just a filler parameter, doesn't matter what is passed.
-        payload :
+        payload : :class:`~pincer.core.dispatch.GatewayDispatch`
             The payload sent from the Discord gateway, this contains the
             required data for the client to know what event it is and
             what specifically happened.
@@ -573,7 +578,7 @@ class Client(Dispatcher):
         _ :
             Socket param, but this isn't required for this handler. So
             its just a filler parameter, doesn't matter what is passed.
-        payload :
+        payload : :class:`~pincer.core.dspatch.GatewayDispatch`
             The payload sent from the Discord gateway, this contains the
             required data for the client to know what event it is and
             what specifically happened.
@@ -587,7 +592,7 @@ class Client(Dispatcher):
 
         Parameters
         ----------
-        guild_id :
+        guild_id : :class:`int`
             The id of the guild which should be fetched from the Discord
             gateway.
         """
@@ -600,9 +605,14 @@ class Client(Dispatcher):
 
         Parameters
         ----------
-        _id :
+        _id : :class:`int`
             The id of the user which should be fetched from the Discord
             gateway.
+
+        Returns
+        -------
+        :class:`~pincer.objects.user.user.User`
+            The user object.
         """
         return await User.from_id(self, _id)
 

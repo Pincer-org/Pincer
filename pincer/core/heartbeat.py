@@ -36,6 +36,11 @@ class Heartbeat:
     @classmethod
     def get(cls) -> float:
         """Get the current heartbeat.
+
+        Returns
+        -------
+        :class:`float`
+            Current heartbeat.
         """
         return cls.__heartbeat
 
@@ -52,9 +57,9 @@ class Heartbeat:
 
         Parameters
         ----------
-        socket :
+        socket : :class:`ws:~websockets.legacy.client.WebSocketClientProtocol`
             The socket to send the heartbeat to.
-        payload :
+        payload : :class:`~pincer.core.dispatch.GatewayDispatch`
             The received hello message from the Discord gateway.
 
         Raises
@@ -100,7 +105,7 @@ class Heartbeat:
 
         Parameters
         ----------
-        socket :
+        socket : :class:`ws:~websockets.legacy.client.WebSocketClientProtocol`
             The socket to send the heartbeat to.
         _ :
             Filling param for auto event handling.
@@ -115,7 +120,7 @@ class Heartbeat:
 
         Parameters
         ----------
-        seq :
+        seq : :class:`int`
             The new heartbeat sequence to be updated with.
         """
         _log.debug("Updating heartbeat sequence...")

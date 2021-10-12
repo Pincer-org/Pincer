@@ -16,8 +16,13 @@ async def payload_middleware(
 
     Parameters
     ----------
-    payload : GatewayDispatch
+    payload : :class:¬pincer.core.dispatch.GatewayDispatch`
         The data received from the ready event.
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.core.dispatch.GatewayDispatch`]]
+        ``on_payload`` and a ``payload``
     """
     return "on_payload", [payload]
 

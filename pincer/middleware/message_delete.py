@@ -20,8 +20,13 @@ async def on_message_delete_middleware(
 
     Parameters
     ----------
-    payload : GatewayDispatch
+    payload : :class:¬pincer.core.dispatch.GatewayDispatch`
         The data received from the ready event.
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.events.message.MessageDeleteEvent`]]
+        ``on_message_delete`` and a ``MessageDeleteEvent``
     """
     return "on_message_delete", [
         MessageDeleteEvent.from_dict(
