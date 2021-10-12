@@ -26,7 +26,7 @@ def error_middleware(
 
     Returns
     -------
-    Tuple[str, List[:class:`~pincer.objects.events.error.DiscordError`]]
+    Tuple[:class:`str`, List[:class:`~pincer.objects.events.error.DiscordError`]]
         ``"on_error"`` and a ``DiscordError``
     """
     return "on_error",  [

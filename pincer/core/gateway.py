@@ -73,7 +73,7 @@ class Dispatcher:
 
             Parameters
             ----------
-            socket : :class:`ws:~websockets.legacy.client.WebSocketClientProtocol`
+            socket : :class:`~ws:websockets.legacy.client.WebSocketClientProtocol`
                 The current socket, which can be used to interact
                 with the Discord API.
             payload : :class:`~pincer.core.dispatch.GatewayDispatch`

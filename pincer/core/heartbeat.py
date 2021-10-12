@@ -57,7 +57,7 @@ class Heartbeat:
 
         Parameters
         ----------
-        socket : :class:`ws:~websockets.legacy.client.WebSocketClientProtocol`
+        socket : :class:`~ws:websockets.legacy.client.WebSocketClientProtocol`
             The socket to send the heartbeat to.
         payload : :class:`~pincer.core.dispatch.GatewayDispatch`
             The received hello message from the Discord gateway.
@@ -105,7 +105,7 @@ class Heartbeat:
 
         Parameters
         ----------
-        socket : :class:`ws:~websockets.legacy.client.WebSocketClientProtocol`
+        socket : :class:`~ws:websockets.legacy.client.WebSocketClientProtocol`
             The socket to send the heartbeat to.
         _ :
             Filling param for auto event handling.

@@ -27,7 +27,7 @@ async def on_ready_middleware(
 
     Parameters
     ----------
-    payload : :class:¬pincer.core.dispatch.GatewayDispatch`
+    payload : :class:`pincer.core.dispatch.GatewayDispatch`
         The data received from the ready event.
 
     Returns

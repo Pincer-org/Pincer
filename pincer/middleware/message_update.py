@@ -21,7 +21,7 @@ async def message_update_middleware(
 
     Parameters
     ----------
-    payload : GatewayDispatch
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the ready event.
     """
     return "on_message_update", [
