@@ -331,8 +331,9 @@ class Client(Dispatcher):
         ----------
         path : :class:`str`
             The import path for the cog.
-        package : :class:`str` |default| :data:`None`
+        package : :class:`str`
             The package name for relative based imports.
+            |default| :data:`None`
         """
 
         if ChatCommandHandler.managers.get(path):
