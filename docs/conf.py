@@ -30,7 +30,6 @@ branch = 'main' if __version__.endswith('a') else 'v' + __version__
 # -- General configuration ---------------------------------------------------
 
 import furo
-import sphinx_autodoc_typehints_updated
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -39,7 +38,6 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
-    'sphinx_autodoc_typehints_updated',
     'exception_hierarchy',
     'attributetable',
     'silence',
