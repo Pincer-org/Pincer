@@ -514,7 +514,7 @@ class Client(Dispatcher):
         ----------
         error : :class:`Exception`
             The error that should be passed to the event
-        name : :class:`str` |default| ``on_error``
+        name : :class:`str`
             the name of the event |default| ``on_error``
 
         Raises
