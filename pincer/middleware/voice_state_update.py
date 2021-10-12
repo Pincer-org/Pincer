@@ -11,11 +11,22 @@ from ..objects.user import VoiceState
 
 
 async def voice_state_update_middleware(self, payload: GatewayDispatch):
+    """
+    Middleware for ``on_voice_state_update`` event.
+
+    :param self:
+        The current client.
+
+    :param payload:
+        The data received from the ready event.
+
+    """
     return "on_voice_state_update", [
         VoiceState.from_dict(
             {"_client": self, "_http": self.http, **payload.data}
         )
     ]
+
 
 def export():
     return voice_state_update_middleware
