@@ -87,6 +87,8 @@ class MessageReactionAddEvent(APIObject):
 class MessageReactionRemoveEvent(APIObject):
     """Sent when a user removes a reaction from a message.
 
+    Attributes
+    ----------
     user_id: :class:`~pincer.utils.snowflake.Snowflake`
         The id of the user
     channel_id: :class:`~pincer.utils.snowflake.Snowflake`
@@ -110,6 +112,8 @@ class MessageReactionRemoveEvent(APIObject):
 class MessageReactionRemoveAllEvent(APIObject):
     """Sent when a user explicitly removes all reactions from a message.
 
+    Attributes
+    ----------
     channel_id: :class:`~pincer.utils.snowflake.Snowflake`
         The id of the channel
     message_id: :class:`~pincer.utils.snowflake.Snowflake`
@@ -127,6 +131,8 @@ class MessageReactionRemoveEmojiEvent(APIObject):
     """Sent when a bot removes all instances of a given
     emoji from the reactions of a message.
 
+    Attributes
+    ----------
     channel_id: :class:`~pincer.utils.snowflake.Snowflake`
         The id of the channel
     message_id: :class:`~pincer.utils.snowflake.Snowflake`
