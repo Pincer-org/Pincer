@@ -39,3 +39,83 @@ Resume
 .. attributetable:: Resume
 
 .. autoclass:: Resume()
+
+Guild
+-----
+
+GuildBanAddEvent
+~~~~~~~~~~~~~~~~
+
+.. attributetable:: GuildBanAddEvent
+
+.. autoclass:: GuildBanAddEvent()
+
+GuildBanRemoveEvent
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: GuildBanRemoveEvent
+
+.. autoclass:: GuildBanRemoveEvent()
+
+GuildEmojisUpdateEvent
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: GuildEmojisUpdateEvent
+
+.. autoclass:: GuildEmojisUpdateEvent()
+
+GuildStickersUpdateEvent
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: GuildStickersUpdateEvent
+
+.. autoclass:: GuildStickersUpdateEvent()
+
+GuildIntegrationsUpdateEvent
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: GuildIntegrationsUpdateEvent
+
+.. autoclass:: GuildIntegrationsUpdateEvent()
+
+GuildMemberRemoveEvent
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: GuildMemberRemoveEvent
+
+.. autoclass:: GuildMemberRemoveEvent()
+
+GuildMemberUpdateEvent
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: GuildMemberUpdateEvent
+
+.. autoclass:: GuildMemberUpdateEvent()
+
+GuildMembersChunkEvent
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: GuildMembersChunkEvent
+
+.. autoclass:: GuildMembersChunkEvent()
+
+GuildRoleCreateEvent
+~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: GuildRoleCreateEvent
+
+.. autoclass:: GuildRoleCreateEvent()
+
+GuildRoleUpdateEvent
+~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: GuildRoleUpdateEvent
+
+.. autoclass:: GuildRoleUpdateEvent()
+
+GuildRoleDeleteEvent
+~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: GuildRoleDeleteEvent
+
+.. autoclass:: GuildRoleDeleteEvent()
