@@ -22,3 +22,20 @@ DiscordError
 .. attributetable:: DiscordError
 
 .. autoclass:: DiscordError()
+
+Gateway Commands
+----------------
+
+Identify
+~~~~~~~~
+
+.. attributetable:: Identify
+
+.. autoclass:: Identify()
+
+Resume
+~~~~~~
+
+.. attributetable:: Resume
+
+.. autoclass:: Resume()
