@@ -322,7 +322,7 @@ class HTTPClient:
 
         Parameters
         ----------
-        route : :class:`str
+        route : :class:`str`
             The Discord REST endpoint to send a patch request to.
         data : Dict
             The update data for the patch request.
