@@ -15,16 +15,15 @@ if TYPE_CHECKING:
 
 @dataclass
 class IntegrationDeleteEvent(APIObject):
-    """
-    Sent when an integration is deleted.
+    """Sent when an integration is deleted.
 
-    :param id:
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
         integration id
-
-    :param guild_id:
+    guild_id: :class:`~pincer.utils.snowflake.Snowflake`
         id of the guild
-
-    :param application_id:
+    application_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         id of the bot/OAuth2 application for this discord integration
     """
     id: Snowflake

@@ -136,3 +136,13 @@ ReadyEvent
 .. attributetable:: ReadyEvent
 
 .. autoclass:: ReadyEvent()
+
+integration
+-----------
+
+IntegrationDeleteEvent
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: IntegrationDeleteEvent
+
+.. autoclass:: IntegrationDeleteEvent()
