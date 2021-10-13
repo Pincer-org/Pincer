@@ -159,3 +159,20 @@ ThrottleScope
 .. attributetable:: ThrottleScope
 
 .. autoclass:: ThrottleScope()
+
+Throttling
+----------
+
+ThrottleInterface
+~~~~~~~~~~~~~~~~~
+
+.. attributetable:: ThrottleInterface
+
+.. autoclass:: ThrottleInterface()
+
+DefaultThrottleHandler
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: DefaultThrottleHandler
+
+.. autoclass:: DefaultThrottleHandler()

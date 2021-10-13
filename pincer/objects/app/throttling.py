@@ -17,24 +17,20 @@ if TYPE_CHECKING:
 
 
 class ThrottleInterface(ABC):
+    """An ABC for throttling
+    """
     throttle: Dict[Coro, Dict[Optional[str], SlidingWindow]] = {}
 
     @staticmethod
     @abstractmethod
     def handle(ctx: MessageContext, **kwargs):
-        """
-        Handles a context. This method is executed before the command is.
-
-        :param ctx:
-            The context of the command.
-
-        :param kwargs:
-            The extra kwargs passed for the cooldown.
-        """
         raise NotImplementedError
 
 
 class DefaultThrottleHandler(ThrottleInterface, ABC):
+    """The default throttlehandler based off the 
+    :class:`~pincer.objects.app.throttling.ThrottleInterface` ABC
+    """
     __throttle_scopes = {
         ThrottleScope.GLOBAL: None,
         ThrottleScope.GUILD: "guild_id",
@@ -44,9 +40,18 @@ class DefaultThrottleHandler(ThrottleInterface, ABC):
 
     @staticmethod
     def get_key_from_scope(ctx: MessageContext) -> Optional[int]:
-        """
-        Retrieve the the appropriate key from the context through the
+        """Retrieve the the appropriate key from the context through the
         throttle scope.
+
+        Parameters
+        ----------
+        ctx : :class:`~pincer.objects.message.context.MessageContext`
+            The context to retrive with
+
+        Returns
+        -------
+        Optional[:class:`int`]
+            The throttlescope enum
         """
         scope = DefaultThrottleHandler.__throttle_scopes[
             ctx.command.cooldown_scope]
