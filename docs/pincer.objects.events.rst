@@ -208,3 +208,76 @@ MessageReactionRemoveEmojiEvent
 .. attributetable:: MessageReactionRemoveEmojiEvent
 
 .. autoclass:: MessageReactionRemoveEmojiEvent()
+
+Presence
+--------
+
+ActivityType
+~~~~~~~~~~~~
+
+.. attributetable:: ActivityType
+
+.. autoclass:: ActivityType()
+
+ActivityTimestamp
+~~~~~~~~~~~~~~~~~
+
+.. attributetable:: ActivityTimestamp
+
+.. autoclass:: ActivityTimestamp()
+
+ActivityEmoji
+~~~~~~~~~~~~~
+
+.. attributetable:: ActivityEmoji
+
+.. autoclass:: ActivityEmoji()
+
+ActivityParty
+~~~~~~~~~~~~~
+
+.. attributetable:: ActivityParty
+
+.. autoclass:: ActivityParty()
+
+ActivityAssets
+~~~~~~~~~~~~~~
+
+.. attributetable:: ActivityAssets
+
+.. autoclass:: ActivityAssets()
+
+ActivitySecrets
+~~~~~~~~~~~~~~~
+
+.. attributetable:: ActivitySecrets
+
+.. autoclass:: ActivitySecrets()
+
+ActivityButton
+~~~~~~~~~~~~~~
+
+.. attributetable:: ActivityButton
+
+.. autoclass:: ActivityButton()
+
+Activity
+~~~~~~~~
+
+.. attributetable:: Activity
+
+.. autoclass:: Activity()
+
+ClientStatus
+~~~~~~~~~~~~
+
+.. attributetable:: ClientStatus
+
+.. autoclass:: ClientStatus()
+
+PresenceUpdateEvent
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: PresenceUpdateEvent
+
+.. autoclass:: PresenceUpdateEvent()
