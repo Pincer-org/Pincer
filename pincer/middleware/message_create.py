@@ -19,7 +19,7 @@ async def message_create_middleware(
 ) -> Tuple[str, List[UserMessage]]:
     """|coro|
 
-    Middleware for ``?`` event. # TODO ``?`` here because idk what it is
+    Middleware for ``on_message`` event.
 
     Parameters
     ----------

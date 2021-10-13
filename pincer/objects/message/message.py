@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-import json
+from json import dumps
 from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
@@ -75,7 +75,6 @@ class Message:
     :param embeds:
         Embed attached to the message. This is an Embed object.
     """
-
     content: str = ''
     attachments: Optional[List[File]] = None
     tts: Optional[bool] = False
@@ -162,7 +161,7 @@ class Message:
             return "application/json", self.to_dict()
 
         form = FormData()
-        form.add_field("payload_json", json.dumps(self.to_dict()))
+        form.add_field("payload_json", dumps(self.to_dict()))
 
         for file in self.attachments:
             form.add_field("file", file.content, filename=file.filename)

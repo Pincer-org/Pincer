@@ -18,7 +18,7 @@ def guild_create_middleware(
 ) -> Tuple[str, List[Guild]]:
     """|coro|
 
-    Middleware for ``?`` event. # TODO ``?`` here because idk what it is
+    Middleware for ``on_guild_create`` event.
 
     Parameters
     ----------
@@ -35,6 +35,7 @@ def guild_create_middleware(
             {"_client": self, "_http": self.http, **payload.data}
         )
     ]
+
 
 def export():
     return guild_create_middleware

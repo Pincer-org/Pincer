@@ -10,8 +10,6 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import Union, Dict, Any, Tuple, List
 
-    from PIL.Image import Image
-
     from ..utils.types import Coro
     from ..utils.types import MISSING
     from ..objects.message.file import File

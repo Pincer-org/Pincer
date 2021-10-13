@@ -1,5 +1,6 @@
-from pincer import __version__
 from os import walk
+
+from pincer import __version__
 
 
 def get_packages():
@@ -9,18 +10,8 @@ def get_packages():
     )
 
 
-def get_requires():
-    with open("requirements.txt") as f:
-        return '\n\t'.join(f.read().strip().splitlines())
-
-
-def get_testing_requires():
-    with open("packages/dev.txt") as f:
-        return '\n\t'.join(f.read().strip().splitlines())
-
-
-def get_images_requires():
-    with open("packages/img.txt") as f:
+def get_dependencies(path: str) -> str:
+    with open(path) as f:
         return '\n\t'.join(f.read().strip().splitlines())
 
 
@@ -33,18 +24,18 @@ def main():
     with open(".github/scripts/setup_base.cfg") as f:
         base = f.read()
 
-    requires = get_requires()
-    testing_requires = get_testing_requires()
-    images_requires = get_images_requires()
+    dependencies = {
+        "requires": get_dependencies("requirement.txt"),
+        "testing_requires": get_dependencies("packages/dev.txt"),
+        "images_requires": get_dependencies("packages/img.txt")
+    }
 
     with open("setup.cfg", "w") as f:
         f.write(
             base.format(
                 version=repr(__version__),
                 packages=packages,
-                requires=requires,
-                testing_requires=testing_requires,
-                images_requires=images_requires
+                **dependencies
             )
         )
 

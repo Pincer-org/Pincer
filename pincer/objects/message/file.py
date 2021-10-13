@@ -60,7 +60,6 @@ class File(APIObject):
         :param filename:
             The name of the file. Will override the default name.
         """
-
         with open(filepath, "rb") as data:
             file = data.read()
 
@@ -96,7 +95,6 @@ class File(APIObject):
 
         :return: File
         """
-
         if not PILLOW_IMPORT:
             raise ModuleNotFoundError(
                 "The `Pillow` library is required for sending and converting "

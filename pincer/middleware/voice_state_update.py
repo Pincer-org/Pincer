@@ -12,6 +12,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import List, Tuple
 
+<<<<<<< HEAD
     from ..core.dispatch import GatewayDispatch
     from ..objects.user.voice_state import VoiceState
 
@@ -22,7 +23,7 @@ async def voice_state_update_middleware(
 ) -> Tuple[str, List[VoiceState]]:
     """|coro|
 
-    Middleware for ``?`` event. # TODO ``?`` here because idk what it is
+    Middleware for ``on_voice_state_update`` event.
 
     Parameters
     ----------
@@ -33,12 +34,25 @@ async def voice_state_update_middleware(
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.user.voice_state.VoiceState`]]
         ``on_voice_state_update`` and a ``VoiceState``
+=======
+async def voice_state_update_middleware(self, payload: GatewayDispatch):
+    """
+    Middleware for ``on_voice_state_update`` event.
+
+    :param self:
+        The current client.
+
+    :param payload:
+        The data received from the ready event.
+
+>>>>>>> main
     """
     return "on_voice_state_update", [
         VoiceState.from_dict(
             {"_client": self, "_http": self.http, **payload.data}
         )
     ]
+
 
 def export():
     return voice_state_update_middleware
