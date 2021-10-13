@@ -23,7 +23,7 @@ class ActivityType(IntEnum):
     STREAMING = 1 #: Streaming {details}; e.g. "Streaming Rocket League"; Only supports Twitch and YouTube.
     LISTENING = 2 #: Listening to {name}; e.g. "Listening to Spotify"
     WATCHING = 3 #: Watching {name}; e.g. "Watching YouTube Together"
-    CUSTOM = 4 #: {emoji} {name}; e.g. ":smiley: I am cool"; Not for bots; discord limitation
+    CUSTOM = 4 #: \\{emoji} {name}; e.g. "\\:smiley: I am cool"; Not for bots; discord limitation
     COMPETING = 5 #: Competing in {name}; e.g. "Competing in Arena World Champions"
 
 
@@ -179,7 +179,7 @@ class Activity(APIObject):
     flags: APINullable[:class:`~pincer.objects.events.presence.ActivityFlags`]
         Activity flags ``OR``\\d together,
         describes what the payload includes
-    buttons: APInullable[List[:class:`~pincer.objects.events.presence.AcitivityButtons`]]
+    buttons: APInullable[List[:class:`~pincer.objects.events.presence.ActivityButton`]]
         The url button on an activity.
     """ # TODO um this doc should be longer
     name: str
@@ -229,6 +229,8 @@ class PresenceUpdateEvent(APIObject):
     """This event is sent when a user's presence or info,
     such as name or avatar, is updated.
 
+    Attributes
+    ----------
     user: :class:`~pincer.objects.user.user.User`
         The user presence is being updated for
     guild_id: :class:`~pincer.utils.snowflake.Snowflake`

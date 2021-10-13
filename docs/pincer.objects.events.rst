@@ -254,6 +254,13 @@ ActivitySecrets
 
 .. autoclass:: ActivitySecrets()
 
+ActivityFlags
+~~~~~~~~~~~~~
+
+.. attributetable:: ActivityFlags
+
+.. autoclass:: ActivityFlags()
+
 ActivityButton
 ~~~~~~~~~~~~~~
 
