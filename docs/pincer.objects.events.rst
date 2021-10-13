@@ -119,3 +119,20 @@ GuildRoleDeleteEvent
 .. attributetable:: GuildRoleDeleteEvent
 
 .. autoclass:: GuildRoleDeleteEvent()
+
+Hello Ready
+-----------
+
+HelloEvent
+~~~~~~~~~~
+
+.. attributetable:: HelloEvent
+
+.. autoclass:: HelloEvent()
+
+ReadyEvent
+~~~~~~~~~~
+
+.. attributetable:: ReadyEvent
+
+.. autoclass:: ReadyEvent()
