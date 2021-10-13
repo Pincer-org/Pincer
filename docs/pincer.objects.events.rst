@@ -12,3 +12,13 @@ ChannelPinsUpdateEvent
 .. attributetable:: ChannelPinsUpdateEvent
 
 .. autoclass:: ChannelPinsUpdateEvent()
+
+Error
+-----
+
+DiscordError
+~~~~~~~~~~~~
+
+.. attributetable:: DiscordError
+
+.. autoclass:: DiscordError()
