@@ -146,3 +146,20 @@ IntegrationDeleteEvent
 .. attributetable:: IntegrationDeleteEvent
 
 .. autoclass:: IntegrationDeleteEvent()
+
+Invite
+------
+
+InviteCreateEvent
+~~~~~~~~~~~~~~~~~
+
+.. attributetable:: InviteCreateEvent
+
+.. autoclass:: InviteCreateEvent()
+
+InviteDeleteEvent
+~~~~~~~~~~~~~~~~~
+
+.. attributetable:: InviteDeleteEvent
+
+.. autoclass:: InviteDeleteEvent()
