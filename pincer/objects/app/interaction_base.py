@@ -54,7 +54,7 @@ class MessageInteraction(APIObject):
         The name of the application command
     user: :class:`~pincer.objects.user.user.User`
         The user who invoked the interaction
-    member: :class:`~pincer.utils.types.APINullable`\\[Dict]
+    member: APINullable[Dict]
         The member who invoked the interaction
     """
     id: Snowflake

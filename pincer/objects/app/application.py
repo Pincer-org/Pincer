@@ -36,7 +36,7 @@ class Application(APIObject):
         the icon hash of the app
     name: :class:`str`
         the name of the app
-    privacy_policy_url: :data:`~pincer.utils.types.APINullable`\\[:class:`str`]
+    privacy_policy_url: APINullable[:class:`str`]
         the url of the app's privacy policy
     summary: :class:`str`
         if this application is a game sold on Discord, this field will be the
@@ -44,24 +44,24 @@ class Application(APIObject):
     verify_key: :class:`str`
         the hex encoded key for verification in interactions and the GameSDK's
         GetTicket
-    cover_image: :data:`~pincer.utils.types.APINullable`\\[:class:`str`]
+    cover_image: APINullable[:class:`str`]
         the application's default rich presence invite cover image hash
-    flags: :data:`~pincer.utils.types.APINullable`\\[:class:`int`]
+    flags: APINullable[:class:`int`]
         the application's public flags
-    guild_id: :data:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
+    guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         if this application is a game sold on Discord, this field will be the
         guild to which it has been linked
-    owner: :data:`~pincer.utils.types.APINullable`\\[:class:`~pincer.objects.user.user.User`]
+    owner: APINullable[:class:`~pincer.objects.user.user.User`]
         partial user object containing info on the owner of the application
-    primary_sku_id: :data:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
+    primary_sku_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         if this application is a game sold on Discord, this field will be the
         id of the "Game SKU" that is created, if exists
-    rpc_origins: :data:`~pincer.utils.types.APINullable`\\[List[:class:`str`]]
+    rpc_origins: APINullable[List[:class:`str`]]
         an array of rpc origin urls, if rpc is enabled
-    slug: :data:`~pincer.utils.types.APINullable`\\[:class:`str`]
+    slug: APINullable[:class:`str`]
         if this application is a game sold on Discord, this field will be the
         URL slug that links to the store page
-    terms_of_service_url: :data:`~pincer.utils.types.APINullable`\\[:class:`str`]
+    terms_of_service_url: APINullable[:class:`str`]
         the url of the app's terms of service
     """
     bot_public: bool

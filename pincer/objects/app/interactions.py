@@ -40,15 +40,15 @@ class ResolvedData(APIObject):
 
     Attributes
     ----------
-    users: :data:`~pincer.utils.types.APINullable`\\[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.user.user.User`]]
+    users: APINullable[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.user.user.User`]]
         Map of Snowflakes to user objects
-    members: :data:`~pincer.utils.types.APINullable`\\[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.guild.member.GuildMember`]]
+    members: APINullable[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.guild.member.GuildMember`]]
         Map of Snowflakes to partial member objects
-    roles: :data:`~pincer.utils.types.APINullable`\\[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.guild.role.Role`]]
+    roles: APINullable[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.guild.role.Role`]]
         Map of Snowflakes to role objects
-    channels: :data:`~pincer.utils.types.APINullable`\\[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.guild.channel.Channel`]]
+    channels: APINullable[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.guild.channel.Channel`]]
         Map of Snowflakes to partial channel objects
-    messages: :data:`~pincer.utils.types.APINullable`\\[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.message.user_message.UserMessage`]]
+    messages: APINullable[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.message.user_message.UserMessage`]]
         Map of Snowflakes to partial message objects
     """
     users: APINullable[Dict[Snowflake, User]] = MISSING
@@ -70,17 +70,17 @@ class InteractionData(APIObject):
         The `name` of the invoked command
     type: :class:`int`
         The `type` of the invoked command
-    resolved: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.objects.app.interactions.ResolvedData`]
+    resolved: APINullable[:class:`~pincer.objects.app.interactions.ResolvedData`]
         Converted users + roles + channels
-    options: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.objects.app.command.AppCommandInteractionDataOption`]
+    options: APINullable[:class:`~pincer.objects.app.command.AppCommandInteractionDataOption`]
         The params + values from the user
-    custom_id: :class:`~pincer.utils.types.APINullable`\\[:class:`str`]
+    custom_id: APINullable[:class:`str`]
         The `custom_id` of the component
-    component_type: :class:`~pincer.utils.types.APINullable`\\[:class:`int`]
+    component_type: APINullable[:class:`int`]
         The type of the component
-    values: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.objects.app.select_menu.SelectOption`]
+    values: APINullable[:class:`~pincer.objects.app.select_menu.SelectOption`]
         The values the user selected
-    target_id: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
+    target_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Id of the user or message targeted by a user or message command
     """
     id: Snowflake
@@ -130,17 +130,17 @@ class Interaction(APIObject):
         A continuation token for responding to the interaction
     version: :class:`int`
         Read-only property, always ``1``
-    data: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.objects.app.interactions.InteractionData`]
+    data: APINullable[:class:`~pincer.objects.app.interactions.InteractionData`]
         The command data payload
-    guild_id: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
+    guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The guild it was sent from
-    channel_id: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
+    channel_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The channel it was sent from
-    member: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.objects.guild.member.GuildMember`]
+    member: APINullable[:class:`~pincer.objects.guild.member.GuildMember`]
         Guild member data for the invoking user, including permissions
-    user: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.objects.user.user.User`]
+    user: APINullable[:class:`~pincer.objects.user.user.User`]
         User object for the invoking user, if invoked in a DM
-    message: :class:`~pincer.utils.types.APINullable`\\[:class:`~pincer.objects.message.user_message.UserMessage`]
+    message: APINullable[:class:`~pincer.objects.message.user_message.UserMessage`]
         For components, the message they were attached to
     """
 

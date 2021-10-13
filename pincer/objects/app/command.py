@@ -51,9 +51,9 @@ class AppCommandInteractionDataOption(APIObject):
         The name of the parameter
     value: :class:`str`
         The value of the pair
-    type: :data:`~pincer.utils.types.APINullable`\\[:class:`str`]
+    type: APINullable[:class:`str`]
         Value of application command option type
-    options: :data:`~pincer.utils.types.APINullable`\\[List[:data:`~pincer.objects.app.command.AppCommandInteractionDataOption`]]
+    options: APINullable[List[:data:`~pincer.objects.app.command.AppCommandInteractionDataOption`]]
         Present if this option is a group or subcommand
     """
     name: str
@@ -98,12 +98,12 @@ class AppCommandOption(APIObject):
         1-32 lowercase character name matching `^[\\w-]{1,32}$`
     description: :class:`str`
         1-100 character description
-    required: :data:`~pincer.utils.types.APINullable`\\[:class:`bool`]
+    required: APINullable[:class:`bool`]
         If the parameter is required or optional |default| :data:`False`
-    choices: :data:`~pincer.utils.types.APINullable`\\[List[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
+    choices: APINullable[List[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
         Choices for `STRING`, `INTEGER`, and `NUMBER`
         types for the user to pick from, max 25
-    options: :data:`~pincer.utils.types.APINullable`\\[List[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
+    options: APINullable[List[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
         If the option is a subcommand or subcommand group type,
         this nested options will be the parameters
     """
@@ -142,18 +142,18 @@ class AppCommand(APIObject):
     description: :class:`str`
         1-100 character description for ``CHAT_INPUT`` commands,
         empty string for ``USER`` and ``MESSAGE`` commands
-    id: :data:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
+    id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Unique id of the command
-    version: :data:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
+    version: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Autoincrementing version identifier updated during substantial
         record changes
-    application_id: :data:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
+    application_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Unique id of the parent application
-    options: :data:`~pincer.utils.types.APINullable`\\[List[:class:`~pincer.objects.app.command.AppCommandOption`]]
+    options: APINullable[List[:class:`~pincer.objects.app.command.AppCommandOption`]]
         The parameters for the command, max 25
-    guild_id: :data:`~pincer.utils.types.APINullable`\\[:class:`~pincer.utils.snowflake.Snowflake`]
+    guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Guild id of the command, if not global
-    default_permission: :data:`~pincer.utils.types.APINullable`\\[:class:`bool`]
+    default_permission: APINullable[:class:`bool`]
         Whether the command is enabled by default
         when the app is added to a guild
     """
