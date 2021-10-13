@@ -288,3 +288,20 @@ PresenceUpdateEvent
 .. attributetable:: PresenceUpdateEvent
 
 .. autoclass:: PresenceUpdateEvent()
+
+Thread
+------
+
+ThreadListSyncEvent
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: ThreadListSyncEvent
+
+.. autoclass:: ThreadListSyncEvent()
+
+ThreadMembersUpdateEvent
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: ThreadMembersUpdateEvent
+
+.. autoclass:: ThreadMembersUpdateEvent()
