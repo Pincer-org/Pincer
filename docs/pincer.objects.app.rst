@@ -122,3 +122,20 @@ Interaction
 .. attributetable:: Interaction
 
 .. autoclass:: Interaction()
+
+Select Menu
+-----------
+
+SelectOption
+~~~~~~~~~~~~
+
+.. attributetable:: SelectOption
+
+.. autoclass:: SelectOption()
+
+SelectMenu
+~~~~~~~~~~
+
+.. attributetable:: SelectMenu
+
+.. autoclass:: SelectMenu()
