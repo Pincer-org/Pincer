@@ -29,7 +29,7 @@ class SelectOption(APIObject):
     description: APINullable[:class:`str`]
         An additional description of the option, max 100 characters
     emoji: APINullable[:class:`~pincer.objects.message.emoji.Emoji`]
-        ``id``, ``name``, and `animated``
+        ``id``, ``name``, and ``animated``
     default: APINullable[:class:`bool`]
         Will render this option as selected by default
     """

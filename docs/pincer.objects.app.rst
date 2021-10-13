@@ -139,3 +139,13 @@ SelectMenu
 .. attributetable:: SelectMenu
 
 .. autoclass:: SelectMenu()
+
+Session Start Limit
+-------------------
+
+SessionStartLimit
+~~~~~~~~~~~~~~~~~
+
+.. attributetable:: SessionStartLimit
+
+.. autoclass:: SessionStartLimit()
