@@ -149,3 +149,13 @@ SessionStartLimit
 .. attributetable:: SessionStartLimit
 
 .. autoclass:: SessionStartLimit()
+
+Throttle Scope
+--------------
+
+ThrottleScope
+~~~~~~~~~~~~~
+
+.. attributetable:: ThrottleScope
+
+.. autoclass:: ThrottleScope()
