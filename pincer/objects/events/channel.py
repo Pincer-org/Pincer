@@ -16,18 +16,17 @@ if TYPE_CHECKING:
 
 @dataclass
 class ChannelPinsUpdateEvent(APIObject):
-    """
-    Sent when a message is pinned or unpinned in a text channel.
+    """Sent when a message is pinned or unpinned in a text channel.
     This is not sent when a pinned message is deleted.
 
-    :param guild_id:
-        the id of the guild
-
-    :param channel_id:
-        the id of the channel
-
-    :param last_pin_timestamp:
-        the time at which the most recent pinned message was pinned
+    Attributes
+    ----------
+    channel_id: :class:`~pincer.utils.snowflake.Snowflake`
+        The id of the channel
+    guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        The id of the guild
+    last_pin_timestamp: APINullable[:class:`~pincer.utils.timestamp.Timestamp`]
+        The time at which the most recent pinned message was pinned
     """
     channel_id: Snowflake
 
