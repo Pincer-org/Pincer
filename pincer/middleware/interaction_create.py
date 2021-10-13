@@ -5,8 +5,6 @@ import logging
 from inspect import isasyncgenfunction
 from typing import Union, Dict, Any
 
-from PIL.Image import Image
-
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
 from ..objects import (
