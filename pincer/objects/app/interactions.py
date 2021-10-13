@@ -15,7 +15,6 @@ if TYPE_CHECKING:
     from ...client import Client
     from ..user.user import User
     from ..guild.role import Role
-    from . import interaction_base
     from ...core.http import HTTPClient
     from ..guild.channel import Channel
     from ..guild.member import GuildMember
@@ -24,6 +23,7 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
     from ..app.select_menu import SelectOption
     from ..message.context import MessageContext
+    from .interaction_base import InteractionType
     from ..message.user_message import UserMessage
     from .command import AppCommandInteractionDataOption, AppCommandOptionType
 
@@ -149,7 +149,7 @@ class Interaction(APIObject):
 
     id: Snowflake
     application_id: Snowflake
-    type: interaction_base.InteractionType
+    type: InteractionType
     token: str
 
     version: int = 1
@@ -165,7 +165,7 @@ class Interaction(APIObject):
         self.application_id = convert(
             self.application_id, Snowflake.from_string
         )
-        self.type = convert(self.type, interaction_base.InteractionType)
+        self.type = convert(self.type, InteractionType)
         self.data = convert(
             self.data,
             InteractionData.from_dict,
@@ -226,7 +226,6 @@ class Interaction(APIObject):
         Sets the parameters in the interaction that need information from the
         discord API.
         """
-
         if not self.data.options:
             return
 
@@ -240,7 +239,6 @@ class Interaction(APIObject):
         Sets an AppCommandInteractionDataOption value paramater to the payload
         type
         """
-
         converter = self._convert_functions.get(option.type)
 
         if not converter:
