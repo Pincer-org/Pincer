@@ -163,3 +163,48 @@ InviteDeleteEvent
 .. attributetable:: InviteDeleteEvent
 
 .. autoclass:: InviteDeleteEvent()
+
+Message
+-------
+
+MessageDeleteEvent
+~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageDeleteEvent
+
+.. autoclass:: MessageDeleteEvent()
+
+MessageDeleteBulkEvent
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageDeleteBulkEvent
+
+.. autoclass:: MessageDeleteBulkEvent()
+
+MessageReactionAddEvent
+~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageReactionAddEvent
+
+.. autoclass:: MessageReactionAddEvent()
+
+MessageReactionRemoveEvent
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageReactionRemoveEvent
+
+.. autoclass:: MessageReactionRemoveEvent()
+
+MessageReactionRemoveAllEvent
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageReactionRemoveAllEvent
+
+.. autoclass:: MessageReactionRemoveAllEvent()
+
+MessageReactionRemoveEmojiEvent
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageReactionRemoveEmojiEvent
+
+.. autoclass:: MessageReactionRemoveEmojiEvent()
