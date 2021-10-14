@@ -68,8 +68,6 @@ class HTTPMeta(type):
                 http_object.__annotations__[k] = v
                 setattr(http_object, k, None)
 
-            print(http_object.__annotations__)
-
         return http_object
 
 
