@@ -17,7 +17,6 @@ async def message_create_middleware(self, payload: GatewayDispatch):
 
     :param payload:
         The data received from the message creation event.
-
     """
     return "on_message", [
         UserMessage.from_dict(

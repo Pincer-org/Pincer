@@ -460,7 +460,6 @@ class ChatCommandHandler(metaclass=Singleton):
         to Discord!
         """
         to_add = ChatCommandHandler.register
-        print(to_add.keys(), list(map(lambda x: x.name, self._api_commands)))
 
         for reg_cmd in self._api_commands:
             try:
