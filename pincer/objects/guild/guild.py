@@ -234,12 +234,6 @@ class Guild(APIObject):
     """
     Represents a Discord guild/server in which your client resides.
 
-    :param _client:
-        reference to the Client
-
-    :param _http:
-        reference to the HTTPClient
-
     :param afk_channel_id:
         id of afk channel
 
@@ -411,10 +405,6 @@ class Guild(APIObject):
         the welcome screen of a Community guild, shown to new members,
         returned in an Invite's guild object
     """
-
-    _client: Client
-    _http: HTTPClient
-
     afk_channel_id: Optional[Snowflake]
     afk_timeout: int
     application_id: Optional[Snowflake]

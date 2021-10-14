@@ -24,7 +24,7 @@ async def message_create_middleware(
     Parameters
     ----------
     payload : :class:`pincer.core.dispatch.GatewayDispatch`
-        The data received from the ready event.
+        The data received from the message creation event.
 
     Returns
     -------

@@ -14,10 +14,9 @@ if TYPE_CHECKING:
     from typing import Optional
 
     from ...client import Client
-    from ...core.http import HTTPClient
     from ...utils.types import APINullable
-    from ...utils.conversion import convert
     from ...utils.snowflake import Snowflake
+    from ...utils.conversion import convert, construct_client_dict
 
 
 class PremiumTypes(IntEnum):
@@ -42,12 +41,6 @@ class User(APIObject):
     """
     Represents a Discord user. This can be a bot account or a
     human account.
-
-    :param _client:
-        reference to the Client
-
-    :param _http:
-        reference to the HTTPClient
 
     :param avatar:
         the user's avatar hash
@@ -99,10 +92,6 @@ class User(APIObject):
     :param verified:
         whether the email on this account has been verified
     """
-
-    _client: Client
-    _http: HTTPClient
-
     avatar: Optional[str]
     discriminator: str
     id: Snowflake
@@ -145,5 +134,5 @@ class User(APIObject):
 
     @classmethod
     async def from_id(cls, client: Client, user_id: int) -> User:
-        data = await client.http.get(f"/users/{user_id}")
-        return cls(_client=client, _http=client.http, **data)
+        data = await client.http.get(f"users/{user_id}")
+        return cls.from_dict(construct_client_dict(client, data))

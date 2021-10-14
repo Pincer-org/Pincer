@@ -143,10 +143,6 @@ class Interaction(APIObject):
     message: APINullable[:class:`~pincer.objects.message.user_message.UserMessage`]
         For components, the message they were attached to
     """
-
-    _client: Client
-    _http: HTTPClient
-
     id: Snowflake
     application_id: Snowflake
     type: InteractionType

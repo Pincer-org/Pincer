@@ -20,7 +20,7 @@ async def message_update_middleware(
 ) -> Tuple[str, List[UserMessage]]:
     """|coro|
 
-    Middleware for ``?`` event. # TODO ``?`` here because idk what it is
+    Middleware for ``on_message_update`` event.
 
     Parameters
     ----------

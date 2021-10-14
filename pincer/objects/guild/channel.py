@@ -114,9 +114,6 @@ class Channel(APIObject):
     video_quality_mode: APINullable[:class:`int`]
         The camera video quality mode of the voice channel, 1 when not present
     """
-    _client: Client
-    _http: HTTPClient
-
     id: Snowflake
     type: ChannelType
 
@@ -148,6 +145,10 @@ class Channel(APIObject):
     topic: APINullable[Optional[str]] = MISSING
     user_limit: APINullable[int] = MISSING
     video_quality_mode: APINullable[int] = MISSING
+
+    @property
+    def mention(self):
+        return f"<#{self.id}>"
 
     @classmethod
     async def from_id(cls, client: Client, channel_id: int) -> Channel:

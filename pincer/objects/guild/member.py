@@ -22,15 +22,9 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class GuildMember(APIObject):
+class BaseMember(APIObject):
     """
-    Represents a member which resides in a guild/server.
-
-    :param _client:
-        reference to the Client
-
-    :param _http:
-        reference to the HTTPClient
+    Represents the base of a guild member.
 
     :param deaf:
         whether the user is deafened in voice channels
@@ -43,6 +37,70 @@ class GuildMember(APIObject):
 
     :param roles:
         array of role object ids
+
+    :param hoisted_role:
+        The user their top guild role!
+    """
+    deaf: bool
+    joined_at: Timestamp
+    mute: bool
+    roles: List[Snowflake]
+
+    hoisted_role: APINullable[Snowflake] = MISSING
+
+    def __post_init__(self):
+        self.roles = convert(self.roles, Snowflake.from_string)
+        self.hoisted_role = convert(self.hoisted_role, Snowflake.from_string)
+
+
+@dataclass
+class PartialGuildMember(APIObject):
+    """
+    Represents a partial guild member.
+    This is a reference to a member from a guild which does not contain
+    all information.
+
+    This gets used in form example message mentions.
+
+    :param id:
+        the user's id
+
+    :param username:
+        the user's username, not unique across the platform
+
+    :param discriminator:
+        the user's 4-digit discord-tag
+
+    :param avatar:
+        the user's avatar hash
+
+    :param public_flags:
+        the flags on a user's account
+
+    :param member:
+        The user their (partial) guild information.
+    """
+    id: Snowflake
+    username: str
+    discriminator: str
+    avatar: str
+    public_flags: int
+    member: BaseMember
+
+    def __post_init__(self):
+        self.member = convert(self.member, BaseMember.from_dict)
+
+
+@dataclass
+class GuildMember(BaseMember, APIObject):
+    """
+    Represents a member which resides in a guild/server.
+
+    :param _client:
+        reference to the Client
+
+    :param _http:
+        reference to the HTTPClient
 
     :param nick:
         this users guild nickname
@@ -65,15 +123,9 @@ class GuildMember(APIObject):
         the user this guild member represents
     """
 
-    _client: Client
-    _http: HTTPClient
+    # _client: Client
+    # _http: HTTPClient
 
-    deaf: bool
-    joined_at: Timestamp
-    mute: bool
-    roles: List[Snowflake]
-
-    hoisted_role: APINullable[Snowflake] = MISSING
     nick: APINullable[Optional[str]] = MISSING
     pending: APINullable[bool] = MISSING
     is_pending: APINullable[bool] = MISSING
@@ -83,7 +135,6 @@ class GuildMember(APIObject):
     avatar: APINullable[str] = MISSING
 
     def __post_init__(self):
-        self.roles = convert(self.roles, Snowflake.from_string)
         self.user = convert(self.user, User.from_dict, User, self._client)
         self.premium_since = convert(
             self.premium_since, Timestamp.parse, Timestamp

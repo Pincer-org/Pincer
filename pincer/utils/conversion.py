@@ -8,7 +8,19 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..client import Client
     from .types import T, MISSING
-    from typing import Callable, Any, Optional
+    from typing import Dict, Callable, Any, Optional
+
+
+def construct_client_dict(client: Client, data: Dict[...]):
+    """
+    Constructs a proper kwargs dict with the client props.
+    """
+
+    return {
+        **data,
+        "_client": client,
+        "_http": client.http
+    }
 
 
 def convert(
@@ -20,6 +32,7 @@ def convert(
     """
     Convert a value to T if its not MISSING.
     """
+
     def handle_factory() -> T:
         def fin_fac(v: Any):
             if check is not None and isinstance(v, check):
@@ -28,7 +41,7 @@ def convert(
             if client is None:
                 return factory(v)
 
-            return factory({**v, "_client": client, "_http": client.http})
+            return factory(construct_client_dict(client, v))
 
         return (
             list(map(fin_fac, value))

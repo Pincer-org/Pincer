@@ -66,6 +66,9 @@ class Role(APIObject):
 
     :param tags:
         the tags this role has
+
+    :param mention:
+        structures a string to mention the role
     """
 
     color: int
@@ -80,6 +83,10 @@ class Role(APIObject):
     icon: APINullable[str] = MISSING
     unicode_emoji: APINullable[str] = MISSING
     tags: APINullable[RoleTags] = MISSING
+
+    @property
+    def mention(self):
+        return f"<@&{self.id}>"
 
     # TODO: Implement Caching
     @classmethod
