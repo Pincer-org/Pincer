@@ -6,7 +6,7 @@ from __future__ import annotations
 import copy
 from dataclasses import dataclass, fields, _is_dataclass_instance
 from enum import Enum
-from typing import Dict, Tuple, Union, Generic, TypeVar, Any
+from typing import Dict, Tuple, Union, Generic, TypeVar, Any, Optional
 
 from .types import MissingType
 
@@ -53,8 +53,28 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
         return copy.deepcopy(obj)
 
 
+class HTTPMeta(type):
+    # TODO: Fix typehints
+    __attrs = {
+        "_client": Optional[Any],
+        "_http": Optional[Any]
+    }
+
+    def __new__(mcs, *args, **kwargs):
+        http_object = super().__new__(mcs, *args, **kwargs)
+
+        if getattr(http_object, "__annotations__", None):
+            for k, v in HTTPMeta.__attrs.items():
+                http_object.__annotations__[k] = v
+                setattr(http_object, k, None)
+
+            print(http_object.__annotations__)
+
+        return http_object
+
+
 @dataclass
-class APIObject:
+class APIObject(metaclass=HTTPMeta):
     """
     Represents an object which has been fetched from the Discord API.
     """

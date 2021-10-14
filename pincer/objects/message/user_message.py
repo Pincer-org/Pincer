@@ -10,13 +10,13 @@ from typing import List, Optional, Union, TYPE_CHECKING
 from ..app.application import Application
 from ..app.interaction_base import MessageInteraction
 from ..guild.channel import Channel, ChannelMention
-from ..guild.member import GuildMember
+from ..guild.member import GuildMember, PartialGuildMember
 from ..guild.role import Role
 from ..message.attachment import Attachment
-from ..message.embed import Embed
 from ..message.component import MessageComponent
-from ..message.reference import MessageReference
+from ..message.embed import Embed
 from ..message.reaction import Reaction
+from ..message.reference import MessageReference
 from ..message.sticker import StickerItem
 from ..user import User
 from ..._config import GatewayConfig
@@ -161,10 +161,6 @@ class UserMessage(APIObject):
     """
     Represents a message sent in a channel within Discord.
 
-    :param _client:
-
-    :param _http:
-
     :param id:
         id of the message
 
@@ -260,9 +256,6 @@ class UserMessage(APIObject):
     :param sticker_items:
         sent if the message contains stickers
     """
-    _client: Client
-    _http: HTTPClient
-
     id: Snowflake
     channel_id: Snowflake
     author: User
@@ -271,7 +264,7 @@ class UserMessage(APIObject):
     edited_timestamp: Optional[Timestamp]
     tts: bool
     mention_everyone: bool
-    mentions: List[User]
+    mentions: List[GuildMember]
     mention_roles: List[Role]
     attachments: List[Attachment]
     embeds: List[Embed]
@@ -280,7 +273,7 @@ class UserMessage(APIObject):
 
     mention_channels: APINullable[List[ChannelMention]] = MISSING
     guild_id: APINullable[Snowflake] = MISSING
-    member: APINullable[GuildMember] = MISSING
+    member: APINullable[PartialGuildMember] = MISSING
     reactions: APINullable[List[Reaction]] = MISSING
     nonce: APINullable[Union[int, str]] = MISSING
     webhook_id: APINullable[Snowflake] = MISSING
@@ -301,7 +294,7 @@ class UserMessage(APIObject):
         self.author = convert(self.author, User.from_dict, client=self._client)
         self.timestamp = convert(self.timestamp, Timestamp)
         self.edited_timestamp = convert(self.edited_timestamp, Timestamp)
-        self.mentions = convert(self.mentions, User.from_dict,
+        self.mentions = convert(self.mentions, PartialGuildMember.from_dict,
                                 client=self._client)
         self.mention_roles = convert(self.mention_roles, Role.from_dict)
         self.attachments = convert(self.attachments, Attachment.from_dict)

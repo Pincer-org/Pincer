@@ -17,7 +17,6 @@ if TYPE_CHECKING:
     from ..guild.member import GuildMember
     from ..user import User
     from ... import Client
-    from ...core.http import HTTPClient
     from ...utils import APINullable, Snowflake, Timestamp
 
 
@@ -43,12 +42,6 @@ class ChannelType(IntEnum):
 class Channel(APIObject):
     """
     Represents a Discord Channel Mention object
-
-    :param _client:
-        reference to the Client
-
-    :param _http:
-        reference to the HTTPClient
 
     :param id:
         the id of this channel
@@ -139,10 +132,6 @@ class Channel(APIObject):
     :param video_quality_mode:
         the camera video quality mode of the voice channel, 1 when not present
     """
-
-    _client: Client
-    _http: HTTPClient
-
     id: Snowflake
     type: ChannelType
 

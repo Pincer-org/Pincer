@@ -190,7 +190,10 @@ class Client(Dispatcher):
         Get a list of chat command calls which have been registered in
         the ChatCommandHandler.
         """
-        return [cmd.app.name for cmd in ChatCommandHandler.register.values()]
+        return list(map(
+            lambda cmd: cmd.app.name,
+            ChatCommandHandler.register.values()
+        ))
 
     @staticmethod
     def event(coroutine: Coro):

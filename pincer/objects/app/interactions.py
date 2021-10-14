@@ -129,10 +129,6 @@ class Interaction(APIObject):
     """
     Represents a Discord Interaction object
 
-    :param _client:
-
-    :param _http:
-
     :param id:
         id of the interaction
 
@@ -166,10 +162,6 @@ class Interaction(APIObject):
     :param message:
         for components, the message they were attached to
     """
-
-    _client: Client
-    _http: HTTPClient
-
     id: Snowflake
     application_id: Snowflake
     type: InteractionType
