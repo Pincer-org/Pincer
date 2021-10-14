@@ -360,10 +360,8 @@ class ChatCommandHandler(metaclass=Singleton):
         self._api_commands = await self.get_commands()
 
         for api_cmd in self._api_commands:
-            loc_cmd = ChatCommandHandler.register.get(api_cmd.name)
-
-            if loc_cmd:
-                loc_cmd.app.id = api_cmd.id
+            if ChatCommandHandler.register.get(api_cmd.name):
+                ChatCommandHandler.register[api_cmd.name].app = api_cmd
 
     async def __remove_unused_commands(self):
         """
@@ -373,7 +371,7 @@ class ChatCommandHandler(metaclass=Singleton):
         to_remove: List[AppCommand] = []
 
         for api_cmd in self._api_commands:
-            doesnt_exist = all(map(
+            doesnt_exist = not all(map(
                 lambda loc_cmd: api_cmd.name != loc_cmd.app.name,
                 ChatCommandHandler.register.values()
             ))
@@ -462,6 +460,7 @@ class ChatCommandHandler(metaclass=Singleton):
         to Discord!
         """
         to_add = ChatCommandHandler.register
+        print(to_add.keys(), list(map(lambda x: x.name, self._api_commands)))
 
         for reg_cmd in self._api_commands:
             try:
