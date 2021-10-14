@@ -14,13 +14,13 @@ if TYPE_CHECKING:
 
 @dataclass
 class Ban(APIObject):
-    """
-    Representation of the Discord Ban object
+    """Representation of the Discord Ban object
 
-    :param reason:
+    Attributes
+    ----------
+    reason: Optional[:class:`str`]
         The reason for the ban
-
-    :param user:
+    user: :class:`~pincer.objects.user.user.User`
         The banned user
     """
     reason: Optional[str]

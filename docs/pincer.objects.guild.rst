@@ -40,3 +40,13 @@ AuditLog
 .. attributetable:: AuditLog
 
 .. autoclass:: AuditLog()
+
+Ban
+---
+
+Ban
+~~~
+
+.. attributetable:: Ban
+
+.. autoclass:: Ban()
