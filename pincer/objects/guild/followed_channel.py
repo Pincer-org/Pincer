@@ -16,11 +16,12 @@ if TYPE_CHECKING:
 class FollowedChannel(APIObject):
     """Represents a Discord Followed Channel object
 
-    :param channel_id:
-        source channel id
-
-    :param webhook_id:
-        created target webhook id
+    Attributes
+    ----------
+    channel_id: :class:`~pincer.utils.snowflake.Snowflake`
+        Source channel id
+    webhook_id: :class:`~pincer.utils.snowflake.Snowflake`
+        Created target webhook id
     """
     channel_id: Snowflake
     webhook_id: Snowflake

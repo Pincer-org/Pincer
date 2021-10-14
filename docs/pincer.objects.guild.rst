@@ -112,3 +112,13 @@ GuildFeatures
 .. attributetable:: GuildFeatures
 
 .. autoclass:: GuildFeatures()
+
+Followed Channel
+----------------
+
+FollowedChannel
+~~~~~~~~~~~~~~~
+
+.. attributetable:: FollowedChannel
+
+.. autoclass:: FollowedChannel()
