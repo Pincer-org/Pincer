@@ -36,9 +36,9 @@ __all__ = (
     "ExplicitContentFilterLevel", "FollowedChannel", "Guild", "GuildFeature",
     "GuildFeatures", "GuildMember", "GuildNSFWLevel", "GuildTemplate",
     "GuildWidget", "Invite", "InviteMetadata", "InviteStageInstance",
-    "InviteTargetType", "MFALevel", "NewsChannel", "Overwrite", "PremiumTier",
-    "PrivacyLevel", "Role", "RoleTags", "StageInstance", "SystemChannelFlags",
-    "TextChannel", "ThreadMember", "ThreadMetadata", "VerificationLevel",
-    "VoiceChannel", "Webhook", "WebhookType", "WelcomeScreen",
-    "WelcomeScreenChannel", "PartialGuildMember"
+    "InviteTargetType", "MFALevel", "NewsChannel", "Overwrite",
+    "PartialGuildMember", "PremiumTier", "PrivacyLevel", "Role", "RoleTags",
+    "StageInstance", "SystemChannelFlags", "TextChannel", "ThreadMember",
+    "ThreadMetadata", "VerificationLevel", "VoiceChannel", "Webhook",
+    "WebhookType", "WelcomeScreen", "WelcomeScreenChannel"
 )
