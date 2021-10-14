@@ -50,3 +50,55 @@ Ban
 .. attributetable:: Ban
 
 .. autoclass:: Ban()
+
+Channel
+-------
+
+ChannelType
+~~~~~~~~~~~
+
+.. attributetable:: ChannelType
+
+.. autoclass:: ChannelType()
+
+Channel
+~~~~~~~
+
+.. attributetable:: Channel
+
+.. autoclass:: Channel()
+
+TextChannel
+~~~~~~~~~~~
+
+.. attributetable:: TextChannel
+
+.. autoclass:: TextChannel()
+
+VoiceChannel
+~~~~~~~~~~~~
+
+.. attributetable:: VoiceChannel
+
+.. autoclass:: VoiceChannel()
+
+CategoryChannel
+~~~~~~~~~~~~~~~
+
+.. attributetable:: CategoryChannel
+
+.. autoclass:: CategoryChannel()
+
+NewsChannel
+~~~~~~~~~~~
+
+.. attributetable:: NewsChannel
+
+.. autoclass:: NewsChannel()
+
+ChannelMention
+~~~~~~~~~~~~~~
+
+.. attributetable:: ChannelMention
+
+.. autoclass:: ChannelMention()
