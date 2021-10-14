@@ -31,7 +31,7 @@ if TYPE_CHECKING:
 class InteractionFlags(IntEnum):
     """Represents the valid flags for interactions
     """
-    EPHEMERAL = 1 << 6 #: Only the user receiving the message can see it
+    EPHEMERAL = 1 << 6  #: Only the user receiving the message can see it
 
 
 @dataclass

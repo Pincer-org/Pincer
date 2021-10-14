@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from ..core.dispatch import GatewayDispatch
     from ..objects.guild import Guild
 
+
 def guild_create_middleware(
     self,
     payload: GatewayDispatch

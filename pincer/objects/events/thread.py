@@ -16,6 +16,7 @@ if TYPE_CHECKING:
     from ..guild.thread import ThreadMember
     from ...utils.snowflake import Snowflake
 
+
 @dataclass
 class ThreadListSyncEvent(APIObject):
     """Sent when the current user gains access to a channel.

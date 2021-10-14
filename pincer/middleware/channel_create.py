@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from ..core.dispatch import GatewayDispatch
     from ..objects.guild.channel import Channel
 
+
 def channel_create_middleware(
     self,
     payload: GatewayDispatch
@@ -31,7 +32,7 @@ def channel_create_middleware(
     Tuple[:class:`str`, List[:class:`~pincer.objects.guild.channel.Channel`]]
         ``"on_channel_creation"`` and a channel.
     """
-    return "on_channel_creation",  [
+    return "on_channel_creation", [
         Channel.from_dict(
             {"_client": self, "_http": self.http, **payload.data}
         )

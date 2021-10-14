@@ -27,20 +27,20 @@ if TYPE_CHECKING:
 
 class ChannelType(IntEnum):
     """Represents a channel its type."""
-    GUILD_TEXT = 0 #: A text channel. 
-    DM = 1 #: A DM channel. 
-    GUILD_VOICE = 2 #: A voice channel. 
-    GROUP_DM = 3 #: A group DM channel. 
-    GUILD_CATEGORY = 4 #: A category channel.
-    GUILD_NEWS = 5 #: A news channel. 
-    GUILD_STORE = 6 #: A store channel.
+    GUILD_TEXT = 0  #: A text channel.
+    DM = 1  #: A DM channel.
+    GUILD_VOICE = 2  #: A voice channel.
+    GROUP_DM = 3  #: A group DM channel.
+    GUILD_CATEGORY = 4  #: A category channel.
+    GUILD_NEWS = 5  #: A news channel.
+    GUILD_STORE = 6  #: A store channel.
 
     if GatewayConfig.version >= 9:
-        GUILD_NEWS_THREAD = 10 #: A news thread.
-        GUILD_PUBLIC_THREAD = 11 #: A public thread.
-        GUILD_PRIVATE_THREAD = 12 #: A private thread.
+        GUILD_NEWS_THREAD = 10  #: A news thread.
+        GUILD_PUBLIC_THREAD = 11  #: A public thread.
+        GUILD_PRIVATE_THREAD = 12  #: A private thread.
 
-    GUILD_STAGE_VOICE = 13 #: A stage channel.
+    GUILD_STAGE_VOICE = 13  #: A stage channel.
 
 
 @dataclass
@@ -211,6 +211,7 @@ def __str__(self):
 class TextChannel(Channel):
     """A subclass of ``Channel`` for text channels with all the same attributes.
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -244,6 +245,7 @@ class TextChannel(Channel):
 class VoiceChannel(Channel):
     """A subclass of ``Channel`` for voice channels with all the same attributes.
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -275,6 +277,7 @@ class VoiceChannel(Channel):
 class CategoryChannel(Channel):
     """A subclass of ``Channel`` for categories channels with all the same attributes.
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -282,6 +285,7 @@ class CategoryChannel(Channel):
 class NewsChannel(Channel):
     """A subclass of ``Channel`` for news channels with all the same attributes.
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

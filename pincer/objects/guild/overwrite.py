@@ -29,7 +29,7 @@ class Overwrite(APIObject):
     :param deny:
         permission bit set
     """
-    id: Snowflake#
+    id: Snowflake
     type: int
     allow: str
     deny: str

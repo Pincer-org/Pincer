@@ -14,6 +14,7 @@ class Timestamp:
     """
     Contains a lot of useful methods for working with timestamps.
     """
+
     def __init__(self, time: Optional[TS] = None):
         self.__time = Timestamp.parse(time)
         self.__epoch = Timestamp.to_epoch(self.__time)

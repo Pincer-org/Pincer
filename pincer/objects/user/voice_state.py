@@ -19,6 +19,7 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
     from ...utils.timestamp import Timestamp
 
+
 @dataclass
 class VoiceState(APIObject):
     """

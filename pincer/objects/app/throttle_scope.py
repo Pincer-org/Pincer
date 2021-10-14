@@ -7,7 +7,7 @@ class ThrottleScope(Enum):
     """On what the cooldown should be set/on what should the cooldown be
     set.
     """
-    GUILD = auto() #: The cooldown is per guild.
-    CHANNEL = auto() #: The cooldown is per channel.
-    USER = auto() #: The cooldown is per user.
-    GLOBAL = auto() #: The cooldown is global.
+    GUILD = auto()  #: The cooldown is per guild.
+    CHANNEL = auto()  #: The cooldown is per channel.
+    USER = auto()  #: The cooldown is per user.
+    GLOBAL = auto()  #: The cooldown is global.

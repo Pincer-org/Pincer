@@ -21,20 +21,20 @@ if TYPE_CHECKING:
 class CallbackType(IntEnum):
     """The types of response a client can give to a interaction.
     """
-    PONG = 1 #: ACK a Ping
-    MESSAGE = 4 #: Respond to an interaction with a message
-    DEFERRED_MESSAGE = 5 #: ACK an interaction and edit a response later, the user sees a loading state
-    DEFERRED_UPDATE_MESSAGE = 6 #: For components, ACK an interaction and edit the original message later; the user does not see a loading state
-    UPDATE_MESSAGE = 7 #: For components, edit the message the component was attached to
+    PONG = 1  #: ACK a Ping
+    MESSAGE = 4  #: Respond to an interaction with a message
+    DEFERRED_MESSAGE = 5  #: ACK an interaction and edit a response later, the user sees a loading state
+    DEFERRED_UPDATE_MESSAGE = 6  #: For components, ACK an interaction and edit the original message later; the user does not see a loading state
+    UPDATE_MESSAGE = 7  #: For components, edit the message the component was attached to
 
 
 class InteractionType(IntEnum):
     """Represents the different types of interactions the client
     can have with a member.
     """
-    PING = 1 #: Ping an interaction
-    APPLICATION_COMMAND = 2 #: A "slash" command
-    MESSAGE_COMPONENT = 3 #: A ui compoment like buttons and selects
+    PING = 1  #: Ping an interaction
+    APPLICATION_COMMAND = 2  #: A "slash" command
+    MESSAGE_COMPONENT = 3  #: A ui compoment like buttons and selects
 
 
 @dataclass

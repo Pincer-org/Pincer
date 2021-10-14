@@ -22,24 +22,25 @@ if TYPE_CHECKING:
 class AppCommandType(IntEnum):
     """Defines the different types of application commands.
     """
-    CHAT_INPUT = 1 #: Slash commands; a text-based command that shows up when a user types /
-    USER = 2 #: A UI-based command that shows up when you right click or tap on a user
-    MESSAGE = 3 #: A UI-based command that shows up when you right click or tap on a message
+    CHAT_INPUT = 1  #: Slash commands; a text-based command that shows up when a user types /
+    USER = 2  #: A UI-based command that shows up when you right click or tap on a user
+    MESSAGE = 3  #: A UI-based command that shows up when you right click or tap on a message
 
 
 class AppCommandOptionType(IntEnum):
     """Represents a parameter type.
     """
-    SUB_COMMAND = 1 #: The parameter will be a subcommand.
-    SUB_COMMAND_GROUP = 2 #: The parameter will be a group of subcommands.
-    STRING = 3 #: The parameter will be a string.
-    INTEGER = 4 #: The parameter will be an integer/number. (-2^53 and 2^53)
-    BOOLEAN = 5 #: The parameter will be a boolean.
-    USER = 6 #: The parameter will be a Discord user object.
-    CHANNEL = 7 #: The parameter will be a Discord channel object.
-    ROLE = 8 #: The parameter will be a Discord role object.
-    MENTIONABLE = 9 #: The parameter will be mentionable.
+    SUB_COMMAND = 1  #: The parameter will be a subcommand.
+    SUB_COMMAND_GROUP = 2  #: The parameter will be a group of subcommands.
+    STRING = 3  #: The parameter will be a string.
+    INTEGER = 4  #: The parameter will be an integer/number. (-2^53 and 2^53)
+    BOOLEAN = 5  #: The parameter will be a boolean.
+    USER = 6  #: The parameter will be a Discord user object.
+    CHANNEL = 7  #: The parameter will be a Discord channel object.
+    ROLE = 8  #: The parameter will be a Discord role object.
+    MENTIONABLE = 9  #: The parameter will be mentionable.
     NUMBER = 10  #: The parameter will be a float. (-2^53 and 2^53)
+
 
 @dataclass
 class AppCommandInteractionDataOption(APIObject):

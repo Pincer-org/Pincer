@@ -177,6 +177,7 @@ class Client(Dispatcher):
         The throttler for your client (generally not used) 
         |default| :data:`None`
     """
+
     def __init__(
             self,
             token: str, *,
@@ -204,12 +205,11 @@ class Client(Dispatcher):
     @property
     def chat_commands(self) -> List[str]:
         """List[:class:`str`]: List of chat commands
-        
+
         Get a list of chat command calls which have been registered in
         the :class:`~pincer.commands.ChatCommandHandler`\\.
         """
         return [cmd.app.name for cmd in ChatCommandHandler.register.values()]
-
 
     @staticmethod
     def event(coroutine: Coro):

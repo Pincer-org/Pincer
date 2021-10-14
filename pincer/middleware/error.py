@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from ..core.dispatch import GatewayDispatch
     from ..objects.events.error import DiscordError
 
+
 def error_middleware(
     self,
     payload: GatewayDispatch
@@ -33,7 +34,7 @@ def error_middleware(
     Tuple[:class:`str`, List[:class:`~pincer.objects.events.error.DiscordError`]]
         ``"on_error"`` and a ``DiscordError``
     """
-    return "on_error",  [
+    return "on_error", [
         DiscordError.from_dict(
             {"_client": self, "_http": self.http, **payload.data}
         )

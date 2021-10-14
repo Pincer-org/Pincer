@@ -94,7 +94,7 @@ class Sticker(APIObject):
 
     description: Optional[str]
     format_type: StickerFormatType
-    id: Snowflake#
+    id: Snowflake
     name: str
     tags: str
     type: StickerType
@@ -122,7 +122,7 @@ class StickerItem(APIObject):
         type of sticker format
     """
 
-    id: Snowflake#
+    id: Snowflake
     name: str
     format_type: StickerFormatType
 
@@ -154,10 +154,10 @@ class StickerPack(APIObject):
         id of the sticker pack's banner image
     """
 
-    id: Snowflake#
+    id: Snowflake
     stickers: List[Sticker]
     name: str
-    sku_id: Snowflake#
+    sku_id: Snowflake
     description: str
 
     cover_sticker_id: APINullable[Snowflake] = MISSING

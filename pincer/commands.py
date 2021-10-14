@@ -16,9 +16,9 @@ from .objects.app.command import AppCommandOptionType, AppCommand
 
 if TYPE_CHECKING:
     from typing import (
-    Optional, Dict, List,
-    Any, Tuple, get_origin,
-    get_args, Union
+        Optional, Dict, List,
+        Any, Tuple, get_origin,
+        get_args, Union
     )
 
     from .client import Client
@@ -28,7 +28,7 @@ if TYPE_CHECKING:
     from .utils.signature import get_signature_and_params
     from .utils.types import Coro, MISSING, choice_value_types, Choices
     from .objects.app.command import (
-        AppCommandOption, 
+        AppCommandOption,
         AppCommandOptionChoice, ClientCommandStructure, AppCommandType
     )
     from .exceptions import (
@@ -317,7 +317,7 @@ def command(
 
 class ChatCommandHandler(metaclass=Singleton):
     """Metaclass containing methods used to handle various commands
-    
+
     Attributes
     ----------
     client: :class:`Client`

@@ -11,4 +11,3 @@ from .slidingwindow import *
 from .snowflake import *
 from .timestamp import *
 from .types import *
-

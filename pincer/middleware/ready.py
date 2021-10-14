@@ -41,7 +41,7 @@ async def on_ready_middleware(
         raise InvalidPayload(
             "A `user` key/value pair is expected on the `ready` payload "
             "event."
-        ) # TODO this error doesn't exist???
+        )  # TODO this error doesn't exist???
 
     self.bot = User.from_dict(
         {"_client": self, "_http": self.http, **user}

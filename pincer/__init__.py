@@ -36,11 +36,11 @@ class VersionInfo(NamedTuple):
 
     def __repr__(self) -> str:
         return (
-                f'{self.major}.{self.minor}.{self.micro}'
-                + (
-                        f'-{self.release_level}{self.serial}'
-                        * (self.release_level is not None)
-                )
+            f'{self.major}.{self.minor}.{self.micro}'
+            + (
+                f'-{self.release_level}{self.serial}'
+                * (self.release_level is not None)
+            )
         )
 
 

@@ -67,7 +67,7 @@ class Application(APIObject):
     bot_public: bool
     bot_require_code_grant: bool
     description: str
-    id: Snowflake#
+    id: Snowflake
     icon: Optional[str]
     name: str
     privacy_policy_url: APINullable[str]

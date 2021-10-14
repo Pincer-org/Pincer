@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class GatewayDispatch:
     """Represents a websocket message.
-    
+
     Attributes
     ----------
     op: :class:`int`

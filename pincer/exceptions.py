@@ -77,6 +77,7 @@ class CommandCooldownError(CommandError):
     ctx: :class:`~objects.message.context.MessageContext`
         The context of the error
     """
+
     def __init__(self, message: str, context):
         self.ctx = context
         super(CommandCooldownError, self).__init__(message)
@@ -150,7 +151,7 @@ class EmbedFieldError(PincerError, ValueError):
 
 class TaskError(PincerError):
     """Base class for exceptions that are related to tasks.
-    
+
     Attributes
     ----------
     task: :class:`~utils.tasks.Task`

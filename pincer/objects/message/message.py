@@ -114,9 +114,9 @@ class Message:
         """
 
         return (
-                len(self.content) < 1
-                and not self.embeds
-                and not self.attachments
+            len(self.content) < 1
+            and not self.embeds
+            and not self.attachments
         )
 
     def to_dict(self):
