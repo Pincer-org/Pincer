@@ -102,3 +102,13 @@ ChannelMention
 .. attributetable:: ChannelMention
 
 .. autoclass:: ChannelMention()
+
+Features
+--------
+
+GuildFeatures
+~~~~~~~~~~~~~
+
+.. attributetable:: GuildFeatures
+
+.. autoclass:: GuildFeatures()
