@@ -3,14 +3,27 @@
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from io import BytesIO
-import os
-from typing import Optional
-
-from PIL.Image import Image
+from typing import Optional, TYPE_CHECKING
 
 from ...utils import APIObject
+
+PILLOW_IMPORT = True
+
+try:
+    from PIL.Image import Image
+
+    if TYPE_CHECKING:
+        IMAGE_TYPE = Image
+except (ModuleNotFoundError, ImportError):
+    PILLOW_IMPORT = False
+
+    if TYPE_CHECKING:
+        from ...utils import MISSING
+
+        IMAGE_TYPE = MISSING
 
 
 @dataclass
@@ -34,14 +47,14 @@ class File(APIObject):
         """
         :param filepath:
             The path to the file you want to send. Must be string. The file's
-            name in the file path is used as the name when uploaded discord by
-            default.
+            name in the file path is used as the name when uploaded to discord
+            by default.
 
         :param filename:
             The name of the file. Will override the default name.
         """
-
-        file = open(filepath, "rb").read()
+        with open(filepath, "rb") as data:
+            file = data.read()
 
         return cls(
             content=file,
@@ -49,15 +62,16 @@ class File(APIObject):
         )
 
     @classmethod
-    def from_image(
+    def from_pillow_image(
             cls,
-            img: Image,
+            img: IMAGE_TYPE,
             filename: str,
-            image_format: Optional[str] = None
+            image_format: Optional[str] = None,
+            **kwargs
     ) -> File:
         """
         Creates a file object from a PIL image
-        Supports PNG and JPEG
+        Supports GIF, PNG, JPEG, and WEBP.
 
         :param img:
             Pillow image object.
@@ -74,6 +88,11 @@ class File(APIObject):
 
         :return: File
         """
+        if not PILLOW_IMPORT:
+            raise ModuleNotFoundError(
+                "The `Pillow` library is required for sending and converting "
+                "pillow images,"
+            )
 
         if image_format is None:
             image_format = os.path.splitext(filename)[1][1:]
@@ -81,9 +100,11 @@ class File(APIObject):
             if image_format == "jpg":
                 image_format = "jpeg"
 
-        imgByteArr = BytesIO()
-        img.save(imgByteArr, format=image_format)
-        img_bytes = imgByteArr.getvalue()
+        # https://stackoverflow.com/questions/33101935/convert-pil-image-to-byte-array
+        # Credit goes to second answer
+        img_byte_arr = BytesIO()
+        img.save(img_byte_arr, format=image_format)
+        img_bytes = img_byte_arr.getvalue()
 
         return cls(
             content=img_bytes,

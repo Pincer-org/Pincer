@@ -23,10 +23,13 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: install requirements_dev
-        run: pip install -r requirements_dev.txt
+        run: pip install -r packages/dev
+
+      - name: install requirements_img
+        run: pip install -r packages/img.txt
 
       - name: generate setup.cfg
-        run: python -m gen.setup_generator
+        run: python ./.github/scripts/setup_generator.py
 
       - name: compile lib
         run: python setup.py sdist bdist_wheel

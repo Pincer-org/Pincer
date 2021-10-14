@@ -20,7 +20,7 @@ from .exceptions import (
     NoCogManagerReturnFound, CogAlreadyExists, CogNotFound
 )
 from .middleware import middleware
-from .objects import User, Intents, Guild, ThrottleInterface
+from .objects import Role, User, Intents, Guild, ThrottleInterface, Channel
 from .objects.app.throttling import DefaultThrottleHandler
 from .utils import get_index, should_pass_cls, Coro
 from .utils.signature import get_params
@@ -182,7 +182,7 @@ class Client(Dispatcher):
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
         self.throttler = throttler
-        ChatCommandHandler.managers["__main__"] = self
+        ChatCommandHandler.managers[self.__module__] = self
 
     @property
     def chat_commands(self):
@@ -190,7 +190,10 @@ class Client(Dispatcher):
         Get a list of chat command calls which have been registered in
         the ChatCommandHandler.
         """
-        return [cmd.app.name for cmd in ChatCommandHandler.register.values()]
+        return list(map(
+            lambda cmd: cmd.app.name,
+            ChatCommandHandler.register.values()
+        ))
 
     @staticmethod
     def event(coroutine: Coro):
@@ -278,7 +281,7 @@ class Client(Dispatcher):
         if iscoroutinefunction(call) or isasyncgenfunction(call):
             return call
 
-    def load_cog(self, path: str):
+    def load_cog(self, path: str, package: Optional[str] = None):
         """
         Load a cog from a string path, setup method in COG may
         optionally have a first argument which will contain the client!
@@ -312,6 +315,9 @@ class Client(Dispatcher):
 
         :param path:
             The import path for the cog.
+
+        :param package:
+            The package name for relative based imports.
         """
 
         if ChatCommandHandler.managers.get(path):
@@ -320,7 +326,7 @@ class Client(Dispatcher):
             )
 
         try:
-            module = import_module(path)
+            module = import_module(path, package=package)
         except ModuleNotFoundError:
             raise CogNotFound(f"Cog `{path}` could not be found!")
 
@@ -566,6 +572,32 @@ class Client(Dispatcher):
             A User object.
         """
         return await User.from_id(self, _id)
+
+    async def get_role(self, guild_id, role_id: int) -> Role:
+        """
+        Fetch a role object by the role identifier.
+
+        :param role_id:
+            The id of the guild which should be fetched from the Discord
+            gateway.
+
+        :returns:
+            A Guild object.
+        """
+        return await Role.from_id(self, guild_id, role_id)
+
+    async def get_channel(self, _id: int) -> Channel:
+        """
+        Fetch a Channel from its identifier.
+
+        :param _id:
+            The id of the user which should be fetched from the Discord
+            gateway.
+
+        :returns:
+            A Channel object.
+        """
+        return await Channel.from_id(self, _id)
 
 
 Bot = Client

@@ -17,7 +17,7 @@ from .exceptions import (
     InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
     InvalidCommandName
 )
-from .objects import ThrottleScope, AppCommand
+from .objects import ThrottleScope, AppCommand, Role, User, Channel
 from .objects.app import (
     AppCommandOptionType, AppCommandOption, AppCommandOptionChoice,
     ClientCommandStructure, AppCommandType
@@ -33,12 +33,17 @@ COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 _log = logging.getLogger(__package__)
 
 _options_type_link = {
-    # TODO: Implement other types:
+    # TODO: Implement mentionable:
     Signature.empty: AppCommandOptionType.STRING,
     str: AppCommandOptionType.STRING,
     int: AppCommandOptionType.INTEGER,
     bool: AppCommandOptionType.BOOLEAN,
-    float: AppCommandOptionType.NUMBER
+    float: AppCommandOptionType.NUMBER,
+
+    User: AppCommandOptionType.USER,
+    Channel: AppCommandOptionType.CHANNEL,
+    Role: AppCommandOptionType.ROLE,
+  
 }
 
 
@@ -51,6 +56,16 @@ def command(
         cooldown_scale: Optional[float] = 60,
         cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER
 ):
+    """
+    Command option types are designated by using type hints.
+    str - String
+    int - Integer
+    bool - Boolean
+    float - Number
+    pincer.User - User
+    pincer.Channel - Channel
+    pincer.Role - Role
+    """
     # TODO: Fix docs
     # TODO: Fix docs w guild
     # TODO: Fix docs w cooldown
@@ -259,7 +274,7 @@ class ChatCommandHandler(metaclass=Singleton):
     __delete = "/commands/{command.id}"
     __update = "/commands/{command.id}"
     __add = "/commands"
-    __add_guild = "/guilds/{command.app.guild_id}/commands"
+    __add_guild = "/guilds/{command.guild_id}/commands"
 
     # TODO: Fix docs
     def __init__(self, client):
@@ -345,10 +360,8 @@ class ChatCommandHandler(metaclass=Singleton):
         self._api_commands = await self.get_commands()
 
         for api_cmd in self._api_commands:
-            loc_cmd = ChatCommandHandler.register.get(api_cmd.name)
-
-            if loc_cmd:
-                loc_cmd.app.id = api_cmd.id
+            if ChatCommandHandler.register.get(api_cmd.name):
+                ChatCommandHandler.register[api_cmd.name].app = api_cmd
 
     async def __remove_unused_commands(self):
         """
@@ -358,7 +371,7 @@ class ChatCommandHandler(metaclass=Singleton):
         to_remove: List[AppCommand] = []
 
         for api_cmd in self._api_commands:
-            doesnt_exist = all(map(
+            doesnt_exist = not all(map(
                 lambda loc_cmd: api_cmd.name != loc_cmd.app.name,
                 ChatCommandHandler.register.values()
             ))
@@ -446,12 +459,18 @@ class ChatCommandHandler(metaclass=Singleton):
         Add all new commands which have been registered by the decorator
         to Discord!
         """
-        commands_to_add: List[AppCommand] = [
-            cmd.app for cmd in ChatCommandHandler.register.values()
-            if cmd.app not in self._api_commands
-        ]
+        to_add = ChatCommandHandler.register
 
-        await self.add_commands(commands_to_add)
+        for reg_cmd in self._api_commands:
+            try:
+                del to_add[reg_cmd.name]
+            except IndexError:
+                pass
+
+        await self.add_commands(list(map(
+            lambda cmd: cmd.app,
+            to_add.values()
+        )))
 
     async def initialize(self):
         # TODO: Fix docs

@@ -4,21 +4,27 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from json import dumps
 from typing import Dict, Tuple, Union, List, Optional, TYPE_CHECKING
 
 from aiohttp import FormData, Payload
-import json
-from PIL.Image import Image
 
 from ..app.interaction_base import CallbackType
 from ..guild.role import Role
-from ..message.file import File
 from ..message.embed import Embed
+from ..message.file import File
 from ..message.user_message import AllowedMentionTypes
 from ..user import User
 from ...exceptions import CommandReturnIsEmpty
 from ...utils.api_object import APIObject
 from ...utils.snowflake import Snowflake
+
+PILLOW_IMPORT = True
+
+try:
+    from PIL.Image import Image
+except (ModuleNotFoundError, ImportError):
+    PILLOW_IMPORT = False
 
 if TYPE_CHECKING:
     from ..app import InteractionFlags
@@ -49,7 +55,24 @@ class AllowedMentions(APIObject):
 
 @dataclass
 class Message:
-    # TODO: Write docs
+    # TODO: Docs for tts, allowed_mentions, components, flags, and type.
+
+    """
+    A discord message that will be send to discord
+
+    :param content:
+        The text in the message.
+
+    :param attachments:
+        Attachments on the message. This is a File object. You can also attach
+        a Pillow Image or string. Pillow images will be converted to PNGs. They
+        will use the naming sceme ``image%`` where % is the images index in the
+        attachments array. Strings will be read as a filepath. The name of the
+        file that the string points to will be used as the name.
+
+    :param embeds:
+        Embed attached to the message. This is an Embed object.
+    """
     content: str = ''
     attachments: Optional[List[File]] = None
     tts: Optional[bool] = False
@@ -69,10 +92,10 @@ class Message:
         for count, value in enumerate(self.attachments):
             if isinstance(value, File):
                 attch.append(value)
-            elif isinstance(value, Image):
-                attch.append(File.from_image(
+            elif PILLOW_IMPORT and isinstance(value, Image):
+                attch.append(File.from_pillow_image(
                     value,
-                    f"file{count}.png",
+                    f"image{count}.png",
                 ))
             elif isinstance(value, str):
                 attch.append(File.from_file(value))
@@ -81,9 +104,20 @@ class Message:
 
         self.attachments = attch
 
+    @property
+    def isempty(self) -> bool:
+        """
+        :return:
+            Returns true if a message is empty.
+        """
+
+        return (
+                len(self.content) < 1
+                and not self.embeds
+                and not self.attachments
+        )
+
     def to_dict(self):
-        if len(self.content) < 1 and not self.embeds and not self.attachments:
-            raise CommandReturnIsEmpty("Cannot return empty message.")
 
         allowed_mentions = (
             self.allowed_mentions.to_dict()
@@ -113,22 +147,22 @@ class Message:
         Creates the data that the discord API wants for the message object
 
         :return: (content_type, data)
+
+        :raises CommandReturnIsEmpty:
+            Command does not have content, an embed, or attachment.
         """
+
+        if self.isempty:
+            raise CommandReturnIsEmpty("Cannot return empty message.")
 
         if not self.attachments:
             return "application/json", self.to_dict()
 
         form = FormData()
-        form.add_field("payload_json", json.dumps(self.to_dict()))
-        form.add_fields(
-            *(
-                (file.filename, file.content)
-                for file in self.attachments
-            )
-        )
+        form.add_field("payload_json", dumps(self.to_dict()))
 
-        # for file in self.attachments:
-        #     form.add_field("file", file.content, filename=file.filename)
+        for file in self.attachments:
+            form.add_field("file", file.content, filename=file.filename)
 
         payload = form()
         return payload.headers["Content-Type"], payload
