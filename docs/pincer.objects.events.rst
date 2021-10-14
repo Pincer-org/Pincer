@@ -305,3 +305,13 @@ ThreadMembersUpdateEvent
 .. attributetable:: ThreadMembersUpdateEvent
 
 .. autoclass:: ThreadMembersUpdateEvent()
+
+Typing Start
+------------
+
+TypingStartEvent
+~~~~~~~~~~~~~~~~
+
+.. attributetable:: TypingStartEvent
+
+.. autoclass:: TypingStartEvent()
