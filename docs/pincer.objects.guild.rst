@@ -1,141 +1,42 @@
-pincer.objects.guild package
-============================
+.. currentmodule:: pincer.objects
 
-Submodules
-----------
+Pincer Objects Guild Section
+=============================
 
-pincer.objects.guild.audit\_log module
---------------------------------------
+Audit Log
+---------
 
-.. automodule:: pincer.objects.guild.audit_log
-   :members:
-   :undoc-members:
-   :show-inheritance:
+AuditLogEvent
+~~~~~~~~~~~~~
 
-pincer.objects.guild.ban module
--------------------------------
+.. attributetable:: AuditLogEvent
 
-.. automodule:: pincer.objects.guild.ban
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: AuditLogEvent()
 
-pincer.objects.guild.channel module
------------------------------------
+AuditLogChange
+~~~~~~~~~~~~~~
 
-.. automodule:: pincer.objects.guild.channel
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: AuditLogChange
 
-pincer.objects.guild.features module
-------------------------------------
+.. autoclass:: AuditLogChange()
 
-.. automodule:: pincer.objects.guild.features
-   :members:
-   :undoc-members:
-   :show-inheritance:
+AuditEntryInfo
+~~~~~~~~~~~~~~
 
-pincer.objects.guild.followed\_channel module
----------------------------------------------
+.. attributetable:: AuditEntryInfo
 
-.. automodule:: pincer.objects.guild.followed_channel
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: AuditEntryInfo()
 
-pincer.objects.guild.guild module
----------------------------------
+AuditLogEntry
+~~~~~~~~~~~~~
 
-.. automodule:: pincer.objects.guild.guild
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: AuditLogEntry
 
-pincer.objects.guild.invite module
-----------------------------------
+.. autoclass:: AuditLogEntry()
 
-.. automodule:: pincer.objects.guild.invite
-   :members:
-   :undoc-members:
-   :show-inheritance:
+AuditLog
+~~~~~~~~
 
-pincer.objects.guild.member module
-----------------------------------
+.. attributetable:: AuditLog
 
-.. automodule:: pincer.objects.guild.member
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pincer.objects.guild.overwrite module
--------------------------------------
-
-.. automodule:: pincer.objects.guild.overwrite
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pincer.objects.guild.role module
---------------------------------
-
-.. automodule:: pincer.objects.guild.role
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pincer.objects.guild.stage module
----------------------------------
-
-.. automodule:: pincer.objects.guild.stage
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pincer.objects.guild.template module
-------------------------------------
-
-.. automodule:: pincer.objects.guild.template
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pincer.objects.guild.thread module
-----------------------------------
-
-.. automodule:: pincer.objects.guild.thread
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pincer.objects.guild.webhook module
------------------------------------
-
-.. automodule:: pincer.objects.guild.webhook
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pincer.objects.guild.welcome\_screen module
--------------------------------------------
-
-.. automodule:: pincer.objects.guild.welcome_screen
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pincer.objects.guild.widget module
-----------------------------------
-
-.. automodule:: pincer.objects.guild.widget
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: pincer.objects.guild
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: AuditLog()
