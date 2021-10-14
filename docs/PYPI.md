@@ -82,7 +82,7 @@ following:
 - Events
 - Event middleware
 - Commands
-- Command arguments *(for types: str, int, float, bool, User)*
+- Command arguments *(for types: str, int, float, bool, User, Channel, Role)*
 - Command argument choices
 - Command argument descriptions
 - Command cool downs (Using WindowSliding technique)
