@@ -315,3 +315,13 @@ TypingStartEvent
 .. attributetable:: TypingStartEvent
 
 .. autoclass:: TypingStartEvent()
+
+Voice
+-----
+
+VoiceServerUpdateEvent
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: VoiceServerUpdateEvent
+
+.. autoclass:: VoiceServerUpdateEvent()

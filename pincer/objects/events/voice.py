@@ -16,19 +16,18 @@ if TYPE_CHECKING:
 
 @dataclass
 class VoiceServerUpdateEvent(APIObject):
-    """
-    Sent when a guild's voice server is updated.
+    """Sent when a guild's voice server is updated.
     This is sent when initially connecting to voice,
     and when the current voice instance fails over to a new server.
 
-    :param token:
-        voice connection token
-
-    :param guild_id:
-        the guild this voice server update is for
-
-    :param endpoint:
-        the voice server host
+    Attributes
+    ----------
+    token: :class:`str`
+        Voice connection token
+    guild_id: :class:`~pincer.utils.snowflake.Snowflake`
+        The guild this voice server update is for
+    endpoint: Optional[:class:`str`]
+        The voice server host
     """
     token: str
     guild_id: Snowflake
