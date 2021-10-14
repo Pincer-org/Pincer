@@ -14,14 +14,14 @@ if TYPE_CHECKING:
 
 @dataclass
 class WebhookUpdateEvent(APIObject):
-    """
-    Sent when a guild's channel webhook
+    """Sent when a guild's channel webhook
     is created, updated, or deleted.
 
-    :param guild_id:
+    Attributes
+    ----------
+    guild_id: :class:`~pincer.utils.snowflake.Snowflake`
         id of the guild
-
-    :param channel_id:
+    channel_id: :class:`~pincer.utils.snowflake.Snowflake`
         id of the channel
     """
     guild_id: Snowflake

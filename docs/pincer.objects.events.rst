@@ -325,3 +325,13 @@ VoiceServerUpdateEvent
 .. attributetable:: VoiceServerUpdateEvent
 
 .. autoclass:: VoiceServerUpdateEvent()
+
+Webhook
+-------
+
+WebhookUpdateEvent
+~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: WebhookUpdateEvent
+
+.. autoclass:: WebhookUpdateEvent()
