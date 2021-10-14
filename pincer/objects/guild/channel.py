@@ -66,6 +66,7 @@ class Channel(APIObject):
 
     :param icon:
         icon hash
+
     :param last_message_id:
         the id of the last message sent in this channel (may not point to an
         existing or valid message)
@@ -131,6 +132,9 @@ class Channel(APIObject):
 
     :param video_quality_mode:
         the camera video quality mode of the voice channel, 1 when not present
+
+    :param mention:
+        structures a string to mention the channel
     """
     id: Snowflake
     type: ChannelType
@@ -163,6 +167,10 @@ class Channel(APIObject):
     topic: APINullable[Optional[str]] = MISSING
     user_limit: APINullable[int] = MISSING
     video_quality_mode: APINullable[int] = MISSING
+
+    @property
+    def mention(self):
+        return f"<#{self.id}>"
 
     @classmethod
     async def from_id(cls, client: Client, channel_id: int) -> Channel:
