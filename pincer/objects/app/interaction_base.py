@@ -20,12 +20,25 @@ if TYPE_CHECKING:
 
 class CallbackType(IntEnum):
     """The types of response a client can give to a interaction.
-    """
-    PONG = 1  #: ACK a Ping
-    MESSAGE = 4  #: Respond to an interaction with a message
-    DEFERRED_MESSAGE = 5  #: ACK an interaction and edit a response later, the user sees a loading state
-    DEFERRED_UPDATE_MESSAGE = 6  #: For components, ACK an interaction and edit the original message later; the user does not see a loading state
-    UPDATE_MESSAGE = 7  #: For components, edit the message the component was attached to
+
+    Attributes
+    ----------
+    PONG:
+        ACK a Ping
+    MESSAGE:
+        Respond to an interaction with a message
+    DEFERRED_MESSAGE:
+        ACK an interaction and edit a response later, the user sees a loading state
+    DEFERRED_UPDATE_MESSAGE:
+        For components, ACK an interaction and edit the original message later
+    UPDATE_MESSAGE:
+        For components, edit the message the component was attached to
+    """  # noqa: E501
+    PONG = 1
+    MESSAGE = 4
+    DEFERRED_MESSAGE = 5
+    DEFERRED_UPDATE_MESSAGE = 6
+    UPDATE_MESSAGE = 7
 
 
 class InteractionType(IntEnum):

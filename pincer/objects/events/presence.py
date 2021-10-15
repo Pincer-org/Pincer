@@ -18,13 +18,28 @@ if TYPE_CHECKING:
 
 class ActivityType(IntEnum):
     """Represents the enum of the type of activity.
-    """
-    GAME = 0  #: Playing {name}; e.g. "Playing Rocket League"
-    STREAMING = 1  #: Streaming {details}; e.g. "Streaming Rocket League"; Only supports Twitch and YouTube.
-    LISTENING = 2  #: Listening to {name}; e.g. "Listening to Spotify"
-    WATCHING = 3  #: Watching {name}; e.g. "Watching YouTube Together"
-    CUSTOM = 4  #: \\{emoji} {name}; e.g. "\\:smiley: I am cool"; Not for bots; discord limitation
-    COMPETING = 5  #: Competing in {name}; e.g. "Competing in Arena World Champions"
+
+    Attributes
+    ----------
+    GAME:
+        Playing {name}; e.g. "Playing Rocket League"
+    STREAMING:
+        Streaming {details}; e.g. "Streaming Rocket League"; Only supports Twitch and YouTube.
+    LISTENING:
+        Listening to {name}; e.g. "Listening to Spotify"
+    WATCHING:
+        Watching {name}; e.g. "Watching YouTube Together"
+    CUSTOM:
+        \\{emoji} {name}; e.g. "\\:smiley: I am cool"; Not for bots; discord limitation
+    COMPETING:
+        Competing in {name}; e.g. "Competing in Arena World Champions"
+    """  # noqa: E501
+    GAME = 0
+    STREAMING = 1
+    LISTENING = 2
+    WATCHING = 3
+    CUSTOM = 4
+    COMPETING = 5
 
 
 @dataclass
@@ -181,7 +196,8 @@ class Activity(APIObject):
         describes what the payload includes
     buttons: APInullable[List[:class:`~pincer.objects.events.presence.ActivityButton`]]
         The url button on an activity.
-    """  # TODO um this doc should be longer
+    """  # noqa: E501
+    # TODO um this doc should be longer
     name: str
     type: ActivityType
     created_at: int

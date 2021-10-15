@@ -44,7 +44,7 @@ class ChannelType(IntEnum):
 
 
 @dataclass
-class Channel(APIObject):
+class Channel(APIObject):  # noqa E501
     """Represents a Discord Channel Mention object
 
     Attributes
@@ -113,7 +113,7 @@ class Channel(APIObject):
         The user limit of the voice channel
     video_quality_mode: APINullable[:class:`int`]
         The camera video quality mode of the voice channel, 1 when not present
-    """
+    """  # noqa: E501
     id: Snowflake
     type: ChannelType
 
@@ -275,7 +275,8 @@ class VoiceChannel(Channel):
 
 
 class CategoryChannel(Channel):
-    """A subclass of ``Channel`` for categories channels with all the same attributes.
+    """A subclass of ``Channel`` for categories channels
+    with all the same attributes.
     """
 
     def __init__(self, *args, **kwargs):

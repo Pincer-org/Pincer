@@ -50,7 +50,7 @@ class ResolvedData(APIObject):
         Map of Snowflakes to partial channel objects
     messages: APINullable[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.message.user_message.UserMessage`]]
         Map of Snowflakes to partial message objects
-    """
+    """  # noqa: E501
     users: APINullable[Dict[Snowflake, User]] = MISSING
     members: APINullable[Dict[Snowflake, GuildMember]] = MISSING
     roles: APINullable[Dict[Snowflake, Role]] = MISSING
@@ -82,7 +82,7 @@ class InteractionData(APIObject):
         The values the user selected
     target_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Id of the user or message targeted by a user or message command
-    """
+    """  # noqa: E501
     id: Snowflake
     name: str
     type: int
@@ -142,7 +142,7 @@ class Interaction(APIObject):
         User object for the invoking user, if invoked in a DM
     message: APINullable[:class:`~pincer.objects.message.user_message.UserMessage`]
         For components, the message they were attached to
-    """
+    """  # noqa: E501
     id: Snowflake
     application_id: Snowflake
     type: InteractionType

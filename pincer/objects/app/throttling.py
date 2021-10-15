@@ -28,7 +28,7 @@ class ThrottleInterface(ABC):
 
 
 class DefaultThrottleHandler(ThrottleInterface, ABC):
-    """The default throttlehandler based off the 
+    """The default throttlehandler based off the
     :class:`~pincer.objects.app.throttling.ThrottleInterface` ABC
     """
     __throttle_scopes = {

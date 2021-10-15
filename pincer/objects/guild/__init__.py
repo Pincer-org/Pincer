@@ -13,7 +13,6 @@ from .overwrite import *
 from .role import *
 from .stage import *
 from .template import *
-from .template import *
 from .thread import *
 from .webhook import *
 from .welcome_screen import *

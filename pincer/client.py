@@ -114,7 +114,7 @@ def event_middleware(call: str, *, override: bool = False):
     call : :class:`str`
         The call that the function should tie to
     override : :class:`bool`
-        If it should override default middleware, 
+        If it should override default middleware,
         usually shouldn't be used |default| :data:`False`
     """
     def decorator(func: Coro):
@@ -145,8 +145,8 @@ def event_middleware(call: str, *, override: bool = False):
     return decorator
 
 
-for event, middleware in middleware.items():
-    event_middleware(event)(middleware)
+for event, middleware_ in middleware.items():
+    event_middleware(event)(middleware_)
 
 
 class Client(Dispatcher):
@@ -169,12 +169,12 @@ class Client(Dispatcher):
     token : :class:`str`
         the token to login with your bot from the developer portal
     received : Optional[:class:`str`]
-        The default message which will be sent when no response is given. 
+        The default message which will be sent when no response is given.
         |default| :data:`None`
     intents : Optional[:class:`~objects.app.intents.Intents`]
         The discord intents to use |default| :data:`None`
     throttler : Optional[:class:`~objects.app.throttling.ThrottleInterface`]
-        The throttler for your client (generally not used) 
+        The throttler for your client (generally not used)
         |default| :data:`None`
     """
 
@@ -213,8 +213,8 @@ class Client(Dispatcher):
 
     @staticmethod
     def event(coroutine: Coro):
-        """A decorator to register a Discord gateway event listener. 
-        This event will get called when the client receives a new event 
+        """A decorator to register a Discord gateway event listener.
+        This event will get called when the client receives a new event
         update from Discord which matches the event name.
 
         The event name gets pulled from your method name, and this must
@@ -536,7 +536,7 @@ class Client(Dispatcher):
         Parameters
         ----------
         name : :class:`str`
-            The name of the event, this is also the filename in the 
+            The name of the event, this is also the filename in the
             middleware directory.
         payload : :class:`~pincer.core.dispatch.GatewayDispatch`
             The payload sent from the Discord gateway, this contains the

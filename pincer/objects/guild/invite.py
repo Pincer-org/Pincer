@@ -13,7 +13,7 @@ from ...utils.api_object import APIObject
 if TYPE_CHECKING:
     from typing import List, Optional
 
-    from . import guild
+    from .guild import Guild
     from ...utils.types import APINullable
     from ..user.user import User
     from ..app import application
@@ -138,7 +138,7 @@ class Invite(APIObject):
     approximate_presence_count: APINullable[int] = MISSING
     expires_at: APINullable[Optional[Timestamp]] = MISSING
     inviter: APINullable[User] = MISSING
-    guild: APINullable[guild.Guild] = MISSING
+    guild: APINullable[Guild] = MISSING
     stage_instance: APINullable[InviteStageInstance] = MISSING
     target_type: APINullable[InviteTargetType] = MISSING
     target_user: APINullable[User] = MISSING

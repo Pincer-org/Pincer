@@ -135,7 +135,7 @@ class GuildMemberUpdateEvent(APIObject):
     pending: APINullable[:class:`bool`]
         whether the user has not yet passed the guild's
         Membership Screening requirements
-    """
+    """  # noqa: E501
     guild_id: Snowflake
     roles: List[Snowflake]
     user: User
@@ -172,7 +172,7 @@ class GuildMembersChunkEvent(APIObject):
         of the returned members will be here
     nonce: APINullable[:class:`str`]
         The nonce used in the Guild Members Request
-    """
+    """  # noqa: E501
     guild_id: Snowflake
     members: List[GuildMember]
     chunk_index: int

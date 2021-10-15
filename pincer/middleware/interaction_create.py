@@ -40,7 +40,7 @@ def convert_message(self, message: Union[Embed, Message, str]) -> Message:
     ----------
     message : Union[:class:`~pincer.objects.message.embed.Embed`, :class:`~pincer.objects.message.message.Message`, :class:`str`]
         Message to convert
-    """
+    """  # noqa: E501
     if isinstance(message, Embed):
         message = Message(embeds=[message])
     elif PILLOW_IMPORT and isinstance(message, (File, Image)):
@@ -182,7 +182,7 @@ async def interaction_create_middleware(
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.app.interactions.Interaction`]]
         ``on_interaction_create`` and an ``Interaction``
-    """
+    """  # noqa: E501
     interaction: Interaction = Interaction.from_dict(
         {**payload.data, "_client": self, "_http": self.http}
     )

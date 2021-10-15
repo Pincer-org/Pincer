@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Any, Optional, List, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from ...utils.types import MISSING
 from ...utils.api_object import APIObject
@@ -143,7 +143,7 @@ class AuditLogEntry(APIObject):
         Additional info for certain action types
     reason: APINullable[:class:`str`]
         The reason for the change x(0-512 characters)
-    """
+    """  # noqa: E501
     target_id: Optional[str]
     user_id: Optional[Snowflake]
     id: Snowflake
@@ -168,7 +168,7 @@ class AuditLog(APIObject):
         list of partial integration objects
     threads: List[:class:`~pincer.objects.guild.channel.Channel`]
         list of threads found in the audit log
-    """
+    """  # noqa: E501
     webhooks: List[Webhook]
     users: List[User]
     audit_log_entries: List[AuditLogEntry]

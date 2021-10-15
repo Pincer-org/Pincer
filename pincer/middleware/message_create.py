@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 async def message_create_middleware(
     self,
     payload: GatewayDispatch
-) -> Tuple[str, List[UserMessage]]:
+) -> Tuple[str, List[UserMessage]]:  # noqa: E501
     """|coro|
 
     Middleware for ``on_message`` event.
@@ -30,7 +30,7 @@ async def message_create_middleware(
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.message.user_message.UserMessage`]]
         ``on_message`` and a ``UserMessage``
-    """
+    """  # noqa: E501
     return "on_message", [
         UserMessage.from_dict(
             {"_client": self, "_http": self.http, **payload.data}

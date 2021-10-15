@@ -21,10 +21,19 @@ if TYPE_CHECKING:
 
 class AppCommandType(IntEnum):
     """Defines the different types of application commands.
-    """
-    CHAT_INPUT = 1  #: Slash commands; a text-based command that shows up when a user types /
-    USER = 2  #: A UI-based command that shows up when you right click or tap on a user
-    MESSAGE = 3  #: A UI-based command that shows up when you right click or tap on a message
+
+    Attributes
+    ----------
+    CHAT_INPUT:
+        Slash commands; a text-based command that shows up when a user types ``/``.
+    USER:
+        A UI-based command that shows up when you right click or tap on a user.
+    MESSAGE:
+        A UI-based command that shows up when you right click or tap on a message.
+    """  # noqa: E501
+    CHAT_INPUT = 1
+    USER = 2
+    MESSAGE = 3
 
 
 class AppCommandOptionType(IntEnum):
@@ -56,7 +65,7 @@ class AppCommandInteractionDataOption(APIObject):
         Value of application command option type
     options: APINullable[List[:data:`~pincer.objects.app.command.AppCommandInteractionDataOption`]]
         Present if this option is a group or subcommand
-    """
+    """  # noqa: E501
     name: str
     value: APINullable[str] = MISSING
     type: APINullable[AppCommandOptionType] = MISSING
@@ -107,7 +116,7 @@ class AppCommandOption(APIObject):
     options: APINullable[List[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
         If the option is a subcommand or subcommand group type,
         this nested options will be the parameters
-    """
+    """  # noqa: E501
     type: AppCommandOptionType
     name: str
     description: str
@@ -157,7 +166,7 @@ class AppCommand(APIObject):
     default_permission: APINullable[:class:`bool`]
         Whether the command is enabled by default
         when the app is added to a guild
-    """
+    """  # noqa: E501
     type: AppCommandType
     name: str
     description: str
@@ -200,9 +209,9 @@ class AppCommand(APIObject):
         )
 
         if (
-                (self.options is MISSING and other.options is not MISSING)
-                or (self.options is not MISSING and other.options is MISSING)
-                and not is_equal
+            (self.options is MISSING and other.options is not MISSING)
+            or (self.options is not MISSING and other.options is MISSING)
+            and not is_equal
         ):
             return False
 

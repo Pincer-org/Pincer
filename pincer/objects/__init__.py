@@ -35,7 +35,6 @@ from .guild.overwrite import *
 from .guild.role import *
 from .guild.stage import *
 from .guild.template import *
-from .guild.template import *
 from .guild.thread import *
 from .guild.webhook import *
 from .guild.welcome_screen import *

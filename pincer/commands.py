@@ -33,8 +33,8 @@ if TYPE_CHECKING:
     )
     from .exceptions import (
         CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
-        InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
-        InvalidCommandName
+        InvalidArgumentAnnotation, CommandDescriptionTooLong,
+        InvalidCommandGuild, InvalidCommandName
     )
 
 COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
@@ -52,13 +52,13 @@ _options_type_link = {
 
 
 def command(
-        name: Optional[str] = None,
-        description: Optional[str] = "Description not set",
-        enable_default: Optional[bool] = True,
-        guild: Union[Snowflake, int, str] = None,
-        cooldown: Optional[int] = 0,
-        cooldown_scale: Optional[float] = 60,
-        cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER
+    name: Optional[str] = None,
+    description: Optional[str] = "Description not set",
+    enable_default: Optional[bool] = True,
+    guild: Union[Snowflake, int, str] = None,
+    cooldown: Optional[int] = 0,
+    cooldown_scale: Optional[float] = 60,
+    cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER
 ):
     """A decorator to create a command to register and respond to
     with the discord API from a function.
@@ -83,9 +83,9 @@ def command(
                 )
 
     References from above:
-        :class:`~client.Client`, 
-        :class:`~objects.message.message.Message`, 
-        :class:`~utils.types.Choices`, 
+        :class:`~client.Client`,
+        :class:`~objects.message.message.Message`,
+        :class:`~utils.types.Choices`,
         :class:`~objects.app.interactions.InteractionFlags`
 
     Parameters
@@ -99,7 +99,7 @@ def command(
     guild : Optional[Union[:class:`~pincer.utils.snowflake.Snowflake`, :class:`int`, :class:`str`]]
         What guild to add it to (don't specify for global) |default| :data:`None`
     cooldown : Optional[:class:`int`]
-        The amount of times in the cooldown_scale the command can be invoked 
+        The amount of times in the cooldown_scale the command can be invoked
         |default| ``0``
     cooldown_scale : Optional[:class:`float`]
         The 'checking time' of the cooldown |default| ``60``
@@ -111,7 +111,7 @@ def command(
     CommandIsNotCoroutine
         If the command function is not a coro
     InvalidCommandName
-        If the command name does not follow the regex ``^[\w-]{1,32}$``
+        If the command name does not follow the regex ``^[\\w-]{1,32}$``
     InvalidCommandGuild
         If the guild id is invalid
     CommandDescriptionTooLong
@@ -122,10 +122,10 @@ def command(
     TooManyArguments
         Max 25 arguments to pass for commands
     InvalidArgumentAnnotation
-        Annotation amount is max 25, 
-        Not a valid argument type, 
+        Annotation amount is max 25,
+        Not a valid argument type,
         Annotations must consist of name and value
-    """
+    """  # noqa: E501
     def decorator(func: Coro):
         if not iscoroutinefunction(func) and not isasyncgenfunction(func):
             raise CommandIsNotCoroutine(
@@ -209,7 +209,7 @@ def command(
                 # Do NOT use isinstance as this is a comparison between
                 # two values of the type type and isinstance does NOT
                 # work here.
-                union_args = [t for t in args if t is not type(None)]
+                union_args = [t for t in args if t is not None]
 
                 annotation = (
                     get_index(union_args, 0)
@@ -424,7 +424,7 @@ class ChatCommandHandler(metaclass=Singleton):
         ----------
         to_update : Dict[:class:`~objects.app.command.AppCommand`, Dict[:class:`str`, Any]]
             Dictionary of commands to changes where changes is a dictionary too
-        """
+        """  # noqa: E501
         await gather(*list(map(
             lambda cmd: self.update_command(cmd[0], cmd[1]),
             to_update.items()
