@@ -49,6 +49,16 @@ Implementing Slash Commands
 ---------------------------
 
 Using slash commands is as easy as adding the :func:`~.pincer.commands.command` decorator on a function and using Python annotations to specify the argument types.
+Available types are as follows:
+
+- str - String
+- int - Integer
+- bool - Boolean
+- float - Number
+- pincer.objects.User - User
+- pincer.objects.Channel - Channel
+- pincer.objects.Role - Role
+- Mentionable is not implemented
 
 .. code-block:: python
 
