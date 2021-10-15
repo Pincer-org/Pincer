@@ -44,10 +44,19 @@ class CallbackType(IntEnum):
 class InteractionType(IntEnum):
     """Represents the different types of interactions the client
     can have with a member.
+
+    Attributes
+    ----------
+    PING:
+        Ping an interaction.
+    APPLICATION_COMMAND:
+        A "slash" command.
+    MESSAGE_COMPONENT:
+        A ui compoment like buttons and selects.
     """
-    PING = 1  #: Ping an interaction
-    APPLICATION_COMMAND = 2  #: A "slash" command
-    MESSAGE_COMPONENT = 3  #: A ui compoment like buttons and selects
+    PING = 1
+    APPLICATION_COMMAND = 2
+    MESSAGE_COMPONENT = 3
 
 
 @dataclass

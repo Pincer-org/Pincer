@@ -26,21 +26,47 @@ if TYPE_CHECKING:
 
 
 class ChannelType(IntEnum):
-    """Represents a channel its type."""
-    GUILD_TEXT = 0  #: A text channel.
-    DM = 1  #: A DM channel.
-    GUILD_VOICE = 2  #: A voice channel.
-    GROUP_DM = 3  #: A group DM channel.
-    GUILD_CATEGORY = 4  #: A category channel.
-    GUILD_NEWS = 5  #: A news channel.
-    GUILD_STORE = 6  #: A store channel.
+    """Represents a channel its type.
+
+    Attributes
+    ----------
+    GUILD_TEXT:
+        A text channel.
+    DM:
+        A DM channel.
+    GUILD_VOICE:
+        A voice channel.
+    GROUP_DM:
+        A group DM channel.
+    GUILD_CATEGORY:
+        A category channel.
+    GUILD_NEWS:
+        A news channel.
+    GUILD_STORE:
+        A store channel.
+    GUILD_NEWS_THREAD:
+        A news thread.
+    GUILD_PUBLIC_THREAD:
+        A public thread.
+    GUILD_PRIVATE_THREAD:
+        A private thread.
+    GUILD_STAGE_VOICE:
+        A stage channel.
+    """
+    GUILD_TEXT = 0
+    DM = 1
+    GUILD_VOICE = 2
+    GROUP_DM = 3
+    GUILD_CATEGORY = 4
+    GUILD_NEWS = 5
+    GUILD_STORE = 6
 
     if GatewayConfig.version >= 9:
-        GUILD_NEWS_THREAD = 10  #: A news thread.
-        GUILD_PUBLIC_THREAD = 11  #: A public thread.
-        GUILD_PRIVATE_THREAD = 12  #: A private thread.
+        GUILD_NEWS_THREAD = 10
+        GUILD_PUBLIC_THREAD = 11
+        GUILD_PRIVATE_THREAD = 12
 
-    GUILD_STAGE_VOICE = 13  #: A stage channel.
+    GUILD_STAGE_VOICE = 13
 
 
 @dataclass
