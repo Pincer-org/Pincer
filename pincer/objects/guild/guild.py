@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from typing import overload, TYPE_CHECKING
-from enum import Enum, auto, IntEnum
+from enum import IntEnum
 from dataclasses import dataclass, field
 
 from ...utils.types import MISSING
@@ -13,36 +13,36 @@ from ...utils.api_object import APIObject
 if TYPE_CHECKING:
     from typing import Dict, List, Optional
 
+    from .role import Role
+    from .channel import Channel
     from ...client import Client
-    from ..guild.role import Role
     from ..user import voice_state
     from .member import GuildMember
+    from .stage import StageInstance
     from ..message.emoji import Emoji
-    from ...core.http import HTTPClient
-    from ..guild.channel import Channel
+    from .features import GuildFeatures
     from ..message.sticker import Sticker
     from ...utils.types import APINullable
-    from ..guild.stage import StageInstance
     from ...utils.snowflake import Snowflake
     from ...utils.timestamp import Timestamp
+    from .welcome_screen import WelcomeScreen
     from ...exceptions import UnavailableGuildError
-    from ..guild.welcome_screen import WelcomeScreen
     from ..events.presence import PresenceUpdateEvent
 
 
 class PremiumTier(IntEnum):
-    """
-    :param NONE:
-        guild has not unlocked any Server Boost perks
+    """Represents the boost tier of a guild.
 
-    :param TIER_1:
-        guild has unlocked Server Boost level 1 perks
-
-    :param TIER_2:
-        guild has unlocked Server Boost level 2 perks
-
-    :param TIER_3:
-        guild has unlocked Server Boost level 3 perks
+    Attributes
+    ----------
+    NONE:
+        Guild has not unlocked any Server Boost perks.
+    TIER_1:
+        Guild has unlocked Server Boost level 1 perks.
+    TIER_2:
+        Guild has unlocked Server Boost level 2 perks.
+    TIER_3:
+        Guild has unlocked Server Boost level 3 perks.
     """
     NONE = 0
     TIER_1 = 1
@@ -51,6 +51,19 @@ class PremiumTier(IntEnum):
 
 
 class GuildNSFWLevel(IntEnum):
+    """Represents the NSFW level of a guild.
+
+    Attributes
+    ----------
+    DEFAULT:
+        Default NSFW level.
+    EXPLICIT:
+        Explicit NSFW level.
+    SAFE:
+        SAFE NSFW level.
+    AGE_RESTRICTED:
+        Age restricted NSFW level.
+    """
     DEFAULT = 0
     EXPLICIT = 1
     SAFE = 2
@@ -58,15 +71,16 @@ class GuildNSFWLevel(IntEnum):
 
 
 class ExplicitContentFilterLevel(IntEnum):
-    """
-    :param DISABLED:
-        media content will not be scanned
+    """Represents the filter content level of a guild.
 
-    :param MEMBERS_WITHOUT_ROLES:
-        media content sent by members without roles will be scanned
-
-    :param ALL_MEMBERS:
-        media content sent by all members will be scanned
+    Attributes
+    ----------
+    DISABLED:
+        Media content will not be scanned.
+    MEMBERS_WITHOUT_ROLES:
+        Media content sent by members without roles will be scanned.
+    ALL_MEMBERS:
+        Media content sent by all members will be scanned.
     """
     DISABLED = 0
     MEMBERS_WITHOUT_ROLES = 1
@@ -74,33 +88,34 @@ class ExplicitContentFilterLevel(IntEnum):
 
 
 class MFALevel(IntEnum):
-    """
-    :param NONE:
-        guild has no MFA/2FA requirement for moderation actions
+    """Represents the multi factor authentication level of a guild.
 
-    :param ELEVATED:
-        guild has a 2FA requirement for moderation actions
+    Attributes
+    ----------
+    NONE:
+        Guild has no MFA/2FA requirement for moderation actions.
+    ELEVATED:
+        Guild has a 2FA requirement for moderation actions
     """
     NONE = 0
     ELEVATED = 1
 
 
 class VerificationLevel(IntEnum):
-    """
-    :param NONE:
-        unrestricted
+    """Represents the verification level of a guild.
 
-    :param LOW:
-        must have verified email on account
-
-    :param MEDIUM:
-        must be registered on Discord for longer than 5 minutes
-
-    :param HIGH:
-        must be a member of the server for longer than 10 minutes
-
-    :param VERY_HIGH:
-        must have a verified phone number
+    Attributes
+    ----------
+    NONE:
+        Unrestricted.
+    LOW:
+        Must have verified email on account.
+    MEDIUM:
+        Must be registered on Discord for longer than 5 minutes.
+    HIGH:
+        Must be a member of the server for longer than 10 minutes.
+    VERY_HIGH:
+        Must have a verified phone number.
     """
     NONE = 0
     LOW = 1
@@ -110,298 +125,160 @@ class VerificationLevel(IntEnum):
 
 
 class DefaultMessageNotificationLevel(IntEnum):
-    """
-    :param ALL_MESSAGES:
-        members will receive notifications for all messages by default
+    """Represents the default message notification level of a guild.
 
-    :param ONLY_MENTIONS:
-        members will receive notifications only
-        for messages that @mention them by default
-    """
+    Attributes
+    ----------
+    ALL_MESSAGES:
+        Members will receive notifications for all messages by default.
+    ONLY_MENTIONS:
+        Members will receive notifications only for messages that @mention them by default.
+    """  # noqa: E501
     ALL_MESSAGES = 0
     ONLY_MENTIONS = 1
 
 
 class SystemChannelFlags(IntEnum):
-    """
-    :param SUPPRESS_JOIN_NOTIFICATIONS:
-        Suppress member join notifications
+    """Represents the system channel flags of a guild.
 
-    :param SUPPRESS_PREMIUM_SUBSCRIPTIONS:
-        Suppress server boost notifications
-
-    :param SUPPRESS_GUILD_REMINDER_NOTIFICATIONS:
-        Suppress server setup tips
+    Attributes
+    ----------
+    SUPPRESS_JOIN_NOTIFICATIONS:
+        Suppress member join notifications.
+    SUPPRESS_PREMIUM_SUBSCRIPTIONS:
+        Suppress server boost notifications.
+    SUPPRESS_GUILD_REMINDER_NOTIFICATIONS:
+        Suppress server setup tips.
     """
     SUPPRESS_JOIN_NOTIFICATIONS = 1 << 0
     SUPPRESS_PREMIUM_SUBSCRIPTIONS = 1 << 1
     SUPPRESS_GUILD_REMINDER_NOTIFICATIONS = 1 << 2
 
 
-class GuildFeature(Enum):
-    """
-    :param ANIMATED_ICON:
-        guild has access to set an animated guild icon
-
-    :param BANNER:
-        guild has access to set a guild banner image
-
-    :param COMMERCE:
-        guild has access to use commerce features (i.e. create store channels)
-
-    :param COMMUNITY:
-        guild can enable welcome screen, Membership Screening, stage channels
-        and discovery, and receives community updates
-
-    :param DISCOVERABLE:
-        guild is able to be discovered in the directory
-
-    :param FEATURABLE:
-        guild is able to be featured in the directory
-
-    :param INVITE_SPLASH:
-        guild has access to set an invite splash background
-
-    :param MEMBER_VERIFICATION_GATE_ENABLED:
-        guild has enabled Membership Screening
-
-    :param NEWS:
-        guild has access to create news channels
-
-    :param PARTNERED:
-        guild is partnered
-
-    :param PREVIEW_ENABLED:
-        guild can be previewed before joining via Membership Screening
-        or the directory
-
-    :param VANITY_URL:
-        guild has access to set a vanity URL
-
-    :param VERIFIED:
-        guild is verified
-
-    :param VIP_REGIONS:
-        guild has access to set 384kbps bitrate in voice
-        (previously VIP voice servers)
-
-    :param WELCOME_SCREEN_ENABLED:
-        guild has enabled the welcome screen
-
-    :param TICKETED_EVENTS_ENABLED:
-        guild has enabled ticketed events
-
-    :param MONETIZATION_ENABLED:
-        guild has enabled monetization
-
-    :param MORE_STICKERS:
-        guild has increased custom sticker slots
-
-    :param THREE_DAY_THREAD_ARCHIVE:
-        guild has access to the three day archive time for threads
-
-    :param SEVEN_DAY_THREAD_ARCHIVE:
-        guild has access to the seven day archive time for threads
-
-    :param PRIVATE_THREADS:
-        guild has access to create private threads
-    """
-    ANIMATED_ICON = auto()
-    BANNER = auto()
-    COMMERCE = auto()
-    COMMUNITY = auto()
-    DISCOVERABLE = auto()
-    FEATURABLE = auto()
-    INVITE_SPLASH = auto()
-    MEMBER_VERIFICATION_GATE_ENABLED = auto()
-    NEWS = auto()
-    PARTNERED = auto()
-    PREVIEW_ENABLED = auto()
-    VANITY_URL = auto()
-    VERIFIED = auto()
-    VIP_REGIONS = auto()
-    WELCOME_SCREEN_ENABLED = auto()
-    TICKETED_EVENTS_ENABLED = auto()
-    MONETIZATION_ENABLED = auto()
-    MORE_STICKERS = auto()
-    THREE_DAY_THREAD_ARCHIVE = auto()
-    SEVEN_DAY_THREAD_ARCHIVE = auto()
-    PRIVATE_THREADS = auto()
-
-
 @dataclass
 class Guild(APIObject):
-    """
-    Represents a Discord guild/server in which your client resides.
+    """Represents a Discord guild/server in which your client resides.
 
-    :param afk_channel_id:
+    Attributes
+    ----------
+    afk_channel_id:
         id of afk channel
-
-    :param afk_timeout:
+    afk_timeout:
         afk timeout in seconds
-
-    :param application_id:
+    application_id:
         application id of the guild creator if it is bot-created
-
-    :param banner:
+    banner:
         banner hash
-
-    :param default_message_notifications:
+    default_message_notifications:
         default message notifications level
-
-    :param description:
+    description:
         the description of a Community guild
-
-    :param discovery_splash:
+    discovery_splash:
         discovery splash hash;
         only present for guilds with the "DISCOVERABLE" feature
-
-    :param emojis:
+    emojis:
         custom guild emojis
-
-    :param explicit_content_filter:
+    explicit_content_filter:
         explicit content filter level
-
-    :param features:
+    features:
         enabled guild features
-
-    :param id:
+    id:
         guild id
-
-    :param icon:
+    icon:
         icon hash
-
-    :param mfa_level:
+    mfa_level:
         required MFA level for the guild
-
-    :param name:
+    name:
         guild name (2-100 characters, excluding trailing and leading
         whitespace)
-
-    :param nsfw_level:
+    nsfw_level:
         guild NSFW level
-
-    :param owner_id:
+    owner_id:
         id of owner
-
-    :param preferred_locale:
+    preferred_locale:
         the preferred locale of a Community guild;
         used in server discovery and notices from Discord;
         defaults to "en-US"
-
-    :param premium_tier:
+    premium_tier:
         premium tier (Server Boost level)
-
-    :param public_updates_channel_id:
+    public_updates_channel_id:
         the id of the channel where admins
         and moderators of Community guilds receive notices from Discord
-
-    :param roles:
+    roles:
         roles in the guild
-
-    :param rules_channel_id:
+    rules_channel_id:
         the id of the channel where Community guilds can display rules
         and/or guidelines
-
-    :param splash:
+    splash:
         splash hash
-
-    :param system_channel_flags:
+    system_channel_flags:
         system channel flags
-
-    :param system_channel_id:
+    system_channel_id:
         the id of the channel where guild notices
         such as welcome messages and boost events are posted
-
-    :param vanity_url_code:
+    vanity_url_code:
         the vanity url code for the guild
-
-    :param verification_level:
+    verification_level:
         verification level required for the guild
-
-    :param approximate_member_count:
+    approximate_member_count:
         approximate number of members in this guild, returned from the
         `GET /guilds/<id>` endpoint when with_counts is true
-
-    :param approximate_presence_count:
+    approximate_presence_count:
         approximate number of non-offline members in this guild,
         returned from the `GET /guilds/<id>`
         endpoint when with_counts is true
-
-    :param channels:
+    channels:
         channels in the guild
-
-    :param icon_hash:
+    icon_hash:
         icon hash, returned when in the template object
-
-    :param joined_at:
+    joined_at:
         when this guild was joined at
-
-    :param large:
+    large:
         true if this is considered a large guild
-
-    :param max_members:
+    max_members:
         the maximum number of members for the guild
-
-    :param max_presences:
+    max_presences:
         the maximum number of presences for the guild
         (null is always returned, apart from the largest of guilds)
-
-    :param max_video_channel_users:
+    max_video_channel_users:
         the maximum amount of users in a video channel
-
-    :param members:
+    members:
         users in the guild
-
-    :param member_count:
+    member_count:
         total number of members in this guild
-
-    :param nsfw:
+    nsfw:
         boolean if the server is NSFW
-
-    :param owner:
+    owner:
         true if the user is the owner of the guild
-
-    :param permissions:
+    permissions:
         total permissions for the user in the guild
         (excludes overwrites)
-
-    :param premium_subscription_count:
+    premium_subscription_count:
         the number of boosts this guild currently has
-
-    :param presences:
+    presences:
         presences of the members in the guild,
         will only include non-offline members if the size is greater
         than large threshold
-
-    :param stage_instances:
+    stage_instances:
         Stage instances in the guild
-
-    :param stickers:
+    stickers:
         custom guild stickers
-
-    :param region:
+    region:
         voice region id for the guild (deprecated)
-
-    :param threads:
+    threads:
         all active threads in the guild that current user
         has permission to view
-
-    :param unavailable:
+    unavailable:
         true if this guild is unavailable due to an outage
-
-    :param voice_states:
+    voice_states:
         states of members currently in voice channels;
         lacks the guild_id key
-
-    :param widget_enabled:
+    widget_enabled:
         true if the server widget is enabled
-
-    :param widget_channel_id:
+    widget_channel_id:
         the channel id that the widget will generate an invite to,
         or null if set to no invite
-
-    :param welcome_screen:
+    welcome_screen:
         the welcome screen of a Community guild, shown to new members,
         returned in an Invite's guild object
     """
@@ -415,7 +292,7 @@ class Guild(APIObject):
     discovery_splash: Optional[str]
     emojis: List[Emoji]
     explicit_content_filter: ExplicitContentFilterLevel
-    features: List[GuildFeature]
+    features: List[GuildFeatures]
     id: Snowflake
     icon: Optional[str]
     mfa_level: MFALevel
@@ -494,7 +371,7 @@ class Guild(APIObject):
         """
         Fetches a GuildMember from its identifier
 
-        :param _id:
+        _id:
             The id of the guild member which should be fetched from the Discord
             gateway.
 
