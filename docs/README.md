@@ -137,6 +137,14 @@ class Bot(Client):
         ...
 
     @command(description="Say something as the bot!")
+    # Pincer ues type hints to specify the arugment type
+    # str - String
+    # int - Integer
+    # bool - Boolean
+    # float - Number
+    # pincer.objects.User - User
+    # pincer.objects.Channel - Channel
+    # pincer.objects.Role - Role
     async def say(self, message: str):
         return message
 
