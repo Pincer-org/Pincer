@@ -137,7 +137,7 @@ class Bot(Client):
         ...
 
     @command(description="Say something as the bot!")
-    # Pincer ues type hints to specify the arugment type
+    # Pincer uses type hints to specify the argument type
     # str - String
     # int - Integer
     # bool - Boolean
