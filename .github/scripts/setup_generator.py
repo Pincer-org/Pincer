@@ -1,8 +1,6 @@
-from os import walk, chdir
+from os import walk
 
-chdir("..")
-
-from pincer import __version__
+from ..pincer import __version__
 
 
 def get_packages():
