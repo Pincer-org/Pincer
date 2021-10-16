@@ -1,6 +1,7 @@
+from importlib import import_module
 from os import walk
 
-from ..pincer import __version__
+__version__ = import_module('pincer').__version__
 
 
 def get_packages():
