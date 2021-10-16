@@ -1,7 +1,6 @@
-from importlib import import_module
 from os import walk
 
-__version__ = import_module('pincer').__version__
+from pincer import __version__
 
 
 def get_packages():
@@ -22,7 +21,7 @@ def main():
 
     packages = get_packages()
 
-    with open(".github/scripts/setup_base.cfg") as f:
+    with open("./setup_config/base.cfg") as f:
         base = f.read()
 
     dependencies = {
