@@ -280,3 +280,13 @@ StageInstance
 .. attributetable:: StageInstance
 
 .. autoclass:: StageInstance()
+
+Template
+--------
+
+GuildTemplate
+~~~~~~~~~~~~~
+
+.. attributetable:: GuildTemplate
+
+.. autoclass:: GuildTemplate()
