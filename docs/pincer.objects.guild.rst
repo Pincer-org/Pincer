@@ -236,3 +236,13 @@ GuildMember
 .. attributetable:: GuildMember
 
 .. autoclass:: GuildMember()
+
+Overwrite
+---------
+
+Overwrite
+~~~~~~~~~
+
+.. attributetable:: Overwrite
+
+.. autoclass:: Overwrite()
