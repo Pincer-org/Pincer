@@ -1,6 +1,6 @@
-from os import walk
+from os import walk, chdir
 
-print(__package__, __name__)
+chdir("..")
 
 from pincer import __version__
 

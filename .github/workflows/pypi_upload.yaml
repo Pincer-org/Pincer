@@ -29,7 +29,7 @@ jobs:
         run: pip install -r packages/img.txt
 
       - name: generate setup.cfg
-        run: python ./.github/scripts/setup_generator.py
+        run: cd ./.github && python -m scripts.setup_generator
 
       - name: compile lib
         run: python setup.py sdist bdist_wheel
