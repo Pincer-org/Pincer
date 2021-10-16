@@ -212,3 +212,27 @@ Invite
 .. attributetable:: Invite
 
 .. autoclass:: Invite()
+
+Member
+------
+
+BaseMember
+~~~~~~~~~~
+
+.. attributetable:: BaseMember
+
+.. autoclass:: BaseMember()
+
+PartialGuildMember
+~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: PartialGuildMember
+
+.. autoclass:: PartialGuildMember()
+
+GuildMember
+~~~~~~~~~~~
+
+.. attributetable:: GuildMember
+
+.. autoclass:: GuildMember()
