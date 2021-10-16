@@ -122,3 +122,62 @@ FollowedChannel
 .. attributetable:: FollowedChannel
 
 .. autoclass:: FollowedChannel()
+
+Guild
+-----
+
+PremiumTier
+~~~~~~~~~~~
+
+.. attributetable:: PremiumTier
+
+.. autoclass:: PremiumTier()
+
+GuildNSFWLevel
+~~~~~~~~~~~~~~
+
+.. attributetable:: GuildNSFWLevel
+
+.. autoclass:: GuildNSFWLevel()
+
+ExplicitContentFilterLevel
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: ExplicitContentFilterLevel
+
+.. autoclass:: ExplicitContentFilterLevel()
+
+MFALevel
+~~~~~~~~
+
+.. attributetable:: MFALevel
+
+.. autoclass:: MFALevel()
+
+VerificationLevel
+~~~~~~~~~~~~~~~~~
+
+.. attributetable:: VerificationLevel
+
+.. autoclass:: VerificationLevel()
+
+DefaultMessageNotificationLevel
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: DefaultMessageNotificationLevel
+
+.. autoclass:: DefaultMessageNotificationLevel()
+
+SystemChannelFlags
+~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: SystemChannelFlags
+
+.. autoclass:: SystemChannelFlags()
+
+Guild
+~~~~~
+
+.. attributetable:: Guild
+
+.. autoclass:: Guild()

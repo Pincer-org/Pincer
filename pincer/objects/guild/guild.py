@@ -16,7 +16,6 @@ if TYPE_CHECKING:
     from .role import Role
     from .channel import Channel
     from ...client import Client
-    from ..user import voice_state
     from .member import GuildMember
     from .stage import StageInstance
     from ..message.emoji import Emoji
@@ -25,6 +24,7 @@ if TYPE_CHECKING:
     from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
     from ...utils.timestamp import Timestamp
+    from ..user.voice_state import VoiceState
     from .welcome_screen import WelcomeScreen
     from ...exceptions import UnavailableGuildError
     from ..events.presence import PresenceUpdateEvent
@@ -161,125 +161,125 @@ class Guild(APIObject):
 
     Attributes
     ----------
-    afk_channel_id:
-        id of afk channel
-    afk_timeout:
-        afk timeout in seconds
-    application_id:
-        application id of the guild creator if it is bot-created
-    banner:
-        banner hash
-    default_message_notifications:
-        default message notifications level
-    description:
-        the description of a Community guild
-    discovery_splash:
-        discovery splash hash;
+    afk_channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+        Id of afk channel
+    afk_timeout: :class:`int`
+        Afk timeout in seconds
+    application_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+        Application id of the guild creator if it is bot-created
+    banner: Optional[:class:`str`]
+        Banner hash
+    default_message_notifications: :class:`~pincer.objects.guild.guild.DefaultMessageNotificationLevel`
+        Default message notifications level
+    description: Optional[:class:`str`]
+        The description of a Community guild
+    discovery_splash: Optional[:class:`str`]
+        Discovery splash hash;
         only present for guilds with the "DISCOVERABLE" feature
-    emojis:
-        custom guild emojis
-    explicit_content_filter:
-        explicit content filter level
-    features:
-        enabled guild features
-    id:
-        guild id
-    icon:
-        icon hash
-    mfa_level:
-        required MFA level for the guild
-    name:
-        guild name (2-100 characters, excluding trailing and leading
+    emojis: List[:class:`~pincer.objects.message.emoji.Emoji`]
+        Custom guild emojis
+    explicit_content_filter: :class:`~pincer.objects.guild.guild.ExplicitContentFilterLevel`
+        Explicit content filter level
+    features: List[:class:`~pincer.objects.guild.features.GuildFeatures`]
+        Enabled guild features
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        Guild id
+    icon: Optional[:class:`str`]
+        Icon hash
+    mfa_level: :class:`~pincer.objects.guild.guild.MFALevel`
+        Required MFA level for the guild
+    name: :class:`str`
+        Guild name (2-100 characters, excluding trailing and leading
         whitespace)
-    nsfw_level:
-        guild NSFW level
-    owner_id:
-        id of owner
-    preferred_locale:
-        the preferred locale of a Community guild;
+    nsfw_level: :class:`~pincer.objects.guild.guild.NSFWLevel`
+        Guild NSFW level
+    owner_id: :class:`~pincer.utils.snowflake.Snowflake`
+        Id of owner
+    preferred_locale: :class:`str`
+        The preferred locale of a Community guild;
         used in server discovery and notices from Discord;
         defaults to "en-US"
-    premium_tier:
-        premium tier (Server Boost level)
-    public_updates_channel_id:
-        the id of the channel where admins
+    premium_tier: :class:`~pincer.objects.guild.guild.PremiumTier`
+        Premium tier (Server Boost level)
+    public_updates_channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+        The id of the channel where admins
         and moderators of Community guilds receive notices from Discord
-    roles:
-        roles in the guild
-    rules_channel_id:
-        the id of the channel where Community guilds can display rules
+    roles: List[:class:`~pincer.objects.guild.role.Role`]
+        Roles in the guild
+    rules_channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+        The id of the channel where Community guilds can display rules
         and/or guidelines
-    splash:
-        splash hash
-    system_channel_flags:
-        system channel flags
-    system_channel_id:
-        the id of the channel where guild notices
+    splash: Optional[:class:`str`]
+        Splash hash
+    system_channel_flags: :class:`~pincer.objects.guild.guild.SystemChannelFlags`
+        System channel flags
+    system_channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+        The id of the channel where guild notices
         such as welcome messages and boost events are posted
-    vanity_url_code:
-        the vanity url code for the guild
-    verification_level:
-        verification level required for the guild
-    approximate_member_count:
-        approximate number of members in this guild, returned from the
+    vanity_url_code: Optional[:class:`str`]
+        The vanity url code for the guild
+    verification_level: :class:`~pincer.objects.guild.guild.VerificationLevel`
+        Verification level required for the guild
+    approximate_member_count: APINullable[:class:`int`]
+        Approximate number of members in this guild, returned from the
         `GET /guilds/<id>` endpoint when with_counts is true
-    approximate_presence_count:
-        approximate number of non-offline members in this guild,
+    approximate_presence_count: APINullable[:class:`int`]
+        Approximate number of non-offline members in this guild,
         returned from the `GET /guilds/<id>`
         endpoint when with_counts is true
-    channels:
-        channels in the guild
-    icon_hash:
-        icon hash, returned when in the template object
-    joined_at:
-        when this guild was joined at
-    large:
-        true if this is considered a large guild
-    max_members:
-        the maximum number of members for the guild
-    max_presences:
-        the maximum number of presences for the guild
+    channels: APINullable[List[:class:`~pincer.objects.guild.chanenl.Channel`]]
+        Channels in the guild
+    icon_hash: APINullable[Optional[:class:`str`]]
+        Icon hash, returned when in the template object
+    joined_at: APINullable[:class:`~pincer.utils.timestamp.Timestamp`]
+        When this guild was joined at
+    large: APINullable[:class:`bool`]
+        True if this is considered a large guild
+    max_members: APINullable[:class:`int`]
+        The maximum number of members for the guild
+    max_presences: APINullable[Optional[:class:`int`]]
+        The maximum number of presences for the guild
         (null is always returned, apart from the largest of guilds)
-    max_video_channel_users:
-        the maximum amount of users in a video channel
-    members:
-        users in the guild
-    member_count:
-        total number of members in this guild
-    nsfw:
-        boolean if the server is NSFW
-    owner:
-        true if the user is the owner of the guild
-    permissions:
-        total permissions for the user in the guild
+    max_video_channel_users: APINullable[:class:`int`]
+        The maximum amount of users in a video channel
+    members: APINullable[List[:class:`~pincer.objects.guild.member.GuildMember`]]
+        Users in the guild
+    member_count: APINullable[:class:`bool`]
+        Total number of members in this guild
+    nsfw: APINullable[:class:`bool`]
+        Boolean if the server is NSFW
+    owner: APINullable[:class:`bool`]
+        True if the user is the owner of the guild
+    permissions: APINullable[:class:`str`]
+        Total permissions for the user in the guild
         (excludes overwrites)
-    premium_subscription_count:
-        the number of boosts this guild currently has
-    presences:
-        presences of the members in the guild,
+    premium_subscription_count: APINullable[:class:`int`]
+        The number of boosts this guild currently has
+    presences: APINullable[List[:class:`~pincer.objects.events.presence.PresenceUpdateEvent`]]
+        Presences of the members in the guild,
         will only include non-offline members if the size is greater
         than large threshold
-    stage_instances:
+    stage_instances: APINullable[List[:class:`~pincer.objects.guild.stage.StageInstance`]]
         Stage instances in the guild
-    stickers:
-        custom guild stickers
-    region:
-        voice region id for the guild (deprecated)
-    threads:
-        all active threads in the guild that current user
+    stickers: Optional[List[:class:`~pincer.objects.message.sticker.Sticker`]]
+        Custom guild stickers
+    region: APINullable[Optional[:class:`str`]]
+        Voice region id for the guild (deprecated)
+    threads: APINullable[List[:class:`~pincer.objects.guild.channel.Channel`]]
+        All active threads in the guild that current user
         has permission to view
-    unavailable:
-        true if this guild is unavailable due to an outage
-    voice_states:
-        states of members currently in voice channels;
+    unavailable: APINullable[:class:`bool`]
+        True if this guild is unavailable due to an outage
+    voice_states: APINullable[List[:class:`~pincer.objects.user.voice_state.VoiceState`]]
+        States of members currently in voice channels;
         lacks the guild_id key
-    widget_enabled:
-        true if the server widget is enabled
-    widget_channel_id:
-        the channel id that the widget will generate an invite to,
+    widget_enabled: APINullable[:class:`bool`]
+        True if the server widget is enabled
+    widget_channel_id: APINullable[Optional[:class:`~pincer.utils.snowflake.Snowflake`]]
+        The channel id that the widget will generate an invite to,
         or null if set to no invite
-    welcome_screen:
-        the welcome screen of a Community guild, shown to new members,
+    welcome_screen: APINullable[:class:`~pincer.objects.guild.welcome_screen.WelcomeScreen`]
+        The welcome screen of a Community guild, shown to new members,
         returned in an Invite's guild object
     """
     afk_channel_id: Optional[Snowflake]
@@ -341,7 +341,7 @@ class Guild(APIObject):
     threads: APINullable[List[Channel]] = MISSING
     # Guilds are considered available unless otherwise specified
     unavailable: APINullable[bool] = False
-    voice_states: APINullable[List[voice_state.VoiceState]] = MISSING
+    voice_states: APINullable[List[VoiceState]] = MISSING
     widget_enabled: APINullable[bool] = MISSING
     widget_channel_id: APINullable[Optional[Snowflake]] = MISSING
     welcome_screen: APINullable[WelcomeScreen] = MISSING
@@ -367,17 +367,21 @@ class Guild(APIObject):
         # Once below is fixed. Change this to Guild.from_dict
         return Guild(**data)
 
-    async def get_member(self, _id: int):
-        """
+    async def get_member(self, _id: int) -> GuildMember:
+        """|coro|
+
         Fetches a GuildMember from its identifier
 
+        Parameters
+        ----------
         _id:
             The id of the guild member which should be fetched from the Discord
             gateway.
 
-        :returns:
-            A GuildMember objects.
-
+        Returns
+        -------
+        :class:`~pincer.objects.guild.member.GuildMember`
+            A GuildMember object.
         """
         return await GuildMember.from_id(self._client, self.id, _id)
 
@@ -391,12 +395,30 @@ class Guild(APIObject):
             deaf: Optional[bool] = None,
             channel_id: Optional[Snowflake] = None
     ) -> GuildMember:
-        """
+        """|coro|
+
         Modifies a member in the guild from its identifier and based on the
         keyword arguments provided.
 
-        :returns:
-            The GuildMember that has been modified.
+        Parameters
+        ----------
+        _id : int
+            Id of the member to modify
+        nick : Optional[:class:`str`]
+            New nickname for the member |default| :data:`None`
+        roles : Optional[List[:class:`~pincer.utils.snowflake.Snowflake]]
+            New roles for the member |default| :data:`None`
+        mute : Optional[:class:`bool`]
+            Whether the member is muted |default| :data:`None`
+        deaf : Optional[:class:`bool`]
+            Whether the member is defaened |default| :data:`None`
+        channel_id : Optional[:class:`~pincer.utils.snowflake.Snowflake]
+            Voice channel id to move to |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.member.GuildMember`
+            The new member object.
         """
         ...
 
@@ -408,14 +430,6 @@ class Guild(APIObject):
 
     @classmethod
     def from_dict(cls, data) -> Guild:
-        """
-        Instantiate a new guild from a dictionary.
-
-        Also handles it if the guild isn't available.
-
-        :raises UnavailableGuildError:
-            Exception gets raised when guild is unavailable.
-        """
         if data.get("unavailable", False):
             raise UnavailableGuildError(
                 f"Guild \"{data['id']}\" is unavailable due"
