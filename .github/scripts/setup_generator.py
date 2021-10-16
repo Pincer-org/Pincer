@@ -1,4 +1,6 @@
-from os import walk
+from os import walk, chdir
+
+chdir("../../")
 
 from pincer import __version__
 
@@ -25,7 +27,7 @@ def main():
         base = f.read()
 
     dependencies = {
-        "requires": get_dependencies("requirement.txt"),
+        "requires": get_dependencies("requirements.txt"),
         "testing_requires": get_dependencies("packages/dev.txt"),
         "images_requires": get_dependencies("packages/img.txt")
     }
