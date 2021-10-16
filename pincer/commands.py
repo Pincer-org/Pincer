@@ -63,6 +63,15 @@ def command(
     """A decorator to create a command to register and respond to
     with the discord API from a function.
 
+    str - String
+    int - Integer
+    bool - Boolean
+    float - Number
+    pincer.objects.User - User
+    pincer.objects.Channel - Channel
+    pincer.objects.Role - Role
+    Mentionable is not implemented
+
     .. code-block:: python3
 
         class Bot(Client):

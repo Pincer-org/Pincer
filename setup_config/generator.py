@@ -21,11 +21,11 @@ def main():
 
     packages = get_packages()
 
-    with open(".github/scripts/setup_base.cfg") as f:
+    with open("./setup_config/base.cfg") as f:
         base = f.read()
 
     dependencies = {
-        "requires": get_dependencies("requirement.txt"),
+        "requires": get_dependencies("requirements.txt"),
         "testing_requires": get_dependencies("packages/dev.txt"),
         "images_requires": get_dependencies("packages/img.txt")
     }
