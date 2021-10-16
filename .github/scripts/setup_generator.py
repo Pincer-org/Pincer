@@ -1,7 +1,9 @@
-from os import walk, chdir, getcwd
+from os import walk, chdir, getcwd, listdir
 
+print(listdir())
 chdir("../../")
 print(getcwd())
+print(listdir())
 
 from pincer import __version__
 
