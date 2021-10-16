@@ -181,3 +181,34 @@ Guild
 .. attributetable:: Guild
 
 .. autoclass:: Guild()
+
+Invite
+------
+
+InviteTargetType
+~~~~~~~~~~~~~~~~
+
+.. attributetable:: InviteTargetType
+
+.. autoclass:: InviteTargetType()
+
+InviteStageInstance
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: InviteStageInstance
+
+.. autoclass:: InviteStageInstance()
+
+InviteMetadata
+~~~~~~~~~~~~~~
+
+.. attributetable:: InviteMetadata
+
+.. autoclass:: InviteMetadata()
+
+Invite
+~~~~~~
+
+.. attributetable:: Invite
+
+.. autoclass:: Invite()
