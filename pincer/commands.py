@@ -62,9 +62,10 @@ def command(
     int - Integer
     bool - Boolean
     float - Number
-    pincer.User - User
-    pincer.Channel - Channel
-    pincer.Role - Role
+    pincer.objects.User - User
+    pincer.objects.Channel - Channel
+    pincer.objects.Role - Role
+    Mentionable is not implemented
     """
     # TODO: Fix docs
     # TODO: Fix docs w guild

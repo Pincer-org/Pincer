@@ -137,6 +137,15 @@ class Bot(Client):
         ...
 
     @command(description="Say something as the bot!")
+    # Pincer uses type hints to specify the argument type
+    # str - String
+    # int - Integer
+    # bool - Boolean
+    # float - Number
+    # pincer.objects.User - User
+    # pincer.objects.Channel - Channel
+    # pincer.objects.Role - Role
+    # Mentionable is not implemented
     async def say(self, message: str):
         return message
 

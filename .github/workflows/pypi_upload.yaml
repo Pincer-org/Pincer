@@ -23,7 +23,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: install requirements_dev
-        run: pip install -r packages/dev
+        run: pip install -r packages/dev.txt
 
       - name: install requirements_img
         run: pip install -r packages/img.txt
