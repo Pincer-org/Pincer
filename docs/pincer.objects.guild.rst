@@ -263,3 +263,20 @@ Role
 .. attributetable:: Role
 
 .. autoclass:: Role()
+
+Stage
+-----
+
+PrivacyLevel
+~~~~~~~~~~~~
+
+.. attributetable:: PrivacyLevel
+
+.. autoclass:: PrivacyLevel()
+
+StageInstance
+~~~~~~~~~~~~~
+
+.. attributetable:: StageInstance
+
+.. autoclass:: StageInstance()
