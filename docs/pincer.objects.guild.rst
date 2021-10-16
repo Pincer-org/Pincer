@@ -246,3 +246,20 @@ Overwrite
 .. attributetable:: Overwrite
 
 .. autoclass:: Overwrite()
+
+Role
+----
+
+RoleTags
+~~~~~~~~
+
+.. attributetable:: RoleTags
+
+.. autoclass:: RoleTags()
+
+Role
+~~~~
+
+.. attributetable:: Role
+
+.. autoclass:: Role()
