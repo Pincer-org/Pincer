@@ -14,32 +14,36 @@ from ...utils.api_object import APIObject
 if TYPE_CHECKING:
     from typing import List, Optional, Union
 
-    from ...client import Client
+    from .embed import Embed
     from ..user.user import User
-    from ..app import application
     from ..guild.role import Role
-    from ..message.embed import Embed
-    from ..app import interaction_base
-    from ...core.http import HTTPClient
+    from .reaction import Reaction
+    from .sticker import StickerItem
+    from .attachment import Attachment
     from ...utils.types import APINullable
     from ...utils.conversion import convert
-    from ..message.reaction import Reaction
+    from .component import MessageComponent
+    from .reference import MessageReference
     from ...utils.snowflake import Snowflake
     from ...utils.timestamp import Timestamp
-    from ..message.sticker import StickerItem
-    from ..message.attachment import Attachment
-    from ..message.component import MessageComponent
-    from ..message.reference import MessageReference
+    from ..app.application import Application
     from ..guild.channel import Channel, ChannelMention
+    from ..app.interaction_base import MessageInteraction
     from ..guild.member import GuildMember, PartialGuildMember
 
 
 class MessageActivityType(IntEnum):
-    """
-    The activity people can perform on a rich presence activity.
+    """The activity people can perform on a rich presence activity.
 
     Such an activity could for example be a spotify listen.
-    """
+
+    Attributes
+    ----------
+    JOIN:
+    SPECTATE:
+    LISTEN:
+    JOIN_REQUEST:
+    """  # TODO docs: maybe do this, cba rn
     JOIN = 1
     SPECTATE = 2
     LISTEN = 3
@@ -47,37 +51,31 @@ class MessageActivityType(IntEnum):
 
 
 class MessageFlags(IntEnum):
-    """
-    Special message properties.
+    """Special message properties.
 
-    :param CROSSPOSTED:
-        the message has been published to subscribed
+    Attributes
+    ----------
+    CROSSPOSTED:
+        The message has been published to subscribed
         channels (via Channel Following)
-
-    :param IS_CROSSPOST:
-        this message originated from a message
+    IS_CROSSPOST:
+        This message originated from a message
         in another channel (via Channel Following)
-
-    :param SUPPRESS_EMBEDS:
-        do not include any embeds when serializing this message
-
-    :param SOURCE_MESSAGE_DELETED:
-        the source message for this crosspost
+    SUPPRESS_EMBEDS:
+        Do not include any embeds when serializing this message
+    SOURCE_MESSAGE_DELETED:
+        The source message for this crosspost
         has been deleted (via Channel Following)
-
-    :param URGENT:
-        this message came from the urgent message system
-
-    :param HAS_THREAD:
-        this message has an associated thread,
+    URGENT:
+        This message came from the urgent message system
+    HAS_THREAD:
+        This message has an associated thread,
         with the same id as the message
-
-    :param EPHEMERAL:
-        this message is only visible to the user
+    EPHEMERAL:
+        This message is only visible to the user
         who invoked the Interaction
-
-    :param LOADING:
-        this message is an Interaction
+    LOADING:
+        This message is an Interaction
         Response and the bot is "thinking"
     """
     CROSSPOSTED = 1 << 0
@@ -91,9 +89,33 @@ class MessageFlags(IntEnum):
 
 
 class MessageType(IntEnum):
-    """
-    Represents the type of the message.
-    """
+    """Represents the type of the message.
+
+    Attributes
+    ----------
+    DEFAULT:
+    RECIPIENT_ADD:
+    RECIPIENT_REMOVE:
+    CALL:
+    CHANNEL_NAME_CHANGE:
+    CHANNEL_ICON_CHANGE:
+    CHANNEL_PINNED_MESSAGE:
+    GUILD_MEMBER_JOIN:
+    USER_PREMIUM_GUILD_SUBSCRIPTION:
+    USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_1:
+    USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_2:
+    USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3:
+    CHANNEL_FOLLOW_ADD:
+    GUILD_DISCOVERY_DISQUALIFIED:
+    GUILD_DISCOVERY_REQUALIFIED:
+    GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING:
+    GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING:
+    THREAD_CREATED:
+    REPLY:
+    APPLICATION_COMMAND:
+    THREAD_STARTER_MESSAGE:
+    GUILD_INVITE_REMINDER:
+    """  # TODO docs: maybe do this too, really cba rn
     DEFAULT = 0
     RECIPIENT_ADD = 1
     RECIPIENT_REMOVE = 2
@@ -127,13 +149,13 @@ class MessageType(IntEnum):
 
 @dataclass
 class MessageActivity(APIObject):
-    """
-    Represents a Discord Message Activity object
+    """Represents a Discord Message Activity object
 
-    :param type:
+    Attributes
+    ----------
+    type: :class:`~pincer.objects.message.user_message.MessageActivity`
         type of message activity
-
-    :param party_id:
+    party_id: APINullable[:class:`str`]
         party_id from a Rich Presence event
     """
     type: MessageActivityType
@@ -141,16 +163,15 @@ class MessageActivity(APIObject):
 
 
 class AllowedMentionTypes(str, Enum):
-    """
-    The allowed mentions.
+    """The allowed mentions.
 
-    :param ROLES:
+    Attributes
+    ----------
+    ROLES:
         Controls role mentions
-
-    :param USERS:
+    USERS:
         Controls user mentions
-
-    :param EVERYONE:
+    EVERYONE:
         Controls @everyone and @here mentions
     """
     ROLES = "roles"
@@ -160,103 +181,75 @@ class AllowedMentionTypes(str, Enum):
 
 @dataclass
 class UserMessage(APIObject):
-    """
-    Represents a message sent in a channel within Discord.
+    """Represents a message sent in a channel within Discord.
 
-    :param id:
-        id of the message
-
-    :param channel_id:
-        id of the channel the message was sent in
-
-    :param guild_id:
-        id of the guild the message was sent in
-
-    :param author:
-        the author of this message (not guaranteed to be a valid user)
-
-    :param member:
-        member properties for this message's author
-
-    :param content:
-        contents of the message
-
-    :param timestamp:
-        when this message was sent
-
-    :param edited_timestamp:
-        when this message was edited (or null if never)
-
-    :param tts:
-        whether this was a TTS message
-
-    :param mention_everyone:
-        whether this message mentions everyone
-
-    :param mentions:
-        users specifically mentioned in the message
-
-    :param mention_roles:
-        roles specifically mentioned in this message
-
-    :param mention_channels:
-        channels specifically mentioned in this message
-
-    :param attachments:
-        any attached files
-
-    :param embeds:
-        any embedded content
-
-    :param reactions:
-        reactions to the message
-
-    :param nonce:
-        user for validating a message was sent
-
-    :param pinned:
-        whether this message is pinned
-
-    :param webhook_id:
-        if the message is generated by a webhook,
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        Ud of the message
+    channel_id: :class:`~pincer.utils.snowflake.Snowflake`
+        Id of the channel the message was sent in
+    author: :class:`~pincer.objects.user.user.User`
+        The author of this message (not guaranteed to be a valid user)
+    content: :class:`str`
+        Contents of the message
+    timestamp: :class:`~pincer.utils.timestamp.Timestamp`
+        When this message was sent
+    edited_timestamp: Optional[:class:`~pincer.utils.timestamp.Timestamp`]
+        When this message was edited (or null if never)
+    tts: :class:`bool`
+        Whether this was a TTS message
+    mention_everyone: :class:`bool`
+        Whether this message mentions everyone
+    mentions: List[:class:`~pincer.objects.guild.member.GuildMember`]
+        Users specifically mentioned in the message
+    mention_roles: List[:class:`~pincer.objects.guild.role.Role`]
+        Roles specifically mentioned in this message
+    attachments: List[:class:`~pincer.objects.message.attachment.Attachment`]
+        Any attached files
+    embeds: List[:class:`~pincer.objects.message.embed.Embed`]
+        Any embedded content
+    pinned: :class:`bool`
+        Whether this message is pinned
+    type: :class:`~pincer.objects.message.user_message.MessageType`
+        Type of message
+    mention_channels: APINullable[List[:class:`~pincer.objects.guild.channel.Channel`]]
+        Channels specifically mentioned in this message
+    guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        Id of the guild the message was sent in
+    member: APINullable[:class:`~pincer.objects.guild.member.PartialGuildMember`]
+        Member properties for this message's author
+    reactions: APINullable[List[:class:`~pincer.objects.message.reaction.Reaction`]]
+        Reactions to the message
+    nonce: APINullable[Union[:class:`int`, :class:`str`]]
+        User for validating a message was sent
+    webhook_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        If the message is generated by a webhook,
         this is the webhook's id
-
-    :param type:
-        type of message
-
-    :param activity:
-        sent with Rich Presence-related chat embeds
-
-    :param application:
-        sent with Rich Presence-related chat embeds
-
-    :param application_id:
-        if the message is a response to an Interaction,
+    activity: APINullable[:class:`~pincer.objects.message.user_message.MessageActivity`]
+        Sent with Rich Presence-related chat embeds
+    application: APINullable[:class:`~pincer.objects.app.application.Application`]
+        Sent with Rich Presence-related chat embeds
+    application_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        If the message is a response to an Interaction,
         this is the id of the interaction's application
-
-    :param message_reference:
-        data showing the source of a crosspost,
+    message_reference: APINullable[:class:`~pincer.objects.message.reference.MessageReference`]
+        Data showing the source of a crosspost,
         channel follow add, pin, or reply message
-
-    :param flags:
-        message flags combined as a bitfield
-
-    :param referenced_message:
-        the message associated with the message_reference
-
-    :param interaction:
-        sent if the message is a response to an Interaction
-
-    :param thread:
-        the thread that was started from this message,
+    flags: APINullable[:class:`~pincer.objects.message.user_message.MessageFlags`]
+        Message flags combined as a bitfield
+    referenced_message: APINullable[Optional[:class:`~pincer.objects.message.user_message.UserMessage`]]
+        The message associated with the message_reference
+    interaction: APINullable[:class:`~pincer.objects.app.interaction_base.MessageInteraction`]
+        Sent if the message is a response to an Interaction
+    thread: APINullable[:class:`~pincer.objects.guild.channel.Channel`]
+        The thread that was started from this message,
         includes thread member object
-
-    :param components:
-        sent if the message contains components like buttons,
+    components: APINullable[List[:class:`~pincer.objects.message.component.MessageComponent`]]
+        Sent if the message contains components like buttons,
         action rows, or other interactive components
-
-    :param sticker_items:
-        sent if the message contains stickers
+    sticker_items: APINullable[List[:class:`~pincer.objects.message.sticker.StickerItem`]]
+        Sent if the message contains stickers
     """
     id: Snowflake
     channel_id: Snowflake
@@ -280,12 +273,12 @@ class UserMessage(APIObject):
     nonce: APINullable[Union[int, str]] = MISSING
     webhook_id: APINullable[Snowflake] = MISSING
     activity: APINullable[MessageActivity] = MISSING
-    application: APINullable[application.Application] = MISSING
+    application: APINullable[Application] = MISSING
     application_id: APINullable[Snowflake] = MISSING
     message_reference: APINullable[MessageReference] = MISSING
     flags: APINullable[MessageFlags] = MISSING
     referenced_message: APINullable[Optional[UserMessage]] = MISSING
-    interaction: APINullable[interaction_base.MessageInteraction] = MISSING
+    interaction: APINullable[MessageInteraction] = MISSING
     thread: APINullable[Channel] = MISSING
     components: APINullable[List[MessageComponent]] = MISSING
     sticker_items: APINullable[List[StickerItem]] = MISSING
@@ -312,7 +305,7 @@ class UserMessage(APIObject):
         self.webhook_id = convert(self.webhook_id, Snowflake.from_string)
         self.activity = convert(self.activity, MessageActivity.from_dict)
         self.application = convert(
-            self.application, application.Application.from_dict)
+            self.application, Application.from_dict)
         self.application_id = convert(
             self.application_id,
             Snowflake.from_string
@@ -328,7 +321,7 @@ class UserMessage(APIObject):
         # )
         self.interaction = convert(
             self.interaction,
-            interaction_base.MessageInteraction.from_dict
+            MessageInteraction.from_dict
         )
         self.thread = convert(self.thread, Channel.from_dict,
                               client=self._client)

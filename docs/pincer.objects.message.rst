@@ -200,3 +200,48 @@ StickerPack
 .. attributetable:: StickerPack
 
 .. autoclass:: StickerPack()
+
+User Message
+------------
+
+MessageActivityType
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageActivityType
+
+.. autoclass:: MessageActivityType()
+
+MessageFlags
+~~~~~~~~~~~~
+
+.. attributetable:: MessageFlags
+
+.. autoclass:: MessageFlags()
+
+MessageType
+~~~~~~~~~~~
+
+.. attributetable:: MessageType
+
+.. autoclass:: MessageType()
+
+MessageActivity
+~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageActivity
+
+.. autoclass:: MessageActivity()
+
+AllowedMentionTypes
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: AllowedMentionTypes
+
+.. autoclass:: AllowedMentionTypes()
+
+UserMessage
+~~~~~~~~~~~
+
+.. attributetable:: UserMessage
+
+.. autoclass:: UserMessage()
