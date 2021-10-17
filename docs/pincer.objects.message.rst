@@ -36,3 +36,13 @@ MessageComponent
 .. attributetable:: MessageComponent
 
 .. autoclass:: MessageComponent()
+
+Context
+-------
+
+MessageContext
+~~~~~~~~~~~~~~
+
+.. attributetable:: MessageContext
+
+.. autoclass:: MessageContext()

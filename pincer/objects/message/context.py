@@ -16,24 +16,21 @@ if TYPE_CHECKING:
 
 @dataclass
 class MessageContext:
-    """
-    Represents the context of a message interaction.
+    """Represents the context of a message interaction.
 
-    :param id:
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
         The ID of the interaction.
-
-    :param author:
+    author: Union[:class:`~pincer.objects.guild.member.GuildMember`, :class:`~pincer.objects.user.user.User`]
         The user whom invoked the interaction.
-
-    :param command:
+    command: :class:`~pincer.objects.app.command.ClientCommandStructure`
         The local command object for the command to whom this context
         belongs.
-
-    :param guild_id:
+    guild_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
         The ID of the guild the interaction was invoked in.
         Can be None if it wasn't invoked in a guild.
-
-    :param channel_id:
+    channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
         The ID of the channel the interaction was invoked in.
         Can be None if it wasn't invoked in a channel.
     """
