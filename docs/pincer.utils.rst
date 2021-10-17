@@ -20,3 +20,16 @@ chdir
 ~~~~~
 
 .. autofunction:: chdir
+
+Signature
+---------
+
+get_signature_and_params
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autofunction:: get_signature_and_params
+
+get_params
+~~~~~~~~~~
+
+.. autofunction:: get_params
