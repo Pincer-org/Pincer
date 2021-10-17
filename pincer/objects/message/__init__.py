@@ -7,6 +7,7 @@ from .component import *
 from .context import *
 from .embed import *
 from .emoji import *
+from .file import *
 from .message import *
 from .reaction import *
 from .reference import *

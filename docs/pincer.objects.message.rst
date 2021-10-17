@@ -115,3 +115,13 @@ Emoji
 .. attributetable:: Emoji
 
 .. autoclass:: Emoji()
+
+File
+----
+
+File
+~~~~
+
+.. attributetable:: File
+
+.. autoclass:: File()

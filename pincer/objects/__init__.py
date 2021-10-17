@@ -45,6 +45,7 @@ from .message.component import *
 from .message.context import *
 from .message.embed import *
 from .message.emoji import *
+from .message.file import *
 from .message.message import *
 from .message.reaction import *
 from .message.reference import *

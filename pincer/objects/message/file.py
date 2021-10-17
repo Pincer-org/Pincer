@@ -35,14 +35,14 @@ except (ModuleNotFoundError, ImportError):
 
 @dataclass
 class File(APIObject):
-    """
-    A file that is prepared by the user to be send to the discord
+    """A file that is prepared by the user to be send to the discord
     API.
 
-    :param content:
+    Attributes
+    ----------
+    content: :class:`bytes` 
         File bytes.
-
-    :param filename:
+    filename: :class:`str`
         The name of the file when its uploaded to discord.
     """
 
@@ -51,14 +51,18 @@ class File(APIObject):
 
     @classmethod
     def from_file(cls, filepath: str, filename: str = None) -> File:
-        """
-        :param filepath:
+        """Make a ``File`` object from a file stored locally.
+
+        Parameters
+        ----------
+        filepath: :class:`str`
             The path to the file you want to send. Must be string. The file's
             name in the file path is used as the name when uploaded to discord
             by default.
 
-        :param filename:
+        filename: :class:`str`
             The name of the file. Will override the default name.
+            |default| ``os.path.basename(filepath)``
         """
         with open(filepath, "rb") as data:
             file = data.read()
@@ -76,24 +80,29 @@ class File(APIObject):
             image_format: Optional[str] = None,
             **kwargs
     ) -> File:
-        """
-        Creates a file object from a PIL image
+        """Creates a file object from a PIL image
         Supports GIF, PNG, JPEG, and WEBP.
 
-        :param img:
+        Parameters
+        ----------
+        img: :class:`~pil:PIL.Image.Image`
             Pillow image object.
-
-        :param filename:
+        filename:
             The filename to be used when uploaded to discord. The extension is
             used as image_format unless otherwise specified.
-
-        Keyword Arguments:
-
-        :param image_format:
+        image_format:
             The image_format to be used if you want to override the file
             extension.
 
-        :return: File
+        Returns
+        -------
+        :class:`~pincer.objects.message.file.File`
+            The new file object.
+
+        Raises
+        ------
+        ModuleNotFoundError:
+            ``Pillow`` is not installed
         """
         if not PILLOW_IMPORT:
             raise ModuleNotFoundError(

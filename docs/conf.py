@@ -61,7 +61,8 @@ resource_links = {
 
 intersphinx_mapping = {
     'py': ('https://docs.python.org/3', None),
-    'ws': ('https://websockets.readthedocs.io/en/stable', None)
+    'ws': ('https://websockets.readthedocs.io/en/stable', None),
+    'pil': ('https://pillow.readthedocs.io/en/stable', None)
 }
 
 # Add any paths that contain templates here, relative to this directory.
