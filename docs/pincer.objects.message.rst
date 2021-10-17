@@ -105,3 +105,13 @@ Embed
 .. attributetable:: Embed
 
 .. autoclass:: Embed()
+
+Emoji
+-----
+
+Emoji
+~~~~~
+
+.. attributetable:: Emoji
+
+.. autoclass:: Emoji()
