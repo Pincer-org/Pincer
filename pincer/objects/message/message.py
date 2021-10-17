@@ -73,7 +73,7 @@ class AllowedMentions(APIObject):
 class Message:
     """A discord message that will be send to discord
 
-    Parameters
+    Attributes
     ----------
     content: :class:`str`
         The text in the message.
