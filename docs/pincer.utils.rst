@@ -57,3 +57,13 @@ TaskScheduler
 
    .. automethod:: TaskScheduler.loop
       :decorator:
+
+Timestamp
+---------
+
+Timestamp
+~~~~~~~~~
+
+.. attributetable:: Timestamp
+
+.. autoclass:: Timestamp()
