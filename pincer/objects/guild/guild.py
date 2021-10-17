@@ -416,6 +416,7 @@ class Guild(APIObject):
     roles: List[Role]
     system_channel_flags: SystemChannelFlags
     verification_level: VerificationLevel
+
     guild_scheduled_events: APINullable[List] = MISSING
     lazy: APINullable[bool] = MISSING
     premium_progress_bar_enabled: APINullable[bool] = MISSING
