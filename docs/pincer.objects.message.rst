@@ -152,3 +152,13 @@ Reaction
 .. attributetable:: Reaction
 
 .. autoclass:: Reaction()
+
+Reference
+---------
+
+MessageReference
+~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageReference
+
+.. autoclass:: MessageReference()

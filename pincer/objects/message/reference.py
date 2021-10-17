@@ -16,20 +16,18 @@ if TYPE_CHECKING:
 
 @dataclass
 class MessageReference(APIObject):
-    """
-    Represents a Discord Message Reference object
+    """Represents a Discord Message Reference object
 
-    :param message_id:
-        id of the originating message
-
-    :param channel_id:
-        id of the originating message's channel
-
-    :param guild_id:
-        id of the originating message's guild
-
-    :param fail_if_not_exists:
-        when sending, whether to error if the referenced message doesn't
+    Attributes
+    ----------
+    message_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        Id of the originating message
+    channel_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        Id of the originating message's channel
+    guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        Id of the originating message's guild
+    fail_if_not_exists: APINullable[:class:`bool`]
+        When sending, whether to error if the referenced message doesn't
         exist instead of sending as a normal (non-reply) message,
         default true
     """
