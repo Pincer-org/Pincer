@@ -47,6 +47,13 @@ Snowflake
 Tasks
 -----
 
+Task
+~~~~
+
+.. attributetable:: Task
+
+.. autoclass:: Task()
+
 TaskScheduler
 ~~~~~~~~~~~~~
 

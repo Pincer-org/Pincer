@@ -25,11 +25,16 @@ _log = logging.getLogger(__package__)
 
 
 class Task:
+    """A Task is a coroutine that is scheduled to repeat every x seconds.
+    Use a TaskScheduler in order to create a task.
+
+    Parameters
+    ----------
+    scheduler: :class:`~pincer.utils.tasks.TaskScheduler`
+    coro: :class:`~pincer.utils.types.Coro`
+    deflay: :class:`float`
+    """  # TODO: docs: A
     def __init__(self, scheduler: TaskScheduler, coro: Coro, delay: float):
-        """
-        A Task is a coroutine that is scheduled to repeat every x seconds.
-        Use a TaskScheduler in order to create a task.
-        """
         self._scheduler = scheduler
         self.coro = coro
         self.delay = delay
@@ -48,17 +53,18 @@ class Task:
 
     @property
     def cancelled(self):
-        """Check if the task has been cancelled or not."""
+        """:class:`bool`: Check if the task has been cancelled or not.
+        """
         return self.running and self._handle.cancelled()
 
     @property
     def running(self):
-        """Check if the task is running."""
+        """:class:`bool`: Check if the task is running.
+        """
         return self._handle is not None
 
     def start(self):
-        """
-        Register the task in the TaskScheduler and start
+        """Register the task in the TaskScheduler and start
         the execution of the task.
         """
         if self.running:
@@ -69,7 +75,8 @@ class Task:
         self._scheduler.register(self)
 
     def cancel(self):
-        """Cancel the task."""
+        """Cancel the task.
+        """
         if not self.running:
             raise TaskCancelError(
                 f'Task `{self.coro.__name__}` is not running.', self
