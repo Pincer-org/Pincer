@@ -324,3 +324,20 @@ Webhook
 .. attributetable:: Webhook
 
 .. autoclass:: Webhook()
+
+Welcome Screen
+--------------
+
+WelcomeScreenChannel
+~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: WelcomeScreenChannel
+
+.. autoclass:: WelcomeScreenChannel()
+
+WelcomeScreen
+~~~~~~~~~~~~~
+
+.. attributetable:: WelcomeScreen
+
+.. autoclass:: WelcomeScreen()
