@@ -9,8 +9,18 @@ if TYPE_CHECKING:
 
 
 @contextmanager
-def chdir(path) -> Generator[str, Any, None]:
-    """Change the cwd to the given path as a context manager."""
+def chdir(path: str) -> Generator[str, Any, None]:
+    """Change the cwd to the given path as a context manager.
+
+    Parameters
+    ----------
+    path:
+        Path to change to.
+
+    Yields
+    ------
+    Generator[:class:`str`, Any, None]
+    """
     current_path = os.getcwd()
     os.chdir(path)
 

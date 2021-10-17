@@ -12,3 +12,11 @@ APIObject
 .. attributetable:: APIObject
 
 .. autoclass:: APIObject()
+
+Directory
+---------
+
+chdir
+~~~~~
+
+.. autofunction:: chdir
