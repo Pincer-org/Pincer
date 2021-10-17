@@ -25,7 +25,7 @@ class Timestamp:
         """
         Convert a datetime to an epoch.
 
-        :param time:
+        time:
             The datetime to convert.
         """
         return int(time.timestamp() * 1000)
@@ -35,7 +35,7 @@ class Timestamp:
         """
         Convert a string to a datetime object.
 
-        :param string:
+        string:
             The string to convert.
         """
         return datetime.fromisoformat(string)
@@ -45,17 +45,16 @@ class Timestamp:
         """
         Convert an epoch to a datetime object.
 
-        :param epoch:
+        epoch:
             The epoch to convert to a datetime object.
         """
         return datetime.utcfromtimestamp(epoch)
 
     @staticmethod
     def parse(time: Optional[TS] = None) -> datetime:
-        """
-        Convert a time to datetime object.
+        """Convert a time to datetime object.
 
-        :param time:
+        time:
             The time to be converted to a datetime object.
             This can be one of these types: datetime, float, int, str
 
