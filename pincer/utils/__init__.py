@@ -9,5 +9,6 @@ from .insertion import *
 from .signature import *
 from .slidingwindow import *
 from .snowflake import *
+from .tasks import *
 from .timestamp import *
 from .types import *

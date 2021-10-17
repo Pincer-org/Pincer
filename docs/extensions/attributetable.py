@@ -206,7 +206,7 @@ def get_class_results(lookup, modulename, name, fullname):
             ):
                 if (
                     doc.startswith(('A decorator', 'A shortcut decorator')) 
-                    or label == "event"
+                    or label in ("event", "loop")
                 ):
                     # finicky but surprisingly consistent
                     badge = attributetablebadge('@', '@')

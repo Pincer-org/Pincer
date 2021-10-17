@@ -43,3 +43,17 @@ Snowflake
 .. attributetable:: Snowflake
 
 .. autoclass:: Snowflake()
+
+Tasks
+-----
+
+TaskScheduler
+~~~~~~~~~~~~~
+
+.. attributetable:: TaskScheduler
+
+.. autoclass:: TaskScheduler()
+   :exclude-members: loop
+
+   .. automethod:: TaskScheduler.loop
+      :decorator:
