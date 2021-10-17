@@ -67,3 +67,13 @@ User
 .. attributetable:: User
 
 .. autoclass:: User()
+
+Voice State
+-----------
+
+VoiceState
+~~~~~~~~~~
+
+.. attributetable:: VoiceState
+
+.. autoclass:: VoiceState()

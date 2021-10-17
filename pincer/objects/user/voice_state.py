@@ -12,8 +12,6 @@ from ...utils.api_object import APIObject
 if TYPE_CHECKING:
     from typing import Optional
 
-    from ...client import Client
-    from ...core.http import HTTPClient
     from ..guild.member import GuildMember
     from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
@@ -22,47 +20,36 @@ if TYPE_CHECKING:
 
 @dataclass
 class VoiceState(APIObject):
-    """
-    Used to represent a user's voice connection status
+    """Used to represent a user's voice connection status
 
-    :param guild_id:
-        the guild id this voice state is for
-
-    :param channel_id:
-        the channel id this user is connected to
-
-    :param user_id:
-        the user id this voice state is for
-
-    :param member:
-        the guild member this voice state is for
-
-    :param session_id:
-        the session id for this voice state
-
-    :param deaf:
-        whether this user is deafened by the server
-
-    :param mute:
-        whether this user is muted by the server
-
-    :param self_deaf:
-        whether this user is locally deafened
-
-    :param self_mute:
-        whether this user is locally muted
-
-    :param self_stream:
-        whether this user is streaming using "Go Live"
-
-    :param self_video:
-        whether this user's camera is enabled
-
-    :param suppress:
-        whether this user is muted by the current user
-
-    :param request_to_speak_timestamp:
-        the time at which the user requested to speak
+    Attributes
+    ----------
+    channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+        The channel id this user is connected to
+    user_id: :class:`~pincer.utils.snowflake.Snowflake`
+        The user id this voice state is for
+    session_id: :class:`str`
+        The session id for this voice state
+    deaf: :class:`bool`
+        Whether this user is deafened by the server
+    mute: :class:`bool`
+        Whether this user is muted by the server
+    self_deaf: :class:`bool`
+        Whether this user is locally deafened
+    self_mute: :class:`bool`
+        Whether this user is locally muted
+    self_video: :class:`bool`
+        Whether this user's camera is enabled
+    suppress: :class:`bool`
+        Whether this user is muted by the current user
+    request_to_speak_timestamp: Optional[:class:`~pincer.utils.timestamp.Timestamp`]
+        The time at which the user requested to speak
+    guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        The guild id this voice state is for
+    member: APINullable[:class:`~pincer.objects.guild.member.GuildMember`]
+        The guild member this voice state is for
+    self_stream: APINullable[:class:`bool`]
+        Whether this user is streaming using "Go Live"
     """
     channel_id: Optional[Snowflake]
     user_id: Snowflake
