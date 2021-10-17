@@ -7,20 +7,20 @@ including command responses
 """
 from ..core.dispatch import GatewayDispatch
 from ..objects.events.error import DiscordError
+from ..utils.conversion import construct_client_dict
 
 
 def error_middleware(self, payload: GatewayDispatch):
     """
     Middleware for ``on_error`` event.
 
-    :param client:
+    :param self:
+        The current client/bot.
 
     :param payload:
         The data received from the ready event.
     """
 
     return "on_error",  [
-        DiscordError.from_dict(
-            {"_client": self, "_http": self.http, **payload.data}
-        )
+        DiscordError.from_dict(construct_client_dict(self, payload.data))
     ]

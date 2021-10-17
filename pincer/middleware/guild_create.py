@@ -5,6 +5,7 @@
 
 from ..core.dispatch import GatewayDispatch
 from ..objects.guild import Guild
+from ..utils.conversion import construct_client_dict
 
 
 async def guild_create_middleware(self, payload: GatewayDispatch):
@@ -22,9 +23,7 @@ async def guild_create_middleware(self, payload: GatewayDispatch):
 
     """
     return "on_guild_create", [
-        Guild.from_dict(
-            {"_client": self, "_http": self.http, **payload.data}
-        )
+        Guild.from_dict(construct_client_dict(self, payload.data))
     ]
 
 

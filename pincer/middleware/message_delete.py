@@ -5,6 +5,7 @@
 
 from ..core.dispatch import GatewayDispatch
 from ..objects.events.message import MessageDeleteEvent
+from ..utils.conversion import construct_client_dict
 
 
 async def on_message_delete_middleware(self, payload: GatewayDispatch):
@@ -18,9 +19,7 @@ async def on_message_delete_middleware(self, payload: GatewayDispatch):
         The data received from the delete message event.
     """
     return "on_message_delete", [
-        MessageDeleteEvent.from_dict(
-            {"_client": self, "_http": self.http, **payload.data}
-        )
+        MessageDeleteEvent.from_dict(construct_client_dict(self, payload.data))
     ]
 
 

@@ -11,6 +11,7 @@ from ..core.dispatch import GatewayDispatch
 from ..exceptions import InvalidPayload
 from ..objects import User
 from ..utils import Coro
+from ..utils.conversion import construct_client_dict
 
 
 async def on_ready_middleware(self, payload: GatewayDispatch):
@@ -31,9 +32,8 @@ async def on_ready_middleware(self, payload: GatewayDispatch):
             "event."
         )
 
-    self.bot = User.from_dict(
-        {"_client": self, "_http": self.http, **user}
-    )
+    self.bot = User.from_dict(construct_client_dict(self, user))
+
     await ChatCommandHandler(self).initialize()
     return "on_ready",
 

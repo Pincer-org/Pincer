@@ -8,6 +8,7 @@ sent when a user's voice state changes in a subscribed voice channel
 
 from ..core.dispatch import GatewayDispatch
 from ..objects.user import VoiceState
+from ..utils.conversion import construct_client_dict
 
 
 async def voice_state_update_middleware(self, payload: GatewayDispatch):
@@ -22,9 +23,7 @@ async def voice_state_update_middleware(self, payload: GatewayDispatch):
 
     """
     return "on_voice_state_update", [
-        VoiceState.from_dict(
-            {"_client": self, "_http": self.http, **payload.data}
-        )
+        VoiceState.from_dict(construct_client_dict(self, payload.data))
     ]
 
 

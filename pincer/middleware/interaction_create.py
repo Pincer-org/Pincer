@@ -2,7 +2,7 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 import logging
-from inspect import isasyncgenfunction
+from inspect import isasyncgenfunction, getfullargspec
 from typing import Union, Dict, Any
 
 from ..commands import ChatCommandHandler
@@ -11,6 +11,7 @@ from ..objects import (
     File, Interaction, Embed, Message, InteractionFlags, MessageContext
 )
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
+from ..utils.conversion import construct_client_dict
 from ..utils.signature import get_params, get_signature_and_params
 
 PILLOW_IMPORT = True
@@ -87,7 +88,8 @@ async def interaction_response_handler(
     """
 
     if should_pass_cls(command):
-        kwargs["self"] = ChatCommandHandler.managers[command.__module__]
+        cls_keyword = getfullargspec(command).args[0]
+        kwargs[cls_keyword] = ChatCommandHandler.managers[command.__module__]
 
     sig, params = get_signature_and_params(command)
     if should_pass_ctx(sig, params):
@@ -164,7 +166,7 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
     """
 
     interaction: Interaction = Interaction.from_dict(
-        {**payload.data, "_client": self, "_http": self.http}
+        construct_client_dict(self, payload.data)
     )
     await interaction.build()
     command = ChatCommandHandler.register.get(interaction.data.name)

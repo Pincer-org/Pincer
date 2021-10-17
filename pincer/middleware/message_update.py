@@ -5,6 +5,7 @@
 
 from ..core.dispatch import GatewayDispatch
 from ..objects import UserMessage
+from ..utils.conversion import construct_client_dict
 
 
 async def message_update_middleware(self, payload: GatewayDispatch):
@@ -20,9 +21,7 @@ async def message_update_middleware(self, payload: GatewayDispatch):
 
     """
     return "on_message_update", [
-        UserMessage.from_dict(
-            {"_client": self, "_http": self.http, **payload.data}
-        )
+        UserMessage.from_dict(construct_client_dict(self, payload.data))
     ]
 
 
