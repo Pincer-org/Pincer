@@ -9,6 +9,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from ..utils.conversion import construct_client_dict
+
 if TYPE_CHECKING:
     from typing import Tuple
     from ..utils.types import Coro
@@ -43,9 +45,8 @@ async def on_ready_middleware(
             "event."
         )  # TODO this error doesn't exist???
 
-    self.bot = User.from_dict(
-        {"_client": self, "_http": self.http, **user}
-    )
+    self.bot = User.from_dict(construct_client_dict(self, user))
+
     await ChatCommandHandler(self).initialize()
     return "on_ready",
 

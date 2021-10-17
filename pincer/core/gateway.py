@@ -175,6 +175,12 @@ class Dispatcher:
 
         async with connect(GatewayConfig.uri()) as socket:
             self.__socket = socket
+
+            # Removing the limit of the received socket.
+            # Having the default limit can cause an issue
+            # with first payload of bigger bots.
+            # socket.max_size = None
+
             _log.debug(
                 "Successfully established websocket connection with `%s`",
                 GatewayConfig.uri()

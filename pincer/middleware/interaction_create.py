@@ -4,8 +4,8 @@
 from __future__ import annotations
 
 import logging
-from inspect import isasyncgenfunction
 from typing import TYPE_CHECKING
+from inspect import isasyncgenfunction, getfullargspec
 
 if TYPE_CHECKING:
     from typing import Union, Dict, Any, Tuple, List
@@ -19,6 +19,7 @@ if TYPE_CHECKING:
     from ..objects.message.message import Message
     from ..objects.app.interactions import Interaction
     from ..objects.message.context import MessageContext
+    from ..utils.conversion import construct_client_dict
     from ..objects.app.interactions import InteractionFlags
     from ..utils.insertion import should_pass_cls, should_pass_ctx
     from ..utils.signature import get_params, get_signature_and_params
@@ -98,7 +99,8 @@ async def interaction_response_handler(
         The arguments to be passed to the command.
     """
     if should_pass_cls(command):
-        kwargs["self"] = ChatCommandHandler.managers[command.__module__]
+        cls_keyword = getfullargspec(command).args[0]
+        kwargs[cls_keyword] = ChatCommandHandler.managers[command.__module__]
 
     sig, params = get_signature_and_params(command)
     if should_pass_ctx(sig, params):
@@ -184,7 +186,7 @@ async def interaction_create_middleware(
         ``on_interaction_create`` and an ``Interaction``
     """  # noqa: E501
     interaction: Interaction = Interaction.from_dict(
-        {**payload.data, "_client": self, "_http": self.http}
+        construct_client_dict(self, payload.data)
     )
     command = ChatCommandHandler.register.get(interaction.data.name)
 

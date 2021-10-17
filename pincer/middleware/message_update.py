@@ -7,6 +7,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from ..utils.conversion import construct_client_dict
+
 if TYPE_CHECKING:
     from typing import List, Tuple
 
@@ -28,9 +30,7 @@ async def message_update_middleware(
         The data received from the ready event.
     """
     return "on_message_update", [
-        UserMessage.from_dict(
-            {"_client": self, "_http": self.http, **payload.data}
-        )
+        UserMessage.from_dict(construct_client_dict(self, payload.data))
     ]
 
 

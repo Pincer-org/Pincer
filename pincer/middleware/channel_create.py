@@ -33,7 +33,5 @@ def channel_create_middleware(
         ``"on_channel_creation"`` and a channel.
     """
     return "on_channel_creation", [
-        Channel.from_dict(
-            {"_client": self, "_http": self.http, **payload.data}
-        )
+        Channel.from_dict(construct_client_dict(self, payload.data))
     ]

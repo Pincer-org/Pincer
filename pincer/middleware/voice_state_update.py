@@ -9,6 +9,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from ..utils.conversion import construct_client_dict
+
 if TYPE_CHECKING:
     from typing import List, Tuple
 
@@ -35,9 +37,7 @@ async def voice_state_update_middleware(
         ``on_voice_state_update`` and a ``VoiceState``
     """  # noqa: E501
     return "on_voice_state_update", [
-        VoiceState.from_dict(
-            {"_client": self, "_http": self.http, **payload.data}
-        )
+        VoiceState.from_dict(construct_client_dict(self, payload.data))
     ]
 
 

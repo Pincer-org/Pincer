@@ -6,6 +6,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from ..utils.conversion import construct_client_dict
+
 if TYPE_CHECKING:
     from typing import List, Tuple
 
@@ -32,9 +34,7 @@ async def message_create_middleware(
         ``on_message`` and a ``UserMessage``
     """  # noqa: E501
     return "on_message", [
-        UserMessage.from_dict(
-            {"_client": self, "_http": self.http, **payload.data}
-        )
+        UserMessage.from_dict(construct_client_dict(self, payload.data))
     ]
 
 

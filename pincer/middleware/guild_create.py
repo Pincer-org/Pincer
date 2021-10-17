@@ -9,8 +9,9 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import List, Tuple
 
-    from ..core.dispatch import GatewayDispatch
     from ..objects.guild import Guild
+    from ..core.dispatch import GatewayDispatch
+    from ..utils.conversion import construct_client_dict
 
 
 def guild_create_middleware(
@@ -32,9 +33,7 @@ def guild_create_middleware(
         ``on_guild_create`` and a ``Guild``
     """
     return "on_guild_create", [
-        Guild.from_dict(
-            {"_client": self, "_http": self.http, **payload.data}
-        )
+        Guild.from_dict(construct_client_dict(self, payload.data))
     ]
 
 

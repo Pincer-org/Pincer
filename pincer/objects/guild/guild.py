@@ -3,12 +3,13 @@
 
 from __future__ import annotations
 
-from typing import overload, TYPE_CHECKING
 from enum import IntEnum
 from dataclasses import dataclass, field
+from typing import overload, TYPE_CHECKING
 
 from ...utils.types import MISSING
 from ...utils.api_object import APIObject
+from ...utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from typing import Dict, List, Optional
@@ -282,37 +283,38 @@ class Guild(APIObject):
         The welcome screen of a Community guild, shown to new members,
         returned in an Invite's guild object
     """
-    afk_channel_id: Optional[Snowflake]
     afk_timeout: int
-    application_id: Optional[Snowflake]
-    embedded_activities: Optional[List]
-    banner: Optional[str]
     default_message_notifications: DefaultMessageNotificationLevel
-    description: Optional[str]
-    discovery_splash: Optional[str]
     emojis: List[Emoji]
     explicit_content_filter: ExplicitContentFilterLevel
     features: List[GuildFeatures]
     id: Snowflake
-    icon: Optional[str]
     mfa_level: MFALevel
     name: str
     nsfw_level: GuildNSFWLevel
     owner_id: Snowflake
     preferred_locale: str
     premium_tier: PremiumTier
-    public_updates_channel_id: Optional[Snowflake]
     roles: List[Role]
-    rules_channel_id: Optional[Snowflake]
-    splash: Optional[str]
     system_channel_flags: SystemChannelFlags
-    system_channel_id: Optional[Snowflake]
-    vanity_url_code: Optional[str]
     verification_level: VerificationLevel
-    guild_scheduled_events: Optional[List]
-    lazy: Optional[bool]
-    premium_progress_bar_enabled: Optional[bool]
-    guild_hashes: Optional[Dict]
+
+    guild_scheduled_events: APINullable[List] = MISSING
+    lazy: APINullable[bool] = MISSING
+    premium_progress_bar_enabled: APINullable[bool] = MISSING
+    guild_hashes: APINullable[Dict] = MISSING
+    afk_channel_id: APINullable[Snowflake] = MISSING
+    application_id: APINullable[Snowflake] = MISSING
+    embedded_activities: APINullable[List] = MISSING
+    banner: APINullable[str] = MISSING
+    description: APINullable[str] = MISSING
+    discovery_splash: APINullable[str] = MISSING
+    icon: APINullable[str] = MISSING
+    public_updates_channel_id: APINullable[Snowflake] = MISSING
+    rules_channel_id: APINullable[Snowflake] = MISSING
+    splash: APINullable[str] = MISSING
+    system_channel_id: APINullable[Snowflake] = MISSING
+    vanity_url_code: APINullable[str] = MISSING
 
     application_command_counts: APINullable[Dict] = MISSING
     application_command_count: APINullable[int] = MISSING
@@ -351,21 +353,12 @@ class Guild(APIObject):
         data = await client.http.get(f"/guilds/{_id}")
         channel_data = await client.http.get(f"/guilds/{_id}/channels")
 
-        channels: List[Channel] = [
+        data["channels"]: List[Channel] = [
             Channel.from_dict({**i, "_client": client, "_http": client.http})
             for i in (channel_data or [])
         ]
 
-        data.update(
-            {
-                "_client": client,
-                "_http": client.http,
-                "channels": channels
-            }
-        )
-
-        # Once below is fixed. Change this to Guild.from_dict
-        return Guild(**data)
+        return Guild.from_dict(construct_client_dict(client, data))
 
     async def get_member(self, _id: int) -> GuildMember:
         """|coro|
@@ -424,9 +417,7 @@ class Guild(APIObject):
 
     async def modify_member(self, _id: int, **kwargs) -> GuildMember:
         data = await self._http.patch(f"guilds/{self.id}/members/{_id}", kwargs)
-        return GuildMember.from_dict(
-            {**data, "_client": self._client, "_http": self._http}
-        )
+        return GuildMember.from_dict(construct_client_dict(self._client, data))
 
     @classmethod
     def from_dict(cls, data) -> Guild:
