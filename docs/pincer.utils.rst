@@ -33,3 +33,13 @@ get_params
 ~~~~~~~~~~
 
 .. autofunction:: get_params
+
+Snowflake
+---------
+
+Snowflake
+~~~~~~~~~
+
+.. attributetable:: Snowflake
+
+.. autoclass:: Snowflake()
