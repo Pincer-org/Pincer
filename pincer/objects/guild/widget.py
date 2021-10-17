@@ -16,14 +16,14 @@ if TYPE_CHECKING:
 
 @dataclass
 class GuildWidget(APIObject):
-    """
-    Represents a Discord Guild Widget object
+    """Represents a Discord Guild Widget object
 
-    :param enabled:
-        whether the widget is enabled
-
-    :param channel_id:
-        the widget channel id
+    Attributes
+    ----------
+    enabled: :class:`bool`
+        Whether the widget is enabled
+    channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+        The widget channel id
     """
     enabled: bool
     channel_id: Optional[Snowflake]

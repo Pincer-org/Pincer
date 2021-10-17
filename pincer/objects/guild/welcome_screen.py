@@ -45,9 +45,9 @@ class WelcomeScreen(APIObject):
     Attributes
     ----------
     description: LIst[:class:`~pincer.objects.guild.welcome_screen.WelcomeScreenChannel`]
-        the server description shown in the welcome screen
+        The server description shown in the welcome screen
     welcome_channels: Optional[:class:`str`]
-        the channels shown in the welcome screen, up to 5
+        The channels shown in the welcome screen, up to 5
     """
     welcome_channels: List[WelcomeScreenChannel]
 

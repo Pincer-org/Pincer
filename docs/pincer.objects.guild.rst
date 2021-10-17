@@ -341,3 +341,13 @@ WelcomeScreen
 .. attributetable:: WelcomeScreen
 
 .. autoclass:: WelcomeScreen()
+
+Widget
+------
+
+GuildWidget
+~~~~~~~~~~~
+
+.. attributetable:: GuildWidget
+
+.. autoclass:: GuildWidget()
