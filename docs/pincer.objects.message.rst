@@ -142,3 +142,13 @@ Message
 .. attributetable:: Message
 
 .. autoclass:: Message()
+
+Reaction
+--------
+
+Reaction
+~~~~~~~~
+
+.. attributetable:: Reaction
+
+.. autoclass:: Reaction()
