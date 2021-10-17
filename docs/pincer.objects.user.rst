@@ -43,3 +43,27 @@ Integration
 .. attributetable:: Integration
 
 .. autoclass:: Integration()
+
+User
+----
+
+PremiumTypes
+~~~~~~~~~~~~
+
+.. attributetable:: PremiumTypes
+
+.. autoclass:: PremiumTypes()
+
+VisibilityType
+~~~~~~~~~~~~~~
+
+.. attributetable:: VisibilityType
+
+.. autoclass:: VisibilityType()
+
+User
+~~~~
+
+.. attributetable:: User
+
+.. autoclass:: User()
