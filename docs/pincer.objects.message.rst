@@ -125,3 +125,20 @@ File
 .. attributetable:: File
 
 .. autoclass:: File()
+
+Message
+-------
+
+AllowedMentions
+~~~~~~~~~~~~~~~
+
+.. attributetable:: AllowedMentions
+
+.. autoclass:: AllowedMentions()
+
+Message
+~~~~~~~
+
+.. attributetable:: Message
+
+.. autoclass:: Message()

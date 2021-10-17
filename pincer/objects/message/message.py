@@ -14,16 +14,16 @@ if TYPE_CHECKING:
 
     from aiohttp import FormData, Payload
 
+    from .file import File
+    from .embed import Embed
     from ..user.user import User
     from ..guild.role import Role
-    from ..message.file import File
-    from ..message.embed import Embed
-    from ..app import interaction_base
     from .component import MessageComponent
     from ...utils.snowflake import Snowflake
+    from .user_message import AllowedMentionTypes
     from ...exceptions import CommandReturnIsEmpty
     from ..app.interactions import InteractionFlags
-    from ..message.user_message import AllowedMentionTypes
+    from ..app.interaction_base import CallbackType
 
 PILLOW_IMPORT = True
 
@@ -35,6 +35,20 @@ except (ModuleNotFoundError, ImportError):
 
 @dataclass
 class AllowedMentions(APIObject):
+    """Represents the entities the client can mention
+
+    Attributes
+    ----------
+    parse: List[:class:`~pincer.objects.message.user_message.AllowedMentionTypes`]
+        An array of allowed mention types to parse from the content.
+    roles: List[Union[:class:`~pincer.objects.guild.role.Role`, :class:`~pincer.utils.snowflake.Snowflake`]]
+        List of ``Role`` objects or snowflakes of allowed mentions.
+    users: List[Union[:class:`~pincer.objects.user.user.User` :class:`~pincer.utils.snowflake.Snowflake`]]
+        List of ``user`` objects or snowflakes of allowed mentions.
+    reply: :class:`bool`
+        If replies should mention the author.
+        |default| :data:`True`
+    """
     parse: List[AllowedMentionTypes]
     roles: List[Union[Role, Snowflake]]
     users: List[Union[User, Snowflake]]
@@ -57,23 +71,32 @@ class AllowedMentions(APIObject):
 
 @dataclass
 class Message:
-    # TODO: Docs for tts, allowed_mentions, components, flags, and type.
+    """A discord message that will be send to discord
 
-    """
-    A discord message that will be send to discord
-
-    :param content:
+    Parameters
+    ----------
+    content: :class:`str`
         The text in the message.
-
-    :param attachments:
+        |default| ``""``
+    attachments: Optional[List[:class:`~pincer.objects.message.file.File`]]
         Attachments on the message. This is a File object. You can also attach
         a Pillow Image or string. Pillow images will be converted to PNGs. They
         will use the naming sceme ``image%`` where % is the images index in the
         attachments array. Strings will be read as a filepath. The name of the
         file that the string points to will be used as the name.
-
-    :param embeds:
+    tts: Optional[:class:`bool`]
+        Whether the message should be spoken to the user.
+        |default| :data:`False`
+    embeds: Optional[List[:class:`~pincer.objects.message.embed.Embed`]]
         Embed attached to the message. This is an Embed object.
+    allowed_mentions: Optional[:class:`~pincer.objects.message.message.AllowedMentions`]
+        The allowed mentions for the message.
+    components: Optional[List[:class:`~pincer.objects.message.component.MessageComponent`]]
+        The components of the message.
+    flags: Optional[:class:`~pincer.objects.app.interactions.InteractionFlags`]
+        The interaction flags for the message.
+    type: Optional[:class:`~pincer.objects.app.interaction_base.CallbackType`]
+        The type of the callback.
     """
     content: str = ''
     attachments: Optional[List[File]] = None
@@ -82,7 +105,7 @@ class Message:
     allowed_mentions: Optional[AllowedMentions] = None
     components: Optional[List[MessageComponent]] = None
     flags: Optional[InteractionFlags] = None
-    type: Optional[interaction_base.CallbackType] = None
+    type: Optional[CallbackType] = None
 
     def __post_init__(self):
 
@@ -108,9 +131,7 @@ class Message:
 
     @property
     def isempty(self) -> bool:
-        """
-        :return:
-            Returns true if a message is empty.
+        """:class:`bool`: If the message is empty.
         """
 
         return (
@@ -140,20 +161,11 @@ class Message:
         }
 
         return {
-            "type": self.type or interaction_base.CallbackType.MESSAGE,
+            "type": self.type or CallbackType.MESSAGE,
             "data": {k: i for k, i in resp.items() if i}
         }
 
     def serialize(self) -> Tuple[str, Union[Payload, Dict]]:
-        """
-        Creates the data that the discord API wants for the message object
-
-        :return: (content_type, data)
-
-        :raises CommandReturnIsEmpty:
-            Command does not have content, an embed, or attachment.
-        """
-
         if self.isempty:
             raise CommandReturnIsEmpty("Cannot return empty message.")
 
