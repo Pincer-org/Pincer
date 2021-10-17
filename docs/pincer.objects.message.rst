@@ -26,3 +26,13 @@ Button
 .. attributetable:: Button
 
 .. autoclass:: Button()
+
+Component
+---------
+
+MessageComponent
+~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageComponent
+
+.. autoclass:: MessageComponent()
