@@ -12,10 +12,6 @@ if TYPE_CHECKING:
 
 
 def construct_client_dict(client: Client, data: Dict[...]):
-    """
-    Constructs a proper kwargs dict with the client props.
-    """
-
     return {
         **data,
         "_client": client,
@@ -29,10 +25,6 @@ def convert(
         check: Optional[type] = None,
         client: Optional[Client] = None
 ) -> T:
-    """
-    Convert a value to T if its not MISSING.
-    """
-
     def handle_factory() -> T:
         def fin_fac(v: Any):
             if check is not None and isinstance(v, check):
