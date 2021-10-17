@@ -18,33 +18,29 @@ if TYPE_CHECKING:
 
 @dataclass
 class Connection(APIObject):
-    """
-    The connection object that the user has attached.
+    """The connection object that the user has attached.
 
-    :param id:
-        id of the connection account
-
-    :param name:
-        the username of the connection account
-
-    :param type:
-        the service of the connection (twitch, youtube)
-
-    :param revoked:
-        whether the connection is revoked
-
-    :param integrations:
-        an array of partial server integrations
-
-    :param verified:
-        whether the connection is verified
-
-    :param friend_sync:
-        whether friend sync is enabled for this connection
-
-    :param show_activity:
-        whether activities related to this connection
+    Attributes
+    ----------
+    id: :class:`str`
+        Id of the connection account
+    name: :class:`str`
+        The username of the connection account
+    type: :class:`str`
+        The service of the connection (twitch, youtube)
+    verified: :class:`bool`
+        Whether the connection is verified
+    friend_sync: :class:`bool`
+        Whether friend sync is enabled for this connection
+    show_activity: :class:`bool`
+        Whether activities related to this connection
         will be shown in presence updates
+    visibility: :class:`~pincer.objects.user.user.VisibilityType`
+        If the connection is visible
+    revoked: APINullable[:class:`bool`]
+        Whether the connection is revoked
+    integrations: APINullable[List[:class:`~pincer.objects.user.integration.Integration`]]
+        An array of partial server integrations
     """
     id: str
     name: str
