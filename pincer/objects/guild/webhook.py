@@ -21,18 +21,17 @@ if TYPE_CHECKING:
 
 
 class WebhookType(IntEnum):
-    """
-    Represents the type of a webhook.
+    """Represents the type of a webhook.
 
-    :param INCOMING:
+    Attributes
+    ----------
+    INCOMING:
         Incoming Webhooks can post messages to channels with a
         generated token.
-
-    :param CHANNEL_FOLLOWER:
+    CHANNEL_FOLLOWER:
         Channel Follower Webhooks are internal webhooks used with
         Channel Following to post new messages into channels.
-
-    :param APPLICATION:
+    APPLICATION:
         Application webhooks are webhooks used with Interactions
     """
     INCOMING = 1
@@ -42,51 +41,40 @@ class WebhookType(IntEnum):
 
 @dataclass
 class Webhook(APIObject):
-    """
-    Represents a Discord channel webhook.
+    """Represents a Discord channel webhook.
 
-    :param id:
-        the id of the webhook
-
-    :param type:
-        the type of the webhook
-
-    :param channel_id:
-        the channel id this webhook is for, if any
-
-    :param name:
-        the default name of the webhook
-
-    :param avatar:
-        the default user avatar hash of the webhook
-
-    :param application_id:
-        the bot/OAuth2 application that created this webhook
-
-    :param user:
-        the user this webhook was created by
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        The id of the webhook
+    type: :class:`~pincer.objects.guild.webhook.WebhookType`
+        The type of the webhook
+    channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+        The channel id this webhook is for, if any
+    name: Optional[:class:`str`]
+        The default name of the webhook
+    avatar: Optional[:class:`str`]
+        The default user avatar hash of the webhook
+    application_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+        The bot/OAuth2 application that created this webhook
+    user: APINullable[:class:`~pincer.objects.user.user.User`]
+        The user this webhook was created by
         (not returned when getting a webhook with its token)
-
-    :param token:
-        the secure token of the webhook
+    token: APINullable[:class:`str`]
+        The secure token of the webhook
         (returned for Incoming Webhooks)
-
-    :param source_guild:
-        the guild of the channel that this webhook is following
+    source_guild: APINullable[:class:`~pincer.objects.guild.guild.Guild`]
+        The guild of the channel that this webhook is following
         (returned for Channel Follower Webhooks)
-
-    :param source_channel:
-        the channel that this webhook is following
+    source_channel: APINullable[:class:`~pincer.objects.guild.channel.Channel`]
+        The channel that this webhook is following
         (returned for Channel Follower Webhooks)
-
-    :param url:
-        the url used for executing the webhook
+    url: APINullable[:class:`str`]
+        The url used for executing the webhook
         (returned by the webhooks OAuth2 flow)
-
-    :param guild_id:
-        the guild id this webhook is for, if any
+    guild_id: APINullable[Optional[:class:`~pincer.objects.guild.guild.Guild`]]
+        The guild id this webhook is for, if any
     """
-
     id: Snowflake
     type: WebhookType
 

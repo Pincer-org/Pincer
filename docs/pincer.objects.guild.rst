@@ -307,3 +307,20 @@ ThreadMember
 .. attributetable:: ThreadMember
 
 .. autoclass:: ThreadMember()
+
+Webhook
+-------
+
+WebhookType
+~~~~~~~~~~~
+
+.. attributetable:: WebhookType
+
+.. autoclass:: WebhookType()
+
+Webhook
+~~~~~~~
+
+.. attributetable:: Webhook
+
+.. autoclass:: Webhook()
