@@ -1,6 +1,6 @@
 .. currentmodule:: pincer.middleware
 
-Pincer Middleware module
+Pincer Middleware Module
 ========================
 
 Activity Join Request

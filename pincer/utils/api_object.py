@@ -13,15 +13,6 @@ T = TypeVar("T")
 
 
 def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
-    """
-    Returns a dict from a dataclass that ignores
-    all values that are None
-    Modification of _asdict_inner from dataclasses
-
-    :param obj:
-        Dataclass obj
-    """
-
     if _is_dataclass_instance(obj):
         result = []
         for f in fields(obj):
@@ -54,6 +45,7 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
 
 class HTTPMeta(type):
     # TODO: Fix typehints
+    # ? - ooliver1
     __attrs = {
         "_client": Optional[Any],
         "_http": Optional[Any]
@@ -72,8 +64,7 @@ class HTTPMeta(type):
 
 @dataclass
 class APIObject(metaclass=HTTPMeta):
-    """
-    Represents an object which has been fetched from the Discord API.
+    """Represents an object which has been fetched from the Discord API.
     """
 
     # def __post_init__(self):
@@ -92,9 +83,6 @@ class APIObject(metaclass=HTTPMeta):
             cls: Generic[T],
             data: Dict[str, Union[str, bool, int, Any]]
     ) -> T:
-        """
-        Parse an API object from a dictionary.
-        """
         if isinstance(data, cls):
             return data
 
@@ -110,7 +98,4 @@ class APIObject(metaclass=HTTPMeta):
         )
 
     def to_dict(self) -> Dict:
-        """
-        Transform the current object to a dictionary representation.
-        """
         return _asdict_ignore_none(self)
