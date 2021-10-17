@@ -290,3 +290,20 @@ GuildTemplate
 .. attributetable:: GuildTemplate
 
 .. autoclass:: GuildTemplate()
+
+Thread
+------
+
+ThreadMetadata
+~~~~~~~~~~~~~~
+
+.. attributetable:: ThreadMetadata
+
+.. autoclass:: ThreadMetadata()
+
+ThreadMember
+~~~~~~~~~~~~
+
+.. attributetable:: ThreadMember
+
+.. autoclass:: ThreadMember()
