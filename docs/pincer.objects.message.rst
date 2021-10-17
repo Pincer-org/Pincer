@@ -162,3 +162,41 @@ MessageReference
 .. attributetable:: MessageReference
 
 .. autoclass:: MessageReference()
+
+Sticker
+-------
+
+StickerType
+~~~~~~~~~~~
+
+.. attributetable:: StickerType
+
+.. autoclass:: StickerType()
+
+StickerFormatType
+~~~~~~~~~~~~~~~~~
+
+.. attributetable:: StickerFormatType
+
+.. autoclass:: StickerFormatType()
+
+Sticker
+~~~~~~~
+
+.. attributetable:: Sticker
+
+.. autoclass:: Sticker()
+
+StickerItem
+~~~~~~~~~~~
+
+.. attributetable:: StickerItem
+
+.. autoclass:: StickerItem()
+
+StickerPack
+~~~~~~~~~~~
+
+.. attributetable:: StickerPack
+
+.. autoclass:: StickerPack()
