@@ -251,7 +251,7 @@ class Client(Dispatcher):
         if name == "on_command_error" and _events.get(name):
             raise InvalidEventName(
                 f"The `{name}` event can only exist once. This is because "
-                f"it gets treated as a command and can have a response."
+                "it gets treated as a command and can have a response."
             )
 
         _events[name].append(coroutine)

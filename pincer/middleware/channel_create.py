@@ -1,7 +1,7 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-"""sent when a channel is created/joined on the client"""
+"""Sent when a channel is created/joined on the client."""
 from pincer.core.dispatch import GatewayDispatch
 from pincer.objects import Channel
 from pincer.utils.conversion import construct_client_dict
