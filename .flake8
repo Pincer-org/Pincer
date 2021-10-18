@@ -37,3 +37,15 @@ exclude =
     # Tuples are not annotations, flake8 says this, vscode says this
     examples
 max-complexity = 10
+per-file-ignores = 
+    pincer/__init__.py:F401
+    pincer/core/__init__.py:F401
+    pincer/middleware/__init__.py:F401
+    pincer/objects/__init__.py:F401
+    pincer/objects/app/__init__.py:F401
+    pincer/objects/events/__init__.py:F401
+    pincer/objects/guild/__init__.py:F401
+    pincer/objects/message/__init__.py:F401
+    pincer/objects/user/__init__.py:F401
+    pincer/objects/voice/__init__.py:F401
+    pincer/utils/__init__.py:F401
