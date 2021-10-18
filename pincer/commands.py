@@ -342,7 +342,7 @@ class ChatCommandHandler(metaclass=Singleton):
         # TODO: Fix docs
         add_endpoint = self.__add
 
-        if bool(cmd.guild_id):
+        if cmd.guild_id:
             add_endpoint = self.__add_guild.format(command=cmd)
 
         res = await self.client.http.post(
