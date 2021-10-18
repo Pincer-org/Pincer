@@ -44,7 +44,7 @@ _options_type_link = {
     User: AppCommandOptionType.USER,
     Channel: AppCommandOptionType.CHANNEL,
     Role: AppCommandOptionType.ROLE,
-  
+
 }
 
 
@@ -68,6 +68,7 @@ def command(
     pincer.objects.Role - Role
     Mentionable is not implemented
     """
+
     # TODO: Fix docs
     # TODO: Fix docs w guild
     # TODO: Fix docs w cooldown
@@ -370,16 +371,15 @@ class ChatCommandHandler(metaclass=Singleton):
         Remove commands that are registered by discord but not in use
         by the current client!
         """
-        to_remove: List[AppCommand] = []
-
         registered_commands = list(map(
             lambda registered_cmd: registered_cmd.app.name,
             ChatCommandHandler.register.values()
         ))
 
-        for api_cmd in self._api_commands:
-            if api_cmd.name not in registered_commands:
-                to_remove.append(api_cmd)
+        to_remove: List[AppCommand] = [
+            api_cmd for api_cmd in self._api_commands
+            if api_cmd.name not in registered_commands
+        ]
 
         await self.remove_commands(to_remove)
 
