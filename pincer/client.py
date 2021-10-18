@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import logging
 from asyncio import iscoroutinefunction, run, ensure_future
+from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
 from typing import Optional, Any, Union, Dict, Tuple, List, TYPE_CHECKING
@@ -32,7 +33,7 @@ _log = logging.getLogger(__package__)
 MiddlewareType = Optional[Union[Coro, Tuple[str, List[Any], Dict[str, Any]]]]
 
 _event = Union[str, Coro]
-_events: Dict[str, Optional[Union[List[_event], _event]]] = {}
+_events: Dict[str, Optional[Union[List[_event], _event]]] = defaultdict(list)
 
 
 def event_middleware(call: str, *, override: bool = False):
@@ -253,9 +254,6 @@ class Client(Dispatcher):
                 f"it gets treated as a command and can have a response."
             )
 
-        if _events.get(name) is None:
-            _events[name] = []
-
         _events[name].append(coroutine)
         return coroutine
 
@@ -263,10 +261,10 @@ class Client(Dispatcher):
     def get_event_coro(name: str) -> List[Optional[Coro]]:
         calls = _events.get(name.strip().lower())
 
-        return [] if not calls else [
-            call for call in calls
-            if iscoroutinefunction(call) or isasyncgenfunction(call)
-        ]
+        return [] if not calls else list(filter(
+            lambda call: iscoroutinefunction(call) or isasyncgenfunction(call),
+            calls
+        ))
 
     def load_cog(self, path: str, package: Optional[str] = None):
         """
