@@ -74,3 +74,39 @@ Timestamp
 .. attributetable:: Timestamp
 
 .. autoclass:: Timestamp()
+
+Types
+-----
+
+MissingType
+~~~~~~~~~~~
+
+.. autoclass:: MissingType()
+
+MISSING
+~~~~~~~
+
+.. data:: MISSING
+   :type: MissingType
+
+APINullable
+~~~~~~~~~~~
+
+.. data:: APINullable
+   :type: Union[T, MissingType]
+
+   Represents a value which is optionally returned from the API
+
+Coro
+~~~~
+
+.. data:: Coro
+   :type: TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
+
+   Represents a coroutine.
+
+choice_value_types
+~~~~~~~~~~~~~~~~~~
+
+.. data:: choice_value_types
+   :type: Tuple[str, int, float]
