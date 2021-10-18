@@ -5,6 +5,7 @@
 
 from ..core.dispatch import GatewayDispatch
 from ..objects import UserMessage
+from ..utils.conversion import construct_client_dict
 
 
 async def message_create_middleware(self, payload: GatewayDispatch):
@@ -19,9 +20,7 @@ async def message_create_middleware(self, payload: GatewayDispatch):
         The data received from the message creation event.
     """
     return "on_message", [
-        UserMessage.from_dict(
-            {"_client": self, "_http": self.http, **payload.data}
-        )
+        UserMessage.from_dict(construct_client_dict(self, payload.data))
     ]
 
 

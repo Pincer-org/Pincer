@@ -1,9 +1,10 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-"""sent when a channel is created/joined on the client"""
+"""Sent when a channel is created/joined on the client."""
 from pincer.core.dispatch import GatewayDispatch
 from pincer.objects import Channel
+from pincer.utils.conversion import construct_client_dict
 
 
 def channel_create_middleware(self, payload: GatewayDispatch):
@@ -16,8 +17,6 @@ def channel_create_middleware(self, payload: GatewayDispatch):
         The data received from the ready event.
     """
 
-    return "on_channel_creation",  [
-        Channel.from_dict(
-            {"_client": self, "_http": self.http, **payload.data}
-        )
+    return "on_channel_creation", [
+        Channel.from_dict(construct_client_dict(self, payload.data))
     ]
