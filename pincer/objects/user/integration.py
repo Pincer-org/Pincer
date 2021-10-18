@@ -110,7 +110,7 @@ class Integration(APIObject):
         Has this integration been revoked
     application: APINullable[:class:`~pincer.objects.user.integration.IntegrationApplication`]
         The bot/OAuth2 application for discord integrations
-    """
+    """  # noqa: E501
 
     id: Snowflake
     name: str

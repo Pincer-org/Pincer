@@ -41,7 +41,8 @@ class Connection(APIObject):
         Whether the connection is revoked
     integrations: APINullable[List[:class:`~pincer.objects.user.integration.Integration`]]
         An array of partial server integrations
-    """
+    """  # noqa: E501
+
     id: str
     name: str
     type: str

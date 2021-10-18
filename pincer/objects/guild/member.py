@@ -106,7 +106,8 @@ class GuildMember(BaseMember, APIObject):
         The user this guild member represents
     Avatar: APINullable[:class:`str`]
         The user's avatar.
-    """
+    """  # noqa: E501
+
     nick: APINullable[Optional[str]] = MISSING
     pending: APINullable[bool] = MISSING
     is_pending: APINullable[bool] = MISSING

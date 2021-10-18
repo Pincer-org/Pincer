@@ -255,7 +255,7 @@ class Embed(APIObject):
         Video information.
     type: APINullable[:class:`int`]
         type of message
-    """
+    """  # noqa: E501
 
     title: APINullable[str] = MISSING
     description: APINullable[str] = MISSING

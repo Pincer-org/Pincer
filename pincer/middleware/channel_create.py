@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from typing import List, Tuple

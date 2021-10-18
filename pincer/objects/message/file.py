@@ -40,7 +40,7 @@ class File(APIObject):
 
     Attributes
     ----------
-    content: :class:`bytes` 
+    content: :class:`bytes`
         File bytes.
     filename: :class:`str`
         The name of the file when its uploaded to discord.

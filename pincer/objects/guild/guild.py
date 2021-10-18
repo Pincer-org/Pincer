@@ -282,7 +282,7 @@ class Guild(APIObject):
     welcome_screen: APINullable[:class:`~pincer.objects.guild.welcome_screen.WelcomeScreen`]
         The welcome screen of a Community guild, shown to new members,
         returned in an Invite's guild object
-    """
+    """  # noqa: E501
     afk_timeout: int
     default_message_notifications: DefaultMessageNotificationLevel
     emojis: List[Emoji]

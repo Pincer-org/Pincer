@@ -48,7 +48,8 @@ class AllowedMentions(APIObject):
     reply: :class:`bool`
         If replies should mention the author.
         |default| :data:`True`
-    """
+    """  # noqa: E501
+
     parse: List[AllowedMentionTypes]
     roles: List[Union[Role, Snowflake]]
     users: List[Union[User, Snowflake]]
@@ -97,7 +98,8 @@ class Message:
         The interaction flags for the message.
     type: Optional[:class:`~pincer.objects.app.interaction_base.CallbackType`]
         The type of the callback.
-    """
+    """  # noqa: E501
+
     content: str = ''
     attachments: Optional[List[File]] = None
     tts: Optional[bool] = False

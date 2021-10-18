@@ -23,7 +23,7 @@ class Timestamp:
     Parameters
     ----------
     time: Union[:class:`str`, :class:`int`, :class:`float`, :class:`datetime.datetime`]
-    """
+    """  # noqa: E501
 
     def __init__(self, time: Optional[TS] = None):
         self.__time = Timestamp.parse(time)
@@ -87,7 +87,8 @@ class Timestamp:
         -------
         :class:`datetime.datetime`:
             The converted datetime object.
-        """
+        """  # noqa: E501
+
         if isinstance(time, datetime):
             return time
 

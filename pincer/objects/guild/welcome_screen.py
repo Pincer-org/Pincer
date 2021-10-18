@@ -48,7 +48,7 @@ class WelcomeScreen(APIObject):
         The server description shown in the welcome screen
     welcome_channels: Optional[:class:`str`]
         The channels shown in the welcome screen, up to 5
-    """
+    """  # noqa: E501
     welcome_channels: List[WelcomeScreenChannel]
 
     description: Optional[str] = None
