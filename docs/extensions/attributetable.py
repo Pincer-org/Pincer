@@ -9,33 +9,45 @@ import inspect
 import os
 import re
 
+
 class attributetable(nodes.General, nodes.Element):
     pass
+
 
 class attributetablecolumn(nodes.General, nodes.Element):
     pass
 
+
 class attributetabletitle(nodes.TextElement):
     pass
+
 
 class attributetableplaceholder(nodes.General, nodes.Element):
     pass
 
+
 class attributetablebadge(nodes.TextElement):
     pass
+
 
 class attributetable_item(nodes.Part, nodes.Element):
     pass
 
+
 def visit_attributetable_node(self, node):
     class_ = node["python-class"]
-    self.body.append(f'<div class="py-attribute-table" data-move-to-id="{class_}">')
+    self.body.append(
+        f'<div class="py-attribute-table" data-move-to-id="{class_}">')
+
 
 def visit_attributetablecolumn_node(self, node):
-    self.body.append(self.starttag(node, 'div', CLASS='py-attribute-table-column'))
+    self.body.append(self.starttag(
+        node, 'div', CLASS='py-attribute-table-column'))
+
 
 def visit_attributetabletitle_node(self, node):
     self.body.append(self.starttag(node, 'span'))
+
 
 def visit_attributetablebadge_node(self, node):
     attributes = {
@@ -44,25 +56,34 @@ def visit_attributetablebadge_node(self, node):
     }
     self.body.append(self.starttag(node, 'span', **attributes))
 
+
 def visit_attributetable_item_node(self, node):
-    self.body.append(self.starttag(node, 'li', CLASS='py-attribute-table-entry'))
+    self.body.append(self.starttag(
+        node, 'li', CLASS='py-attribute-table-entry'))
+
 
 def depart_attributetable_node(self, node):
     self.body.append('</div>')
 
+
 def depart_attributetablecolumn_node(self, node):
     self.body.append('</div>')
+
 
 def depart_attributetabletitle_node(self, node):
     self.body.append('</span>')
 
+
 def depart_attributetablebadge_node(self, node):
     self.body.append('</span>')
+
 
 def depart_attributetable_item_node(self, node):
     self.body.append('</li>')
 
+
 _name_parser_regex = re.compile(r'(?P<module>[\w.]+\.)?(?P<name>\w+)')
+
 
 class PyAttributeTable(SphinxDirective):
     has_content = False
@@ -80,7 +101,8 @@ class PyAttributeTable(SphinxDirective):
             if not modulename:
                 modulename = self.env.ref_context.get('py:module')
         if modulename is None:
-            raise RuntimeError('modulename somehow None for %s in %s.' % (content, self.env.docname))
+            raise RuntimeError('modulename somehow None for %s in %s.' % (
+                content, self.env.docname))
 
         return modulename, name
 
@@ -118,6 +140,7 @@ class PyAttributeTable(SphinxDirective):
         node['python-full-name'] = f'{modulename}.{name}'
         return [node]
 
+
 def build_lookup_table(env):
     # Given an environment, load up a lookup table of
     # full-class-name: objects
@@ -143,6 +166,7 @@ def build_lookup_table(env):
 
 TableElement = namedtuple('TableElement', 'fullname label badge')
 
+
 def process_attributetable(app, doctree, fromdocname):
     env = app.builder.env
 
@@ -154,7 +178,8 @@ def process_attributetable(app, doctree, fromdocname):
         for label, subitems in groups.items():
             if not subitems:
                 continue
-            table.append(class_results_to_node(label, sorted(subitems, key=lambda c: c.label)))
+            table.append(class_results_to_node(
+                label, sorted(subitems, key=lambda c: c.label)))
 
         table['python-class'] = fullname
 
@@ -162,6 +187,7 @@ def process_attributetable(app, doctree, fromdocname):
             node.replace_self([])
         else:
             node.replace_self([table])
+
 
 def get_class_results(lookup, modulename, name, fullname):
     module = importlib.import_module(modulename)
@@ -201,11 +227,11 @@ def get_class_results(lookup, modulename, name, fullname):
                 badge = attributetablebadge('cls', 'cls')
                 badge['badge-type'] = _('classmethod')
             elif (
-                inspect.isfunction(value) 
+                inspect.isfunction(value)
                 or isinstance(value, staticmethod)
             ):
                 if (
-                    doc.startswith(('A decorator', 'A shortcut decorator')) 
+                    doc.startswith(('A decorator', 'A shortcut decorator'))
                     or label in ("event", "loop")
                 ):
                     # finicky but surprisingly consistent
@@ -217,18 +243,20 @@ def get_class_results(lookup, modulename, name, fullname):
                     badge = attributetablebadge('def', 'def')
                     badge['badge-type'] = _('method')
 
-        groups[key].append(TableElement(fullname=attrlookup, label=label, badge=badge))
+        groups[key].append(TableElement(
+            fullname=attrlookup, label=label, badge=badge))
 
     return groups
+
 
 def class_results_to_node(key, elements):
     title = attributetabletitle(key, key)
     ul = nodes.bullet_list('')
     for element in elements:
         ref = nodes.reference('', '', internal=True,
-                                      refuri='#' + element.fullname,
-                                      anchorname='',
-                                      *[nodes.Text(element.label)])
+                              refuri='#' + element.fullname,
+                              anchorname='',
+                              *[nodes.Text(element.label)])
         para = addnodes.compact_paragraph('', '', ref)
         if element.badge is not None:
             ul.append(attributetable_item('', element.badge, para))
@@ -237,12 +265,18 @@ def class_results_to_node(key, elements):
 
     return attributetablecolumn('', title, ul)
 
+
 def setup(app):
     app.add_directive('attributetable', PyAttributeTable)
-    app.add_node(attributetable, html=(visit_attributetable_node, depart_attributetable_node))
-    app.add_node(attributetablecolumn, html=(visit_attributetablecolumn_node, depart_attributetablecolumn_node))
-    app.add_node(attributetabletitle, html=(visit_attributetabletitle_node, depart_attributetabletitle_node))
-    app.add_node(attributetablebadge, html=(visit_attributetablebadge_node, depart_attributetablebadge_node))
-    app.add_node(attributetable_item, html=(visit_attributetable_item_node, depart_attributetable_item_node))
+    app.add_node(attributetable, html=(
+        visit_attributetable_node, depart_attributetable_node))
+    app.add_node(attributetablecolumn, html=(
+        visit_attributetablecolumn_node, depart_attributetablecolumn_node))
+    app.add_node(attributetabletitle, html=(
+        visit_attributetabletitle_node, depart_attributetabletitle_node))
+    app.add_node(attributetablebadge, html=(
+        visit_attributetablebadge_node, depart_attributetablebadge_node))
+    app.add_node(attributetable_item, html=(
+        visit_attributetable_item_node, depart_attributetable_item_node))
     app.add_node(attributetableplaceholder)
     app.connect('doctree-resolved', process_attributetable)

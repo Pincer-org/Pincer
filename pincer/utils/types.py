@@ -7,6 +7,7 @@ from typing import TypeVar, Callable, Coroutine, Any, Union, Literal
 class MissingType:
     """Type class for missing attributes and parameters
     """
+
     def __repr__(self):
         return "<MISSING>"
 
@@ -26,7 +27,7 @@ APINullable = Union[T, MissingType]
 Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
 
 
-Choices = Literal #: Just a :data:`~typing.Literal`
+Choices = Literal
 
 
 choice_value_types = (str, int, float)

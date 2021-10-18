@@ -9,13 +9,14 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+import furo
+from pincer import __title__, __author__, __version__
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../'))
 sys.path.append(os.path.abspath('extensions'))
 
 # -- Project information -----------------------------------------------------
-from pincer import __title__, __author__, __version__
 
 
 project = __title__
@@ -29,7 +30,6 @@ branch = 'main' if __version__.endswith('a') else 'v' + __version__
 
 # -- General configuration ---------------------------------------------------
 
-import furo
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom

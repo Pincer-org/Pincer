@@ -36,7 +36,8 @@ class Task:
         The coroutine to register as a task.
     delay: :class:`float`
         Delay between each iteration of the task.
-    """ 
+    """
+
     def __init__(self, scheduler: TaskScheduler, coro: Coro, delay: float):
         self._scheduler = scheduler
         self.coro = coro
@@ -93,6 +94,7 @@ class Task:
 class TaskScheduler:
     """Class that scedules tasts.
     """
+
     def __init__(self, client):
         self.client = client
         self.tasks: Set[Task] = set()
