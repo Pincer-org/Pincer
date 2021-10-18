@@ -31,9 +31,12 @@ class Task:
     Parameters
     ----------
     scheduler: :class:`~pincer.utils.tasks.TaskScheduler`
+        The scheduler to use.
     coro: :class:`~pincer.utils.types.Coro`
-    deflay: :class:`float`
-    """  # TODO: docs: A
+        The coroutine to register as a task.
+    delay: :class:`float`
+        Delay between each iteration of the task.
+    """ 
     def __init__(self, scheduler: TaskScheduler, coro: Coro, delay: float):
         self._scheduler = scheduler
         self.coro = coro

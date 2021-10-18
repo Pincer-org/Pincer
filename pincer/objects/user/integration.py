@@ -23,8 +23,10 @@ class IntegrationExpireBehavior(IntEnum):
     Attributes
     ----------
     REMOVE_ROLE:
+        Remove role on expire.
     KICK:
-    """  # TODO: docs: cba again, ill look at ddocs after docs done to do this
+        Kick on expire.
+    """
     REMOVE_ROLE = 0
     KICK = 1
 

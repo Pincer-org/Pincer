@@ -197,7 +197,6 @@ class Activity(APIObject):
     buttons: APInullable[List[:class:`~pincer.objects.events.presence.ActivityButton`]]
         The url button on an activity.
     """  # noqa: E501
-    # TODO um this doc should be longer
     name: str
     type: ActivityType
     created_at: int

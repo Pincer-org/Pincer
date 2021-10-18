@@ -40,10 +40,14 @@ class MessageActivityType(IntEnum):
     Attributes
     ----------
     JOIN:
+        Invite to join.
     SPECTATE:
+        Invite to spectate.
     LISTEN:
+        Invite to listen along.
     JOIN_REQUEST:
-    """  # TODO docs: maybe do this, cba rn
+        Request to join.
+    """
     JOIN = 1
     SPECTATE = 2
     LISTEN = 3
@@ -94,28 +98,50 @@ class MessageType(IntEnum):
     Attributes
     ----------
     DEFAULT:
+        Normal message.
     RECIPIENT_ADD:
+        Recipient is added.
     RECIPIENT_REMOVE:
+        Recipient is removed.
     CALL:
+        A call is being made.
     CHANNEL_NAME_CHANGE:
+        The group channel name is changed.
     CHANNEL_ICON_CHANGE:
+        The group channel icon is changed.
     CHANNEL_PINNED_MESSAGE:
+        A message is pinned.
     GUILD_MEMBER_JOIN:
+        A member joined.
     USER_PREMIUM_GUILD_SUBSCRIPTION:
+        A boost.
     USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_1:
+        A boost that reached tier 1.
     USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_2:
+        A boost that reached tier 2.
     USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3:
+        A boost that reached tier 3.
     CHANNEL_FOLLOW_ADD:
+        A channel is subscribed to.
     GUILD_DISCOVERY_DISQUALIFIED:
+        The guild is disqualified from discovery,
     GUILD_DISCOVERY_REQUALIFIED:
+        The guild is requalified for discovery.
     GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING:
+        Warning about discovery violations.
     GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING:
+        Final warning about discovery violations.
     THREAD_CREATED:
+        A thread is created.
     REPLY:
+        A message reply.
     APPLICATION_COMMAND:
+        Slash command is used and responded to.
     THREAD_STARTER_MESSAGE:
+        The initial message in a thread when its created off a message.
     GUILD_INVITE_REMINDER:
-    """  # TODO docs: maybe do this too, really cba rn
+        ??
+    """
     DEFAULT = 0
     RECIPIENT_ADD = 1
     RECIPIENT_REMOVE = 2

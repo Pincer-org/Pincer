@@ -21,7 +21,7 @@ async def on_message_delete_middleware(
 ) -> Tuple[str, List[MessageDeleteEvent]]:
     """|coro|
 
-    Middleware for ``?`` event. # TODO ``?`` here because idk what it is
+    Middleware for ``on_message_delete`` event.
 
     Parameters
     ----------

@@ -25,9 +25,12 @@ class PremiumTypes(IntEnum):
     Attributes
     ----------
     NONE:
+        No nitro.
     NITRO_CLASSIC:
+        Nitro classic (no boosts).
     NITRO:
-    """  # TODO: docs: again
+        Full nitro subscription.
+    """
     NONE = 0
     NITRO_CLASSIC = 1
     NITRO = 2
@@ -39,8 +42,10 @@ class VisibilityType(IntEnum):
     Attributes
     ----------
     NONE:
+        Connection is not visible.
     EVERYONE:
-    """  # TODO docs: once more
+        Connection is visible to everyone.
+    """
     NONE = 0
     EVERYONE = 1
 
