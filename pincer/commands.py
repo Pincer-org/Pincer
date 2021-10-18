@@ -218,7 +218,7 @@ def command(
                 # Do NOT use isinstance as this is a comparison between
                 # two values of the type type and isinstance does NOT
                 # work here.
-                union_args = [t for t in args if t is not None]
+                union_args = [t for t in args if not isinstance(t, None)]
 
                 annotation = (
                     get_index(union_args, 0)
@@ -498,7 +498,7 @@ class ChatCommandHandler(metaclass=Singleton):
         to_remove: List[AppCommand] = []
 
         for api_cmd in self._api_commands:
-            doesnt_exist = all(map(
+            doesnt_exist = not all(map(
                 lambda loc_cmd: api_cmd.name != loc_cmd.app.name,
                 ChatCommandHandler.register.values()
             ))

@@ -10,8 +10,9 @@ class exception_hierarchy(nodes.General, nodes.Element):
 
 
 def visit_exception_hierarchy_node(self, node):
-    self.body.append(self.starttag(
-        node, 'div', CLASS='exception-hierarchy-content'))
+    self.starttag(
+        node, 'div', CLASS='exception-hierarchy-content'
+    )
 
 
 def depart_exception_hierarchy_node(self, node):

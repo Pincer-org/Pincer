@@ -37,12 +37,14 @@ class attributetable_item(nodes.Part, nodes.Element):
 def visit_attributetable_node(self, node):
     class_ = node["python-class"]
     self.body.append(
-        f'<div class="py-attribute-table" data-move-to-id="{class_}">')
+        f'<div class="py-attribute-table" data-move-to-id="{class_}">'
+    )
 
 
 def visit_attributetablecolumn_node(self, node):
     self.body.append(self.starttag(
-        node, 'div', CLASS='py-attribute-table-column'))
+        node, 'div', CLASS='py-attribute-table-column')
+    )
 
 
 def visit_attributetabletitle_node(self, node):
@@ -59,7 +61,8 @@ def visit_attributetablebadge_node(self, node):
 
 def visit_attributetable_item_node(self, node):
     self.body.append(self.starttag(
-        node, 'li', CLASS='py-attribute-table-entry'))
+        node, 'li', CLASS='py-attribute-table-entry')
+    )
 
 
 def depart_attributetable_node(self, node):

@@ -9,24 +9,28 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import furo
-from pincer import __title__, __author__, __version__
+import re
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../'))
+sys.path.append(os.path.abspath('..'))
+sys.path.append(os.path.abspath("../.."))
 sys.path.append(os.path.abspath('extensions'))
 
 # -- Project information -----------------------------------------------------
 
 
-project = __title__
+project = "Pincer Library"
 copyright = '2021, Pincer'
-author = __author__
+author = "Sigmanificient, Arthurdw"
 
-# The full version, including alpha/beta/rc tags
-release = str(__version__)
+version = ''
+with open('../pincer/__init__.py') as f:
+    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 
-branch = 'main' if __version__.endswith('a') else 'v' + __version__
+# The full version, including alpha/beta/rc tags.
+release = version
+
+branch = 'main' if version.endswith('a') else 'v' + version
 
 # -- General configuration ---------------------------------------------------
 

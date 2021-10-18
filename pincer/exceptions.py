@@ -28,8 +28,7 @@ class NoExportMethod(PincerError):
 
 
 class CogError(PincerError):
-    """Exception base class for errors related to Cogs.
-    """
+    """Exception base class for errors related to Cogs."""
 
 
 class CogNotFound(CogError):
@@ -51,8 +50,7 @@ class NoValidSetupMethod(CogError):
 
 
 class TooManySetupArguments(CogError):
-    """
-    Exception which gets raised when too many arguments were requested
+    """Exception which gets raised when too many arguments were requested
     in a cog its setup function.
     """
 
@@ -64,8 +62,7 @@ class NoCogManagerReturnFound(CogError):
 
 
 class CommandError(PincerError):
-    """Base class for exceptions which are related to commands.
-    """
+    """Base class for exceptions which are related to commands."""
 
 
 class CommandCooldownError(CommandError):
@@ -84,18 +81,15 @@ class CommandCooldownError(CommandError):
 
 
 class CommandIsNotCoroutine(CommandError):
-    """Exception raised when the provided command call is not a coroutine.
-    """
+    """Exception raised when the provided command call is not a coroutine."""
 
 
 class CommandAlreadyRegistered(CommandError):
-    """The command which you are trying to register is already registered.
-    """
+    """The command which you are trying to register is already registered."""
 
 
 class CommandDescriptionTooLong(CommandError):
-    """The provided command description is too long, as it exceeds 100 characters.
-    """
+    """The provided command description is too long, as it exceeds 100 characters."""
 
 
 class TooManyArguments(CommandError):
@@ -105,18 +99,15 @@ class TooManyArguments(CommandError):
 
 
 class InvalidArgumentAnnotation(CommandError):
-    """The provided argument annotation is not known, so it cannot be used.
-    """
+    """The provided argument annotation is not known, so it cannot be used."""
 
 
 class CommandReturnIsEmpty(CommandError):
-    """Cannot return an empty string to an interaction.
-    """
+    """Cannot return an empty string to an interaction."""
 
 
 class InvalidCommandGuild(CommandError):
-    """The provided guild id not not valid.
-    """
+    """The provided guild id not not valid."""
 
 
 class InvalidCommandName(CommandError):
@@ -133,13 +124,11 @@ class InvalidEventName(PincerError):
 
 
 class InvalidUrlError(PincerError, ValueError):
-    """Exception raised when an invalid url has been provided.
-    """
+    """Exception raised when an invalid url has been provided."""
 
 
 class EmbedFieldError(PincerError, ValueError):
-    """Exception that is raised when an embed field is too large.
-    """
+    """Exception that is raised when an embed field is too large."""
 
     @classmethod
     def from_desc(cls, _type: str, max_size: int, cur_size: int):
@@ -164,13 +153,11 @@ class TaskError(PincerError):
 
 
 class TaskAlreadyRunning(TaskError):
-    """Exception that is raised when the user tries to start a running task.
-    """
+    """Exception that is raised when the user tries to start a running task."""
 
 
 class TaskCancelError(TaskError):
-    """Exception that is raised when a task cannot be cancelled.
-    """
+    """Exception that is raised when a task cannot be cancelled."""
 
 
 class TaskIsNotCoroutine(TaskError):
@@ -180,8 +167,7 @@ class TaskIsNotCoroutine(TaskError):
 
 
 class TaskInvalidDelay(TaskError):
-    """Exception that is raised when the provided delay is invalid.
-    """
+    """Exception that is raised when the provided delay is invalid."""
 
 
 class DispatchError(PincerError):
@@ -191,8 +177,7 @@ class DispatchError(PincerError):
 
 
 class _InternalPerformReconnectError(DispatchError):
-    """Internal helper exception which on raise lets the client reconnect.
-    """
+    """Internal helper exception which on raise lets the client reconnect."""
 
 
 class DisallowedIntentsError(DispatchError):
@@ -202,8 +187,7 @@ class DisallowedIntentsError(DispatchError):
 
 
 class InvalidTokenError(DispatchError, ValueError):
-    """Exception raised when the authorization token is invalid.
-    """
+    """Exception raised when the authorization token is invalid."""
 
     def __init__(self, hint: Optional[str] = None):
         hint = hint or ''
@@ -214,8 +198,7 @@ class InvalidTokenError(DispatchError, ValueError):
 
 
 class HeartbeatError(DispatchError):
-    """Exception raised due to a problem with websocket heartbeat.
-    """
+    """Exception raised due to a problem with websocket heartbeat."""
 
 
 class UnavailableGuildError(PincerError):
@@ -229,48 +212,39 @@ class UnavailableGuildError(PincerError):
 
 
 class HTTPError(PincerError):
-    """HTTP Exception base class.
-    """
+    """HTTP Exception base class."""
 
 
 class NotModifiedError(HTTPError):
-    """Error code 304.
-    """
+    """Error code 304."""
 
 
 class BadRequestError(HTTPError):
-    """Error code 400.
-    """
+    """Error code 400."""
 
 
 class UnauthorizedError(HTTPError):
-    """Error code 401.
-    """
+    """Error code 401."""
 
 
 class ForbiddenError(HTTPError):
-    """Error code 403.
-    """
+    """Error code 403."""
 
 
 class NotFoundError(HTTPError):
-    """Error code 404.
-    """
+    """Error code 404."""
 
 
 class MethodNotAllowedError(HTTPError):
-    """Error code 405.
-    """
+    """Error code 405."""
 
 
 class RateLimitError(HTTPError):
-    """Error code 429.
-    """
+    """Error code 429."""
 
 
 class GatewayError(HTTPError):
-    """Error code 502.
-    """
+    """Error code 502."""
 
 
 class ServerError(HTTPError):

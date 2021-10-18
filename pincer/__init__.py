@@ -44,5 +44,5 @@ class VersionInfo(NamedTuple):
         )
 
 
-version_info = VersionInfo(0, 9, "", release_level="alpha")
-__version__ = "0.7.1a"
+version_info = VersionInfo(0, 9, 2, release_level="alpha")
+__version__ = "0.9.2a"
