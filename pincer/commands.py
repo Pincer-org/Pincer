@@ -283,14 +283,15 @@ class ChatCommandHandler(metaclass=Singleton):
     def __init__(self, client):
         # TODO: Fix docs
         self.client = client
-        self._api_commands: List[AppCommand] = list()
+        self._api_commands: List[AppCommand] = []
         logging.debug(
             "%i commands registered.",
             len(ChatCommandHandler.register.items())
         )
-        self.client.throttler.throttle = {
-            cmd.call: {} for cmd in ChatCommandHandler.register.values()
-        }
+        self.client.throttler.throttle = dict(map(
+            lambda cmd: (cmd.call, {}),
+            ChatCommandHandler.register.values()
+        ))
 
         self.__prefix = f"applications/{self.client.bot.id}"
 
@@ -341,7 +342,7 @@ class ChatCommandHandler(metaclass=Singleton):
         # TODO: Fix docs
         add_endpoint = self.__add
 
-        if cmd.guild_id is not MISSING:
+        if bool(cmd.guild_id):
             add_endpoint = self.__add_guild.format(command=cmd)
 
         res = await self.client.http.post(
@@ -376,16 +377,17 @@ class ChatCommandHandler(metaclass=Singleton):
             ChatCommandHandler.register.values()
         ))
 
-        to_remove: List[AppCommand] = [
-            api_cmd for api_cmd in self._api_commands
-            if api_cmd.name not in registered_commands
-        ]
+        to_remove = list(filter(
+            lambda cmd: cmd.name not in registered_commands,
+            self._api_commands
+        ))
 
         await self.remove_commands(to_remove)
 
-        self._api_commands = [
-            cmd for cmd in self._api_commands if cmd not in to_remove
-        ]
+        self._api_commands = list(filter(
+            lambda cmd: cmd not in to_remove,
+            self._api_commands
+        ))
 
     async def __update_existing_commands(self):
         """
@@ -409,12 +411,17 @@ class ChatCommandHandler(metaclass=Singleton):
             options: List[Dict[str, Any]] = []
             if api.options is not MISSING:
                 if len(api.options) == len(local.options):
-                    for index, api_option in enumerate(api.options):
-                        opt: Optional[AppCommandOption] = \
-                            get_index(local.options, index)
+                    def get_option(args: Tuple[int, Any]) \
+                            -> Optional[Dict[str, Any]]:
+                        index, api_option = args
 
-                        if opt:
-                            options.append(opt.to_dict())
+                        if opt := get_index(local.options, index):
+                            return opt.to_dict()
+
+                    options = list(filter(
+                        lambda opt: opt is not None,
+                        map(get_option, enumerate(api.options))
+                    ))
                 else:
                     options = local.options
 
@@ -447,10 +454,10 @@ class ChatCommandHandler(metaclass=Singleton):
 
                 for key, change in changes.items():
                     if key == "options":
-                        self._api_commands[idx].options = [
-                            AppCommandOption.from_dict(option)
-                            for option in change
-                        ]
+                        self._api_commands[idx].options = list(map(
+                            AppCommandOption.from_dict,
+                            change
+                        ))
                     else:
                         setattr(self._api_commands[idx], key, change)
 
