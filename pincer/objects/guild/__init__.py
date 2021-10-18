@@ -23,7 +23,7 @@ __all__ = (
     "AuditEntryInfo", "AuditLog", "AuditLogChange", "AuditLogEntry",
     "AuditLogEvent", "Ban", "CategoryChannel", "Channel", "ChannelMention",
     "ChannelType", "DefaultMessageNotificationLevel",
-    "ExplicitContentFilterLevel", "FollowedChannel", "Guild", "GuildFeature",
+    "ExplicitContentFilterLevel", "FollowedChannel", "Guild",
     "GuildFeatures", "GuildMember", "GuildNSFWLevel", "GuildTemplate",
     "GuildWidget", "Invite", "InviteMetadata", "InviteStageInstance",
     "InviteTargetType", "MFALevel", "NewsChannel", "Overwrite",
