@@ -559,9 +559,12 @@ class Client(Dispatcher):
         """
         return await User.from_id(self, _id)
 
-    async def get_role(self, guild_id, role_id: int) -> Role:
+    async def get_role(self, guild_id: int, role_id: int) -> Role:
         """
         Fetch a role object by the role identifier.
+
+        :param guild_id:
+            The guild in which the role resides.
 
         :param role_id:
             The id of the guild which should be fetched from the Discord
