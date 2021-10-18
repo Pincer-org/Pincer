@@ -46,3 +46,8 @@ class VersionInfo(NamedTuple):
 
 version_info = VersionInfo(0, 9, 2, release_level="alpha")
 __version__ = "0.9.2a"
+
+__all__ = (
+    "Bot", "Choices", "Client", "Intents", "__author__", "__email__",
+    "__package__", "__title__", "__version__", "command"
+)

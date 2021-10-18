@@ -13,3 +13,14 @@ from .reaction import *
 from .reference import *
 from .sticker import *
 from .user_message import *
+
+
+__all__ = (
+    "AllowedMentionTypes", "AllowedMentions", "Attachment", "Button",
+    "ButtonStyle", "Embed", "EmbedAuthor", "EmbedField", "EmbedFooter",
+    "EmbedImage", "EmbedProvider", "EmbedThumbnail", "EmbedVideo", "Emoji",
+    "Message", "MessageActivity", "MessageActivityType", "MessageComponent",
+    "MessageContext", "MessageFlags", "MessageReference", "MessageType",
+    "Reaction", "Sticker", "StickerFormatType", "StickerItem", "StickerPack",
+    "StickerType", "UserMessage"
+)
