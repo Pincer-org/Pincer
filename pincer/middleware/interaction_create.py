@@ -5,6 +5,8 @@ import logging
 from inspect import isasyncgenfunction, getfullargspec
 from typing import Union, Dict, Any
 
+from pincer.utils import get_index
+
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
 from ..objects import (
@@ -178,7 +180,7 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
             await interaction_handler(self, interaction, context,
                                       command.call)
         except Exception as e:
-            if coro := self.get_event_coro("on_command_error"):
+            if coro := get_index(self.get_event_coro("on_command_error"), 0):
                 params = get_signature_and_params(coro)[1]
 
                 # Check if a context or error var has been passed.

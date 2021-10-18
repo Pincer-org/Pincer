@@ -6,6 +6,7 @@ from __future__ import annotations
 import logging
 import re
 from asyncio import iscoroutinefunction, gather
+from copy import deepcopy
 from inspect import Signature, isasyncgenfunction
 from typing import (
     Optional, Dict, List, Any, Tuple, get_origin, get_args, Union
@@ -43,7 +44,7 @@ _options_type_link = {
     User: AppCommandOptionType.USER,
     Channel: AppCommandOptionType.CHANNEL,
     Role: AppCommandOptionType.ROLE,
-  
+
 }
 
 
@@ -67,6 +68,7 @@ def command(
     pincer.objects.Role - Role
     Mentionable is not implemented
     """
+
     # TODO: Fix docs
     # TODO: Fix docs w guild
     # TODO: Fix docs w cooldown
@@ -281,14 +283,15 @@ class ChatCommandHandler(metaclass=Singleton):
     def __init__(self, client):
         # TODO: Fix docs
         self.client = client
-        self._api_commands: List[AppCommand] = list()
+        self._api_commands: List[AppCommand] = []
         logging.debug(
             "%i commands registered.",
             len(ChatCommandHandler.register.items())
         )
-        self.client.throttler.throttle = {
-            cmd.call: {} for cmd in ChatCommandHandler.register.values()
-        }
+        self.client.throttler.throttle = dict(map(
+            lambda cmd: (cmd.call, {}),
+            ChatCommandHandler.register.values()
+        ))
 
         self.__prefix = f"applications/{self.client.bot.id}"
 
@@ -339,7 +342,7 @@ class ChatCommandHandler(metaclass=Singleton):
         # TODO: Fix docs
         add_endpoint = self.__add
 
-        if cmd.guild_id is not MISSING:
+        if cmd.guild_id:
             add_endpoint = self.__add_guild.format(command=cmd)
 
         res = await self.client.http.post(
@@ -369,22 +372,22 @@ class ChatCommandHandler(metaclass=Singleton):
         Remove commands that are registered by discord but not in use
         by the current client!
         """
-        to_remove: List[AppCommand] = []
+        registered_commands = list(map(
+            lambda registered_cmd: registered_cmd.app.name,
+            ChatCommandHandler.register.values()
+        ))
 
-        for api_cmd in self._api_commands:
-            doesnt_exist = not all(map(
-                lambda loc_cmd: api_cmd.name != loc_cmd.app.name,
-                ChatCommandHandler.register.values()
-            ))
-
-            if doesnt_exist:
-                to_remove.append(api_cmd)
+        to_remove = list(filter(
+            lambda cmd: cmd.name not in registered_commands,
+            self._api_commands
+        ))
 
         await self.remove_commands(to_remove)
 
-        self._api_commands = [
-            cmd for cmd in self._api_commands if cmd not in to_remove
-        ]
+        self._api_commands = list(filter(
+            lambda cmd: cmd not in to_remove,
+            self._api_commands
+        ))
 
     async def __update_existing_commands(self):
         """
@@ -408,12 +411,17 @@ class ChatCommandHandler(metaclass=Singleton):
             options: List[Dict[str, Any]] = []
             if api.options is not MISSING:
                 if len(api.options) == len(local.options):
-                    for index, api_option in enumerate(api.options):
-                        opt: Optional[AppCommandOption] = \
-                            get_index(local.options, index)
+                    def get_option(args: Tuple[int, Any]) \
+                            -> Optional[Dict[str, Any]]:
+                        index, api_option = args
 
-                        if opt:
-                            options.append(opt.to_dict())
+                        if opt := get_index(local.options, index):
+                            return opt.to_dict()
+
+                    options = list(filter(
+                        lambda opt: opt is not None,
+                        map(get_option, enumerate(api.options))
+                    ))
                 else:
                     options = local.options
 
@@ -446,10 +454,10 @@ class ChatCommandHandler(metaclass=Singleton):
 
                 for key, change in changes.items():
                     if key == "options":
-                        self._api_commands[idx].options = [
-                            AppCommandOption.from_dict(option)
-                            for option in change
-                        ]
+                        self._api_commands[idx].options = list(map(
+                            AppCommandOption.from_dict,
+                            change
+                        ))
                     else:
                         setattr(self._api_commands[idx], key, change)
 
@@ -460,7 +468,7 @@ class ChatCommandHandler(metaclass=Singleton):
         Add all new commands which have been registered by the decorator
         to Discord!
         """
-        to_add = ChatCommandHandler.register
+        to_add = deepcopy(ChatCommandHandler.register)
 
         for reg_cmd in self._api_commands:
             try:
