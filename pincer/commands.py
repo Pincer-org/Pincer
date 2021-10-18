@@ -6,6 +6,7 @@ from __future__ import annotations
 import logging
 import re
 from asyncio import iscoroutinefunction, gather
+from copy import deepcopy
 from inspect import Signature, isasyncgenfunction
 from typing import (
     Optional, Dict, List, Any, Tuple, get_origin, get_args, Union
@@ -371,13 +372,13 @@ class ChatCommandHandler(metaclass=Singleton):
         """
         to_remove: List[AppCommand] = []
 
-        for api_cmd in self._api_commands:
-            doesnt_exist = not all(map(
-                lambda loc_cmd: api_cmd.name != loc_cmd.app.name,
-                ChatCommandHandler.register.values()
-            ))
+        registered_commands = list(map(
+            lambda registered_cmd: registered_cmd.app.name,
+            ChatCommandHandler.register.values()
+        ))
 
-            if doesnt_exist:
+        for api_cmd in self._api_commands:
+            if api_cmd.name not in registered_commands:
                 to_remove.append(api_cmd)
 
         await self.remove_commands(to_remove)
@@ -460,7 +461,7 @@ class ChatCommandHandler(metaclass=Singleton):
         Add all new commands which have been registered by the decorator
         to Discord!
         """
-        to_add = ChatCommandHandler.register
+        to_add = deepcopy(ChatCommandHandler.register)
 
         for reg_cmd in self._api_commands:
             try:
