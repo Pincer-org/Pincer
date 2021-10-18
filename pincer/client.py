@@ -247,7 +247,13 @@ class Client(Dispatcher):
                 f"The event named `{name}` must start with `on_`"
             )
 
-        if _events.get(name, None) is None:
+        if name == "on_command_error" and _events.get(name):
+            raise InvalidEventName(
+                f"The `{name}` event can only exist once. This is because "
+                f"it gets treated as a command and can have a response."
+            )
+
+        if _events.get(name) is None:
             _events[name] = []
 
         _events[name].append(coroutine)
