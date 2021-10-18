@@ -4,30 +4,26 @@
 from __future__ import annotations
 
 import logging
-from typing import (
-    Any,
-    Dict,
-    List,
-    Optional,
-    Tuple,
-    TYPE_CHECKING,
-    Union
-)
+from typing import TYPE_CHECKING
+from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
 from asyncio import iscoroutinefunction, run, ensure_future
 
 from . import __package__
-from ._config import events
 from .utils.types import Coro
 from .middleware import middleware
+from .objects.guild.role import Role
 from .core.gateway import Dispatcher
+from .utils.extraction import get_index
+from .objects.guild.channel import Channel
 
 if TYPE_CHECKING:
+    from typing import Any, Dict, List, Optional, Tuple, Union
+
     from .objects.user import User
     from .objects.guild import Guild
     from .core.http import HTTPClient
-    from .utils.extraction import get_index
     from .utils.signature import get_params
     from .commands import ChatCommandHandler
     from .objects.app.intents import Intents
@@ -44,26 +40,8 @@ _log = logging.getLogger(__package__)
 
 MiddlewareType = Optional[Union[Coro, Tuple[str, List[Any], Dict[str, Any]]]]
 
-_events: Dict[str, Optional[Union[str, Coro]]] = {}
-
-for event in events:
-    event_final_executor = f"on_{event}"
-
-    # Event middleware for the library.
-    # Function argument is a payload (GatewayDispatch).
-
-    # The function must return a string which
-    # contains the main event key.
-
-    # As second value a list with arguments,
-    # and the third value value must be a dictionary.
-    # The last two are passed on as *args and **kwargs.
-
-    # NOTE: These return values must be passed as a tuple!
-    _events[event] = event_final_executor
-
-    # The registered event by the client. Do not manually overwrite.
-    _events[event_final_executor] = None
+_event = Union[str, Coro]
+_events: Dict[str, Optional[Union[List[_event], _event]]] = defaultdict(list)
 
 
 def event_middleware(call: str, *, override: bool = False):
@@ -117,6 +95,7 @@ def event_middleware(call: str, *, override: bool = False):
         If it should override default middleware,
         usually shouldn't be used |default| :data:`False`
     """
+
     def decorator(func: Coro):
         if override:
             _log.warning(
@@ -275,17 +254,17 @@ class Client(Dispatcher):
                 f"The event named `{name}` must start with `on_`"
             )
 
-        if _events.get(name) is not None:
+        if name == "on_command_error" and _events.get(name):
             raise InvalidEventName(
-                f"The event `{name}` has already been registered or is not "
-                f"a valid event name."
+                f"The `{name}` event can only exist once. This is because "
+                f"it gets treated as a command and can have a response."
             )
 
-        _events[name] = coroutine
+        _events[name].append(coroutine)
         return coroutine
 
     @staticmethod
-    def get_event_coro(name: str) -> Optional[Coro]:
+    def get_event_coro(name: str) -> List[Optional[Coro]]:
         """get the coroutine for an event
 
         Parameters
@@ -293,9 +272,12 @@ class Client(Dispatcher):
         name : :class:`str`
             name of the event
         """
-        call = _events.get(name.strip().lower())
-        if iscoroutinefunction(call) or isasyncgenfunction(call):
-            return call
+        calls = _events.get(name.strip().lower())
+
+        return [] if not calls else list(filter(
+            lambda call: iscoroutinefunction(call) or isasyncgenfunction(call),
+            calls
+        ))
 
     def load_cog(self, path: str, package: Optional[str] = None):
         """Load a cog from a string path, setup method in COG may
@@ -416,7 +398,7 @@ class Client(Dispatcher):
         await ChatCommandHandler(self).remove_commands(to_remove)
 
     @staticmethod
-    def execute_event(call: Coro, *args, **kwargs):
+    def execute_event(calls: List[Coro], *args, **kwargs):
         """Invokes an event.
 
         Parameters
@@ -431,10 +413,15 @@ class Client(Dispatcher):
             The named arguments for the event.
         """
 
-        if should_pass_cls(call):
-            args = (ChatCommandHandler.managers[call.__module__], *args)
+        for call in calls:
+            call_args = args
+            if should_pass_cls(call):
+                call_args = (
+                    ChatCommandHandler.managers[call.__module__],
+                    *args
+                )
 
-        ensure_future(call(*args, **kwargs))
+            ensure_future(call(*call_args, **kwargs))
 
     def run(self):
         """start the event listener
@@ -523,8 +510,8 @@ class Client(Dispatcher):
         error
             if ``call := self.get_event_coro(name)`` is :data:`False`
         """
-        if call := self.get_event_coro(name):
-            self.execute_event(call, error, *args, **kwargs)
+        if calls := self.get_event_coro(name):
+            self.execute_event(calls, error, *args, **kwargs)
         else:
             raise error
 
@@ -546,8 +533,8 @@ class Client(Dispatcher):
         try:
             key, args, kwargs = await self.handle_middleware(payload, name)
 
-            if call := self.get_event_coro(key):
-                self.execute_event(call, *args, **kwargs)
+            if calls := self.get_event_coro(key):
+                self.execute_event(calls, *args, **kwargs)
 
         except Exception as e:
             await self.execute_error(e)
@@ -616,6 +603,39 @@ class Client(Dispatcher):
             The user object.
         """
         return await User.from_id(self, _id)
+
+    async def get_role(self, guild_id: int, role_id: int) -> Role:
+        """|coro|
+
+        Fetch a role object by the role identifier.
+
+        guild_id: :class:`int`
+            The guild in which the role resides.
+
+        role_id: :class:`int`
+            The id of the guild which should be fetched from the Discord
+            gateway.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.role.Role`
+            A Role object.
+        """
+        return await Role.from_id(self, guild_id, role_id)
+
+    async def get_channel(self, _id: int) -> Channel:
+        """Fetch a Channel from its identifier.
+
+        _id: :class:`int`
+            The id of the user which should be fetched from the Discord
+            gateway.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.channel.Channel`
+            A Channel object.
+        """
+        return await Channel.from_id(self, _id)
 
 
 Bot = Client

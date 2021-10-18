@@ -7,6 +7,8 @@ import logging
 from typing import TYPE_CHECKING
 from inspect import isasyncgenfunction, getfullargspec
 
+from ..utils.extraction import get_index
+
 if TYPE_CHECKING:
     from typing import Union, Dict, Any, Tuple, List
 
@@ -197,7 +199,7 @@ async def interaction_create_middleware(
             await interaction_handler(self, interaction, context,
                                       command.call)
         except Exception as e:
-            if coro := self.get_event_coro("on_command_error"):
+            if coro := get_index(self.get_event_coro("on_command_error"), 0):
                 params = get_signature_and_params(coro)[1]
 
                 # Check if a context or error var has been passed.
