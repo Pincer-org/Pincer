@@ -331,3 +331,52 @@ class UserMessage(APIObject):
                               client=self._client)
         self.components = convert(self.components, MessageComponent.from_dict)
         self.sticker_items = convert(self.sticker_items, StickerItem.from_dict)
+
+    async def add_reaction(self, emoji: str):
+        """
+        Create a reaction for the message
+
+        :param emoji: str
+        """
+        await self._http.put(
+            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}/@me"
+        )
+
+    async def delete_own_reaction(self, emoji: str):
+        """
+
+        """
+        await self._http.delete(
+            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}/@me"
+        )
+
+    async def delete_user_reaction(self, emoji: str, user_id: Snowflake):
+        """
+
+        """
+        await self._http.delete(
+            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}/{user_id}"
+        )
+
+    async def get_reactions(self, emoji: str, after: Snowflake = None, limit = 25):
+        users = []
+
+        user_list = self._http.get(
+            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}?after={after}&limit={limit}"
+        )
+
+        for user in await user_list:
+            users += [User.from_dict(user)]
+        
+        return users
+
+    async def delete_all_reactions(self):
+        await self._http.delete(
+            f"/channels/{self.channel_id}/messages/{self.id}/reactions"
+        )
+
+    async def delete_emoji(self, emoji):
+        await self._http.delete(
+            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}"
+        )
+    
