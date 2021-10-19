@@ -341,7 +341,9 @@ class UserMessage(APIObject):
         return self.from_dict(
             construct_client_dict(
                 self._client,
-                await self._http.get(f"/channels/{self.channel_id}/messages/{self.id}")
+                await self._http.get(
+                    f"/channels/{self.channel_id}/messages/{self.id}"
+                )
             )
         )
 
@@ -386,7 +388,10 @@ class UserMessage(APIObject):
             f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}/{user_id}"
         )
 
-    async def get_reactions(self, emoji: str, after: Snowflake=0, limit=25) -> Generator[User, None, None]:
+    async def get_reactions(
+        self, emoji: str, after: Snowflake=0, limit=25
+    ) -> Generator[User, None, None]:
+    # TODO: HTTP Client will need to refactored to allow parameters using aiohttp's system.
         """
         Returns the users that reacted with this emoji.
 
@@ -397,12 +402,10 @@ class UserMessage(APIObject):
             Max number of users to return (1-100). 25 is not provided.
         """
 
-        user_list = await self._http.get(
+        for user in await self._http.get(
             f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}"
             f"?after={after}&limit={limit}"
-        )
-
-        for user in user_list:
+        ):
             yield User.from_dict(user)
 
     async def delete_all_reactions(self):
