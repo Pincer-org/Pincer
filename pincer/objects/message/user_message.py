@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum, Enum
-from typing import List, Optional, Union, TYPE_CHECKING
+from typing import Generator, List, Optional, Union, TYPE_CHECKING
 
 from ..app.application import Application
 from ..app.interaction_base import MessageInteraction
@@ -20,9 +20,8 @@ from ..message.reference import MessageReference
 from ..message.sticker import StickerItem
 from ..user import User
 from ..._config import GatewayConfig
-from ...core.http import HTTPClient
 from ...utils.api_object import APIObject
-from ...utils.conversion import convert
+from ...utils.conversion import construct_client_dict, convert
 from ...utils.snowflake import Snowflake
 from ...utils.timestamp import Timestamp
 from ...utils.types import MISSING
@@ -338,55 +337,92 @@ class UserMessage(APIObject):
         updated. This function can be run to get the most recent version of the
         message object.
         """
+
         return self.from_dict(
-            await self._http.get(f"/channels/{self.channel_id}/messages/{self.id}")
+            construct_client_dict(
+                self._client,
+                await self._http.get(f"/channels/{self.channel_id}/messages/{self.id}")
+            )
         )
 
     async def add_reaction(self, emoji: str):
         """
-        Create a reaction for the message
+        Create a reaction for the message. Requires the READ_MESSAGE_HISTORY
+        itent. ADD_REACTIONS intent is required if nobody else has reacted
+        using the emoji.
 
-        :param emoji: str
+        :param emoji:
+            Character for emoji. Does not need to be URL encoded.
         """
+
         await self._http.put(
             f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}/@me"
         )
 
     async def delete_own_reaction(self, emoji: str):
         """
+        Delete a reaction the current user has made for the message.
 
+        :param emoji:
+            Character for emoji. Does not need to be URL encoded.
         """
+
         await self._http.delete(
             f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}/@me"
         )
 
     async def delete_user_reaction(self, emoji: str, user_id: Snowflake):
         """
+        Deletes another user's reaction. Requires the MANAGE_MESSAGES intent.
 
+        :param emoji:
+            Character for emoji. Does not need to be URL encoded.
+
+        :param user_id:
+            User ID            
         """
+
         await self._http.delete(
             f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}/{user_id}"
         )
 
-    async def get_reactions(self, emoji: str, after: Snowflake = None, limit = 25):
-        users = []
+    async def get_reactions(self, emoji: str, after: Snowflake=0, limit=25) -> Generator[User, None, None]:
+        """
+        Returns the users that reacted with this emoji.
 
-        user_list = self._http.get(
-            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}?after={after}&limit={limit}"
+        :param after:
+            Get users after this user ID. Returns all users if not provided.
+
+        :param limit:
+            Max number of users to return (1-100). 25 is not provided.
+        """
+
+        user_list = await self._http.get(
+            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}"
+            f"?after={after}&limit={limit}"
         )
 
-        for user in await user_list:
-            users += [User.from_dict(user)]
-        
-        return users
+        for user in user_list:
+            yield User.from_dict(user)
 
     async def delete_all_reactions(self):
+        """
+        Delete all reactions on a message. Requires the MANAGE_MESSAGES intent.
+        """
+
         await self._http.delete(
             f"/channels/{self.channel_id}/messages/{self.id}/reactions"
         )
 
     async def delete_emoji(self, emoji):
+        """
+        Deletes all the reactions for a given emoji on a message. Requires the
+        MANAGE_MESSAGES intent.
+
+        :param emoji:
+            Character for emoji. Does not need to be URL encoded.
+        """
+
         await self._http.delete(
             f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}"
         )
-    
