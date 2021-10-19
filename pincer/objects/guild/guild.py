@@ -512,7 +512,7 @@ class Guild(APIObject):
         ...
 
     async def modify_member(self, _id: int, **kwargs) -> GuildMember:
-        data = await self._http.patch(f"guilds/{self.id}/members/{_id}", kwargs)
+        data = await self._http.patch(f"guilds/{self.id}/members/{_id}", data=kwargs)
         return GuildMember.from_dict(construct_client_dict(self._client, data))
 
     @classmethod

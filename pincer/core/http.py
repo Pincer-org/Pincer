@@ -291,7 +291,7 @@ class HTTPClient:
     async def patch(
             self,
             route: str,
-            data: Dict,
+            data: Optional[Dict] = None,
             content_type: str = "application/json"
     ) -> Optional[Dict]:
         """
@@ -319,7 +319,7 @@ class HTTPClient:
     async def post(
             self,
             route: str,
-            data: Dict,
+            data: Optional[Dict] = None,
             content_type: str = "application/json"
     ) -> Optional[Dict]:
         """
@@ -347,7 +347,7 @@ class HTTPClient:
     async def put(
             self,
             route: str,
-            data: Dict,
+            data: Optional[Dict] = None,
             content_type: str = "application/json"
     ) -> Optional[Dict]:
         """
