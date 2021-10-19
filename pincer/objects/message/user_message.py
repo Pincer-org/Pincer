@@ -332,6 +332,16 @@ class UserMessage(APIObject):
         self.components = convert(self.components, MessageComponent.from_dict)
         self.sticker_items = convert(self.sticker_items, StickerItem.from_dict)
 
+    async def get_most_recent(self):
+        """
+        Certain Discord methods don't return the message object data after its
+        updated. This function can be run to get the most recent version of the
+        message object.
+        """
+        return self.from_dict(
+            await self._http.get(f"/channels/{self.channel_id}/messages/{self.id}")
+        )
+
     async def add_reaction(self, emoji: str):
         """
         Create a reaction for the message
