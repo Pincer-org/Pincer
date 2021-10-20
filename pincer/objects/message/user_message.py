@@ -497,7 +497,7 @@ class UserMessage(APIObject):
         def set_if_not_none(value: Any, name: str):
             if isinstance(value, APIObject):
                 data[name] = value.to_dict()
-            elif not value is None:
+            elif value is not None:
                 data[name] = value
 
         set_if_not_none(content, "content")
