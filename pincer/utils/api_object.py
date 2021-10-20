@@ -6,6 +6,7 @@ from __future__ import annotations
 import copy
 from dataclasses import dataclass, fields, _is_dataclass_instance
 from enum import Enum
+from inspect import getfullargspec
 from typing import Dict, Tuple, Union, Generic, TypeVar, Any, Optional
 
 from .types import MissingType
@@ -102,13 +103,16 @@ class APIObject(metaclass=HTTPMeta):
         # Disable inspection for IDE because this is valid code for the
         # inherited classes:
         # noinspection PyArgumentList
-        return cls(
-            **{
-                key: (
-                    value.value if isinstance(value, Enum) else value
-                ) for key, value in data.items()
-            }
-        )
+        return cls(**dict(map(
+            lambda key: (
+                key,
+                data[key].value if isinstance(data[key], Enum) else data[key]
+            ),
+            filter(
+                lambda object_argument: data.get(object_argument) is not None,
+                getfullargspec(cls.__init__).args
+            )
+        )))
 
     def to_dict(self) -> Dict:
         """

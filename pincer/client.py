@@ -5,12 +5,12 @@ from __future__ import annotations
 
 import logging
 from asyncio import iscoroutinefunction, run, ensure_future
+from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
 from typing import Optional, Any, Union, Dict, Tuple, List, TYPE_CHECKING
 
 from . import __package__
-from ._config import events
 from .commands import ChatCommandHandler
 from .core.dispatch import GatewayDispatch
 from .core.gateway import Dispatcher
@@ -32,26 +32,8 @@ _log = logging.getLogger(__package__)
 
 MiddlewareType = Optional[Union[Coro, Tuple[str, List[Any], Dict[str, Any]]]]
 
-_events: Dict[str, Optional[Union[str, Coro]]] = {}
-
-for event in events:
-    event_final_executor = f"on_{event}"
-
-    # Event middleware for the library.
-    # Function argument is a payload (GatewayDispatch).
-
-    # The function must return a string which
-    # contains the main event key.
-
-    # As second value a list with arguments,
-    # and the third value value must be a dictionary.
-    # The last two are passed on as *args and **kwargs.
-
-    # NOTE: These return values must be passed as a tuple!
-    _events[event] = event_final_executor
-
-    # The registered event by the client. Do not manually overwrite.
-    _events[event_final_executor] = None
+_event = Union[str, Coro]
+_events: Dict[str, Optional[Union[List[_event], _event]]] = defaultdict(list)
 
 
 def event_middleware(call: str, *, override: bool = False):
@@ -266,20 +248,23 @@ class Client(Dispatcher):
                 f"The event named `{name}` must start with `on_`"
             )
 
-        if _events.get(name) is not None:
+        if name == "on_command_error" and _events.get(name):
             raise InvalidEventName(
-                f"The event `{name}` has already been registered or is not "
-                f"a valid event name."
+                f"The `{name}` event can only exist once. This is because "
+                "it gets treated as a command and can have a response."
             )
 
-        _events[name] = coroutine
+        _events[name].append(coroutine)
         return coroutine
 
     @staticmethod
-    def get_event_coro(name: str) -> Optional[Coro]:
-        call = _events.get(name.strip().lower())
-        if iscoroutinefunction(call) or isasyncgenfunction(call):
-            return call
+    def get_event_coro(name: str) -> List[Optional[Coro]]:
+        calls = _events.get(name.strip().lower())
+
+        return [] if not calls else list(filter(
+            lambda call: iscoroutinefunction(call) or isasyncgenfunction(call),
+            calls
+        ))
 
     def load_cog(self, path: str, package: Optional[str] = None):
         """
@@ -388,12 +373,12 @@ class Client(Dispatcher):
         await ChatCommandHandler(self).remove_commands(to_remove)
 
     @staticmethod
-    def execute_event(call: Coro, *args, **kwargs):
+    def execute_event(calls: List[Coro], *args, **kwargs):
         """
         Invokes an event.
 
-        :param call:
-            The call (method) to which the event is registered.
+        :param calls:
+            A list of calls (methods) to which the event is registered.
 
         :param \\*args:
             The arguments for the event.
@@ -402,10 +387,15 @@ class Client(Dispatcher):
             The named arguments for the event.
         """
 
-        if should_pass_cls(call):
-            args = (ChatCommandHandler.managers[call.__module__], *args)
+        for call in calls:
+            call_args = args
+            if should_pass_cls(call):
+                call_args = (
+                    ChatCommandHandler.managers[call.__module__],
+                    *args
+                )
 
-        ensure_future(call(*args, **kwargs))
+            ensure_future(call(*call_args, **kwargs))
 
     def run(self):
         """Start the event listener"""
@@ -490,8 +480,8 @@ class Client(Dispatcher):
         :param \\*kwargs:
             The named arguments for the event.
         """
-        if call := self.get_event_coro(name):
-            self.execute_event(call, error, *args, **kwargs)
+        if calls := self.get_event_coro(name):
+            self.execute_event(calls, error, *args, **kwargs)
         else:
             raise error
 
@@ -511,8 +501,8 @@ class Client(Dispatcher):
         try:
             key, args, kwargs = await self.handle_middleware(payload, name)
 
-            if call := self.get_event_coro(key):
-                self.execute_event(call, *args, **kwargs)
+            if calls := self.get_event_coro(key):
+                self.execute_event(calls, *args, **kwargs)
 
         except Exception as e:
             await self.execute_error(e)
@@ -573,9 +563,12 @@ class Client(Dispatcher):
         """
         return await User.from_id(self, _id)
 
-    async def get_role(self, guild_id, role_id: int) -> Role:
+    async def get_role(self, guild_id: int, role_id: int) -> Role:
         """
         Fetch a role object by the role identifier.
+
+        :param guild_id:
+            The guild in which the role resides.
 
         :param role_id:
             The id of the guild which should be fetched from the Discord
