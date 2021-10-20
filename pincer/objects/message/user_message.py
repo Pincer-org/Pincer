@@ -403,7 +403,7 @@ class UserMessage(APIObject):
             Character for emoji. Does not need to be URL encoded.
 
         :param user_id:
-            User ID            
+            User ID
         """
 
         await self._http.delete(
