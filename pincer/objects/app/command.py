@@ -200,6 +200,8 @@ class AppCommand(APIObject):
     options: APINullable[List[AppCommandOption]] = MISSING
     guild_id: APINullable[Snowflake] = MISSING
     default_permission: APINullable[bool] = True
+    default_member_permissions: APINullable[None] = None
+    dm_permission: APINullable[None] = None
 
     _eq_props = [
         "type", "name", "description", "guild_id", "default_permission"

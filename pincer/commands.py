@@ -330,6 +330,7 @@ def command(
         )
 
         _log.info(f"Registered command `{cmd}` to `{func.__name__}`.")
+        return func
 
     return decorator
 
