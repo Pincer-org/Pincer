@@ -12,8 +12,12 @@ from inspect import Signature, isasyncgenfunction
 
 from . import __package__
 from .utils.types import Singleton
+from .objects.user.user import User
+from .objects.guild.role import Role
+from .objects.guild.channel import Channel
 from .objects.app.throttle_scope import ThrottleScope
 from .objects.app.command import AppCommandOptionType, AppCommand
+
 
 if TYPE_CHECKING:
     from typing import (
@@ -77,7 +81,10 @@ def command(
     pincer.objects.Role - Role
     Mentionable is not implemented
 
-    # TODO: Fix docs
+    .. code-block:: python3
+
+        class Bot(Client):
+            @command(
                 name="test",
                 description="placeholder"
             )

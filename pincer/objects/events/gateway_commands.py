@@ -71,8 +71,7 @@ class Resume(APIObject):
 
 @dataclass
 class RequestGuildMembers(APIObject):
-    """
-    Used to request all members for a guild or a list of guilds.
+    """Used to request all members for a guild or a list of guilds.
 
     guild_id:
         id of the guild to get members for
@@ -106,8 +105,7 @@ class RequestGuildMembers(APIObject):
 
 @dataclass
 class UpdateVoiceState(APIObject):
-    """
-    Sent when a client wants to join, move,
+    """Sent when a client wants to join, move,
     or disconnect from a voice channel.
 
     guild_id:
@@ -131,8 +129,7 @@ class UpdateVoiceState(APIObject):
 
 
 class StatusType(Enum):
-    """
-    online:
+    """online:
         Online
 
     dnd:
@@ -156,8 +153,7 @@ class StatusType(Enum):
 
 @dataclass
 class UpdatePresence(APIObject):
-    """
-    Sent by the client to indicate a presence or status update.
+    """Sent by the client to indicate a presence or status update.
 
     since:
         unix time (in milliseconds) of when the client went idle,

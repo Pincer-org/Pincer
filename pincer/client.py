@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
+from typing import Any, Dict, List, Optional, Tuple, Union
 from asyncio import iscoroutinefunction, run, ensure_future
 
 from . import __package__
@@ -19,7 +20,6 @@ from .utils.extraction import get_index
 from .objects.guild.channel import Channel
 
 if TYPE_CHECKING:
-    from typing import Any, Dict, List, Optional, Tuple, Union
 
     from .objects.user import User
     from .objects.guild import Guild
