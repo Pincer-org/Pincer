@@ -24,73 +24,6 @@ if TYPE_CHECKING:
 _log = logging.getLogger(__package__)
 
 
-class Task:
-    """A Task is a coroutine that is scheduled to repeat every x seconds.
-    Use a TaskScheduler in order to create a task.
-
-    Parameters
-    ----------
-    scheduler: :class:`~pincer.utils.tasks.TaskScheduler`
-        The scheduler to use.
-    coro: :class:`~pincer.utils.types.Coro`
-        The coroutine to register as a task.
-    delay: :class:`float`
-        Delay between each iteration of the task.
-    """
-
-    def __init__(self, scheduler: TaskScheduler, coro: Coro, delay: float):
-        self._scheduler = scheduler
-        self.coro = coro
-        self.delay = delay
-        self._handle: TimerHandle = None
-        self._client_required = should_pass_cls(coro)
-
-    def __del__(self):
-        if self.running:
-            self.cancel()
-        else:
-            # Did the user forgot to call task.start() ?
-            _log.warn(
-                "Task `%s` was not scheduled. Did you forget to start it ?",
-                self.coro.__name__
-            )
-
-    @property
-    def cancelled(self):
-        """:class:`bool`: Check if the task has been cancelled or not.
-        """
-        return self.running and self._handle.cancelled()
-
-    @property
-    def running(self):
-        """:class:`bool`: Check if the task is running.
-        """
-        return self._handle is not None
-
-    def start(self):
-        """Register the task in the TaskScheduler and start
-        the execution of the task.
-        """
-        if self.running:
-            raise TaskAlreadyRunning(
-                f'Task `{self.coro.__name__}` is already running.', self
-            )
-
-        self._scheduler.register(self)
-
-    def cancel(self):
-        """Cancel the task.
-        """
-        if not self.running:
-            raise TaskCancelError(
-                f'Task `{self.coro.__name__}` is not running.', self
-            )
-
-        self._handle.cancel()
-        if self in self._scheduler.tasks:
-            self._scheduler.tasks.remove(self)
-
-
 class TaskScheduler:
     """Class that scedules tasts.
     """
@@ -217,3 +150,70 @@ class TaskScheduler:
         for task in self.tasks.copy():
             if task.running:
                 task.cancel()
+
+
+class Task:
+    """A Task is a coroutine that is scheduled to repeat every x seconds.
+    Use a TaskScheduler in order to create a task.
+
+    Parameters
+    ----------
+    scheduler: :class:`~pincer.utils.tasks.TaskScheduler`
+        The scheduler to use.
+    coro: :class:`~pincer.utils.types.Coro`
+        The coroutine to register as a task.
+    delay: :class:`float`
+        Delay between each iteration of the task.
+    """
+
+    def __init__(self, scheduler: TaskScheduler, coro: Coro, delay: float):
+        self._scheduler = scheduler
+        self.coro = coro
+        self.delay = delay
+        self._handle: TimerHandle = None
+        self._client_required = should_pass_cls(coro)
+
+    def __del__(self):
+        if self.running:
+            self.cancel()
+        else:
+            # Did the user forgot to call task.start() ?
+            _log.warn(
+                "Task `%s` was not scheduled. Did you forget to start it ?",
+                self.coro.__name__
+            )
+
+    @property
+    def cancelled(self):
+        """:class:`bool`: Check if the task has been cancelled or not.
+        """
+        return self.running and self._handle.cancelled()
+
+    @property
+    def running(self):
+        """:class:`bool`: Check if the task is running.
+        """
+        return self._handle is not None
+
+    def start(self):
+        """Register the task in the TaskScheduler and start
+        the execution of the task.
+        """
+        if self.running:
+            raise TaskAlreadyRunning(
+                f'Task `{self.coro.__name__}` is already running.', self
+            )
+
+        self._scheduler.register(self)
+
+    def cancel(self):
+        """Cancel the task.
+        """
+        if not self.running:
+            raise TaskCancelError(
+                f'Task `{self.coro.__name__}` is not running.', self
+            )
+
+        self._handle.cancel()
+        if self in self._scheduler.tasks:
+            self._scheduler.tasks.remove(self)
