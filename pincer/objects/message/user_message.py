@@ -27,7 +27,6 @@ from ...utils.timestamp import Timestamp
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from ... import Client
     from ...utils import APINullable
 
 

@@ -10,14 +10,10 @@ from typing import Dict, Tuple, Union, List, Optional, TYPE_CHECKING
 from aiohttp import FormData, Payload
 
 from ..app.interaction_base import CallbackType
-from ..guild.role import Role
 from ..message.embed import Embed
 from ..message.file import File
 from ..message.user_message import AllowedMentions
-from ..user import User
 from ...exceptions import CommandReturnIsEmpty
-from ...utils.api_object import APIObject
-from ...utils.snowflake import Snowflake
 
 PILLOW_IMPORT = True
 
