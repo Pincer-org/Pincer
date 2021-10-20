@@ -466,8 +466,31 @@ class UserMessage(APIObject):
         components: List[MessageComponent] = None
     ):
         """
+        Edit a previously sent message. The fields content, embeds, and flags
+        can be edited by the original message author. Other users can only
+        edit flags and only if they have the ``MANAGE_MESSAGES`` permission in
+        the corresponding channel. When specifying flags, ensure to include
+        all previously set flags/bits in addition to ones that you are
+        modifying.
 
+        :param content:
+            The message contents (up to 2000 characters)
 
+        :param embeds:
+            Embedded rich content (up to 6000 characters)
+
+        :param flags:
+            Edit the flags of a message (only ``SUPPRESS_EMBEDS`` can
+            currently be set/unset)
+
+        :param allowed_mentions:
+            allowed mentions for the message
+
+        :param attachments:
+            attached files to keep
+
+        :param components:
+            the components to include with the message
         """
 
         data = {}
