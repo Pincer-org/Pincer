@@ -13,7 +13,7 @@ from ..app.interaction_base import CallbackType
 from ..guild.role import Role
 from ..message.embed import Embed
 from ..message.file import File
-from ..message.user_message import AllowedMentionTypes
+from ..message.user_message import AllowedMentions
 from ..user import User
 from ...exceptions import CommandReturnIsEmpty
 from ...utils.api_object import APIObject
@@ -29,29 +29,6 @@ except (ModuleNotFoundError, ImportError):
 if TYPE_CHECKING:
     from ..app import InteractionFlags
     from .component import MessageComponent
-
-
-@dataclass
-class AllowedMentions(APIObject):
-    parse: List[AllowedMentionTypes]
-    roles: List[Union[Role, Snowflake]]
-    users: List[Union[User, Snowflake]]
-    reply: bool = True
-
-    def to_dict(self):
-        def get_str_id(obj: Union[Snowflake, User, Role]) -> str:
-            if hasattr(obj, "id"):
-                obj = obj.id
-
-            return str(obj)
-
-        return {
-            "parse": self.parse,
-            "roles": list(map(get_str_id, self.roles)),
-            "users": list(map(get_str_id, self.users)),
-            "replied_user": self.reply
-        }
-
 
 @dataclass
 class Message:

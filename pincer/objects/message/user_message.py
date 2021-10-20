@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum, Enum
-from typing import Generator, List, Optional, Union, TYPE_CHECKING
+from typing import Any, Generator, List, Optional, Union, TYPE_CHECKING
 
 from ..app.application import Application
 from ..app.interaction_base import MessageInteraction
@@ -151,8 +151,30 @@ class AllowedMentionTypes(str, Enum):
         Controls @everyone and @here mentions
     """
     ROLES = "roles"
-    USERS = "user"
+    USERS = "users"
     EVERYONE = "everyone"
+
+
+@dataclass
+class AllowedMentions(APIObject):
+    parse: List[AllowedMentionTypes]
+    roles: List[Union[Role, Snowflake]]
+    users: List[Union[User, Snowflake]]
+    reply: bool = True
+
+    def to_dict(self):
+        def get_str_id(obj: Union[Snowflake, User, Role]) -> str:
+            if hasattr(obj, "id"):
+                obj = obj.id
+
+            return str(obj)
+
+        return {
+            "parse": self.parse,
+            "roles": list(map(get_str_id, self.roles)),
+            "users": list(map(get_str_id, self.users)),
+            "replied_user": self.reply
+        }
 
 
 @dataclass
@@ -349,9 +371,9 @@ class UserMessage(APIObject):
 
     async def add_reaction(self, emoji: str):
         """
-        Create a reaction for the message. Requires the READ_MESSAGE_HISTORY
-        itent. ADD_REACTIONS intent is required if nobody else has reacted
-        using the emoji.
+        Create a reaction for the message. Requires the
+        ``READ_MESSAGE_HISTORY` itent. ``ADD_REACTIONS`` intent is required if
+        nobody else has reacted using the emoji.
 
         :param emoji:
             Character for emoji. Does not need to be URL encoded.
@@ -375,7 +397,8 @@ class UserMessage(APIObject):
 
     async def delete_user_reaction(self, emoji: str, user_id: Snowflake):
         """
-        Deletes another user's reaction. Requires the MANAGE_MESSAGES intent.
+        Deletes another user's reaction. Requires the ``MANAGE_MESSAGES``
+        intent.
 
         :param emoji:
             Character for emoji. Does not need to be URL encoded.
@@ -385,13 +408,14 @@ class UserMessage(APIObject):
         """
 
         await self._http.delete(
-            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}/{user_id}"
+            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}"
+            f"/{user_id}"
         )
 
     async def get_reactions(
-        self, emoji: str, after: Snowflake=0, limit=25
+        self, emoji: str, after: Snowflake = 0, limit=25
     ) -> Generator[User, None, None]:
-    # TODO: HTTP Client will need to refactored to allow parameters using aiohttp's system.
+        # TODO: HTTP Client will need to refactored to allow parameters using aiohttp's system.
         """
         Returns the users that reacted with this emoji.
 
@@ -410,7 +434,8 @@ class UserMessage(APIObject):
 
     async def delete_all_reactions(self):
         """
-        Delete all reactions on a message. Requires the MANAGE_MESSAGES intent.
+        Delete all reactions on a message. Requires the ``MANAGE_MESSAGES``
+        intent.
         """
 
         await self._http.delete(
@@ -420,7 +445,7 @@ class UserMessage(APIObject):
     async def delete_emoji(self, emoji):
         """
         Deletes all the reactions for a given emoji on a message. Requires the
-        MANAGE_MESSAGES intent.
+        ``MANAGE_MESSAGES`` intent.
 
         :param emoji:
             Character for emoji. Does not need to be URL encoded.
@@ -428,4 +453,49 @@ class UserMessage(APIObject):
 
         await self._http.delete(
             f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}"
+        )
+
+    # TODO: Implement file (https://discord.com/developers/docs/resources/channel#edit-message)
+    async def edit(
+        self,
+        content: str = None,
+        embeds: List[Embed] = None,
+        flags: int = None,
+        allowed_mentions: AllowedMentions = None,
+        attachments: List[Attachment] = None,
+        components: List[MessageComponent] = None
+    ):
+        """
+
+
+        """
+
+        data = {}
+
+        def set_if_not_none(value: Any, name: str):
+            if isinstance(value, APIObject):
+                data[name] = value.to_dict()
+            elif not value is None:
+                data[name] = value
+
+        set_if_not_none(content, "content")
+        set_if_not_none(embeds, "embeds")
+        set_if_not_none(flags, "flags")
+        set_if_not_none(allowed_mentions, "allowed_mentions")
+        set_if_not_none(attachments, "attachments")
+        set_if_not_none(components, "components")
+
+        await self._http.patch(
+            f"/channels/{self.channel_id}/messages/{self.id}",
+            data=data
+        )
+
+    async def delete(self):
+        """
+        Delete a message. Requires the ``MANAGE_MESSAGES`` intent if the
+        message was not sent by the current user.
+        """
+
+        await self._http.delete(
+            f"/channels/{self.channel_id}/messages/{self.id}"
         )
