@@ -368,7 +368,7 @@ class UserMessage(APIObject):
             )
         )
 
-    async def add_reaction(self, emoji: str):
+    async def react(self, emoji: str):
         """
         Create a reaction for the message. Requires the
         ``READ_MESSAGE_HISTORY` itent. ``ADD_REACTIONS`` intent is required if
@@ -382,7 +382,7 @@ class UserMessage(APIObject):
             f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}/@me"
         )
 
-    async def delete_own_reaction(self, emoji: str):
+    async def unreact(self, emoji: str):
         """
         Delete a reaction the current user has made for the message.
 
@@ -394,7 +394,7 @@ class UserMessage(APIObject):
             f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}/@me"
         )
 
-    async def delete_user_reaction(self, emoji: str, user_id: Snowflake):
+    async def remove_user_reaction(self, emoji: str, user_id: Snowflake):
         """
         Deletes another user's reaction. Requires the ``MANAGE_MESSAGES``
         intent.
@@ -431,7 +431,7 @@ class UserMessage(APIObject):
         ):
             yield User.from_dict(user)
 
-    async def delete_all_reactions(self):
+    async def remove_all_reactions(self):
         """
         Delete all reactions on a message. Requires the ``MANAGE_MESSAGES``
         intent.
@@ -441,7 +441,7 @@ class UserMessage(APIObject):
             f"/channels/{self.channel_id}/messages/{self.id}/reactions"
         )
 
-    async def delete_emoji(self, emoji):
+    async def remove_emoji(self, emoji):
         """
         Deletes all the reactions for a given emoji on a message. Requires the
         ``MANAGE_MESSAGES`` intent.
