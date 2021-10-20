@@ -161,17 +161,18 @@ class AllowedMentions(APIObject):
     users: List[Union[User, Snowflake]]
     reply: bool = True
 
+    @staticmethod
+    def get_str_id(obj: Union[Snowflake, User, Role]) -> str:
+        if hasattr(obj, "id"):
+            obj = obj.id
+
+        return str(obj)
+
     def to_dict(self):
-        def get_str_id(obj: Union[Snowflake, User, Role]) -> str:
-            if hasattr(obj, "id"):
-                obj = obj.id
-
-            return str(obj)
-
         return {
             "parse": self.parse,
-            "roles": list(map(get_str_id, self.roles)),
-            "users": list(map(get_str_id, self.users)),
+            "roles": list(map(self.get_str_id, self.roles)),
+            "users": list(map(self.get_str_id, self.users)),
             "replied_user": self.reply
         }
 
