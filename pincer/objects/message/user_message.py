@@ -281,7 +281,6 @@ class UserMessage(APIObject):
     author: User
     content: str
     timestamp: Timestamp
-    edited_timestamp: Optional[Timestamp]
     tts: bool
     mention_everyone: bool
     mentions: List[GuildMember]
@@ -291,6 +290,7 @@ class UserMessage(APIObject):
     pinned: bool
     type: MessageType
 
+    edited_timestamp: APINullable[Timestamp] = MISSING
     mention_channels: APINullable[List[ChannelMention]] = MISSING
     guild_id: APINullable[Snowflake] = MISSING
     member: APINullable[PartialGuildMember] = MISSING
