@@ -1,7 +1,12 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from .dispatch import *
-from .gateway import *
-from .heartbeat import *
-from .http import *
+from .dispatch import GatewayDispatch
+from .gateway import Dispatcher
+from .heartbeat import Heartbeat
+from .http import HTTPClient
+
+
+__all__ = (
+    "GatewayDispatch", "Dispatcher", "Heartbeat", "HTTPClient"
+)
