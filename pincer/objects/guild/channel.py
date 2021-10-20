@@ -19,7 +19,6 @@ if TYPE_CHECKING:
     from .member import GuildMember
     from .overwrite import Overwrite
     from .thread import ThreadMetadata
-    from ...core.http import HTTPClient
     from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
     from ...utils.timestamp import Timestamp

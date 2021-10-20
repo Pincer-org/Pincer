@@ -3,7 +3,8 @@
 
 from .connection import Connection
 from .integration import (
-    IntegrationExpireBehavior, IntegrationApplication, Integration
+    IntegrationExpireBehavior, IntegrationApplication,
+    Integration, IntegrationAccount
 )
 from .user import User, PremiumTypes, VisibilityType
 from .voice_state import VoiceState

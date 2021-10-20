@@ -14,7 +14,6 @@ if TYPE_CHECKING:
 
     from ...client import Client
     from ..user.user import User
-    from ...core.http import HTTPClient
     from ...utils.types import APINullable
     from ...utils.conversion import convert
     from ...utils.snowflake import Snowflake

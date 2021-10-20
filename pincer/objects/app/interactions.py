@@ -12,10 +12,8 @@ from ...utils.types import MISSING
 from ...utils.api_object import APIObject
 
 if TYPE_CHECKING:
-    from ...client import Client
     from ..user.user import User
     from ..guild.role import Role
-    from ...core.http import HTTPClient
     from ..guild.channel import Channel
     from ..guild.member import GuildMember
     from ...utils.types import APINullable

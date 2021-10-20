@@ -8,7 +8,7 @@ from .gateway_commands import (
     StatusType, UpdatePresence
 )
 from .guild import (
-    GuildBanAddEvent, GuildBanRemoveEvent,GuildEmojisUpdateEvent,
+    GuildBanAddEvent, GuildBanRemoveEvent, GuildEmojisUpdateEvent,
     GuildStickersUpdateEvent, GuildIntegrationsUpdateEvent,
     GuildMemberRemoveEvent, GuildMemberUpdateEvent, GuildMembersChunkEvent,
     GuildRoleCreateEvent, GuildRoleUpdateEvent, GuildRoleDeleteEvent

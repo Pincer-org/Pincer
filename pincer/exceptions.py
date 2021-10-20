@@ -89,7 +89,9 @@ class CommandAlreadyRegistered(CommandError):
 
 
 class CommandDescriptionTooLong(CommandError):
-    """The provided command description is too long, as it exceeds 100 characters."""
+    """The provided command description is too long,
+    as it exceeds 100 characters.
+    """
 
 
 class TooManyArguments(CommandError):

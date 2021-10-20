@@ -14,17 +14,17 @@ from .client import event_middleware, Client, Bot
 from .commands import command, ChatCommandHandler
 from .exceptions import (
     PincerError, UnhandledException, NoExportMethod,
-    CogError,CogNotFound,CogAlreadyExists,NoValidSetupMethod,
-    TooManySetupArguments,NoCogManagerReturnFound,CommandError,
-    CommandCooldownError,CommandIsNotCoroutine,CommandAlreadyRegistered,
-    CommandDescriptionTooLong,TooManyArguments,InvalidArgumentAnnotation,
-    CommandReturnIsEmpty,InvalidCommandGuild,InvalidCommandName,
-    InvalidEventName,InvalidUrlError,EmbedFieldError,TaskError,
-    TaskAlreadyRunning,TaskCancelError,TaskIsNotCoroutine,TaskInvalidDelay,
-    DispatchError,DisallowedIntentsError,InvalidTokenError,HeartbeatError,
-    UnavailableGuildError,HTTPError,NotModifiedError,BadRequestError,
-    UnauthorizedError,ForbiddenError,NotFoundError,MethodNotAllowedError,
-    RateLimitError,GatewayError,ServerError
+    CogError, CogNotFound, CogAlreadyExists, NoValidSetupMethod,
+    TooManySetupArguments, NoCogManagerReturnFound, CommandError,
+    CommandCooldownError, CommandIsNotCoroutine, CommandAlreadyRegistered,
+    CommandDescriptionTooLong, TooManyArguments, InvalidArgumentAnnotation,
+    CommandReturnIsEmpty, InvalidCommandGuild, InvalidCommandName,
+    InvalidEventName, InvalidUrlError, EmbedFieldError, TaskError,
+    TaskAlreadyRunning, TaskCancelError, TaskIsNotCoroutine, TaskInvalidDelay,
+    DispatchError, DisallowedIntentsError, InvalidTokenError, HeartbeatError,
+    UnavailableGuildError, HTTPError, NotModifiedError, BadRequestError,
+    UnauthorizedError, ForbiddenError, NotFoundError, MethodNotAllowedError,
+    RateLimitError, GatewayError, ServerError
 )
 
 __package__ = "pincer"
@@ -64,15 +64,17 @@ __all__ = (
     "__package__", "__title__", "__version__", "command", "GatewayConfig",
     "event_middleware", "ChatCommandHandler", "PincerError",
     "UnhandledException", "NoExportMethod",
-    "CogError", "CogNotFound","CogAlreadyExists","NoValidSetupMethod",
-    "TooManySetupArguments","NoCogManagerReturnFound","CommandError",
-    "CommandCooldownError","CommandIsNotCoroutine","CommandAlreadyRegistered",
-    "CommandDescriptionTooLong","TooManyArguments","InvalidArgumentAnnotation",
-    "CommandReturnIsEmpty","InvalidCommandGuild","InvalidCommandName",
-    "InvalidEventName","InvalidUrlError","EmbedFieldError","TaskError",
-    "TaskAlreadyRunning","TaskCancelError","TaskIsNotCoroutine","TaskInvalidDelay",
-    "DispatchError","DisallowedIntentsError","InvalidTokenError","HeartbeatError",
-    "UnavailableGuildError","HTTPError","NotModifiedError","BadRequestError",
-    "UnauthorizedError","ForbiddenError","NotFoundError","MethodNotAllowedError",
-    "RateLimitError","GatewayError","ServerError"
+    "CogError", "CogNotFound", "CogAlreadyExists", "NoValidSetupMethod",
+    "TooManySetupArguments", "NoCogManagerReturnFound", "CommandError",
+    "CommandCooldownError", "CommandIsNotCoroutine", "CommandAlreadyRegistered",
+    "CommandDescriptionTooLong", "TooManyArguments",
+    "InvalidArgumentAnnotation", "CommandReturnIsEmpty",
+    "InvalidCommandGuild", "InvalidCommandName", "InvalidEventName",
+    "InvalidUrlError", "EmbedFieldError", "TaskError",
+    "TaskAlreadyRunning", "TaskCancelError", "TaskIsNotCoroutine",
+    "TaskInvalidDelay", "DispatchError", "DisallowedIntentsError",
+    "InvalidTokenError", "HeartbeatError", "UnavailableGuildError",
+    "HTTPError", "NotModifiedError", "BadRequestError",
+    "UnauthorizedError", "ForbiddenError", "NotFoundError",
+    "MethodNotAllowedError", "RateLimitError", "GatewayError", "ServerError"
 )
