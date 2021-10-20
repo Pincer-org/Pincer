@@ -64,7 +64,6 @@ from .guild.invite import (
     InviteTargetType, InviteStageInstance, InviteMetadata, Invite
 )
 from .guild.member import GuildMember, PartialGuildMember, BaseMember
-from .guild.member import GuildMember, PartialGuildMember, BaseMember
 from .guild.overwrite import Overwrite
 from .guild.role import RoleTags, Role
 from .guild.stage import PrivacyLevel, StageInstance
