@@ -423,7 +423,7 @@ class UserMessage(APIObject):
             Get users after this user ID. Returns all users if not provided.
 
         :param limit:
-            Max number of users to return (1-100). 25 is not provided.
+            Max number of users to return (1-100). 25 if not provided.
         """
 
         for user in await self._http.get(
