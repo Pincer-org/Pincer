@@ -7,9 +7,14 @@ import copy
 from dataclasses import dataclass, fields, _is_dataclass_instance
 from enum import Enum
 from inspect import getfullargspec
-from typing import Dict, Tuple, Union, Generic, TypeVar, Any, Optional
+from typing import Dict, Tuple, Union, Generic, TypeVar, Any, TYPE_CHECKING, \
+    Optional, List
 
 from .types import MissingType
+
+if TYPE_CHECKING:
+    from ..client import Client
+    from ..core.http import HTTPClient
 
 T = TypeVar("T")
 
@@ -55,17 +60,20 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
 
 
 class HTTPMeta(type):
-    # TODO: Fix typehints
-    __attrs = {
-        "_client": Optional[Any],
-        "_http": Optional[Any]
-    }
+    __meta_items: List[str] = ["_client", "_http"]
+    __ori_annotations: Dict[str, type] = {}
 
-    def __new__(mcs, *args, **kwargs):
-        http_object = super().__new__(mcs, *args, **kwargs)
+    def __new__(mcs, name, base, mapping):
+        for key in HTTPMeta.__meta_items:
+            if mapping.get("__annotations__") and \
+                    (value := mapping["__annotations__"].get(key)):
+                HTTPMeta.__ori_annotations.update({key: value})
+                del mapping["__annotations__"][key]
+
+        http_object = super().__new__(mcs, name, base, mapping)
 
         if getattr(http_object, "__annotations__", None):
-            for k, v in HTTPMeta.__attrs.items():
+            for k, v in HTTPMeta.__ori_annotations.items():
                 http_object.__annotations__[k] = v
                 setattr(http_object, k, None)
 
@@ -77,6 +85,8 @@ class APIObject(metaclass=HTTPMeta):
     """
     Represents an object which has been fetched from the Discord API.
     """
+    _client: Client
+    _http: HTTPClient
 
     # def __post_init__(self):
     #     fin = {
