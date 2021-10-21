@@ -2,6 +2,7 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 import logging
+from asyncio import sleep
 from inspect import isasyncgenfunction, getfullargspec
 from typing import Union, Dict, Any
 
@@ -38,29 +39,6 @@ def convert_message(self, message: Union[Embed, Message, str]) -> Message:
             flags=InteractionFlags.EPHEMERAL
         )
     return message
-
-
-async def reply(self, interaction: Interaction, message: Message):
-    """
-    Sends a reply to an interaction.
-
-    :param self:
-        The current client.
-
-    :param interaction:
-        The interaction from whom the reply is.
-
-    :param message:
-        The message to reply with.
-    """
-
-    content_type, data = message.serialize()
-
-    await self.http.patch(
-        f"webhooks/{self.bot.id}/{interaction.token}/messages/@original",
-        data,
-        content_type=content_type
-    )
 
 
 async def interaction_response_handler(
@@ -110,17 +88,13 @@ async def interaction_response_handler(
             msg = convert_message(self, msg)
 
             if started:
-                await self.http.post(
-                    f"webhooks/{interaction.application_id}"
-                    f"/{interaction.token}",
-                    msg.to_dict().get("data")
-                )
+                await interaction.followup(msg)
             else:
                 started = True
-                await reply(self, interaction, msg)
+                await interaction.edit(msg)
     else:
         message = await command(**kwargs)
-        await reply(self, interaction, convert_message(self, message))
+        await interaction.edit(convert_message(self, message))
 
 
 async def interaction_handler(

@@ -79,8 +79,15 @@ class Message:
     allowed_mentions: Optional[AllowedMentions] = None
     components: Optional[List[MessageComponent]] = None
     flags: Optional[InteractionFlags] = None
+    delete_after: Optional[float] = None
 
     def __post_init__(self):
+
+        if self.delete_after and self.delete_after < 0:
+            raise ValueError(
+                "Message can not be deleted after a negative amount of "
+                "seconds!"
+            )
 
         if not self.attachments:
             return

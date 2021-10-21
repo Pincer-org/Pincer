@@ -3,26 +3,24 @@
 
 from __future__ import annotations
 
+from asyncio import gather, iscoroutine, sleep, ensure_future
 from dataclasses import dataclass
 from enum import IntEnum
 from typing import Dict, TYPE_CHECKING
 
-from asyncio import gather, iscoroutine
-
 from .command import AppCommandInteractionDataOption, AppCommandOptionType
-from .interaction_base import InteractionType
+from .interaction_base import InteractionType, CallbackType
 from ..app.select_menu import SelectOption
 from ..guild.member import GuildMember
 from ..message.context import MessageContext
 from ..message.user_message import UserMessage
 from ..user import User
-from ...core.http import HTTPClient
 from ...utils import APIObject, MISSING, Snowflake, convert
 
 if TYPE_CHECKING:
+    from ..message.message import Message
     from ..guild.channel import Channel
     from ..guild.role import Role
-    from ... import Client
     from ...utils import APINullable
 
 
@@ -220,18 +218,18 @@ class Interaction(APIObject):
             AppCommandOptionType.NUMBER: float,
 
             AppCommandOptionType.USER: lambda value:
-                self._client.get_user(
-                    convert(value, Snowflake.from_string)
-                ),
+            self._client.get_user(
+                convert(value, Snowflake.from_string)
+            ),
             AppCommandOptionType.CHANNEL: lambda value:
-                self._client.get_channel(
-                    convert(value, Snowflake.from_string)
-                ),
+            self._client.get_channel(
+                convert(value, Snowflake.from_string)
+            ),
             AppCommandOptionType.ROLE: lambda value:
-                self._client.get_role(
-                    convert(self.guild_id, Snowflake.from_string),
-                    convert(value, Snowflake.from_string)
-                ),
+            self._client.get_role(
+                convert(self.guild_id, Snowflake.from_string),
+                convert(value, Snowflake.from_string)
+            ),
             AppCommandOptionType.MENTIONABLE: None
         }
 
@@ -277,4 +275,172 @@ class Interaction(APIObject):
             command,
             self.guild_id,
             self.channel_id
+        )
+
+    async def __post_send_handler(self, message: Message):
+        """
+        Process the interaction after it was sent.
+
+        :param message:
+            The interaction message.
+        """
+
+        if message.delete_after:
+            await sleep(message.delete_after)
+            await self.delete()
+
+    def __post_sent(self, message: Message):
+        """
+        Ensure the `__post_send_handler` method its future.
+
+        :param message:
+            The interaction message.
+        """
+        ensure_future(self.__post_send_handler(message))
+
+    async def reply(self, message: Message) -> UserMessage:
+        """
+        Initial reply, only works if no ACK has been sent yet.
+
+        :param message:
+            The response message!
+        """
+        content_type, data = message.serialize()
+
+        res = await self._http.patch(
+            f"interactions/{self.id}/{self.token}/callback",
+            {
+                "type": CallbackType.MESSAGE,
+                "data": data
+            },
+            content_type=content_type
+        )
+        self.__post_sent(message)
+        return UserMessage.from_dict(res)
+
+    async def edit(self, message: Message) -> UserMessage:
+        """
+        Edit an interaction. This is also the way to reply to
+        interactions whom have been acknowledged.
+
+        :param message:
+            The new message!
+        """
+        content_type, data = message.serialize()
+
+        resp = await self._http.patch(
+            f"webhooks/{self._client.bot.id}/{self.token}/messages/@original",
+            data,
+            content_type=content_type
+        )
+        self.__post_sent(message)
+        return UserMessage.from_dict(resp)
+
+    async def delete(self):
+        """
+        Delete the interaction.
+        """
+        await self._http.delete(
+            f"webhooks/{self._client.bot.id}/{self.token}/messages/@original"
+        )
+
+    async def __post_followup_send_handler(
+            self,
+            followup: UserMessage,
+            message: Message
+    ):
+        """
+        Process a folloup after it was sent.
+
+        :param followup:
+            The followup message that is being post processed.
+
+        :param message:
+            The interaction message.
+        """
+
+        if message.delete_after:
+            await sleep(message.delete_after)
+            await self.delete_followup(followup.id)
+
+    def __post_followup_sent(
+            self,
+            followup: UserMessage,
+            message: Message
+    ):
+        """
+        Ensure the `__post_followup_send_handler` method its future.
+
+        :param followup:
+            The followup message that is being post processed.
+
+        :param message:
+            The followup message.
+        """
+        ensure_future(self.__post_followup_send_handler(followup, message))
+
+    async def followup(self, message: Message) -> UserMessage:
+        """
+        Create a follow up message for the interaction.
+        This allows you to respond with multiple messages.
+
+        :param message:
+            The message!
+        """
+        content_type, data = message.serialize()
+
+        resp = await self._http.post(
+            f"webhooks/{self._client.bot.id}/{self.token}",
+            data,
+            content_type=content_type
+        )
+        msg = UserMessage.from_dict(resp)
+        self.__post_followup_sent(msg, message)
+        return msg
+
+    async def edit_followup(self, message_id: int, message: Message) \
+            -> UserMessage:
+        """
+        Edit a followup message.
+
+        :param message_id:
+            The id of the original followup message.
+
+        :param message:
+            The new message!
+        """
+        content_type, data = message.serialize()
+
+        resp = await self._http.patch(
+            f"webhooks/{self._client.bot.id}/{self.token}/messages/{message_id}",
+            data,
+            content_type=content_type
+        )
+        msg = UserMessage.from_dict(resp)
+        self.__post_followup_sent(msg, message)
+        return msg
+
+    async def get_followup(self, message_id: int) -> UserMessage:
+        """
+        Get a followup message by id.
+
+        :param message_id:
+            The id of the original followup message that must be fetched.
+        """
+
+        resp = await self._http.get(
+            f"webhooks/{self._client.bot.id}/{self.token}/messages/{message_id}",
+        )
+        return UserMessage.from_dict(resp)
+
+    async def delete_followup(self, message_id: int):
+        """
+        Remove a followup message by id.
+
+        :param message_id:
+            The id of the followup message that must be deleted.
+        """
+
+        await self._http.delete(
+            f"webhooks/{self._client.bot.id}/{self.token}/messages/{message_id}",
         )
