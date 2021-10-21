@@ -6,12 +6,12 @@ from inspect import isasyncgenfunction, getfullargspec
 from typing import Union, Dict, Any
 
 from pincer.utils import get_index
-
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
 from ..objects import (
     File, Interaction, Embed, Message, InteractionFlags, MessageContext
 )
+from ..objects.app import CallbackType
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 from ..utils.conversion import construct_client_dict
 from ..utils.signature import get_params, get_signature_and_params
@@ -56,8 +56,8 @@ async def reply(self, interaction: Interaction, message: Message):
 
     content_type, data = message.serialize()
 
-    await self.http.post(
-        f"interactions/{interaction.id}/{interaction.token}/callback",
+    await self.http.patch(
+        f"webhooks/{self.bot.id}/{interaction.token}/messages/@original",
         data,
         content_type=content_type
     )
@@ -88,6 +88,11 @@ async def interaction_response_handler(
     :param kwargs:
         The arguments to be passed to the command.
     """
+
+    await self.http.post(
+        f"interactions/{interaction.id}/{interaction.token}/callback",
+        {"type": CallbackType.DEFERRED_MESSAGE}
+    )
 
     if should_pass_cls(command):
         cls_keyword = getfullargspec(command).args[0]

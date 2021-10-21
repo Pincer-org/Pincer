@@ -9,7 +9,6 @@ from typing import Dict, Tuple, Union, List, Optional, TYPE_CHECKING
 
 from aiohttp import FormData, Payload
 
-from ..app.interaction_base import CallbackType
 from ..guild.role import Role
 from ..message.embed import Embed
 from ..message.file import File
@@ -80,7 +79,6 @@ class Message:
     allowed_mentions: Optional[AllowedMentions] = None
     components: Optional[List[MessageComponent]] = None
     flags: Optional[InteractionFlags] = None
-    type: Optional[CallbackType] = None
 
     def __post_init__(self):
 
@@ -137,10 +135,12 @@ class Message:
             ]
         }
 
-        return {
-            "type": self.type or CallbackType.MESSAGE,
-            "data": {k: i for k, i in resp.items() if i}
-        }
+        # IDE does not recognise return type of filter properly.
+        # noinspection PyTypeChecker
+        return dict(filter(
+            lambda kv: kv[1],
+            resp.items()
+        ))
 
     def serialize(self) -> Tuple[str, Union[Payload, Dict]]:
         """
