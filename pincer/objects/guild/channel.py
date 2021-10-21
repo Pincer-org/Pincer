@@ -219,7 +219,7 @@ class Channel(APIObject):  # noqa E501
         data = await self._http.patch(f"channels/{self.id}", kwargs)
         data.update(
             {
-                "_client": self.client,
+                "_client": self._client,
                 "_http": self._http,
                 "type": ChannelType(data.pop("type"))
             }
@@ -309,8 +309,7 @@ class CategoryChannel(Channel):
 
 
 class NewsChannel(Channel):
-    """A subclass of ``Channel`` for news channels with all the same attributes.
-    """
+    """A subclass of ``Channel`` for news channels with all the same attributes."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

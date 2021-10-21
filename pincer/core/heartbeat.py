@@ -42,7 +42,8 @@ class Heartbeat:
         Returns
         -------
         :class:`float`
-            Current heartbeat.
+            The current heartbeat of the client.
+            |default| ``0`` (client has not initialized the heartbeat yet.)
         """
         return cls.__heartbeat
 

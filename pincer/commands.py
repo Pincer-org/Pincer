@@ -228,7 +228,7 @@ def command(
                 # Do NOT use isinstance as this is a comparison between
                 # two values of the type type and isinstance does NOT
                 # work here.
-                union_args = [t for t in args if not isinstance(t, None)]
+                union_args = [t for t in args if t is not type(None)]
 
                 annotation = (
                     get_index(union_args, 0)
@@ -355,7 +355,7 @@ class ChatCommandHandler(metaclass=Singleton):
     __delete = "/commands/{command.id}"
     __update = "/commands/{command.id}"
     __add = "/commands"
-    __add_guild = "/guilds/{command.app.guild_id}/commands"
+    __add_guild = "/guilds/{command.guild_id}/commands"
 
     def __init__(self, client: Client):
         self.client = client
@@ -496,9 +496,7 @@ class ChatCommandHandler(metaclass=Singleton):
         self._api_commands = await self.get_commands()
 
         for api_cmd in self._api_commands:
-            loc_cmd = ChatCommandHandler.register.get(api_cmd.name)
-
-            if loc_cmd:
+            if loc_cmd := ChatCommandHandler.register.get(api_cmd.name):
                 loc_cmd.app.id = api_cmd.id
 
     async def __remove_unused_commands(self):
@@ -613,7 +611,10 @@ class ChatCommandHandler(metaclass=Singleton):
             except IndexError:
                 pass
 
-        await self.add_commands(to_add)
+        await self.add_commands(list(map(
+            lambda cmd: cmd.app,
+            to_add.values()
+        )))
 
     async def initialize(self):
         """|coro|

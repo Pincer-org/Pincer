@@ -29,8 +29,7 @@ _log = logging.getLogger(__package__)
 
 
 class HttpCallable(Protocol):
-    """aiohttp HTTP method
-    """
+    """aiohttp HTTP method"""
     __name__: str
 
     def __call__(
@@ -48,7 +47,7 @@ class HTTPClient:
     Attributes
     ----------
     url: :class:`str`
-        ``f"https://discord.com/api/v{version}"``
+        ``f"https://discord.com/api/v{version}"`` "Base url for all HTTP requests"
     """
 
     def __init__(self, token: str, *, version: int = None, ttl: int = 5):
@@ -266,7 +265,7 @@ class HTTPClient:
     ) -> Optional[Dict]:
         """|coro|
 
-        Sends a patch request to a Discord REST endpoint
+        Sends a patch request to a Discord REST endpoint.
 
         Parameters
         ----------

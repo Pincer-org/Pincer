@@ -145,8 +145,7 @@ class TaskScheduler:
         task._handle = self._loop.call_later(task.delay, self.__execute, task)
 
     def close(self):
-        """Gracefully stops any running task.
-        """
+        """Gracefully stops any running task."""
         for task in self.tasks.copy():
             if task.running:
                 task.cancel()

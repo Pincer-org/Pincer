@@ -79,8 +79,7 @@ class Role(APIObject):
 
     @property
     def mention(self) -> str:
-        """:class:`str`\\: Returns the mention string for this role.
-        """
+        """:class:`str`\\: Returns the mention string for this role."""
         return f"<@&{self.id}>"
 
     # TODO: Implement Caching @Arthurdw

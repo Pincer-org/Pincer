@@ -47,7 +47,7 @@ def get_middleware() -> Dict[str, Coro]:
                     "export"
                 )()
             except AttributeError:
-                _log.info(
+                _log.warning(
                     f"Middleware {middleware_path} expected an `export` method."
                 )
 

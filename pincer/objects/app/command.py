@@ -9,9 +9,9 @@ from typing import List, Union, TYPE_CHECKING
 
 from ...utils.types import MISSING
 from ...utils.api_object import APIObject
+from ...utils.extraction import get_index
 
 if TYPE_CHECKING:
-    from ...utils import extraction
     from ...utils.types import APINullable
     from ...utils.conversion import convert
     from ...utils.snowflake import Snowflake
@@ -244,7 +244,7 @@ class AppCommand(APIObject):
             return False
 
         return not any(
-            option != extraction.get_index(self.options, idx)
+            option != get_index(self.options, idx)
             for idx, option in enumerate(other.options)
         )
 

@@ -27,11 +27,6 @@ try:
 except (ModuleNotFoundError, ImportError):
     PILLOW_IMPORT = False
 
-    if TYPE_CHECKING:
-        from ...utils import MISSING
-
-        IMAGE_TYPE = MISSING
-
 
 @dataclass
 class File(APIObject):

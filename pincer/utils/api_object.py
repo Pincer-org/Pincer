@@ -47,7 +47,6 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
 
 class HTTPMeta(type):
     # TODO: Fix typehints
-    # ? - ooliver1
     __attrs = {
         "_client": Optional[Any],
         "_http": Optional[Any]

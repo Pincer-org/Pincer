@@ -123,8 +123,7 @@ class User(APIObject):
 
     @property
     def mention(self) -> str:
-        """:class:`str`: The user's mention string.
-        """
+        """:class:`str`: The user's mention string."""
         return f"<@!{self.id}>"
 
     def __str__(self):

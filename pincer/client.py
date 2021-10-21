@@ -18,6 +18,7 @@ from .objects.guild.role import Role
 from .core.gateway import Dispatcher
 from .utils.extraction import get_index
 from .objects.guild.channel import Channel
+from .objects.app.throttling import DefaultThrottleHandler
 
 if TYPE_CHECKING:
 
@@ -162,7 +163,7 @@ class Client(Dispatcher):
             token: str, *,
             received: str = None,
             intents: Intents = None,
-            throttler: ThrottleInterface = None
+            throttler: ThrottleInterface = DefaultThrottleHandler
     ):
         super().__init__(
             token,
@@ -179,7 +180,7 @@ class Client(Dispatcher):
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
         self.throttler = throttler
-        ChatCommandHandler.managers["__main__"] = self
+        ChatCommandHandler.managers[self.__module__] = self
 
     @property
     def chat_commands(self) -> List[str]:
@@ -188,7 +189,10 @@ class Client(Dispatcher):
         Get a list of chat command calls which have been registered in
         the :class:`~pincer.commands.ChatCommandHandler`\\.
         """
-        return [cmd.app.name for cmd in ChatCommandHandler.register.values()]
+        return list(map(
+            lambda cmd: cmd.app.name,
+            ChatCommandHandler.register.values()
+        ))
 
     @staticmethod
     def event(coroutine: Coro):

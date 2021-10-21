@@ -98,6 +98,6 @@ class Bot(Client):
 
 if __name__ == "__main__":
     # Of course we have to run our client, you can replace the
-    # XXYOURBOTTOKENHEREXX with your token, or dynamically get it
+    # XXXYOURBOTTOKENHEREXXX with your token, or dynamically get it
     # through a dotenv/env.
     Bot("XXXYOURBOTTOKENHEREXXX").run()

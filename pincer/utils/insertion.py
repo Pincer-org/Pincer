@@ -17,5 +17,5 @@ context_types = [Signature.empty, MessageContext]
 
 
 def should_pass_ctx(sig: Mapping[str, Parameter], params: List[str]) -> bool:
-    # ? this is an internal function lmao
+    # TODO: Write docs, do not add online its internal
     return len(params) >= 1 and sig[params[0]].annotation in context_types

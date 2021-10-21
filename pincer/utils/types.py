@@ -5,8 +5,7 @@ from typing import TypeVar, Callable, Coroutine, Any, Union, Literal
 
 
 class MissingType:
-    """Type class for missing attributes and parameters
-    """
+    """Type class for missing attributes and parameters."""
 
     def __repr__(self):
         return "<MISSING>"

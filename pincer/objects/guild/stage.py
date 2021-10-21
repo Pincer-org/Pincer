@@ -52,12 +52,3 @@ class StageInstance(APIObject):
     topic: str
     privacy_level: PrivacyLevel
     discoverable: bool
-
-    @property
-    def discoverable_disabled(self) -> bool:
-        """:class:`bool`: I honestly don't know why this exists,
-        it is a property to return the opposite value of an attribute???
-
-        - ooliver1/ooliver#6969
-        """
-        return not self.discoverable

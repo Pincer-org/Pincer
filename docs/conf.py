@@ -90,7 +90,7 @@ with open('../requirements.txt') as f:
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_logo = '../assets/img/icon_smol.png'
+html_logo = '../assets/img/icon_small.png'
 html_favicon = '../assets/img/icon.ico'
 html_theme = 'furo'
 # Material theme options (see theme.conf for more information)

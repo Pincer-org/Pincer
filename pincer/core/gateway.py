@@ -5,8 +5,8 @@
 from __future__ import annotations
 
 import logging
-import asyncio
 from typing import TYPE_CHECKING
+from asyncio import AbstractEventLoop
 from typing import Dict, Callable, Awaitable, Optional
 
 from websockets.legacy.client import WebSocketClientProtocol
@@ -53,7 +53,7 @@ class Dispatcher:
     ) -> None:
         if len(token) != 59:
             raise InvalidTokenError(
-                "Disfcord Token must have exactly 59 characters."
+                "Discord Token must have exactly 59 characters."
             )
 
         self.__token = token
@@ -114,8 +114,7 @@ class Dispatcher:
 
     @property
     def intents(self):
-        """:class:`app.Intents`
-        """
+        """:class:`app.Intents`"""
         return self.__intents
 
     @property
@@ -138,7 +137,7 @@ class Dispatcher:
             self,
             socket: WebSocketClientProtocol,
             payload: GatewayDispatch,
-            loop: asyncio.AbstractEventLoop
+            loop: AbstractEventLoop
     ):
         _log.debug(
             "New event received, checking if handler exists for opcode: %i",
@@ -168,7 +167,7 @@ class Dispatcher:
         execute_handler(handler)
         execute_handler(all_handler)
 
-    async def __dispatcher(self, loop: asyncio.AbstractEventLoop):
+    async def __dispatcher(self, loop: AbstractEventLoop):
         _log.debug(
             "Establishing websocket connection with `%s`", GatewayConfig.uri()
         )
@@ -214,7 +213,7 @@ class Dispatcher:
                 except ConnectionClosedOK:
                     _log.debug("Connection closed successfully.")
 
-    def start_loop(self, *, loop: asyncio.AbstractEventLoop = None):
+    def start_loop(self, *, loop: AbstractEventLoop = None):
         """Instantiate the dispatcher, this will create a connection to the
         Discord websocket API on behalf of the client who's token has
         been passed.
