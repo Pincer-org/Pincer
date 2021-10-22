@@ -7,11 +7,11 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import List, Optional, TYPE_CHECKING
 
-from ..user import User
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
+    from ..user import User
     from ...utils import APINullable, Snowflake
 
 

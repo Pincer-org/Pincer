@@ -1,6 +1,8 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
+from __future__ import annotations
+
 
 class Snowflake(int):
     """
@@ -15,8 +17,13 @@ class Snowflake(int):
     they are always returned as strings in the HTTP API
     to prevent integer overflows in some languages.
     """
+
     @classmethod
-    def from_string(cls, string: str):
+    def __factory__(cls, string: str) -> Snowflake:
+        return cls.from_string(string)
+
+    @classmethod
+    def from_string(cls, string: str) -> Snowflake:
         """
         Initialize a new Snowflake from a string.
 

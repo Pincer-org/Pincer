@@ -15,7 +15,7 @@ from typing import (
 from . import __package__
 from .exceptions import (
     CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
-    InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
+    InvalidAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
     InvalidCommandName
 )
 from .objects import ThrottleScope, AppCommand, Role, User, Channel, Guild
@@ -134,7 +134,7 @@ def command(
 
             if isinstance(annotation, tuple):
                 if len(annotation) != 2:
-                    raise InvalidArgumentAnnotation(
+                    raise InvalidAnnotation(
                         f"Tuple annotation `{annotation}` on parameter "
                         f"`{param}` in command `{cmd}` (`{func.__name__}`) "
                         "does not consist of two elements. Please follow the "
@@ -171,7 +171,7 @@ def command(
                 args = get_args(annotation)
 
                 if len(args) > 25:
-                    raise InvalidArgumentAnnotation(
+                    raise InvalidAnnotation(
                         f"Choices/Literal annotation `{annotation}` on "
                         f"parameter `{param}` in command `{cmd}` "
                         f"(`{func.__name__}`) amount exceeds limit of 25 items!"
@@ -184,7 +184,7 @@ def command(
 
                     if isinstance(choice, tuple):
                         if len(choice) != 2:
-                            raise InvalidArgumentAnnotation(
+                            raise InvalidAnnotation(
                                 f"Choices/Literal annotation `{annotation}` on "
                                 f"parameter `{param}` in command `{cmd}` "
                                 f"(`{func.__name__}`), specific choice "
@@ -204,7 +204,7 @@ def command(
                             lambda x: x.__name__,
                             choice_value_types
                         ))
-                        raise InvalidArgumentAnnotation(
+                        raise InvalidAnnotation(
                             f"Choices/Literal annotation `{annotation}` on "
                             f"parameter `{param}` in command `{cmd}` "
                             f"(`{func.__name__}`), invalid type received. "
@@ -213,7 +213,7 @@ def command(
                             f"{type(choice).__name__} was given!"
                         )
                     elif not isinstance(choice, choice_type):
-                        raise InvalidArgumentAnnotation(
+                        raise InvalidAnnotation(
                             f"Choices/Literal annotation `{annotation}` on "
                             f"parameter `{param}` in command `{cmd}` "
                             f"(`{func.__name__}`), all values must be of the "
@@ -229,7 +229,7 @@ def command(
 
             param_type = _options_type_link.get(annotation)
             if not param_type:
-                raise InvalidArgumentAnnotation(
+                raise InvalidAnnotation(
                     f"Annotation `{annotation}` on parameter "
                     f"`{param}` in command `{cmd}` (`{func.__name__}`) is not "
                     "a valid type."

@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import Optional, List, TYPE_CHECKING
 
 from ..user import User
-from ...utils.api_object import APIObject, HTTPMeta
+from ...utils.api_object import APIObject
 from ...utils.conversion import convert
 from ...utils.snowflake import Snowflake
 from ...utils.timestamp import Timestamp

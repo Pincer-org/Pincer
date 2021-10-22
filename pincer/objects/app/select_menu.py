@@ -7,7 +7,8 @@ from dataclasses import dataclass
 from typing import List, TYPE_CHECKING
 
 from ..message.emoji import Emoji
-from ...utils import APIObject, MISSING
+from ...utils import APIObject
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from ...utils import APINullable

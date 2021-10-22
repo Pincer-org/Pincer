@@ -5,31 +5,25 @@ from __future__ import annotations
 
 from asyncio import gather, iscoroutine, sleep, ensure_future
 from dataclasses import dataclass
-from enum import IntEnum
 from typing import Dict, TYPE_CHECKING
 
-from .command import AppCommandInteractionDataOption, AppCommandOptionType
+from .command_types import AppCommandOptionType
 from .interaction_base import InteractionType, CallbackType
 from ..app.select_menu import SelectOption
 from ..guild.member import GuildMember
 from ..message.context import MessageContext
 from ..message.user_message import UserMessage
 from ..user import User
-from ...utils import APIObject, MISSING, Snowflake, convert
+from ...utils import APIObject, convert
+from ...utils.snowflake import Snowflake
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
+    from .command import AppCommandInteractionDataOption
     from ..message.message import Message
     from ..guild.channel import Channel
     from ..guild.role import Role
     from ...utils import APINullable
-
-
-class InteractionFlags(IntEnum):
-    """
-    :param EPHEMERAL:
-        only the user receiving the message can see it
-    """
-    EPHEMERAL = 1 << 6
 
 
 @dataclass
@@ -101,25 +95,6 @@ class InteractionData(APIObject):
     component_type: APINullable[int] = MISSING
     values: APINullable[SelectOption] = MISSING
     target_id: APINullable[Snowflake] = MISSING
-
-    def __post_init__(self):
-        self.id = convert(self.id, Snowflake.from_string)
-        self.resolved = convert(
-            self.resolved,
-            ResolvedData.from_dict,
-            ResolvedData
-        )
-        self.options = convert(
-            self.options,
-            AppCommandInteractionDataOption.from_dict,
-            AppCommandInteractionDataOption
-        )
-        self.values = convert(
-            self.values,
-            SelectOption.from_dict,
-            SelectOption
-        )
-        self.target_id = convert(self.target_id, Snowflake.from_string)
 
 
 @dataclass
@@ -298,7 +273,7 @@ class Interaction(APIObject):
         """
         ensure_future(self.__post_send_handler(message))
 
-    async def reply(self, message: Message) -> UserMessage:
+    async def reply(self, message: Message):
         """
         Initial reply, only works if no ACK has been sent yet.
 
@@ -307,7 +282,7 @@ class Interaction(APIObject):
         """
         content_type, data = message.serialize()
 
-        res = await self._http.patch(
+        await self._http.post(
             f"interactions/{self.id}/{self.token}/callback",
             {
                 "type": CallbackType.MESSAGE,
@@ -316,7 +291,6 @@ class Interaction(APIObject):
             content_type=content_type
         )
         self.__post_sent(message)
-        return UserMessage.from_dict(res)
 
     async def edit(self, message: Message) -> UserMessage:
         """

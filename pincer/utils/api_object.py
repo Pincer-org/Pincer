@@ -4,19 +4,27 @@
 from __future__ import annotations
 
 import copy
+import logging
 from dataclasses import dataclass, fields, _is_dataclass_instance
-from enum import Enum
+from enum import Enum, EnumMeta
 from inspect import getfullargspec
-from typing import Dict, Tuple, Union, Generic, TypeVar, Any, TYPE_CHECKING, \
-    Optional, List
+from sys import modules
+from typing import (
+    Dict, Tuple, Union, Generic, TypeVar, Any, TYPE_CHECKING,
+    List, get_type_hints, get_origin, get_args
+)
 
-from .types import MissingType
+from .conversion import convert
+from .types import MissingType, Singleton, MISSING
+from ..exceptions import InvalidAnnotation
 
 if TYPE_CHECKING:
     from ..client import Client
     from ..core.http import HTTPClient
 
 T = TypeVar("T")
+
+_log = logging.getLogger(__package__)
 
 
 def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
@@ -80,6 +88,18 @@ class HTTPMeta(type):
         return http_object
 
 
+class TypeCache(metaclass=Singleton):
+    cache = {}
+
+    def __init__(self):
+        lcp = modules.copy()
+        for module in lcp:
+            if not module.startswith("pincer"):
+                continue
+
+            TypeCache.cache.update(lcp[module].__dict__)
+
+
 @dataclass
 class APIObject(metaclass=HTTPMeta):
     """
@@ -88,16 +108,72 @@ class APIObject(metaclass=HTTPMeta):
     _client: Client
     _http: HTTPClient
 
-    # def __post_init__(self):
-    #     fin = {
-    #         key: _eval_type(ForwardRef(value), globals(), globals())
-    #         for key, value in self.__annotations__.items()
-    #     }
-    #
-    #     # pprint(self.__annotations__)
-    #     # pprint(get_type_hints(self))
-    #     print(fin)
-    #     print("Post init", self)
+    def __get_types(self, attr: str, arg_type: type) -> Tuple[Any]:
+        origin = get_origin(arg_type)
+
+        if origin is Union:
+            args = get_args(arg_type)
+
+            if 2 <= len(args) < 4:
+                return args
+
+            raise InvalidAnnotation(
+                f"Attribute `{attr}` in `{type(self).__name__}` has too many "
+                f"or not enough arguments! (got {len(args)} expected 2-3)"
+            )
+
+        return arg_type,
+
+    def __attr_convert(self, attr: str, attr_type: T) -> T:
+        factory = attr_type
+
+        if getattr(attr_type, "__factory__", None):
+            factory = attr_type.__factory__
+
+        return convert(
+            getattr(self, attr),
+            factory,
+            attr_type,
+            self._client
+        )
+
+    def __post_init__(self):
+        TypeCache()
+
+        attributes = get_type_hints(self, globalns=TypeCache.cache).items()
+
+        for attr, attr_type in attributes:
+            if attr.startswith('_'):
+                continue
+
+            types = self.__get_types(attr, attr_type)
+
+            types = tuple(filter(
+                lambda tpe: tpe is not None and tpe is not MISSING,
+                types
+            ))
+
+            if not types:
+                raise InvalidAnnotation(
+                    f"Attribute `{attr}` in `{type(self).__name__}` only "
+                    "consisted of missing/optional type!"
+                )
+
+            specific_tp = types[0]
+
+            if tp := get_origin(specific_tp):
+                specific_tp = tp
+
+            if isinstance(specific_tp, EnumMeta) and not getattr(self, attr):
+                attr_value = MISSING
+            else:
+                attr_value = self.__attr_convert(attr, specific_tp)
+
+            setattr(self, attr, attr_value)
+
+    @classmethod
+    def __factory__(cls: Generic[T], *args, **kwargs) -> T:
+        return cls.from_dict(*args, **kwargs)
 
     @classmethod
     def from_dict(

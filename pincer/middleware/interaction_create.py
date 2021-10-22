@@ -2,43 +2,20 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 import logging
-from asyncio import sleep
 from inspect import isasyncgenfunction, getfullargspec
-from typing import Union, Dict, Any
+from typing import Dict, Any
 
 from pincer.utils import get_index
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
-from ..objects import (
-    File, Interaction, Embed, Message, InteractionFlags, MessageContext
-)
+from ..objects import Interaction, MessageContext
 from ..objects.app import CallbackType
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 from ..utils.conversion import construct_client_dict
+from ..utils.convert_message import convert_message
 from ..utils.signature import get_params, get_signature_and_params
 
-PILLOW_IMPORT = True
-
-try:
-    from PIL.Image import Image
-except (ModuleNotFoundError, ImportError):
-    PILLOW_IMPORT = False
-
 _log = logging.getLogger(__name__)
-
-
-def convert_message(self, message: Union[Embed, Message, str]) -> Message:
-    """Converts a message to a Message object"""
-    if isinstance(message, Embed):
-        message = Message(embeds=[message])
-    elif PILLOW_IMPORT and isinstance(message, (File, Image)):
-        message = Message(attachments=[message])
-    elif not isinstance(message, Message):
-        message = Message(message) if message else Message(
-            self.received_message,
-            flags=InteractionFlags.EPHEMERAL
-        )
-    return message
 
 
 async def interaction_response_handler(
@@ -67,11 +44,6 @@ async def interaction_response_handler(
         The arguments to be passed to the command.
     """
 
-    await self.http.post(
-        f"interactions/{interaction.id}/{interaction.token}/callback",
-        {"type": CallbackType.DEFERRED_MESSAGE}
-    )
-
     if should_pass_cls(command):
         cls_keyword = getfullargspec(command).args[0]
         kwargs[cls_keyword] = ChatCommandHandler.managers[command.__module__]
@@ -91,10 +63,10 @@ async def interaction_response_handler(
                 await interaction.followup(msg)
             else:
                 started = True
-                await interaction.edit(msg)
+                await interaction.reply(msg)
     else:
         message = await command(**kwargs)
-        await interaction.edit(convert_message(self, message))
+        await interaction.reply(convert_message(self, message))
 
 
 async def interaction_handler(
