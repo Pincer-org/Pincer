@@ -201,7 +201,7 @@ class Channel(APIObject):
         ...
 
     async def edit(self, **kwargs):
-        data = await self._http.patch(f"channels/{self.id}", kwargs)
+        data = await self._http.patch(f"channels/{self.id}", data=kwargs)
         data.update(
             {
                 "_client": self._client,

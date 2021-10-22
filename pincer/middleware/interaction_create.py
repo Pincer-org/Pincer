@@ -58,7 +58,7 @@ async def reply(self, interaction: Interaction, message: Message):
 
     await self.http.post(
         f"interactions/{interaction.id}/{interaction.token}/callback",
-        data,
+        data=data,
         content_type=content_type
     )
 
@@ -108,7 +108,7 @@ async def interaction_response_handler(
                 await self.http.post(
                     f"webhooks/{interaction.application_id}"
                     f"/{interaction.token}",
-                    msg.to_dict().get("data")
+                    data=msg.to_dict().get("data")
                 )
             else:
                 started = True

@@ -323,7 +323,7 @@ class ChatCommandHandler(metaclass=Singleton):
         # TODO: Fix docs
         await self.client.http.patch(
             self.__prefix + self.__update.format(command=cmd),
-            changes
+            data=changes
         )
 
         for key, value in changes.items():
@@ -348,7 +348,7 @@ class ChatCommandHandler(metaclass=Singleton):
 
         res = await self.client.http.post(
             self.__prefix + add_endpoint,
-            cmd.to_dict()
+            data=cmd.to_dict()
         )
 
         ChatCommandHandler.register[cmd.name].app.id = Snowflake(res['id'])
