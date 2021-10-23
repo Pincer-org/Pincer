@@ -89,6 +89,12 @@ class APIObject(metaclass=HTTPMeta):
     #     print(fin)
     #     print("Post init", self)
 
+    def __str__(self):
+        if self.__dict__.get('name'):
+            return self.name
+
+        return super().__str__()
+
     @classmethod
     def from_dict(
             cls: Generic[T],
