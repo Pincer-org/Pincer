@@ -231,11 +231,10 @@ class Dispatcher:
                     if compressed and isinstance(msg, bytes):
                         buffer = bytearray(msg)
 
-                        if len(msg) < 4 or msg[-4:] != b'\x00\x00\xff\xff':
-                            continue
+                        while not buffer.endswith(b'\x00\x00\xff\xff'):
+                            buffer.extend(await socket.recv())
 
                         msg = inflator.decompress(buffer).decode('utf-8')
-                        buffer = bytearray()
 
                     await self.__handler_manager(
                         socket,
