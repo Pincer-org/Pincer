@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import logging
+import zlib
 from asyncio import get_event_loop, AbstractEventLoop, ensure_future
 from platform import system
 from typing import Dict, Callable, Awaitable, Optional
@@ -133,7 +134,8 @@ class Dispatcher:
                         "$os": system(),
                         "$browser": __package__,
                         "$device": __package__
-                    }
+                    },
+                    "compress": True
                 }
             )
         )
@@ -216,12 +218,28 @@ class Dispatcher:
                 GatewayConfig.uri()
             )
 
+            # Create an inflator for compressed data as defined in
+            # https://discord.com/developers/docs/topics/gateway
+            inflator = zlib.decompressobj()
+            buffer = bytearray()
+
             while self.__keep_alive:
                 try:
                     _log.debug("Waiting for new event.")
+                    msg = await socket.recv()
+
+                    if isinstance(msg, bytes):
+                        buffer.extend(msg)
+
+                        if len(msg) < 4 or msg[-4:] != b'\x00\x00\xff\xff':
+                            continue
+
+                        msg = inflator.decompress(buffer).decode('utf-8')
+                        buffer = bytearray()
+
                     await self.__handler_manager(
                         socket,
-                        GatewayDispatch.from_string(await socket.recv()),
+                        GatewayDispatch.from_string(msg),
                         loop
                     )
 

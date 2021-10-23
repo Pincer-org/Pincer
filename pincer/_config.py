@@ -25,4 +25,5 @@ class GatewayConfig:
             f"{GatewayConfig.socket_base_url}"
             f"?v={GatewayConfig.version}"
             f"&encoding={GatewayConfig.encoding}"
+            f"&compress={GatewayConfig.compression}"
         )
