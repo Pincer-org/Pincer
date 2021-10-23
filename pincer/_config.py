@@ -2,6 +2,7 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass
@@ -13,7 +14,7 @@ class GatewayConfig:
     socket_base_url: str = "wss://gateway.discord.gg/"
     version: int = 9
     encoding: str = "json"
-    compression: str = "zlib-stream"
+    compression: Optional[str] = "zlib-stream"
 
     @staticmethod
     def uri() -> str:
