@@ -135,7 +135,7 @@ class Dispatcher:
                         "$browser": __package__,
                         "$device": __package__
                     },
-                    "compress": True
+                    "compress": GatewayConfig.compressed()
                 }
             )
         )
@@ -218,18 +218,18 @@ class Dispatcher:
                 GatewayConfig.uri()
             )
 
-            # Create an inflator for compressed data as defined in
-            # https://discord.com/developers/docs/topics/gateway
-            inflator = zlib.decompressobj()
-            buffer = bytearray()
+            if compressed := GatewayConfig.compressed():
+                # Create an inflator for compressed data as defined in
+                # https://discord.com/developers/docs/topics/gateway
+                inflator = zlib.decompressobj()
 
             while self.__keep_alive:
                 try:
                     _log.debug("Waiting for new event.")
                     msg = await socket.recv()
 
-                    if isinstance(msg, bytes):
-                        buffer.extend(msg)
+                    if compressed and isinstance(msg, bytes):
+                        buffer = bytearray(msg)
 
                         if len(msg) < 4 or msg[-4:] != b'\x00\x00\xff\xff':
                             continue

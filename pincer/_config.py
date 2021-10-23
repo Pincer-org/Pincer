@@ -21,9 +21,21 @@ class GatewayConfig:
         :return uri:
             The GatewayConfig's uri.
         """
-        return (
+        uri = (
             f"{GatewayConfig.socket_base_url}"
             f"?v={GatewayConfig.version}"
             f"&encoding={GatewayConfig.encoding}"
-            f"&compress={GatewayConfig.compression}"
         )
+
+        if GatewayConfig.compressed():
+            uri += f"&compress={GatewayConfig.compression}"
+
+        return uri
+
+    @staticmethod
+    def compressed() -> bool:
+        """
+        :return compressed:
+            Whether the Gateway should compress payloads or not.
+        """
+        return GatewayConfig.compression == "zlib-stream"
