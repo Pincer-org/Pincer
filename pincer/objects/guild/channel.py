@@ -216,7 +216,7 @@ class Channel(APIObject):  # noqa E501
         :class:`~pincer.objects.guild.channel.Channel`
             The updated channel object.
         """
-        data = await self._http.patch(f"channels/{self.id}", kwargs)
+        data = await self._http.patch(f"channels/{self.id}", data=kwargs)
         data.update(
             {
                 "_client": self._client,

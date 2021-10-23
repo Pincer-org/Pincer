@@ -128,3 +128,10 @@ class Invite(APIObject):
     target_type: APINullable[InviteTargetType] = MISSING
     target_user: APINullable[User] = MISSING
     target_application: APINullable[Application] = MISSING
+
+    def __str__(self) -> str:
+        return self.link
+
+    @property
+    def link(self):
+        return f"https://discord.gg/{self.code}"

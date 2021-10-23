@@ -5,11 +5,13 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from asyncio import TimerHandle, iscoroutinefunction
 from datetime import timedelta
 from typing import TYPE_CHECKING
+from asyncio import TimerHandle, iscoroutinefunction
 
+from .types import Coro
 from . import __package__
+from .insertion import should_pass_cls
 
 if TYPE_CHECKING:
     from typing import Callable, Set
@@ -133,11 +135,7 @@ class TaskScheduler:
 
     def __execute(self, task: Task):
         """Execute a task."""
-        if task._client_required:
-            coro = task.coro(self.client)
-        else:
-            coro = task.coro()
-
+        coro = task.coro(self.client) if task.client_required else task.coro()
         # Execute the coroutine
         asyncio.ensure_future(coro)
 
