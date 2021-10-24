@@ -12,7 +12,7 @@ from ..objects.events.guild import GuildMemberRemoveEvent
 
 async def guild_member_remove_middleware(self, payload: GatewayDispatch):
     """
-    Middleware for ``guild_member_remove`` event.
+    Middleware for ``on_guild_member_remove`` event.
 
     :param self:
         The current client/bot.

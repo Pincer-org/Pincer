@@ -13,7 +13,7 @@ from ..objects.events.guild import GuildMembersChunkEvent
 
 async def guild_member_chunk_middleware(self, payload: GatewayDispatch):
     """
-    Middleware for ``guild_member_chunk`` event.
+    Middleware for ``on_guild_member_chunk`` event.
 
     :param self:
         The current client/bot.

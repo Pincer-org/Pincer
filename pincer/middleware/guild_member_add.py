@@ -13,7 +13,7 @@ from ..objects.events.guild import GuildMemberAddEvent
 
 async def guild_member_add_middleware(self, payload: GatewayDispatch):
     """
-    Middleware for ``guild_member_add`` event.
+    Middleware for ``on_guild_member_add`` event.
 
     :param self:
         The current client/bot.
