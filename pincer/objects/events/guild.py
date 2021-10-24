@@ -87,7 +87,7 @@ class GuildIntegrationsUpdateEvent(APIObject):
     guild_id: Snowflake
 
 
-@dataclass()
+@dataclass
 class GuildMemberAddEvent(GuildMember):
     """
     Sent when a user joins a guild.
