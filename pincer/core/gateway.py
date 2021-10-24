@@ -24,6 +24,8 @@ from ..exceptions import (
 )
 from ..objects import Intents
 
+ZLIB_SUFFIX = b'\x00\x00\xff\xff'
+
 Handler = Callable[[WebSocketClientProtocol, GatewayDispatch], Awaitable[None]]
 _log = logging.getLogger(__package__)
 
@@ -234,7 +236,7 @@ class Dispatcher:
                         else:
                             buffer = bytearray(msg)
 
-                            while not buffer.endswith(b'\x00\x00\xff\xff'):
+                            while not buffer.endswith(ZLIB_SUFFIX):
                                 buffer.extend(await socket.recv())
 
                             msg = inflator.decompress(buffer).decode('utf-8')
