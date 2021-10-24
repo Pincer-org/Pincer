@@ -22,16 +22,14 @@ class GatewayConfig:
         :return uri:
             The GatewayConfig's uri.
         """
-        uri = (
+        return (
             f"{GatewayConfig.socket_base_url}"
             f"?v={GatewayConfig.version}"
             f"&encoding={GatewayConfig.encoding}"
+        ) + (
+            f"&compress={GatewayConfig.compression}"
+            * GatewayConfig.compressed()
         )
-
-        if GatewayConfig.compressed():
-            uri += f"&compress={GatewayConfig.compression}"
-
-        return uri
 
     @staticmethod
     def compressed() -> bool:
