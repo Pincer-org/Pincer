@@ -19,11 +19,11 @@ if TYPE_CHECKING:
 @dataclass
 class Emoji(APIObject):
     """
-    :param id:
-        emoji id
-
     :param name:
         emoji name
+
+    :param id:
+        emoji id
 
     :param animated:
         whether this emoji is animated
@@ -45,8 +45,8 @@ class Emoji(APIObject):
         user that created this emoji
     """
 
-    id: Optional[Snowflake]
     name: Optional[str]
+    id: Optional[Snowflake] = None
 
     animated: APINullable[bool] = MISSING
     available: APINullable[bool] = MISSING
