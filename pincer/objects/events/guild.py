@@ -88,6 +88,11 @@ class GuildIntegrationsUpdateEvent(APIObject):
 
 
 @dataclass
+class GuildMemberAddEvent(GuildMember):
+    
+    guild_id: Snowflake = 0
+
+@dataclass
 class GuildMemberRemoveEvent(APIObject):
     """
     Sent when a user is removed from a guild (leave/kick/ban).
