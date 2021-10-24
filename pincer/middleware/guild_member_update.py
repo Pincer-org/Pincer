@@ -21,7 +21,7 @@ async def guild_member_update(self, payload: GatewayDispatch):
     :param payload:
         The data received from the event.
     """
-    
+
     return (
         "on_guild_member_update",
         [GuildMemberUpdateEvent.from_dict(payload.data)]
