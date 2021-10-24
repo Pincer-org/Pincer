@@ -8,8 +8,9 @@ from ..objects.events.message import MessageReactionRemoveAllEvent
 from ..utils.conversion import construct_client_dict
 
 
-async def message_reaction_remove_all_middleware(self,
-                                                 payload: GatewayDispatch):
+async def message_reaction_remove_all_middleware(
+    self,
+    payload: GatewayDispatch):
     """
     Middleware for ``on_message_reaction_remove_all``,
         creates a object for the message reactions that are removed
