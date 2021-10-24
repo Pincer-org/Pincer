@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from .error import InvalidPayload
+from ..exceptions import InvalidPayload
 from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:

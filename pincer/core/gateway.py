@@ -139,6 +139,19 @@ class Dispatcher:
             payload: GatewayDispatch,
             loop: AbstractEventLoop
     ):
+        """
+        This manages all handles for given OP codes.
+        This method gets invoked for every message that is received from
+        Discord.
+
+        :param socket:
+            The current socket, which can be used to interact with
+            the Discord API.
+        :param payload:
+            The received payload from Discord.
+        :param loop:
+            The current async loop on which the future is bound.
+        """
         _log.debug(
             "New event received, checking if handler exists for opcode: %i",
             payload.op
@@ -168,6 +181,13 @@ class Dispatcher:
         execute_handler(all_handler)
 
     async def __dispatcher(self, loop: AbstractEventLoop):
+        """
+        The main event loop.
+        This handles all interactions with the websocket API.
+
+        :param loop:
+            The loop in which the dispatcher is running.
+        """
         _log.debug(
             "Establishing websocket connection with `%s`", GatewayConfig.uri()
         )

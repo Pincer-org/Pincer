@@ -20,9 +20,11 @@ MISSING = MissingType()
 T = TypeVar('T')
 
 
+# Represents a value which is optionally returned from the API
 APINullable = Union[T, MissingType]
 
 
+# Represents a coroutine.
 Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
 
 

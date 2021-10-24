@@ -32,6 +32,12 @@ class Heartbeat:
 
     @classmethod
     async def __send(cls, socket: WebSocketClientProtocol):
+        """
+        Sends a heartbeat to the API gateway.
+
+        :param socket:
+            The socket to send the heartbeat to.
+        """
         _log.debug("Sending heartbeat (seq: %s)", str(cls.__sequence))
         await socket.send(str(GatewayDispatch(1, cls.__sequence)))
 

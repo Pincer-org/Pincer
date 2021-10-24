@@ -8,6 +8,13 @@ class PincerError(Exception):
     """Base exception class for all Pincer errors."""
 
 
+class InvalidPayload(PincerError):
+    """Exception which gets thrown if an invalid payload has been received.
+    This means that the data of the payload did not match the expected
+    format and/or didn't contain the the expected values.
+    """
+
+
 class UnhandledException(PincerError):
     """Exception which gets thrown if an exception wasn't handled.
 

@@ -20,7 +20,3 @@ class DiscordError(PincerError, APIObject):
     """
     code: int
     message: str
-
-class InvalidPayload(DiscordError):
-    pass
-    # TODO no idea what goes here

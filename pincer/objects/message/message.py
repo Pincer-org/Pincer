@@ -168,6 +168,14 @@ class Message:
         }
 
     def serialize(self) -> Tuple[str, Union[Payload, Dict]]:
+        """
+        Creates the data that the discord API wants for the message object
+
+        :return: (content_type, data)
+
+        :raises CommandReturnIsEmpty:
+            Command does not have content, an embed, or attachment.
+        """
         if self.isempty:
             raise CommandReturnIsEmpty("Cannot return empty message.")
 

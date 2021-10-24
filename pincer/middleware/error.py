@@ -9,12 +9,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from ..objects.events.error import DiscordError
+from ..utils.conversion import construct_client_dict
+
 if TYPE_CHECKING:
     from typing import List, Tuple
 
     from ..core.dispatch import GatewayDispatch
-    from ..objects.events.error import DiscordError
-    from ..utils.conversion import construct_client_dict
 
 
 def error_middleware(

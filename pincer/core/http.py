@@ -6,24 +6,24 @@ import asyncio
 import logging
 from json import dumps
 from typing import Protocol, TYPE_CHECKING
-
+from asyncio import sleep
 
 from . import __package__
+from ..exceptions import (
+    NotFoundError, BadRequestError, NotModifiedError, UnauthorizedError,
+    ForbiddenError, MethodNotAllowedError, RateLimitError, ServerError,
+    HTTPError
+)
+from .._config import GatewayConfig
+
 if TYPE_CHECKING:
     from typing import Any, Dict, Optional, Union
-    from asyncio import sleep
 
     from aiohttp import ClientSession, ClientResponse
     from aiohttp.client import _RequestContextManager
     from aiohttp.payload import Payload
     from aiohttp.typedefs import StrOrURL
 
-    from .._config import GatewayConfig
-    from ..exceptions import (
-        NotFoundError, BadRequestError, NotModifiedError, UnauthorizedError,
-        ForbiddenError, MethodNotAllowedError, RateLimitError, ServerError,
-        HTTPError
-    )
 
 _log = logging.getLogger(__package__)
 
@@ -48,9 +48,25 @@ class HTTPClient:
     ----------
     url: :class:`str`
         ``f"https://discord.com/api/v{version}"`` "Base url for all HTTP requests"
+    max_tts: :class:`int`
+        Max amount of attempts after error code 5xx
     """
 
     def __init__(self, token: str, *, version: int = None, ttl: int = 5):
+        """
+        Instantiate a new HttpApi object.
+
+        :param token:
+            Discord API token
+
+        Keyword Arguments:
+
+        :param version:
+            The discord API version.
+            See `<https://discord.com/developers/docs/reference#api-versioning>`_.
+        :param ttl:
+            Max amount of attempts after error code 5xx
+        """
         version = version or GatewayConfig.version
         self.url: str = f"https://discord.com/api/v{version}"
         self.max_ttl: int = ttl
@@ -92,6 +108,27 @@ class HTTPClient:
             data: Optional[Union[Dict, str, Payload]] = None,
             __ttl: int = None
     ) -> Optional[Dict]:
+        """
+        Send an api request to the Discord REST API.
+
+        :param method:
+            The method for the request. (eg GET or POST)
+
+        :param endpoint:
+            The endpoint to which the request will be sent.
+
+        Keyword Arguments:
+
+        :param content_type:
+            The request's content type.
+
+        :param data:
+            The data which will be added to the request.
+
+        :param __ttl:
+            Private param used for recursively setting the retry amount.
+            (Eg set to 1 for 1 max retry)
+        """
         ttl = __ttl or self.max_ttl
 
         if ttl == 0:
@@ -129,6 +166,31 @@ class HTTPClient:
             data: Optional[str],
             __ttl: int,
     ) -> Optional[Dict]:
+        """
+        Handle responses from the discord API.
+
+        Side effects:
+            If a 5xx error code is returned it will retry the request.
+
+        :param res:
+            The response from the discord API.
+
+        :param method:
+            The method which was used to call the endpoint.
+
+        :param endpoint:
+            The endpoint to which the request was sent.
+
+        :param content_type:
+            The request's content type.
+
+        :param data:
+            The data which was added to the request.
+
+        :param __ttl:
+            Private param used for recursively setting the retry amount.
+            (Eg set to 1 for 1 max retry)
+        """
         _log.debug(f"Received response for {endpoint} | {await res.text()}")
         if res.ok:
             if res.status == 204:

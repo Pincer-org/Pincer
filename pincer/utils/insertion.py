@@ -9,6 +9,15 @@ from ..objects.message.context import MessageContext
 
 
 def should_pass_cls(call: Union[Coro, Callable[..., Any]]) -> bool:
+    """
+    Checks whether a callable requires a self/cls as first parameter.
+
+    :param call:
+        The callable to check.
+
+    :return:
+        Whether or not its required.
+    """
     args = getfullargspec(call).args
     return len(args) >= 1 and args[0] in ["self", "cls"]
 
