@@ -39,4 +39,4 @@ class GatewayConfig:
         :return compressed:
             Whether the Gateway should compress payloads or not.
         """
-        return GatewayConfig.compression == "zlib-stream"
+        return GatewayConfig.compression in ["zlib-stream", "zlib-payload"]

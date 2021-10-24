@@ -218,7 +218,7 @@ class Dispatcher:
                 GatewayConfig.uri()
             )
 
-            if compressed := GatewayConfig.compressed():
+            if GatewayConfig.compression == "zlib-stream":
                 # Create an inflator for compressed data as defined in
                 # https://discord.com/developers/docs/topics/gateway
                 inflator = zlib.decompressobj()
@@ -228,13 +228,16 @@ class Dispatcher:
                     _log.debug("Waiting for new event.")
                     msg = await socket.recv()
 
-                    if compressed and isinstance(msg, bytes):
-                        buffer = bytearray(msg)
+                    if isinstance(msg, bytes):
+                        if GatewayConfig.compression == "zlib-payload":
+                            msg = zlib.decompress(msg)
+                        else:
+                            buffer = bytearray(msg)
 
-                        while not buffer.endswith(b'\x00\x00\xff\xff'):
-                            buffer.extend(await socket.recv())
+                            while not buffer.endswith(b'\x00\x00\xff\xff'):
+                                buffer.extend(await socket.recv())
 
-                        msg = inflator.decompress(buffer).decode('utf-8')
+                            msg = inflator.decompress(buffer).decode('utf-8')
 
                     await self.__handler_manager(
                         socket,
