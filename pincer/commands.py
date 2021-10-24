@@ -5,42 +5,39 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import TYPE_CHECKING
-from asyncio import iscoroutinefunction, gather
 from copy import deepcopy
+from typing import TYPE_CHECKING
+from typing import get_origin, get_args
+from asyncio import iscoroutinefunction, gather
 from inspect import Signature, isasyncgenfunction
 
 from . import __package__
 from .utils.types import Singleton
 from .objects.user.user import User
 from .objects.guild.role import Role
+from .utils.extraction import get_index
 from .objects.guild.channel import Channel
+from .utils.insertion import should_pass_ctx
+from .objects.app.command import (
+    AppCommandOption, AppCommandOptionChoice,
+    ClientCommandStructure, AppCommandType
+)
+from .utils.signature import get_signature_and_params
 from .objects.app.throttle_scope import ThrottleScope
 from .objects.app.command import AppCommandOptionType, AppCommand
+from .utils.types import Coro, MISSING, choice_value_types, Choices
+from .exceptions import (
+    CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
+    InvalidArgumentAnnotation, CommandDescriptionTooLong,
+    InvalidCommandGuild, InvalidCommandName
+)
 
 
 if TYPE_CHECKING:
-    from typing import (
-        Optional, Dict, List,
-        Any, Tuple, get_origin,
-        get_args, Union
-    )
+    from typing import Optional, Dict, List, Any, Tuple, Union
 
     from .client import Client
     from .utils.snowflake import Snowflake
-    from .utils.extraction import get_index
-    from .utils.insertion import should_pass_ctx
-    from .utils.signature import get_signature_and_params
-    from .utils.types import Coro, MISSING, choice_value_types, Choices
-    from .objects.app.command import (
-        AppCommandOption,
-        AppCommandOptionChoice, ClientCommandStructure, AppCommandType
-    )
-    from .exceptions import (
-        CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
-        InvalidArgumentAnnotation, CommandDescriptionTooLong,
-        InvalidCommandGuild, InvalidCommandName
-    )
 
 COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 

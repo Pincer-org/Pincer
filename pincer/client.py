@@ -138,7 +138,7 @@ class Client(Dispatcher):
     Attributes
     ----------
     bot: :class:`~objects.user.user.User`
-        THe user object of the client
+        The user object of the client
     recieved_message: :class:`str`
         The default message which will be sent when no response is given.
     http: :class:`~core.http.HTTPClient`

@@ -5,29 +5,27 @@
 from __future__ import annotations
 
 import logging
+from platform import system
 from typing import TYPE_CHECKING
 from asyncio import AbstractEventLoop
+from asyncio import get_event_loop, ensure_future
 from typing import Dict, Callable, Awaitable, Optional
 
+from websockets import connect
 from websockets.legacy.client import WebSocketClientProtocol
+from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
 
 from . import __package__
 from ..core.dispatch import GatewayDispatch
+from ..exceptions import (
+    PincerError, InvalidTokenError, UnhandledException,
+    _InternalPerformReconnectError, DisallowedIntentsError
+)
 
 if TYPE_CHECKING:
-    from platform import system
-    from asyncio import get_event_loop, ensure_future
-
-    from websockets import connect
-    from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
-
     from .._config import GatewayConfig
     from ..core.heartbeat import Heartbeat
     from ..objects.app.intents import Intents
-    from ..exceptions import (
-        PincerError, InvalidTokenError, UnhandledException,
-        _InternalPerformReconnectError, DisallowedIntentsError
-    )
 
 Handler = Callable[[WebSocketClientProtocol, GatewayDispatch], Awaitable[None]]
 _log = logging.getLogger(__package__)
