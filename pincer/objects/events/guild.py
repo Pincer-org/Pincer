@@ -11,6 +11,7 @@ from ..message.emoji import Emoji
 from ..message.sticker import Sticker
 from ..user import User
 from ...utils.api_object import APIObject
+from ...utils.conversion import construct_client_dict
 from ...utils.snowflake import Snowflake
 from ...utils.timestamp import Timestamp
 from ...utils.types import MISSING, APINullable
@@ -115,6 +116,11 @@ class GuildMemberRemoveEvent(APIObject):
     guild_id: Snowflake
     user: User
 
+    def __post_init__(self):
+        self.user = User.from_dict(
+            construct_client_dict(self._client, self.user)
+        )
+
 
 @dataclass
 class GuildMemberUpdateEvent(APIObject):
@@ -161,6 +167,11 @@ class GuildMemberUpdateEvent(APIObject):
     mute: APINullable[bool] = MISSING
     pending: APINullable[bool] = MISSING
 
+    def __post_init__(self):
+        self.user = User.from_dict(construct_client_dict(
+            self._client, self.user
+        ))
+
 
 @dataclass
 class GuildMembersChunkEvent(APIObject):
@@ -201,6 +212,16 @@ class GuildMembersChunkEvent(APIObject):
     not_found: APINullable[List[Any]] = MISSING
     presences: APINullable[PresenceUpdateEvent] = MISSING
     nonce: APINullable[str] = MISSING
+
+    def __post_init__(self):
+        self.members = [
+            GuildMember.from_dict(
+                construct_client_dict(
+                    self._client, member
+                )
+            )
+            for member in self.members
+        ]
 
 
 @dataclass

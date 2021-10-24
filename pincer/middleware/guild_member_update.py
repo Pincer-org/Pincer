@@ -8,6 +8,7 @@ of a guild member changes.
 
 from ..core.dispatch import GatewayDispatch
 from ..utils import Coro
+from ..utils.conversion import construct_client_dict
 from ..objects.events.guild import GuildMemberUpdateEvent
 
 
@@ -24,7 +25,9 @@ async def guild_member_update_middleware(self, payload: GatewayDispatch):
 
     return (
         "on_guild_member_update",
-        [GuildMemberUpdateEvent.from_dict(payload.data)]
+        [GuildMemberUpdateEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        )]
     )
 
 

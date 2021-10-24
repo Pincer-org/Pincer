@@ -8,6 +8,7 @@ and ``chunk_count`` to calculate how many chunks are left for your request.
 
 from ..core.dispatch import GatewayDispatch
 from ..utils import Coro
+from ..utils.conversion import construct_client_dict
 from ..objects.events.guild import GuildMembersChunkEvent
 
 
@@ -24,7 +25,9 @@ async def guild_member_chunk_middleware(self, payload: GatewayDispatch):
 
     return (
         "on_guild_member_chunk",
-        [GuildMembersChunkEvent.from_dict(payload.data)]
+        [GuildMembersChunkEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        )]
     )
 
 
