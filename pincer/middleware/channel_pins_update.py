@@ -20,12 +20,7 @@ async def channel_pins_update_middleware(self, payload: GatewayDispatch):
         The data received from the channel pins update event.
     """
     return "on_channel_pins_update", [
-        ChannelPinsUpdateEvent.from_dict({
-            "last_pin_timestamp": Timestamp(
-                payload.data.pop("last_pin_timestamp")
-            ),
-            **payload.data
-        })
+        ChannelPinsUpdateEvent.from_dict(payload.data)
     ]
 
 
