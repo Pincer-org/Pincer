@@ -3,7 +3,7 @@
 
 """
 Sent when a new user joins a guild. The inner payload is a guild member object
-with an extra ``guild_id`` key:
+with an extra ``guild_id`` key.
 """
 
 from ..core.dispatch import GatewayDispatch
@@ -11,7 +11,7 @@ from ..utils import Coro
 from ..objects.events.guild import GuildMemberAddEvent
 
 
-async def guild_member_add(self, payload: GatewayDispatch):
+async def guild_member_add_middleware(self, payload: GatewayDispatch):
     """
     Middleware for ``guild_member_add`` event.
 
@@ -26,4 +26,4 @@ async def guild_member_add(self, payload: GatewayDispatch):
 
 
 def export() -> Coro:
-    return guild_member_add
+    return guild_member_add_middleware

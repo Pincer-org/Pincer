@@ -11,7 +11,7 @@ from ..utils import Coro
 from ..objects.events.guild import GuildMemberUpdateEvent
 
 
-async def guild_member_update(self, payload: GatewayDispatch):
+async def guild_member_update_middleware(self, payload: GatewayDispatch):
     """
     Middleware for ``guild_member_update`` event.
 
@@ -29,4 +29,4 @@ async def guild_member_update(self, payload: GatewayDispatch):
 
 
 def export() -> Coro:
-    return guild_member_update
+    return guild_member_update_middleware

@@ -10,7 +10,7 @@ from ..utils import Coro
 from ..objects.events.guild import GuildMemberRemoveEvent
 
 
-async def guild_member_remove(self, payload: GatewayDispatch):
+async def guild_member_remove_middleware(self, payload: GatewayDispatch):
     """
     Middleware for ``guild_member_remove`` event.
 
@@ -28,4 +28,4 @@ async def guild_member_remove(self, payload: GatewayDispatch):
 
 
 def export() -> Coro:
-    return guild_member_remove
+    return guild_member_remove_middleware

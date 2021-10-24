@@ -11,7 +11,7 @@ from ..utils import Coro
 from ..objects.events.guild import GuildMembersChunkEvent
 
 
-async def guild_member_chunk(self, payload: GatewayDispatch):
+async def guild_member_chunk_middleware(self, payload: GatewayDispatch):
     """
     Middleware for ``guild_member_chunk`` event.
 
@@ -29,4 +29,4 @@ async def guild_member_chunk(self, payload: GatewayDispatch):
 
 
 def export() -> Coro:
-    return guild_member_chunk
+    return guild_member_chunk_middleware
