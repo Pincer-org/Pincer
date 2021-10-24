@@ -16,25 +16,22 @@ class GatewayConfig:
     encoding: str = "json"
     compression: Optional[str] = "zlib-stream"
 
-    @staticmethod
-    def uri() -> str:
+    @classmethod
+    def uri(cls) -> str:
         """
         :return uri:
             The GatewayConfig's uri.
         """
         return (
-            f"{GatewayConfig.socket_base_url}"
-            f"?v={GatewayConfig.version}"
-            f"&encoding={GatewayConfig.encoding}"
-        ) + (
-            f"&compress={GatewayConfig.compression}"
-            * GatewayConfig.compressed()
-        )
+            f"{cls.socket_base_url}"
+            f"?v={cls.version}"
+            f"&encoding={cls.encoding}"
+        ) + f"&compress={cls.compression}" * cls.compressed()
 
-    @staticmethod
-    def compressed() -> bool:
+    @classmethod
+    def compressed(cls) -> bool:
         """
         :return compressed:
             Whether the Gateway should compress payloads or not.
         """
-        return GatewayConfig.compression in ["zlib-stream", "zlib-payload"]
+        return cls.compression in ["zlib-stream", "zlib-payload"]
