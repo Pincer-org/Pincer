@@ -87,10 +87,19 @@ class GuildIntegrationsUpdateEvent(APIObject):
     guild_id: Snowflake
 
 
-@dataclass
+@dataclass()
 class GuildMemberAddEvent(GuildMember):
-    
+    """
+    Sent when a user joins a guild.
+
+    :param guild_id:
+        ID of the guild that the user joined.
+    """
+    # NOTE: This isn't a default value. I set it to this because you can't
+    # have fields without default values after regular fields. Apparently that
+    # carries over when you inherit from a dataclass.
     guild_id: Snowflake = 0
+
 
 @dataclass
 class GuildMemberRemoveEvent(APIObject):
