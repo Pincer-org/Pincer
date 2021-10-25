@@ -52,6 +52,38 @@ pincer.middleware.guild\_create module
    :undoc-members:
    :show-inheritance:
 
+pincer.middleware.guild\_member\_add module
+-------------------------------------------
+
+.. automodule:: pincer.middleware.guild_member_add
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pincer.middleware.guild\_member\_remove module
+----------------------------------------------
+
+.. automodule:: pincer.middleware.guild_member_remove
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pincer.middleware.guild\_member\_update module
+----------------------------------------------
+
+.. automodule:: pincer.middleware.guild_member_update
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pincer.middleware.guild\_members\_chunk module
+----------------------------------------------
+
+.. automodule:: pincer.middleware.guild_members_chunk
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.middleware.guild\_status module
 --------------------------------------
 

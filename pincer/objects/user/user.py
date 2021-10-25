@@ -91,11 +91,11 @@ class User(APIObject):
     :param verified:
         whether the email on this account has been verified
     """
-    avatar: Optional[str]
     discriminator: str
     id: Snowflake
     username: str
 
+    avatar: APINullable[str] = MISSING
     flags: APINullable[int] = MISSING
     accent_color: APINullable[Optional[int]] = MISSING
     banner: APINullable[Optional[str]] = MISSING
