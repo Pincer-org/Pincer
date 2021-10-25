@@ -13,14 +13,17 @@ from ..objects.events.guild import GuildMemberAddEvent
 
 
 async def guild_member_add_middleware(self, payload: GatewayDispatch):
-    """
+    """|coro|
+
     Middleware for ``on_guild_member_add`` event.
 
-    :param self:
+    Parameters
+    ----------
+    self : :class:`Client`
         The current client/bot.
 
-    :param payload:
-        The data received from the event.
+    payload : :class:`GatewayDispatch`
+        The data received from the guild member add event.
     """
 
     return "on_guild_member_add", [

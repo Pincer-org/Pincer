@@ -13,14 +13,17 @@ from ..objects.events.guild import GuildMembersChunkEvent
 
 
 async def guild_member_chunk_middleware(self, payload: GatewayDispatch):
-    """
+    """|coro|
+    
     Middleware for ``on_guild_member_chunk`` event.
 
-    :param self:
+    Parameters
+    ----------
+    self : :class:`Client`
         The current client/bot.
 
-    :param payload:
-        The data received from the event.
+    payload : :class:`GatewayDispatch`
+        The data received from the guild member chunk event.
     """
 
     return (
