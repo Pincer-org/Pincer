@@ -93,7 +93,9 @@ class GuildMemberAddEvent(GuildMember):
     """
     Sent when a user joins a guild.
 
-    :param guild_id:
+    Attributes
+    ----------
+    guild_id: :class:`Snowflake`
         ID of the guild that the user joined.
     """
     # NOTE: This isn't a default value. I set it to this because you can't
