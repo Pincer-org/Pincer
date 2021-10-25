@@ -82,7 +82,7 @@ class Message:
     delete_after: Optional[float] = None
 
     def __post_init__(self):
-        if self.delete_after and self.delete_after < 0:
+        if self.delete_after < 0:
             raise ValueError(
                 "Message can not be deleted after a negative amount of "
                 "seconds!"
