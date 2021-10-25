@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import logging
+import zlib
 from asyncio import get_event_loop, AbstractEventLoop, ensure_future
 from platform import system
 from typing import Dict, Callable, Awaitable, Optional
@@ -22,6 +23,8 @@ from ..exceptions import (
     _InternalPerformReconnectError, DisallowedIntentsError
 )
 from ..objects import Intents
+
+ZLIB_SUFFIX = b'\x00\x00\xff\xff'
 
 Handler = Callable[[WebSocketClientProtocol, GatewayDispatch], Awaitable[None]]
 _log = logging.getLogger(__package__)
@@ -133,7 +136,8 @@ class Dispatcher:
                         "$os": system(),
                         "$browser": __package__,
                         "$device": __package__
-                    }
+                    },
+                    "compress": GatewayConfig.compressed()
                 }
             )
         )
@@ -216,12 +220,30 @@ class Dispatcher:
                 GatewayConfig.uri()
             )
 
+            if GatewayConfig.compression == "zlib-stream":
+                # Create an inflator for compressed data as defined in
+                # https://discord.com/developers/docs/topics/gateway
+                inflator = zlib.decompressobj()
+
             while self.__keep_alive:
                 try:
                     _log.debug("Waiting for new event.")
+                    msg = await socket.recv()
+
+                    if isinstance(msg, bytes):
+                        if GatewayConfig.compression == "zlib-payload":
+                            msg = zlib.decompress(msg)
+                        else:
+                            buffer = bytearray(msg)
+
+                            while not buffer.endswith(ZLIB_SUFFIX):
+                                buffer.extend(await socket.recv())
+
+                            msg = inflator.decompress(buffer).decode('utf-8')
+
                     await self.__handler_manager(
                         socket,
-                        GatewayDispatch.from_string(await socket.recv()),
+                        GatewayDispatch.from_string(msg),
                         loop
                     )
 
