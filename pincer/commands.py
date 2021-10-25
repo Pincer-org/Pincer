@@ -15,10 +15,10 @@ from typing import (
 from . import __package__
 from .exceptions import (
     CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
-    InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
+    InvalidAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
     InvalidCommandName
 )
-from .objects import ThrottleScope, AppCommand, Role, User, Channel
+from .objects import ThrottleScope, AppCommand, Role, User, Channel, Guild
 from .objects.app import (
     AppCommandOptionType, AppCommandOption, AppCommandOptionChoice,
     ClientCommandStructure, AppCommandType
@@ -134,7 +134,7 @@ def command(
 
             if isinstance(annotation, tuple):
                 if len(annotation) != 2:
-                    raise InvalidArgumentAnnotation(
+                    raise InvalidAnnotation(
                         f"Tuple annotation `{annotation}` on parameter "
                         f"`{param}` in command `{cmd}` (`{func.__name__}`) "
                         "does not consist of two elements. Please follow the "
@@ -171,7 +171,7 @@ def command(
                 args = get_args(annotation)
 
                 if len(args) > 25:
-                    raise InvalidArgumentAnnotation(
+                    raise InvalidAnnotation(
                         f"Choices/Literal annotation `{annotation}` on "
                         f"parameter `{param}` in command `{cmd}` "
                         f"(`{func.__name__}`) amount exceeds limit of 25 items!"
@@ -184,7 +184,7 @@ def command(
 
                     if isinstance(choice, tuple):
                         if len(choice) != 2:
-                            raise InvalidArgumentAnnotation(
+                            raise InvalidAnnotation(
                                 f"Choices/Literal annotation `{annotation}` on "
                                 f"parameter `{param}` in command `{cmd}` "
                                 f"(`{func.__name__}`), specific choice "
@@ -204,7 +204,7 @@ def command(
                             lambda x: x.__name__,
                             choice_value_types
                         ))
-                        raise InvalidArgumentAnnotation(
+                        raise InvalidAnnotation(
                             f"Choices/Literal annotation `{annotation}` on "
                             f"parameter `{param}` in command `{cmd}` "
                             f"(`{func.__name__}`), invalid type received. "
@@ -213,7 +213,7 @@ def command(
                             f"{type(choice).__name__} was given!"
                         )
                     elif not isinstance(choice, choice_type):
-                        raise InvalidArgumentAnnotation(
+                        raise InvalidAnnotation(
                             f"Choices/Literal annotation `{annotation}` on "
                             f"parameter `{param}` in command `{cmd}` "
                             f"(`{func.__name__}`), all values must be of the "
@@ -229,7 +229,7 @@ def command(
 
             param_type = _options_type_link.get(annotation)
             if not param_type:
-                raise InvalidArgumentAnnotation(
+                raise InvalidAnnotation(
                     f"Annotation `{annotation}` on parameter "
                     f"`{param}` in command `{cmd}` (`{func.__name__}`) is not "
                     "a valid type."
@@ -279,6 +279,9 @@ class ChatCommandHandler(metaclass=Singleton):
     __update = "/commands/{command.id}"
     __add = "/commands"
     __add_guild = "/guilds/{command.guild_id}/commands"
+    __get_guild = "/guilds/{guild_id}/commands"
+    __update_guild = "/guilds/{command.guild_id}/commands/{command.id}"
+    __delete_guild = "/guilds/{command.guild_id}/commands/{command.id}"
 
     # TODO: Fix docs
     def __init__(self, client):
@@ -298,15 +301,28 @@ class ChatCommandHandler(metaclass=Singleton):
 
     async def get_commands(self) -> List[AppCommand]:
         # TODO: Fix docs
+        # TODO: Update if discord adds bulk get guild commands
+        guild_commands = await gather(*map(
+            lambda guild: self.client.http.get(
+                self.__prefix + self.__get_guild.format(
+                    guild_id=guild.id if isinstance(guild, Guild) else guild
+                )
+            ),
+            self.client.guilds
+        ))
         return list(map(
             AppCommand.from_dict,
             await self.client.http.get(self.__prefix + self.__get)
+            + [cmd for guild in guild_commands for cmd in guild]
         ))
 
     async def remove_command(self, cmd: AppCommand):
         # TODO: Fix docs
+        # TODO: Update if discord adds bulk delete commands
+        remove_endpoint = self.__delete_guild if cmd.guild_id else self.__delete
+
         await self.client.http.delete(
-            self.__prefix + self.__delete.format(command=cmd)
+            self.__prefix + remove_endpoint.format(command=cmd)
         )
 
         if ChatCommandHandler.register.get(cmd.name):
@@ -321,6 +337,9 @@ class ChatCommandHandler(metaclass=Singleton):
 
     async def update_command(self, cmd: AppCommand, changes: Dict[str, Any]):
         # TODO: Fix docs
+        # TODO: Update if discord adds bulk update commands
+        update_endpoint = self.__update_guild if cmd.guild_id else self.__update
+
         await self.client.http.patch(
             self.__prefix + self.__update.format(command=cmd),
             data=changes

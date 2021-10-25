@@ -128,9 +128,6 @@ class User(APIObject):
         """Return the discord tag when object gets used as a string."""
         return self.username + '#' + self.discriminator
 
-    def __post_init__(self):
-        self.id = convert(self.id, Snowflake.from_string)
-
     @classmethod
     async def from_id(cls, client: Client, user_id: int) -> User:
         data = await client.http.get(f"users/{user_id}")

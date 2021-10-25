@@ -7,26 +7,25 @@ from dataclasses import dataclass
 from enum import IntEnum, Enum
 from typing import Any, Generator, List, Optional, Union, TYPE_CHECKING
 
-from ..app.application import Application
-from ..app.interaction_base import MessageInteraction
-from ..guild.channel import Channel, ChannelMention
-from ..guild.member import GuildMember, PartialGuildMember
-from ..guild.role import Role
-from ..message.attachment import Attachment
-from ..message.component import MessageComponent
-from ..message.embed import Embed
-from ..message.reaction import Reaction
-from ..message.reference import MessageReference
-from ..message.sticker import StickerItem
-from ..user import User
 from ..._config import GatewayConfig
 from ...utils.api_object import APIObject
-from ...utils.conversion import construct_client_dict, convert
-from ...utils.snowflake import Snowflake
-from ...utils.timestamp import Timestamp
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
+    from ..app.application import Application
+    from ..app.interaction_base import MessageInteraction
+    from ..guild.channel import Channel, ChannelMention
+    from ..guild.member import GuildMember
+    from ..guild.role import Role
+    from ..message.attachment import Attachment
+    from ..message.component import MessageComponent
+    from ..message.embed import Embed
+    from ..message.reaction import Reaction
+    from ..message.reference import MessageReference
+    from ..message.sticker import StickerItem
+    from ..user import User
+    from ...utils.snowflake import Snowflake
+    from ...utils.timestamp import Timestamp
     from ...utils import APINullable
 
 
@@ -290,11 +289,12 @@ class UserMessage(APIObject):
     embeds: List[Embed]
     pinned: bool
     type: MessageType
+    edited_timestamp: Optional[Timestamp] = None
 
     edited_timestamp: APINullable[Timestamp] = MISSING
     mention_channels: APINullable[List[ChannelMention]] = MISSING
     guild_id: APINullable[Snowflake] = MISSING
-    member: APINullable[PartialGuildMember] = MISSING
+    member: APINullable[GuildMember] = MISSING
     reactions: APINullable[List[Reaction]] = MISSING
     nonce: APINullable[Union[int, str]] = MISSING
     webhook_id: APINullable[Snowflake] = MISSING
@@ -309,49 +309,8 @@ class UserMessage(APIObject):
     components: APINullable[List[MessageComponent]] = MISSING
     sticker_items: APINullable[List[StickerItem]] = MISSING
 
-    def __post_init__(self):
-        self.id = convert(self.id, Snowflake.from_string)
-        self.channel_id = convert(self.channel_id, Snowflake.from_string)
-        self.author = convert(self.author, User.from_dict, client=self._client)
-        self.timestamp = convert(self.timestamp, Timestamp)
-        self.edited_timestamp = convert(self.edited_timestamp, Timestamp)
-        self.mentions = convert(self.mentions, PartialGuildMember.from_dict,
-                                client=self._client)
-        self.mention_roles = convert(self.mention_roles, Role.from_dict)
-        self.attachments = convert(self.attachments, Attachment.from_dict)
-        self.embeds = convert(self.embeds, Embed.from_dict)
-        self.mention_channels = convert(
-            self.mention_channels,
-            ChannelMention.from_dict
-        )
-        self.guild_id = convert(self.guild_id, Snowflake.from_string)
-        self.member = convert(self.member, GuildMember.from_dict,
-                              client=self._client)
-        self.reactions = convert(self.reactions, Reaction.from_dict)
-        self.webhook_id = convert(self.webhook_id, Snowflake.from_string)
-        self.activity = convert(self.activity, MessageActivity.from_dict)
-        self.application = convert(self.application, Application.from_dict)
-        self.application_id = convert(
-            self.application_id,
-            Snowflake.from_string
-        )
-        self.message_reference = convert(
-            self.message_reference,
-            MessageReference.from_dict
-        )
-        # self.flags = convert(self.flags, MessageFlags.from_bytes)
-        # self.referenced_message = convert(
-        #     self.referenced_message,
-        #     Message.from_dict
-        # )
-        self.interaction = convert(
-            self.interaction,
-            MessageInteraction.from_dict
-        )
-        self.thread = convert(self.thread, Channel.from_dict,
-                              client=self._client)
-        self.components = convert(self.components, MessageComponent.from_dict)
-        self.sticker_items = convert(self.sticker_items, StickerItem.from_dict)
+    def __str__(self):
+        return self.content
 
     async def get_most_recent(self):
         """

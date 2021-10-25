@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum, auto, IntEnum
-from typing import Optional, List, Dict, overload, TYPE_CHECKING
+from typing import Optional, List, Dict, overload, TYPE_CHECKING, Any
 
 from .member import GuildMember
 from ..events.presence import PresenceUpdateEvent
@@ -19,11 +19,12 @@ from ..user.voice_state import VoiceState
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
-from ...utils.types import MISSING
+from ...utils.types import MISSING, APINullable
 
 if TYPE_CHECKING:
     from ... import Client
-    from ...utils import APINullable, Snowflake, Timestamp
+    from ...utils.snowflake import Snowflake
+    from ...utils.timestamp import Timestamp
 
 
 class PremiumTier(IntEnum):
@@ -440,7 +441,7 @@ class Guild(APIObject):
     approximate_presence_count: APINullable[int] = MISSING
     channels: APINullable[List[Channel]] = field(default_factory=list)
     # TODO: Add type when type is known
-    hub_type: APINullable[...] = MISSING
+    hub_type: APINullable[Any] = MISSING
     icon_hash: APINullable[Optional[str]] = MISSING
     joined_at: APINullable[Timestamp] = MISSING
     large: APINullable[bool] = MISSING

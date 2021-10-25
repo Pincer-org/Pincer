@@ -25,14 +25,16 @@ async def on_ready_middleware(self, payload: GatewayDispatch):
         The data received from the ready event.
     """
     user = payload.data.get("user")
+    guilds = payload.data.get("guilds")
 
-    if not user:
+    if not user or guilds is None:
         raise InvalidPayload(
-            "A `user` key/value pair is expected on the `ready` payload "
-            "event."
+            "A `user` and `guilds` key/value pair is expected on the "
+            "`ready` payload event."
         )
 
     self.bot = User.from_dict(construct_client_dict(self, user))
+    self.guilds = dict(map(lambda i: (i["id"], None), guilds))
 
     await ChatCommandHandler(self).initialize()
     return "on_ready",
