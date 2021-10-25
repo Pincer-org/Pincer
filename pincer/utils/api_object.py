@@ -228,6 +228,12 @@ class APIObject(metaclass=HTTPMeta):
     def __factory__(cls: Generic[T], *args, **kwargs) -> T:
         return cls.from_dict(*args, **kwargs)
 
+    def __str__(self):
+        if self.__dict__.get('name'):
+            return self.name
+
+        return super().__str__()
+
     @classmethod
     def from_dict(
             cls: Generic[T],

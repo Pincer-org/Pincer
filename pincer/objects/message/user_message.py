@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum, Enum
-from typing import List, Optional, Union, TYPE_CHECKING
+from typing import Any, Generator, List, Optional, Union, TYPE_CHECKING
 
 from ..._config import GatewayConfig
 from ...utils.api_object import APIObject
@@ -149,8 +149,31 @@ class AllowedMentionTypes(str, Enum):
         Controls @everyone and @here mentions
     """
     ROLES = "roles"
-    USERS = "user"
+    USERS = "users"
     EVERYONE = "everyone"
+
+
+@dataclass
+class AllowedMentions(APIObject):
+    parse: List[AllowedMentionTypes]
+    roles: List[Union[Role, Snowflake]]
+    users: List[Union[User, Snowflake]]
+    reply: bool = True
+
+    @staticmethod
+    def get_str_id(obj: Union[Snowflake, User, Role]) -> str:
+        if hasattr(obj, "id"):
+            obj = obj.id
+
+        return str(obj)
+
+    def to_dict(self):
+        return {
+            "parse": self.parse,
+            "roles": list(map(self.get_str_id, self.roles)),
+            "users": list(map(self.get_str_id, self.users)),
+            "replied_user": self.reply
+        }
 
 
 @dataclass
@@ -268,6 +291,7 @@ class UserMessage(APIObject):
     type: MessageType
     edited_timestamp: Optional[Timestamp] = None
 
+    edited_timestamp: APINullable[Timestamp] = MISSING
     mention_channels: APINullable[List[ChannelMention]] = MISSING
     guild_id: APINullable[Snowflake] = MISSING
     member: APINullable[GuildMember] = MISSING
@@ -287,3 +311,173 @@ class UserMessage(APIObject):
 
     def __str__(self):
         return self.content
+
+    async def get_most_recent(self):
+        """
+        Certain Discord methods don't return the message object data after its
+        updated. This function can be run to get the most recent version of the
+        message object.
+        """
+
+        return self.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.get(
+                    f"/channels/{self.channel_id}/messages/{self.id}"
+                )
+            )
+        )
+
+    async def react(self, emoji: str):
+        """
+        Create a reaction for the message. Requires the
+        ``READ_MESSAGE_HISTORY` itent. ``ADD_REACTIONS`` intent is required if
+        nobody else has reacted using the emoji.
+
+        :param emoji:
+            Character for emoji. Does not need to be URL encoded.
+        """
+
+        await self._http.put(
+            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}/@me"
+        )
+
+    async def unreact(self, emoji: str):
+        """
+        Delete a reaction the current user has made for the message.
+
+        :param emoji:
+            Character for emoji. Does not need to be URL encoded.
+        """
+
+        await self._http.delete(
+            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}/@me"
+        )
+
+    async def remove_user_reaction(self, emoji: str, user_id: Snowflake):
+        """
+        Deletes another user's reaction. Requires the ``MANAGE_MESSAGES``
+        intent.
+
+        :param emoji:
+            Character for emoji. Does not need to be URL encoded.
+
+        :param user_id:
+            User ID
+        """
+
+        await self._http.delete(
+            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}"
+            f"/{user_id}"
+        )
+
+    async def get_reactions(
+        self, emoji: str, after: Snowflake = 0, limit=25
+    ) -> Generator[User, None, None]:
+        # TODO: HTTP Client will need to refactored to allow parameters using aiohttp's system.
+        """
+        Returns the users that reacted with this emoji.
+
+        :param after:
+            Get users after this user ID. Returns all users if not provided.
+
+        :param limit:
+            Max number of users to return (1-100). 25 if not provided.
+        """
+
+        for user in await self._http.get(
+            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}"
+            f"?after={after}&limit={limit}"
+        ):
+            yield User.from_dict(user)
+
+    async def remove_all_reactions(self):
+        """
+        Delete all reactions on a message. Requires the ``MANAGE_MESSAGES``
+        intent.
+        """
+
+        await self._http.delete(
+            f"/channels/{self.channel_id}/messages/{self.id}/reactions"
+        )
+
+    async def remove_emoji(self, emoji):
+        """
+        Deletes all the reactions for a given emoji on a message. Requires the
+        ``MANAGE_MESSAGES`` intent.
+
+        :param emoji:
+            Character for emoji. Does not need to be URL encoded.
+        """
+
+        await self._http.delete(
+            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}"
+        )
+
+    # TODO: Implement file (https://discord.com/developers/docs/resources/channel#edit-message)
+    async def edit(
+        self,
+        content: str = None,
+        embeds: List[Embed] = None,
+        flags: int = None,
+        allowed_mentions: AllowedMentions = None,
+        attachments: List[Attachment] = None,
+        components: List[MessageComponent] = None
+    ):
+        """
+        Edit a previously sent message. The fields content, embeds, and flags
+        can be edited by the original message author. Other users can only
+        edit flags and only if they have the ``MANAGE_MESSAGES`` permission in
+        the corresponding channel. When specifying flags, ensure to include
+        all previously set flags/bits in addition to ones that you are
+        modifying.
+
+        :param content:
+            The message contents (up to 2000 characters)
+
+        :param embeds:
+            Embedded rich content (up to 6000 characters)
+
+        :param flags:
+            Edit the flags of a message (only ``SUPPRESS_EMBEDS`` can
+            currently be set/unset)
+
+        :param allowed_mentions:
+            allowed mentions for the message
+
+        :param attachments:
+            attached files to keep
+
+        :param components:
+            the components to include with the message
+        """
+
+        data = {}
+
+        def set_if_not_none(value: Any, name: str):
+            if isinstance(value, APIObject):
+                data[name] = value.to_dict()
+            elif value is not None:
+                data[name] = value
+
+        set_if_not_none(content, "content")
+        set_if_not_none(embeds, "embeds")
+        set_if_not_none(flags, "flags")
+        set_if_not_none(allowed_mentions, "allowed_mentions")
+        set_if_not_none(attachments, "attachments")
+        set_if_not_none(components, "components")
+
+        await self._http.patch(
+            f"/channels/{self.channel_id}/messages/{self.id}",
+            data=data
+        )
+
+    async def delete(self):
+        """
+        Delete a message. Requires the ``MANAGE_MESSAGES`` intent if the
+        message was not sent by the current user.
+        """
+
+        await self._http.delete(
+            f"/channels/{self.channel_id}/messages/{self.id}"
+        )
