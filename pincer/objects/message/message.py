@@ -10,7 +10,6 @@ from typing import Dict, Tuple, Union, List, Optional, TYPE_CHECKING
 from aiohttp import FormData, Payload
 
 from ...exceptions import CommandReturnIsEmpty
-from ...utils.api_object import APIObject
 
 PILLOW_IMPORT = True
 
@@ -20,14 +19,12 @@ except (ModuleNotFoundError, ImportError):
     PILLOW_IMPORT = False
 
 if TYPE_CHECKING:
-    from ..guild.role import Role
     from ..message.embed import Embed
     from ..message.file import File
-    from ..message.user_message import AllowedMentionTypes
-    from ..user import User
-    from ...utils.snowflake import Snowflake
+    from ..message.user_message import AllowedMentions
     from ..app import InteractionFlags
     from .component import MessageComponent
+
 
 @dataclass
 class Message:
@@ -59,7 +56,7 @@ class Message:
     delete_after: Optional[float] = None
 
     def __post_init__(self):
-        if self.delete_after < 0:
+        if self.delete_after and self.delete_after < 0:
             raise ValueError(
                 "Message can not be deleted after a negative amount of "
                 "seconds!"

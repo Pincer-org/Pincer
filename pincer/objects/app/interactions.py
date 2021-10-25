@@ -209,9 +209,10 @@ class Interaction(APIObject):
         }
 
     async def build(self):
-        """
-        Sets the parameters in the interaction that need information from the
-        discord API.
+        """|coro|
+
+        Sets the parameters in the interaction that need information
+        from the discord API.
         """
 
         if not self.data.options:
@@ -222,9 +223,10 @@ class Interaction(APIObject):
         )
 
     async def convert(self, option: AppCommandInteractionDataOption):
-        """
-        Sets an AppCommandInteractionDataOption value paramater to the payload
-        type
+        """|coro|
+
+        Sets an AppCommandInteractionDataOption value paramater to
+        the payload type
         """
 
         converter = self._convert_functions.get(option.type)
@@ -253,10 +255,11 @@ class Interaction(APIObject):
         )
 
     async def __post_send_handler(self, message: Message):
-        """
-        Process the interaction after it was sent.
+        """Process the interaction after it was sent.
 
-        :param message:
+        Parameters
+        ----------
+        message :class:`~.pincer.objects.message.message.Message`
             The interaction message.
         """
 
@@ -265,19 +268,23 @@ class Interaction(APIObject):
             await self.delete()
 
     def __post_sent(self, message: Message):
-        """
-        Ensure the `__post_send_handler` method its future.
+        """Ensure the `__post_send_handler` method its future.
 
-        :param message:
+        Parameters
+        ----------
+        message :class:`~.pincer.objects.message.message.Message`
             The interaction message.
         """
         ensure_future(self.__post_send_handler(message))
 
     async def reply(self, message: Message):
-        """
+        """|coro|
+
         Initial reply, only works if no ACK has been sent yet.
 
-        :param message:
+        Parameters
+        ----------
+        message :class:`~.pincer.objects.message.message.Message`
             The response message!
         """
         content_type, data = message.serialize()
@@ -293,11 +300,14 @@ class Interaction(APIObject):
         self.__post_sent(message)
 
     async def edit(self, message: Message) -> UserMessage:
-        """
+        """|coro|
+
         Edit an interaction. This is also the way to reply to
         interactions whom have been acknowledged.
 
-        :param message:
+        Parameters
+        ----------
+        message :class:`~.pincer.objects.message.message.Message`
             The new message!
         """
         content_type, data = message.serialize()
@@ -311,7 +321,8 @@ class Interaction(APIObject):
         return UserMessage.from_dict(resp)
 
     async def delete(self):
-        """
+        """|coro|
+
         Delete the interaction.
         """
         await self._http.delete(
@@ -323,14 +334,14 @@ class Interaction(APIObject):
             followup: UserMessage,
             message: Message
     ):
-        """
-        Process a folloup after it was sent.
+        """Process a folloup after it was sent.
 
-        :param followup:
+        Parameters
+        ----------
+        followup :class:`~.pincer.objects.message.user_message.UserMessage`
             The followup message that is being post processed.
-
-        :param message:
-            The interaction message.
+        message :class:`~.pincer.objects.message.message.Message`
+            The followup message.
         """
 
         if message.delete_after:
@@ -342,24 +353,32 @@ class Interaction(APIObject):
             followup: UserMessage,
             message: Message
     ):
-        """
-        Ensure the `__post_followup_send_handler` method its future.
+        """Ensure the `__post_followup_send_handler` method its future.
 
-        :param followup:
+        Parameters
+        ----------
+        followup :class:`~.pincer.objects.message.user_message.UserMessage`
             The followup message that is being post processed.
-
-        :param message:
+        message :class:`~.pincer.objects.message.message.Message`
             The followup message.
         """
         ensure_future(self.__post_followup_send_handler(followup, message))
 
     async def followup(self, message: Message) -> UserMessage:
-        """
+        """|coro|
+
         Create a follow up message for the interaction.
         This allows you to respond with multiple messages.
 
-        :param message:
-            The message!
+        Parameters
+        ----------
+        message :class:`~.pincer.objects.message.message.Message`
+            The message to sent.
+
+        Returns
+        -------
+        :class:`~.pincer.objects.message.user_message.UserMessage`
+            The message that has been sent.
         """
         content_type, data = message.serialize()
 
@@ -374,14 +393,21 @@ class Interaction(APIObject):
 
     async def edit_followup(self, message_id: int, message: Message) \
             -> UserMessage:
-        """
+        """|coro|
+
         Edit a followup message.
 
-        :param message_id:
+        Parameters
+        ----------
+        message_id :class:`int`
             The id of the original followup message.
+        message :class:`~.pincer.objects.message.message.Message`
+            The message to edit.
 
-        :param message:
-            The new message!
+        Returns
+        -------
+        :class:`~.pincer.objects.message.user_message.UserMessage`
+            The updated message object.
         """
         content_type, data = message.serialize()
 
@@ -395,11 +421,19 @@ class Interaction(APIObject):
         return msg
 
     async def get_followup(self, message_id: int) -> UserMessage:
-        """
+        """|coro|
+
         Get a followup message by id.
 
-        :param message_id:
+        Parameters
+        ----------
+        message_id :class:`int`
             The id of the original followup message that must be fetched.
+
+        Returns
+        -------
+        :class:`~.pincer.objects.message.user_message.UserMessage`
+            The fetched message object.
         """
 
         resp = await self._http.get(
@@ -408,10 +442,13 @@ class Interaction(APIObject):
         return UserMessage.from_dict(resp)
 
     async def delete_followup(self, message_id: int):
-        """
+        """|coro|
+
         Remove a followup message by id.
 
-        :param message_id:
+        Parameters
+        ----------
+        message_id :class:`int`
             The id of the followup message that must be deleted.
         """
 

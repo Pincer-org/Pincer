@@ -235,7 +235,17 @@ class Channel(APIObject):
             /,
             channel_id: Optional[Snowflake] = None
     ):
-        # TODO: Write docs
+        """|coro|
+
+        Delete the current channel.
+
+        Parameters
+        ----------
+        reason Optional[:class:`str`]
+            The reason of the channel delete.
+        channel_id :class:`~.pincer.utils.Snowflake`
+            The id of the channel, defaults to the current object id.
+        """
         channel_id = channel_id or self.id
 
         headers = {}
@@ -249,10 +259,11 @@ class Channel(APIObject):
         )
 
     async def __post_send_handler(self, message: Message):
-        """
-        Process a message after it was sent.
+        """Process a message after it was sent.
 
-        :param message:
+        Parameters
+        ----------
+        message :class:`~.pincer.objects.message.message.Message`
             The message.
         """
 
@@ -264,15 +275,25 @@ class Channel(APIObject):
             self,
             message: Message
     ):
-        """
-        Ensure the `__post_send_handler` method its future.
+        """Ensure the `__post_send_handler` method its future.
 
-        :param message:
+        Parameters
+        ----------
+        message :class:`~.pincer.objects.message.message.Message`
             The message.
         """
         ensure_future(self.__post_send_handler(message))
 
     async def send(self, message: Union[Embed, Message, str]) -> UserMessage:
+        """|coro|
+
+        Send a message in the channel.
+
+        Parameters
+        ----------
+        message :class:`~.pincer.objects.message.message.Message`
+            The message which must be sent
+        """
         # TODO: Write docs
         content_type, data = convert_message(self._client, message).serialize()
 
