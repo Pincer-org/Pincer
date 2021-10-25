@@ -293,6 +293,11 @@ class Channel(APIObject):
         ----------
         message :class:`~.pincer.objects.message.message.Message`
             The message which must be sent
+
+        Returns
+        -------
+        :class:`~.pincer.objects.message.user_message.UserMessage`
+            The message that was sent.
         """
         # TODO: Write docs
         content_type, data = convert_message(self._client, message).serialize()
