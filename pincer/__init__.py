@@ -46,6 +46,6 @@ class VersionInfo(NamedTuple):
 __version__ = VersionInfo(0, 9, 3)
 
 __all__ = (
-    "Bot", "Choices", "Client", "Intents", "__author__", "__email__",
-    "__package__", "__title__", "__version__", "command", "Descripted"
+    "Bot", "Choices", "Client", "Descripted", "Intents", "__author__",
+    "__email__", "__package__", "__title__", "__version__", "command"
 )
