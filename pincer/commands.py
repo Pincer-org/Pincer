@@ -133,6 +133,7 @@ def command(
             choices: List[AppCommandOptionChoice] = []
 
             if isinstance(annotation, str):
+                print(annotation, type(annotation))
                 TypeCache()
                 annotation = _eval_type(
                     ForwardRef(annotation),
