@@ -1,4 +1,4 @@
-from pincer import Client, command
+from pincer import Client, command, Descripted
 from pincer.objects import Embed
 
 
@@ -7,7 +7,7 @@ class Bot(Client):
     @command(description="Say something as the bot!")
     async def say(
             self, ctx,
-            content: (str, "The content of the message")
+            content: Descripted[str, "The content of the message"]
     ) -> Embed:
         # Using the ctx to get the command author
         return Embed(
