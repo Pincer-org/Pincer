@@ -3,6 +3,8 @@
 from sys import modules
 from typing import TypeVar, Callable, Coroutine, Any, Union, Literal
 
+from pincer.exceptions import InvalidAnnotation
+
 
 class MissingType:
     def __repr__(self):
@@ -53,3 +55,30 @@ class TypeCache(metaclass=Singleton):
                 continue
 
             TypeCache.cache.update(lcp[module].__dict__)
+
+
+class _TypeInstanceMeta(type):
+    def __getitem__(cls, args):
+        if not isinstance(args, tuple) or len(args) != 2:
+            raise InvalidAnnotation(
+                "Descripted arguments must be a tuple of length 2. "
+                "(if you are using this as the intented type, just "
+                "pass two arguments)"
+            )
+
+        return cls(*args)
+
+
+class Descripted(metaclass=_TypeInstanceMeta):
+    """
+    Description type.
+    """
+    # TODO: Write example & more docs
+    def __init__(self, key: Any, description: str):
+        if not isinstance(description, str):
+            raise RuntimeError(
+                "The description value must always be a string!"
+            )
+
+        self.key = key
+        self.description = description

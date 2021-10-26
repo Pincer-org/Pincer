@@ -10,7 +10,7 @@ from copy import deepcopy
 from inspect import Signature, isasyncgenfunction
 from typing import (
     Optional, Dict, List, Any, Tuple, get_origin, get_args, Union,
-    get_type_hints, ForwardRef, _eval_type
+    ForwardRef, _eval_type
 )
 
 from . import __package__
@@ -28,7 +28,7 @@ from .utils import (
     get_signature_and_params, get_index, should_pass_ctx, Coro, Snowflake,
     MISSING, choice_value_types, Choices
 )
-from .utils.types import Singleton, TypeCache
+from .utils.types import Singleton, TypeCache, Descripted
 
 COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 
@@ -140,16 +140,9 @@ def command(
                     globals()
                 )
 
-            if isinstance(annotation, tuple):
-                if len(annotation) != 2:
-                    raise InvalidAnnotation(
-                        f"Tuple annotation `{annotation}` on parameter "
-                        f"`{param}` in command `{cmd}` (`{func.__name__}`) "
-                        "does not consist of two elements. Please follow the "
-                        "correct format where the first element is the type"
-                        " and the second element is the description."
-                    )
-                annotation, argument_description = annotation
+            if isinstance(annotation, Descripted):
+                argument_description = annotation.description
+                annotation = annotation.key
 
                 if len(argument_description) > 100:
                     raise CommandDescriptionTooLong(
@@ -187,21 +180,13 @@ def command(
 
                 choice_type = type(args[0])
 
+                if choice_type is Descripted:
+                    choice_type = type(args[0].key)
+
                 for choice in args:
                     choice_name = choice
-
-                    if isinstance(choice, tuple):
-                        if len(choice) != 2:
-                            raise InvalidAnnotation(
-                                f"Choices/Literal annotation `{annotation}` on "
-                                f"parameter `{param}` in command `{cmd}` "
-                                f"(`{func.__name__}`), specific choice "
-                                "declaration through tuple's must consist of "
-                                "2 items. First value is the name and the "
-                                "second value is the value."
-                            )
-
-                        choice_name, choice = str(choice[0]), choice[1]
+                    if isinstance(choice, Descripted):
+                        choice_name, choice = choice.key, choice.description
 
                         if choice_type is tuple:
                             choice_type = type(choice)
@@ -324,7 +309,7 @@ class ChatCommandHandler(metaclass=Singleton):
             + [cmd for guild in guild_commands for cmd in guild]
         ))
 
-    async def remove_command(self, cmd: AppCommand, keep = False):
+    async def remove_command(self, cmd: AppCommand, keep=False):
         # TODO: Fix docs
         # TODO: Update if discord adds bulk delete commands
         remove_endpoint = self.__delete_guild if cmd.guild_id else self.__delete

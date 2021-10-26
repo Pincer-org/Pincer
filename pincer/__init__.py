@@ -12,7 +12,7 @@ from typing import NamedTuple, Literal, Optional
 from .client import Client, Bot
 from .commands import command
 from .objects import Intents
-from .utils import Choices
+from .utils import Choices, Descripted
 
 __package__ = "pincer"
 __title__ = "Pincer library"
@@ -47,5 +47,5 @@ __version__ = VersionInfo(0, 9, 3)
 
 __all__ = (
     "Bot", "Choices", "Client", "Intents", "__author__", "__email__",
-    "__package__", "__title__", "__version__", "command"
+    "__package__", "__title__", "__version__", "command", "Descripted"
 )
