@@ -190,10 +190,8 @@ class AppCommand(APIObject):
                 (self.options is MISSING and other.options is not MISSING)
                 or (self.options is not MISSING and other.options is MISSING)
                 and not is_equal
-        ):
-            return False
-
-        if len(other.options) != len(self.options):
+        ) or len(other.options) != len(self.options) \
+                or self.guild_id != other.guild_id:
             return False
 
         return not any(
@@ -202,7 +200,7 @@ class AppCommand(APIObject):
         )
 
     def __hash__(self):
-        return hash((self.id, self.name, self.description))
+        return hash((self.id, self.name, self.description, self.guild_id))
 
     def add_option(self, option: AppCommandOption):
         """

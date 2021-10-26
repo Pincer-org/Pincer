@@ -316,7 +316,7 @@ class ChatCommandHandler(metaclass=Singleton):
             + [cmd for guild in guild_commands for cmd in guild]
         ))
 
-    async def remove_command(self, cmd: AppCommand):
+    async def remove_command(self, cmd: AppCommand, keep = False):
         # TODO: Fix docs
         # TODO: Update if discord adds bulk delete commands
         remove_endpoint = self.__delete_guild if cmd.guild_id else self.__delete
@@ -325,13 +325,18 @@ class ChatCommandHandler(metaclass=Singleton):
             self.__prefix + remove_endpoint.format(command=cmd)
         )
 
-        if ChatCommandHandler.register.get(cmd.name):
+        if not keep and ChatCommandHandler.register.get(cmd.name):
             del ChatCommandHandler.register[cmd.name]
 
-    async def remove_commands(self, commands: List[AppCommand]):
+    async def remove_commands(
+            self,
+            commands: List[AppCommand],
+            /,
+            keep: List[AppCommand] = None
+    ):
         # TODO: Fix docs
         await gather(*list(map(
-            lambda cmd: self.remove_command(cmd),
+            lambda cmd: self.remove_command(cmd, cmd in (keep or [])),
             commands
         )))
 
@@ -341,7 +346,7 @@ class ChatCommandHandler(metaclass=Singleton):
         update_endpoint = self.__update_guild if cmd.guild_id else self.__update
 
         await self.client.http.patch(
-            self.__prefix + self.__update.format(command=cmd),
+            self.__prefix + update_endpoint.format(command=cmd),
             data=changes
         )
 
@@ -384,8 +389,9 @@ class ChatCommandHandler(metaclass=Singleton):
         self._api_commands = await self.get_commands()
 
         for api_cmd in self._api_commands:
-            if ChatCommandHandler.register.get(api_cmd.name):
-                ChatCommandHandler.register[api_cmd.name].app = api_cmd
+            cmd = ChatCommandHandler.register.get(api_cmd.name)
+            if cmd.app == api_cmd:
+                cmd.app = api_cmd
 
     async def __remove_unused_commands(self):
         """
@@ -393,16 +399,23 @@ class ChatCommandHandler(metaclass=Singleton):
         by the current client!
         """
         registered_commands = list(map(
-            lambda registered_cmd: registered_cmd.app.name,
+            lambda registered_cmd: registered_cmd.app,
             ChatCommandHandler.register.values()
         ))
+        keep = []
 
-        to_remove = list(filter(
-            lambda cmd: cmd.name not in registered_commands,
-            self._api_commands
-        ))
+        def predicate(target: AppCommand) -> bool:
+            for reg_cmd in registered_commands:
+                reg_cmd: AppCommand = reg_cmd
+                if target == reg_cmd:
+                    return False
+                elif target.name == reg_cmd.name:
+                    keep.append(target)
+            return True
 
-        await self.remove_commands(to_remove)
+        to_remove = list(filter(predicate, self._api_commands))
+
+        await self.remove_commands(to_remove, keep=keep)
 
         self._api_commands = list(filter(
             lambda cmd: cmd not in to_remove,
