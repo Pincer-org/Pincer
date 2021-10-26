@@ -1,7 +1,9 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
+from __future__ import annotations
+
 from sys import modules
-from typing import TypeVar, Callable, Coroutine, Any, Union, Literal
+from typing import TypeVar, Callable, Coroutine, Any, Union, Literal, Tuple
 
 from pincer.exceptions import InvalidAnnotation
 
@@ -58,7 +60,7 @@ class TypeCache(metaclass=Singleton):
 
 
 class _TypeInstanceMeta(type):
-    def __getitem__(cls, args):
+    def __getitem__(cls, args: Tuple[T, str]):
         if not isinstance(args, tuple) or len(args) != 2:
             raise InvalidAnnotation(
                 "Descripted arguments must be a tuple of length 2. "
@@ -70,10 +72,9 @@ class _TypeInstanceMeta(type):
 
 
 class Descripted(metaclass=_TypeInstanceMeta):
-    """
-    Description type.
-    """
     # TODO: Write example & more docs
+    """Description type."""
+
     def __init__(self, key: Any, description: str):
         if not isinstance(description, str):
             raise RuntimeError(

@@ -133,13 +133,15 @@ def command(
             choices: List[AppCommandOptionChoice] = []
 
             if isinstance(annotation, str):
-                print(annotation, type(annotation))
                 TypeCache()
-                annotation = _eval_type(
-                    ForwardRef(annotation),
-                    TypeCache.cache,
-                    globals()
-                )
+                try:
+                    annotation = _eval_type(
+                        ForwardRef(annotation),
+                        TypeCache.cache,
+                        globals()
+                    )
+                except TypeError:
+                    annotation = eval(annotation, TypeCache.cache, globals())
 
             if isinstance(annotation, Descripted):
                 argument_description = annotation.description
