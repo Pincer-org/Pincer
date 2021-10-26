@@ -397,9 +397,9 @@ class ChatCommandHandler(metaclass=Singleton):
         self._api_commands = await self.get_commands()
 
         for api_cmd in self._api_commands:
-            if cmd := ChatCommandHandler.register.get(api_cmd.name):
-                if cmd.app == api_cmd:
-                    cmd.app = api_cmd
+            cmd = ChatCommandHandler.register.get(api_cmd.name)
+            if cmd and cmd.app == api_cmd:
+                cmd.app = api_cmd
 
     async def __remove_unused_commands(self):
         """
