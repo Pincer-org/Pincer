@@ -9,7 +9,8 @@ from asyncio import iscoroutinefunction, gather
 from copy import deepcopy
 from inspect import Signature, isasyncgenfunction
 from typing import (
-    Optional, Dict, List, Any, Tuple, get_origin, get_args, Union
+    Optional, Dict, List, Any, Tuple, get_origin, get_args, Union,
+    get_type_hints, ForwardRef, _eval_type
 )
 
 from . import __package__
@@ -27,7 +28,7 @@ from .utils import (
     get_signature_and_params, get_index, should_pass_ctx, Coro, Snowflake,
     MISSING, choice_value_types, Choices
 )
-from .utils.types import Singleton
+from .utils.types import Singleton, TypeCache
 
 COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 
@@ -44,7 +45,6 @@ _options_type_link = {
     User: AppCommandOptionType.USER,
     Channel: AppCommandOptionType.CHANNEL,
     Role: AppCommandOptionType.ROLE,
-
 }
 
 
@@ -131,6 +131,14 @@ def command(
             annotation, required = sig[param].annotation, True
             argument_description: Optional[str] = None
             choices: List[AppCommandOptionChoice] = []
+
+            if isinstance(annotation, str):
+                TypeCache()
+                annotation = _eval_type(
+                    ForwardRef(annotation),
+                    TypeCache.cache,
+                    globals()
+                )
 
             if isinstance(annotation, tuple):
                 if len(annotation) != 2:

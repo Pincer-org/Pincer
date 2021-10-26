@@ -8,14 +8,13 @@ import logging
 from dataclasses import dataclass, fields, _is_dataclass_instance
 from enum import Enum, EnumMeta
 from inspect import getfullargspec
-from sys import modules
 from typing import (
     Dict, Tuple, Union, Generic, TypeVar, Any, TYPE_CHECKING,
     List, get_type_hints, get_origin, get_args
 )
 
 from .conversion import convert
-from .types import MissingType, Singleton, MISSING
+from .types import MissingType, MISSING, TypeCache
 from ..exceptions import InvalidAnnotation
 
 if TYPE_CHECKING:
@@ -95,20 +94,6 @@ class HTTPMeta(type):
                 setattr(http_object, k, None)
 
         return http_object
-
-
-class TypeCache(metaclass=Singleton):
-    cache = {}
-
-    def __init__(self):
-        # Register all known types to the cache. This gets used later
-        # to auto-convert the properties to their desired type.
-        lcp = modules.copy()
-        for module in lcp:
-            if not module.startswith("pincer"):
-                continue
-
-            TypeCache.cache.update(lcp[module].__dict__)
 
 
 @dataclass

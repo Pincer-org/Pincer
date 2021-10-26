@@ -1,6 +1,6 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
-
+from sys import modules
 from typing import TypeVar, Callable, Coroutine, Any, Union, Literal
 
 
@@ -39,3 +39,17 @@ class Singleton(type):
                 cls
             ).__call__(*args, **kwargs)
         return cls._instances[cls]
+
+
+class TypeCache(metaclass=Singleton):
+    cache = {}
+
+    def __init__(self):
+        # Register all known types to the cache. This gets used later
+        # to auto-convert the properties to their desired type.
+        lcp = modules.copy()
+        for module in lcp:
+            if not module.startswith("pincer"):
+                continue
+
+            TypeCache.cache.update(lcp[module].__dict__)
