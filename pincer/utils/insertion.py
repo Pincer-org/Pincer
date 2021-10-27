@@ -4,7 +4,7 @@
 from typing import Any, Union, Callable, Mapping, List
 from inspect import getfullargspec, Parameter, Signature
 
-from .types import Coro
+from .types import Coro, TypeCache
 from ..objects.message.context import MessageContext
 
 
@@ -26,5 +26,13 @@ context_types = [Signature.empty, MessageContext]
 
 
 def should_pass_ctx(sig: Mapping[str, Parameter], params: List[str]) -> bool:
-    # TODO: Write docs, do not add online its internal
-    return len(params) >= 1 and sig[params[0]].annotation in context_types
+    # TODO: Write docs, do not put online
+    if not params:
+        return False
+
+    annotation = sig[params[0]].annotation
+    if isinstance(annotation, str):
+        TypeCache()
+        annotation = eval(annotation, TypeCache.cache, globals())
+
+    return annotation in context_types

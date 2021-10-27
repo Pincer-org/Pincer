@@ -7,6 +7,7 @@ from enum import IntEnum, Enum
 from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
+<<<<<<< HEAD
 from .embed import Embed
 from ..user.user import User
 from ..guild.role import Role
@@ -31,6 +32,28 @@ if TYPE_CHECKING:
 
     from ...utils.types import APINullable
     from ...utils.timestamp import Timestamp
+=======
+from ..._config import GatewayConfig
+from ...utils.api_object import APIObject
+from ...utils.types import MISSING
+
+if TYPE_CHECKING:
+    from ..app.application import Application
+    from ..app.interaction_base import MessageInteraction
+    from ..guild.channel import Channel, ChannelMention
+    from ..guild.member import GuildMember
+    from ..guild.role import Role
+    from ..message.attachment import Attachment
+    from ..message.component import MessageComponent
+    from ..message.embed import Embed
+    from ..message.reaction import Reaction
+    from ..message.reference import MessageReference
+    from ..message.sticker import StickerItem
+    from ..user import User
+    from ...utils.snowflake import Snowflake
+    from ...utils.timestamp import Timestamp
+    from ...utils import APINullable
+>>>>>>> main
 
 
 class MessageActivityType(IntEnum):
@@ -315,11 +338,12 @@ class UserMessage(APIObject):
     embeds: List[Embed]
     pinned: bool
     type: MessageType
+    edited_timestamp: Optional[Timestamp] = None
 
     edited_timestamp: APINullable[Timestamp] = MISSING
     mention_channels: APINullable[List[ChannelMention]] = MISSING
     guild_id: APINullable[Snowflake] = MISSING
-    member: APINullable[PartialGuildMember] = MISSING
+    member: APINullable[GuildMember] = MISSING
     reactions: APINullable[List[Reaction]] = MISSING
     nonce: APINullable[Union[int, str]] = MISSING
     webhook_id: APINullable[Snowflake] = MISSING
@@ -334,6 +358,7 @@ class UserMessage(APIObject):
     components: APINullable[List[MessageComponent]] = MISSING
     sticker_items: APINullable[List[StickerItem]] = MISSING
 
+<<<<<<< HEAD
     def __post_init__(self):
         self.id = convert(self.id, Snowflake.from_string)
         self.channel_id = convert(self.channel_id, Snowflake.from_string)
@@ -378,6 +403,10 @@ class UserMessage(APIObject):
                               client=self._client)
         self.components = convert(self.components, MessageComponent.from_dict)
         self.sticker_items = convert(self.sticker_items, StickerItem.from_dict)
+=======
+    def __str__(self):
+        return self.content
+>>>>>>> main
 
     async def get_most_recent(self):
         """

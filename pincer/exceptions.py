@@ -5,7 +5,7 @@ from typing import Optional
 
 
 class PincerError(Exception):
-    """Base exception class for all Pincer errors."""
+    """Base exception class for all Pincer errors"""
 
 
 class InvalidPayload(PincerError):
@@ -145,11 +145,11 @@ class EmbedFieldError(PincerError, ValueError):
 
         Parameters
         ----------
-        _type: :class:`str`
+        _type :class:`str`
             The type/name of the field.
-        max_size: :class:`int`
+        max_si :class:`int`
             The maximum size of the field.
-        cur_size: :class:`int
+        cur_size :class:`int`
             The current size of the field.
         """
         return cls(
@@ -268,6 +268,25 @@ class GatewayError(HTTPError):
 
 
 class ServerError(HTTPError):
-    """Error code 5xx.
-    Status code is not in the discord API
+    """Error code 5xx."""
+
+
+class NotFoundError(HTTPError):
+    """Error code 404."""
+
+
+class MethodNotAllowedError(HTTPError):
+    """Error code 405."""
+
+
+class RateLimitError(HTTPError):
+    """Error code 429."""
+
+
+class GatewayError(HTTPError):
+    """Error code 502."""
+
+
+class ServerError(HTTPError):
     """
+    Error code 5xx.

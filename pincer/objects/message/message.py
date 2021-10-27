@@ -9,8 +9,11 @@ from dataclasses import dataclass
 
 from aiohttp import FormData, Payload
 
+<<<<<<< HEAD
 from .file import File
 from ...utils.api_object import APIObject
+=======
+>>>>>>> main
 from ...exceptions import CommandReturnIsEmpty
 from ..app.interaction_base import CallbackType
 
@@ -32,6 +35,16 @@ try:
     from PIL.Image import Image
 except (ModuleNotFoundError, ImportError):
     PILLOW_IMPORT = False
+
+<<<<<<< HEAD
+=======
+if TYPE_CHECKING:
+    from ..message.embed import Embed
+    from ..message.file import File
+    from ..message.user_message import AllowedMentions
+    from ..app import InteractionFlags
+    from .component import MessageComponent
+>>>>>>> main
 
 
 @dataclass
@@ -108,9 +121,14 @@ class Message:
     allowed_mentions: Optional[AllowedMentions] = None
     components: Optional[List[MessageComponent]] = None
     flags: Optional[InteractionFlags] = None
-    type: Optional[CallbackType] = None
+    delete_after: Optional[float] = None
 
     def __post_init__(self):
+        if self.delete_after and self.delete_after < 0:
+            raise ValueError(
+                "Message can not be deleted after a negative amount of "
+                "seconds!"
+            )
 
         if not self.attachments:
             return
@@ -162,10 +180,12 @@ class Message:
             ]
         }
 
-        return {
-            "type": self.type or CallbackType.MESSAGE,
-            "data": {k: i for k, i in resp.items() if i}
-        }
+        # IDE does not recognise return type of filter properly.
+        # noinspection PyTypeChecker
+        return dict(filter(
+            lambda kv: kv[1],
+            resp.items()
+        ))
 
     def serialize(self) -> Tuple[str, Union[Payload, Dict]]:
         """

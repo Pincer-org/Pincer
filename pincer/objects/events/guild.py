@@ -6,6 +6,9 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from ...utils.api_object import APIObject
+from ...utils.conversion import construct_client_dict
+from ...utils.snowflake import Snowflake
+from ...utils.timestamp import Timestamp
 from ...utils.types import MISSING, APINullable
 
 if TYPE_CHECKING:
@@ -94,6 +97,22 @@ class GuildIntegrationsUpdateEvent(APIObject):
 
 
 @dataclass
+class GuildMemberAddEvent(GuildMember):
+    """
+    Sent when a user joins a guild.
+
+    Attributes
+    ----------
+    guild_id: :class:`Snowflake`
+        ID of the guild that the user joined.
+    """
+    # NOTE: This isn't a default value. I set it to this because you can't
+    # have fields without default values after regular fields. Apparently that
+    # carries over when you inherit from a dataclass.
+    guild_id: Snowflake = 0
+
+
+@dataclass
 class GuildMemberRemoveEvent(APIObject):
     """Sent when a user is removed from a guild (leave/kick/ban).
 
@@ -106,6 +125,11 @@ class GuildMemberRemoveEvent(APIObject):
     """
     guild_id: Snowflake
     user: User
+
+    def __post_init__(self):
+        self.user = User.from_dict(
+            construct_client_dict(self._client, self.user)
+        )
 
 
 @dataclass
@@ -146,6 +170,11 @@ class GuildMemberUpdateEvent(APIObject):
     mute: APINullable[bool] = MISSING
     pending: APINullable[bool] = MISSING
 
+    def __post_init__(self):
+        self.user = User.from_dict(construct_client_dict(
+            self._client, self.user
+        ))
+
 
 @dataclass
 class GuildMembersChunkEvent(APIObject):
@@ -181,6 +210,16 @@ class GuildMembersChunkEvent(APIObject):
     not_found: APINullable[List[Any]] = MISSING
     presences: APINullable[PresenceUpdateEvent] = MISSING
     nonce: APINullable[str] = MISSING
+
+    def __post_init__(self):
+        self.members = [
+            GuildMember.from_dict(
+                construct_client_dict(
+                    self._client, member
+                )
+            )
+            for member in self.members
+        ]
 
 
 @dataclass

@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from asyncio import sleep, ensure_future
+from dataclasses import dataclass
 from enum import IntEnum
 from dataclasses import dataclass
 from typing import overload, TYPE_CHECKING
@@ -10,6 +12,8 @@ from typing import overload, TYPE_CHECKING
 from ...utils.types import MISSING
 from ..._config import GatewayConfig
 from ...utils.api_object import APIObject
+from ...utils.convert_message import convert_message
+from ...utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from typing import Dict, List, Optional, Union
@@ -18,10 +22,13 @@ if TYPE_CHECKING:
     from ..user.user import User
     from .member import GuildMember
     from .overwrite import Overwrite
+    from ..message.embed import Embed
     from .thread import ThreadMetadata
+    from ..message.message import Message
     from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
     from ...utils.timestamp import Timestamp
+    from ..message.user_message import UserMessage
 
 
 class ChannelType(IntEnum):
@@ -177,14 +184,13 @@ class Channel(APIObject):  # noqa E501
 
     @classmethod
     async def from_id(cls, client: Client, channel_id: int) -> Channel:
+        # TODO: Write docs
         data = (await client.http.get(f"channels/{channel_id}")) or {}
-        data.update(
-            {
-                "_client": client,
-                "_http": client.http,
-                "type": ChannelType(data.pop("type"))
-            }
-        )
+
+        data.update(construct_client_dict(
+            client,
+            {"type": ChannelType(data.pop("type"))}
+        ))
 
         channel_cls = _channel_type_map.get(data["type"], Channel)
         return channel_cls.from_dict(data)
@@ -203,7 +209,11 @@ class Channel(APIObject):  # noqa E501
     ) -> Channel:
         ...
 
-    async def edit(self, **kwargs):
+    async def edit(
+            self,
+            reason: Optional[str] = None,
+            **kwargs
+    ):
         """Edit a channel with the given keyword arguments.
 
         Parameters
@@ -216,16 +226,103 @@ class Channel(APIObject):  # noqa E501
         :class:`~pincer.objects.guild.channel.Channel`
             The updated channel object.
         """
-        data = await self._http.patch(f"channels/{self.id}", data=kwargs)
-        data.update(
-            {
-                "_client": self._client,
-                "_http": self._http,
-                "type": ChannelType(data.pop("type"))
-            }
+        headers = {}
+
+        if reason:
+            headers["X-Audit-Log-Reason"] = str(reason)
+
+        data = await self._http.patch(
+            f"channels/{self.id}",
+            kwargs,
+            headers=headers
         )
+        data.update(construct_client_dict(
+            self._client,
+            {"type": ChannelType(data.pop("type"))}
+        ))
         channel_cls = _channel_type_map.get(data["type"], Channel)
         return channel_cls.from_dict(data)
+
+    async def delete(
+            self,
+            reason: Optional[str] = None,
+            /,
+            channel_id: Optional[Snowflake] = None
+    ):
+        """|coro|
+
+        Delete the current channel.
+
+        Parameters
+        ----------
+        reason Optional[:class:`str`]
+            The reason of the channel delete.
+        channel_id :class:`~.pincer.utils.Snowflake`
+            The id of the channel, defaults to the current object id.
+        """
+        channel_id = channel_id or self.id
+
+        headers = {}
+
+        if reason:
+            headers["X-Audit-Log-Reason"] = str(reason)
+
+        await self._http.delete(
+            f"channels/{channel_id}",
+            headers
+        )
+
+    async def __post_send_handler(self, message: Message):
+        """Process a message after it was sent.
+
+        Parameters
+        ----------
+        message :class:`~.pincer.objects.message.message.Message`
+            The message.
+        """
+
+        if getattr(message, "delete_after", None):
+            await sleep(message.delete_after)
+            await self.delete()
+
+    def __post_sent(
+            self,
+            message: Message
+    ):
+        """Ensure the `__post_send_handler` method its future.
+
+        Parameters
+        ----------
+        message :class:`~.pincer.objects.message.message.Message`
+            The message.
+        """
+        ensure_future(self.__post_send_handler(message))
+
+    async def send(self, message: Union[Embed, Message, str]) -> UserMessage:
+        """|coro|
+
+        Send a message in the channel.
+
+        Parameters
+        ----------
+        message :class:`~.pincer.objects.message.message.Message`
+            The message which must be sent
+
+        Returns
+        -------
+        :class:`~.pincer.objects.message.user_message.UserMessage`
+            The message that was sent.
+        """
+        content_type, data = convert_message(self._client, message).serialize()
+
+        resp = await self._http.post(
+            f"channels/{self.id}/messages",
+            data,
+            content_type=content_type
+        )
+        msg = UserMessage.from_dict(resp)
+        self.__post_sent(msg)
+        return msg
 
     def __str__(self):
         """return the discord tag when object gets used as a string."""
@@ -234,9 +331,6 @@ class Channel(APIObject):  # noqa E501
 
 class TextChannel(Channel):
     """A subclass of ``Channel`` for text channels with all the same attributes."""
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
     @overload
     async def edit(
@@ -268,9 +362,6 @@ class TextChannel(Channel):
 class VoiceChannel(Channel):
     """A subclass of ``Channel`` for voice channels with all the same attributes."""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     @overload
     async def edit(
             self, name: str = None, position: int = None, bitrate: int = None,
@@ -300,16 +391,11 @@ class CategoryChannel(Channel):
     """A subclass of ``Channel`` for categories channels
     with all the same attributes.
     """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    pass
 
 
 class NewsChannel(Channel):
     """A subclass of ``Channel`` for news channels with all the same attributes."""
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
     @overload
     async def edit(
@@ -358,6 +444,7 @@ class ChannelMention(APIObject):
     name: str
 
 
+# noinspection PyTypeChecker
 _channel_type_map: Dict[ChannelType, Channel] = {
     ChannelType.GUILD_TEXT: TextChannel,
     ChannelType.GUILD_VOICE: VoiceChannel,

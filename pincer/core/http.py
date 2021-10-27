@@ -56,15 +56,15 @@ class HTTPClient:
         """
         Instantiate a new HttpApi object.
 
-        :param token:
+        token:
             Discord API token
 
         Keyword Arguments:
 
-        :param version:
+        version:
             The discord API version.
             See `<https://discord.com/developers/docs/reference#api-versioning>`_.
-        :param ttl:
+        ttl:
             Max amount of attempts after error code 5xx
         """
         version = version or GatewayConfig.version
@@ -106,26 +106,27 @@ class HTTPClient:
             endpoint: str, *,
             content_type: str = "application/json",
             data: Optional[Union[Dict, str, Payload]] = None,
+            headers: Optional[Dict[str, Any]] = None,
             __ttl: int = None
     ) -> Optional[Dict]:
         """
         Send an api request to the Discord REST API.
 
-        :param method:
+        method:
             The method for the request. (eg GET or POST)
 
-        :param endpoint:
+        endpoint:
             The endpoint to which the request will be sent.
 
         Keyword Arguments:
 
-        :param content_type:
+        content_type:
             The request's content type.
 
-        :param data:
+        data:
             The data which will be added to the request.
 
-        :param __ttl:
+        __ttl:
             Private param used for recursively setting the retry amount.
             (Eg set to 1 for 1 max retry)
         """
@@ -151,7 +152,10 @@ class HTTPClient:
         async with method(
                 url,
                 data=data,
-                headers={"Content-Type": content_type}
+                headers={
+                    "Content-Type": content_type,
+                    **(headers or {})
+                }
         ) as res:
             return await self.__handle_response(
                 res, method, endpoint, content_type, data, ttl
@@ -172,22 +176,22 @@ class HTTPClient:
         Side effects:
             If a 5xx error code is returned it will retry the request.
 
-        :param res:
+        res:
             The response from the discord API.
 
-        :param method:
+        method:
             The method which was used to call the endpoint.
 
-        :param endpoint:
+        endpoint:
             The endpoint to which the request was sent.
 
-        :param content_type:
+        content_type:
             The request's content type.
 
-        :param data:
+        data:
             The data which was added to the request.
 
-        :param __ttl:
+        __ttl:
             Private param used for recursively setting the retry amount.
             (Eg set to 1 for 1 max retry)
         """
@@ -251,7 +255,11 @@ class HTTPClient:
             data=data
         )
 
-    async def delete(self, route: str) -> Optional[Dict]:
+    async def delete(
+            self,
+            route: str,
+            headers: Optional[Dict[str, Any]] = None
+    ) -> Optional[Dict]:
         """|coro|
 
         Sends a delete request to a Discord REST endpoint.
@@ -260,13 +268,20 @@ class HTTPClient:
         ----------
         route : :class:`str`
             The Discord REST endpoint to send a delete request to.
+        headers: Optional[Dict[:class:`str`, Any]]
+            The request headers.
+            |default| ``None``
 
         Returns
         -------
         Optional[Dict]
             The response from discord.
         """
-        return await self.__send(self.__session.delete, route)
+        return await self.__send(
+            self.__session.delete,
+            route,
+            headers=headers
+        )
 
     async def get(self, route: str) -> Optional[Dict]:
         """|coro|
@@ -322,8 +337,9 @@ class HTTPClient:
     async def patch(
             self,
             route: str,
-            data: Optional[Dict] = None,
-            content_type: str = "application/json"
+            data: Dict,
+            content_type: str = "application/json",
+            headers: Optional[Dict[str, Any]] = None
     ) -> Optional[Dict]:
         """|coro|
 
@@ -335,21 +351,31 @@ class HTTPClient:
             The Discord REST endpoint to send a patch request to.
         data : Dict
             The update data for the patch request.
-        content_type : :class:`str`
-            Body content type. |default| ``application/json``
+        content_type: :class:`str`
+            Body content type.
+            |default| ``application/json``
+        headers: Optional[Dict[:class:`str`, Any]]
+            The request headers.
+
+        Returns
+        -------
+        Optional[Dict]
+            JSON response from the discord API.
         """
         return await self.__send(
             self.__session.patch,
             route,
             content_type=content_type,
-            data=data
+            data=data,
+            headers=headers
         )
 
     async def post(
             self,
             route: str,
-            data: Optional[Dict] = None,
-            content_type: str = "application/json"
+            data: Dict,
+            content_type: str = "application/json",
+            headers: Optional[Dict[str, Any]] = None
     ) -> Optional[Dict]:
         """|coro|
 
@@ -363,19 +389,28 @@ class HTTPClient:
             The update data for the patch request.
         content_type : :class:`str`
             Body content type. |default| ``application/json``
+        headers: Optional[Dict[:class:`str`, Any]]
+            The request headers.
+
+        Returns
+        -------
+        Optional[Dict]
+            JSON response from the discord API.
         """
         return await self.__send(
             self.__session.post,
             route,
             content_type=content_type,
-            data=data
+            data=data,
+            headers=headers
         )
 
     async def put(
             self,
             route: str,
-            data: Optional[Dict] = None,
-            content_type: str = "application/json"
+            data: Dict,
+            content_type: str = "application/json",
+            headers: Optional[Dict[str, Any]] = None
     ) -> Optional[Dict]:
         """|coro|
 
@@ -389,10 +424,18 @@ class HTTPClient:
             The update data for the patch request.
         content_type : :class:`str`
             Body content type. |default| ``application/json``
+        headers: Optional[Dict[:class:`str`, Any]]
+            The request headers.
+
+        Returns
+        -------
+        Optional[Dict]
+            JSON response from the discord API.
         """
         return await self.__send(
             self.__session.put,
             route,
             content_type=content_type,
-            data=data
+            data=data,
+            headers=headers
         )

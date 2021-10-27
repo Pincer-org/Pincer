@@ -6,22 +6,28 @@ from __future__ import annotations
 import logging
 import re
 from copy import deepcopy
-from typing import TYPE_CHECKING
 from typing import get_origin, get_args
 from asyncio import iscoroutinefunction, gather
 from inspect import Signature, isasyncgenfunction
+from typing import (
+    Optional, Dict, List, Any, Tuple, get_origin, get_args, Union,
+    ForwardRef, _eval_type
+)
 
 from . import __package__
-from .utils.types import Singleton
-from .objects.user.user import User
-from .objects.guild.role import Role
-from .utils.extraction import get_index
-from .objects.guild.channel import Channel
-from .utils.insertion import should_pass_ctx
-from .objects.app.command import (
-    AppCommandOption, AppCommandOptionChoice,
+from .client import Client
+from .utils.snowflake import Snowflake
+from .exceptions import (
+    CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
+    InvalidAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
+    InvalidCommandName
+)
+from .objects import ThrottleScope, AppCommand, Role, User, Channel, Guild
+from .objects.app import (
+    AppCommandOptionType, AppCommandOption, AppCommandOptionChoice,
     ClientCommandStructure, AppCommandType
 )
+from .utils import get_index, should_pass_ctx
 from .utils.signature import get_signature_and_params
 from .objects.app.throttle_scope import ThrottleScope
 from .objects.app.command import AppCommandOptionType, AppCommand
@@ -31,13 +37,7 @@ from .exceptions import (
     InvalidArgumentAnnotation, CommandDescriptionTooLong,
     InvalidCommandGuild, InvalidCommandName
 )
-
-
-if TYPE_CHECKING:
-    from typing import Optional, Dict, List, Any, Tuple, Union
-
-    from .client import Client
-    from .utils.snowflake import Snowflake
+from .utils.types import Singleton, TypeCache, Descripted
 
 COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 
@@ -198,16 +198,13 @@ def command(
             argument_description: Optional[str] = None
             choices: List[AppCommandOptionChoice] = []
 
-            if isinstance(annotation, tuple):
-                if len(annotation) != 2:
-                    raise InvalidArgumentAnnotation(
-                        f"Tuple annotation `{annotation}` on parameter "
-                        f"`{param}` in command `{cmd}` (`{func.__name__}`) "
-                        "does not consist of two elements. Please follow the "
-                        "correct format where the first element is the type"
-                        " and the second element is the description."
-                    )
-                annotation, argument_description = annotation
+            if isinstance(annotation, str):
+                TypeCache()
+                annotation = eval(annotation, TypeCache.cache, globals())
+
+            if isinstance(annotation, Descripted):
+                argument_description = annotation.description
+                annotation = annotation.key
 
                 if len(argument_description) > 100:
                     raise CommandDescriptionTooLong(
@@ -237,7 +234,7 @@ def command(
                 args = get_args(annotation)
 
                 if len(args) > 25:
-                    raise InvalidArgumentAnnotation(
+                    raise InvalidAnnotation(
                         f"Choices/Literal annotation `{annotation}` on "
                         f"parameter `{param}` in command `{cmd}` "
                         f"(`{func.__name__}`) amount exceeds limit of 25 items!"
@@ -245,21 +242,14 @@ def command(
 
                 choice_type = type(args[0])
 
+                if choice_type is Descripted:
+                    choice_type = type(args[0].key)
+
                 for choice in args:
-                    choice_name = choice
-
-                    if isinstance(choice, tuple):
-                        if len(choice) != 2:
-                            raise InvalidArgumentAnnotation(
-                                f"Choices/Literal annotation `{annotation}` on "
-                                f"parameter `{param}` in command `{cmd}` "
-                                f"(`{func.__name__}`), specific choice "
-                                "declaration through tuple's must consist of "
-                                "2 items. First value is the name and the "
-                                "second value is the value."
-                            )
-
-                        choice_name, choice = str(choice[0]), choice[1]
+                    choice_description = choice
+                    if isinstance(choice, Descripted):
+                        choice_description = choice.description
+                        choice = choice.key
 
                         if choice_type is tuple:
                             choice_type = type(choice)
@@ -270,7 +260,7 @@ def command(
                             lambda x: x.__name__,
                             choice_value_types
                         ))
-                        raise InvalidArgumentAnnotation(
+                        raise InvalidAnnotation(
                             f"Choices/Literal annotation `{annotation}` on "
                             f"parameter `{param}` in command `{cmd}` "
                             f"(`{func.__name__}`), invalid type received. "
@@ -279,7 +269,7 @@ def command(
                             f"{type(choice).__name__} was given!"
                         )
                     elif not isinstance(choice, choice_type):
-                        raise InvalidArgumentAnnotation(
+                        raise InvalidAnnotation(
                             f"Choices/Literal annotation `{annotation}` on "
                             f"parameter `{param}` in command `{cmd}` "
                             f"(`{func.__name__}`), all values must be of the "
@@ -287,7 +277,7 @@ def command(
                         )
 
                     choices.append(AppCommandOptionChoice(
-                        name=choice_name,
+                        name=choice_description,
                         value=choice
                     ))
 
@@ -295,7 +285,7 @@ def command(
 
             param_type = _options_type_link.get(annotation)
             if not param_type:
-                raise InvalidArgumentAnnotation(
+                raise InvalidAnnotation(
                     f"Annotation `{annotation}` on parameter "
                     f"`{param}` in command `{cmd}` (`{func.__name__}`) is not "
                     "a valid type."
@@ -353,6 +343,9 @@ class ChatCommandHandler(metaclass=Singleton):
     __update = "/commands/{command.id}"
     __add = "/commands"
     __add_guild = "/guilds/{command.guild_id}/commands"
+    __get_guild = "/guilds/{guild_id}/commands"
+    __update_guild = "/guilds/{command.guild_id}/commands/{command.id}"
+    __delete_guild = "/guilds/{command.guild_id}/commands/{command.id}"
 
     def __init__(self, client: Client):
         self.client = client
@@ -372,13 +365,28 @@ class ChatCommandHandler(metaclass=Singleton):
         """|coro|
 
         Get a list of app commands
+
+        Returns
+        -------
+        List[:class:`~pincer.objects.app.command.AppCommand`]
+            List of commands.
         """
+        # TODO: Update if discord adds bulk get guild commands
+        guild_commands = await gather(*map(
+            lambda guild: self.client.http.get(
+                self.__prefix + self.__get_guild.format(
+                    guild_id=guild.id if isinstance(guild, Guild) else guild
+                )
+            ),
+            self.client.guilds
+        ))
         return list(map(
             AppCommand.from_dict,
             await self.client.http.get(self.__prefix + self.__get)
+            + [cmd for guild in guild_commands for cmd in guild]
         ))
 
-    async def remove_command(self, cmd: AppCommand):
+    async def remove_command(self, cmd: AppCommand, keep=False):
         """|coro|
 
         Remove a specific command
@@ -388,14 +396,22 @@ class ChatCommandHandler(metaclass=Singleton):
         cmd : :class:`~pincer.objects.app.command.AppCommand`
             What command to delete
         """
+        # TODO: Update if discord adds bulk delete commands
+        remove_endpoint = self.__delete_guild if cmd.guild_id else self.__delete
+
         await self.client.http.delete(
-            self.__prefix + self.__delete.format(command=cmd)
+            self.__prefix + remove_endpoint.format(command=cmd)
         )
 
-        if ChatCommandHandler.register.get(cmd.name):
+        if not keep and ChatCommandHandler.register.get(cmd.name):
             del ChatCommandHandler.register[cmd.name]
 
-    async def remove_commands(self, commands: List[AppCommand]):
+    async def remove_commands(
+            self,
+            commands: List[AppCommand],
+            /,
+            keep: List[AppCommand] = None
+    ):
         """|coro|
 
         Remove a list of commands
@@ -406,7 +422,7 @@ class ChatCommandHandler(metaclass=Singleton):
             List of commands to delete
         """
         await gather(*list(map(
-            lambda cmd: self.remove_command(cmd),
+            lambda cmd: self.remove_command(cmd, cmd in (keep or [])),
             commands
         )))
 
@@ -422,8 +438,11 @@ class ChatCommandHandler(metaclass=Singleton):
         changes : Dict[:class:`str`, Any]
             Dictionary of changes
         """
+        # TODO: Update if discord adds bulk update commands
+        update_endpoint = self.__update_guild if cmd.guild_id else self.__update
+
         await self.client.http.patch(
-            self.__prefix + self.__update.format(command=cmd),
+            self.__prefix + update_endpoint.format(command=cmd),
             data=changes
         )
 
@@ -493,8 +512,9 @@ class ChatCommandHandler(metaclass=Singleton):
         self._api_commands = await self.get_commands()
 
         for api_cmd in self._api_commands:
-            if loc_cmd := ChatCommandHandler.register.get(api_cmd.name):
-                loc_cmd.app.id = api_cmd.id
+            cmd = ChatCommandHandler.register.get(api_cmd.name)
+            if cmd and cmd.app == api_cmd:
+                cmd.app = api_cmd
 
     async def __remove_unused_commands(self):
         """|coro|
@@ -503,16 +523,23 @@ class ChatCommandHandler(metaclass=Singleton):
         by the current client
         """
         registered_commands = list(map(
-            lambda registered_cmd: registered_cmd.app.name,
+            lambda registered_cmd: registered_cmd.app,
             ChatCommandHandler.register.values()
         ))
+        keep = []
 
-        to_remove = list(filter(
-            lambda cmd: cmd.name not in registered_commands,
-            self._api_commands
-        ))
+        def predicate(target: AppCommand) -> bool:
+            for reg_cmd in registered_commands:
+                reg_cmd: AppCommand = reg_cmd
+                if target == reg_cmd:
+                    return False
+                elif target.name == reg_cmd.name:
+                    keep.append(target)
+            return True
 
-        await self.remove_commands(to_remove)
+        to_remove = list(filter(predicate, self._api_commands))
+
+        await self.remove_commands(to_remove, keep=keep)
 
         self._api_commands = list(filter(
             lambda cmd: cmd not in to_remove,

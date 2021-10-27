@@ -8,10 +8,10 @@ from dataclasses import dataclass, field
 from typing import overload, TYPE_CHECKING
 
 from .channel import Channel
+from ...exceptions import UnavailableGuildError
 from .member import GuildMember
 from ...utils.types import MISSING
 from ...utils.api_object import APIObject
-from ...exceptions import UnavailableGuildError
 from ...utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:

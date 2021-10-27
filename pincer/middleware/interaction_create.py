@@ -6,76 +6,22 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 from inspect import isasyncgenfunction, getfullargspec
+from typing import Dict, Any
 
-from ..utils.types import MISSING
-from ..objects.message.file import File
-from ..utils.extraction import get_index
+from pincer.utils import get_index
 from ..commands import ChatCommandHandler
-from ..objects.message.embed import Embed
-from ..objects.message.message import Message
-from ..objects.app.interactions import Interaction
+from ..core.dispatch import GatewayDispatch
+from ..objects import Interaction, MessageContext
+from ..utils.convert_message import convert_message
 from ..utils.conversion import construct_client_dict
-from ..objects.app.interactions import InteractionFlags
-from ..utils.insertion import should_pass_cls, should_pass_ctx
 from ..utils.signature import get_params, get_signature_and_params
+from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 
 if TYPE_CHECKING:
-    from typing import Union, Dict, Any, Tuple, List
+    from typing import List
 
-    from ..utils.types import Coro
-    from ..core.dispatch import GatewayDispatch
-    from ..objects.message.context import MessageContext
-
-PILLOW_IMPORT = True
-
-try:
-    from PIL.Image import Image
-except (ModuleNotFoundError, ImportError):
-    PILLOW_IMPORT = False
 
 _log = logging.getLogger(__name__)
-
-
-def convert_message(self, message: Union[Embed, Message, str]) -> Message:
-    """Converts a message to a Message object
-
-    Parameters
-    ----------
-    message : Union[:class:`~pincer.objects.message.embed.Embed`, :class:`~pincer.objects.message.message.Message`, :class:`str`]
-        Message to convert
-    """  # noqa: E501
-    if isinstance(message, Embed):
-        message = Message(embeds=[message])
-    elif PILLOW_IMPORT and isinstance(message, (File, Image)):
-        message = Message(attachments=[message])
-    elif not isinstance(message, Message):
-        message = Message(message) if message else Message(
-            self.received_message,
-            flags=InteractionFlags.EPHEMERAL
-        )
-    return message
-
-
-async def reply(self, interaction: Interaction, message: Message):
-    """|coro|
-
-    Sends a reply to an interaction.
-
-    Parameters
-    ----------
-    interaction : :class:`~pincer.objects.app.interactions.Interaction`
-        The interaction from whom the reply is.
-    message : :class:`~pincer.objects.message.message.Message`
-        The message to reply with.
-    """
-
-    content_type, data = message.serialize()
-
-    await self.http.post(
-        f"interactions/{interaction.id}/{interaction.token}/callback",
-        data=data,
-        content_type=content_type
-    )
 
 
 async def interaction_response_handler(
@@ -116,17 +62,13 @@ async def interaction_response_handler(
             msg = convert_message(self, msg)
 
             if started:
-                await self.http.post(
-                    f"webhooks/{interaction.application_id}"
-                    f"/{interaction.token}",
-                    data=msg.to_dict().get("data")
-                )
+                await interaction.followup(msg)
             else:
                 started = True
-                await reply(self, interaction, msg)
+                await interaction.reply(msg)
     else:
         message = await command(**kwargs)
-        await reply(self, interaction, convert_message(self, message))
+        await interaction.reply(convert_message(self, message))
 
 
 async def interaction_handler(

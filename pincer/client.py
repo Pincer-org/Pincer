@@ -16,26 +16,27 @@ from .utils.types import Coro
 from .middleware import middleware
 from .objects.guild.role import Role
 from .core.gateway import Dispatcher
+from .utils.signature import get_params
 from .utils.extraction import get_index
 from .objects.guild.channel import Channel
+from .utils.insertion import should_pass_cls
 from .objects.app.throttling import DefaultThrottleHandler
+from .exceptions import (
+    InvalidEventName, TooManySetupArguments, NoValidSetupMethod,
+    NoCogManagerReturnFound, CogAlreadyExists, CogNotFound
+)
 
 if TYPE_CHECKING:
-
     from .objects.user import User
     from .objects.guild import Guild
     from .core.http import HTTPClient
-    from .utils.signature import get_params
+    from .objects.app import AppCommand
+    from .utils.snowflake import Snowflake
     from .commands import ChatCommandHandler
     from .objects.app.intents import Intents
     from .core.dispatch import GatewayDispatch
     from .objects.app.command import AppCommand
-    from .utils.insertion import should_pass_cls
     from .objects.app.throttling import ThrottleInterface
-    from .exceptions import (
-        InvalidEventName, TooManySetupArguments, NoValidSetupMethod,
-        NoCogManagerReturnFound, CogAlreadyExists, CogNotFound
-    )
 
 _log = logging.getLogger(__package__)
 
@@ -184,6 +185,10 @@ class Client(Dispatcher):
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
         self.throttler = throttler
+        # TODO: Document guild prop
+        # The guild value is only registered if the GUILD_MEMBERS
+        # intent is enabled.
+        self.guilds: Dict[Snowflake, Optional[Guild]] = {}
         ChatCommandHandler.managers[self.__module__] = self
 
     @property

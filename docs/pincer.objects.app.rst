@@ -88,18 +88,6 @@ InteractionType
 MessageInteraction
 ~~~~~~~~~~~~~~~~~~
 
-.. attributetable:: MessageInteraction
-
-.. autoclass:: MessageInteraction()
-
-interactions
-------------
-
-InteractionFlags
-~~~~~~~~~~~~~~~~
-
-.. attributetable:: InteractionFlags
-
 .. autoclass:: InteractionFlags()
 
 ResolvedData

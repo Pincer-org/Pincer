@@ -33,9 +33,9 @@ def guild_create_middleware(
     Tuple[:class:`str`, List[:class:`~pincer.objects.guild.guild.Guild`]]
         ``on_guild_create`` and a ``Guild``
     """
-    return "on_guild_create", [
-        Guild.from_dict(construct_client_dict(self, payload.data))
-    ]
+    guild = Guild.from_dict(construct_client_dict(self, payload.data))
+    self.guilds[guild.id] = guild
+    return "on_guild_create", [guild]
 
 
 def export():

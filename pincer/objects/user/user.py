@@ -92,11 +92,11 @@ class User(APIObject):
     verified: APINullable[:class:`bool`]
         Whether the email on this account has been verified
     """
-    avatar: Optional[str]
     discriminator: str
     id: Snowflake
     username: str
 
+    avatar: APINullable[str] = MISSING
     flags: APINullable[int] = MISSING
     accent_color: APINullable[Optional[int]] = MISSING
     banner: APINullable[Optional[str]] = MISSING
@@ -128,9 +128,6 @@ class User(APIObject):
 
     def __str__(self):
         return self.username + '#' + self.discriminator
-
-    def __post_init__(self):
-        self.id = convert(self.id, Snowflake.from_string)
 
     @classmethod
     async def from_id(cls, client: Client, user_id: int) -> User:

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+from inspect import getfullargspec
 
 from .types import T, MISSING
 
@@ -23,7 +24,7 @@ def construct_client_dict(client: Client, data: Dict[...]):
 def convert(
         value: Any,
         factory: Callable[[Any], T],
-        check: Optional[type] = None,
+        check: Optional[T] = None,
         client: Optional[Client] = None
 ) -> T:
     def handle_factory() -> T:
@@ -31,10 +32,13 @@ def convert(
             if check is not None and isinstance(v, check):
                 return v
 
-            if client is None:
-                return factory(v)
+            try:
+                if client and "_client" in getfullargspec(factory).args:
+                    return factory(construct_client_dict(client, v))
+            except TypeError:  # Buildin type/has no signature
+                pass
 
-            return factory(construct_client_dict(client, v))
+            return factory(v)
 
         return (
             list(map(fin_fac, value))
