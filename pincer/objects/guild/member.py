@@ -8,7 +8,6 @@ from typing import Optional, List, TYPE_CHECKING
 
 from ..user import User
 from ...utils.api_object import APIObject
-from ...utils.conversion import convert
 from ...utils.snowflake import Snowflake
 from ...utils.timestamp import Timestamp
 from ...utils.types import MISSING
@@ -45,10 +44,6 @@ class BaseMember(APIObject):
 
     hoisted_role: APINullable[Snowflake] = MISSING
 
-    def __post_init__(self):
-        self.roles = convert(self.roles, Snowflake.from_string)
-        self.hoisted_role = convert(self.hoisted_role, Snowflake.from_string)
-
 
 @dataclass
 class PartialGuildMember(APIObject):
@@ -83,9 +78,6 @@ class PartialGuildMember(APIObject):
     avatar: str
     public_flags: int
     member: BaseMember
-
-    def __post_init__(self):
-        self.member = convert(self.member, BaseMember.from_dict)
 
 
 @dataclass
@@ -130,12 +122,6 @@ class GuildMember(BaseMember, APIObject):
     premium_since: APINullable[Optional[Timestamp]] = MISSING
     user: APINullable[User] = MISSING
     avatar: APINullable[str] = MISSING
-
-    def __post_init__(self):
-        self.user = convert(self.user, User.from_dict, User, self._client)
-        self.premium_since = convert(
-            self.premium_since, Timestamp.parse, Timestamp
-        )
 
     @classmethod
     async def from_id(
