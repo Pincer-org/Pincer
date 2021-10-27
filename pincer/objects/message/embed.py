@@ -10,12 +10,12 @@ from dataclasses import dataclass, field
 
 from ...utils.types import MISSING
 from ...utils.api_object import APIObject
+from ...exceptions import InvalidUrlError, EmbedFieldError
 
 if TYPE_CHECKING:
     from typing import Any, Callable, Dict, Iterable, Union, Optional
 
     from ...utils.types import APINullable
-    from ...exceptions import InvalidUrlError, EmbedFieldError
 
 
 def _field_size(_field: str) -> int:
@@ -53,6 +53,13 @@ def _is_valid_url(url: str) -> bool:
 
 
 def _check_if_valid_url(url: str):
+    """Checks if the provided url is valid.
+
+    :raises InvalidUrlError:
+        if the url didn't match the url regex.
+        (which means that it was malformed or didn't match the http/attachment
+        protocol).
+    """
     if not _is_valid_url(url):
         raise InvalidUrlError(
             "Url was malformed or wasn't of protocol http(s)/attachment."

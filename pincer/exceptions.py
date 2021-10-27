@@ -141,6 +141,17 @@ class EmbedFieldError(PincerError, ValueError):
 
     @classmethod
     def from_desc(cls, _type: str, max_size: int, cur_size: int):
+        """Create an instance by description.
+
+        Parameters
+        ----------
+        _type: :class:`str`
+            The type/name of the field.
+        max_size: :class:`int`
+            The maximum size of the field.
+        cur_size: :class:`int
+            The current size of the field.
+        """
         return cls(
             f"{_type} can have a maximum length of {max_size}."
             f" (Current size: {cur_size})"

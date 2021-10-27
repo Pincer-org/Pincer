@@ -34,19 +34,17 @@ class Snowflake(int):
 
     @property
     def worker_id(self) -> int:
-        """:class:`int`: Internal worker ID
-        """
+        """:class:`int`: Internal worker ID"""
         return (self >> 17) % 16
 
     @property
     def process_id(self) -> int:
-        """:class:`int`: Internal process ID
-        """
+        """:class:`int`: Internal process ID"""
         return (self >> 12) % 16
 
     @property
     def increment(self) -> int:
         """:class:`int`: For every ID that is generated on that process,
-        this number is incremented
+        this number is incremented.
         """
         return self % 2048

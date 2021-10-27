@@ -9,13 +9,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from ..objects.user.voice_state import VoiceState
 from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from typing import List, Tuple
 
     from ..core.dispatch import GatewayDispatch
-    from ..objects.user.voice_state import VoiceState
 
 
 async def voice_state_update_middleware(

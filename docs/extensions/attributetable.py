@@ -186,10 +186,7 @@ def process_attributetable(app, doctree, fromdocname):
 
         table['python-class'] = fullname
 
-        if not table:
-            node.replace_self([])
-        else:
-            node.replace_self([table])
+        node.replace_self([table] if table else [])
 
 
 def get_class_results(lookup, modulename, name, fullname):

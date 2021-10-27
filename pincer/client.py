@@ -147,14 +147,18 @@ class Client(Dispatcher):
     Parameters
     ----------
     token : :class:`str`
-        the token to login with your bot from the developer portal
+        The token to login with your bot from the developer portal
     received : Optional[:class:`str`]
         The default message which will be sent when no response is given.
         |default| :data:`None`
     intents : Optional[:class:`~objects.app.intents.Intents`]
         The discord intents to use |default| :data:`None`
     throttler : Optional[:class:`~objects.app.throttling.ThrottleInterface`]
-        The throttler for your client (generally not used)
+        The cooldown handler for your client,
+        defaults to :class`~.objects.app.throttling.DefaultThrottleHandler`
+        *(which uses the WindowSliding technique)*.
+        Custom throttlers must derive from
+        :class:`~pincer.objects.app.throttling.ThrottleInterface`.
         |default| :data:`None`
     """
 
@@ -242,8 +246,6 @@ class Client(Dispatcher):
             If the function is not a coro
         InvalidEventName
             If the function name is not a valid event (on_x)
-        InvalidEventName
-            If it is not a valid event name
         """
         if not iscoroutinefunction(coroutine) \
                 and not isasyncgenfunction(coroutine):
@@ -428,8 +430,7 @@ class Client(Dispatcher):
             ensure_future(call(*call_args, **kwargs))
 
     def run(self):
-        """start the event listener
-        """
+        """start the event listener"""
         self.start_loop()
         run(self.http.close())
 

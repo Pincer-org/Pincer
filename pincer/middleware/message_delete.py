@@ -7,12 +7,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..utils.conversion import construct_client_dict
+from ..objects.events.message import MessageDeleteEvent
 
 if TYPE_CHECKING:
     from typing import List, Tuple
 
     from ..core.dispatch import GatewayDispatch
-    from ..objects.events.message import MessageDeleteEvent
 
 
 async def on_message_delete_middleware(

@@ -55,7 +55,7 @@ from .guild.channel import (
     ChannelType, Channel, TextChannel, VoiceChannel, CategoryChannel,
     NewsChannel, ChannelMention
 )
-from .guild.features import GuildFeatures
+from .guild.features import GuildFeature
 from .guild.followed_channel import FollowedChannel
 from .guild.guild import (
     PremiumTier, GuildNSFWLevel, ExplicitContentFilterLevel, MFALevel,
@@ -129,7 +129,7 @@ __all__ = (
     "AuditLogEntry", "AuditLogEvent", "Ban", "CategoryChannel", "Channel",
     "ChannelMention", "ChannelType", "DefaultMessageNotificationLevel",
     "ExplicitContentFilterLevel", "FollowedChannel", "Guild",
-    "GuildFeatures", "GuildMember", "GuildNSFWLevel", "GuildTemplate",
+    "GuildFeature", "GuildMember", "GuildNSFWLevel", "GuildTemplate",
     "GuildWidget", "Invite", "InviteMetadata", "InviteStageInstance",
     "InviteTargetType", "MFALevel", "NewsChannel", "Overwrite",
     "PartialGuildMember", "PremiumTier", "PrivacyLevel", "Role", "RoleTags",

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import os
+from os import getcwd, chdir
 from typing import TYPE_CHECKING
 from contextlib import contextmanager
 
@@ -21,8 +21,8 @@ def chdir(path: str) -> Generator[str, Any, None]:
     ------
     Generator[:class:`str`, Any, None]
     """
-    current_path = os.getcwd()
-    os.chdir(path)
+    current_path = getcwd()
+    chdir(path)
 
     yield current_path
-    os.chdir(current_path)
+    chdir(current_path)

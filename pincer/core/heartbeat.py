@@ -5,18 +5,17 @@ from __future__ import annotations
 
 import logging
 from typing import TYPE_CHECKING
-
+from asyncio import sleep
 
 from . import __package__
+from ..exceptions import HeartbeatError
+from ..core.dispatch import GatewayDispatch
 
 if TYPE_CHECKING:
-    from asyncio import sleep
     from typing import Optional
 
     from websockets.legacy.client import WebSocketClientProtocol
 
-    from ..exceptions import HeartbeatError
-    from ..core.dispatch import GatewayDispatch
 
 _log = logging.getLogger(__package__)
 

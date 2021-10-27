@@ -7,27 +7,27 @@ from enum import IntEnum
 from dataclasses import dataclass, field
 from typing import overload, TYPE_CHECKING
 
+from .channel import Channel
+from .member import GuildMember
 from ...utils.types import MISSING
 from ...utils.api_object import APIObject
+from ...exceptions import UnavailableGuildError
 from ...utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from typing import Dict, List, Optional
 
     from .role import Role
-    from .channel import Channel
     from ...client import Client
-    from .member import GuildMember
     from .stage import StageInstance
     from ..message.emoji import Emoji
-    from .features import GuildFeatures
+    from .features import GuildFeature
     from ..message.sticker import Sticker
     from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
     from ...utils.timestamp import Timestamp
     from ..user.voice_state import VoiceState
     from .welcome_screen import WelcomeScreen
-    from ...exceptions import UnavailableGuildError
     from ..events.presence import PresenceUpdateEvent
 
 
@@ -181,7 +181,7 @@ class Guild(APIObject):
         Custom guild emojis
     explicit_content_filter: :class:`~pincer.objects.guild.guild.ExplicitContentFilterLevel`
         Explicit content filter level
-    features: List[:class:`~pincer.objects.guild.features.GuildFeatures`]
+    features: List[:class:`~pincer.objects.guild.features.GuildFeature`]
         Enabled guild features
     id: :class:`~pincer.utils.snowflake.Snowflake`
         Guild id
@@ -287,7 +287,7 @@ class Guild(APIObject):
     default_message_notifications: DefaultMessageNotificationLevel
     emojis: List[Emoji]
     explicit_content_filter: ExplicitContentFilterLevel
-    features: List[GuildFeatures]
+    features: List[GuildFeature]
     id: Snowflake
     mfa_level: MFALevel
     name: str

@@ -8,22 +8,22 @@ from dataclasses import dataclass
 from typing import Dict, TYPE_CHECKING
 from asyncio import gather, iscoroutine
 
+from ..user.user import User
 from ...utils.types import MISSING
+from ..guild.member import GuildMember
+from ...utils.conversion import convert
+from ...utils.snowflake import Snowflake
 from ...utils.api_object import APIObject
+from ..app.select_menu import SelectOption
+from ..message.context import MessageContext
+from .interaction_base import InteractionType
+from ..message.user_message import UserMessage
+from .command import AppCommandInteractionDataOption, AppCommandOptionType
 
 if TYPE_CHECKING:
-    from ..user.user import User
     from ..guild.role import Role
     from ..guild.channel import Channel
-    from ..guild.member import GuildMember
     from ...utils.types import APINullable
-    from ...utils.conversion import convert
-    from ...utils.snowflake import Snowflake
-    from ..app.select_menu import SelectOption
-    from ..message.context import MessageContext
-    from .interaction_base import InteractionType
-    from ..message.user_message import UserMessage
-    from .command import AppCommandInteractionDataOption, AppCommandOptionType
 
 
 class InteractionFlags(IntEnum):

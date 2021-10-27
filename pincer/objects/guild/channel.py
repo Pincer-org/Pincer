@@ -227,15 +227,13 @@ class Channel(APIObject):  # noqa E501
         channel_cls = _channel_type_map.get(data["type"], Channel)
         return channel_cls.from_dict(data)
 
-
-def __str__(self):
-    """return the discord tag when object gets used as a string."""
-    return self.name or str(self.id)
+    def __str__(self):
+        """return the discord tag when object gets used as a string."""
+        return self.name or str(self.id)
 
 
 class TextChannel(Channel):
-    """A subclass of ``Channel`` for text channels with all the same attributes.
-    """
+    """A subclass of ``Channel`` for text channels with all the same attributes."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -268,8 +266,7 @@ class TextChannel(Channel):
 
 
 class VoiceChannel(Channel):
-    """A subclass of ``Channel`` for voice channels with all the same attributes.
-    """
+    """A subclass of ``Channel`` for voice channels with all the same attributes."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

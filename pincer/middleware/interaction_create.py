@@ -7,24 +7,24 @@ import logging
 from typing import TYPE_CHECKING
 from inspect import isasyncgenfunction, getfullargspec
 
+from ..utils.types import MISSING
+from ..objects.message.file import File
 from ..utils.extraction import get_index
+from ..commands import ChatCommandHandler
+from ..objects.message.embed import Embed
+from ..objects.message.message import Message
+from ..objects.app.interactions import Interaction
+from ..utils.conversion import construct_client_dict
+from ..objects.app.interactions import InteractionFlags
+from ..utils.insertion import should_pass_cls, should_pass_ctx
+from ..utils.signature import get_params, get_signature_and_params
 
 if TYPE_CHECKING:
     from typing import Union, Dict, Any, Tuple, List
 
     from ..utils.types import Coro
-    from ..utils.types import MISSING
-    from ..objects.message.file import File
-    from ..commands import ChatCommandHandler
-    from ..objects.message.embed import Embed
     from ..core.dispatch import GatewayDispatch
-    from ..objects.message.message import Message
-    from ..objects.app.interactions import Interaction
     from ..objects.message.context import MessageContext
-    from ..utils.conversion import construct_client_dict
-    from ..objects.app.interactions import InteractionFlags
-    from ..utils.insertion import should_pass_cls, should_pass_ctx
-    from ..utils.signature import get_params, get_signature_and_params
 
 PILLOW_IMPORT = True
 
@@ -160,8 +160,8 @@ async def interaction_handler(
 
     kwargs = {**defaults, **params}
 
-    await interaction_response_handler(self, command, context, interaction,
-                                       kwargs)
+    await interaction_response_handler(
+        self, command, context, interaction, kwargs)
 
 
 async def interaction_create_middleware(

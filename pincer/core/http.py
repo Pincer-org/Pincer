@@ -2,11 +2,12 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 from __future__ import annotations
 
-import asyncio
 import logging
 from json import dumps
-from typing import Protocol, TYPE_CHECKING
 from asyncio import sleep
+from typing import Protocol, TYPE_CHECKING
+
+from aiohttp import ClientSession, ClientResponse
 
 from . import __package__
 from ..exceptions import (
@@ -19,7 +20,6 @@ from .._config import GatewayConfig
 if TYPE_CHECKING:
     from typing import Any, Dict, Optional, Union
 
-    from aiohttp import ClientSession, ClientResponse
     from aiohttp.client import _RequestContextManager
     from aiohttp.payload import Payload
     from aiohttp.typedefs import StrOrURL
@@ -240,7 +240,7 @@ class HTTPClient:
             f"{res.status}. Retrying in {retry_in}s."
         )
 
-        await asyncio.sleep(retry_in)
+        await sleep(retry_in)
 
         # try sending it again
         return await self.__send(

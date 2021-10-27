@@ -8,15 +8,15 @@ from dataclasses import dataclass
 from typing import List, Union, TYPE_CHECKING
 
 from ...utils.types import MISSING
+from ...utils.conversion import convert
+from ...utils.snowflake import Snowflake
 from ...utils.api_object import APIObject
 from ...utils.extraction import get_index
+from ...utils.types import Coro, choice_value_types
 
 if TYPE_CHECKING:
     from ...utils.types import APINullable
-    from ...utils.conversion import convert
-    from ...utils.snowflake import Snowflake
     from ..app.throttle_scope import ThrottleScope
-    from ...utils.types import Coro, choice_value_types
 
 
 class AppCommandType(IntEnum):

@@ -65,8 +65,7 @@ class HTTPMeta(type):
 
 @dataclass
 class APIObject(metaclass=HTTPMeta):
-    """Represents an object which has been fetched from the Discord API.
-    """
+    """Represents an object which has been fetched from the Discord API."""
 
     # def __post_init__(self):
     #     fin = {

@@ -7,30 +7,30 @@ from enum import IntEnum, Enum
 from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
+from .embed import Embed
+from ..user.user import User
+from ..guild.role import Role
+from .reaction import Reaction
+from .sticker import StickerItem
+from .attachment import Attachment
 from ...utils.types import MISSING
 from ..._config import GatewayConfig
+from ...utils.conversion import convert
+from .component import MessageComponent
+from .reference import MessageReference
+from ...utils.snowflake import Snowflake
 from ...utils.api_object import APIObject
+from ..app.application import Application
+from ..guild.channel import Channel, ChannelMention
 from ...utils.conversion import construct_client_dict
+from ..app.interaction_base import MessageInteraction
+from ..guild.member import GuildMember, PartialGuildMember
 
 if TYPE_CHECKING:
     from typing import List, Optional, Union
 
-    from .embed import Embed
-    from ..user.user import User
-    from ..guild.role import Role
-    from .reaction import Reaction
-    from .sticker import StickerItem
-    from .attachment import Attachment
     from ...utils.types import APINullable
-    from ...utils.conversion import convert
-    from .component import MessageComponent
-    from .reference import MessageReference
-    from ...utils.snowflake import Snowflake
     from ...utils.timestamp import Timestamp
-    from ..app.application import Application
-    from ..guild.channel import Channel, ChannelMention
-    from ..app.interaction_base import MessageInteraction
-    from ..guild.member import GuildMember, PartialGuildMember
 
 
 class MessageActivityType(IntEnum):

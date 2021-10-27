@@ -7,23 +7,24 @@ from json import dumps
 from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
+from aiohttp import FormData, Payload
+
+from .file import File
 from ...utils.api_object import APIObject
+from ...exceptions import CommandReturnIsEmpty
+from ..app.interaction_base import CallbackType
 
 if TYPE_CHECKING:
     from typing import Dict, Union, List, Optional, Tuple
 
-    from aiohttp import FormData, Payload
 
-    from .file import File
     from .embed import Embed
     from ..user.user import User
     from ..guild.role import Role
     from .component import MessageComponent
     from ...utils.snowflake import Snowflake
     from .user_message import AllowedMentionTypes
-    from ...exceptions import CommandReturnIsEmpty
     from ..app.interactions import InteractionFlags
-    from ..app.interaction_base import CallbackType
 
 PILLOW_IMPORT = True
 
@@ -133,8 +134,7 @@ class Message:
 
     @property
     def isempty(self) -> bool:
-        """:class:`bool`: If the message is empty.
-        """
+        """:class:`bool`: If the message is empty."""
 
         return (
             len(self.content) < 1

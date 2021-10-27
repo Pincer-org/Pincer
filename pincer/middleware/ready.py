@@ -9,14 +9,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from ..objects.user.user import User
 from ..exceptions import InvalidPayload
+from ..commands import ChatCommandHandler
 from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from typing import Tuple
     from ..utils.types import Coro
-    from ..objects.user.user import User
-    from ..commands import ChatCommandHandler
     from ..core.dispatch import GatewayDispatch
 
 
@@ -44,7 +44,7 @@ async def on_ready_middleware(
         raise InvalidPayload(
             "A `user` key/value pair is expected on the `ready` payload "
             "event."
-        )  # TODO this error doesn't exist???
+        )
 
     self.bot = User.from_dict(construct_client_dict(self, user))
 

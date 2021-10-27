@@ -5,9 +5,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from .types import T, MISSING
+
 if TYPE_CHECKING:
     from ..client import Client
-    from .types import T, MISSING
     from typing import Dict, Callable, Any, Optional
 
 

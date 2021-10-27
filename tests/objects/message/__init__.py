@@ -1,7 +1,8 @@
+from pincer import __version__
 from pincer.objects import Embed
 
 print(Embed(
-    title="Pincer - 0.6.4",
+    title=f"Pincer - {__version__}",
     description=(
         "🚀 An asynchronous python API wrapper meant to replace"
         " discord.py\n> Snappy discord api wrapper written "

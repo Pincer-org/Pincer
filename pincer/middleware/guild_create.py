@@ -6,12 +6,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from ..objects.guild import Guild
+from ..utils.conversion import construct_client_dict
+
 if TYPE_CHECKING:
     from typing import List, Tuple
 
-    from ..objects.guild import Guild
     from ..core.dispatch import GatewayDispatch
-    from ..utils.conversion import construct_client_dict
 
 
 def guild_create_middleware(

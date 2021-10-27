@@ -7,13 +7,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from ..objects import UserMessage
 from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from typing import List, Tuple
 
     from ..core.dispatch import GatewayDispatch
-    from ..objects import UserMessage
 
 
 async def message_update_middleware(

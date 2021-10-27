@@ -6,14 +6,14 @@ from typing import TYPE_CHECKING
 from abc import ABC, abstractmethod
 
 from .throttle_scope import ThrottleScope
+from ...exceptions import CommandCooldownError
+from ...utils.slidingwindow import SlidingWindow
 
 if TYPE_CHECKING:
     from typing import Dict, Optional
 
     from ...utils.types import Coro
     from ..message.context import MessageContext
-    from ...exceptions import CommandCooldownError
-    from ...utils.slidingwindow import SlidingWindow
 
 
 class ThrottleInterface(ABC):

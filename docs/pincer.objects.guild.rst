@@ -106,12 +106,12 @@ ChannelMention
 Features
 --------
 
-GuildFeatures
+GuildFeature
 ~~~~~~~~~~~~~
 
-.. attributetable:: GuildFeatures
+.. attributetable:: GuildFeature
 
-.. autoclass:: GuildFeatures()
+.. autoclass:: GuildFeature()
 
 Followed Channel
 ----------------

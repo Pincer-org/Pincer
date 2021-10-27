@@ -79,6 +79,7 @@ Exceptions
 .. autoexception:: InvalidUrlError()
 
 .. autoexception:: EmbedFieldError()
+    :exclude-members: from_desc
 
 .. autoexception:: TaskError()
 
@@ -127,6 +128,7 @@ Exception Hierarchy
 
     - :exc:`Exception`
         - :exc:`PincerError`
+            - :exc: `InvalidPayload`
             - :exc:`UnhandledException`
             - :exc:`NoExportMethod`
             - :exc:`CogError`

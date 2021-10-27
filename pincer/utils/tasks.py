@@ -11,24 +11,22 @@ from asyncio import TimerHandle, iscoroutinefunction
 
 from .types import Coro
 from . import __package__
+from ..exceptions import (
+    TaskAlreadyRunning, TaskCancelError, TaskInvalidDelay,
+    TaskIsNotCoroutine
+)
 from .insertion import should_pass_cls
 
 if TYPE_CHECKING:
     from typing import Callable, Set
 
     from .types import Coro
-    from ..exceptions import (
-        TaskAlreadyRunning, TaskCancelError, TaskInvalidDelay,
-        TaskIsNotCoroutine
-    )
-    from .insertion import should_pass_cls
 
 _log = logging.getLogger(__package__)
 
 
 class TaskScheduler:
-    """Class that scedules tasts.
-    """
+    """Class that scedules tasts."""
 
     def __init__(self, client):
         self.client = client
@@ -174,7 +172,7 @@ class Task:
         if self.running:
             self.cancel()
         else:
-            # Did the user forgot to call task.start() ?
+            # Did the user forget to call task.start() ?
             _log.warn(
                 "Task `%s` was not scheduled. Did you forget to start it ?",
                 self.coro.__name__
@@ -182,14 +180,12 @@ class Task:
 
     @property
     def cancelled(self):
-        """:class:`bool`: Check if the task has been cancelled or not.
-        """
+        """:class:`bool`: Check if the task has been cancelled or not."""
         return self.running and self._handle.cancelled()
 
     @property
     def running(self):
-        """:class:`bool`: Check if the task is running.
-        """
+        """:class:`bool`: Check if the task is running."""
         return self._handle is not None
 
     def start(self):
@@ -204,8 +200,7 @@ class Task:
         self._scheduler.register(self)
 
     def cancel(self):
-        """Cancel the task.
-        """
+        """Cancel the task."""
         if not self.running:
             raise TaskCancelError(
                 f'Task `{self.coro.__name__}` is not running.', self

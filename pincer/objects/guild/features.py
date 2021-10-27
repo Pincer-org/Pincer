@@ -6,7 +6,7 @@ from __future__ import annotations
 from enum import Enum, auto
 
 
-class GuildFeatures(Enum):
+class GuildFeature(Enum):
     """Represents Guild Features strings.
 
     Attributes
