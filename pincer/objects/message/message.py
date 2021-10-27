@@ -9,11 +9,6 @@ from dataclasses import dataclass
 
 from aiohttp import FormData, Payload
 
-<<<<<<< HEAD
-from .file import File
-from ...utils.api_object import APIObject
-=======
->>>>>>> main
 from ...exceptions import CommandReturnIsEmpty
 from ..app.interaction_base import CallbackType
 
@@ -36,15 +31,12 @@ try:
 except (ModuleNotFoundError, ImportError):
     PILLOW_IMPORT = False
 
-<<<<<<< HEAD
-=======
 if TYPE_CHECKING:
     from ..message.embed import Embed
     from ..message.file import File
     from ..message.user_message import AllowedMentions
     from ..app import InteractionFlags
     from .component import MessageComponent
->>>>>>> main
 
 
 @dataclass

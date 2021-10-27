@@ -8,12 +8,7 @@ from .embed import (
     EmbedVideo, EmbedFooter
 )
 from .emoji import Emoji
-<<<<<<< HEAD
-from .file import File
-from .message import AllowedMentions, Message
-=======
 from .message import Message
->>>>>>> main
 from .component import MessageComponent
 from .context import MessageContext
 from .reference import MessageReference

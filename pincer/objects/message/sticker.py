@@ -7,24 +7,14 @@ from enum import IntEnum
 from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
-<<<<<<< HEAD
-=======
-from ...utils.api_object import APIObject
->>>>>>> main
 from ...utils.types import MISSING
 from ...utils.api_object import APIObject
 
 if TYPE_CHECKING:
-<<<<<<< HEAD
     from typing import List, Optional
 
-    from ...utils.types import APINullable
-    from ..user.user import User
-    from ...utils.snowflake import Snowflake
-=======
     from ..user import User
     from ...utils import APINullable, Snowflake
->>>>>>> main
 
 
 class StickerType(IntEnum):

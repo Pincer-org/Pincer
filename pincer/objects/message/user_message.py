@@ -7,7 +7,6 @@ from enum import IntEnum, Enum
 from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
-<<<<<<< HEAD
 from .embed import Embed
 from ..user.user import User
 from ..guild.role import Role
@@ -32,28 +31,6 @@ if TYPE_CHECKING:
 
     from ...utils.types import APINullable
     from ...utils.timestamp import Timestamp
-=======
-from ..._config import GatewayConfig
-from ...utils.api_object import APIObject
-from ...utils.types import MISSING
-
-if TYPE_CHECKING:
-    from ..app.application import Application
-    from ..app.interaction_base import MessageInteraction
-    from ..guild.channel import Channel, ChannelMention
-    from ..guild.member import GuildMember
-    from ..guild.role import Role
-    from ..message.attachment import Attachment
-    from ..message.component import MessageComponent
-    from ..message.embed import Embed
-    from ..message.reaction import Reaction
-    from ..message.reference import MessageReference
-    from ..message.sticker import StickerItem
-    from ..user import User
-    from ...utils.snowflake import Snowflake
-    from ...utils.timestamp import Timestamp
-    from ...utils import APINullable
->>>>>>> main
 
 
 class MessageActivityType(IntEnum):
@@ -358,58 +335,12 @@ class UserMessage(APIObject):
     components: APINullable[List[MessageComponent]] = MISSING
     sticker_items: APINullable[List[StickerItem]] = MISSING
 
-<<<<<<< HEAD
-    def __post_init__(self):
-        self.id = convert(self.id, Snowflake.from_string)
-        self.channel_id = convert(self.channel_id, Snowflake.from_string)
-        self.author = convert(self.author, User.from_dict, client=self._client)
-        self.timestamp = convert(self.timestamp, Timestamp)
-        self.edited_timestamp = convert(self.edited_timestamp, Timestamp)
-        self.mentions = convert(self.mentions, PartialGuildMember.from_dict,
-                                client=self._client)
-        self.mention_roles = convert(self.mention_roles, Role.from_dict)
-        self.attachments = convert(self.attachments, Attachment.from_dict)
-        self.embeds = convert(self.embeds, Embed.from_dict)
-        self.mention_channels = convert(
-            self.mention_channels,
-            ChannelMention.from_dict
-        )
-        self.guild_id = convert(self.guild_id, Snowflake.from_string)
-        self.member = convert(self.member, GuildMember.from_dict,
-                              client=self._client)
-        self.reactions = convert(self.reactions, Reaction.from_dict)
-        self.webhook_id = convert(self.webhook_id, Snowflake.from_string)
-        self.activity = convert(self.activity, MessageActivity.from_dict)
-        self.application = convert(
-            self.application, Application.from_dict)
-        self.application_id = convert(
-            self.application_id,
-            Snowflake.from_string
-        )
-        self.message_reference = convert(
-            self.message_reference,
-            MessageReference.from_dict
-        )
-        # self.flags = convert(self.flags, MessageFlags.from_bytes)
-        # self.referenced_message = convert(
-        #     self.referenced_message,
-        #     Message.from_dict
-        # )
-        self.interaction = convert(
-            self.interaction,
-            MessageInteraction.from_dict
-        )
-        self.thread = convert(self.thread, Channel.from_dict,
-                              client=self._client)
-        self.components = convert(self.components, MessageComponent.from_dict)
-        self.sticker_items = convert(self.sticker_items, StickerItem.from_dict)
-=======
     def __str__(self):
         return self.content
->>>>>>> main
 
     async def get_most_recent(self):
-        """
+        """|coro|
+
         Certain Discord methods don't return the message object data after its
         updated. This function can be run to get the most recent version of the
         message object.
@@ -429,8 +360,7 @@ class UserMessage(APIObject):
         Create a reaction for the message. Requires the
         ``READ_MESSAGE_HISTORY` itent. ``ADD_REACTIONS`` intent is required if
         nobody else has reacted using the emoji.
-
-        :param emoji:
+        emoji:
             Character for emoji. Does not need to be URL encoded.
         """
 
@@ -441,8 +371,7 @@ class UserMessage(APIObject):
     async def unreact(self, emoji: str):
         """
         Delete a reaction the current user has made for the message.
-
-        :param emoji:
+        emoji:
             Character for emoji. Does not need to be URL encoded.
         """
 
@@ -454,11 +383,9 @@ class UserMessage(APIObject):
         """
         Deletes another user's reaction. Requires the ``MANAGE_MESSAGES``
         intent.
-
-        :param emoji:
+        emoji:
             Character for emoji. Does not need to be URL encoded.
-
-        :param user_id:
+        user_id:
             User ID
         """
 
@@ -473,11 +400,9 @@ class UserMessage(APIObject):
         # TODO: HTTP Client will need to refactored to allow parameters using aiohttp's system.
         """
         Returns the users that reacted with this emoji.
-
-        :param after:
+        after:
             Get users after this user ID. Returns all users if not provided.
-
-        :param limit:
+        limit:
             Max number of users to return (1-100). 25 if not provided.
         """
 
@@ -501,8 +426,7 @@ class UserMessage(APIObject):
         """
         Deletes all the reactions for a given emoji on a message. Requires the
         ``MANAGE_MESSAGES`` intent.
-
-        :param emoji:
+        emoji:
             Character for emoji. Does not need to be URL encoded.
         """
 
@@ -520,7 +444,8 @@ class UserMessage(APIObject):
         attachments: List[Attachment] = None,
         components: List[MessageComponent] = None
     ):
-        """
+        """|coro|
+
         Edit a previously sent message. The fields content, embeds, and flags
         can be edited by the original message author. Other users can only
         edit flags and only if they have the ``MANAGE_MESSAGES`` permission in
@@ -528,23 +453,21 @@ class UserMessage(APIObject):
         all previously set flags/bits in addition to ones that you are
         modifying.
 
-        :param content:
+        Parameters
+        ----------
+        content: :class:`str`
             The message contents (up to 2000 characters)
-
-        :param embeds:
+            |default| ``None``
+        embeds: List[:class:`~pincer.objects.message.embed.Embed`]
             Embedded rich content (up to 6000 characters)
-
-        :param flags:
+        flags: :class:`int`
             Edit the flags of a message (only ``SUPPRESS_EMBEDS`` can
             currently be set/unset)
-
-        :param allowed_mentions:
+        allowed_mentions: :class:`~pincer.objects.message.message.AllowedMentions`
             allowed mentions for the message
-
-        :param attachments:
+        attachments: List[:class:`~pincer.objects.message.attachment.Attachment`]
             attached files to keep
-
-        :param components:
+        components: List[:class:`~pincer.objects.message.component.MessageComponent`]
             the components to include with the message
         """
 
