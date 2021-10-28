@@ -335,14 +335,15 @@ class Interaction(APIObject):
             :func:`~pincer.objects.app.interaction.Interaction.ack`
             function.
         """
-        if self.has_acknowledged and not self.has_replied:
-            self.has_replied = True
-            return await self.edit(message)
-        elif self.has_replied:
+        if self.has_replied:
             raise UseFollowup(
                 "A response has already been sent to the interaction. "
                 "Please use a followup instead!"
             )
+        elif self.has_acknowledged:
+            self.has_replied = True
+            await self.edit(message)
+            return
 
         message = convert_message(self._client, message)
         content_type, data = message.serialize()

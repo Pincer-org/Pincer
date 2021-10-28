@@ -52,13 +52,11 @@ async def interaction_response_handler(
 
     if isasyncgenfunction(command):
         message = command(**kwargs)
-        started = False or interaction.has_replied
 
         async for msg in message:
-            if started:
+            if interaction.has_replied:
                 await interaction.followup(msg)
             else:
-                started = True
                 await interaction.reply(msg)
     else:
         message = await command(**kwargs)
