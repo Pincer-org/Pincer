@@ -77,7 +77,7 @@ class PartialGuildMember(APIObject):
     discriminator: str
     avatar: str
     public_flags: int
-    member: BaseMember
+    member: Optional[BaseMember]
 
 
 @dataclass
