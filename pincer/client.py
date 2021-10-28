@@ -24,6 +24,7 @@ from .objects import Role, User, Intents, Guild, ThrottleInterface, Channel
 from .objects.app.throttling import DefaultThrottleHandler
 from .utils import get_index, should_pass_cls, Coro
 from .utils.signature import get_params
+from .utils.event_mgr import EventMgr
 
 if TYPE_CHECKING:
     from .objects.app import AppCommand

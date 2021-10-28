@@ -134,14 +134,7 @@ def command(
 
             if isinstance(annotation, str):
                 TypeCache()
-                try:
-                    annotation = _eval_type(
-                        ForwardRef(annotation),
-                        TypeCache.cache,
-                        globals()
-                    )
-                except TypeError:
-                    annotation = eval(annotation, TypeCache.cache, globals())
+                annotation = eval(annotation, TypeCache.cache, globals())
 
             if isinstance(annotation, Descripted):
                 argument_description = annotation.description
@@ -187,9 +180,10 @@ def command(
                     choice_type = type(args[0].key)
 
                 for choice in args:
-                    choice_name = choice
+                    choice_description = choice
                     if isinstance(choice, Descripted):
-                        choice_name, choice = choice.key, choice.description
+                        choice_description = choice.description
+                        choice = choice.key
 
                         if choice_type is tuple:
                             choice_type = type(choice)
@@ -217,7 +211,7 @@ def command(
                         )
 
                     choices.append(AppCommandOptionChoice(
-                        name=choice_name,
+                        name=choice_description,
                         value=choice
                     ))
 

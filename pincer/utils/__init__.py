@@ -3,6 +3,7 @@
 
 from .api_object import APIObject, HTTPMeta
 from .conversion import convert
+from .event_mgr import EventMgr
 from .extraction import get_index
 from .insertion import should_pass_cls, should_pass_ctx
 from .signature import get_signature_and_params
@@ -14,7 +15,7 @@ from .types import (
 )
 
 __all__ = (
-    "APINullable", "APIObject", "Choices", "Coro", "Descripted",
+    "APINullable", "APIObject", "Choices", "Coro", "Descripted", "EventMgr",
     "HTTPMeta", "MISSING", "Snowflake", "Task", "TaskScheduler", "Timestamp",
     "choice_value_types", "convert", "get_index", "get_signature_and_params",
     "should_pass_cls", "should_pass_ctx"
