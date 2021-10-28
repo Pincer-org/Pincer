@@ -257,9 +257,30 @@ class Interaction(APIObject):
             self.channel_id
         )
 
+    async def response(self) -> UserMessage:
+        """|coro|
+
+        Gets the original response for an interaction.
+
+        Returns
+        -------
+        :class:`~pincer.objects.message.user_message.UserMessage`
+            The fetched response!
+        """
+        if not self.has_replied:
+            raise InteractionDoesNotExist(
+                "No interaction reply has been sent yet!"
+            )
+
+        resp = await self._http.get(
+            f"/webhooks/{self._client.bot.id}/{self.token}/messages/@original"
+        )
+        return UserMessage.from_dict(resp)
+
     async def ack(self, flags: Optional[InteractionFlags] = None):
-        """Acknowledge an interaction, any flags here are applied to the
-        reply.
+        """|coro|
+
+        Acknowledge an interaction, any flags here are applied to the reply.
 
         Parameters
         ----------
