@@ -36,6 +36,14 @@ pincer.utils.directory module
    :undoc-members:
    :show-inheritance:
 
+pincer.utils.event\_mgr module
+------------------------------
+
+.. automodule:: pincer.utils.event_mgr
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.utils.extraction module
 ------------------------------
 
