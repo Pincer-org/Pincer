@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from asyncio import gather, iscoroutine, sleep, ensure_future
 from dataclasses import dataclass
-from typing import Dict, TYPE_CHECKING, Union
+from typing import Dict, TYPE_CHECKING, Union, Optional
 
 from .command_types import AppCommandOptionType
 from .interaction_base import InteractionType, CallbackType
@@ -14,13 +14,15 @@ from ..guild.member import GuildMember
 from ..message.context import MessageContext
 from ..message.user_message import UserMessage
 from ..user import User
-from ...exceptions import InteractionDoesNotExist, UseFollowup
+from ...exceptions import InteractionDoesNotExist, UseFollowup, \
+    InteractionAlreadyAcknowledged, NotFoundError, InteractionTimedOut
 from ...utils import APIObject, convert
 from ...utils.convert_message import convert_message
 from ...utils.snowflake import Snowflake
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
+    from .interaction_flags import InteractionFlags
     from ...utils.convert_message import MessageConvertable
     from .command import AppCommandInteractionDataOption
     from ..message.message import Message
@@ -255,6 +257,38 @@ class Interaction(APIObject):
             self.channel_id
         )
 
+    async def ack(self, flags: Optional[InteractionFlags] = None):
+        """Acknowledge an interaction, any flags here are applied to the
+        reply.
+
+        Parameters
+        ----------
+        flags :class:`~pincer.objects.app.interaction_flags.InteractionFlags`
+            The flags which must be applied to the reply.
+
+        Raises
+        ------
+        :class:`~pincer.exceptions.InteractionAlreadyAcknowledged`
+            The interaction was already acknowledged, this can be
+            because a reply or ack was already sent.
+        """
+        if self.has_replied or self.has_acknowledged:
+            raise InteractionAlreadyAcknowledged(
+                "The interaction you are trying to acknowledge has already "
+                "been acknowledged"
+            )
+
+        self.has_acknowledged = True
+        await self._http.post(
+            f"interactions/{self.id}/{self.token}/callback",
+            {
+                "type": CallbackType.DEFERRED_MESSAGE,
+                "data": {
+                    "flags": flags
+                }
+            }
+        )
+
     async def __post_send_handler(self, message: Message):
         """Process the interaction after it was sent.
 
@@ -276,6 +310,7 @@ class Interaction(APIObject):
         message :class:`~pincer.objects.message.message.Message`
             The interaction message.
         """
+        self.has_replied = True
         ensure_future(self.__post_send_handler(message))
 
     async def reply(self, message: MessageConvertable):
@@ -294,8 +329,16 @@ class Interaction(APIObject):
             Exception raised when a reply has already been sent so a
             :func:`~pincer.objects.app.interactions.Interaction.followup`
             should be used instead.
+        :class:`~.pincer.errors.InteractionTimedOut`
+            Exception raised when discord had to wait too long for a reply.
+            You can extend the discord wait time by using the
+            :func:`~pincer.objects.app.interaction.Interaction.ack`
+            function.
         """
-        if self.has_replied:
+        if self.has_acknowledged and not self.has_replied:
+            self.has_replied = True
+            return await self.edit(message)
+        elif self.has_replied:
             raise UseFollowup(
                 "A response has already been sent to the interaction. "
                 "Please use a followup instead!"
@@ -304,15 +347,22 @@ class Interaction(APIObject):
         message = convert_message(self._client, message)
         content_type, data = message.serialize()
 
-        await self._http.post(
-            f"interactions/{self.id}/{self.token}/callback",
-            {
-                "type": CallbackType.MESSAGE,
-                "data": data
-            },
-            content_type=content_type
-        )
-        self.has_replied = True
+        try:
+            await self._http.post(
+                f"interactions/{self.id}/{self.token}/callback",
+                {
+                    "type": CallbackType.MESSAGE,
+                    "data": data
+                },
+                content_type=content_type
+            )
+        except NotFoundError:
+            raise InteractionTimedOut(
+                "Discord had to wait too long for the interaction reply, "
+                "you can extend the time it takes for discord to timeout by "
+                "acknowledging the interaction. (using interaction.ack)"
+            )
+
         self.__post_sent(message)
 
     async def edit(self, message: MessageConvertable) -> UserMessage:
