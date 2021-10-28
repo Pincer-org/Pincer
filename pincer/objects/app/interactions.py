@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from asyncio import gather, iscoroutine, sleep, ensure_future
 from dataclasses import dataclass
-from typing import Dict, TYPE_CHECKING
+from typing import Dict, TYPE_CHECKING, Union
 
 from .command_types import AppCommandOptionType
 from .interaction_base import InteractionType, CallbackType
@@ -14,11 +14,14 @@ from ..guild.member import GuildMember
 from ..message.context import MessageContext
 from ..message.user_message import UserMessage
 from ..user import User
+from ...exceptions import InteractionDoesNotExist, UseFollowup
 from ...utils import APIObject, convert
+from ...utils.convert_message import convert_message
 from ...utils.snowflake import Snowflake
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
+    from ...utils.convert_message import MessageConvertable
     from .command import AppCommandInteractionDataOption
     from ..message.message import Message
     from ..guild.channel import Channel
@@ -147,6 +150,8 @@ class Interaction(APIObject):
     member: APINullable[GuildMember] = MISSING
     user: APINullable[User] = MISSING
     message: APINullable[UserMessage] = MISSING
+    has_replied: bool = False
+    has_acknowledged: bool = False
 
     def __post_init__(self):
         self.id = convert(self.id, Snowflake.from_string)
@@ -239,17 +244,13 @@ class Interaction(APIObject):
 
         res = converter(option.value)
 
-        if iscoroutine(res):
-            option.value = await res
-            return
-
-        option.value = res
+        option.value = (await res) if iscoroutine(res) else res
 
     def convert_to_message_context(self, command):
         return MessageContext(
-            self.id,
             self.member or self.user,
             command,
+            self,
             self.guild_id,
             self.channel_id
         )
@@ -259,7 +260,7 @@ class Interaction(APIObject):
 
         Parameters
         ----------
-        message :class:`~.pincer.objects.message.message.Message`
+        message :class:`~pincer.objects.message.message.Message`
             The interaction message.
         """
 
@@ -272,21 +273,35 @@ class Interaction(APIObject):
 
         Parameters
         ----------
-        message :class:`~.pincer.objects.message.message.Message`
+        message :class:`~pincer.objects.message.message.Message`
             The interaction message.
         """
         ensure_future(self.__post_send_handler(message))
 
-    async def reply(self, message: Message):
+    async def reply(self, message: MessageConvertable):
         """|coro|
 
         Initial reply, only works if no ACK has been sent yet.
 
         Parameters
         ----------
-        message :class:`~.pincer.objects.message.message.Message`
+        message :class:`~pincer.utils.convert_message.MessageConvertable`
             The response message!
+
+        Raises
+        ------
+        :class:`~.pincer.errors.UseFollowup`
+            Exception raised when a reply has already been sent so a
+            :func:`~pincer.objects.app.interactions.Interaction.followup`
+            should be used instead.
         """
+        if self.has_replied:
+            raise UseFollowup(
+                "A response has already been sent to the interaction. "
+                "Please use a followup instead!"
+            )
+
+        message = convert_message(self._client, message)
         content_type, data = message.serialize()
 
         await self._http.post(
@@ -297,9 +312,10 @@ class Interaction(APIObject):
             },
             content_type=content_type
         )
+        self.has_replied = True
         self.__post_sent(message)
 
-    async def edit(self, message: Message) -> UserMessage:
+    async def edit(self, message: MessageConvertable) -> UserMessage:
         """|coro|
 
         Edit an interaction. This is also the way to reply to
@@ -307,9 +323,27 @@ class Interaction(APIObject):
 
         Parameters
         ----------
-        message :class:`~.pincer.objects.message.message.Message`
+        message :class:`~pincer.utils.convert_message.MessageConvertable`
             The new message!
+
+        Returns
+        -------
+        :class:`~pincer.objects.message.user_message.UserMessage`
+            The updated message object.
+
+        Raises
+        ------
+        :class:`~.pincer.errors.InteractionDoesNotExist`
+            Exception raised when no reply has been sent.
         """
+
+        if not self.has_replied:
+            raise InteractionDoesNotExist(
+                "The interaction whom you are trying to edit has not "
+                "been sent yet!"
+            )
+
+        message = convert_message(self._client, message)
         content_type, data = message.serialize()
 
         resp = await self._http.patch(
@@ -324,7 +358,18 @@ class Interaction(APIObject):
         """|coro|
 
         Delete the interaction.
+
+        Raises
+        ------
+        :class:`~pincer.errors.InteractionDoesNotExist`
+            Exception raised when no reply has been sent.
         """
+        if not self.has_replied:
+            raise InteractionDoesNotExist(
+                "The interaction whom you are trying to delete has not "
+                "been sent yet!"
+            )
+
         await self._http.delete(
             f"webhooks/{self._client.bot.id}/{self.token}/messages/@original"
         )
@@ -338,9 +383,9 @@ class Interaction(APIObject):
 
         Parameters
         ----------
-        followup :class:`~.pincer.objects.message.user_message.UserMessage`
+        followup :class:`~pincer.objects.message.user_message.UserMessage`
             The followup message that is being post processed.
-        message :class:`~.pincer.objects.message.message.Message`
+        message :class:`~pincer.objects.message.message.Message`
             The followup message.
         """
 
@@ -357,14 +402,14 @@ class Interaction(APIObject):
 
         Parameters
         ----------
-        followup :class:`~.pincer.objects.message.user_message.UserMessage`
+        followup :class:`~pincer.objects.message.user_message.UserMessage`
             The followup message that is being post processed.
-        message :class:`~.pincer.objects.message.message.Message`
+        message :class:`~pincer.objects.message.message.Message`
             The followup message.
         """
         ensure_future(self.__post_followup_send_handler(followup, message))
 
-    async def followup(self, message: Message) -> UserMessage:
+    async def followup(self, message: MessageConvertable) -> UserMessage:
         """|coro|
 
         Create a follow up message for the interaction.
@@ -372,14 +417,15 @@ class Interaction(APIObject):
 
         Parameters
         ----------
-        message :class:`~.pincer.objects.message.message.Message`
+        message :class:`~pincer.utils.convert_message.MessageConvertable`
             The message to sent.
 
         Returns
         -------
-        :class:`~.pincer.objects.message.user_message.UserMessage`
+        :class:`~pincer.objects.message.user_message.UserMessage`
             The message that has been sent.
         """
+        message = convert_message(self._client, message)
         content_type, data = message.serialize()
 
         resp = await self._http.post(
@@ -391,8 +437,11 @@ class Interaction(APIObject):
         self.__post_followup_sent(msg, message)
         return msg
 
-    async def edit_followup(self, message_id: int, message: Message) \
-            -> UserMessage:
+    async def edit_followup(
+            self,
+            message_id: int,
+            message: MessageConvertable
+    ) -> UserMessage:
         """|coro|
 
         Edit a followup message.
@@ -401,14 +450,15 @@ class Interaction(APIObject):
         ----------
         message_id :class:`int`
             The id of the original followup message.
-        message :class:`~.pincer.objects.message.message.Message`
-            The message to edit.
+        message :class:`~pincer.utils.convert_message.MessageConvertable`
+            The message new message.
 
         Returns
         -------
-        :class:`~.pincer.objects.message.user_message.UserMessage`
+        :class:`~pincer.objects.message.user_message.UserMessage`
             The updated message object.
         """
+        message = convert_message(self._client, message)
         content_type, data = message.serialize()
 
         resp = await self._http.patch(
@@ -432,7 +482,7 @@ class Interaction(APIObject):
 
         Returns
         -------
-        :class:`~.pincer.objects.message.user_message.UserMessage`
+        :class:`~pincer.objects.message.user_message.UserMessage`
             The fetched message object.
         """
 
@@ -441,16 +491,17 @@ class Interaction(APIObject):
         )
         return UserMessage.from_dict(resp)
 
-    async def delete_followup(self, message_id: int):
+    async def delete_followup(self, message: Union[UserMessage, int]):
         """|coro|
 
         Remove a followup message by id.
 
         Parameters
         ----------
-        message_id :class:`int`
-            The id of the followup message that must be deleted.
+        message Union[:class:`~pincer.objects.user_message.UserMessage`, :class:`int`]
+            The id/followup object of the followup message that must be deleted.
         """
+        message_id = message if isinstance(message, int) else message.id
 
         await self._http.delete(
             f"webhooks/{self._client.bot.id}/{self.token}/messages/{message_id}",

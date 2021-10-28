@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import Optional, Union, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ..app import ClientCommandStructure
+    from ..app import ClientCommandStructure, Interaction
     from ..guild.member import GuildMember
     from ..user import User
     from ...utils.snowflake import Snowflake
@@ -16,9 +16,6 @@ if TYPE_CHECKING:
 class MessageContext:
     """
     Represents the context of a message interaction.
-
-    :param id:
-        The ID of the interaction.
 
     :param author:
         The user whom invoked the interaction.
@@ -35,9 +32,9 @@ class MessageContext:
         The ID of the channel the interaction was invoked in.
         Can be None if it wasn't invoked in a channel.
     """
-    id: Snowflake
     author: Union[GuildMember, User]
     command: ClientCommandStructure
+    interaction: Interaction
 
     guild_id: Optional[Snowflake] = None
     channel_id: Optional[Snowflake] = None
