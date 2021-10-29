@@ -8,7 +8,7 @@ from asyncio import iscoroutinefunction, run, ensure_future
 from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
-from typing import Optional, Any, Union, Dict, Tuple, List, TYPE_CHECKING
+from typing import Callable, Optional, Any, Union, Dict, Tuple, List, TYPE_CHECKING
 
 from . import __package__
 from .commands import ChatCommandHandler
@@ -546,8 +546,47 @@ class Client(Dispatcher):
         """
         await self.process_event("payload", payload)
 
-    async def wait_for(self, event_name: str):
-        return await self.event_mgr.wait_for(event_name)
+    async def wait_for(
+        self,
+        event_name: str,
+        check: Optional[Callable[[Any], bool]] = None
+    ):
+        """
+        Parameters
+        ----------
+        event_name : str
+            The type of event. It should start with `on_`. This is the same
+            name that is used for @Client.event.
+        check : Callable[[Any], bool], default=None
+            This function only returns a value if this return true.
+
+        Returns
+        ------
+        Any
+            What the Discord API returns for this event.
+        """
+        return await self.event_mgr.wait_for(event_name, check)
+
+    def loop_on(
+        self,
+        event_name: str,
+        check: Optional[Callable[[Any], bool]] = None
+    ):
+        """
+        Parameters
+        ----------
+        event_name : str
+            The type of event. It should start with `on_`. This is the same
+            name that is used for @Client.event.
+        check : Callable[[Any], bool], default=None
+            This function only returns a value if this return true.
+
+        Yields
+        ------
+        Any
+            What the Discord API returns for this event.
+        """
+        return self.event_mgr.loop_on(event_name, check)
 
     async def get_guild(self, guild_id: int) -> Guild:
         """
