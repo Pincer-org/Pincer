@@ -166,6 +166,7 @@ class Client(Dispatcher):
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
         self.throttler = throttler
+        self.event_mgr = EventMgr()
         # TODO: Document guild prop
         # The guild value is only registered if the GUILD_MEMBERS
         # intent is enabled.
@@ -507,6 +508,8 @@ class Client(Dispatcher):
         try:
             key, args, kwargs = await self.handle_middleware(payload, name)
 
+            self.event_mgr.process_events(key, *args)
+
             if calls := self.get_event_coro(key):
                 self.execute_event(calls, *args, **kwargs)
 
@@ -542,6 +545,9 @@ class Client(Dispatcher):
             what specifically happened.
         """
         await self.process_event("payload", payload)
+
+    async def wait_for(self, event_name: str):
+        return await self.event_mgr.wait_for(event_name)
 
     async def get_guild(self, guild_id: int) -> Guild:
         """
