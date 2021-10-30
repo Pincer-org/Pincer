@@ -61,6 +61,7 @@ class EventMgr:
     stack : List[_DiscordEvent]
         The List of events that need to be processed.
     """
+
     def __init__(self):
         self.stack = []
 
@@ -94,7 +95,7 @@ class EventMgr:
         ----------
         event : _DiscordEvent
             Event to remove from the stack.
-        
+
         Returns
         -------
         Any
