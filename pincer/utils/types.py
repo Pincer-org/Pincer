@@ -5,7 +5,7 @@ from __future__ import annotations
 from sys import modules
 from typing import TypeVar, Callable, Coroutine, Any, Union, Literal, Tuple
 
-from pincer.exceptions import InvalidAnnotation
+from pincer.exceptions import InvalidArgumentAnnotation
 
 
 class MissingType:
@@ -69,7 +69,7 @@ class TypeCache(metaclass=Singleton):
 class _TypeInstanceMeta(type):
     def __getitem__(cls, args: Tuple[T, str]):
         if not isinstance(args, tuple) or len(args) != 2:
-            raise InvalidAnnotation(
+            raise InvalidArgumentAnnotation(
                 "Descripted arguments must be a tuple of length 2. "
                 "(if you are using this as the intented type, just "
                 "pass two arguments)"

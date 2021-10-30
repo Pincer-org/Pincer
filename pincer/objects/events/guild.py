@@ -5,10 +5,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from ..guild.member import GuildMember
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
-from ...utils.snowflake import Snowflake
-from ...utils.timestamp import Timestamp
 from ...utils.types import MISSING, APINullable
 
 if TYPE_CHECKING:
@@ -18,7 +17,6 @@ if TYPE_CHECKING:
     from ..guild.role import Role
     from ..message.emoji import Emoji
     from ..message.sticker import Sticker
-    from ..guild.member import GuildMember
     from ...utils.snowflake import Snowflake
     from ...utils.timestamp import Timestamp
     from .presence import PresenceUpdateEvent

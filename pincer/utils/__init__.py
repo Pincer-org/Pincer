@@ -6,7 +6,7 @@ from .conversion import convert
 from .directory import chdir
 from .extraction import get_index
 from .insertion import should_pass_cls, should_pass_ctx
-from .signature import get_signature_and_params
+from .signature import get_params, get_signature_and_params
 from .snowflake import Snowflake
 from .tasks import Task, TaskScheduler
 from .timestamp import Timestamp

@@ -3,34 +3,87 @@
 
 from __future__ import annotations
 
-from enum import IntEnum, Enum
+from enum import Enum, IntEnum
 from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
 from .embed import Embed
-from ..user.user import User
-from ..guild.role import Role
 from .reaction import Reaction
 from .sticker import StickerItem
 from .attachment import Attachment
-from ...utils.types import MISSING
-from ..._config import GatewayConfig
-from ...utils.conversion import convert
 from .component import MessageComponent
 from .reference import MessageReference
+from ..user.user import User
+from ..guild.role import Role
+from ..app.application import Application
+from ..app.interaction_base import MessageInteraction
+from ..guild.member import GuildMember
+from ...utils.types import MISSING
+from ..._config import GatewayConfig
 from ...utils.snowflake import Snowflake
 from ...utils.api_object import APIObject
-from ..app.application import Application
-from ..guild.channel import Channel, ChannelMention
 from ...utils.conversion import construct_client_dict
-from ..app.interaction_base import MessageInteraction
-from ..guild.member import GuildMember, PartialGuildMember
 
 if TYPE_CHECKING:
     from typing import List, Optional, Union
 
+    from ..guild.channel import Channel, ChannelMention
     from ...utils.types import APINullable
     from ...utils.timestamp import Timestamp
+
+
+@dataclass
+class AllowedMentions(APIObject):
+    """Represents the entities the client can mention
+
+    Attributes
+    ----------
+    parse: List[:class:`~pincer.objects.message.user_message.AllowedMentionTypes`]
+        An array of allowed mention types to parse from the content.
+    roles: List[Union[:class:`~pincer.objects.guild.role.Role`, :class:`~pincer.utils.snowflake.Snowflake`]]
+        List of ``Role`` objects or snowflakes of allowed mentions.
+    users: List[Union[:class:`~pincer.objects.user.user.User` :class:`~pincer.utils.snowflake.Snowflake`]]
+        List of ``user`` objects or snowflakes of allowed mentions.
+    reply: :class:`bool`
+        If replies should mention the author.
+        |default| :data:`True`
+    """  # noqa: E501
+
+    parse: List[AllowedMentionTypes]
+    roles: List[Union[Role, Snowflake]]
+    users: List[Union[User, Snowflake]]
+    reply: bool = True
+
+    def to_dict(self):
+        def get_str_id(obj: Union[Snowflake, User, Role]) -> str:
+            if hasattr(obj, "id"):
+                obj = obj.id
+
+            return str(obj)
+
+        return {
+            "parse": self.parse,
+            "roles": list(map(get_str_id, self.roles)),
+            "users": list(map(get_str_id, self.users)),
+            "replied_user": self.reply
+        }
+
+
+class AllowedMentionTypes(str, Enum):
+    """The allowed mentions.
+
+    Attributes
+    ----------
+    ROLES:
+        Controls role mentions
+    USERS:
+        Controls user mentions
+    EVERYONE:
+        Controls @everyone and @here mentions
+    """
+    ROLES = "roles"
+    USERS = "users"
+    EVERYONE = "everyone"
 
 
 class MessageActivityType(IntEnum):
@@ -187,46 +240,6 @@ class MessageActivity(APIObject):
     """
     type: MessageActivityType
     party_id: APINullable[str] = MISSING
-
-
-class AllowedMentionTypes(str, Enum):
-    """The allowed mentions.
-
-    Attributes
-    ----------
-    ROLES:
-        Controls role mentions
-    USERS:
-        Controls user mentions
-    EVERYONE:
-        Controls @everyone and @here mentions
-    """
-    ROLES = "roles"
-    USERS = "users"
-    EVERYONE = "everyone"
-
-
-@dataclass
-class AllowedMentions(APIObject):
-    parse: List[AllowedMentionTypes]
-    roles: List[Union[Role, Snowflake]]
-    users: List[Union[User, Snowflake]]
-    reply: bool = True
-
-    @staticmethod
-    def get_str_id(obj: Union[Snowflake, User, Role]) -> str:
-        if hasattr(obj, "id"):
-            obj = obj.id
-
-        return str(obj)
-
-    def to_dict(self):
-        return {
-            "parse": self.parse,
-            "roles": list(map(self.get_str_id, self.roles)),
-            "users": list(map(self.get_str_id, self.users)),
-            "replied_user": self.reply
-        }
 
 
 @dataclass

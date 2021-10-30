@@ -12,6 +12,8 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from asyncio import iscoroutinefunction, run, ensure_future
 
 from . import __package__
+from .core.http import HTTPClient
+from .commands import ChatCommandHandler
 from .utils.types import Coro
 from .middleware import middleware
 from .objects.guild.role import Role
@@ -29,13 +31,10 @@ from .exceptions import (
 if TYPE_CHECKING:
     from .objects.user import User
     from .objects.guild import Guild
-    from .core.http import HTTPClient
     from .objects.app import AppCommand
     from .utils.snowflake import Snowflake
-    from .commands import ChatCommandHandler
     from .objects.app.intents import Intents
     from .core.dispatch import GatewayDispatch
-    from .objects.app.command import AppCommand
     from .objects.app.throttling import ThrottleInterface
 
 _log = logging.getLogger(__package__)

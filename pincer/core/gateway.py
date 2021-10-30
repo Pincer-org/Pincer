@@ -8,10 +8,8 @@ import logging
 import zlib
 from platform import system
 from typing import TYPE_CHECKING
-from asyncio import AbstractEventLoop
-from asyncio import get_event_loop, ensure_future
+from asyncio import AbstractEventLoop, ensure_future, get_event_loop
 from typing import Dict, Callable, Awaitable, Optional
-from asyncio import get_event_loop, AbstractEventLoop, ensure_future
 
 from websockets import connect
 from websockets.legacy.client import WebSocketClientProtocol
@@ -19,14 +17,14 @@ from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
 
 from . import __package__
 from ..core.dispatch import GatewayDispatch
+from ..core.heartbeat import Heartbeat
+from .._config import GatewayConfig
 from ..exceptions import (
     PincerError, InvalidTokenError, UnhandledException,
     _InternalPerformReconnectError, DisallowedIntentsError
 )
 
 if TYPE_CHECKING:
-    from .._config import GatewayConfig
-    from ..core.heartbeat import Heartbeat
     from ..objects.app.intents import Intents
 
 ZLIB_SUFFIX = b'\x00\x00\xff\xff'

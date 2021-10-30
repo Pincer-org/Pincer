@@ -11,8 +11,9 @@ from .app.intents import Intents
 from .app.interaction_base import (
     CallbackType, InteractionType, MessageInteraction
 )
+from .app.interaction_flags import InteractionFlags
 from .app.interactions import (
-    InteractionFlags, ResolvedData, InteractionData, Interaction
+    ResolvedData, InteractionData, Interaction
 )
 from .app.select_menu import SelectOption, SelectMenu
 from .app.session_start_limit import SessionStartLimit
@@ -82,7 +83,7 @@ from .message.embed import (
 )
 from .message.emoji import Emoji
 from .message.file import File
-from .message.message import AllowedMentions, Message
+from .message.message import Message
 from .message.component import MessageComponent
 from .message.context import MessageContext
 from .message.reference import MessageReference
@@ -92,7 +93,7 @@ from .message.sticker import (
 )
 from .message.user_message import (
     MessageActivityType, MessageFlags, MessageType, MessageActivity,
-    AllowedMentionTypes, UserMessage
+    AllowedMentions, AllowedMentionTypes, UserMessage
 )
 from .user.connection import Connection
 from .user.integration import (

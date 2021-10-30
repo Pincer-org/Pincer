@@ -6,7 +6,6 @@ from __future__ import annotations
 from asyncio import sleep, ensure_future
 from dataclasses import dataclass
 from enum import IntEnum
-from dataclasses import dataclass
 from typing import overload, TYPE_CHECKING
 
 from ...utils.types import MISSING

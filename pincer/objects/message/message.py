@@ -7,22 +7,20 @@ from json import dumps
 from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
-from aiohttp import FormData, Payload
+from aiohttp import FormData
 
 from ...exceptions import CommandReturnIsEmpty
-from ..app.interaction_base import CallbackType
 
 if TYPE_CHECKING:
     from typing import Dict, Union, List, Optional, Tuple
 
+    from aiohttp import Payload
 
     from .embed import Embed
-    from ..user.user import User
-    from ..guild.role import Role
     from .component import MessageComponent
-    from ...utils.snowflake import Snowflake
-    from .user_message import AllowedMentionTypes
     from ..app.interactions import InteractionFlags
+    from ..message.file import File
+    from ..message.user_message import AllowedMentions
 
 PILLOW_IMPORT = True
 
@@ -30,50 +28,6 @@ try:
     from PIL.Image import Image
 except (ModuleNotFoundError, ImportError):
     PILLOW_IMPORT = False
-
-if TYPE_CHECKING:
-    from ..message.embed import Embed
-    from ..message.file import File
-    from ..message.user_message import AllowedMentions
-    from ..app import InteractionFlags
-    from .component import MessageComponent
-
-
-@dataclass
-class AllowedMentions(APIObject):
-    """Represents the entities the client can mention
-
-    Attributes
-    ----------
-    parse: List[:class:`~pincer.objects.message.user_message.AllowedMentionTypes`]
-        An array of allowed mention types to parse from the content.
-    roles: List[Union[:class:`~pincer.objects.guild.role.Role`, :class:`~pincer.utils.snowflake.Snowflake`]]
-        List of ``Role`` objects or snowflakes of allowed mentions.
-    users: List[Union[:class:`~pincer.objects.user.user.User` :class:`~pincer.utils.snowflake.Snowflake`]]
-        List of ``user`` objects or snowflakes of allowed mentions.
-    reply: :class:`bool`
-        If replies should mention the author.
-        |default| :data:`True`
-    """  # noqa: E501
-
-    parse: List[AllowedMentionTypes]
-    roles: List[Union[Role, Snowflake]]
-    users: List[Union[User, Snowflake]]
-    reply: bool = True
-
-    def to_dict(self):
-        def get_str_id(obj: Union[Snowflake, User, Role]) -> str:
-            if hasattr(obj, "id"):
-                obj = obj.id
-
-            return str(obj)
-
-        return {
-            "parse": self.parse,
-            "roles": list(map(get_str_id, self.roles)),
-            "users": list(map(get_str_id, self.users)),
-            "replied_user": self.reply
-        }
 
 
 @dataclass
