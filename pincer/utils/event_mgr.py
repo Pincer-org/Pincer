@@ -6,6 +6,13 @@ from typing import Any, Callable, Optional
 
 
 class _DiscordEvent(Event):
+    """
+    Attributes
+    ----------
+    return_value : Optional[str]
+        Used to store the arguments from ``can_be_set`` so they can be
+        returned later.
+    """
 
     def __init__(self, event_name: str, check: Optional[Callable[[Any], bool]]):
         """
@@ -16,11 +23,6 @@ class _DiscordEvent(Event):
         check : Optional[Callable[[Any], bool]]
             ``can_be_set`` only returns true if this function returns true.
             Will be ignored if set to None.
-        Attributes
-        ----------
-        return_value : Optional[str]
-            Used to store the arguments from ``can_be_set`` so they can be
-            returned later.
         """
         self.event_name = event_name
         self.check = check
@@ -53,13 +55,13 @@ class _DiscordEvent(Event):
 
 
 class EventMgr:
+    """
+    Attributes
+    ----------
+    stack : List[_DiscordEvent]
+        The List of events that need to be processed.
+    """
     def __init__(self):
-        """
-        Attributes
-        ----------
-        stack : List[_DiscordEvent]
-            The List of events that need to be processed.
-        """
         self.stack = []
 
     def add_event(self, event_name: str, check: Callable):
