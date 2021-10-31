@@ -5,14 +5,10 @@ from __future__ import annotations
 
 import logging
 import re
-from copy import deepcopy
-from typing import get_origin, get_args, TYPE_CHECKING
 from asyncio import iscoroutinefunction, gather
+from copy import deepcopy
 from inspect import Signature, isasyncgenfunction
-from typing import (
-    Optional, Dict, List, Any, Tuple, get_origin, get_args, Union,
-    ForwardRef, _eval_type
-)
+from typing import TYPE_CHECKING, get_origin, get_args
 
 from . import __package__
 from .utils.snowflake import Snowflake
@@ -29,11 +25,11 @@ from .objects.app import (
 from .utils import get_index, should_pass_ctx
 from .utils.signature import get_signature_and_params
 from .utils.types import Coro, MISSING, choice_value_types, Choices
-from .exceptions import (
-    CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
-    CommandDescriptionTooLong, InvalidCommandGuild, InvalidCommandName
-)
+
 from .utils.types import Singleton, TypeCache, Descripted
+
+if TYPE_CHECKING:
+    from typing import Optional, Dict, List, Any, Tuple, Union
 
 COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 
