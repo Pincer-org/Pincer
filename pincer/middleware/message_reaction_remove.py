@@ -10,16 +10,25 @@ from ..utils.conversion import construct_client_dict
 
 
 async def message_reaction_remove_middleware(self, payload: GatewayDispatch):
-    """
-    Middleware for ``on_message_reaction_remove``,
-        creates a object for the message reaction that is removed
+    """|coro|
 
-    :param self:
-        The current client.
+    Middleware for ``on_message_reaction_remove`` event.
 
-    :param payload:
+    Parameters
+    ----------
+    self : :class:`Client`
+        The current client/bot.
+
+    payload : :class:`GatewayDispatch`
         The data received from the message reaction remove event.
+
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.events.message.MessageReactionRemoveEvent`]]
+        ``on_message_reaction_remove`` and an ``MessageReactionRemoveEvent``
     """
+
     return "on_message_reaction_remove", [
         MessageReactionRemoveEvent.from_dict(
             construct_client_dict(

@@ -10,16 +10,25 @@ from ..utils.conversion import construct_client_dict
 
 
 async def message_reaction_add_middleware(self, payload: GatewayDispatch):
-    """
-    Middleware for ``on_message_reaction_add``,
-        creates a object for the message reaction that is added
+    """|coro|
 
-    :param self:
-        The current client.
+    Middleware for ``on_message_reaction_add`` event.
 
-    :param payload:
+    Parameters
+    ----------
+    self : :class:`Client`
+        The current client/bot.
+
+    payload : :class:`GatewayDispatch`
         The data received from the message reaction add event.
+
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.events.message.MessageReactionAddEvent`]]
+        ``on_message_reaction_add`` and an ``MessageReactionAddEvent``
     """
+
     return "on_message_reaction_add", [
         MessageReactionAddEvent.from_dict(
             construct_client_dict(

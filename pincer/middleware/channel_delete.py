@@ -9,15 +9,22 @@ from ..utils.conversion import construct_client_dict
 
 
 async def channel_delete_middleware(self, payload: GatewayDispatch):
-    """
+    """|coro|
+
     Middleware for ``on_channel_delete``,
-        creates a object for the channel that is deleted
 
-    :param self:
-        The current client.
+    Parameters
+    ----------
+    self : :class:`Client`
+        The current client/bot.
 
-    :param payload:
+    payload : :class:`pincer.core.dispatch.GatewayDispatch`
         The data received from the channel delete event.
+
+    Returns
+    -------
+    Tuple[:class:`str`, `~pincer.objects.guild.channel.Channel`]
+        ``on_channel_delete`` and a ``Channel``
     """
     return "on_channel_delete", [
         Channel.from_dict(construct_client_dict(self, payload.data))

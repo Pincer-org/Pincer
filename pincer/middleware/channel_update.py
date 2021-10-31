@@ -9,16 +9,25 @@ from ..utils.conversion import construct_client_dict
 
 
 async def channel_update_middleware(self, payload: GatewayDispatch):
-    """
-    Middleware for ``on_channel_update``,
-        creates a object for the channel that is updated
+    """|coro|
 
-    :param self:
-        The current client.
+    Middleware for ``on_channel_update`` event.
 
-    :param payload:
+    Parameters
+    ----------
+    self : :class:`Client`
+        The current client/bot.
+
+    payload : :class:`GatewayDispatch`
         The data received from the channel update event.
+
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.channel.channel.Channel`]]
+        ``on_channel_update`` and a ``Channel``
     """
+
     return "on_channel_update", [
        Channel.from_dict(construct_client_dict(self, payload.data))
     ]

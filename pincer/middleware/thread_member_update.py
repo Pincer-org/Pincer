@@ -10,16 +10,25 @@ from ..utils.conversion import construct_client_dict
 
 
 async def thread_member_update_middleware(self, payload: GatewayDispatch):
-    """
-    Middleware for ``on_thread_member_update``,
-        creates a object for the thread member that is updated
+    """|coro|
 
-    :param self:
-        The current client.
+    Middleware for ``on_thread_member_update`` event.
 
-    :param payload:
+    Parameters
+    ----------
+    self : :class:`Client`
+        The current client/bot.
+
+    payload : :class:`GatewayDispatch`
         The data received from the thread member update event.
+
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.thread.ThreadMember`]]
+        ``on_thread_member_update`` and an ``ThreadMember``
     """
+
     return "on_thread_member_update", [
         ThreadMember.from_dict(construct_client_dict(
             self,

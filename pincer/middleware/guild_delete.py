@@ -9,16 +9,25 @@ from ..utils.conversion import construct_client_dict
 
 
 async def guild_delete_middleware(self, payload: GatewayDispatch):
-    """
-    Middleware for ``on_guild_delete``,
-        creates a object for the guild that is deleted
+    """|coro|
 
-    :param self:
-        The current client.
+    Middleware for ``on_guild_delete`` event.
 
-    :param payload:
+    Parameters
+    ----------
+    self : :class:`Client`
+        The current client/bot.
+
+    payload : :class:`GatewayDispatch`
         The data received from the guild delete event.
+
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.guild.UnavailableGuild`]]
+        ``on_guild_delete`` and an ``UnavailableGuild``
     """
+
     return "on_guild_delete", [
         UnavailableGuild.from_dict(construct_client_dict(self, payload.data))
     ]

@@ -10,16 +10,25 @@ from ..utils.conversion import construct_client_dict
 
 
 async def guild_update_middleware(self, payload: GatewayDispatch):
-    """
-    Middleware for ``on_guild_update``,
-        creates a object for the guild that is updated
+    """|coro|
 
-    :param self:
-        The current client.
+    Middleware for ``on_guild_update`` event.
 
-    :param payload:
+    Parameters
+    ----------
+    self : :class:`Client`
+        The current client/bot.
+
+    payload : :class:`GatewayDispatch`
         The data received from the guild update event.
+
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.guild.Guild`]]
+        ``on_guild_Update`` and an ``Guild``
     """
+
     channel_list = payload.data.pop("channels", [])
 
     channels: List[Channel] = [

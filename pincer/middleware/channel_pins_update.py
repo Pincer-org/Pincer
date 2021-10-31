@@ -9,16 +9,24 @@ from ..utils import Timestamp
 
 
 async def channel_pins_update_middleware(self, payload: GatewayDispatch):
-    """
+    """|coro|
+
     Middleware for ``on_channel_pins_update``,
-        creates a object for the message pinned/unpinned
 
-    :param self:
-        The current client.
+    Parameters
+    ----------
+    self : :class:`Client`
+        The current client/bot.
 
-    :param payload:
+    payload : :class:`pincer.core.dispatch.GatewayDispatch`
         The data received from the channel pins update event.
+
+    Returns
+    -------
+    Tuple[:class:`str`, `~pincer.objects.guild.channel.Channel`]
+        ``on_channel_pins_update`` and a ``Channel``
     """
+
     return "on_channel_pins_update", [
         ChannelPinsUpdateEvent.from_dict(payload.data)
     ]

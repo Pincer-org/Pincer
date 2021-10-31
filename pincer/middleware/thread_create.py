@@ -9,15 +9,25 @@ from ..utils.conversion import construct_client_dict
 
 
 def thread_create_middleware(self, payload: GatewayDispatch):
-    """
+    """|coro|
+
     Middleware for ``on_thread_create`` event.
 
-    :param self:
-        The current client
+    Parameters
+    ----------
+    self : :class:`Client`
+        The current client/bot.
 
-    :param payload:
+    payload : :class:`GatewayDispatch`
         The data received from the thread create event.
+
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.channel.Channel`]]
+        ``on_thread_create`` and an ``Channel``
     """
+
     return "on_thread_create", [
         Channel.from_dict(construct_client_dict(self, payload.data))
     ]

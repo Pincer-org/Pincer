@@ -14,15 +14,25 @@ from ..utils.conversion import construct_client_dict
 
 
 async def thread_list_sync(self, payload: GatewayDispatch):
-    """
+    """|coro|
+
     Middleware for ``on_thread_list_sync`` event.
 
-    :param self:
-        The current client
+    Parameters
+    ----------
+    self : :class:`Client`
+        The current client/bot.
 
-    :param payload:
+    payload : :class:`GatewayDispatch`
         The data received from the thread list sync event.
+
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.events.thread.ThreadListSyncEvent`]]
+        ``on_thread_list_sync`` and an ``ThreadListSyncEvent``
     """
+
     threads: List[Channel] = [
         Channel.from_dict(construct_client_dict(self, thread))
         for thread in payload.data.pop("threads")

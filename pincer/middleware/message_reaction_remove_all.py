@@ -11,16 +11,25 @@ from ..utils.conversion import construct_client_dict
 async def message_reaction_remove_all_middleware(
     self,
     payload: GatewayDispatch):
-    """
-    Middleware for ``on_message_reaction_remove_all``,
-        creates a object for the message reactions that are removed
+    """|coro|
 
-    :param self:
-        The current client.
+    Middleware for ``on_message_reaction_remove_all`` event.
 
-    :param payload:
+    Parameters
+    ----------
+    self : :class:`Client`
+        The current client/bot.
+
+    payload : :class:`GatewayDispatch`
         The data received from the message reaction remove all event.
+
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.events.message.MessageReactionRemoveAllEvent`]]
+        ``on_message_reaction_remove_all`` and an ``MessageReactionRemoveAllEvent``
     """
+
     return "on_message_reaction_remove_all", [
         MessageReactionRemoveAllEvent.from_dict(
             construct_client_dict(self, payload.data)

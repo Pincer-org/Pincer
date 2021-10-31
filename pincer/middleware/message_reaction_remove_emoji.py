@@ -11,16 +11,25 @@ from ..utils.conversion import construct_client_dict
 
 async def message_reaction_remove_emoji_middleware(self,
                                                    payload: GatewayDispatch):
-    """
-    Middleware for ``on_message_reaction_remove_emoji``,
-        creates a object for the message reaction emoji that is removed
+    """|coro|
 
-    :param self:
-        The current client.
+    Middleware for ``on_message_reaction_remove_emoji`` event.
 
-    :param payload:
-        The data received from the message reaction remove event.
+    Parameters
+    ----------
+    self : :class:`Client`
+        The current client/bot.
+
+    payload : :class:`GatewayDispatch`
+        The data received from the message reaction remove emoji event.
+
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.events.message.MessageReactionRemoveEmojiEvent`]]
+        ``on_message_reaction_remove_emoji`` and an ``MessageReactionRemoveEmojiEvent``
     """
+
     return "on_message_reaction_remove_emoji", [
         MessageReactionRemoveEmojiEvent.from_dict(
             construct_client_dict(
