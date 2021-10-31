@@ -8,6 +8,7 @@ from .embed import (
     EmbedVideo, EmbedFooter
 )
 from .emoji import Emoji
+from .file import File
 from .message import Message
 from .component import MessageComponent
 from .context import MessageContext

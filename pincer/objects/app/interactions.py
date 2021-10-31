@@ -9,18 +9,14 @@ from typing import Dict, TYPE_CHECKING
 
 from .command_types import AppCommandOptionType
 from .interaction_base import InteractionType, CallbackType
-from ..app.select_menu import SelectOption
 from ..guild.member import GuildMember
+from ..app.select_menu import SelectOption
+from ..message.user_message import UserMessage
+from ..user import User
+from ..message.context import MessageContext
 from ...utils.conversion import convert
 from ...utils.snowflake import Snowflake
 from ...utils.api_object import APIObject
-from ..app.select_menu import SelectOption
-from ..message.context import MessageContext
-from .interaction_base import InteractionType
-from ..message.user_message import UserMessage
-from ..user import User
-from ...utils import APIObject, convert
-from ...utils.snowflake import Snowflake
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:

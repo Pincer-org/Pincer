@@ -18,7 +18,7 @@ from ..utils.signature import get_params, get_signature_and_params
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 
 if TYPE_CHECKING:
-    from typing import List
+    from typing import List, Tuple
 
 
 _log = logging.getLogger(__name__)

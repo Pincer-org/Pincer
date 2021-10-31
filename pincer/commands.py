@@ -5,21 +5,16 @@ from __future__ import annotations
 
 import logging
 import re
-from copy import deepcopy
-from typing import get_origin, get_args
 from asyncio import iscoroutinefunction, gather
+from copy import deepcopy
 from inspect import Signature, isasyncgenfunction
-from typing import (
-    Optional, Dict, List, Any, Tuple, get_origin, get_args, Union,
-    ForwardRef, _eval_type
-)
+from typing import TYPE_CHECKING, get_origin, get_args
 
 from . import __package__
-from .client import Client
 from .utils.snowflake import Snowflake
 from .exceptions import (
     CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
-    InvalidAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
+    InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
     InvalidCommandName
 )
 from .objects import ThrottleScope, AppCommand, Role, User, Channel, Guild
@@ -29,15 +24,12 @@ from .objects.app import (
 )
 from .utils import get_index, should_pass_ctx
 from .utils.signature import get_signature_and_params
-from .objects.app.throttle_scope import ThrottleScope
-from .objects.app.command import AppCommandOptionType, AppCommand
 from .utils.types import Coro, MISSING, choice_value_types, Choices
-from .exceptions import (
-    CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
-    InvalidArgumentAnnotation, CommandDescriptionTooLong,
-    InvalidCommandGuild, InvalidCommandName
-)
+
 from .utils.types import Singleton, TypeCache, Descripted
+
+if TYPE_CHECKING:
+    from typing import Optional, Dict, List, Any, Tuple, Union
 
 COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 
@@ -55,6 +47,9 @@ _options_type_link = {
     Channel: AppCommandOptionType.CHANNEL,
     Role: AppCommandOptionType.ROLE,
 }
+
+if TYPE_CHECKING:
+    from .client import Client
 
 
 def command(
@@ -234,7 +229,7 @@ def command(
                 args = get_args(annotation)
 
                 if len(args) > 25:
-                    raise InvalidAnnotation(
+                    raise InvalidArgumentAnnotation(
                         f"Choices/Literal annotation `{annotation}` on "
                         f"parameter `{param}` in command `{cmd}` "
                         f"(`{func.__name__}`) amount exceeds limit of 25 items!"
@@ -260,7 +255,7 @@ def command(
                             lambda x: x.__name__,
                             choice_value_types
                         ))
-                        raise InvalidAnnotation(
+                        raise InvalidArgumentAnnotation(
                             f"Choices/Literal annotation `{annotation}` on "
                             f"parameter `{param}` in command `{cmd}` "
                             f"(`{func.__name__}`), invalid type received. "
@@ -269,7 +264,7 @@ def command(
                             f"{type(choice).__name__} was given!"
                         )
                     elif not isinstance(choice, choice_type):
-                        raise InvalidAnnotation(
+                        raise InvalidArgumentAnnotation(
                             f"Choices/Literal annotation `{annotation}` on "
                             f"parameter `{param}` in command `{cmd}` "
                             f"(`{func.__name__}`), all values must be of the "
@@ -285,7 +280,7 @@ def command(
 
             param_type = _options_type_link.get(annotation)
             if not param_type:
-                raise InvalidAnnotation(
+                raise InvalidArgumentAnnotation(
                     f"Annotation `{annotation}` on parameter "
                     f"`{param}` in command `{cmd}` (`{func.__name__}`) is not "
                     "a valid type."
