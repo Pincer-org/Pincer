@@ -549,7 +549,8 @@ class Client(Dispatcher):
     async def wait_for(
         self,
         event_name: str,
-        check: Optional[Callable[[Any], bool]] = None
+        check: Optional[Callable[[Any], bool]] = None,
+        timeout: Optional[float] = None
     ):
         """
         Parameters
@@ -559,18 +560,21 @@ class Client(Dispatcher):
             name that is used for @Client.event.
         check : Callable[[Any], bool], default=None
             This function only returns a value if this return true.
+        timeout: Union[float, None]
+            Amount of seconds before timeout.
 
         Returns
         ------
         Any
             What the Discord API returns for this event.
         """
-        return await self.event_mgr.wait_for(event_name, check)
+        return await self.event_mgr.wait_for(event_name, check, timeout)
 
-    def loop_on(
+    def loop_for(
         self,
         event_name: str,
-        check: Optional[Callable[[Any], bool]] = None
+        check: Optional[Callable[[Any], bool]] = None,
+        timeout: Optional[float] = None
     ):
         """
         Parameters
@@ -580,13 +584,15 @@ class Client(Dispatcher):
             name that is used for @Client.event.
         check : Callable[[Any], bool], default=None
             This function only returns a value if this return true.
+        timeout: Union[float, None]
+            Amount of seconds before timeout. Timeouts are for each loop.
 
         Yields
         ------
         Any
             What the Discord API returns for this event.
         """
-        return self.event_mgr.loop_on(event_name, check)
+        return self.event_mgr.loop_on(event_name, check, timeout)
 
     async def get_guild(self, guild_id: int) -> Guild:
         """

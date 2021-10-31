@@ -1,8 +1,8 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from asyncio import Event
-from typing import Any, Callable, Optional
+from asyncio import Event, wait_for as aio_wait_for
+from typing import Any, Callable, Union
 
 
 class _DiscordEvent(Event):
@@ -14,7 +14,11 @@ class _DiscordEvent(Event):
         returned later.
     """
 
-    def __init__(self, event_name: str, check: Optional[Callable[[Any], bool]]):
+    def __init__(
+        self,
+        event_name: str,
+        check: Union[Callable[[Any], bool], None]
+    ):
         """
         Parameters
         ----------
@@ -29,7 +33,7 @@ class _DiscordEvent(Event):
         self.return_value = None
         super().__init__()
 
-    def can_be_set(self, event_name, *args) -> bool:
+    def can_be_set(self, event_name: str, *args) -> bool:
         """
         Parameters
         ----------
@@ -65,7 +69,7 @@ class EventMgr:
     def __init__(self):
         self.stack = []
 
-    def add_event(self, event_name: str, check: Callable):
+    def add_event(self, event_name: str, check: Union[Callable, None]):
         """
         Parameters
         ----------
@@ -84,7 +88,7 @@ class EventMgr:
         """
         event = _DiscordEvent(
             event_name=event_name,
-            check=check,
+            check=check
         )
         self.stack.append(event)
         return event
@@ -117,16 +121,22 @@ class EventMgr:
             if event.can_be_set(event_name, *args):
                 event.set()
 
-    async def wait_for(self, event_name: str, check: Callable) -> Any:
+    async def wait_for(
+        self,
+        event_name: str,
+        check: Union[Callable[[Any], bool], None],
+        timeout: Union[float, None]
+    ) -> Any:
         """
         Parameters
         ----------
         event_name : str
             The type of event. It should start with `on_`. This is the same
             name that is used for @Client.event.
-
-        check : Callable[[Any], bool]
+        check : Union[Callable[[Any], bool], None]
             This function only returns a value if this return true.
+        timeout: Union[float, None]
+            Amount of seconds before timeout. Use None for no timeout.
 
         Returns
         ------
@@ -134,19 +144,25 @@ class EventMgr:
             What the Discord API returns for this event.
         """
         event = self.add_event(event_name, check)
-        await event.wait()
+        await aio_wait_for(event.wait(), timeout=timeout)
         return self.pop_event(event)
 
-    async def loop_on(self, event_name: str, check: Callable) -> Any:
+    async def loop_for(
+        self,
+        event_name: str,
+        check: Union[Callable[[Any], bool], None],
+        timeout: Union[float, None]
+    ) -> Any:
         """
         Parameters
         ----------
         event_name : str
             The type of event. It should start with `on_`. This is the same
             name that is used for @Client.event.
-
         check : Callable[[Any], bool]
             This function only returns a value if this return true.
+        timeout: Union[float, None]
+            Amount of seconds before timeout. Timeouts are for each loop.
 
         Yields
         ------
@@ -154,4 +170,4 @@ class EventMgr:
             What the Discord API returns for this event.
         """
         while True:
-            yield await self.wait_for(event_name, check)
+            yield await self.wait_for(event_name, check, timeout)
