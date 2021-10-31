@@ -322,7 +322,7 @@ class Guild(APIObject):
     approximate_presence_count: APINullable[int] = MISSING
     channels: APINullable[List[Channel]] = field(default_factory=list)
     # TODO: Add type when type is known
-    hub_type: APINullable[...] = MISSING
+    hub_type: APINullable[Any] = MISSING
     icon_hash: APINullable[Optional[str]] = MISSING
     joined_at: APINullable[Timestamp] = MISSING
     large: APINullable[bool] = MISSING
