@@ -27,7 +27,7 @@ Channel Create
 channel_create_middleware
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autofunction:: channel_create_middleware
+.. autofunction:: pincer.middleware.channel_create.channel_create_middleware
 
 Error
 -----
@@ -35,7 +35,7 @@ Error
 error_middleware
 ~~~~~~~~~~~~~~~~
 
-.. autofunction:: error_middleware
+.. autofunction:: pincer.middleware.error.error_middleware
 
 Guild Create
 ------------
@@ -43,7 +43,7 @@ Guild Create
 guild_create_middleware
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autofunction:: guild_create_middleware
+.. autofunction:: pincer.middleware.guild_create.guild_create_middleware
 
 Guild Status
 ------------
@@ -57,27 +57,22 @@ Interaction Create
 convert_message
 ~~~~~~~~~~~~~~~
 
-.. autofunction:: convert_message
-
-reply
-~~~~~
-
-.. autofunction:: reply
+.. autofunction:: pincer.middleware.interaction_create.convert_message
 
 interaction_response_handler
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autofunction:: interaction_response_handler
+.. autofunction:: pincer.middleware.interaction_create.interaction_response_handler
 
 interaction_handler
 ~~~~~~~~~~~~~~~~~~~
 
-.. autofunction:: interaction_handler
+.. autofunction:: pincer.middleware.interaction_create.interaction_handler
 
 interaction_create_middleware
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autofunction:: interaction_create_middleware
+.. autofunction:: pincer.middleware.interaction_create.interaction_create_middleware
 
 Message Create
 --------------
@@ -85,7 +80,7 @@ Message Create
 message_create_middleware
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autofunction:: message_create_middleware
+.. autofunction:: pincer.middleware.message_create.message_create_middleware
 
 Message Delete
 --------------
@@ -93,7 +88,7 @@ Message Delete
 on_message_delete_middleware
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autofunction:: on_message_delete_middleware
+.. autofunction:: pincer.middleware.message_delete.on_message_delete_middleware
 
 Message Update
 --------------
@@ -101,7 +96,7 @@ Message Update
 message_update_middleware
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autofunction:: message_update_middleware
+.. autofunction:: pincer.middleware.message_update.message_update_middleware
 
 Notification Create
 -------------------
@@ -115,7 +110,7 @@ Payload
 payload_middleware
 ~~~~~~~~~~~~~~~~~~
 
-.. autofunction:: payload_middleware
+.. autofunction:: pincer.middleware.payload.payload_middleware
 
 Ready
 -----
@@ -123,7 +118,7 @@ Ready
 on_ready_middleware
 ~~~~~~~~~~~~~~~~~~~
 
-.. autofunction:: on_ready_middleware
+.. autofunction:: pincer.middleware.ready.on_ready_middleware
 
 Speaking Start
 --------------
@@ -173,4 +168,4 @@ Voice State Update
 voice_state_update_middleware
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autofunction:: voice_state_update_middleware
+.. autofunction:: pincer.middleware.voice_state_update.voice_state_update_middleware
