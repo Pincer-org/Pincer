@@ -5,7 +5,6 @@
 
 from ..core.dispatch import GatewayDispatch
 from ..objects.events.channel import ChannelPinsUpdateEvent
-from ..utils import Timestamp
 
 
 async def channel_pins_update_middleware(self, payload: GatewayDispatch):

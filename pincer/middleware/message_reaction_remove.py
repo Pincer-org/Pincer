@@ -4,7 +4,7 @@
 """sent when a user removes a reaction to a message"""
 
 from ..core.dispatch import GatewayDispatch
-from ..objects import GuildMember, Emoji
+from ..objects import Emoji
 from ..objects.events.message import MessageReactionRemoveEvent
 from ..utils.conversion import construct_client_dict
 
