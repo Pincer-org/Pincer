@@ -13,7 +13,9 @@ ignore =
     # H405: multi line docstring summary not separated with an empty line
     H405,
     # H501: Do not use self.__dict__ for string formatting
-    H501
+    H501,
+    # W503: line break before binary operator
+    W503
 exclude =
     # No need to traverse our git directory
     .git,
