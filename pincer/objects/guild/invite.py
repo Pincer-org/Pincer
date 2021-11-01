@@ -14,12 +14,12 @@ if TYPE_CHECKING:
     from typing import List, Optional
 
     from .guild import Guild
-    from ..user.user import User
-    from ..guild.channel import Channel
-    from ...utils.types import APINullable
-    from ..guild.member import GuildMember
-    from ...utils.timestamp import Timestamp
     from ..app.application import Application
+    from ..guild.channel import Channel
+    from ..guild.member import GuildMember
+    from ..user.user import User
+    from ...utils.timestamp import Timestamp
+    from ...utils.types import APINullable
 
 
 class InviteTargetType(IntEnum):

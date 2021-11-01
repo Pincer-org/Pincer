@@ -18,16 +18,16 @@ from ...utils.conversion import construct_client_dict
 if TYPE_CHECKING:
     from typing import Dict, List, Optional, Union
 
-    from ...client import Client
-    from ..user.user import User
     from .member import GuildMember
     from .overwrite import Overwrite
-    from ..message.embed import Embed
     from .thread import ThreadMetadata
     from ..message.message import Message
+    from ..message.embed import Embed
+    from ..user.user import User
+    from ...client import Client
+    from ...utils.timestamp import Timestamp
     from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
-    from ...utils.timestamp import Timestamp
 
 
 class ChannelType(IntEnum):

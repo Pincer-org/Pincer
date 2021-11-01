@@ -8,27 +8,27 @@ from dataclasses import dataclass, field
 from typing import overload, TYPE_CHECKING
 
 from .channel import Channel
-from ...exceptions import UnavailableGuildError
 from .member import GuildMember
-from ...utils.types import MISSING
+from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import Dict, List, Optional
 
-    from .role import Role
-    from ...client import Client
-    from .stage import StageInstance
-    from ..message.emoji import Emoji
     from .features import GuildFeature
-    from ..message.sticker import Sticker
-    from ...utils.types import APINullable
-    from ...utils.snowflake import Snowflake
-    from ...utils.timestamp import Timestamp
-    from ..user.voice_state import VoiceState
+    from .role import Role
+    from .stage import StageInstance
     from .welcome_screen import WelcomeScreen
     from ..events.presence import PresenceUpdateEvent
+    from ..message.emoji import Emoji
+    from ..message.sticker import Sticker
+    from ..user.voice_state import VoiceState
+    from ...client import Client
+    from ...utils.timestamp import Timestamp
+    from ...utils.types import APINullable
+    from ...utils.snowflake import Snowflake
 
 
 class PremiumTier(IntEnum):

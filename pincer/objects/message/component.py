@@ -12,10 +12,10 @@ from ...utils.api_object import APIObject
 if TYPE_CHECKING:
     from typing import List
 
+    from ..app.select_menu import SelectOption
+    from ..message.button import ButtonStyle
     from ..message.emoji import Emoji
     from ...utils.types import APINullable
-    from ..message.button import ButtonStyle
-    from ..app.select_menu import SelectOption
 
 
 @dataclass
