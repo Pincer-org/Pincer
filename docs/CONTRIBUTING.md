@@ -15,7 +15,8 @@ We'll use the issue to have a conversation about the problem you found.
 ## Make your update
 
 Make your changes to the file(s) you'd like to update to solve an issue
-or add a new feature.
+or add a new feature. When writing docstrings, please use the 
+[numpydocs](https://numpydoc.readthedocs.io/en/latest/format.html) style guide.
 
 We recommend you using [Gitmoji](https://gitmoji.dev/) for your commits as it 
 help organization them by categories.
