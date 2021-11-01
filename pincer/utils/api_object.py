@@ -9,7 +9,7 @@ from enum import Enum, EnumMeta
 from inspect import getfullargspec
 from dataclasses import dataclass, fields, _is_dataclass_instance
 from typing import (
-    Dict, Tuple, Union, Generic, TypeVar, get_type_hints,
+    Callable, Dict, Tuple, Union, Generic, TypeVar, get_type_hints,
     Any, get_origin, TYPE_CHECKING, List, get_args
 )
 
