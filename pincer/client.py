@@ -16,24 +16,21 @@ from .core.http import HTTPClient
 from .commands import ChatCommandHandler
 from .utils.types import Coro
 from .middleware import middleware
-from .objects.guild.role import Role
 from .core.gateway import Dispatcher
 from .utils.signature import get_params
 from .utils.extraction import get_index
-from .objects.guild.channel import Channel
 from .utils.insertion import should_pass_cls
-from .objects.app.throttling import DefaultThrottleHandler
 from .exceptions import (
     InvalidEventName, TooManySetupArguments, NoValidSetupMethod,
     NoCogManagerReturnFound, CogAlreadyExists, CogNotFound
 )
+from .objects import (
+    Role, Channel, DefaultThrottleHandler, User, Guild, Intents
+)
 
 if TYPE_CHECKING:
-    from .objects.user import User
-    from .objects.guild import Guild
     from .objects.app import AppCommand
     from .utils.snowflake import Snowflake
-    from .objects.app.intents import Intents
     from .core.dispatch import GatewayDispatch
     from .objects.app.throttling import ThrottleInterface
 
