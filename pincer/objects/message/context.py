@@ -8,10 +8,10 @@ from dataclasses import dataclass
 if TYPE_CHECKING:
     from typing import Optional, Union
 
-    from ..user.user import User
-    from ..guild.member import GuildMember
-    from ...utils.snowflake import Snowflake
     from ..app.command import ClientCommandStructure
+    from ..guild.member import GuildMember
+    from ..user.user import User
+    from ...utils.snowflake import Snowflake
 
 
 @dataclass
