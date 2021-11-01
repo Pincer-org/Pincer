@@ -47,7 +47,8 @@ class Dispatcher:
     def __init__(
             self, token: str, *,
             handlers: Dict[int, Handler],
-            intents: Intents
+            intents: Intents,
+            reconnect: bool
     ) -> None:
         """
         :param token:
@@ -61,6 +62,9 @@ class Dispatcher:
 
         :raises InvalidTokenError:
             Discord Token length is not 59 characters.
+
+        auto_reconnect :class:`bool`
+            Whether the dispatcher should automatically reconnect.
         """
 
         if len(token) != 59:
@@ -72,6 +76,7 @@ class Dispatcher:
         self.__keep_alive = True
         self.__socket: Optional[WebSocketClientProtocol] = None
         self.__intents = intents
+        self.__reconnect = reconnect
 
         async def identify_and_handle_hello(
                 socket: WebSocketClientProtocol,
@@ -114,6 +119,7 @@ class Dispatcher:
         }
 
         self.__dispatch_errors: Dict[int, PincerError] = {
+            1006: _InternalPerformReconnectError(),
             4000: _InternalPerformReconnectError(),
             4004: InvalidTokenError(),
             4007: _InternalPerformReconnectError(),
@@ -257,8 +263,10 @@ class Dispatcher:
                     exception = self.__dispatch_errors.get(exc.code)
 
                     if isinstance(exception, _InternalPerformReconnectError):
-                        Heartbeat.update_sequence(0)
-                        return self.start_loop()
+                        if self.__reconnect:
+                            _log.debug("Connection closed, reconnecting...")
+                            Heartbeat.update_sequence(0)
+                            return self.start_loop(loop=loop)
 
                     raise exception or UnhandledException(
                         f"Dispatch error ({exc.code}): {exc.reason}"

@@ -131,7 +131,8 @@ class Client(Dispatcher):
             token: str, *,
             received: str = None,
             intents: Intents = None,
-            throttler: ThrottleInterface = DefaultThrottleHandler
+            throttler: ThrottleInterface = DefaultThrottleHandler,
+            reconnect: bool = True,
     ):
         """
         The client is the main instance which is between the programmer
@@ -149,6 +150,9 @@ class Client(Dispatcher):
 
         :param intents:
             The discord intents for your client.
+
+        auto_reconnect :class:`bool`
+            Whether the client should automatically reconnect.
         """
         super().__init__(
             token,
@@ -158,7 +162,8 @@ class Client(Dispatcher):
                 # Use this event handler for opcode 0.
                 0: self.event_handler
             },
-            intents=intents or Intents.NONE
+            intents=intents or Intents.NONE,
+            reconnect=reconnect,
         )
 
         self.bot: Optional[User] = None
