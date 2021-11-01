@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from ..guild.member import GuildMember
+from ..user.user import User
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
 from ...utils.types import MISSING, APINullable
@@ -13,7 +14,6 @@ from ...utils.types import MISSING, APINullable
 if TYPE_CHECKING:
     from typing import Any, List, Optional
 
-    from ..user.user import User
     from ..guild.role import Role
     from ..message.emoji import Emoji
     from ..message.sticker import Sticker
