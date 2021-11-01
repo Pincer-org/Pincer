@@ -11,7 +11,7 @@ ignore =
     F401,
     # C901 Too complex, well no way getting over that
     C901,
-    # W503 break before binary operator but theres also an after error?
+    # W503: line break before binary operator
     W503
 exclude =
     # No need to traverse our git directory
