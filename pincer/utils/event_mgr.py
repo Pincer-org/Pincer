@@ -1,8 +1,10 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from asyncio import Event, wait_for as aio_wait_for
+from asyncio import Event, wait_for as _wait_for, TimeoutError as _TimeoutError
 from typing import Any, Callable, Union
+
+from ..exceptions import TimeoutError
 
 
 class _DiscordEvent(Event):
@@ -144,7 +146,10 @@ class EventMgr:
             What the Discord API returns for this event.
         """
         event = self.add_event(event_name, check)
-        await aio_wait_for(event.wait(), timeout=timeout)
+        try:
+            await _wait_for(event.wait(), timeout=timeout)
+        except _TimeoutError as e:
+            raise TimeoutError from e
         return self.pop_event(event)
 
     async def loop_for(

@@ -592,7 +592,7 @@ class Client(Dispatcher):
         Any
             What the Discord API returns for this event.
         """
-        return self.event_mgr.loop_on(event_name, check, timeout)
+        return self.event_mgr.loop_for(event_name, check, timeout)
 
     async def get_guild(self, guild_id: int) -> Guild:
         """
