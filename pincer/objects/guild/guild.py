@@ -349,7 +349,20 @@ class Guild(APIObject):
     welcome_screen: APINullable[WelcomeScreen] = MISSING
 
     @classmethod
-    async def from_id(cls, client: Client, _id: int) -> Guild:
+    async def from_id(cls, client: Client, _id: Snowflake) -> Guild:
+        """
+        Parameters
+        ----------
+        client : `~pincer.Client`
+            Client object to use the http gateway from.
+        _id : :class: `pincer.utils.snowflake.Snowflake`
+            Guild ID.
+
+        Returns
+        -------
+        :class: `~pincer.objects.guild.guild.Guild`
+            The new guild object.
+        """
         data = await client.http.get(f"/guilds/{_id}")
         channel_data = await client.http.get(f"/guilds/{_id}/channels")
 
@@ -421,10 +434,25 @@ class Guild(APIObject):
 
     @classmethod
     def from_dict(cls, data) -> Guild:
+        """
+        Parameters
+        ----------
+        data : :class: Dict
+            Guild data recieved from the discord API.
+
+        Returns
+        -------
+        :class: `~pincer.objects.guild.guild.Guild`
+            The new guild object.
+
+        Raises
+        :class: `~pincer.exceptions.UnavailableGuildError`
+            The guild is unavailable due to a discord outage.
+        """
         if data.get("unavailable", False):
             raise UnavailableGuildError(
-                f"Guild \"{data['id']}\" is unavailable due"
-                " to a discord outage."
+                f"Guild \"{data['id']}\" is unavailable due to a discord"
+                " outage."
             )
 
         return super().from_dict(data)

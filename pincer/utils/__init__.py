@@ -10,14 +10,16 @@ from .signature import get_params, get_signature_and_params
 from .snowflake import Snowflake
 from .tasks import Task, TaskScheduler
 from .timestamp import Timestamp
+
 from .types import (
-    APINullable, Coro, MISSING, MissingType, Choices, choice_value_types
+    APINullable, Coro, MISSING, Descripted, MissingType, Choices,
+    choice_value_types
 )
 
 
 __all__ = (
     "APINullable", "APIObject", "Choices", "Coro", "chdir", "HTTPMeta",
-    "MISSING", "Snowflake", "Task", "TaskScheduler", "Timestamp",
+    "Descripted", "MISSING", "Snowflake", "Task", "TaskScheduler", "Timestamp",
     "choice_value_types", "convert", "get_index", "get_signature_and_params",
     "should_pass_cls", "should_pass_ctx", "MissingType", "get_params"
 )

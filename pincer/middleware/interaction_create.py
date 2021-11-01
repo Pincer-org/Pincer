@@ -132,6 +132,7 @@ async def interaction_create_middleware(
     interaction: Interaction = Interaction.from_dict(
         construct_client_dict(self, payload.data)
     )
+    await interaction.build()
     command = ChatCommandHandler.register.get(interaction.data.name)
 
     if command:
