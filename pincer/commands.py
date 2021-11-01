@@ -622,7 +622,6 @@ class ChatCommandHandler(metaclass=Singleton):
         to Discord
         """
         to_add = deepcopy(ChatCommandHandler.register)
-
         for reg_cmd in self._api_commands:
             try:
                 del to_add[reg_cmd.name]
