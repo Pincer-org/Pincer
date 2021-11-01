@@ -9,7 +9,6 @@ from datetime import timedelta
 from typing import TYPE_CHECKING
 from asyncio import TimerHandle, iscoroutinefunction
 
-from .types import Coro
 from . import __package__
 from ..exceptions import (
     TaskAlreadyRunning, TaskCancelError, TaskInvalidDelay,
@@ -21,6 +20,7 @@ if TYPE_CHECKING:
     from typing import Callable, Set
 
     from .types import Coro
+
 
 _log = logging.getLogger(__package__)
 
