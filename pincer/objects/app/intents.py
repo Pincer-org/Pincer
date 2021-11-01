@@ -69,7 +69,10 @@ class Intents(IntEnum):
 
     @staticmethod
     def all() -> Intents:
-        """:class:`~pincer.objects.app.intents.Intents`: Method of all intents"""
+        """
+        :class:`~pincer.objects.app.intents.Intents`:
+        Method of all intents
+        """
         res = 0
 
         for intent in list(map(lambda itm: itm.value, Intents)):

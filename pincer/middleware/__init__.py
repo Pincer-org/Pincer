@@ -6,11 +6,12 @@ import logging
 from glob import glob
 from importlib import import_module
 from pathlib import Path
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING
 
 from ..utils.directory import chdir
 
 if TYPE_CHECKING:
+    from typing import Dict
     from ..utils.types import Coro
 
 from .channel_create import channel_create_middleware

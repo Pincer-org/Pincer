@@ -28,7 +28,8 @@ class CallbackType(IntEnum):
     MESSAGE:
         Respond to an interaction with a message
     DEFERRED_MESSAGE:
-        ACK an interaction and edit a response later, the user sees a loading state
+        ACK an interaction and edit a response later, the user sees a loading
+        state
     DEFERRED_UPDATE_MESSAGE:
         For components, ACK an interaction and edit the original message later
     UPDATE_MESSAGE:
