@@ -229,3 +229,9 @@ class APIObject(metaclass=HTTPMeta):
                 getfullargspec(cls.__init__).args
             )
         )))
+
+    def to_dict(self):
+        """
+        Transforms an APIObject to a dictionary
+        """
+        return _asdict_ignore_none(self)
