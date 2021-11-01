@@ -266,7 +266,8 @@ class Dispatcher:
                         if self.__reconnect:
                             _log.debug("Connection closed, reconnecting...")
                             Heartbeat.update_sequence(0)
-                            return self.start_loop(loop=loop)
+                            await self.close()
+                            return self.start_loop()
 
                     raise exception or UnhandledException(
                         f"Dispatch error ({exc.code}): {exc.reason}"
