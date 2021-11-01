@@ -8,7 +8,7 @@ import re
 from asyncio import iscoroutinefunction, gather
 from copy import deepcopy
 from inspect import Signature, isasyncgenfunction
-from typing import TYPE_CHECKING, get_origin, get_args
+from typing import TYPE_CHECKING, get_origin, get_args, Union, Tuple, List
 
 from . import __package__
 from .utils.snowflake import Snowflake
@@ -25,11 +25,10 @@ from .objects.app import (
 from .utils import get_index, should_pass_ctx
 from .utils.signature import get_signature_and_params
 from .utils.types import Coro, MISSING, choice_value_types, Choices
-
 from .utils.types import Singleton, TypeCache, Descripted
 
 if TYPE_CHECKING:
-    from typing import Optional, Dict, List, Any, Tuple, Union
+    from typing import Any, Optional, Dict
 
 COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 

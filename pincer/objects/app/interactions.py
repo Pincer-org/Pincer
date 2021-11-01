@@ -14,6 +14,7 @@ from ..app.select_menu import SelectOption
 from ..message.user_message import UserMessage
 from ..user import User
 from ..message.context import MessageContext
+from ..message.message import Message
 from ...utils.conversion import convert
 from ...utils.snowflake import Snowflake
 from ...utils.api_object import APIObject
@@ -21,7 +22,6 @@ from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from .command import AppCommandInteractionDataOption
-    from ..message.message import Message
     from ..guild.channel import Channel
     from ..guild.role import Role
     from ...utils import APINullable
