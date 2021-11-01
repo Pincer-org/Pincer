@@ -3,14 +3,14 @@
 
 from __future__ import annotations
 
+import copy
 import logging
-from copy import copy
+from dataclasses import dataclass, fields, _is_dataclass_instance
 from enum import Enum, EnumMeta
 from inspect import getfullargspec
-from dataclasses import dataclass, fields, _is_dataclass_instance
 from typing import (
-    Callable, Dict, Tuple, Union, Generic, TypeVar, get_type_hints,
-    Any, get_origin, TYPE_CHECKING, List, get_args
+    Dict, Tuple, Union, Generic, TypeVar, Any, TYPE_CHECKING,
+    List, get_type_hints, get_origin, get_args
 )
 
 from .conversion import convert
@@ -27,6 +27,15 @@ _log = logging.getLogger(__package__)
 
 
 def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
+    """
+    Returns a dict from a dataclass that ignores
+    all values that are None
+    Modification of _asdict_inner from dataclasses
+
+    :param obj:
+        Dataclass obj
+    """
+
     if _is_dataclass_instance(obj):
         result = []
         for f in fields(obj):
@@ -89,8 +98,9 @@ class HTTPMeta(type):
 
 @dataclass
 class APIObject(metaclass=HTTPMeta):
-    """Represents an object which has been fetched from the Discord API."""
-
+    """
+    Represents an object which has been fetched from the Discord API.
+    """
     _client: Client
     _http: HTTPClient
 
@@ -150,7 +160,8 @@ class APIObject(metaclass=HTTPMeta):
             The instanciated version of the arg_type.
         """
         factory = attr_type
-    # Always use `__factory__` over __init__
+
+        # Always use `__factory__` over __init__
         if getattr(attr_type, "__factory__", None):
             factory = attr_type.__factory__
 
@@ -213,6 +224,9 @@ class APIObject(metaclass=HTTPMeta):
             cls: Generic[T],
             data: Dict[str, Union[str, bool, int, Any]]
     ) -> T:
+        """
+        Parse an API object from a dictionary.
+        """
         if isinstance(data, cls):
             return data
 
@@ -230,8 +244,8 @@ class APIObject(metaclass=HTTPMeta):
             )
         )))
 
-    def to_dict(self):
+    def to_dict(self) -> Dict:
         """
-        Transforms an APIObject to a dictionary
+        Transform the current object to a dictionary representation.
         """
         return _asdict_ignore_none(self)
