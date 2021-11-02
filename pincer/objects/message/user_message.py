@@ -25,7 +25,7 @@ from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
-    from typing import List, Optional, Union
+    from typing import Any, List, Optional, Union, Generator
 
     from ..guild.channel import Channel, ChannelMention
     from ...utils.types import APINullable
@@ -369,11 +369,15 @@ class UserMessage(APIObject):
         )
 
     async def react(self, emoji: str):
-        """
+        """|coro|
+
         Create a reaction for the message. Requires the
         ``READ_MESSAGE_HISTORY` itent. ``ADD_REACTIONS`` intent is required if
         nobody else has reacted using the emoji.
-        emoji:
+
+        Parameters
+        ----------
+        emoji: :class:`str`
             Character for emoji. Does not need to be URL encoded.
         """
 
@@ -382,9 +386,13 @@ class UserMessage(APIObject):
         )
 
     async def unreact(self, emoji: str):
-        """
+        """|coro|
+
         Delete a reaction the current user has made for the message.
-        emoji:
+
+        Parameters
+        ----------
+        emoji: :class:`str`
             Character for emoji. Does not need to be URL encoded.
         """
 
@@ -393,12 +401,16 @@ class UserMessage(APIObject):
         )
 
     async def remove_user_reaction(self, emoji: str, user_id: Snowflake):
-        """
+        """|coro|
+
         Deletes another user's reaction. Requires the ``MANAGE_MESSAGES``
         intent.
-        emoji:
+
+        Parameters
+        ----------
+        emoji: :class:`str`
             Character for emoji. Does not need to be URL encoded.
-        user_id:
+        user_id: :class:`~pincer.utils.snowflake.Snowflake`
             User ID
         """
 
@@ -411,12 +423,20 @@ class UserMessage(APIObject):
         self, emoji: str, after: Snowflake = 0, limit=25
     ) -> Generator[User, None, None]:
         # TODO: HTTP Client will need to refactored to allow parameters using aiohttp's system.
-        """
+        """|coro|
+
         Returns the users that reacted with this emoji.
-        after:
+
+        Parameters
+        ----------
+        emoji: :class:`str`
+            Emoji to get users for.
+        after: :class:`~pincer.utils.snowflake.Snowflake`
             Get users after this user ID. Returns all users if not provided.
-        limit:
-            Max number of users to return (1-100). 25 if not provided.
+            |default| ``0``
+        limit: :class:`int`
+            Max number of users to return (1-100).
+            |default| ``25``
         """
 
         for user in await self._http.get(
@@ -426,7 +446,8 @@ class UserMessage(APIObject):
             yield User.from_dict(user)
 
     async def remove_all_reactions(self):
-        """
+        """|coro|
+
         Delete all reactions on a message. Requires the ``MANAGE_MESSAGES``
         intent.
         """
@@ -436,10 +457,14 @@ class UserMessage(APIObject):
         )
 
     async def remove_emoji(self, emoji):
-        """
+        """|coro|
+
         Deletes all the reactions for a given emoji on a message. Requires the
         ``MANAGE_MESSAGES`` intent.
-        emoji:
+
+        Parameters
+        ----------
+        emoji: :class:`str`
             Character for emoji. Does not need to be URL encoded.
         """
 
@@ -505,7 +530,8 @@ class UserMessage(APIObject):
         )
 
     async def delete(self):
-        """
+        """|coro|
+
         Delete a message. Requires the ``MANAGE_MESSAGES`` intent if the
         message was not sent by the current user.
         """
