@@ -574,7 +574,8 @@ class Client(Dispatcher):
         self,
         event_name: str,
         check: Optional[Callable[[Any], bool]] = None,
-        timeout: Optional[float] = None
+        iteration_timeout: Optional[float] = None,
+        loop_timeout: Optional[float] = None
     ):
         """
         Parameters
@@ -584,15 +585,23 @@ class Client(Dispatcher):
             name that is used for @Client.event.
         check : Callable[[Any], bool], default=None
             This function only returns a value if this return true.
-        timeout: Union[float, None]
+        iteration_timeout: Union[float, None]
             Amount of seconds before timeout. Timeouts are for each loop.
+        loop_timeout: Union[float, None]
+            Amount of seconds before the entire loop times out. The generator
+            will only raise a timeout error while it is waiting for an event.
 
         Yields
         ------
         Any
             What the Discord API returns for this event.
         """
-        return self.event_mgr.loop_for(event_name, check, timeout)
+        return self.event_mgr.loop_for(
+            event_name,
+            check,
+            iteration_timeout,
+            loop_timeout
+        )
 
     async def get_guild(self, guild_id: int) -> Guild:
         """
