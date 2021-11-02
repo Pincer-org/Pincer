@@ -188,8 +188,10 @@ class EventMgr:
             while True:
                 yield await self.wait_for(event_name, check, iteration_timeout)
 
+        loop = get_running_loop()
+
         while True:
-            start_time = get_running_loop().time()
+            start_time = loop.time()
 
             try:
                 yield await _wait_for(
@@ -206,7 +208,7 @@ class EventMgr:
                     "loop_for() timed out while waiting for an event"
                 )
 
-            loop_timeout -= get_running_loop().time() - start_time
+            loop_timeout -= loop.time() - start_time
 
             # loop_timeout can be below 0 if the user's code in the for loop
             # takes longer than the time left in loop_timeout
