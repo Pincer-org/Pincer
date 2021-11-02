@@ -390,6 +390,10 @@ class ChatCommandHandler(metaclass=Singleton):
         ----------
         cmd : :class:`~pincer.objects.app.command.AppCommand`
             What command to delete
+        keep : bool
+            Whether the command should be removed from the ChatCommandHandler.
+            Set to :data:`True` to keep the command.
+            |default| :data:`False` 
         """
         # TODO: Update if discord adds bulk delete commands
         remove_endpoint = self.__delete_guild if cmd.guild_id else self.__delete
@@ -415,6 +419,10 @@ class ChatCommandHandler(metaclass=Singleton):
         ----------
         commands : List[:class:`~pincer.objects.app.command.AppCommand`]
             List of commands to delete
+        keep: List[:class:`~pincer.objects.app.command.AppCommand`]
+            List of commands that should not be removed from the
+            ChatCommandHandler.
+            |default| :data:`None`
         """
         await gather(*list(map(
             lambda cmd: self.remove_command(cmd, cmd in (keep or [])),
