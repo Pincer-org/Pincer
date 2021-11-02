@@ -8,6 +8,7 @@ import re
 from asyncio import iscoroutinefunction, gather
 from copy import deepcopy
 from inspect import Signature, isasyncgenfunction
+from functools import partial
 from typing import (
     Optional, Dict, List, Any, Tuple, get_origin, get_args, Union,
     ForwardRef, _eval_type
@@ -49,13 +50,15 @@ _options_type_link = {
 
 
 def command(
-        name: Optional[str] = None,
-        description: Optional[str] = "Description not set",
-        enable_default: Optional[bool] = True,
-        guild: Union[Snowflake, int, str] = None,
-        cooldown: Optional[int] = 0,
-        cooldown_scale: Optional[float] = 60,
-        cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER
+    func: Coro = None,
+    *,
+    name: Optional[str] = None,
+    description: Optional[str] = "Description not set",
+    enable_default: Optional[bool] = True,
+    guild: Union[Snowflake, int, str] = None,
+    cooldown: Optional[int] = 0,
+    cooldown_scale: Optional[float] = 60,
+    cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
 ):
     """
     Command option types are designated by using type hints.
@@ -76,184 +79,187 @@ def command(
     # TODO: Fix docs w argument descriptions
     # TODO: Fix docs w argument choices
 
-    def decorator(func: Coro):
-        if not iscoroutinefunction(func) and not isasyncgenfunction(func):
-            raise CommandIsNotCoroutine(
-                f"Command with call `{func.__name__}` is not a coroutine, "
-                "which is required for commands."
-            )
-
-        cmd = name or func.__name__
-
-        if not re.match(COMMAND_NAME_REGEX, cmd):
-            raise InvalidCommandName(
-                f"Command `{cmd}` doesn't follow the name requirements."
-                "Ensure to match the following regex:"
-                f" {COMMAND_NAME_REGEX.pattern}"
-            )
-
-        try:
-            guild_id = int(guild) if guild else MISSING
-        except ValueError:
-            raise InvalidCommandGuild(
-                f"Command with call `{func.__name__}` its `guilds` parameter "
-                "contains a non valid guild id."
-            )
-
-        if len(description) > 100:
-            raise CommandDescriptionTooLong(
-                f"Command `{cmd}` (`{func.__name__}`) its description exceeds "
-                "the 100 character limit."
-            )
-
-        if reg := ChatCommandHandler.register.get(cmd):
-            raise CommandAlreadyRegistered(
-                f"Command `{cmd}` (`{func.__name__}`) has already been "
-                f"registered by `{reg.call.__name__}`."
-            )
-
-        sig, params = get_signature_and_params(func)
-        pass_context = should_pass_ctx(sig, params)
-
-        if len(params) > (25 + pass_context):
-            raise TooManyArguments(
-                f"Command `{cmd}` (`{func.__name__}`) can only have 25 "
-                f"arguments (excluding the context and self) yet {len(params)} "
-                "were provided!"
-            )
-
-        options: List[AppCommandOption] = []
-
-        for idx, param in enumerate(params):
-            if idx == 0 and pass_context:
-                continue
-
-            annotation, required = sig[param].annotation, True
-            argument_description: Optional[str] = None
-            choices: List[AppCommandOptionChoice] = []
-
-            if isinstance(annotation, str):
-                TypeCache()
-                annotation = eval(annotation, TypeCache.cache, globals())
-
-            if isinstance(annotation, Descripted):
-                argument_description = annotation.description
-                annotation = annotation.key
-
-                if len(argument_description) > 100:
-                    raise CommandDescriptionTooLong(
-                        f"Tuple annotation `{annotation}` on parameter "
-                        f"`{param}` in command `{cmd}` (`{func.__name__}`), "
-                        "argument description too long. (maximum length is 100 "
-                        "characters)"
-                    )
-
-            if get_origin(annotation) is Union:
-                args = get_args(annotation)
-                if type(None) in args:
-                    required = False
-
-                # Do NOT use isinstance as this is a comparison between
-                # two values of the type type and isinstance does NOT
-                # work here.
-                union_args = [t for t in args if t is not type(None)]
-
-                annotation = (
-                    get_index(union_args, 0)
-                    if len(union_args) == 1
-                    else Union[Tuple[List]]
-                )
-
-            if get_origin(annotation) is Choices:
-                args = get_args(annotation)
-
-                if len(args) > 25:
-                    raise InvalidAnnotation(
-                        f"Choices/Literal annotation `{annotation}` on "
-                        f"parameter `{param}` in command `{cmd}` "
-                        f"(`{func.__name__}`) amount exceeds limit of 25 items!"
-                    )
-
-                choice_type = type(args[0])
-
-                if choice_type is Descripted:
-                    choice_type = type(args[0].key)
-
-                for choice in args:
-                    choice_description = choice
-                    if isinstance(choice, Descripted):
-                        choice_description = choice.description
-                        choice = choice.key
-
-                        if choice_type is tuple:
-                            choice_type = type(choice)
-
-                    if type(choice) not in choice_value_types:
-                        # Properly get all the names of the types
-                        valid_types = list(map(
-                            lambda x: x.__name__,
-                            choice_value_types
-                        ))
-                        raise InvalidAnnotation(
-                            f"Choices/Literal annotation `{annotation}` on "
-                            f"parameter `{param}` in command `{cmd}` "
-                            f"(`{func.__name__}`), invalid type received. "
-                            "Value must be a member of "
-                            f"{', '.join(valid_types)} but "
-                            f"{type(choice).__name__} was given!"
-                        )
-                    elif not isinstance(choice, choice_type):
-                        raise InvalidAnnotation(
-                            f"Choices/Literal annotation `{annotation}` on "
-                            f"parameter `{param}` in command `{cmd}` "
-                            f"(`{func.__name__}`), all values must be of the "
-                            "same type!"
-                        )
-
-                    choices.append(AppCommandOptionChoice(
-                        name=choice_description,
-                        value=choice
-                    ))
-
-                annotation = choice_type
-
-            param_type = _options_type_link.get(annotation)
-            if not param_type:
-                raise InvalidAnnotation(
-                    f"Annotation `{annotation}` on parameter "
-                    f"`{param}` in command `{cmd}` (`{func.__name__}`) is not "
-                    "a valid type."
-                )
-
-            options.append(
-                AppCommandOption(
-                    type=param_type,
-                    name=param,
-                    description=argument_description or "Description not set",
-                    required=required,
-                    choices=choices or MISSING
-                )
-            )
-
-        ChatCommandHandler.register[cmd] = ClientCommandStructure(
-            call=func,
+    if func is None:
+        return partial(
+            command,
+            name=name,
+            description=description,
+            enable_default=enable_default,
+            guild=guild,
             cooldown=cooldown,
             cooldown_scale=cooldown_scale,
             cooldown_scope=cooldown_scope,
-            app=AppCommand(
-                name=cmd,
-                description=description,
-                type=AppCommandType.CHAT_INPUT,
-                default_permission=enable_default,
-                options=options,
-                guild_id=guild_id
+        )
+
+    if not iscoroutinefunction(func) and not isasyncgenfunction(func):
+        raise CommandIsNotCoroutine(
+            f"Command with call `{func.__name__}` is not a coroutine, "
+            "which is required for commands."
+        )
+
+    cmd = name or func.__name__
+
+    if not re.match(COMMAND_NAME_REGEX, cmd):
+        raise InvalidCommandName(
+            f"Command `{cmd}` doesn't follow the name requirements."
+            "Ensure to match the following regex:"
+            f" {COMMAND_NAME_REGEX.pattern}"
+        )
+
+    try:
+        guild_id = int(guild) if guild else MISSING
+    except ValueError:
+        raise InvalidCommandGuild(
+            f"Command with call `{func.__name__}` its `guilds` parameter "
+            "contains a non valid guild id."
+        )
+
+    if len(description) > 100:
+        raise CommandDescriptionTooLong(
+            f"Command `{cmd}` (`{func.__name__}`) its description exceeds "
+            "the 100 character limit."
+        )
+
+    if reg := ChatCommandHandler.register.get(cmd):
+        raise CommandAlreadyRegistered(
+            f"Command `{cmd}` (`{func.__name__}`) has already been "
+            f"registered by `{reg.call.__name__}`."
+        )
+
+    sig, params = get_signature_and_params(func)
+    pass_context = should_pass_ctx(sig, params)
+
+    if len(params) > (25 + pass_context):
+        raise TooManyArguments(
+            f"Command `{cmd}` (`{func.__name__}`) can only have 25 "
+            f"arguments (excluding the context and self) yet {len(params)} "
+            "were provided!"
+        )
+
+    options: List[AppCommandOption] = []
+
+    for idx, param in enumerate(params):
+        if idx == 0 and pass_context:
+            continue
+
+        annotation, required = sig[param].annotation, True
+        argument_description: Optional[str] = None
+        choices: List[AppCommandOptionChoice] = []
+
+        if isinstance(annotation, str):
+            TypeCache()
+            annotation = eval(annotation, TypeCache.cache, globals())
+
+        if isinstance(annotation, Descripted):
+            argument_description = annotation.description
+            annotation = annotation.key
+
+            if len(argument_description) > 100:
+                raise CommandDescriptionTooLong(
+                    f"Tuple annotation `{annotation}` on parameter "
+                    f"`{param}` in command `{cmd}` (`{func.__name__}`), "
+                    "argument description too long. (maximum length is 100 "
+                    "characters)"
+                )
+
+        if get_origin(annotation) is Union:
+            args = get_args(annotation)
+            if type(None) in args:
+                required = False
+
+            # Do NOT use isinstance as this is a comparison between
+            # two values of the type type and isinstance does NOT
+            # work here.
+            union_args = [t for t in args if t is not type(None)]
+
+            annotation = (
+                get_index(union_args, 0) if len(union_args) == 1 else Union[Tuple[List]]
+            )
+
+        if get_origin(annotation) is Choices:
+            args = get_args(annotation)
+
+            if len(args) > 25:
+                raise InvalidAnnotation(
+                    f"Choices/Literal annotation `{annotation}` on "
+                    f"parameter `{param}` in command `{cmd}` "
+                    f"(`{func.__name__}`) amount exceeds limit of 25 items!"
+                )
+
+            choice_type = type(args[0])
+
+            if choice_type is Descripted:
+                choice_type = type(args[0].key)
+
+            for choice in args:
+                choice_description = choice
+                if isinstance(choice, Descripted):
+                    choice_description = choice.description
+                    choice = choice.key
+
+                    if choice_type is tuple:
+                        choice_type = type(choice)
+
+                if type(choice) not in choice_value_types:
+                    # Properly get all the names of the types
+                    valid_types = list(map(lambda x: x.__name__, choice_value_types))
+                    raise InvalidAnnotation(
+                        f"Choices/Literal annotation `{annotation}` on "
+                        f"parameter `{param}` in command `{cmd}` "
+                        f"(`{func.__name__}`), invalid type received. "
+                        "Value must be a member of "
+                        f"{', '.join(valid_types)} but "
+                        f"{type(choice).__name__} was given!"
+                    )
+                elif not isinstance(choice, choice_type):
+                    raise InvalidAnnotation(
+                        f"Choices/Literal annotation `{annotation}` on "
+                        f"parameter `{param}` in command `{cmd}` "
+                        f"(`{func.__name__}`), all values must be of the "
+                        "same type!"
+                    )
+
+                choices.append(
+                    AppCommandOptionChoice(name=choice_description, value=choice)
+                )
+
+            annotation = choice_type
+
+        param_type = _options_type_link.get(annotation)
+        if not param_type:
+            raise InvalidAnnotation(
+                f"Annotation `{annotation}` on parameter "
+                f"`{param}` in command `{cmd}` (`{func.__name__}`) is not "
+                "a valid type."
+            )
+
+        options.append(
+            AppCommandOption(
+                type=param_type,
+                name=param,
+                description=argument_description or "Description not set",
+                required=required,
+                choices=choices or MISSING,
             )
         )
 
-        _log.info(f"Registered command `{cmd}` to `{func.__name__}`.")
-        return func
+    ChatCommandHandler.register[cmd] = ClientCommandStructure(
+        call=func,
+        cooldown=cooldown,
+        cooldown_scale=cooldown_scale,
+        cooldown_scope=cooldown_scope,
+        app=AppCommand(
+            name=cmd,
+            description=description,
+            type=AppCommandType.CHAT_INPUT,
+            default_permission=enable_default,
+            options=options,
+            guild_id=guild_id,
+        ),
+    )
 
-    return decorator
+    _log.info(f"Registered command `{cmd}` to `{func.__name__}`.")
+    return func
 
 
 class ChatCommandHandler(metaclass=Singleton):
