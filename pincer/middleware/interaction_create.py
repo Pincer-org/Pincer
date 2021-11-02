@@ -3,64 +3,19 @@
 
 import logging
 from inspect import isasyncgenfunction, getfullargspec
-from typing import Union, Dict, Any
+from typing import Dict, Any
 
 from pincer.utils import get_index
-
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
-from ..objects import (
-    File, Interaction, Embed, Message, InteractionFlags, MessageContext
-)
+from ..objects import Interaction, MessageContext
+from ..objects.app import CallbackType
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 from ..utils.conversion import construct_client_dict
+from ..utils.convert_message import convert_message
 from ..utils.signature import get_params, get_signature_and_params
 
-PILLOW_IMPORT = True
-
-try:
-    from PIL.Image import Image
-except (ModuleNotFoundError, ImportError):
-    PILLOW_IMPORT = False
-
 _log = logging.getLogger(__name__)
-
-
-def convert_message(self, message: Union[Embed, Message, str]) -> Message:
-    """Converts a message to a Message object"""
-    if isinstance(message, Embed):
-        message = Message(embeds=[message])
-    elif PILLOW_IMPORT and isinstance(message, (File, Image)):
-        message = Message(attachments=[message])
-    elif not isinstance(message, Message):
-        message = Message(message) if message else Message(
-            self.received_message,
-            flags=InteractionFlags.EPHEMERAL
-        )
-    return message
-
-
-async def reply(self, interaction: Interaction, message: Message):
-    """
-    Sends a reply to an interaction.
-
-    :param self:
-        The current client.
-
-    :param interaction:
-        The interaction from whom the reply is.
-
-    :param message:
-        The message to reply with.
-    """
-
-    content_type, data = message.serialize()
-
-    await self.http.post(
-        f"interactions/{interaction.id}/{interaction.token}/callback",
-        data=data,
-        content_type=content_type
-    )
 
 
 async def interaction_response_handler(
@@ -105,17 +60,13 @@ async def interaction_response_handler(
             msg = convert_message(self, msg)
 
             if started:
-                await self.http.post(
-                    f"webhooks/{interaction.application_id}"
-                    f"/{interaction.token}",
-                    data=msg.to_dict().get("data")
-                )
+                await interaction.followup(msg)
             else:
                 started = True
-                await reply(self, interaction, msg)
+                await interaction.reply(msg)
     else:
         message = await command(**kwargs)
-        await reply(self, interaction, convert_message(self, message))
+        await interaction.reply(convert_message(self, message))
 
 
 async def interaction_handler(

@@ -20,6 +20,14 @@ pincer.objects.app.command module
    :undoc-members:
    :show-inheritance:
 
+pincer.objects.app.command\_types module
+----------------------------------------
+
+.. automodule:: pincer.objects.app.command_types
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.objects.app.intents module
 ---------------------------------
 
@@ -32,6 +40,14 @@ pincer.objects.app.interaction\_base module
 -------------------------------------------
 
 .. automodule:: pincer.objects.app.interaction_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pincer.objects.app.interaction\_flags module
+--------------------------------------------
+
+.. automodule:: pincer.objects.app.interaction_flags
    :members:
    :undoc-members:
    :show-inheritance:

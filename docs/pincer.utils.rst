@@ -20,6 +20,14 @@ pincer.utils.conversion module
    :undoc-members:
    :show-inheritance:
 
+pincer.utils.convert\_message module
+------------------------------------
+
+.. automodule:: pincer.utils.convert_message
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pincer.utils.directory module
 -----------------------------
 

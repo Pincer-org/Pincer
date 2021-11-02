@@ -27,6 +27,7 @@ from .utils.signature import get_params
 
 if TYPE_CHECKING:
     from .objects.app import AppCommand
+    from .utils import Snowflake
 
 _log = logging.getLogger(__package__)
 
@@ -164,6 +165,10 @@ class Client(Dispatcher):
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
         self.throttler = throttler
+        # TODO: Document guild prop
+        # The guild value is only registered if the GUILD_MEMBERS
+        # intent is enabled.
+        self.guilds: Dict[Snowflake, Optional[Guild]] = {}
         ChatCommandHandler.managers[self.__module__] = self
 
     @property
