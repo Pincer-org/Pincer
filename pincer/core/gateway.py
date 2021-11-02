@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import logging
 import zlib
-from asyncio import get_event_loop, AbstractEventLoop, ensure_future, sleep
+from asyncio import get_event_loop, AbstractEventLoop, ensure_future
 from platform import system
 from typing import Dict, Callable, Awaitable, Optional
 
