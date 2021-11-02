@@ -152,11 +152,11 @@ class Client(Dispatcher):
         The discord intents to use |default| :data:`None`
     throttler : Optional[:class:`~objects.app.throttling.ThrottleInterface`]
         The cooldown handler for your client,
-        defaults to :class`~.objects.app.throttling.DefaultThrottleHandler`
+        defaults to :class:`~.objects.app.throttling.DefaultThrottleHandler`
         *(which uses the WindowSliding technique)*.
         Custom throttlers must derive from
         :class:`~pincer.objects.app.throttling.ThrottleInterface`.
-        |default| :data:`None`
+        |default| :class:`~pincer.objects.app.throttling.DefaultThrottleHandler`
     """
 
     def __init__(
@@ -233,13 +233,13 @@ class Client(Dispatcher):
             >>> # Class based
             >>> from pincer import Client
             >>>
-            >>> class BotClient(Client):
+            >>> class MyClient(Client):
             ...     @Client.event
             ...     async def on_ready(self):
             ...         print(f"Signed in as {self.bot}")
             >>>
             >>> if __name__ == "__main__":
-            ...     BotClient("token").run()
+            ...     MyClient("token").run()
 
         Raises
         ------
@@ -298,7 +298,7 @@ class Client(Dispatcher):
 
             >>> from pincer import Client
             >>>
-            >>> class BotClient(Client):
+            >>> class MyClient(Client):
             ...     def __init__(self, *args, **kwargs):
             ...         self.load_cog("cogs.say")
             ...         super().__init__(*args, **kwargs)

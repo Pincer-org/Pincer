@@ -83,7 +83,7 @@ def command(
                 self,
                 ctx,
                 amount: int,
-                name: (str, "ah yes"),
+                name: Descripted(str, "ah yes"),
                 letter: Choices["a", "b", "c"]
             ):
                 return Message(
@@ -95,6 +95,7 @@ def command(
         :class:`~client.Client`,
         :class:`~objects.message.message.Message`,
         :class:`~utils.types.Choices`,
+        :class:`~utils.types.Descripted`,
         :class:`~objects.app.interactions.InteractionFlags`
 
     Parameters
