@@ -323,7 +323,7 @@ class Dispatcher:
         self.__keep_alive = False
 
         self.__socket.messages.append("CLOSE")
-        # noinspection PyProtectedMember
-        self.__socket._pop_message_waiter.cancel()
+        if waiter := getattr(self.__socket, "_pop_message_waiter", None):
+            waiter.cancel()
         await self.__socket.close()
         _log.debug("Successfully closed connection!")
