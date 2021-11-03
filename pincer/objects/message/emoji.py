@@ -46,7 +46,7 @@ class Emoji(APIObject):
     """
 
     name: Optional[str]
-    id: Optional[Snowflake] = None
+    id: APINullable[Snowflake] = MISSING
 
     animated: APINullable[bool] = MISSING
     available: APINullable[bool] = MISSING
