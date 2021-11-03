@@ -30,8 +30,3 @@ class ChannelPinsUpdateEvent(APIObject):
     guild_id: APINullable[Snowflake] = MISSING
     last_pin_timestamp: APINullable[Timestamp] = MISSING
 
-
-    def __post_init__(self):
-        self.last_pin_timestamp = convert(
-            self.last_pin_timestamp, Timestamp.parse, Timestamp
-    )
