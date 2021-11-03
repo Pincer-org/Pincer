@@ -3,4 +3,31 @@
 
 """sent when a user in a subscribed voice channel speaks"""
 
-# TODO: Implement event
+from ..core.dispatch import GatewayDispatch
+from ..utils.snowflake import Snowflake
+from ..utils.types import Coro
+
+
+async def speaking_start_middleware(self, payload: GatewayDispatch):
+    """|coro|
+    
+    Middleware for ``on_speaking_start`` event.
+    
+    Parameters
+    ----------
+    self : :class:`Client`
+        The current client/bot.
+    payload : :class:`GatewayDispatch`
+        The data received from the speaking start event.
+        
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`Snowflake`]]
+        ``on_speaking_start`` and a ``Snowflake`` (user_id)
+    """
+    user_id: Snowflake = Snowflake.from_string(payload.data.get("user_id"))
+    return "on_speaking_start", [user_id]
+
+
+def export() -> Coro:
+    return speaking_start_middleware
