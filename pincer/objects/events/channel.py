@@ -4,7 +4,6 @@
 from dataclasses import dataclass
 
 from ...utils.api_object import APIObject
-from ...utils.conversion import convert
 from ...utils.snowflake import Snowflake
 from ...utils.timestamp import Timestamp
 from ...utils.types import MISSING, APINullable

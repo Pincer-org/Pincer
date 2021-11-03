@@ -6,7 +6,7 @@ from typing import List
 
 from ..core.dispatch import GatewayDispatch
 from ..objects import Guild, Channel
-from ..utils.conversion import construct_client_dict, convert
+from ..utils.conversion import construct_client_dict
 
 
 async def guild_update_middleware(self, payload: GatewayDispatch):
