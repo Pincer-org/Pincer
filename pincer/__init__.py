@@ -26,6 +26,8 @@ from .exceptions import (
     UnauthorizedError, ForbiddenError, NotFoundError, MethodNotAllowedError,
     RateLimitError, GatewayError, ServerError
 )
+from .objects import Intents
+from .utils import Choices, Descripted
 
 __package__ = "pincer"
 __title__ = "Pincer library"
@@ -48,11 +50,11 @@ class VersionInfo(NamedTuple):
 
     def __repr__(self) -> str:
         return (
-            f'{self.major}.{self.minor}.{self.micro}'
-            + (
-                f'-{self.release_level}{self.serial}'
-                * (self.release_level is not None)
-            )
+                f'{self.major}.{self.minor}.{self.micro}'
+                + (
+                        f'-{self.release_level}{self.serial}'
+                        * (self.release_level is not None)
+                )
         )
 
 
@@ -60,9 +62,9 @@ version_info = VersionInfo(0, 9, 3, release_level="alpha")
 __version__ = "0.9.3a"
 
 __all__ = (
-    "Bot", "Choices", "Client", "Intents", "__author__", "__email__",
-    "__package__", "__title__", "__version__", "command", "GatewayConfig",
-    "event_middleware", "ChatCommandHandler", "PincerError",
+    "Bot", "Choices", "Client", "Descripted", "Intents", "__author__",
+    "__email__", "__package__", "__title__", "__version__", "command",
+    "GatewayConfig", "event_middleware", "ChatCommandHandler", "PincerError",
     "UnhandledException", "NoExportMethod",
     "CogError", "CogNotFound", "CogAlreadyExists", "NoValidSetupMethod",
     "TooManySetupArguments", "NoCogManagerReturnFound", "CommandError",
