@@ -125,7 +125,7 @@ You have the possibility to use your own class to inherit from the Pincer bot
 base.
 
 ```py
-from pincer import Client, command
+from pincer import Client, command, Descripted
 
 
 class Bot(Client):
@@ -152,8 +152,8 @@ class Bot(Client):
     @command(description="Add two numbers!")
     async def add(
             self, 
-            first: (int, "The first number"), # support arg descriptions!
-            second: (int, "The second number") # since 0.7.1
+            first: Descripted[int, "The first number"],
+            second: Descripted[int, "The second number"]
     ): 
         return f"The addition of `{first}` and `{second}` is `{first + second}`"
 ```

@@ -157,7 +157,8 @@ class AppCommand(APIObject):
     dm_permission: APINullable[None] = None
 
     _eq_props = [
-        "type", "name", "description", "guild_id", "default_permission"
+        "type", "name", "description", "guild_id", "default_permission",
+        "options"
     ]
 
     def __post_init__(self):
@@ -181,22 +182,9 @@ class AppCommand(APIObject):
         if isinstance(other, ClientCommandStructure):
             other = other.app
 
-        is_equal = all(
+        return all(
             self.__getattribute__(prop) == other.__getattribute__(prop)
             for prop in self._eq_props
-        )
-
-        if (
-                (self.options is MISSING and other.options is not MISSING)
-                or (self.options is not MISSING and other.options is MISSING)
-                and not is_equal
-        ) or len(other.options) != len(self.options) \
-                or self.guild_id != other.guild_id:
-            return False
-
-        return not any(
-            option != get_index(self.options, idx)
-            for idx, option in enumerate(other.options)
         )
 
     def __hash__(self):

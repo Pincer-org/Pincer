@@ -18,6 +18,10 @@ class Timestamp:
         self.__epoch = Timestamp.to_epoch(self.__time)
         self.date, self.time = str(self).split()
 
+    @classmethod
+    def __factory__(cls, time: Optional[TS] = None) -> datetime:
+        return cls.parse(time)
+
     @staticmethod
     def to_epoch(time: datetime) -> int:
         """
