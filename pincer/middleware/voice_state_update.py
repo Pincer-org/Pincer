@@ -12,15 +12,22 @@ from ..utils.conversion import construct_client_dict
 
 
 async def voice_state_update_middleware(self, payload: GatewayDispatch):
-    """
+    """|coro|
+    
     Middleware for ``on_voice_state_update`` event.
 
+    Parameters
+    ----------
     :param self:
         The current client.
 
     :param payload:
-        The data received from the ready event.
+        The data received from the voice state update event.
 
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.user.voice_state.VoiceState`]]
+        ``on_voice_state_update`` and a ``VoiceState``
     """
     return "on_voice_state_update", [
         VoiceState.from_dict(construct_client_dict(self, payload.data))
