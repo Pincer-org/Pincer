@@ -2,9 +2,10 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 """Sent when a channel is created/joined on the client."""
-from pincer.core.dispatch import GatewayDispatch
-from pincer.objects import Channel
-from pincer.utils.conversion import construct_client_dict
+from ..core.dispatch import GatewayDispatch
+from ..objects import Channel
+from ..utils.conversion import construct_client_dict
+from ..utils.types import Coro
 
 
 def channel_create_middleware(self, payload: GatewayDispatch):
@@ -26,3 +27,6 @@ def channel_create_middleware(self, payload: GatewayDispatch):
     return "on_channel_create", [
         Channel.from_dict(construct_client_dict(self, payload.data))
     ]
+
+def export() -> Coro:
+    return channel_create_middleware
