@@ -12,6 +12,7 @@ from pincer.utils import get_index
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
 from ..objects import Interaction, MessageContext
+
 from ..utils.convert_message import convert_message
 from ..utils.conversion import construct_client_dict
 from ..utils.signature import get_params, get_signature_and_params
@@ -56,19 +57,16 @@ async def interaction_response_handler(
 
     if isasyncgenfunction(command):
         message = command(**kwargs)
-        started = False
 
         async for msg in message:
-            msg = convert_message(self, msg)
-
-            if started:
+            if interaction.has_replied:
                 await interaction.followup(msg)
             else:
-                started = True
                 await interaction.reply(msg)
     else:
         message = await command(**kwargs)
-        await interaction.reply(convert_message(self, message))
+        if not interaction.has_replied:
+            await interaction.reply(message)
 
 
 async def interaction_handler(

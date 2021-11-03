@@ -7,6 +7,8 @@ import logging
 from typing import TYPE_CHECKING
 from asyncio import sleep
 
+from websockets.exceptions import ConnectionClosedOK
+
 from . import __package__
 from ..exceptions import HeartbeatError
 from ..core.dispatch import GatewayDispatch
@@ -38,7 +40,15 @@ class Heartbeat:
             The socket to send the heartbeat to.
         """
         _log.debug("Sending heartbeat (seq: %s)", str(cls.__sequence))
-        await socket.send(str(GatewayDispatch(1, cls.__sequence)))
+        try:
+            await socket.send(str(GatewayDispatch(1, cls.__sequence)))
+        except ConnectionClosedOK:
+            _log.debug(
+                "Sending heartbeat failed. Ignoring failure... "
+                "Client should automatically resolve this issue. "
+                "If a crash occurs please create an issue on our github! "
+                "(https://github.com/Pincer-org/Pincer)"
+            )
 
     @classmethod
     def get(cls) -> float:
@@ -123,8 +133,10 @@ class Heartbeat:
         await cls.__send(socket)
 
     @classmethod
-    def update_sequence(cls, seq: int):
-        """Update the heartbeat sequence.
+    def update_sequence(cls, seq: Optional[int]):
+        """
+        Update the heartbeat sequence.
+
 
         Parameters
         ----------

@@ -45,11 +45,11 @@ class Dispatcher:
     `<https://discord.com/developers/applications/>`_)
     """
 
-    # TODO: Implement compression
     def __init__(
             self, token: str, *,
             handlers: Dict[int, Handler],
-            intents: Intents
+            intents: Intents,
+            reconnect: bool
     ) -> None:
         if len(token) != 59:
             raise InvalidTokenError(
@@ -58,8 +58,10 @@ class Dispatcher:
 
         self.__token = token
         self.__keep_alive = True
+        self.__has_closed = self.__should_restart = False
         self.__socket: Optional[WebSocketClientProtocol] = None
         self.__intents = intents
+        self.__reconnect = reconnect
 
         async def identify_and_handle_hello(
                 socket: WebSocketClientProtocol,
@@ -91,10 +93,7 @@ class Dispatcher:
             Closes the client and then reconnects it.
             """
             _log.debug("Reconnecting client...")
-            await self.close()
-
-            Heartbeat.update_sequence(payload.seq)
-            self.start_loop()
+            await self.restart(payload.seq)
 
         self.__dispatch_handlers: Dict[int, Handler] = {
             **handlers,
@@ -105,6 +104,7 @@ class Dispatcher:
         }
 
         self.__dispatch_errors: Dict[int, PincerError] = {
+            1006: _InternalPerformReconnectError(),
             4000: _InternalPerformReconnectError(),
             4004: InvalidTokenError(),
             4007: _InternalPerformReconnectError(),
@@ -194,6 +194,7 @@ class Dispatcher:
         )
 
         async with connect(GatewayConfig.uri()) as socket:
+            socket: WebSocketClientProtocol = socket
             self.__socket = socket
 
             # Removing the limit of the received socket.
@@ -215,6 +216,9 @@ class Dispatcher:
                 try:
                     _log.debug("Waiting for new event.")
                     msg = await socket.recv()
+
+                    if msg == "CLOSE":
+                        break
 
                     if isinstance(msg, bytes):
                         if GatewayConfig.compression == "zlib-payload":
@@ -243,14 +247,16 @@ class Dispatcher:
                     exception = self.__dispatch_errors.get(exc.code)
 
                     if isinstance(exception, _InternalPerformReconnectError):
-                        Heartbeat.update_sequence(0)
-                        return self.start_loop()
+                        if self.__reconnect:
+                            _log.debug("Connection closed, reconnecting...")
+                            return await self.restart()
 
                     raise exception or UnhandledException(
                         f"Dispatch error ({exc.code}): {exc.reason}"
                     )
                 except ConnectionClosedOK:
                     _log.debug("Connection closed successfully.")
+            self.__has_closed = True
 
     def start_loop(self, *, loop: AbstractEventLoop = None):
         """Instantiate the dispatcher, this will create a connection to the
@@ -263,10 +269,28 @@ class Dispatcher:
             The loop in which the Dispatcher will run. If no loop is
             provided it will get a new one. |default| :data:`None`
         """
-        _log.debug("Starting GatewayDispatcher")
         loop = loop or get_event_loop()
+        self.__keep_alive = True
+        self.__has_closed = self.__should_restart = False
         loop.run_until_complete(self.__dispatcher(loop))
+        if self.__should_restart:
+            return self.start_loop(loop=loop)
         loop.close()
+
+    async def restart(self, /, seq: Optional[int] = None):
+        """
+        Restart the dispatcher.
+
+        Parameters
+        ----------
+        seq Optional[:class:`int`]
+            The sequence number of the last dispatched event.
+            If not provided, the dispatcher will restart with no base
+            sequence.
+        """
+        await self.close()
+        Heartbeat.update_sequence(seq)
+        self.__should_restart = True
 
     async def close(self):
         """|coro|
@@ -278,9 +302,11 @@ class Dispatcher:
             _log.error("Cannot close non existing socket socket connection.")
             raise RuntimeError("Please open the connection before closing.")
 
-        _log.debug(
-            "Setting keep_alive to False, this will terminate the heartbeat."
-        )
-
+        _log.debug("Closing connection...")
         self.__keep_alive = False
+
+        self.__socket.messages.append("CLOSE")
+        if waiter := getattr(self.__socket, "_pop_message_waiter", None):
+            waiter.cancel()
         await self.__socket.close()
+        _log.debug("Successfully closed connection!")

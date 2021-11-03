@@ -1,6 +1,5 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
-
 from typing import Optional
 
 
@@ -107,6 +106,7 @@ class TooManyArguments(CommandError):
     """
 
 
+
 class InvalidArgumentAnnotation(CommandError):
     """The provided argument annotation is not known, so it cannot be used."""
 
@@ -117,6 +117,34 @@ class CommandReturnIsEmpty(CommandError):
 
 class InvalidCommandGuild(CommandError):
     """The provided guild id not not valid."""
+
+
+class InteractionDoesNotExist(CommandError):
+    """The action which you are trying to perform requires an
+    interaction to be created/sent to discord. But this has not been
+    done yet!
+    """
+
+
+class UseFollowup(CommandError):
+    """A reply has alrready been sent, please use a followup to
+    continue replying.
+    """
+
+
+class InteractionAlreadyAcknowledged(CommandError):
+    """The command has already been acknowledged by discord.
+    This can be because a reply or ack has already been sent!
+    """
+
+
+class InteractionTimedOut(CommandError):
+    """Discord had to wait too long for a response from your command!
+    The discord wait time can be extended by using the
+    :func:`~pincer.objects.app.interaction.Interaction.ack` function in
+    the :attr:`~pincer.objects.message.context.MessageContext.interaction`
+    property.
+    """
 
 
 class InvalidCommandName(CommandError):
