@@ -51,10 +51,10 @@ class VoiceConnectionStates(Enum):
     """
     :param DISCONNECTED:
         TCP disconnected
-        
+
     :param AWAITING_ENDPOINT:
         Waiting for voice endpoint
-        
+
     :param AUTHENTICATING:
         TCP authenticating
 
@@ -97,21 +97,22 @@ class VoiceConnectionStates(Enum):
 class VoiceConnectionStatusEvent(APIObject):
     """
     Sent when the client's voice connection status changes
+    
     :param state:
         one of the voice connection states listed below
-        
+
     :param hostname:
         hostname of the connected voice server
-        
+
     :param pings:
         last 20 pings (in ms)
-        
+
     :param average_ping:
         average ping (in ms)
-        
+
     :param last_ping:
         last ping (in ms)
-        
+
     """
 
     state: VoiceConnectionStates
@@ -119,3 +120,27 @@ class VoiceConnectionStatusEvent(APIObject):
     pings: List[int]
     average_ping: int
     last_ping: int
+
+
+@dataclass
+class SpeakingStartEvent(APIObject):
+    """
+    Sent when a user in a subscribed voice channel speaks
+
+    :param user_id:
+        id of user who started speaking
+    """
+
+    user_id: Snowflake
+
+
+@dataclass
+class SpeakingStopEvent(APIObject):
+    """
+    Sent when a user in a subscribed voice channel stops speaking
+
+    :param user_id:
+        id of user who stopped speaking
+    """
+
+    user_id: Snowflake
