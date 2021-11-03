@@ -9,7 +9,6 @@ from pincer.utils import get_index
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
 from ..objects import Interaction, MessageContext
-from ..objects.app import CallbackType
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 from ..utils.conversion import construct_client_dict
 from ..utils.convert_message import convert_message
@@ -107,15 +106,23 @@ async def interaction_handler(
 
 
 async def interaction_create_middleware(self, payload: GatewayDispatch):
-    """
+    """|coro|
+    
     Middleware for ``on_interaction``, which handles command
     execution.
-
+    
+    Parameters
+    ----------
     :param self:
         The current client.
 
     :param payload:
         The data received from the interaction event.
+        
+    Returns
+    ------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.app.interactions.Interaction`]]
+        ``on_interaction`` and an ``Interaction``
     """
 
     interaction: Interaction = Interaction.from_dict(

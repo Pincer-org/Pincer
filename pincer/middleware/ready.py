@@ -15,14 +15,22 @@ from ..utils.conversion import construct_client_dict
 
 
 async def on_ready_middleware(self, payload: GatewayDispatch):
-    """
+    """|coro|
+    
     Middleware for ``on_ready`` event.
 
+    Parameters
+    ----------
     :param self:
         The current client.
 
     :param payload:
         The data received from the ready event.
+        
+    Returns
+    -------
+    Tuple[:class:`str`]
+        ``on_ready``
     """
     user = payload.data.get("user")
     guilds = payload.data.get("guilds")
@@ -37,7 +45,7 @@ async def on_ready_middleware(self, payload: GatewayDispatch):
     self.guilds = dict(map(lambda i: (i["id"], None), guilds))
 
     await ChatCommandHandler(self).initialize()
-    return "on_ready",
+    return ("on_ready",)
 
 
 def export() -> Coro:

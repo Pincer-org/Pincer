@@ -23,6 +23,11 @@ async def guild_member_remove_middleware(self, payload: GatewayDispatch):
 
     payload : :class:`GatewayDispatch`
         The data received from the guild member remove event.
+        
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildMemberRemoveEvent`]]
+        ``on_guild_member_remove`` and a ``GuildMemberRemoveEvent`` object
     """
 
     return (

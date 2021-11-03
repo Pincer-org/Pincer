@@ -11,7 +11,8 @@ from ..utils.conversion import construct_client_dict
 
 
 def error_middleware(self, payload: GatewayDispatch):
-    """
+    """|coro|
+    
     Middleware for ``on_error`` event.
 
     :param self:
@@ -19,6 +20,11 @@ def error_middleware(self, payload: GatewayDispatch):
 
     :param payload:
         The data received from the ready event.
+        
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.events.error.DiscordError`]]
+        ``on_error`` and a ``DiscordError``
     """
 
     return "on_error",  [

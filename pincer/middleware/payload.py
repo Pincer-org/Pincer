@@ -5,10 +5,25 @@ from ..core.dispatch import GatewayDispatch
 
 
 async def payload_middleware(self, payload: GatewayDispatch):
-    """Invoked when basically anything is received from gateway.."""
+    """|coro|
+    
+    Middleware for ``on_payload`` event.
+    
+    Parameters
+    ----------
+    self : :class:`Client`
+        The current client/bot.
+        
+    payload : :class:`GatewayDispatch`
+        The data received from the notification create event.
+        
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.core.dispatch.GatewayDispatch`]]
+        ``on_payload`` and a ``GatewayDispatch`` object
+    """
     return "on_payload", [payload]
 
 
 def export():
-    """Export the middleware"""
     return payload_middleware

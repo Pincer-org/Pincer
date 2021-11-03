@@ -9,15 +9,23 @@ from ..utils.conversion import construct_client_dict
 
 
 async def message_create_middleware(self, payload: GatewayDispatch):
-    """
+    """|coro|
+    
     Middleware for ``on_message`` event,
         generate a class for the message that has been created.
 
+    Paramaters
+    ----------
     :param self:
         The current client.
 
     :param payload:
         The data received from the message creation event.
+        
+    Returns
+    -------
+    Tuple[:class:`str`, :class:`~pincer.objects.message.user_message.UserMessage`]
+        ``on_message`` and a ``UserMessage``
     """
     return "on_message", [
         UserMessage.from_dict(construct_client_dict(self, payload.data))

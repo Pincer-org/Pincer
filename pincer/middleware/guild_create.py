@@ -9,18 +9,24 @@ from ..utils.conversion import construct_client_dict
 
 
 async def guild_create_middleware(self, payload: GatewayDispatch):
-    """
+    """|coro|
+    
     Middleware for ``on_guild_create``,
         generate the guild class that was created
 
+    Paramaters
+    ----------
+    
     :param self:
         The current client.
 
     :param payload:
         The data received from the guild creation event.
 
-    :return Guild:
-
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.Guild`]]
+        ``on_guild_create`` and a ``Guild``
     """
     guild = Guild.from_dict(construct_client_dict(self, payload.data))
     self.guilds[guild.id] = guild

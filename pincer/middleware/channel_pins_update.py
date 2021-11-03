@@ -22,7 +22,7 @@ async def channel_pins_update_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, `~pincer.objects.guild.channel.Channel`]
+    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.channel.Channel`]]
         ``on_channel_pins_update`` and a ``Channel``
     """
 
