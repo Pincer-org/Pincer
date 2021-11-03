@@ -8,7 +8,7 @@ from ..objects.events.message import MessageDeleteEvent
 from ..utils.conversion import construct_client_dict
 
 
-async def on_message_delete_middleware(self, payload: GatewayDispatch):
+async def message_delete_middleware(self, payload: GatewayDispatch):
     """|coro|
     
     Middleware for ``on_message_delete`` event.
@@ -32,4 +32,4 @@ async def on_message_delete_middleware(self, payload: GatewayDispatch):
 
 
 def export():
-    return on_message_delete_middleware
+    return message_delete_middleware

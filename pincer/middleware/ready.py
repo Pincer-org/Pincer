@@ -14,7 +14,7 @@ from ..utils import Coro
 from ..utils.conversion import construct_client_dict
 
 
-async def on_ready_middleware(self, payload: GatewayDispatch):
+async def ready_middleware(self, payload: GatewayDispatch):
     """|coro|
     
     Middleware for ``on_ready`` event.
@@ -49,4 +49,4 @@ async def on_ready_middleware(self, payload: GatewayDispatch):
 
 
 def export() -> Coro:
-    return on_ready_middleware
+    return ready_middleware
