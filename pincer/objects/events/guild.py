@@ -4,17 +4,18 @@
 from dataclasses import dataclass
 from typing import Any, List, Optional
 
-from .presence import PresenceUpdateEvent
-from ..guild.member import GuildMember
-from ..guild.role import Role
-from ..message.emoji import Emoji
-from ..message.sticker import Sticker
-from ..user import User
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
 from ...utils.snowflake import Snowflake
 from ...utils.timestamp import Timestamp
 from ...utils.types import MISSING, APINullable
+from ..guild.guild import Guild
+from ..guild.member import GuildMember
+from ..guild.role import Role
+from ..message.emoji import Emoji
+from ..message.sticker import Sticker
+from ..user import User
+from .presence import PresenceUpdateEvent
 
 
 @dataclass
@@ -269,3 +270,17 @@ class GuildRoleDeleteEvent(APIObject):
     """
     guild_id: Snowflake
     role_id: Snowflake
+
+
+@dataclass
+class GuildStatusEvent(APIObject):
+    """
+    Sent when a subscribed server's state changes
+    :param guild:
+        guild with requested id
+    :param online:
+        number of online users in guild (deprecated; always 0)
+    """
+
+    guild: Guild
+    online = 0
