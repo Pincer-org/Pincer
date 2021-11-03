@@ -21,7 +21,6 @@ def thread_create_middleware(self, payload: GatewayDispatch):
     payload : :class:`GatewayDispatch`
         The data received from the thread create event.
 
-
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.guild.channel.Channel`]]

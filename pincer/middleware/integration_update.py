@@ -14,14 +14,13 @@ async def integration_update_middleware(self, payload: GatewayDispatch):
 
     Middleware for ``on_integration_update``,
 
-    Paramaters
+    Parameters
     ----------
+    self : :class:`Client`
+        The current client/bot
 
-    :param self:
-        The current client.
-
-    :param payload:
-        The data received from the integration update event.
+    payload : :class:`GatewayDispatch`
+        The data recieved from the integration update event
 
     Returns
     -------

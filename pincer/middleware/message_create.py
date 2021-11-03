@@ -14,13 +14,13 @@ async def message_create_middleware(self, payload: GatewayDispatch):
     Middleware for ``on_message`` event,
         generate a class for the message that has been created.
 
-    Paramaters
+    Parameters
     ----------
-    :param self:
-        The current client.
+    self : :class:`Client`
+        The current client/bot
 
-    :param payload:
-        The data received from the message creation event.
+    payload : :class:`GatewayDispatch`
+        The data recieved from the message create event
         
     Returns
     -------

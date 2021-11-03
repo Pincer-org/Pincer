@@ -22,7 +22,6 @@ async def guild_update_middleware(self, payload: GatewayDispatch):
     payload : :class:`GatewayDispatch`
         The data received from the guild update event.
 
-
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.guild.guild.Guild`]]

@@ -18,6 +18,7 @@ async def voice_connection_status_middleware(self, payload: GatewayDispatch):
     ----------
     self : :class:`Client`
         The current client/bot.
+        
     payload : :class:`GatewayDispatch`
         The data received from the voice connection status event.
         

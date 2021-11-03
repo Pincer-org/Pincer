@@ -20,6 +20,7 @@ async def activity_spectate_middleware(self, payload: GatewayDispatch):
     ----------
     self : :class:`Client`
         The current client/bot.
+        
     payload : :class:`GatewayDispatch`
         The data received from the activity spectate event.
         

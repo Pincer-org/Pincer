@@ -113,11 +113,11 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
     
     Parameters
     ----------
-    :param self:
-        The current client.
+    self : :class:`Client`:
+        The current client/bot
 
-    :param payload:
-        The data received from the interaction event.
+    payload : :class:`GatewayDispatch`
+        The data recieved from the interaction create event
         
     Returns
     ------

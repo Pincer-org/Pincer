@@ -21,7 +21,6 @@ async def guild_delete_middleware(self, payload: GatewayDispatch):
     payload : :class:`GatewayDispatch`
         The data received from the guild delete event.
 
-
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.guild.guild.UnavailableGuild`]]

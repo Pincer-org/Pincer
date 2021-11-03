@@ -13,10 +13,13 @@ def channel_create_middleware(self, payload: GatewayDispatch):
     
     Middleware for ``on_channel_creation`` event.
 
-    :param client:
+    Parameters
+    ----------
+    self : :class:`Client`
+        The current client/bot
 
-    :param payload:
-        The data received from the ready event.
+    payload : :class:`GatewayDispatch`
+        The data recieved from the channel create event
         
     Returns
     -------

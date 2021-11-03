@@ -22,7 +22,6 @@ async def message_reaction_add_middleware(self, payload: GatewayDispatch):
     payload : :class:`GatewayDispatch`
         The data received from the message reaction add event.
 
-
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.events.message.MessageReactionAddEvent`]]

@@ -14,14 +14,13 @@ async def guild_create_middleware(self, payload: GatewayDispatch):
     Middleware for ``on_guild_create``,
         generate the guild class that was created
 
-    Paramaters
+    Parameters
     ----------
-    
-    :param self:
-        The current client.
+    self : :class:`Client`
+        The current client/bot
 
-    :param payload:
-        The data received from the guild creation event.
+    payload : :class:`GatewayDispatch`
+        The data recieved from the guild create event
 
     Returns
     -------

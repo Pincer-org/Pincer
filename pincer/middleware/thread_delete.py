@@ -21,7 +21,6 @@ async def thread_delete_middleware(self, payload: GatewayDispatch):
     payload : :class:`GatewayDispatch`
         The data received from the thread delete event.
 
-
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.guild.channel.Channel`]]

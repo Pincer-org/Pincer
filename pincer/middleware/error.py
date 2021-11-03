@@ -16,11 +16,13 @@ def error_middleware(self, payload: GatewayDispatch):
     
     Middleware for ``on_error`` event.
 
-    :param self:
-        The current client/bot.
+    Parameters
+    ----------
+    self : :class:`Client`
+        The current client/bot
 
-    :param payload:
-        The data received from the ready event.
+    payload : :class:`GatewayDispatch`
+        The data recieved from the error event
         
     Returns
     -------

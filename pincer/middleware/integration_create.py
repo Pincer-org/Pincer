@@ -14,14 +14,13 @@ async def integration_create_middleware(self, payload: GatewayDispatch):
 
     Middleware for ``on_integration_create``,
 
-    Paramaters
+    Parameters
     ----------
+    self : :class:`Client`
+        The current client/bot
 
-    :param self:
-        The current client.
-
-    :param payload:
-        The data received from the integration create event.
+    payload : :class:`GatewayDispatch`
+        The data recieved from the sintegration create event
 
     Returns
     -------

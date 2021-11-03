@@ -26,7 +26,6 @@ async def thread_list_sync(self, payload: GatewayDispatch):
     payload : :class:`GatewayDispatch`
         The data received from the thread list sync event.
 
-
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.guild.events.thread.ThreadListSyncEvent`]]

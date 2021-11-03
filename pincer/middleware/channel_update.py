@@ -21,7 +21,6 @@ async def channel_update_middleware(self, payload: GatewayDispatch):
     payload : :class:`GatewayDispatch`
         The data received from the channel update event.
 
-
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.channel.channel.Channel`]]

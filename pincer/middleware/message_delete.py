@@ -13,13 +13,13 @@ async def message_delete_middleware(self, payload: GatewayDispatch):
     
     Middleware for ``on_message_delete`` event.
 
-    Paramters
-    ---------
-    :param self:
-        The current client.
+    Parameters
+    ----------
+    self : :class:`Client`
+        The current client/bot
 
-    :param payload:
-        The data received from the delete message event.
+    payload : :class:`GatewayDispatch`
+        The data recieved from the message delete event
         
     Returns
     -------

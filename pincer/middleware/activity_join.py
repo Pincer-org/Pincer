@@ -23,7 +23,6 @@ async def activity_join_middleware(self, payload: GatewayDispatch):
     payload : :class:`GatewayDispatch`
         The data received from the activity join event.
 
-
     Returns
     -------
     Tuple[:class:`str`, List[:class:`str`]]

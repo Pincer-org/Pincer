@@ -17,6 +17,7 @@ async def speaking_stop_middleware(self, payload: GatewayDispatch):
     ----------
     self : :class:`Client`
         The current client/bot.
+        
     payload : :class:`GatewayDispatch`
         The data received from the speaking stop event.
         

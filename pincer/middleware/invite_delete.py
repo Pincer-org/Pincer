@@ -14,14 +14,13 @@ async def invite_delete_middleware(self, payload: GatewayDispatch):
 
     Middleware for ``on_invite_delete``,
 
-    Paramaters
+    Parameters
     ----------
+    self : :class:`Client`
+        The current client/bot
 
-    :param self:
-        The current client.
-
-    :param payload:
-        The data received from the invite delete event.
+    payload : :class:`GatewayDispatch`
+        The data recieved from the invite delete event
 
     Returns
     -------

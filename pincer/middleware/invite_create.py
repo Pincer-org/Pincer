@@ -14,14 +14,13 @@ async def invite_create_middleware(self, payload: GatewayDispatch):
 
     Middleware for ``on_invite_create``,
 
-    Paramaters
+    Parameters
     ----------
+    self : :class:`Client`
+        The current client/bot
 
-    :param self:
-        The current client.
-
-    :param payload:
-        The data received from the invite create event.
+    payload : :class:`GatewayDispatch`
+        The data recieved from the invite create event
 
     Returns
     -------

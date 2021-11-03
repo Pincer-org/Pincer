@@ -16,11 +16,11 @@ async def message_update_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    :param self:
-        The current client.
+    self : :class:`Client`
+        The current client/bot
 
-    :param payload:
-        The data received from the message update event.
+    payload : :class:`GatewayDispatch`
+        The data recieved from the message update event event
 
     Returns
     -------

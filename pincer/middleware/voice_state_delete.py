@@ -11,11 +11,14 @@ from ..utils.types import Coro
 
 async def voice_state_delete_middleware(self, payload: GatewayDispatch):
     """|coro|
+    
     Middleware for ``on_voice_state_delete`` event.
+    
     Parameters
     ----------
     self : :class:`Client`
         The current client/bot.
+        
     payload : :class:`GatewayDispatch`
         The data received from the voice state delete event.
         
