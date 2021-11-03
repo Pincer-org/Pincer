@@ -83,7 +83,7 @@ def command(
                 self,
                 ctx,
                 amount: int,
-                name: Descripted(str, "ah yes"),
+                name: Descripted[str, "ah yes"],
                 letter: Choices["a", "b", "c"]
             ):
                 return Message(
