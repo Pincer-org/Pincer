@@ -26,9 +26,16 @@ async def channel_delete_middleware(self, payload: GatewayDispatch):
     Tuple[:class:`str`, `~pincer.objects.guild.channel.Channel`]
         ``on_channel_delete`` and a ``Channel``
     """
-    return "on_channel_delete", [
-        Channel.from_dict(construct_client_dict(self, payload.data))
-    ]
+
+    channel = Channel.from_dict(construct_client_dict(self, payload.data))
+
+    if channel.guild_id in self.guilds:
+        guild = self.guilds[channel.guild_id]
+        old = filter(lambda c: c.id == channel.id, guild.channels)
+        if old:
+            guild.channels.remove(old)
+
+    return "on_channel_delete", [channel]
 
 
 def export():

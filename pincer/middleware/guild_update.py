@@ -6,7 +6,7 @@ from typing import List
 
 from ..core.dispatch import GatewayDispatch
 from ..objects import Guild, Channel
-from ..utils.conversion import construct_client_dict
+from ..utils.conversion import construct_client_dict, convert
 
 
 async def guild_update_middleware(self, payload: GatewayDispatch):
@@ -36,12 +36,13 @@ async def guild_update_middleware(self, payload: GatewayDispatch):
         for channel in channel_list
     ]
 
-    return "on_guild_update", [
-        Guild.from_dict(construct_client_dict(
-            self,
-            {"channels": channels, **payload.data}
-        ))
-    ]
+    guild = Guild.from_dict(construct_client_dict(
+        self,
+        {"channels": channels, **payload.data}
+    ))
+    self.guild[guild.id] = guild
+
+    return "on_guild_update", [guild]
 
 
 def export():
