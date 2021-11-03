@@ -6,17 +6,17 @@ from ..core.dispatch import GatewayDispatch
 
 async def payload_middleware(self, payload: GatewayDispatch):
     """|coro|
-    
+
     Middleware for ``on_payload`` event.
-    
+
     Parameters
     ----------
     self : :class:`Client`
         The current client/bot.
-        
+
     payload : :class:`GatewayDispatch`
         The data received from the notification create event.
-        
+
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.core.dispatch.GatewayDispatch`]]

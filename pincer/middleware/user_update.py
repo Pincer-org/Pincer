@@ -11,17 +11,17 @@ from ..utils.types import Coro
 
 async def user_update_middleware(self, payload: GatewayDispatch):
     """|coro|
-    
+
     Middleware for ``on_user_update`` event.
-    
+
     Parameters
     ----------
     self : :class:`Client`
         The current client/bot.
-        
+
     payload : :class:`GatewayDispatch`
         The data received from the user update event.
-        
+
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.user.user.User`]]

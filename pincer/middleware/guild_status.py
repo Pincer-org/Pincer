@@ -11,17 +11,17 @@ from ..utils.types import Coro
 
 async def guild_status_middleware(self, payload: GatewayDispatch):
     """|coro|
-    
+
     Middleware for ``on_guild_status`` event.
-    
+
     Parameters
     ----------
     self : :class:`Client`
         The current client/bot.
-        
+
     payload : :class:`GatewayDispatch`
         The data received from the guild status event.
-        
+
     Return
     ------
     Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildStatusEvent`]]

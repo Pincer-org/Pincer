@@ -13,7 +13,7 @@ from ..utils.types import Coro
 
 def error_middleware(self, payload: GatewayDispatch):
     """|coro|
-    
+
     Middleware for ``on_error`` event.
 
     Parameters
@@ -23,16 +23,17 @@ def error_middleware(self, payload: GatewayDispatch):
 
     payload : :class:`GatewayDispatch`
         The data recieved from the error event
-        
+
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.events.error.DiscordError`]]
         ``on_error`` and a ``DiscordError``
     """
 
-    return "on_error",  [
+    return "on_error", [
         DiscordError.from_dict(construct_client_dict(self, payload.data))
     ]
-    
+
+
 def export() -> Coro:
     return error_middleware

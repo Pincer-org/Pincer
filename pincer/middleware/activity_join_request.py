@@ -11,17 +11,17 @@ from ..utils.types import Coro
 
 async def activity_join_request_middleware(self, payload: GatewayDispatch):
     """|coro|
-    
+
     Middleware for ``on_activity_join_request`` event.
-    
+
     Parameters
     ----------
     self : :class:`Client`
         The current client/bot.
-        
+
     payload : :class:`GatewayDispatch`
         The data received from the activity join request event.
-        
+
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.user.user.User`]]

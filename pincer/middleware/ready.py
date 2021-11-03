@@ -16,7 +16,7 @@ from ..utils.conversion import construct_client_dict
 
 async def ready_middleware(self, payload: GatewayDispatch):
     """|coro|
-    
+
     Middleware for ``on_ready`` event.
 
     Parameters
@@ -26,7 +26,7 @@ async def ready_middleware(self, payload: GatewayDispatch):
 
     payload : :class:`GatewayDispatch`
         The data recieved from the stage instance create event
-        
+
     Returns
     -------
     Tuple[:class:`str`]

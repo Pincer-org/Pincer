@@ -14,17 +14,17 @@ from ..utils.types import Coro
 
 async def notification_create_middleware(self, payload: GatewayDispatch):
     """|coro|
-    
+
     Middleware for ``on_notification_create`` event.
-    
+
     Parameters
     ----------
     self : :class:`Client`
         The current client/bot.
-        
+
     payload : :class:`GatewayDispatch`
         The data received from the notification create event.
-        
+
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.events.notification.NotificationCreateEvent`]]

@@ -97,7 +97,7 @@ class VoiceConnectionStates(Enum):
 class VoiceConnectionStatusEvent(APIObject):
     """
     Sent when the client's voice connection status changes
-    
+
     :param state:
         one of the voice connection states listed below
 

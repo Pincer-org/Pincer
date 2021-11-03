@@ -11,17 +11,17 @@ from ..utils.types import Coro
 
 async def typing_start_middleware(self, payload: GatewayDispatch):
     """|coro|
-    
+
     Middleware for ``on_typing_start`` event.
-    
+
     Parameters
     ----------
     self : :class:`Client`
         The current client/bot.
-        
+
     payload : :class:`GatewayDispatch`
         The data received from the typing start event.
-        
+
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.events.typing_start.TypingStartEvent`]]

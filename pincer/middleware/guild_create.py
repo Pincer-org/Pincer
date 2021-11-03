@@ -10,7 +10,7 @@ from ..utils.conversion import construct_client_dict
 
 async def guild_create_middleware(self, payload: GatewayDispatch):
     """|coro|
-    
+
     Middleware for ``on_guild_create``,
         generate the guild class that was created
 

@@ -10,7 +10,7 @@ from ..utils.types import Coro
 
 def channel_create_middleware(self, payload: GatewayDispatch):
     """|coro|
-    
+
     Middleware for ``on_channel_creation`` event.
 
     Parameters
@@ -20,7 +20,7 @@ def channel_create_middleware(self, payload: GatewayDispatch):
 
     payload : :class:`GatewayDispatch`
         The data recieved from the channel create event
-        
+
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.guild.channel.Channel`]]
@@ -30,6 +30,7 @@ def channel_create_middleware(self, payload: GatewayDispatch):
     return "on_channel_create", [
         Channel.from_dict(construct_client_dict(self, payload.data))
     ]
+
 
 def export() -> Coro:
     return channel_create_middleware

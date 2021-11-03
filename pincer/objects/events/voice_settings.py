@@ -14,10 +14,10 @@ from ...utils.api_object import APIObject
 class AvailableDevices(APIObject):
     """
     Represents an availabe device for voice settings
-    
+
     :param id:
         id of the available device
-        
+
     :param name:
         name of the available device
     """
@@ -30,13 +30,13 @@ class AvailableDevices(APIObject):
 class VoiceSettingsInput(APIObject):
     """
     Represents a voice setting input object
-    
+
     :param device_id:
         the device's id
-        
+
     :param volume:
         input voice level (min: 0, max: 100)
-        
+
     :param available_devices:
         array of read-only device objects containing id and name string keys
     """
@@ -69,13 +69,13 @@ class KeyTypes(IntEnum):
 class ShortcutKeyCombo(APIObject):
     """
     Represents a shortcut key combo for the voice mode settings from a user
-    
+
     :param type:
         type of shortcut key combo
-        
+
     :param code:
         key code
-        
+
     :param name:
         key name
     """
@@ -89,16 +89,16 @@ class ShortcutKeyCombo(APIObject):
 class VoiceSettingsMode(APIObject):
     """
     Represents the voice mode settings from a user
-    
+
     :param type:
         voice setting mode type
-        
+
     :param auto_threshold:
         voice activity threshold automatically sets its threshold
-        
+
     :param threshold:
         threshold for voice activity (in dB)
-        
+
     :param shortcut:
         shortcut key combos for PTT
     """
@@ -114,7 +114,7 @@ class VoiceSettingsMode(APIObject):
 class VoiceSettingsUpdateEvent(APIObject):
     """
     Represents a user's voice settings
-    
+
     :param input:
         input settings
 

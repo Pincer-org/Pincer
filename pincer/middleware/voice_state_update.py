@@ -13,7 +13,7 @@ from ..utils.conversion import construct_client_dict
 
 async def voice_state_update_middleware(self, payload: GatewayDispatch):
     """|coro|
-    
+
     Middleware for ``on_voice_state_update`` event.
 
     Parameters

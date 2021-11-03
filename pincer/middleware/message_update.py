@@ -10,7 +10,7 @@ from ..utils.conversion import construct_client_dict
 
 async def message_update_middleware(self, payload: GatewayDispatch):
     """|coro|
-    
+
     Middleware for ``on_message_update`` event,
         generate a class for the message that has been updated.
 

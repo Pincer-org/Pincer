@@ -10,7 +10,7 @@ from ..utils.conversion import construct_client_dict
 
 async def message_delete_middleware(self, payload: GatewayDispatch):
     """|coro|
-    
+
     Middleware for ``on_message_delete`` event.
 
     Parameters
@@ -20,7 +20,7 @@ async def message_delete_middleware(self, payload: GatewayDispatch):
 
     payload : :class:`GatewayDispatch`
         The data recieved from the message delete event
-        
+
     Returns
     -------
     Tuple[:class:`str`, :class:`~pincer.objects.events.message.MessageDeleteEvent`]

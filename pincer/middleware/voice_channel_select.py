@@ -11,17 +11,17 @@ from ..utils.types import Coro
 
 async def voice_channel_select_middleware(self, payload: GatewayDispatch):
     """|coro|
-    
+
     Middleware for ``on_voice_channel_select`` event.
-    
+
     Parameters
     ----------
     self : :class:`Client`
         The current client/bot.
-        
+
     payload : :class:`GatewayDispatch`
         The data received from the voice channel select event.
-        
+
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.events.voice.VoiceChannelSelectEvent`]]
