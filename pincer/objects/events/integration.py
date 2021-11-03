@@ -25,3 +25,41 @@ class IntegrationDeleteEvent(APIObject):
     id: Snowflake
     guild_id: Snowflake
     application_id: APINullable[Snowflake] = MISSING
+
+
+@dataclass
+class IntegrationCreateEvent(APIObject):
+    """
+    Sent when an integration is created.
+
+    :param id:
+        integration id
+
+    :param guild_id:
+        id of the guild
+
+    :param application_id:
+        id of the bot/OAuth2 application for this discord integration
+    """
+    id: Snowflake
+    guild_id: Snowflake
+    application_id: APINullable[Snowflake] = MISSING
+
+
+@dataclass
+class IntegrationUpdateEvent(APIObject):
+    """
+    Sent when an integration is updated.
+
+    :param id:
+        integration id
+
+    :param guild_id:
+        id of the guild
+
+    :param application_id:
+        id of the bot/OAuth2 application for this discord integration
+    """
+    id: Snowflake
+    guild_id: Snowflake
+    application_id: APINullable[Snowflake] = MISSING
