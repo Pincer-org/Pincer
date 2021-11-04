@@ -19,7 +19,9 @@ from .exceptions import (
     InvalidAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
     InvalidCommandName
 )
-from .objects import ThrottleScope, AppCommand, Role, User, Channel, Guild
+from .objects import (
+    ThrottleScope, AppCommand, Role, User, Channel, Guild, MessageContext
+)
 from .objects.app import (
     AppCommandOptionType, AppCommandOption, AppCommandOptionChoice,
     ClientCommandStructure, AppCommandType
@@ -129,6 +131,12 @@ def command(
                 continue
 
             annotation, required = sig[param].annotation, True
+
+            # ctx is type MessageContext but should not be included in the
+            # slash command
+            if annotation == MessageContext:
+                return
+
             argument_description: Optional[str] = None
             choices: List[AppCommandOptionChoice] = []
 
@@ -218,6 +226,7 @@ def command(
                 annotation = choice_type
 
             param_type = _options_type_link.get(annotation)
+
             if not param_type:
                 raise InvalidAnnotation(
                     f"Annotation `{annotation}` on parameter "
