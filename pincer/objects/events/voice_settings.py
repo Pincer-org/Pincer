@@ -128,7 +128,7 @@ class VoiceSettingsMode(APIObject):
 
     shortcut : :class:`ShortcutKeyCombo`
         shortcut key combos for PTT
-        
+
     delay : :class:`float`
         the PTT release delay (in ms) (min: 0, max: 2000)
     """
