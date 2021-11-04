@@ -16,9 +16,6 @@ async def voice_state_delete_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot.
-
     payload : :class:`GatewayDispatch`
         The data received from the voice state delete event.
 

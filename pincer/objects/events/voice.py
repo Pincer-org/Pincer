@@ -36,10 +36,12 @@ class VoiceChannelSelectEvent(APIObject):
     """
     Sent when the client joins a voice channel
 
-    :param channel_id:
+    Attributes
+    ----------
+    channel_id : Optional[:class:`Snowflake`]
         id of channel
 
-    :param guild_id:
+    guild_id : Optional[:class:`Snowflake`]
         id of guild
     """
 
@@ -49,34 +51,36 @@ class VoiceChannelSelectEvent(APIObject):
 
 class VoiceConnectionStates(Enum):
     """
-    :param DISCONNECTED:
+    Attributes
+    ----------
+    DISCONNECTED : :class:`str`
         TCP disconnected
 
-    :param AWAITING_ENDPOINT:
+    AWAITING_ENDPOINT : :class:`str`
         Waiting for voice endpoint
 
-    :param AUTHENTICATING:
+    AUTHENTICATING : :class:`str`
         TCP authenticating
 
-    :param CONNECTING:
+    CONNECTING : :class:`str`
         TCP connecting
 
-    :param CONNECTED:
+    CONNECTED : :class:`str`
         TCP connected
 
-    :param VOICE_DISCONNECTED:
+    VOICE_DISCONNECTED : :class:`str`
         TCP connected, Voice disconnected
 
-    :param VOICE_CONNECTING:
+    VOICE_CONNECTING : :class:`str`
         TCP connected, Voice connecting
 
-    :param VOICE_CONNECTED:
+    VOICE_CONNECTED : :class:`str`
         TCP connected, Voice connected
 
-    :param NO_ROUTE:
+    NO_ROUTE : :class:`str`
         No route to host
 
-    :param ICE_CHECKING:
+    ICE_CHECKING : :class:`str`
         WebRTC ice checking
 
     """
@@ -98,19 +102,19 @@ class VoiceConnectionStatusEvent(APIObject):
     """
     Sent when the client's voice connection status changes
 
-    :param state:
+    state : :class:`VoiceConnectionStates`
         one of the voice connection states listed below
 
-    :param hostname:
+    hostname : :class:`str`
         hostname of the connected voice server
 
-    :param pings:
+    pings : List[:class:`int`]
         last 20 pings (in ms)
 
-    :param average_ping:
+    average_ping : :class:`int`
         average ping (in ms)
 
-    :param last_ping:
+    last_ping : :class:`int`
         last ping (in ms)
 
     """
@@ -127,7 +131,9 @@ class SpeakingStartEvent(APIObject):
     """
     Sent when a user in a subscribed voice channel speaks
 
-    :param user_id:
+    Attributes
+    ----------
+    user_id : :class:`Snowflake`
         id of user who started speaking
     """
 
@@ -139,7 +145,9 @@ class SpeakingStopEvent(APIObject):
     """
     Sent when a user in a subscribed voice channel stops speaking
 
-    :param user_id:
+    Attributes
+    ----------
+    user_id : :class:`Snowflake`
         id of user who stopped speaking
     """
 

@@ -16,16 +16,13 @@ async def guild_status_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot.
-
     payload : :class:`GatewayDispatch`
         The data received from the guild status event.
 
     Return
     ------
     Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildStatusEvent`]]
-        ``on_guild_status`` and a ``GuildStatusEvent`` object
+        ``on_guild_status`` and a ``GuildStatusEvent``
     """
     return "on_guild_status", [
         GuildStatusEvent.from_dict(construct_client_dict(self, payload.data))

@@ -32,13 +32,15 @@ class IntegrationCreateEvent(APIObject):
     """
     Sent when an integration is created.
 
-    :param id:
+    Attributes
+    ----------
+    id : :class:`Snowflake`
         integration id
 
-    :param guild_id:
+    guild_id : :class:`Snowflake`
         id of the guild
 
-    :param application_id:
+    application_id : APINullable[:class:`Snowflake`]
         id of the bot/OAuth2 application for this discord integration
     """
     id: Snowflake
@@ -51,13 +53,15 @@ class IntegrationUpdateEvent(APIObject):
     """
     Sent when an integration is updated.
 
-    :param id:
+    Attributes
+    ----------
+    id : :class:`Snowflake`
         integration id
 
-    :param guild_id:
+    guild_id : :class:`Snowflake`
         id of the guild
 
-    :param application_id:
+    application_id : APINullable[:class:`Snowflake`]
         id of the bot/OAuth2 application for this discord integration
     """
     id: Snowflake

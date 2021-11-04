@@ -16,16 +16,13 @@ async def voice_connection_status_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot.
-
     payload : :class:`GatewayDispatch`
         The data received from the voice connection status event.
 
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.events.voice.VoiceConnectionStatusEvent`]]
-        ``on_voice_connection_status`` and a ``VoiceConnectionStatusEvent`` object
+        ``on_voice_connection_status`` and a ``VoiceConnectionStatusEvent``
     """
     return "on_voice_connection_status", [
         VoiceConnectionStatusEvent.from_dict(construct_client_dict(self, payload.data))

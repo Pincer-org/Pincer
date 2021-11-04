@@ -16,16 +16,13 @@ async def guild_role_delete_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot.
-
     payload : :class:`GatewayDispatch`
         The data received from the guild role delete event.
 
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildRoleDeleteEvent`]]
-        ``on_guild_role_delete`` and a ``GuildRoleDeleteEvent`` object
+        ``on_guild_role_delete`` and a ``GuildRoleDeleteEvent``
     """
 
     return (

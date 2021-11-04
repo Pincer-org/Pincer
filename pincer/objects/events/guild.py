@@ -276,11 +276,15 @@ class GuildRoleDeleteEvent(APIObject):
 class GuildStatusEvent(APIObject):
     """
     Sent when a subscribed server's state changes
-    :param guild:
+    
+    Attributes
+    ----------
+    guild : :class:`Guild`
         guild with requested id
-    :param online:
+        
+    online : :class:`int`
         number of online users in guild (deprecated; always 0)
     """
 
     guild: Guild
-    online = 0
+    online: int = 0

@@ -15,9 +15,6 @@ def stage_instance_delete_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot
-
     payload : :class:`GatewayDispatch`
         The data recieved from the stage instance delete event
 

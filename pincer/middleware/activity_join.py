@@ -6,8 +6,8 @@ Sent when the user clicks a Rich Presence join invite in chat
 to join a game.
 """
 
-from pincer.objects.events.activity import ActivityJoinEvent
-from pincer.utils.conversion import construct_client_dict
+from ..objects.events.activity import ActivityJoinEvent
+from ..utils.conversion import construct_client_dict
 from ..core.dispatch import GatewayDispatch
 from ..utils.types import Coro
 
@@ -19,16 +19,13 @@ async def activity_join_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot.
-
     payload : :class:`GatewayDispatch`
         The data received from the activity join event.
 
     Returns
     -------
     Tuple[:class:`str`, List[:class:`ActivityJoinEvent`]]
-        ``on_activity_join`` and an ``ActivityJoinEvent`` object
+        ``on_activity_join`` and an ``ActivityJoinEvent``
     """
     return "on_activity_join", [
         ActivityJoinEvent.from_dict(construct_client_dict(self, payload.data))

@@ -16,16 +16,13 @@ async def guild_ban_remove_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot.
-
     payload : :class:`GatewayDispatch`
         The data received from the guild ban remove event.
 
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildBanRemoveEvent`]]
-        ``on_guild_ban_remove_update`` and a ``GuildBanRemoveEvent`` object
+        ``on_guild_ban_remove_update`` and a ``GuildBanRemoveEvent``
     """
 
     return (

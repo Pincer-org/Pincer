@@ -11,13 +11,10 @@ from ..utils.types import Coro
 def channel_create_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_channel_creation`` event.
+    Middleware for ``on_channel_create`` event.
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot
-
     payload : :class:`GatewayDispatch`
         The data recieved from the channel create event
 

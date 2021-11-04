@@ -15,10 +15,12 @@ class AvailableDevices(APIObject):
     """
     Represents an availabe device for voice settings
 
-    :param id:
+    Attributes
+    ----------
+    id : :class:`str`
         id of the available device
 
-    :param name:
+    name : :class:`str`
         name of the available device
     """
 
@@ -31,13 +33,15 @@ class VoiceSettingsInput(APIObject):
     """
     Represents a voice setting input object
 
-    :param device_id:
+    Attributes
+    ----------
+    device_id : :class:`str`
         the device's id
 
-    :param volume:
+    volume : :class:`float`
         input voice level (min: 0, max: 100)
 
-    :param available_devices:
+    available_devices : List[:class:`AvailableDevices`]
         array of read-only device objects containing id and name string keys
     """
 
@@ -46,7 +50,26 @@ class VoiceSettingsInput(APIObject):
     available_devices: List[AvailableDevices]
 
 
-VoiceSettingsOutput = VoiceSettingsInput
+@dataclass
+class VoiceSettingsOutput(APIObject):
+    """
+    Represents a voice setting output object
+
+    Attributes
+    ----------
+    device_id : :class:`str`
+        the device's id
+
+    volume : :class:`float`
+        input voice level (min: 0, max: 100)
+
+    available_devices : List[:class:`AvailableDevices`]
+        array of read-only device objects containing id and name string keys
+    """
+
+    device_id: str
+    volume: float
+    available_devices: List[AvailableDevices]
 
 
 class VoiceSettingsModeType(Enum):
@@ -70,13 +93,15 @@ class ShortcutKeyCombo(APIObject):
     """
     Represents a shortcut key combo for the voice mode settings from a user
 
-    :param type:
+    Attributes
+    ----------
+    type : :class:`KeyTypes`
         type of shortcut key combo
 
-    :param code:
+    code : :class:`str`
         key code
 
-    :param name:
+    name : :class:`str`
         key name
     """
 
@@ -90,17 +115,22 @@ class VoiceSettingsMode(APIObject):
     """
     Represents the voice mode settings from a user
 
-    :param type:
+    Attributes
+    ----------
+    type : :class:`VoiceSettingsModeType`
         voice setting mode type
 
-    :param auto_threshold:
+    auto_threshold : :class:`bool`
         voice activity threshold automatically sets its threshold
 
-    :param threshold:
+    threshold : :class:`float`
         threshold for voice activity (in dB)
 
-    :param shortcut:
+    shortcut : :class:`ShortcutKeyCombo`
         shortcut key combos for PTT
+        
+    delay : :class:`float`
+        the PTT release delay (in ms) (min: 0, max: 2000)
     """
 
     type: VoiceSettingsModeType
@@ -115,34 +145,36 @@ class VoiceSettingsUpdateEvent(APIObject):
     """
     Represents a user's voice settings
 
-    :param input:
+    Attributes
+    ----------
+    input : :class:`VoiceSettingsInput`
         input settings
 
-    :param output:
+    output : :class:`VoiceSettingsOutput`
         output settings
 
-    :param mode:
+    mode : :class:`bool`
         voice mode settings
 
-    :param automatic_gain_control:
+    automatic_gain_control : :class:`bool`
         state of automatic gain control
 
-    :param echo_cancellation:
+    echo_cancellation : :class:`bool`
         state of echo cancellation
 
-    :param noise_suppression:
+    noise_suppression : :class:`bool`
         state of noise suppression
 
-    :param qos:
+    qos : :class:`bool`
         state of voice quality of service
 
-    :param silence_warning:
+    silence_warning : :class:`bool`
         state of silence warning notice
 
-    :param deaf:
+    deaf : :class:`bool`
         state of self-deafen
 
-    :param mute:
+    mute : :class:`bool`
         state of self-mute
     """
 

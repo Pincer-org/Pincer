@@ -19,16 +19,13 @@ async def guild_member_update_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot.
-
     payload : :class:`GatewayDispatch`
         The data received from the guild member update event.
 
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildMemberUpdateEvent`]]
-        ``on_guild_member_update`` and a ``GuildMemberUpdateEvent`` object
+        ``on_guild_member_update`` and a ``GuildMemberUpdateEvent``
     """
 
     return (

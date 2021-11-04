@@ -3,7 +3,7 @@
 
 """sent when multiple messages are deleted at once"""
 
-from pincer.utils.types import Coro
+from ..utils.types import Coro
 from ..core.dispatch import GatewayDispatch
 from ..objects.events.message import MessageDeleteBulkEvent
 from ..utils.conversion import construct_client_dict
@@ -16,16 +16,13 @@ async def message_delete_bulk_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot
-
     payload : :class:`GatewayDispatch`
         The data recieved from the message delete bulk event
 
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.events.message.MessageDeleteBulkEvent`]]
-        ``on_message_delete_bulk`` and an ``MessageDeleteBulkEvent`` object
+        ``on_message_delete_bulk`` and an ``MessageDeleteBulkEvent``
     """
     return "on_message_delete_bulk", [
         MessageDeleteBulkEvent.from_dict(construct_client_dict(self, payload.data))

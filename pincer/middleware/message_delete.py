@@ -15,16 +15,13 @@ async def message_delete_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot
-
     payload : :class:`GatewayDispatch`
         The data recieved from the message delete event
 
     Returns
     -------
     Tuple[:class:`str`, :class:`~pincer.objects.events.message.MessageDeleteEvent`]
-        ``on_message_delete`` and a ``MessageDeleteEvent`` object
+        ``on_message_delete`` and a ``MessageDeleteEvent``
     """
     return "on_message_delete", [
         MessageDeleteEvent.from_dict(construct_client_dict(self, payload.data))

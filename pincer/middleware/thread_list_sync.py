@@ -20,9 +20,6 @@ async def thread_list_sync(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot.
-
     payload : :class:`GatewayDispatch`
         The data received from the thread list sync event.
 

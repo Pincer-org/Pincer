@@ -5,7 +5,7 @@ import logging
 from inspect import isasyncgenfunction, getfullargspec
 from typing import Dict, Any
 
-from pincer.utils import get_index
+from ..utils import get_index
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
 from ..objects import Interaction, MessageContext
@@ -113,9 +113,6 @@ async def interaction_create_middleware(self, payload: GatewayDispatch):
     
     Parameters
     ----------
-    self : :class:`Client`:
-        The current client/bot
-
     payload : :class:`GatewayDispatch`
         The data recieved from the interaction create event
         

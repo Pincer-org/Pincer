@@ -15,9 +15,6 @@ async def channel_delete_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot.
-
     payload : :class:`pincer.core.dispatch.GatewayDispatch`
         The data received from the channel delete event.
 

@@ -14,19 +14,21 @@ class NotificationCreateEvent(APIObject):
     """
     Represents a notification
 
-    :param channel_id:
+    Attributes
+    ----------
+    channel_id : :class:`Snowflake`
         id of channel where notification occurred
 
-    :param message:
+    message : :class:`UserMessage`
         message that generated this notification
 
-    :param icon_url:
+    icon_url : :class:`str`
         icon url of the notification
 
-    :param title:
+    title : :class:`str`
         title of the notification
 
-    :param body:
+    body : :class:`str`
         body of the notification
     """
 

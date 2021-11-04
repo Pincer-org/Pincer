@@ -3,7 +3,7 @@
 
 """sent when an integration is deleted"""
 
-from pincer.utils.types import Coro
+from ..utils.types import Coro
 from ..core.dispatch import GatewayDispatch
 from ..objects.events.integration import IntegrationDeleteEvent
 from ..utils.conversion import construct_client_dict
@@ -16,16 +16,13 @@ async def integration_delete_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot
-
     payload : :class:`GatewayDispatch`
         The data recieved from the integration delete event
 
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.events.integration.IntegrationDeleteEvent`]]
-        ``on_integration_delete`` and an ``IntegrationDeleteEvent`` object
+        ``on_integration_delete`` and an ``IntegrationDeleteEvent``
     """
     return "on_integration_delete", [
         IntegrationDeleteEvent.from_dict(construct_client_dict(self, payload.data))

@@ -16,16 +16,13 @@ async def speaking_start_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot.
-
     payload : :class:`GatewayDispatch`
         The data received from the speaking start event.
 
     Returns
     -------
     Tuple[:class:`str`, List[:class:`SpeakingStartEvent`]]
-        ``on_speaking_start`` and a ``SpeakingStartEvent`` object
+        ``on_speaking_start`` and a ``SpeakingStartEvent``
     """
     return "on_speaking_start", [
         SpeakingStartEvent.from_dict(construct_client_dict(self, payload.data))

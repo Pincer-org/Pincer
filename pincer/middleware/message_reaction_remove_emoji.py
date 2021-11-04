@@ -16,9 +16,6 @@ async def message_reaction_remove_emoji_middleware(self, payload: GatewayDispatc
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot.
-
     payload : :class:`GatewayDispatch`
         The data received from the message reaction remove emoji event.
 

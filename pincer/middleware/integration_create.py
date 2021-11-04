@@ -3,7 +3,7 @@
 
 """sent when an integration is created"""
 
-from pincer.utils.types import Coro
+from ..utils.types import Coro
 from ..core.dispatch import GatewayDispatch
 from ..objects.events.integration import IntegrationCreateEvent
 from ..utils.conversion import construct_client_dict
@@ -16,16 +16,13 @@ async def integration_create_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot
-
     payload : :class:`GatewayDispatch`
         The data recieved from the sintegration create event
 
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.events.integration.IntegrationCreateEvent`]]
-        ``on_integration_create`` and an ``IntegrationCreateEvent`` object
+        ``on_integration_create`` and an ``IntegrationCreateEvent``
     """
     return "on_integration_create", [
         IntegrationCreateEvent.from_dict(construct_client_dict(self, payload.data))

@@ -3,7 +3,7 @@
 
 """sent when an invite is deleted"""
 
-from pincer.utils.types import Coro
+from ..utils.types import Coro
 from ..core.dispatch import GatewayDispatch
 from ..objects.events.invite import InviteDeleteEvent
 from ..utils.conversion import construct_client_dict
@@ -16,16 +16,13 @@ async def invite_delete_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot
-
     payload : :class:`GatewayDispatch`
         The data recieved from the invite delete event
 
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.events.invite.InviteDeleteEvent`]]
-        ``on_invite_delete`` and an ``InviteDeleteEvent`` object
+        ``on_invite_delete`` and an ``InviteDeleteEvent``
     """
     return "on_invite_delete", [
         InviteDeleteEvent.from_dict(construct_client_dict(self, payload.data))

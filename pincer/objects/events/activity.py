@@ -11,7 +11,9 @@ class ActivityJoinEvent(APIObject):
     """
     Sent when the user clicks a Rich Presence join invite in chat to join a game.
 
-    :param secret:
+    Attributes
+    ----------
+    secret : :class:`str`
         the join_secret for the given invite
     """
 
@@ -22,8 +24,10 @@ class ActivityJoinEvent(APIObject):
 class ActivitySpectateEvent(APIObject):
     """
     Sent when the user clicks a Rich Presence spectate invite in chat to spectate a game.
-
-    :param secret:
+    
+    Attributes
+    ----------
+    secret: :class:`str`
         the spectate_secret for the given invite
     """
 

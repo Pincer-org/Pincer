@@ -11,16 +11,13 @@ async def payload_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot.
-
     payload : :class:`GatewayDispatch`
         The data received from the notification create event.
 
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.core.dispatch.GatewayDispatch`]]
-        ``on_payload`` and a ``GatewayDispatch`` object
+        ``on_payload`` and a ``GatewayDispatch``
     """
     return "on_payload", [payload]
 

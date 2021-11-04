@@ -18,10 +18,7 @@ async def voice_state_update_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    :param self:
-        The current client.
-
-    :param payload:
+    payload : :class:`GatewayDispatch`
         The data received from the voice state update event.
 
     Returns

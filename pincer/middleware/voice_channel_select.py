@@ -16,16 +16,13 @@ async def voice_channel_select_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot.
-
     payload : :class:`GatewayDispatch`
         The data received from the voice channel select event.
 
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.events.voice.VoiceChannelSelectEvent`]]
-        ``on_voice_channel_select`` and a ``VoiceChannelSelectEvent`` object
+        ``on_voice_channel_select`` and a ``VoiceChannelSelectEvent``
     """
     return "on_voice_channel_select", [
         VoiceChannelSelectEvent.from_dict(construct_client_dict(self, payload.data))

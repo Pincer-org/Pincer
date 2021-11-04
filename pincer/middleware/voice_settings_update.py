@@ -16,16 +16,13 @@ async def voice_settings_update_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot.
-
     payload : :class:`GatewayDispatch`
         The data received from the voice settings update event.
 
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.events.VoiceSettingsUpdateEvent`]]
-        ``on_voice_settings_update`` and a ``VoiceSettingsUpdateEvent`` object
+        ``on_voice_settings_update`` and a ``VoiceSettingsUpdateEvent``
     """
     return "on_voice_settings_update", [
         VoiceSettingsUpdateEvent.from_dict(construct_client_dict(self, payload.data))
