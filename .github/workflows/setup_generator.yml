@@ -1,12 +1,12 @@
-name: "PyPI Upload"
+name: Sort alls
 
 on:
-  workflow_dispatch:
   push:
-    branches: [ "release" ]
+    branches:
+      - main
 
 jobs:
-  uploader:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,8 +28,17 @@ jobs:
       - name: install requirements_img
         run: pip install -r packages/img.txt
 
-      - name: compile lib
-        run: python setup.py sdist bdist_wheel
+      - name: generate setup.cfg
+        run: python -m setup_config.generator
 
-      - name: upload lib
-        run: python -m twine upload dist/* --skip-existing -u ${{ secrets.u }} -p ${{ secrets.p }}
+      - name: setup git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@pincer.dev"
+
+      - name: add to git
+        run: |
+          git pull
+          git add .
+          git diff-index --quiet HEAD || git commit -m "🔨  Automatic update of setup.cfg"
+          git push origin main
