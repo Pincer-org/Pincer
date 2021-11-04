@@ -289,7 +289,6 @@ class UserMessage(APIObject):
     embeds: List[Embed]
     pinned: bool
     type: MessageType
-    edited_timestamp: Optional[Timestamp] = None
 
     edited_timestamp: APINullable[Timestamp] = MISSING
     mention_channels: APINullable[List[ChannelMention]] = MISSING

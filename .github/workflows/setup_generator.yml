@@ -1,4 +1,4 @@
-name: Sort alls
+name: Generate setup.cfg
 
 on:
   push:
