@@ -1,13 +1,8 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from asyncio import (
-    Event, wait_for as _wait_for, TimeoutError as _TimeoutError,
-    get_running_loop
-)
+from asyncio import Event, wait_for as _wait_for, get_running_loop
 from typing import Any, Callable, Union
-
-from ..exceptions import TimeoutError, AsyncGeneratorTimeoutError
 
 
 class _DiscordEvent(Event):
@@ -151,7 +146,7 @@ class EventMgr:
         event = self.add_event(event_name, check)
         try:
             await _wait_for(event.wait(), timeout=timeout)
-        except _TimeoutError:
+        except TimeoutError:
             raise TimeoutError(
                 "wait_for() timed out while waiting for an event."
             )
@@ -203,8 +198,8 @@ class EventMgr:
                     timeout=loop_timeout
                 )
 
-            except _TimeoutError:
-                raise AsyncGeneratorTimeoutError(
+            except TimeoutError:
+                raise TimeoutError(
                     "loop_for() timed out while waiting for an event"
                 )
 

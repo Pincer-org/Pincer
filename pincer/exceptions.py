@@ -268,18 +268,6 @@ class UnavailableGuildError(PincerError):
     """
 
 
-class TimeoutError(PincerError):
-    """
-    Exception raised when ``Client.wait_for()`` or an iteration
-    ``Client.loop_for()`` times out.
-    """
-
-
-class AsyncGeneratorTimeoutError(TimeoutError):
-    """
-    Raised when ``Client.loop_for()`` times out.
-    """
-
 # Discord HTTP Errors
 # `developers/docs/topics/opcodes-and-status-codes#http`
 
