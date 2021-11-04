@@ -3,10 +3,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from typing import Union
 
+from ..objects.app.interaction_flags import InteractionFlags
 from ..objects.message.embed import Embed
 from ..objects.message.file import File
 from ..objects.message.message import Message
-from ..objects.app.interaction_flags import InteractionFlags
 
 PILLOW_IMPORT = True
 
@@ -18,10 +18,12 @@ except (ModuleNotFoundError, ImportError):
 if TYPE_CHECKING:
     from pincer import Client
 
+MessageConvertable = Union[Embed, Message, str]
+
 
 def convert_message(
         client: Client,
-        message: Union[Embed, Message, str]
+        message: MessageConvertable
 ) -> Message:
     """Converts a message to a Message object"""
     if isinstance(message, Embed):
