@@ -9,6 +9,7 @@ from typing import Dict, Tuple, Union, List, Optional, TYPE_CHECKING
 
 from aiohttp import FormData, Payload
 
+from ..message.file import File
 from ...exceptions import CommandReturnIsEmpty
 
 PILLOW_IMPORT = True
@@ -20,7 +21,6 @@ except (ModuleNotFoundError, ImportError):
 
 if TYPE_CHECKING:
     from ..message.embed import Embed
-    from ..message.file import File
     from ..message.user_message import AllowedMentions
     from ..app import InteractionFlags
     from .component import MessageComponent
