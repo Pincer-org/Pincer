@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from json import dumps
-from typing import Dict, Tuple, Union, List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from aiohttp import FormData, Payload
 
@@ -20,6 +20,9 @@ except (ModuleNotFoundError, ImportError):
     PILLOW_IMPORT = False
 
 if TYPE_CHECKING:
+    from typing import Dict, Tuple, Union, List, Optional
+
+    from ...objects.app import CallbackType
     from ..message.embed import Embed
     from ..message.user_message import AllowedMentions
     from ..app import InteractionFlags
@@ -90,9 +93,9 @@ class Message:
         """
 
         return (
-                len(self.content) < 1
-                and not self.embeds
-                and not self.attachments
+            len(self.content) < 1
+            and not self.embeds
+            and not self.attachments
         )
 
     def to_dict(self):
@@ -122,7 +125,10 @@ class Message:
             resp.items()
         ))
 
-    def serialize(self) -> Tuple[str, Union[Payload, Dict]]:
+    # TODO: Write docs.
+    def serialize(
+        self, message_type: Optional[CallbackType] = None
+    ) -> Tuple[str, Union[Payload, Dict]]:
         """
         Creates the data that the discord API wants for the message object
 
@@ -135,11 +141,20 @@ class Message:
         if self.isempty:
             raise CommandReturnIsEmpty("Cannot return empty message.")
 
+        json_payload = self.to_dict()
+
+        if message_type is not None:
+            json_data = json_payload
+            json_payload = {
+                "data": json_data,
+                "type": message_type
+            }
+
         if not self.attachments:
-            return "application/json", self.to_dict()
+            return "application/json", json_payload
 
         form = FormData()
-        form.add_field("payload_json", dumps(self.to_dict()))
+        form.add_field("payload_json", dumps(json_payload))
 
         for file in self.attachments:
             form.add_field("file", file.content, filename=file.filename)
