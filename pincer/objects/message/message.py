@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-from copy import copy
 from dataclasses import dataclass
 from json import dumps
 from typing import Dict, Tuple, Union, List, Optional, TYPE_CHECKING
@@ -143,8 +142,11 @@ class Message:
         json_payload = self.to_dict()
 
         if message_type is not None:
-            json_payload["data"] = copy(json_payload)
-            json_payload["type"] = message_type
+            json_data = json_payload
+            json_payload = {
+                "data": json_data,
+                "type": message_type
+            }
 
         if not self.attachments:
             return "application/json", json_payload
