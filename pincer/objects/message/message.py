@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from json import dumps
-from typing import Dict, Tuple, Union, List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from aiohttp import FormData, Payload
 
@@ -20,6 +20,8 @@ except (ModuleNotFoundError, ImportError):
     PILLOW_IMPORT = False
 
 if TYPE_CHECKING:
+    from typing import Dict, Tuple, Union, List, Optional
+
     from ...objects.app import CallbackType
     from ..message.embed import Embed
     from ..message.user_message import AllowedMentions
@@ -125,7 +127,7 @@ class Message:
 
     # TODO: Write docs.
     def serialize(
-        self, message_type: CallbackType = None
+        self, message_type: Optional[CallbackType] = None
     ) -> Tuple[str, Union[Payload, Dict]]:
         """
         Creates the data that the discord API wants for the message object
