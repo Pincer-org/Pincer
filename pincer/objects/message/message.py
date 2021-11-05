@@ -20,7 +20,7 @@ except (ModuleNotFoundError, ImportError):
     PILLOW_IMPORT = False
 
 if TYPE_CHECKING:
-    from ...objects import CallbackType
+    from ...objects.app import CallbackType
     from ..message.embed import Embed
     from ..message.user_message import AllowedMentions
     from ..app import InteractionFlags
