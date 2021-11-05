@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from copy import copy
 from dataclasses import dataclass
 from json import dumps
 from typing import Dict, Tuple, Union, List, Optional, TYPE_CHECKING
@@ -20,6 +21,7 @@ except (ModuleNotFoundError, ImportError):
     PILLOW_IMPORT = False
 
 if TYPE_CHECKING:
+    from ...objects import CallbackType
     from ..message.embed import Embed
     from ..message.user_message import AllowedMentions
     from ..app import InteractionFlags
@@ -90,9 +92,9 @@ class Message:
         """
 
         return (
-                len(self.content) < 1
-                and not self.embeds
-                and not self.attachments
+            len(self.content) < 1
+            and not self.embeds
+            and not self.attachments
         )
 
     def to_dict(self):
@@ -122,7 +124,10 @@ class Message:
             resp.items()
         ))
 
-    def serialize(self) -> Tuple[str, Union[Payload, Dict]]:
+    # TODO: Write docs.
+    def serialize(
+        self, message_type: CallbackType = None
+    ) -> Tuple[str, Union[Payload, Dict]]:
         """
         Creates the data that the discord API wants for the message object
 
@@ -135,11 +140,17 @@ class Message:
         if self.isempty:
             raise CommandReturnIsEmpty("Cannot return empty message.")
 
+        json_payload = self.to_dict()
+
+        if message_type is not None:
+            json_payload["data"] = copy(json_payload)
+            json_payload["type"] = message_type
+
         if not self.attachments:
-            return "application/json", self.to_dict()
+            return "application/json", json_payload
 
         form = FormData()
-        form.add_field("payload_json", dumps(self.to_dict()))
+        form.add_field("payload_json", dumps(json_payload))
 
         for file in self.attachments:
             form.add_field("file", file.content, filename=file.filename)
