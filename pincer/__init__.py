@@ -59,7 +59,7 @@ class VersionInfo(NamedTuple):
 
 
 version_info = VersionInfo(0, 10, 1, release_level="alpha")
-__version__ = "0.9.3a"
+__version__ = repr(version_info)
 
 __all__ = (
     "Bot", "Choices", "Client", "Descripted", "Intents", "__author__",
