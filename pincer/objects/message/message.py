@@ -9,6 +9,7 @@ from dataclasses import dataclass
 
 from aiohttp import FormData
 
+from ..message.file import File
 from ...exceptions import CommandReturnIsEmpty
 
 if TYPE_CHECKING:
@@ -21,6 +22,7 @@ if TYPE_CHECKING:
     from ..app.interactions import InteractionFlags
     from ..message.file import File
     from ..message.user_message import AllowedMentions
+    from ...objects.app import CallbackType
 
 PILLOW_IMPORT = True
 
@@ -133,7 +135,10 @@ class Message:
             resp.items()
         ))
 
-    def serialize(self) -> Tuple[str, Union[Payload, Dict]]:
+    # TODO: Write docs.
+    def serialize(
+        self, message_type: Optional[CallbackType] = None
+    ) -> Tuple[str, Union[Payload, Dict]]:
         """
         Creates the data that the discord API wants for the message object
 
@@ -145,11 +150,20 @@ class Message:
         if self.isempty:
             raise CommandReturnIsEmpty("Cannot return empty message.")
 
+        json_payload = self.to_dict()
+
+        if message_type is not None:
+            json_data = json_payload
+            json_payload = {
+                "data": json_data,
+                "type": message_type
+            }
+
         if not self.attachments:
-            return "application/json", self.to_dict()
+            return "application/json", json_payload
 
         form = FormData()
-        form.add_field("payload_json", dumps(self.to_dict()))
+        form.add_field("payload_json", dumps(json_payload))
 
         for file in self.attachments:
             form.add_field("file", file.content, filename=file.filename)

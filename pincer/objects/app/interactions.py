@@ -348,15 +348,14 @@ class Interaction(APIObject):
             return
 
         message = convert_message(self._client, message)
-        content_type, data = message.serialize()
+        content_type, data = message.serialize(
+            message_type=CallbackType.MESSAGE
+        )
 
         try:
             await self._http.post(
                 f"interactions/{self.id}/{self.token}/callback",
-                {
-                    "type": CallbackType.MESSAGE,
-                    "data": data
-                },
+                data,
                 content_type=content_type
             )
         except NotFoundError:
