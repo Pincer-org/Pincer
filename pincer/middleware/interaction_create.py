@@ -100,7 +100,8 @@ async def interaction_handler(
     kwargs = {**defaults, **params}
 
     await interaction_response_handler(
-        self, command, context, interaction, kwargs)
+        self, command, context, interaction, kwargs
+    )
 
 
 async def interaction_create_middleware(
