@@ -1,6 +1,8 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
+from __future__ import annotations
+
 import asyncio
 import logging
 from asyncio import TimerHandle, iscoroutinefunction
