@@ -5,7 +5,7 @@ import asyncio
 import logging
 from asyncio import TimerHandle, iscoroutinefunction
 from datetime import timedelta
-from typing import Callable, Set, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 
 from ..exceptions import (
@@ -17,7 +17,7 @@ from .insertion import should_pass_cls
 from .types import Coro
 
 if TYPE_CHECKING:
-    from typing import Optional
+    from typing import Optional, Callable, Set
 
 _log = logging.getLogger(__package__)
 
