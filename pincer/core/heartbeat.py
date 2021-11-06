@@ -43,7 +43,7 @@ class Heartbeat:
         try:
             await socket.send(str(GatewayDispatch(1, cls.__sequence)))
         except ConnectionClosedOK:
-            _log.debug(
+            _log.error(
                 "Sending heartbeat failed. Ignoring failure... "
                 "Client should automatically resolve this issue. "
                 "If a crash occurs please create an issue on our github! "
