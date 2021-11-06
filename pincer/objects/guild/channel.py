@@ -214,7 +214,7 @@ class Channel(APIObject):
 
         headers = {}
 
-        if reason:
+        if reason is not None:
             headers["X-Audit-Log-Reason"] = str(reason)
 
         data = await self._http.patch(
@@ -250,7 +250,7 @@ class Channel(APIObject):
 
         headers = {}
 
-        if reason:
+        if reason is not None:
             headers["X-Audit-Log-Reason"] = str(reason)
 
         await self._http.delete(
