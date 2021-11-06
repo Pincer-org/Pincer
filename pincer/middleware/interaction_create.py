@@ -13,7 +13,6 @@ from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
 from ..objects import Interaction, MessageContext
 
-from ..utils.convert_message import convert_message
 from ..utils.conversion import construct_client_dict
 from ..utils.signature import get_params, get_signature_and_params
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx

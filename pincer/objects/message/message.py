@@ -20,7 +20,6 @@ if TYPE_CHECKING:
     from .embed import Embed
     from .component import MessageComponent
     from ..app.interactions import InteractionFlags
-    from ..message.file import File
     from ..message.user_message import AllowedMentions
     from ...objects.app import CallbackType
 

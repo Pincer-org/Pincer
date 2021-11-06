@@ -32,6 +32,23 @@ if TYPE_CHECKING:
     from ...utils.timestamp import Timestamp
 
 
+class AllowedMentionTypes(str, Enum):
+    """The allowed mentions.
+
+    Attributes
+    ----------
+    ROLES:
+        Controls role mentions
+    USERS:
+        Controls user mentions
+    EVERYONE:
+        Controls @everyone and @here mentions
+    """
+    ROLES = "roles"
+    USERS = "users"
+    EVERYONE = "everyone"
+
+
 @dataclass
 class AllowedMentions(APIObject):
     """Represents the entities the client can mention
@@ -67,23 +84,6 @@ class AllowedMentions(APIObject):
             "users": list(map(get_str_id, self.users)),
             "replied_user": self.reply
         }
-
-
-class AllowedMentionTypes(str, Enum):
-    """The allowed mentions.
-
-    Attributes
-    ----------
-    ROLES:
-        Controls role mentions
-    USERS:
-        Controls user mentions
-    EVERYONE:
-        Controls @everyone and @here mentions
-    """
-    ROLES = "roles"
-    USERS = "users"
-    EVERYONE = "everyone"
 
 
 class MessageActivityType(IntEnum):

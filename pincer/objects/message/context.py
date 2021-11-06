@@ -11,7 +11,6 @@ if TYPE_CHECKING:
     from typing import Optional, Union
     from .user_message import UserMessage
     from ..app import ClientCommandStructure, Interaction
-    from ..app.command import ClientCommandStructure
     from ..app.interaction_flags import InteractionFlags
     from ..guild.member import GuildMember
     from ..user.user import User
@@ -22,7 +21,7 @@ if TYPE_CHECKING:
 @dataclass
 class MessageContext:
     """Represents the context of a message interaction.
-    
+
     Attributes
     ----------
     id: :class:`~pincer.utils.snowflake.Snowflake`

@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING
 
 from ..user.user import User
 from ...utils.api_object import APIObject
-from ...utils.conversion import convert
 from ...utils.snowflake import Snowflake
 from ...utils.timestamp import Timestamp
 from ...utils.types import MISSING

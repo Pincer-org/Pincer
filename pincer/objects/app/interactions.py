@@ -18,10 +18,8 @@ from ..user import User
 from ...exceptions import InteractionDoesNotExist, UseFollowup, \
     InteractionAlreadyAcknowledged, NotFoundError, InteractionTimedOut
 from ...utils import APIObject, convert
-from ...utils.conversion import convert
 from ...utils.convert_message import convert_message
 from ...utils.snowflake import Snowflake
-from ...utils.api_object import APIObject
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
