@@ -134,16 +134,23 @@ class Message:
             resp.items()
         ))
 
-    # TODO: Write docs.
     def serialize(
         self, message_type: Optional[CallbackType] = None
     ) -> Tuple[str, Union[Payload, Dict]]:
         """
-        Creates the data that the discord API wants for the message object
+        Parameters
+        ----------
+        message_type : Optional[:class:`pincer.objects.app.CallbackType`]
+            Callback type of message.
 
-        :return: (content_type, data)
+        Returns
+        -------
+        Tuple[str, Union[Payload, Dict]]
+            (content_type, data)
 
-        :raises CommandReturnIsEmpty:
+        Raises
+        ------
+        :class:`pincer.exceptions.CommandReturnIsEmpty`
             Command does not have content, an embed, or attachment.
         """
         if self.isempty:
