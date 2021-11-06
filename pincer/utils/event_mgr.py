@@ -4,6 +4,8 @@
 from asyncio import Event, wait_for as _wait_for, get_running_loop
 from typing import Any, Callable, Union
 
+from .types import CheckFunction
+
 
 class _DiscordEvent(Event):
     """
@@ -17,7 +19,7 @@ class _DiscordEvent(Event):
     def __init__(
         self,
         event_name: str,
-        check: Union[Callable[[Any], bool], None]
+        check: CheckFunction
     ):
         """
         Parameters
@@ -62,14 +64,14 @@ class EventMgr:
     """
     Attributes
     ----------
-    stack : List[_DiscordEvent]
+    event_list : List[_DiscordEvent]
         The List of events that need to be processed.
     """
 
     def __init__(self):
-        self.stack = []
+        self.event_list = []
 
-    def add_event(self, event_name: str, check: Union[Callable, None]):
+    def add_event(self, event_name: str, check: CheckFunction):
         """
         Parameters
         ----------
@@ -90,23 +92,8 @@ class EventMgr:
             event_name=event_name,
             check=check
         )
-        self.stack.append(event)
+        self.event_list.append(event)
         return event
-
-    def pop_event(self, event) -> Any:
-        """
-        Parameters
-        ----------
-        event : _DiscordEvent
-            Event to remove from the stack.
-
-        Returns
-        -------
-        Any
-            ``event.return_value``
-        """
-        self.stack.remove(event)
-        return event.return_value
 
     def process_events(self, event_name, *args):
         """
@@ -117,14 +104,14 @@ class EventMgr:
         *args : Any
             The arguments returned from the middleware for this event.
         """
-        for event in self.stack:
+        for event in self.event_list:
             if event.can_be_set(event_name, *args):
                 event.set()
 
     async def wait_for(
         self,
         event_name: str,
-        check: Union[Callable[[Any], bool], None],
+        check: CheckFunction,
         timeout: Union[float, None]
     ) -> Any:
         """
@@ -150,7 +137,8 @@ class EventMgr:
             raise TimeoutError(
                 "wait_for() timed out while waiting for an event."
             )
-        return self.pop_event(event)
+        self.event_list.remove(event)
+        return event.return_value
 
     async def loop_for(
         self,

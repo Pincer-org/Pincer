@@ -28,7 +28,7 @@ from .utils.event_mgr import EventMgr
 
 if TYPE_CHECKING:
     from .objects.app import AppCommand
-    from .utils import Snowflake
+    from .utils import Snowflake, CheckFunction
 
 _log = logging.getLogger(__package__)
 
@@ -554,7 +554,7 @@ class Client(Dispatcher):
     async def wait_for(
         self,
         event_name: str,
-        check: Optional[Callable[[Any], bool]] = None,
+        check: CheckFunction,
         timeout: Optional[float] = None
     ):
         """
@@ -578,7 +578,7 @@ class Client(Dispatcher):
     def loop_for(
         self,
         event_name: str,
-        check: Optional[Callable[[Any], bool]] = None,
+        check: CheckFunction,
         iteration_timeout: Optional[float] = None,
         loop_timeout: Optional[float] = None
     ):

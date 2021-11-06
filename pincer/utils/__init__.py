@@ -11,12 +11,13 @@ from .snowflake import Snowflake
 from .tasks import Task, TaskScheduler
 from .timestamp import Timestamp
 from .types import (
-    APINullable, Coro, MISSING, Choices, choice_value_types, Descripted
+    APINullable, Coro, MISSING, Choices, choice_value_types, Descripted,
+    CheckFunction
 )
 
 __all__ = (
     "APINullable", "APIObject", "Choices", "Coro", "Descripted",
     "EventMgr", "HTTPMeta", "MISSING", "Snowflake", "Task", "TaskScheduler",
-    "Timestamp", "choice_value_types", "convert", "get_index",
+    "Timestamp", "choice_value_types", "convert", "get_index", "CheckFunction",
     "get_signature_and_params", "should_pass_cls", "should_pass_ctx"
 )

@@ -30,6 +30,8 @@ Choices = Literal
 
 choice_value_types = (str, int, float)
 
+CheckFunction = Union[Callable[[Any], bool], None]
+
 
 class Singleton(type):
     # Thanks to this stackoverflow answer (method 3):
