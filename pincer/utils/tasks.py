@@ -41,7 +41,7 @@ class Task:
             self.cancel()
         else:
             # Did the user forgot to call task.start() ?
-            _log.warn(
+            _log.warning(
                 "Task `%s` was not scheduled. Did you forget to start it ?",
                 self.coro.__name__
             )
