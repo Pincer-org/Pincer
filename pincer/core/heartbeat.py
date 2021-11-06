@@ -133,7 +133,7 @@ class Heartbeat:
         await cls.__send(socket)
 
     @classmethod
-    def update_sequence(cls, seq: Optional[int]):
+    def update_sequence(cls, seq: int):
         """
         Update the heartbeat sequence.
 

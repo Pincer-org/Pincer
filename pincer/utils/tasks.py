@@ -17,8 +17,7 @@ from ..exceptions import (
 from .insertion import should_pass_cls
 
 if TYPE_CHECKING:
-    from typing import Callable, Set
-
+    from typing import Optional, Callable, Set
     from .types import Coro
 
 
