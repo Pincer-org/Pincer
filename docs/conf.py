@@ -8,13 +8,14 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#
-import re
 import os
 import sys
+
 sys.path.append(os.path.abspath('..'))
 sys.path.append(os.path.abspath("../.."))
 sys.path.append(os.path.abspath('extensions'))
+
+from pincer import __version__
 
 # -- Project information -----------------------------------------------------
 
@@ -23,14 +24,11 @@ project = "Pincer Library"
 copyright = '2021, Pincer'
 author = "Sigmanificient, Arthurdw"
 
-version = ''
-with open('../pincer/__init__.py') as f:
-    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 
 # The full version, including alpha/beta/rc tags.
-release = version
+release = __version__
 
-branch = 'main' if version.endswith('a') else 'v' + version
+branch = 'main' if __version__.endswith('a') else 'v' + __version__
 
 # -- General configuration ---------------------------------------------------
 
