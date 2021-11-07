@@ -24,7 +24,7 @@ async def user_update_middleware(self, payload: GatewayDispatch):
     Tuple[:class:`str`, List[:class:`~pincer.objects.user.user.User`]]
         ``on_user_update`` and a ``User``
     """
-    return "on_voice_state_create", [
+    return "on_user_update", [
         User.from_dict(construct_client_dict(self, payload.data))
     ]
 
