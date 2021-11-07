@@ -8,7 +8,7 @@ from .embed import (
     EmbedVideo, EmbedFooter
 )
 from .emoji import Emoji
-from .message import AllowedMentions, Message
+from .message import Message
 from .component import MessageComponent
 from .context import MessageContext
 from .reference import MessageReference
@@ -18,7 +18,7 @@ from .sticker import (
 )
 from .user_message import (
     MessageActivityType, MessageFlags, MessageType, MessageActivity,
-    AllowedMentionTypes, UserMessage
+    AllowedMentionTypes, UserMessage, AllowedMentions
 )
 
 __all__ = (

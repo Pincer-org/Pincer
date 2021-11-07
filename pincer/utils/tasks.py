@@ -1,11 +1,13 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
+from __future__ import annotations
+
 import asyncio
 import logging
 from asyncio import TimerHandle, iscoroutinefunction
 from datetime import timedelta
-from typing import Callable, Set
+from typing import TYPE_CHECKING
 
 
 from ..exceptions import (
@@ -15,6 +17,9 @@ from ..exceptions import (
 from . import __package__
 from .insertion import should_pass_cls
 from .types import Coro
+
+if TYPE_CHECKING:
+    from typing import Optional, Callable, Set
 
 _log = logging.getLogger(__package__)
 
@@ -28,7 +33,7 @@ class Task:
         self._scheduler = scheduler
         self.coro = coro
         self.delay = delay
-        self._handle: TimerHandle = None
+        self._handle: Optional[TimerHandle] = None
         self._client_required = should_pass_cls(coro)
 
     def __del__(self):
@@ -36,7 +41,7 @@ class Task:
             self.cancel()
         else:
             # Did the user forgot to call task.start() ?
-            _log.warn(
+            _log.warning(
                 "Task `%s` was not scheduled. Did you forget to start it ?",
                 self.coro.__name__
             )
@@ -73,6 +78,10 @@ class Task:
         self._handle.cancel()
         if self in self._scheduler.tasks:
             self._scheduler.tasks.remove(self)
+
+    @property
+    def client_required(self):
+        return self._client_required
 
 
 class TaskScheduler:
@@ -147,11 +156,7 @@ class TaskScheduler:
 
     def __execute(self, task: Task):
         """Execute a task."""
-        if task._client_required:
-            coro = task.coro(self.client)
-        else:
-            coro = task.coro()
-
+        coro = task.coro(self.client) if task.client_required else task.coro()
         # Execute the coroutine
         asyncio.ensure_future(coro)
 

@@ -5,19 +5,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from json import dumps
-from typing import Dict, Tuple, Union, List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from aiohttp import FormData, Payload
 
-from ..app.interaction_base import CallbackType
-from ..guild.role import Role
-from ..message.embed import Embed
 from ..message.file import File
-from ..message.user_message import AllowedMentionTypes
-from ..user import User
 from ...exceptions import CommandReturnIsEmpty
-from ...utils.api_object import APIObject
-from ...utils.snowflake import Snowflake
 
 PILLOW_IMPORT = True
 
@@ -27,30 +20,13 @@ except (ModuleNotFoundError, ImportError):
     PILLOW_IMPORT = False
 
 if TYPE_CHECKING:
+    from typing import Dict, Tuple, Union, List, Optional
+
+    from ...objects.app import CallbackType
+    from ..message.embed import Embed
+    from ..message.user_message import AllowedMentions
     from ..app import InteractionFlags
     from .component import MessageComponent
-
-
-@dataclass
-class AllowedMentions(APIObject):
-    parse: List[AllowedMentionTypes]
-    roles: List[Union[Role, Snowflake]]
-    users: List[Union[User, Snowflake]]
-    reply: bool = True
-
-    def to_dict(self):
-        def get_str_id(obj: Union[Snowflake, User, Role]) -> str:
-            if hasattr(obj, "id"):
-                obj = obj.id
-
-            return str(obj)
-
-        return {
-            "parse": self.parse,
-            "roles": list(map(get_str_id, self.roles)),
-            "users": list(map(get_str_id, self.users)),
-            "replied_user": self.reply
-        }
 
 
 @dataclass
@@ -80,9 +56,14 @@ class Message:
     allowed_mentions: Optional[AllowedMentions] = None
     components: Optional[List[MessageComponent]] = None
     flags: Optional[InteractionFlags] = None
-    type: Optional[CallbackType] = None
+    delete_after: Optional[float] = None
 
     def __post_init__(self):
+        if self.delete_after and self.delete_after < 0:
+            raise ValueError(
+                "Message can not be deleted after a negative amount of "
+                "seconds!"
+            )
 
         if not self.attachments:
             return
@@ -112,9 +93,9 @@ class Message:
         """
 
         return (
-                len(self.content) < 1
-                and not self.embeds
-                and not self.attachments
+            len(self.content) < 1
+            and not self.embeds
+            and not self.attachments
         )
 
     def to_dict(self):
@@ -137,12 +118,17 @@ class Message:
             ]
         }
 
-        return {
-            "type": self.type or CallbackType.MESSAGE,
-            "data": {k: i for k, i in resp.items() if i}
-        }
+        # IDE does not recognise return type of filter properly.
+        # noinspection PyTypeChecker
+        return dict(filter(
+            lambda kv: kv[1],
+            resp.items()
+        ))
 
-    def serialize(self) -> Tuple[str, Union[Payload, Dict]]:
+    # TODO: Write docs.
+    def serialize(
+        self, message_type: Optional[CallbackType] = None
+    ) -> Tuple[str, Union[Payload, Dict]]:
         """
         Creates the data that the discord API wants for the message object
 
@@ -155,11 +141,20 @@ class Message:
         if self.isempty:
             raise CommandReturnIsEmpty("Cannot return empty message.")
 
+        json_payload = self.to_dict()
+
+        if message_type is not None:
+            json_data = json_payload
+            json_payload = {
+                "data": json_data,
+                "type": message_type
+            }
+
         if not self.attachments:
-            return "application/json", self.to_dict()
+            return "application/json", json_payload
 
         form = FormData()
-        form.add_field("payload_json", dumps(self.to_dict()))
+        form.add_field("payload_json", dumps(json_payload))
 
         for file in self.attachments:
             form.add_field("file", file.content, filename=file.filename)

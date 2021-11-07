@@ -1,14 +1,19 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from dataclasses import dataclass
-from typing import List
+from __future__ import annotations
 
-from ..guild.member import GuildMember
-from ..message.emoji import Emoji
+from dataclasses import dataclass
+from typing import List, TYPE_CHECKING
+
 from ...utils.api_object import APIObject
-from ...utils.snowflake import Snowflake
-from ...utils.types import APINullable, MISSING
+from ...utils.types import MISSING
+
+if TYPE_CHECKING:
+    from ..guild.member import GuildMember
+    from ..message.emoji import Emoji
+    from ...utils.snowflake import Snowflake
+    from ...utils.types import APINullable
 
 
 @dataclass

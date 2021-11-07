@@ -22,9 +22,9 @@ async def guild_create_middleware(self, payload: GatewayDispatch):
     :return Guild:
 
     """
-    return "on_guild_create", [
-        Guild.from_dict(construct_client_dict(self, payload.data))
-    ]
+    guild = Guild.from_dict(construct_client_dict(self, payload.data))
+    self.guilds[guild.id] = guild
+    return "on_guild_create", [guild]
 
 
 def export():

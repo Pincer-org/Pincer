@@ -1,17 +1,17 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
+from .application import Application
 from .command import (
-    AppCommandType, AppCommandOptionType, AppCommandInteractionDataOption,
+    AppCommandInteractionDataOption,
     AppCommandOptionChoice, AppCommandOption, AppCommand,
     ClientCommandStructure
 )
-from .application import Application
+from .command_types import AppCommandType, AppCommandOptionType
 from .intents import Intents
 from .interaction_base import CallbackType, InteractionType, MessageInteraction
-from .interactions import (
-    InteractionFlags, ResolvedData, InteractionData, Interaction
-)
+from .interaction_flags import InteractionFlags
+from .interactions import ResolvedData, InteractionData, Interaction
 from .select_menu import SelectOption, SelectMenu
 from .session_start_limit import SessionStartLimit
 from .throttle_scope import ThrottleScope

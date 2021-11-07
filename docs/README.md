@@ -25,7 +25,7 @@ An asynchronous Python API wrapper meant to replace discord.py
 
 ## :pushpin: Links
 
-> <img src="../assets/svg/discord.svg" width="16px" alt="Discord Logo"> ｜Join the Discord server: https://discord.gg/8WkYz3fNFm <br>
+> <img src="../assets/svg/discord.svg" width="16px" alt="Discord Logo"> ｜Join the Discord server: https://discord.gg/pincer <br>
 > <img src="../assets/svg/pypi.svg" width="16px" alt="PyPI Logo"> ｜The PyPI package: https://pypi.org/project/Pincer <br>
 > <img src="../assets/svg/pincer.svg" width="16px" alt="Pincer Logo"> ｜Our website: https://pincer.dev <br>
 > 📝 | ReadTheDocs: https://pincer.readthedocs.io
@@ -125,7 +125,7 @@ You have the possibility to use your own class to inherit from the Pincer bot
 base.
 
 ```py
-from pincer import Client, command
+from pincer import Client, command, Descripted
 
 
 class Bot(Client):
@@ -152,8 +152,8 @@ class Bot(Client):
     @command(description="Add two numbers!")
     async def add(
             self, 
-            first: (int, "The first number"), # support arg descriptions!
-            second: (int, "The second number") # since 0.7.1
+            first: Descripted[int, "The first number"],
+            second: Descripted[int, "The second number"]
     ): 
         return f"The addition of `{first}` and `{second}` is `{first + second}`"
 ```

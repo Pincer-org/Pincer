@@ -1,6 +1,5 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
-
 from typing import Optional
 
 
@@ -39,9 +38,7 @@ class NoExportMethod(PincerError):
 
 
 class CogError(PincerError):
-    """
-    Exception base class for errors related to Cogs.
-    """
+    """Exception base class for errors related to Cogs."""
 
 
 class CogNotFound(CogError):
@@ -80,9 +77,7 @@ class NoCogManagerReturnFound(CogError):
 
 
 class CommandError(PincerError):
-    """
-    Base class for exceptions which are related to commands.
-    """
+    """Base class for exceptions which are related to commands."""
 
 
 class CommandCooldownError(CommandError):
@@ -97,15 +92,11 @@ class CommandCooldownError(CommandError):
 
 
 class CommandIsNotCoroutine(CommandError):
-    """
-    Exception raised when the provided command call is not a coroutine.
-    """
+    """Exception raised when the provided command call is not a coroutine."""
 
 
 class CommandAlreadyRegistered(CommandError):
-    """
-    The command which you are trying to register is already registered.
-    """
+    """The command which you are trying to register is already registered."""
 
 
 class CommandDescriptionTooLong(CommandError):
@@ -122,21 +113,43 @@ class TooManyArguments(CommandError):
     """
 
 
-class InvalidArgumentAnnotation(CommandError):
-    """
-    The provided argument annotation is not known, so it cannot be used.
-    """
+class InvalidAnnotation(CommandError):
+    """The provided argument annotation is not known, so it cannot be used."""
 
 
 class CommandReturnIsEmpty(CommandError):
-    """
-    Cannot return an empty string to an interaction.
-    """
+    """Cannot return an empty string to an interaction."""
 
 
 class InvalidCommandGuild(CommandError):
+    """The provided guild id not not valid."""
+
+
+class InteractionDoesNotExist(CommandError):
+    """The action which you are trying to perform requires an
+    interaction to be created/sent to discord. But this has not been
+    done yet!
     """
-    The provided guild id not not valid.
+
+
+class UseFollowup(CommandError):
+    """A reply has alrready been sent, please use a followup to
+    continue replying.
+    """
+
+
+class InteractionAlreadyAcknowledged(CommandError):
+    """The command has already been acknowledged by discord.
+    This can be because a reply or ack has already been sent!
+    """
+
+
+class InteractionTimedOut(CommandError):
+    """Discord had to wait too long for a response from your command!
+    The discord wait time can be extended by using the
+    :func:`~pincer.objects.app.interaction.Interaction.ack` function in
+    the :attr:`~pincer.objects.message.context.MessageContext.interaction`
+    property.
     """
 
 
@@ -230,9 +243,7 @@ class DisallowedIntentsError(DispatchError):
 
 
 class InvalidTokenError(DispatchError, ValueError):
-    """
-    Exception raised when the authorization token is invalid.
-    """
+    """Exception raised when the authorization token is invalid."""
 
     def __init__(self, hint: Optional[str] = None):
         """

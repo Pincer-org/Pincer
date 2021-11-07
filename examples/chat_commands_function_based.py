@@ -1,4 +1,4 @@
-from pincer import command, Client
+from pincer import command, Client, Descripted
 from pincer.objects import Message, InteractionFlags, Embed
 
 
@@ -11,20 +11,20 @@ async def on_ready(self):
 
 
 @command(description="Say something as the bot!")
-async def say(message: (str, "The content of the message")):
+async def say(message: Descripted[str, "The content of the message"]):
     return message
 
 
 @command(description="Add two numbers!")
 async def add(
-        first: (int, "The first number"),
-        second: (int, "The second number")
+        first: Descripted[int, "The first number"],
+        second: Descripted[int, "The second number"]
 ):
     return f"The addition of `{first}` and `{second}` is `{first + second}`"
 
 
 @command(guild=1324567890)
-async def private_say(message: (str, "The content of the message")):
+async def private_say(message: Descripted[str, "The content of the message"]):
     return Message(message, flags=InteractionFlags.EPHEMERAL)
 
 
@@ -48,6 +48,7 @@ async def pincer_embed():
             "/400871418/045ebf39-7c6e-4c3a-b744-0c3122374203"
         )
     )
+
 
 if __name__ == "__main__":
     Client("XXXYOURBOTTOKENHEREXXX").run()

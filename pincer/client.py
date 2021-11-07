@@ -27,6 +27,7 @@ from .utils.signature import get_params
 
 if TYPE_CHECKING:
     from .objects.app import AppCommand
+    from .utils import Snowflake
 
 _log = logging.getLogger(__package__)
 
@@ -130,7 +131,8 @@ class Client(Dispatcher):
             token: str, *,
             received: str = None,
             intents: Intents = None,
-            throttler: ThrottleInterface = DefaultThrottleHandler
+            throttler: ThrottleInterface = DefaultThrottleHandler,
+            reconnect: bool = True,
     ):
         """
         The client is the main instance which is between the programmer
@@ -148,6 +150,9 @@ class Client(Dispatcher):
 
         :param intents:
             The discord intents for your client.
+
+        auto_reconnect :class:`bool`
+            Whether the client should automatically reconnect.
         """
         super().__init__(
             token,
@@ -157,13 +162,18 @@ class Client(Dispatcher):
                 # Use this event handler for opcode 0.
                 0: self.event_handler
             },
-            intents=intents or Intents.NONE
+            intents=intents or Intents.NONE,
+            reconnect=reconnect,
         )
 
         self.bot: Optional[User] = None
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
         self.throttler = throttler
+        # TODO: Document guild prop
+        # The guild value is only registered if the GUILD_MEMBERS
+        # intent is enabled.
+        self.guilds: Dict[Snowflake, Optional[Guild]] = {}
         ChatCommandHandler.managers[self.__module__] = self
 
     @property

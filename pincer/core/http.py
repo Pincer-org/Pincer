@@ -91,6 +91,7 @@ class HTTPClient:
             endpoint: str, *,
             content_type: str = "application/json",
             data: Optional[Union[Dict, str, Payload]] = None,
+            headers: Optional[Dict[str, Any]] = None,
             __ttl: int = None
     ) -> Optional[Dict]:
         """
@@ -138,7 +139,10 @@ class HTTPClient:
         async with method(
                 url,
                 data=data,
-                headers={"Content-Type": content_type}
+                headers={
+                    "Content-Type": content_type,
+                    **(headers or {})
+                }
         ) as res:
             return await self.__handle_response(
                 res, method, endpoint, content_type, data, ttl
@@ -240,17 +244,28 @@ class HTTPClient:
             data=data
         )
 
-    async def delete(self, route: str) -> Optional[Dict]:
+    async def delete(
+            self,
+            route: str,
+            headers: Optional[Dict[str, Any]] = None
+    ) -> Optional[Dict]:
         """
         Sends a delete request to a Discord REST endpoint.
 
         :param route:
             The Discord REST endpoint to send a delete request to.
 
+        :param headers:
+            The request headers.
+
         :return:
             JSON response from the discord API.
         """
-        return await self.__send(self.__session.delete, route)
+        return await self.__send(
+            self.__session.delete,
+            route,
+            headers=headers
+        )
 
     async def get(self, route: str) -> Optional[Dict]:
         """
@@ -292,7 +307,8 @@ class HTTPClient:
             self,
             route: str,
             data: Dict,
-            content_type: str = "application/json"
+            content_type: str = "application/json",
+            headers: Optional[Dict[str, Any]] = None
     ) -> Optional[Dict]:
         """
         Sends a patch request to a Discord REST endpoint.
@@ -306,6 +322,9 @@ class HTTPClient:
         :param content_type:
             Body content type.
 
+        :param headers:
+            The request headers.
+
         :return:
             JSON response from the discord API.
         """
@@ -313,14 +332,16 @@ class HTTPClient:
             self.__session.patch,
             route,
             content_type=content_type,
-            data=data
+            data=data,
+            headers=headers
         )
 
     async def post(
             self,
             route: str,
             data: Dict,
-            content_type: str = "application/json"
+            content_type: str = "application/json",
+            headers: Optional[Dict[str, Any]] = None
     ) -> Optional[Dict]:
         """
         Sends a post request to a Discord REST endpoint.
@@ -334,6 +355,9 @@ class HTTPClient:
         :param content_type:
             Body content type.
 
+        :param headers:
+            The request headers.
+
         :return:
             JSON response from the discord API.
         """
@@ -341,14 +365,16 @@ class HTTPClient:
             self.__session.post,
             route,
             content_type=content_type,
-            data=data
+            data=data,
+            headers=headers
         )
 
     async def put(
             self,
             route: str,
             data: Dict,
-            content_type: str = "application/json"
+            content_type: str = "application/json",
+            headers: Optional[Dict[str, Any]] = None
     ) -> Optional[Dict]:
         """
         Sends a put request to a Discord REST endpoint.
@@ -362,6 +388,9 @@ class HTTPClient:
         :param content_type:
             Body content type.
 
+        :param headers:
+            The request headers.
+
         :return:
             JSON response from the discord API.
         """
@@ -369,5 +398,6 @@ class HTTPClient:
             self.__session.put,
             route,
             content_type=content_type,
-            data=data
+            data=data,
+            headers=headers
         )
