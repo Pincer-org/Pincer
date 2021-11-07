@@ -31,7 +31,6 @@ class Bot(Client):
                 else:
                     await next_message.react("🚀")
                     await channel.send("Number is correct!")
-                    self.game_running = False
 
         except TimeoutError:
             channel.send("Game timed out")
