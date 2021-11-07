@@ -8,7 +8,7 @@ from asyncio import iscoroutinefunction, run, ensure_future
 from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
-from typing import Callable, Optional, Any, Union, Dict, Tuple, List, TYPE_CHECKING
+from typing import Optional, Any, Union, Dict, Tuple, List, TYPE_CHECKING
 
 from . import __package__
 from .commands import ChatCommandHandler
