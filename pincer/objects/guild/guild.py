@@ -456,3 +456,9 @@ class Guild(APIObject):
             )
 
         return super().from_dict(data)
+
+
+@dataclass
+class UnavailableGuild(APIObject):
+    id: Snowflake
+    unavailable: bool = True
