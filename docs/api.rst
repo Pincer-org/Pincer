@@ -1,5 +1,14 @@
 API Reference
-=============
+==============
 
-.. include:: modules.rst
-	:start-after: pincer
+Subpages
+-----------
+
+.. toctree::
+    :maxdepth: 1
+
+    pincer
+    pincer.core
+    pincer.middleware
+    pincer.objects
+    pincer.utils

@@ -3,24 +3,33 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from enum import IntEnum
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
+from dataclasses import dataclass
 
-from ...core.http import HTTPClient
-from ...utils.api_object import APIObject
-from ...utils.conversion import convert, construct_client_dict
-from ...utils.snowflake import Snowflake
 from ...utils.types import MISSING
+from ...utils.api_object import APIObject
 
 if TYPE_CHECKING:
-    from ... import Client
-    from ...utils import APINullable
+    from typing import Optional
+
+    from ...client import Client
+    from ...utils.types import APINullable
+    from ...utils.snowflake import Snowflake
+    from ...utils.conversion import convert, construct_client_dict
 
 
 class PremiumTypes(IntEnum):
-    """
-    The type of Discord premium a user has.
+    """The type of Discord premium a user has.
+
+    Attributes
+    ----------
+    NONE:
+        No nitro.
+    NITRO_CLASSIC:
+        Nitro classic (no boosts).
+    NITRO:
+        Full nitro subscription.
     """
     NONE = 0
     NITRO_CLASSIC = 1
@@ -28,8 +37,14 @@ class PremiumTypes(IntEnum):
 
 
 class VisibilityType(IntEnum):
-    """
-    The type of a connection visibility.
+    """The type of a connection visibility.
+
+    Attributes
+    ----------
+    NONE:
+        Connection is not visible.
+    EVERYONE:
+        Connection is visible to everyone.
     """
     NONE = 0
     EVERYONE = 1
@@ -37,59 +52,45 @@ class VisibilityType(IntEnum):
 
 @dataclass
 class User(APIObject):
-    """
-    Represents a Discord user. This can be a bot account or a
+    """Represents a Discord user. This can be a bot account or a
     human account.
 
-    :param avatar:
-        the user's avatar hash
-
-    :param discriminator:
-        the user's 4-digit discord-tag
-
-    :param flags:
-        the flags on a user's account
-
-    :param id:
-        the user's id
-
-    :param username:
-        the user's username, not unique across the platform
-
-    :param accent_color:
-        the user's banner color encoded as an integer representation of
+    Attributes
+    ----------
+    avatar: Optional[:class:`str`]
+        The user's avatar hash
+    discriminator: :class:`str`
+        The user's 4-digit discord-tag
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        The user's id
+    username: :class:`str`
+        The user's username, not unique across the platform
+    flags: APINullable[:class:`int`]
+        The flags on a user's account
+    accent_color: APINullable[Optional[:class:`int`]]
+        The user's banner color encoded as an integer representation of
         hexadecimal color code
-
-    :param banner:
-        the user's banner, or null if unset
-
-    :param banner_color:
-        the color of the user's banner
-
-    :param bot:
-        whether the user belongs to an OAuth2 application
-
-    :param email:
-        the user's email
-
-    :param locale:
-        the user's chosen language option
-
-    :param mfa_enabled:
-        whether the user has two factor enabled on their account
-
-    :param premium_type:
-        the type of Nitro subscription on a user's account
-
-    :param public_flags:
-        the public flags on a user's account
-
-    :param system:
-        whether the user is an Official Discord System user
+    banner: APINullable[Optional[:class:`str`]]
+        The user's banner, or null if unset
+    banner_color: APINullable[Optional[:class:`int`]]
+        The color of the user's banner
+    bot: APINullable[:class:`bool`]
+        Whether the user belongs to an OAuth2 application
+    email: APINullable[Optional[:class:`str`]]
+        The user's email
+    locale: APINullable[:class:`str`]
+        The user's chosen language option
+    mfa_enabled: APINullable[:class:`bool`]
+        Whether the user has two factor enabled on their account
+    premium_type: APINullable[:class:`int`]
+        The type of Nitro subscription on a user's account
+    public_flags: APINullable[:class:`int`]
+        The public flags on a user's account
+    system: APINullable[:class:`bool`]
+        Whether the user is an Official Discord System user
         (part of the urgent message system)
-
-    :param verified:
-        whether the email on this account has been verified
+    verified: APINullable[:class:`bool`]
+        Whether the email on this account has been verified
     """
     discriminator: str
     id: Snowflake
@@ -111,8 +112,8 @@ class User(APIObject):
 
     @property
     def premium(self) -> APINullable[PremiumTypes]:
-        """
-        The user their premium type in a usable enum.
+        """APINullable[:class:`~pincer.objects.user.user.PremiumTypes`]: The
+        user their premium type in a usable enum.
         """
         return (
             MISSING
@@ -122,10 +123,10 @@ class User(APIObject):
 
     @property
     def mention(self) -> str:
+        """:class:`str`: The user's mention string."""
         return f"<@!{self.id}>"
 
     def __str__(self):
-        """Return the discord tag when object gets used as a string."""
         return self.username + '#' + self.discriminator
 
     @classmethod

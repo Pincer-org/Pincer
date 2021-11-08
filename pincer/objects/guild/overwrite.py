@@ -9,25 +9,23 @@ from typing import TYPE_CHECKING
 from ...utils import APIObject
 
 if TYPE_CHECKING:
-    from ...utils import Snowflake
+    from ...utils.snowflake import Snowflake
 
 
 @dataclass
 class Overwrite(APIObject):
-    """
-    Represents a Discord Overwrite object
+    """Represents a Discord Overwrite object
 
-    :param id:
-        role or user id
-
-    :param type:
-        either 0 (role) or 1 (member)
-
-    :param allow:
-        permission bit set
-
-    :param deny:
-        permission bit set
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        Role or user id
+    type: :class:`int`
+        Either 0 (role) or 1 (member)
+    allow: :class:`str`
+        Permission bit set
+    deny: :class:`str`
+        Permission bit set
     """
     id: Snowflake
     type: int

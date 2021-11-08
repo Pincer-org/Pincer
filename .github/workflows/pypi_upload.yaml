@@ -28,9 +28,6 @@ jobs:
       - name: install requirements_img
         run: pip install -r packages/img.txt
 
-      - name: generate setup.cfg
-        run: python -m setup_config.generator
-
       - name: compile lib
         run: python setup.py sdist bdist_wheel
 

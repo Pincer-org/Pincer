@@ -1,141 +1,353 @@
-pincer.objects.guild package
-============================
+.. currentmodule:: pincer.objects
 
-Submodules
-----------
+Pincer Objects Guild Section
+=============================
 
-pincer.objects.guild.audit\_log module
---------------------------------------
+Audit Log
+---------
 
-.. automodule:: pincer.objects.guild.audit_log
-   :members:
-   :undoc-members:
-   :show-inheritance:
+AuditLogEvent
+~~~~~~~~~~~~~
 
-pincer.objects.guild.ban module
--------------------------------
+.. attributetable:: AuditLogEvent
 
-.. automodule:: pincer.objects.guild.ban
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: AuditLogEvent()
 
-pincer.objects.guild.channel module
------------------------------------
+AuditLogChange
+~~~~~~~~~~~~~~
 
-.. automodule:: pincer.objects.guild.channel
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: AuditLogChange
 
-pincer.objects.guild.features module
-------------------------------------
+.. autoclass:: AuditLogChange()
 
-.. automodule:: pincer.objects.guild.features
-   :members:
-   :undoc-members:
-   :show-inheritance:
+AuditEntryInfo
+~~~~~~~~~~~~~~
 
-pincer.objects.guild.followed\_channel module
----------------------------------------------
+.. attributetable:: AuditEntryInfo
 
-.. automodule:: pincer.objects.guild.followed_channel
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: AuditEntryInfo()
 
-pincer.objects.guild.guild module
----------------------------------
+AuditLogEntry
+~~~~~~~~~~~~~
 
-.. automodule:: pincer.objects.guild.guild
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: AuditLogEntry
 
-pincer.objects.guild.invite module
-----------------------------------
+.. autoclass:: AuditLogEntry()
 
-.. automodule:: pincer.objects.guild.invite
-   :members:
-   :undoc-members:
-   :show-inheritance:
+AuditLog
+~~~~~~~~
 
-pincer.objects.guild.member module
-----------------------------------
+.. attributetable:: AuditLog
 
-.. automodule:: pincer.objects.guild.member
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: AuditLog()
 
-pincer.objects.guild.overwrite module
--------------------------------------
+Ban
+---
 
-.. automodule:: pincer.objects.guild.overwrite
-   :members:
-   :undoc-members:
-   :show-inheritance:
+Ban
+~~~
 
-pincer.objects.guild.role module
---------------------------------
+.. attributetable:: Ban
 
-.. automodule:: pincer.objects.guild.role
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: Ban()
 
-pincer.objects.guild.stage module
----------------------------------
+Channel
+-------
 
-.. automodule:: pincer.objects.guild.stage
-   :members:
-   :undoc-members:
-   :show-inheritance:
+ChannelType
+~~~~~~~~~~~
 
-pincer.objects.guild.template module
-------------------------------------
+.. attributetable:: ChannelType
 
-.. automodule:: pincer.objects.guild.template
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: ChannelType()
 
-pincer.objects.guild.thread module
-----------------------------------
+Channel
+~~~~~~~
 
-.. automodule:: pincer.objects.guild.thread
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: Channel
 
-pincer.objects.guild.webhook module
------------------------------------
+.. autoclass:: Channel()
 
-.. automodule:: pincer.objects.guild.webhook
-   :members:
-   :undoc-members:
-   :show-inheritance:
+TextChannel
+~~~~~~~~~~~
 
-pincer.objects.guild.welcome\_screen module
--------------------------------------------
+.. attributetable:: TextChannel
 
-.. automodule:: pincer.objects.guild.welcome_screen
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: TextChannel()
 
-pincer.objects.guild.widget module
-----------------------------------
+VoiceChannel
+~~~~~~~~~~~~
 
-.. automodule:: pincer.objects.guild.widget
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: VoiceChannel
 
-Module contents
----------------
+.. autoclass:: VoiceChannel()
 
-.. automodule:: pincer.objects.guild
-   :members:
-   :undoc-members:
-   :show-inheritance:
+CategoryChannel
+~~~~~~~~~~~~~~~
+
+.. attributetable:: CategoryChannel
+
+.. autoclass:: CategoryChannel()
+
+NewsChannel
+~~~~~~~~~~~
+
+.. attributetable:: NewsChannel
+
+.. autoclass:: NewsChannel()
+
+ChannelMention
+~~~~~~~~~~~~~~
+
+.. attributetable:: ChannelMention
+
+.. autoclass:: ChannelMention()
+
+Features
+--------
+
+GuildFeature
+~~~~~~~~~~~~~
+
+.. attributetable:: GuildFeature
+
+.. autoclass:: GuildFeature()
+
+Followed Channel
+----------------
+
+FollowedChannel
+~~~~~~~~~~~~~~~
+
+.. attributetable:: FollowedChannel
+
+.. autoclass:: FollowedChannel()
+
+Guild
+-----
+
+PremiumTier
+~~~~~~~~~~~
+
+.. attributetable:: PremiumTier
+
+.. autoclass:: PremiumTier()
+
+GuildNSFWLevel
+~~~~~~~~~~~~~~
+
+.. attributetable:: GuildNSFWLevel
+
+.. autoclass:: GuildNSFWLevel()
+
+ExplicitContentFilterLevel
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: ExplicitContentFilterLevel
+
+.. autoclass:: ExplicitContentFilterLevel()
+
+MFALevel
+~~~~~~~~
+
+.. attributetable:: MFALevel
+
+.. autoclass:: MFALevel()
+
+VerificationLevel
+~~~~~~~~~~~~~~~~~
+
+.. attributetable:: VerificationLevel
+
+.. autoclass:: VerificationLevel()
+
+DefaultMessageNotificationLevel
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: DefaultMessageNotificationLevel
+
+.. autoclass:: DefaultMessageNotificationLevel()
+
+SystemChannelFlags
+~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: SystemChannelFlags
+
+.. autoclass:: SystemChannelFlags()
+
+Guild
+~~~~~
+
+.. attributetable:: Guild
+
+.. autoclass:: Guild()
+
+Invite
+------
+
+InviteTargetType
+~~~~~~~~~~~~~~~~
+
+.. attributetable:: InviteTargetType
+
+.. autoclass:: InviteTargetType()
+
+InviteStageInstance
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: InviteStageInstance
+
+.. autoclass:: InviteStageInstance()
+
+InviteMetadata
+~~~~~~~~~~~~~~
+
+.. attributetable:: InviteMetadata
+
+.. autoclass:: InviteMetadata()
+
+Invite
+~~~~~~
+
+.. attributetable:: Invite
+
+.. autoclass:: Invite()
+
+Member
+------
+
+BaseMember
+~~~~~~~~~~
+
+.. attributetable:: BaseMember
+
+.. autoclass:: BaseMember()
+
+PartialGuildMember
+~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: PartialGuildMember
+
+.. autoclass:: PartialGuildMember()
+
+GuildMember
+~~~~~~~~~~~
+
+.. attributetable:: GuildMember
+
+.. autoclass:: GuildMember()
+
+Overwrite
+---------
+
+Overwrite
+~~~~~~~~~
+
+.. attributetable:: Overwrite
+
+.. autoclass:: Overwrite()
+
+Role
+----
+
+RoleTags
+~~~~~~~~
+
+.. attributetable:: RoleTags
+
+.. autoclass:: RoleTags()
+
+Role
+~~~~
+
+.. attributetable:: Role
+
+.. autoclass:: Role()
+
+Stage
+-----
+
+PrivacyLevel
+~~~~~~~~~~~~
+
+.. attributetable:: PrivacyLevel
+
+.. autoclass:: PrivacyLevel()
+
+StageInstance
+~~~~~~~~~~~~~
+
+.. attributetable:: StageInstance
+
+.. autoclass:: StageInstance()
+
+Template
+--------
+
+GuildTemplate
+~~~~~~~~~~~~~
+
+.. attributetable:: GuildTemplate
+
+.. autoclass:: GuildTemplate()
+
+Thread
+------
+
+ThreadMetadata
+~~~~~~~~~~~~~~
+
+.. attributetable:: ThreadMetadata
+
+.. autoclass:: ThreadMetadata()
+
+ThreadMember
+~~~~~~~~~~~~
+
+.. attributetable:: ThreadMember
+
+.. autoclass:: ThreadMember()
+
+Webhook
+-------
+
+WebhookType
+~~~~~~~~~~~
+
+.. attributetable:: WebhookType
+
+.. autoclass:: WebhookType()
+
+Webhook
+~~~~~~~
+
+.. attributetable:: Webhook
+
+.. autoclass:: Webhook()
+
+Welcome Screen
+--------------
+
+WelcomeScreenChannel
+~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: WelcomeScreenChannel
+
+.. autoclass:: WelcomeScreenChannel()
+
+WelcomeScreen
+~~~~~~~~~~~~~
+
+.. attributetable:: WelcomeScreen
+
+.. autoclass:: WelcomeScreen()
+
+Widget
+------
+
+GuildWidget
+~~~~~~~~~~~
+
+.. attributetable:: GuildWidget
+
+.. autoclass:: GuildWidget()

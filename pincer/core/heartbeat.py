@@ -4,24 +4,29 @@
 from __future__ import annotations
 
 import logging
+from typing import TYPE_CHECKING
 from asyncio import sleep
-from typing import Optional
 
-from websockets.legacy.client import WebSocketClientProtocol
+from websockets.exceptions import ConnectionClosedOK
 
 from . import __package__
-from ..core.dispatch import GatewayDispatch
 from ..exceptions import HeartbeatError
+from ..core.dispatch import GatewayDispatch
+
+if TYPE_CHECKING:
+    from typing import Optional
+
+    from websockets.legacy.client import WebSocketClientProtocol
+
 
 _log = logging.getLogger(__package__)
 
 
 class Heartbeat:
-    """
-    The heartbeat of the websocket connection.
+    """The heartbeat of the websocket connection.
 
     This is what lets the server and client know that they are still
-        both online and properly connected.
+    both online and properly connected.
     """
     __heartbeat: float = 0
     __sequence: Optional[int] = None
@@ -30,22 +35,30 @@ class Heartbeat:
     async def __send(cls, socket: WebSocketClientProtocol):
         """
         Sends a heartbeat to the API gateway.
-        :meta public:
 
         :param socket:
             The socket to send the heartbeat to.
         """
         _log.debug("Sending heartbeat (seq: %s)", str(cls.__sequence))
-        await socket.send(str(GatewayDispatch(1, cls.__sequence)))
+        try:
+            await socket.send(str(GatewayDispatch(1, cls.__sequence)))
+        except ConnectionClosedOK:
+            _log.error(
+                "Sending heartbeat failed. Ignoring failure... "
+                "Client should automatically resolve this issue. "
+                "If a crash occurs please create an issue on our github! "
+                "(https://github.com/Pincer-org/Pincer)"
+            )
 
     @classmethod
     def get(cls) -> float:
-        """
-        Get the current heartbeat.
+        """Get the current heartbeat.
 
-        :return:
+        Returns
+        -------
+        :class:`float`
             The current heartbeat of the client.
-            Default is 0 (client has not initialized the heartbeat yet.)
+            |default| ``0`` (client has not initialized the heartbeat yet.)
         """
         return cls.__heartbeat
 
@@ -55,15 +68,22 @@ class Heartbeat:
             socket: WebSocketClientProtocol,
             payload: GatewayDispatch
     ):
-        """
+        """|coro|
+
         Handshake between the discord API and the client.
         Retrieve the heartbeat for maintaining a connection.
 
-        :param socket:
+        Parameters
+        ----------
+        socket : :class:`~ws:websockets.legacy.client.WebSocketClientProtocol`
             The socket to send the heartbeat to.
-
-        :param payload:
+        payload : :class:`~pincer.core.dispatch.GatewayDispatch`
             The received hello message from the Discord gateway.
+
+        Raises
+        ------
+        HeartbeatError
+            No ``heartbeat_interval`` is present.
         """
         _log.debug("Handling initial discord hello websocket message.")
         cls.__heartbeat = payload.data.get("heartbeat_interval")
@@ -96,17 +116,18 @@ class Heartbeat:
 
     @classmethod
     async def handle_heartbeat(cls, socket: WebSocketClientProtocol, _):
-        """
+        """|coro|
+
         Handles a heartbeat, which means that it rests
         and then sends a new heartbeat.
 
-        :param socket:
+        Parameters
+        ----------
+        socket : :class:`~ws:websockets.legacy.client.WebSocketClientProtocol`
             The socket to send the heartbeat to.
-
-        :param _:
+        _ :
             Filling param for auto event handling.
         """
-
         _log.debug("Resting heart for %is", cls.__heartbeat)
         await sleep(cls.__heartbeat)
         await cls.__send(socket)
@@ -116,7 +137,10 @@ class Heartbeat:
         """
         Update the heartbeat sequence.
 
-        :param seq:
+
+        Parameters
+        ----------
+        seq : :class:`int`
             The new heartbeat sequence to be updated with.
         """
         _log.debug("Updating heartbeat sequence...")

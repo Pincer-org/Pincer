@@ -1,109 +1,247 @@
-pincer.objects.message package
+.. currentmodule:: pincer.objects
+
+Pincer Objects Message Section
 ==============================
 
-Submodules
+Attachment
 ----------
 
-pincer.objects.message.attachment module
-----------------------------------------
+Attachment
+~~~~~~~~~~
 
-.. automodule:: pincer.objects.message.attachment
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: Attachment
 
-pincer.objects.message.button module
-------------------------------------
+.. autoclass:: Attachment()
 
-.. automodule:: pincer.objects.message.button
-   :members:
-   :undoc-members:
-   :show-inheritance:
+ButtonStyle
+~~~~~~~~~~~
 
-pincer.objects.message.component module
----------------------------------------
+.. attributetable:: ButtonStyle
 
-.. automodule:: pincer.objects.message.component
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: ButtonStyle()
 
-pincer.objects.message.context module
--------------------------------------
+Button
+~~~~~~
 
-.. automodule:: pincer.objects.message.context
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: Button
 
-pincer.objects.message.embed module
------------------------------------
+.. autoclass:: Button()
 
-.. automodule:: pincer.objects.message.embed
-   :members:
-   :undoc-members:
-   :show-inheritance:
+Component
+---------
 
-pincer.objects.message.emoji module
------------------------------------
+MessageComponent
+~~~~~~~~~~~~~~~~
 
-.. automodule:: pincer.objects.message.emoji
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: MessageComponent
 
-pincer.objects.message.file module
-----------------------------------
+.. autoclass:: MessageComponent()
 
-.. automodule:: pincer.objects.message.file
-   :members:
-   :undoc-members:
-   :show-inheritance:
+Context
+-------
 
-pincer.objects.message.message module
--------------------------------------
+MessageContext
+~~~~~~~~~~~~~~
 
-.. automodule:: pincer.objects.message.message
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: MessageContext
 
-pincer.objects.message.reaction module
---------------------------------------
+.. autoclass:: MessageContext()
 
-.. automodule:: pincer.objects.message.reaction
-   :members:
-   :undoc-members:
-   :show-inheritance:
+Embed
+-----
 
-pincer.objects.message.reference module
----------------------------------------
+EmbedAuthor
+~~~~~~~~~~~
 
-.. automodule:: pincer.objects.message.reference
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: EmbedAuthor
 
-pincer.objects.message.sticker module
--------------------------------------
+.. autoclass:: EmbedAuthor()
 
-.. automodule:: pincer.objects.message.sticker
-   :members:
-   :undoc-members:
-   :show-inheritance:
+EmbedImage
+~~~~~~~~~~
 
-pincer.objects.message.user\_message module
--------------------------------------------
+.. attributetable:: EmbedImage
 
-.. automodule:: pincer.objects.message.user_message
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: EmbedImage()
 
-Module contents
----------------
+EmbedProvider
+~~~~~~~~~~~~~
 
-.. automodule:: pincer.objects.message
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: EmbedProvider
+
+.. autoclass:: EmbedProvider()
+
+EmbedThumbnail
+~~~~~~~~~~~~~~
+
+.. attributetable:: EmbedThumbnail
+
+.. autoclass:: EmbedThumbnail()
+
+EmbedVideo
+~~~~~~~~~~
+
+.. attributetable:: EmbedVideo
+
+.. autoclass:: EmbedVideo()
+
+EmbedFooter
+~~~~~~~~~~~
+
+.. attributetable:: EmbedFooter
+
+.. autoclass:: EmbedFooter()
+
+EmbedField
+~~~~~~~~~~
+
+.. attributetable:: EmbedField
+
+.. autoclass:: EmbedField()
+
+Embed
+~~~~~
+
+.. attributetable:: Embed
+
+.. autoclass:: Embed()
+
+Emoji
+-----
+
+Emoji
+~~~~~
+
+.. attributetable:: Emoji
+
+.. autoclass:: Emoji()
+
+File
+----
+
+File
+~~~~
+
+.. attributetable:: File
+
+.. autoclass:: File()
+
+Message
+-------
+
+AllowedMentions
+~~~~~~~~~~~~~~~
+
+.. attributetable:: AllowedMentions
+
+.. autoclass:: AllowedMentions()
+
+Message
+~~~~~~~
+
+.. attributetable:: Message
+
+.. autoclass:: Message()
+
+Reaction
+--------
+
+Reaction
+~~~~~~~~
+
+.. attributetable:: Reaction
+
+.. autoclass:: Reaction()
+
+Reference
+---------
+
+MessageReference
+~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageReference
+
+.. autoclass:: MessageReference()
+
+Sticker
+-------
+
+StickerType
+~~~~~~~~~~~
+
+.. attributetable:: StickerType
+
+.. autoclass:: StickerType()
+
+StickerFormatType
+~~~~~~~~~~~~~~~~~
+
+.. attributetable:: StickerFormatType
+
+.. autoclass:: StickerFormatType()
+
+Sticker
+~~~~~~~
+
+.. attributetable:: Sticker
+
+.. autoclass:: Sticker()
+
+StickerItem
+~~~~~~~~~~~
+
+.. attributetable:: StickerItem
+
+.. autoclass:: StickerItem()
+
+StickerPack
+~~~~~~~~~~~
+
+.. attributetable:: StickerPack
+
+.. autoclass:: StickerPack()
+
+User Message
+------------
+
+MessageActivityType
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageActivityType
+
+.. autoclass:: MessageActivityType()
+
+MessageFlags
+~~~~~~~~~~~~
+
+.. attributetable:: MessageFlags
+
+.. autoclass:: MessageFlags()
+
+MessageType
+~~~~~~~~~~~
+
+.. attributetable:: MessageType
+
+.. autoclass:: MessageType()
+
+MessageActivity
+~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageActivity
+
+.. autoclass:: MessageActivity()
+
+AllowedMentionTypes
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: AllowedMentionTypes
+
+.. autoclass:: AllowedMentionTypes()
+
+UserMessage
+~~~~~~~~~~~
+
+.. attributetable:: UserMessage
+
+.. autoclass:: UserMessage()
