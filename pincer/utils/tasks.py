@@ -5,29 +5,29 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from datetime import timedelta
-from typing import TYPE_CHECKING
 from asyncio import TimerHandle, iscoroutinefunction
+from datetime import timedelta
+from typing import TYPE_CHECKING, Optional
 
 from . import __package__
+from .insertion import should_pass_cls
 from ..exceptions import (
     TaskAlreadyRunning, TaskCancelError, TaskInvalidDelay,
     TaskIsNotCoroutine
 )
-from .insertion import should_pass_cls
 
 if TYPE_CHECKING:
-    from typing import Optional, Callable, Set
+    from typing import Callable, Set
     from .types import Coro
 
 
 _log = logging.getLogger(__package__)
 
-
 class TaskScheduler:
-    """Class that scedules tasts."""
-
     def __init__(self, client):
+        """
+        Used to create tasks
+        """
         self.client = client
         self.tasks: Set[Task] = set()
         self._loop = asyncio.get_event_loop()
@@ -43,11 +43,9 @@ class TaskScheduler:
         microseconds=0
     ) -> Callable[[Coro], Task]:
         """A decorator to create a task that repeat the given amount of t
-
         :Example usage:
 
         .. code-block:: python
-
             from pincer import Client
             from pincer.utils import TaskScheduler
 
@@ -60,7 +58,6 @@ class TaskScheduler:
 
             my_task.start()
             client.run()
-
         Parameters
         ----------
         days : :class:`int`
@@ -84,7 +81,6 @@ class TaskScheduler:
         microseconds : :class:`int`
             Days to wait between iterations.
             |default| ``0``
-
         Raises
         ------
         TaskIsNotCoroutine:
@@ -121,7 +117,6 @@ class TaskScheduler:
 
     def register(self, task: Task):
         """Register a task.
-
         Parameters
         ----------
         task : :class:`~pincer.utils.tasks.Task`
@@ -132,7 +127,11 @@ class TaskScheduler:
 
     def __execute(self, task: Task):
         """Execute a task."""
-        coro = task.coro(self.client) if task.client_required else task.coro()
+        if task._client_required:
+            coro = task.coro(self.client)
+        else:
+            coro = task.coro()
+
         # Execute the coroutine
         asyncio.ensure_future(coro)
 
@@ -145,11 +144,9 @@ class TaskScheduler:
             if task.running:
                 task.cancel()
 
-
 class Task:
     """A Task is a coroutine that is scheduled to repeat every x seconds.
     Use a TaskScheduler in order to create a task.
-
     Parameters
     ----------
     scheduler: :class:`~pincer.utils.tasks.TaskScheduler`
@@ -164,15 +161,15 @@ class Task:
         self._scheduler = scheduler
         self.coro = coro
         self.delay = delay
-        self._handle: TimerHandle = None
+        self._handle: Optional[TimerHandle] = None
         self._client_required = should_pass_cls(coro)
 
     def __del__(self):
         if self.running:
             self.cancel()
         else:
-            # Did the user forget to call task.start() ?
-            _log.warn(
+            # Did the user forgot to call task.start() ?
+            _log.warning(
                 "Task `%s` was not scheduled. Did you forget to start it ?",
                 self.coro.__name__
             )
