@@ -11,7 +11,7 @@ from .voice_state import VoiceState
 
 
 __all__ = (
-    "Connection", "Integration", "IntegrationApplication",
-    "IntegrationExpireBehavior", "PremiumTypes", "User", "VisibilityType",
-    "VoiceState", "IntegrationAccount"
+    "Connection", "Integration", "IntegrationAccount",
+    "IntegrationApplication", "IntegrationExpireBehavior", "PremiumTypes",
+    "User", "VisibilityType", "VoiceState"
 )

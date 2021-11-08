@@ -8,5 +8,5 @@ from .http import HTTPClient
 
 
 __all__ = (
-    "GatewayDispatch", "Dispatcher", "Heartbeat", "HTTPClient"
+    "Dispatcher", "GatewayDispatch", "HTTPClient", "Heartbeat"
 )

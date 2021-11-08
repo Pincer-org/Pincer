@@ -27,8 +27,8 @@ __all__ = (
     "AllowedMentionTypes", "AllowedMentions", "Attachment", "Button",
     "ButtonStyle", "Embed", "EmbedAuthor", "EmbedField", "EmbedFooter",
     "EmbedImage", "EmbedProvider", "EmbedThumbnail", "EmbedVideo", "Emoji",
-    "Message", "MessageActivity", "MessageActivityType", "MessageComponent",
-    "MessageContext", "MessageFlags", "MessageReference", "MessageType",
-    "Reaction", "Sticker", "StickerFormatType", "StickerItem", "StickerPack",
-    "StickerType", "UserMessage", "File"
+    "File", "Message", "MessageActivity", "MessageActivityType",
+    "MessageComponent", "MessageContext", "MessageFlags", "MessageReference",
+    "MessageType", "Reaction", "Sticker", "StickerFormatType", "StickerItem",
+    "StickerPack", "StickerType", "UserMessage"
 )

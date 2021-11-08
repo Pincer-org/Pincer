@@ -32,20 +32,19 @@ from .voice import VoiceServerUpdateEvent
 from .webhook import WebhookUpdateEvent
 
 __all__ = (
-    "ChannelPinsUpdateEvent", "DiscordError", "Identify", "Resume",
-    "RequestGuildMembers", "UpdateVoiceState", "StatusType",
-    "UpdatePresence", "GuildBanAddEvent", "GuildBanRemoveEvent",
-    "GuildEmojisUpdateEvent", "GuildStickersUpdateEvent",
+    "Activity", "ActivityAssets", "ActivityButton", "ActivityEmoji",
+    "ActivityFlags", "ActivityParty", "ActivitySecrets", "ActivityTimestamp",
+    "ActivityType", "ChannelPinsUpdateEvent", "ClientStatus", "DiscordError",
+    "GuildBanAddEvent", "GuildBanRemoveEvent", "GuildEmojisUpdateEvent",
     "GuildIntegrationsUpdateEvent", "GuildMemberRemoveEvent",
-    "GuildMemberUpdateEvent", "GuildMembersChunkEvent",
-    "GuildRoleCreateEvent", "GuildRoleUpdateEvent", "GuildRoleDeleteEvent",
-    "HelloEvent", "ReadyEvent", "IntegrationDeleteEvent", "InviteCreateEvent",
-    "InviteDeleteEvent", "MessageDeleteEvent", "MessageDeleteBulkEvent",
-    "MessageReactionAddEvent", "MessageReactionRemoveEvent",
-    "MessageReactionRemoveAllEvent", "MessageReactionRemoveEmojiEvent",
-    "ActivityType", "ActivityTimestamp", "ActivityEmoji", "ActivityParty",
-    "ActivityAssets", "ActivitySecrets", "ActivityFlags", "ActivityButton",
-    "Activity", "ClientStatus", "PresenceUpdateEvent", "ThreadListSyncEvent",
-    "ThreadMembersUpdateEvent", "TypingStartEvent", "VoiceServerUpdateEvent",
-    "WebhookUpdateEvent"
+    "GuildMemberUpdateEvent", "GuildMembersChunkEvent", "GuildRoleCreateEvent",
+    "GuildRoleDeleteEvent", "GuildRoleUpdateEvent", "GuildStickersUpdateEvent",
+    "HelloEvent", "Identify", "IntegrationDeleteEvent", "InviteCreateEvent",
+    "InviteDeleteEvent", "MessageDeleteBulkEvent", "MessageDeleteEvent",
+    "MessageReactionAddEvent", "MessageReactionRemoveAllEvent",
+    "MessageReactionRemoveEmojiEvent", "MessageReactionRemoveEvent",
+    "PresenceUpdateEvent", "ReadyEvent", "RequestGuildMembers", "Resume",
+    "StatusType", "ThreadListSyncEvent", "ThreadMembersUpdateEvent",
+    "TypingStartEvent", "UpdatePresence", "UpdateVoiceState",
+    "VoiceServerUpdateEvent", "WebhookUpdateEvent"
 )

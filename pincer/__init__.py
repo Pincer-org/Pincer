@@ -62,21 +62,20 @@ version_info = VersionInfo(0, 10, 1, release_level="alpha")
 __version__ = repr(version_info)
 
 __all__ = (
-    "Bot", "Choices", "Client", "Descripted", "Intents", "__author__",
-    "__email__", "__package__", "__title__", "__version__", "command",
-    "GatewayConfig", "event_middleware", "ChatCommandHandler", "PincerError",
-    "UnhandledException", "NoExportMethod",
-    "CogError", "CogNotFound", "CogAlreadyExists", "NoValidSetupMethod",
-    "TooManySetupArguments", "NoCogManagerReturnFound", "CommandError",
-    "CommandCooldownError", "CommandIsNotCoroutine", "CommandAlreadyRegistered",
-    "CommandDescriptionTooLong", "TooManyArguments",
-    "InvalidArgumentAnnotation", "CommandReturnIsEmpty",
-    "InvalidCommandGuild", "InvalidCommandName", "InvalidEventName",
-    "InvalidUrlError", "EmbedFieldError", "TaskError",
-    "TaskAlreadyRunning", "TaskCancelError", "TaskIsNotCoroutine",
-    "TaskInvalidDelay", "DispatchError", "DisallowedIntentsError",
-    "InvalidTokenError", "HeartbeatError", "UnavailableGuildError",
-    "HTTPError", "NotModifiedError", "BadRequestError",
-    "UnauthorizedError", "ForbiddenError", "NotFoundError",
-    "MethodNotAllowedError", "RateLimitError", "GatewayError", "ServerError"
+    "BadRequestError", "Bot", "ChatCommandHandler", "Choices",
+    "Client", "CogAlreadyExists", "CogError", "CogNotFound",
+    "CommandAlreadyRegistered", "CommandCooldownError",
+    "CommandDescriptionTooLong", "CommandError", "CommandIsNotCoroutine",
+    "CommandReturnIsEmpty", "Descripted", "DisallowedIntentsError",
+    "DispatchError", "EmbedFieldError", "ForbiddenError", "GatewayConfig",
+    "GatewayError", "HTTPError", "HeartbeatError", "Intents",
+    "InvalidArgumentAnnotation", "InvalidCommandGuild", "InvalidCommandName",
+    "InvalidEventName", "InvalidTokenError", "InvalidUrlError",
+    "MethodNotAllowedError", "NoCogManagerReturnFound", "NoExportMethod",
+    "NoValidSetupMethod", "NotFoundError", "NotModifiedError", "PincerError",
+    "RateLimitError", "ServerError", "TaskAlreadyRunning", "TaskCancelError",
+    "TaskError", "TaskInvalidDelay", "TaskIsNotCoroutine", "TooManyArguments",
+    "TooManySetupArguments", "UnauthorizedError", "UnavailableGuildError",
+    "UnhandledException", "__author__", "__email__", "__package__",
+    "__title__", "__version__", "command", "event_middleware"
 )
