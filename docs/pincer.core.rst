@@ -1,45 +1,48 @@
-pincer.core package
-===================
 
-Submodules
-----------
+.. currentmodule:: pincer.core
 
-pincer.core.dispatch module
----------------------------
+Pincer Core Module
+==================
 
-.. automodule:: pincer.core.dispatch
-   :members:
-   :undoc-members:
-   :show-inheritance:
+Dispatching
+-----------
 
-pincer.core.gateway module
---------------------------
+GatewayDispatch
+~~~~~~~~~~~~~~~
 
-.. automodule:: pincer.core.gateway
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: GatewayDispatch
 
-pincer.core.heartbeat module
-----------------------------
+.. autoclass:: GatewayDispatch()
 
-.. automodule:: pincer.core.heartbeat
-   :members:
-   :undoc-members:
-   :show-inheritance:
+Gateway
+-------
 
-pincer.core.http module
------------------------
+Dispatcher
+~~~~~~~~~~
 
-.. automodule:: pincer.core.http
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: Dispatcher
 
-Module contents
----------------
+.. autoclass:: Dispatcher()
+    :exclude-members: __handler_manager, __dispatcher
 
-.. automodule:: pincer.core
-   :members:
-   :undoc-members:
-   :show-inheritance:
+Heartbeat
+---------
+
+Heartbeat
+~~~~~~~~~
+
+.. attributetable:: Heartbeat
+
+.. autoclass:: Heartbeat()
+    :exclude-members: __send
+
+Http
+----
+
+HTTPClient
+~~~~~~~~~~
+
+.. attributetable:: HTTPClient
+
+.. autoclass:: HTTPClient()
+    :exclude-members: __send, __handle_response

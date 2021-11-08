@@ -1,21 +1,15 @@
-pincer.objects.voice package
+
+.. currentmodule:: pincer.objects
+
+Pincer Objects Voice Section
 ============================
 
-Submodules
-----------
+Region
+------
 
-pincer.objects.voice.region module
-----------------------------------
+VoiceRegion
+~~~~~~~~~~~
 
-.. automodule:: pincer.objects.voice.region
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: VoiceRegion
 
-Module contents
----------------
-
-.. automodule:: pincer.objects.voice
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: VoiceRegion()
