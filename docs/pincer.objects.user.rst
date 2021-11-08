@@ -1,45 +1,79 @@
-pincer.objects.user package
+.. currentmodule:: pincer.objects
+
+Pincer Objects User Section
 ===========================
 
-Submodules
+Connection
 ----------
 
-pincer.objects.user.connection module
--------------------------------------
+Connection
+~~~~~~~~~~
 
-.. automodule:: pincer.objects.user.connection
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: Connection
 
-pincer.objects.user.integration module
---------------------------------------
+.. autoclass:: Connection()
 
-.. automodule:: pincer.objects.user.integration
-   :members:
-   :undoc-members:
-   :show-inheritance:
+Integration
+-----------
 
-pincer.objects.user.user module
--------------------------------
+IntegrationExpireBehavior
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: pincer.objects.user.user
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: IntegrationExpireBehavior
 
-pincer.objects.user.voice\_state module
----------------------------------------
+.. autoclass:: IntegrationExpireBehavior()
 
-.. automodule:: pincer.objects.user.voice_state
-   :members:
-   :undoc-members:
-   :show-inheritance:
+IntegrationAccount
+~~~~~~~~~~~~~~~~~~
 
-Module contents
----------------
+.. attributetable:: IntegrationAccount
 
-.. automodule:: pincer.objects.user
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: IntegrationAccount()
+
+IntegrationApplication
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: IntegrationApplication
+
+.. autoclass:: IntegrationApplication()
+
+Integration
+~~~~~~~~~~~
+
+.. attributetable:: Integration
+
+.. autoclass:: Integration()
+
+User
+----
+
+PremiumTypes
+~~~~~~~~~~~~
+
+.. attributetable:: PremiumTypes
+
+.. autoclass:: PremiumTypes()
+
+VisibilityType
+~~~~~~~~~~~~~~
+
+.. attributetable:: VisibilityType
+
+.. autoclass:: VisibilityType()
+
+User
+~~~~
+
+.. attributetable:: User
+
+.. autoclass:: User()
+
+Voice State
+-----------
+
+VoiceState
+~~~~~~~~~~
+
+.. attributetable:: VoiceState
+
+.. autoclass:: VoiceState()
