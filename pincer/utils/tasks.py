@@ -23,6 +23,7 @@ if TYPE_CHECKING:
 
 _log = logging.getLogger(__package__)
 
+
 class TaskScheduler:
     def __init__(self, client):
         """
@@ -58,6 +59,7 @@ class TaskScheduler:
 
             my_task.start()
             client.run()
+
         Parameters
         ----------
         days : :class:`int`
@@ -127,11 +129,7 @@ class TaskScheduler:
 
     def __execute(self, task: Task):
         """Execute a task."""
-        if task._client_required:
-            coro = task.coro(self.client)
-        else:
-            coro = task.coro()
-
+        coro = task.coro(self.client) if task.client_required else task.coro()
         # Execute the coroutine
         asyncio.ensure_future(coro)
 
@@ -143,6 +141,7 @@ class TaskScheduler:
         for task in self.tasks.copy():
             if task.running:
                 task.cancel()
+
 
 class Task:
     """A Task is a coroutine that is scheduled to repeat every x seconds.
@@ -205,3 +204,7 @@ class Task:
         self._handle.cancel()
         if self in self._scheduler.tasks:
             self._scheduler.tasks.remove(self)
+
+    @property
+    def client_required(self):
+        return self._client_required
