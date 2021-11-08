@@ -3,17 +3,14 @@ max-line-length = 80
 ignore =
     D203,
     # H101: Use TODO(NAME)
-    H101,
-    # H401: docstring should not start with a space
-    H401,
-    # H403: multi line docstrings should end on a new line
-    H403,
-    # H404: multi line docstring should start without a leading new line
-    H404,
-    # H405: multi line docstring summary not separated with an empty line
-    H405,
     # H501: Do not use self.__dict__ for string formatting
     H501,
+    # F403 Unable to detect undefined names
+    F403,
+    # F401 __init__ causes verbose output
+    F401,
+    # C901 Too complex, well no way getting over that
+    C901,
     # W503: line break before binary operator
     W503
 exclude =
@@ -28,9 +25,15 @@ exclude =
     # This contains our built documentation
     build,
     # This contains test code that we don't want to check
-    dev
+    dev,
     # This contains builds that we don't want to check
-    dist
+    dist,
     # This is our python environment
-    venv
+    venv,
+    # This is used by some editors for file history
+    .history,
+    # This is config for github
+    .github,
+    # Tuples are not annotations, flake8 says this, vscode says this
+    examples
 max-complexity = 10

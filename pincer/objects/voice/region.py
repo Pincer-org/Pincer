@@ -8,28 +8,24 @@ from ...utils.api_object import APIObject
 
 @dataclass
 class VoiceRegion(APIObject):
-    """
-    Represents a Discord Voice Region object
+    """Represents a Discord Voice Region object
 
-    :param id:
-        unique ID for the region
-
-    :param name:
-        name of the region
-
-    :param vip:
-        true if this is a vip-only server
-
-    :param optimal:
-        true for a single server
+    Attributes
+    ----------
+    id: :class:`str`
+        Unique ID for the region
+    name: :class:`str`
+        Name of the region
+    vip: :class:`bool`
+        True if this is a vip-only server
+    optimal: :class:`bool`
+        True for a single server
         that is closest to the current user's client
-
-    :param deprecated:
-        whether this is a deprecated voice region
+    deprecated: :class:`bool`
+        Whether this is a deprecated voice region
         (avoid switching to these)
-
-    :param custom:
-        whether this is a custom voice region
+    custom: :class:`bool`
+        Whether this is a custom voice region
         (used for events/etc)
     """
     id: str

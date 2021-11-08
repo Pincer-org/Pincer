@@ -3,43 +3,47 @@
 
 from __future__ import annotations
 
+from enum import IntEnum
 from dataclasses import dataclass, field
-from enum import Enum, auto, IntEnum
-from typing import Optional, List, Dict, overload, TYPE_CHECKING, Any
+from typing import overload, TYPE_CHECKING
 
+from .channel import Channel
 from .member import GuildMember
-from ..events.presence import PresenceUpdateEvent
-from ..guild.channel import Channel
-from ..guild.role import Role
-from ..guild.stage import StageInstance
-from ..guild.welcome_screen import WelcomeScreen
-from ..message.emoji import Emoji
-from ..message.sticker import Sticker
-from ..user.voice_state import VoiceState
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
-from ...utils.types import MISSING, APINullable
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from ... import Client
-    from ...utils.snowflake import Snowflake
+    from typing import Dict, List, Optional
+
+    from .features import GuildFeature
+    from .role import Role
+    from .stage import StageInstance
+    from .welcome_screen import WelcomeScreen
+    from ..events.presence import PresenceUpdateEvent
+    from ..message.emoji import Emoji
+    from ..message.sticker import Sticker
+    from ..user.voice_state import VoiceState
+    from ...client import Client
     from ...utils.timestamp import Timestamp
+    from ...utils.types import APINullable
+    from ...utils.snowflake import Snowflake
 
 
 class PremiumTier(IntEnum):
-    """
-    :param NONE:
-        guild has not unlocked any Server Boost perks
+    """Represents the boost tier of a guild.
 
-    :param TIER_1:
-        guild has unlocked Server Boost level 1 perks
-
-    :param TIER_2:
-        guild has unlocked Server Boost level 2 perks
-
-    :param TIER_3:
-        guild has unlocked Server Boost level 3 perks
+    Attributes
+    ----------
+    NONE:
+        Guild has not unlocked any Server Boost perks.
+    TIER_1:
+        Guild has unlocked Server Boost level 1 perks.
+    TIER_2:
+        Guild has unlocked Server Boost level 2 perks.
+    TIER_3:
+        Guild has unlocked Server Boost level 3 perks.
     """
     NONE = 0
     TIER_1 = 1
@@ -48,6 +52,19 @@ class PremiumTier(IntEnum):
 
 
 class GuildNSFWLevel(IntEnum):
+    """Represents the NSFW level of a guild.
+
+    Attributes
+    ----------
+    DEFAULT:
+        Default NSFW level.
+    EXPLICIT:
+        Explicit NSFW level.
+    SAFE:
+        SAFE NSFW level.
+    AGE_RESTRICTED:
+        Age restricted NSFW level.
+    """
     DEFAULT = 0
     EXPLICIT = 1
     SAFE = 2
@@ -55,15 +72,16 @@ class GuildNSFWLevel(IntEnum):
 
 
 class ExplicitContentFilterLevel(IntEnum):
-    """
-    :param DISABLED:
-        media content will not be scanned
+    """Represents the filter content level of a guild.
 
-    :param MEMBERS_WITHOUT_ROLES:
-        media content sent by members without roles will be scanned
-
-    :param ALL_MEMBERS:
-        media content sent by all members will be scanned
+    Attributes
+    ----------
+    DISABLED:
+        Media content will not be scanned.
+    MEMBERS_WITHOUT_ROLES:
+        Media content sent by members without roles will be scanned.
+    ALL_MEMBERS:
+        Media content sent by all members will be scanned.
     """
     DISABLED = 0
     MEMBERS_WITHOUT_ROLES = 1
@@ -71,33 +89,34 @@ class ExplicitContentFilterLevel(IntEnum):
 
 
 class MFALevel(IntEnum):
-    """
-    :param NONE:
-        guild has no MFA/2FA requirement for moderation actions
+    """Represents the multi factor authentication level of a guild.
 
-    :param ELEVATED:
-        guild has a 2FA requirement for moderation actions
+    Attributes
+    ----------
+    NONE:
+        Guild has no MFA/2FA requirement for moderation actions.
+    ELEVATED:
+        Guild has a 2FA requirement for moderation actions
     """
     NONE = 0
     ELEVATED = 1
 
 
 class VerificationLevel(IntEnum):
-    """
-    :param NONE:
-        unrestricted
+    """Represents the verification level of a guild.
 
-    :param LOW:
-        must have verified email on account
-
-    :param MEDIUM:
-        must be registered on Discord for longer than 5 minutes
-
-    :param HIGH:
-        must be a member of the server for longer than 10 minutes
-
-    :param VERY_HIGH:
-        must have a verified phone number
+    Attributes
+    ----------
+    NONE:
+        Unrestricted.
+    LOW:
+        Must have verified email on account.
+    MEDIUM:
+        Must be registered on Discord for longer than 5 minutes.
+    HIGH:
+        Must be a member of the server for longer than 10 minutes.
+    VERY_HIGH:
+        Must have a verified phone number.
     """
     NONE = 0
     LOW = 1
@@ -107,301 +126,163 @@ class VerificationLevel(IntEnum):
 
 
 class DefaultMessageNotificationLevel(IntEnum):
-    """
-    :param ALL_MESSAGES:
-        members will receive notifications for all messages by default
+    """Represents the default message notification level of a guild.
 
-    :param ONLY_MENTIONS:
-        members will receive notifications only
-        for messages that @mention them by default
-    """
+    Attributes
+    ----------
+    ALL_MESSAGES:
+        Members will receive notifications for all messages by default.
+    ONLY_MENTIONS:
+        Members will receive notifications only for messages that @mention them by default.
+    """  # noqa: E501
     ALL_MESSAGES = 0
     ONLY_MENTIONS = 1
 
 
 class SystemChannelFlags(IntEnum):
-    """
-    :param SUPPRESS_JOIN_NOTIFICATIONS:
-        Suppress member join notifications
+    """Represents the system channel flags of a guild.
 
-    :param SUPPRESS_PREMIUM_SUBSCRIPTIONS:
-        Suppress server boost notifications
-
-    :param SUPPRESS_GUILD_REMINDER_NOTIFICATIONS:
-        Suppress server setup tips
+    Attributes
+    ----------
+    SUPPRESS_JOIN_NOTIFICATIONS:
+        Suppress member join notifications.
+    SUPPRESS_PREMIUM_SUBSCRIPTIONS:
+        Suppress server boost notifications.
+    SUPPRESS_GUILD_REMINDER_NOTIFICATIONS:
+        Suppress server setup tips.
     """
     SUPPRESS_JOIN_NOTIFICATIONS = 1 << 0
     SUPPRESS_PREMIUM_SUBSCRIPTIONS = 1 << 1
     SUPPRESS_GUILD_REMINDER_NOTIFICATIONS = 1 << 2
 
 
-class GuildFeature(Enum):
-    """
-    :param ANIMATED_ICON:
-        guild has access to set an animated guild icon
-
-    :param BANNER:
-        guild has access to set a guild banner image
-
-    :param COMMERCE:
-        guild has access to use commerce features (i.e. create store channels)
-
-    :param COMMUNITY:
-        guild can enable welcome screen, Membership Screening, stage channels
-        and discovery, and receives community updates
-
-    :param DISCOVERABLE:
-        guild is able to be discovered in the directory
-
-    :param FEATURABLE:
-        guild is able to be featured in the directory
-
-    :param INVITE_SPLASH:
-        guild has access to set an invite splash background
-
-    :param MEMBER_VERIFICATION_GATE_ENABLED:
-        guild has enabled Membership Screening
-
-    :param NEWS:
-        guild has access to create news channels
-
-    :param PARTNERED:
-        guild is partnered
-
-    :param PREVIEW_ENABLED:
-        guild can be previewed before joining via Membership Screening
-        or the directory
-
-    :param VANITY_URL:
-        guild has access to set a vanity URL
-
-    :param VERIFIED:
-        guild is verified
-
-    :param VIP_REGIONS:
-        guild has access to set 384kbps bitrate in voice
-        (previously VIP voice servers)
-
-    :param WELCOME_SCREEN_ENABLED:
-        guild has enabled the welcome screen
-
-    :param TICKETED_EVENTS_ENABLED:
-        guild has enabled ticketed events
-
-    :param MONETIZATION_ENABLED:
-        guild has enabled monetization
-
-    :param MORE_STICKERS:
-        guild has increased custom sticker slots
-
-    :param THREE_DAY_THREAD_ARCHIVE:
-        guild has access to the three day archive time for threads
-
-    :param SEVEN_DAY_THREAD_ARCHIVE:
-        guild has access to the seven day archive time for threads
-
-    :param PRIVATE_THREADS:
-        guild has access to create private threads
-    """
-    ANIMATED_ICON = auto()
-    BANNER = auto()
-    COMMERCE = auto()
-    COMMUNITY = auto()
-    DISCOVERABLE = auto()
-    FEATURABLE = auto()
-    INVITE_SPLASH = auto()
-    MEMBER_VERIFICATION_GATE_ENABLED = auto()
-    NEWS = auto()
-    PARTNERED = auto()
-    PREVIEW_ENABLED = auto()
-    VANITY_URL = auto()
-    VERIFIED = auto()
-    VIP_REGIONS = auto()
-    WELCOME_SCREEN_ENABLED = auto()
-    TICKETED_EVENTS_ENABLED = auto()
-    MONETIZATION_ENABLED = auto()
-    MORE_STICKERS = auto()
-    THREE_DAY_THREAD_ARCHIVE = auto()
-    SEVEN_DAY_THREAD_ARCHIVE = auto()
-    PRIVATE_THREADS = auto()
-
-
 @dataclass
 class Guild(APIObject):
-    """
-    Represents a Discord guild/server in which your client resides.
+    """Represents a Discord guild/server in which your client resides.
 
-    :param afk_channel_id:
-        id of afk channel
-
-    :param afk_timeout:
-        afk timeout in seconds
-
-    :param application_id:
-        application id of the guild creator if it is bot-created
-
-    :param banner:
-        banner hash
-
-    :param default_message_notifications:
-        default message notifications level
-
-    :param description:
-        the description of a Community guild
-
-    :param discovery_splash:
-        discovery splash hash;
+    Attributes
+    ----------
+    afk_channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+        Id of afk channel
+    afk_timeout: :class:`int`
+        Afk timeout in seconds
+    application_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+        Application id of the guild creator if it is bot-created
+    banner: Optional[:class:`str`]
+        Banner hash
+    default_message_notifications: :class:`~pincer.objects.guild.guild.DefaultMessageNotificationLevel`
+        Default message notifications level
+    description: Optional[:class:`str`]
+        The description of a Community guild
+    discovery_splash: Optional[:class:`str`]
+        Discovery splash hash;
         only present for guilds with the "DISCOVERABLE" feature
-
-    :param emojis:
-        custom guild emojis
-
-    :param explicit_content_filter:
-        explicit content filter level
-
-    :param features:
-        enabled guild features
-
-    :param id:
-        guild id
-
-    :param icon:
-        icon hash
-
-    :param mfa_level:
-        required MFA level for the guild
-
-    :param name:
-        guild name (2-100 characters, excluding trailing and leading
+    emojis: List[:class:`~pincer.objects.message.emoji.Emoji`]
+        Custom guild emojis
+    explicit_content_filter: :class:`~pincer.objects.guild.guild.ExplicitContentFilterLevel`
+        Explicit content filter level
+    features: List[:class:`~pincer.objects.guild.features.GuildFeature`]
+        Enabled guild features
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        Guild id
+    icon: Optional[:class:`str`]
+        Icon hash
+    mfa_level: :class:`~pincer.objects.guild.guild.MFALevel`
+        Required MFA level for the guild
+    name: :class:`str`
+        Guild name (2-100 characters, excluding trailing and leading
         whitespace)
-
-    :param nsfw_level:
-        guild NSFW level
-
-    :param owner_id:
-        id of owner
-
-    :param preferred_locale:
-        the preferred locale of a Community guild;
+    nsfw_level: :class:`~pincer.objects.guild.guild.NSFWLevel`
+        Guild NSFW level
+    owner_id: :class:`~pincer.utils.snowflake.Snowflake`
+        Id of owner
+    preferred_locale: :class:`str`
+        The preferred locale of a Community guild;
         used in server discovery and notices from Discord;
         defaults to "en-US"
-
-    :param premium_tier:
-        premium tier (Server Boost level)
-
-    :param public_updates_channel_id:
-        the id of the channel where admins
+    premium_tier: :class:`~pincer.objects.guild.guild.PremiumTier`
+        Premium tier (Server Boost level)
+    public_updates_channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+        The id of the channel where admins
         and moderators of Community guilds receive notices from Discord
-
-    :param roles:
-        roles in the guild
-
-    :param rules_channel_id:
-        the id of the channel where Community guilds can display rules
+    roles: List[:class:`~pincer.objects.guild.role.Role`]
+        Roles in the guild
+    rules_channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+        The id of the channel where Community guilds can display rules
         and/or guidelines
-
-    :param splash:
-        splash hash
-
-    :param system_channel_flags:
-        system channel flags
-
-    :param system_channel_id:
-        the id of the channel where guild notices
+    splash: Optional[:class:`str`]
+        Splash hash
+    system_channel_flags: :class:`~pincer.objects.guild.guild.SystemChannelFlags`
+        System channel flags
+    system_channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+        The id of the channel where guild notices
         such as welcome messages and boost events are posted
-
-    :param vanity_url_code:
-        the vanity url code for the guild
-
-    :param verification_level:
-        verification level required for the guild
-
-    :param approximate_member_count:
-        approximate number of members in this guild, returned from the
+    vanity_url_code: Optional[:class:`str`]
+        The vanity url code for the guild
+    verification_level: :class:`~pincer.objects.guild.guild.VerificationLevel`
+        Verification level required for the guild
+    approximate_member_count: APINullable[:class:`int`]
+        Approximate number of members in this guild, returned from the
         `GET /guilds/<id>` endpoint when with_counts is true
-
-    :param approximate_presence_count:
-        approximate number of non-offline members in this guild,
+    approximate_presence_count: APINullable[:class:`int`]
+        Approximate number of non-offline members in this guild,
         returned from the `GET /guilds/<id>`
         endpoint when with_counts is true
-
-    :param channels:
-        channels in the guild
-
-    :param icon_hash:
-        icon hash, returned when in the template object
-
-    :param joined_at:
-        when this guild was joined at
-
-    :param large:
-        true if this is considered a large guild
-
-    :param max_members:
-        the maximum number of members for the guild
-
-    :param max_presences:
-        the maximum number of presences for the guild
+    channels: APINullable[List[:class:`~pincer.objects.guild.chanenl.Channel`]]
+        Channels in the guild
+    icon_hash: APINullable[Optional[:class:`str`]]
+        Icon hash, returned when in the template object
+    joined_at: APINullable[:class:`~pincer.utils.timestamp.Timestamp`]
+        When this guild was joined at
+    large: APINullable[:class:`bool`]
+        True if this is considered a large guild
+    max_members: APINullable[:class:`int`]
+        The maximum number of members for the guild
+    max_presences: APINullable[Optional[:class:`int`]]
+        The maximum number of presences for the guild
         (null is always returned, apart from the largest of guilds)
-
-    :param max_video_channel_users:
-        the maximum amount of users in a video channel
-
-    :param members:
-        users in the guild
-
-    :param member_count:
-        total number of members in this guild
-
-    :param nsfw:
-        boolean if the server is NSFW
-
-    :param owner:
-        true if the user is the owner of the guild
-
-    :param permissions:
-        total permissions for the user in the guild
+    max_video_channel_users: APINullable[:class:`int`]
+        The maximum amount of users in a video channel
+    members: APINullable[List[:class:`~pincer.objects.guild.member.GuildMember`]]
+        Users in the guild
+    member_count: APINullable[:class:`bool`]
+        Total number of members in this guild
+    nsfw: APINullable[:class:`bool`]
+        Boolean if the server is NSFW
+    owner: APINullable[:class:`bool`]
+        True if the user is the owner of the guild
+    permissions: APINullable[:class:`str`]
+        Total permissions for the user in the guild
         (excludes overwrites)
-
-    :param premium_subscription_count:
-        the number of boosts this guild currently has
-
-    :param presences:
-        presences of the members in the guild,
+    premium_subscription_count: APINullable[:class:`int`]
+        The number of boosts this guild currently has
+    presences: APINullable[List[:class:`~pincer.objects.events.presence.PresenceUpdateEvent`]]
+        Presences of the members in the guild,
         will only include non-offline members if the size is greater
         than large threshold
-
-    :param stage_instances:
+    stage_instances: APINullable[List[:class:`~pincer.objects.guild.stage.StageInstance`]]
         Stage instances in the guild
-
-    :param stickers:
-        custom guild stickers
-
-    :param region:
-        voice region id for the guild (deprecated)
-
-    :param threads:
-        all active threads in the guild that current user
+    stickers: Optional[List[:class:`~pincer.objects.message.sticker.Sticker`]]
+        Custom guild stickers
+    region: APINullable[Optional[:class:`str`]]
+        Voice region id for the guild (deprecated)
+    threads: APINullable[List[:class:`~pincer.objects.guild.channel.Channel`]]
+        All active threads in the guild that current user
         has permission to view
-
-    :param unavailable:
-        true if this guild is unavailable due to an outage
-
-    :param voice_states:
-        states of members currently in voice channels;
+    unavailable: APINullable[:class:`bool`]
+        True if this guild is unavailable due to an outage
+    voice_states: APINullable[List[:class:`~pincer.objects.user.voice_state.VoiceState`]]
+        States of members currently in voice channels;
         lacks the guild_id key
-
-    :param widget_enabled:
-        true if the server widget is enabled
-
-    :param widget_channel_id:
-        the channel id that the widget will generate an invite to,
+    widget_enabled: APINullable[:class:`bool`]
+        True if the server widget is enabled
+    widget_channel_id: APINullable[Optional[:class:`~pincer.utils.snowflake.Snowflake`]]
+        The channel id that the widget will generate an invite to,
         or null if set to no invite
-
-    :param welcome_screen:
-        the welcome screen of a Community guild, shown to new members,
+    welcome_screen: APINullable[:class:`~pincer.objects.guild.welcome_screen.WelcomeScreen`]
+        The welcome screen of a Community guild, shown to new members,
         returned in an Invite's guild object
-    """
+    """  # noqa: E501
     afk_timeout: int
     default_message_notifications: DefaultMessageNotificationLevel
     emojis: List[Emoji]
@@ -468,7 +349,20 @@ class Guild(APIObject):
     welcome_screen: APINullable[WelcomeScreen] = MISSING
 
     @classmethod
-    async def from_id(cls, client: Client, _id: int) -> Guild:
+    async def from_id(cls, client: Client, _id: Snowflake) -> Guild:
+        """
+        Parameters
+        ----------
+        client : `~pincer.Client`
+            Client object to use the http gateway from.
+        _id : :class: `pincer.utils.snowflake.Snowflake`
+            Guild ID.
+
+        Returns
+        -------
+        :class: `~pincer.objects.guild.guild.Guild`
+            The new guild object.
+        """
         data = await client.http.get(f"/guilds/{_id}")
         channel_data = await client.http.get(f"/guilds/{_id}/channels")
 
@@ -479,17 +373,21 @@ class Guild(APIObject):
 
         return Guild.from_dict(construct_client_dict(client, data))
 
-    async def get_member(self, _id: int):
-        """
+    async def get_member(self, _id: int) -> GuildMember:
+        """|coro|
+
         Fetches a GuildMember from its identifier
 
-        :param _id:
+        Parameters
+        ----------
+        _id:
             The id of the guild member which should be fetched from the Discord
             gateway.
 
-        :returns:
-            A GuildMember objects.
-
+        Returns
+        -------
+        :class:`~pincer.objects.guild.member.GuildMember`
+            A GuildMember object.
         """
         return await GuildMember.from_id(self._client, self.id, _id)
 
@@ -503,12 +401,30 @@ class Guild(APIObject):
             deaf: Optional[bool] = None,
             channel_id: Optional[Snowflake] = None
     ) -> GuildMember:
-        """
+        """|coro|
+
         Modifies a member in the guild from its identifier and based on the
         keyword arguments provided.
 
-        :returns:
-            The GuildMember that has been modified.
+        Parameters
+        ----------
+        _id : int
+            Id of the member to modify
+        nick : Optional[:class:`str`]
+            New nickname for the member |default| :data:`None`
+        roles : Optional[List[:class:`~pincer.utils.snowflake.Snowflake]]
+            New roles for the member |default| :data:`None`
+        mute : Optional[:class:`bool`]
+            Whether the member is muted |default| :data:`None`
+        deaf : Optional[:class:`bool`]
+            Whether the member is defaened |default| :data:`None`
+        channel_id : Optional[:class:`~pincer.utils.snowflake.Snowflake]
+            Voice channel id to move to |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.member.GuildMember`
+            The new member object.
         """
         ...
 
@@ -519,17 +435,24 @@ class Guild(APIObject):
     @classmethod
     def from_dict(cls, data) -> Guild:
         """
-        Instantiate a new guild from a dictionary.
+        Parameters
+        ----------
+        data : :class: Dict
+            Guild data recieved from the discord API.
 
-        Also handles it if the guild isn't available.
+        Returns
+        -------
+        :class: `~pincer.objects.guild.guild.Guild`
+            The new guild object.
 
-        :raises UnavailableGuildError:
-            Exception gets raised when guild is unavailable.
+        Raises
+        :class: `~pincer.exceptions.UnavailableGuildError`
+            The guild is unavailable due to a discord outage.
         """
         if data.get("unavailable", False):
             raise UnavailableGuildError(
-                f"Guild \"{data['id']}\" is unavailable due"
-                " to a discord outage."
+                f"Guild \"{data['id']}\" is unavailable due to a discord"
+                " outage."
             )
 
         return super().from_dict(data)

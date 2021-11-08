@@ -1,11 +1,11 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from inspect import getfullargspec, Parameter, Signature
 from typing import Any, Union, Callable, Mapping, List
+from inspect import getfullargspec, Parameter, Signature
 
 from .types import Coro, TypeCache
-from ..objects.message import MessageContext
+from ..objects.message.context import MessageContext
 
 
 def should_pass_cls(call: Union[Coro, Callable[..., Any]]) -> bool:
@@ -26,7 +26,7 @@ context_types = [Signature.empty, MessageContext]
 
 
 def should_pass_ctx(sig: Mapping[str, Parameter], params: List[str]) -> bool:
-    # TODO: Write docs
+    # TODO: Write docs, do not put online
     if not params:
         return False
 

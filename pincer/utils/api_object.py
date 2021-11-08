@@ -15,7 +15,7 @@ from typing import (
 
 from .conversion import convert
 from .types import MissingType, MISSING, TypeCache
-from ..exceptions import InvalidAnnotation
+from ..exceptions import InvalidArgumentAnnotation
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -122,7 +122,7 @@ class APIObject(metaclass=HTTPMeta):
 
         Raises
         ------
-        :class:`~pincer.exceptions.InvalidAnnotation`
+        :class:`~pincer.exceptions.InvalidArgumentAnnotation`
             Exception which is raised when the type annotation has not enough
             or too many arguments for the parser to handle.
         """
@@ -136,7 +136,7 @@ class APIObject(metaclass=HTTPMeta):
             if 2 <= len(args) < 4:
                 return args
 
-            raise InvalidAnnotation(
+            raise InvalidArgumentAnnotation(
                 f"Attribute `{attr}` in `{type(self).__name__}` has too many "
                 f"or not enough arguments! (got {len(args)} expected 2-3)"
             )
@@ -191,7 +191,7 @@ class APIObject(metaclass=HTTPMeta):
             ))
 
             if not types:
-                raise InvalidAnnotation(
+                raise InvalidArgumentAnnotation(
                     f"Attribute `{attr}` in `{type(self).__name__}` only "
                     "consisted of missing/optional type!"
                 )

@@ -9,8 +9,23 @@ Full MIT License can be found in `LICENSE` at the project root.
 
 from typing import NamedTuple, Literal, Optional
 
-from .client import Client, Bot
-from .commands import command
+from ._config import GatewayConfig
+from .client import event_middleware, Client, Bot
+from .commands import command, ChatCommandHandler
+from .exceptions import (
+    PincerError, UnhandledException, NoExportMethod,
+    CogError, CogNotFound, CogAlreadyExists, NoValidSetupMethod,
+    TooManySetupArguments, NoCogManagerReturnFound, CommandError,
+    CommandCooldownError, CommandIsNotCoroutine, CommandAlreadyRegistered,
+    CommandDescriptionTooLong, TooManyArguments, InvalidArgumentAnnotation,
+    CommandReturnIsEmpty, InvalidCommandGuild, InvalidCommandName,
+    InvalidEventName, InvalidUrlError, EmbedFieldError, TaskError,
+    TaskAlreadyRunning, TaskCancelError, TaskIsNotCoroutine, TaskInvalidDelay,
+    DispatchError, DisallowedIntentsError, InvalidTokenError, HeartbeatError,
+    UnavailableGuildError, HTTPError, NotModifiedError, BadRequestError,
+    UnauthorizedError, ForbiddenError, NotFoundError, MethodNotAllowedError,
+    RateLimitError, GatewayError, ServerError
+)
 from .objects import Intents
 from .utils import Choices, Descripted
 
@@ -43,9 +58,25 @@ class VersionInfo(NamedTuple):
         )
 
 
-__version__ = VersionInfo(0, 10, 0)
+version_info = VersionInfo(0, 10, 1, release_level="alpha")
+__version__ = repr(version_info)
 
 __all__ = (
     "Bot", "Choices", "Client", "Descripted", "Intents", "__author__",
-    "__email__", "__package__", "__title__", "__version__", "command"
+    "__email__", "__package__", "__title__", "__version__", "command",
+    "GatewayConfig", "event_middleware", "ChatCommandHandler", "PincerError",
+    "UnhandledException", "NoExportMethod",
+    "CogError", "CogNotFound", "CogAlreadyExists", "NoValidSetupMethod",
+    "TooManySetupArguments", "NoCogManagerReturnFound", "CommandError",
+    "CommandCooldownError", "CommandIsNotCoroutine", "CommandAlreadyRegistered",
+    "CommandDescriptionTooLong", "TooManyArguments",
+    "InvalidArgumentAnnotation", "CommandReturnIsEmpty",
+    "InvalidCommandGuild", "InvalidCommandName", "InvalidEventName",
+    "InvalidUrlError", "EmbedFieldError", "TaskError",
+    "TaskAlreadyRunning", "TaskCancelError", "TaskIsNotCoroutine",
+    "TaskInvalidDelay", "DispatchError", "DisallowedIntentsError",
+    "InvalidTokenError", "HeartbeatError", "UnavailableGuildError",
+    "HTTPError", "NotModifiedError", "BadRequestError",
+    "UnauthorizedError", "ForbiddenError", "NotFoundError",
+    "MethodNotAllowedError", "RateLimitError", "GatewayError", "ServerError"
 )

@@ -5,8 +5,7 @@ from __future__ import annotations
 
 
 class Snowflake(int):
-    """
-    Discord utilizes Twitter's snowflake format for uniquely
+    """Discord utilizes Twitter's snowflake format for uniquely
     identifiable descriptors (IDs).
 
     These IDs are guaranteed to be unique across all of Discord,
@@ -23,37 +22,36 @@ class Snowflake(int):
         return cls.from_string(string)
 
     @classmethod
-    def from_string(cls, string: str) -> Snowflake:
-        """
-        Initialize a new Snowflake from a string.
+    def from_string(cls, string: str):
+        """Initialize a new Snowflake from a string.
 
-        :param string:
+        Parameters
+        ----------
+        string: :class:`str`
             The snowflake as a string.
         """
         return Snowflake(int(string))
 
     @property
     def timestamp(self) -> int:
-        """
-        Milliseconds since Discord Epoch,
+        """:class:`int`: Milliseconds since Discord Epoch,
         the first second of 2015 or 14200704000000
         """
         return self >> 22
 
     @property
     def worker_id(self) -> int:
-        """Internal worker ID"""
+        """:class:`int`: Internal worker ID"""
         return (self >> 17) % 16
 
     @property
     def process_id(self) -> int:
-        """Internal process ID"""
+        """:class:`int`: Internal process ID"""
         return (self >> 12) % 16
 
     @property
     def increment(self) -> int:
-        """
-        For every ID that is generated on that process,
-        this number is incremented
+        """:class:`int`: For every ID that is generated on that process,
+        this number is incremented.
         """
         return self % 2048

@@ -7,7 +7,7 @@ Before starting make sure Pincer is installed. See :doc:`installing`.
 Basic on_ready bot
 ------------------
 
-For a basic bot, creating a :class:`~.client.Client` class works well. 
+For a basic bot, creating a :class:`~.Client` class works well. 
 
 .. code-block:: python
 
@@ -18,7 +18,7 @@ For a basic bot, creating a :class:`~.client.Client` class works well.
 
 	@client.event
 	async def on_ready():
-	    print(f"Logged in as {client.bot} after {perf_counter()} seconds.")
+		print(f"Logged in as {client.bot} after {perf_counter()} seconds.")
 
 	client.run()
 
@@ -26,7 +26,7 @@ For a basic bot, creating a :class:`~.client.Client` class works well.
 Inheriting from Client
 ----------------------
 
-Inheriting from :class:`~.client.Client` allows more flexibility and enables advance usage for a bot.
+Inheriting from :class:`~.Client` allows more flexibility and enables advance usage for a bot.
 
 .. code-block:: python
 
@@ -34,13 +34,13 @@ Inheriting from :class:`~.client.Client` allows more flexibility and enables adv
 	from pincer import Client
 
 	class Bot(Client):
-	    def __init__(self, token):
-	        super(Bot, self).__init__(token)
+		def __init__(self, token):
+			super(Bot, self).__init__(token)
 
-	    @Client.event
-	    async def on_ready(self):
-	        print(f"Logged in as {self.bot} after {perf_counter()} seconds.")
-	
+		@Client.event
+		async def on_ready(self):
+			print(f"Logged in as {self.bot} after {perf_counter()} seconds.")
+
 	bot = Bot("TOKEN")
 	bot.run()
 
@@ -48,7 +48,7 @@ Inheriting from :class:`~.client.Client` allows more flexibility and enables adv
 Implementing Slash Commands
 ---------------------------
 
-Using slash commands is as easy as adding the :func:`~.pincer.commands.command` decorator on a function and using Python annotations to specify the argument types.
+Using slash commands is as easy as adding the :func:`~pincer.commands.command` decorator on a function and using Python annotations to specify the argument types.
 Available types are as follows:
 
 - str - String
@@ -65,58 +65,56 @@ Available types are as follows:
 	from pincer import Client, command
 
 	class Bot(Client):
-	    ...
-	    @command(description="Add two numbers!")
-	    async def add(self, first: int, second: int):
-	        return f"The addition of `{first}` and `{second}` is `{first + second}`"
+		...
+		@command(description="Add two numbers!")
+		async def add(self, first: int, second: int):
+			return f"The addition of `{first}` and `{second}` is `{first + second}`"
 
 
 Sending private messages
 ------------------------
 
-See :class:`~.pincer.objects.message.Message` for more.
+See :class:`~.Message` for more.
 
 .. code-block:: python
 
 	from pincer import Client, command, Message
 
 	class Bot(Client):
-	    ...
-	    @command(description="Sends a DM to the user.")
-	    async def private_say(self, message: str):
-	        return Message(message, flags=InteractionFlags.EPHEMERAL)
+		...
+		@command(description="Sends a DM to the user.")
+		async def private_say(self, message: str):
+			return Message(message, flags=InteractionFlags.EPHEMERAL)
 
 
 Sending Embeds
 --------------
 
-See :class:`pincer.objects.embed.Embed` for more
+See :class:`~.Embed` for more
 
 .. code-block:: python
 
 	from pincer import Client, command, Embed
 
 	class Bot(Client):
-	    ...
-	    @command(description="Pincer Informational Embed")
-	    async def an_embed(self, message: str):
-	        return Embed(
-	            title="Pincer",
-	            description=(
-	                "🚀 An asynchronous python API wrapper meant to replace"
-	                " discord.py\n> Snappy discord api wrapper written "
-	                "with aiohttp & websockets"
-	            )
-	        ).add_field(
-	            name="**Github Repository**",
-	            value="> https://github.com/Pincer-org/Pincer"
-	        ).set_thumbnail(
-	            url="https://pincer.dev/img/icon.png"
-	        ).set_image(
-	            url=(
-	                "https://repository-images.githubusercontent.com"
-	                "/400871418/045ebf39-7c6e-4c3a-b744-0c3122374203"
-	            )
-	        )
-
-
+		...
+		@command(description="Pincer Informational Embed")
+		async def an_embed(self, message: str):
+			return Embed(
+				title="Pincer",
+				description=(
+					"🚀 An asynchronous python API wrapper meant to replace"
+					" discord.py\n> Snappy discord api wrapper written "
+					"with aiohttp & websockets"
+				)
+			).add_field(
+				name="**Github Repository**",
+				value="> https://github.com/Pincer-org/Pincer"
+			).set_thumbnail(
+				url="https://pincer.dev/img/icon.png"
+			).set_image(
+				url=(
+					"https://repository-images.githubusercontent.com"
+					"/400871418/045ebf39-7c6e-4c3a-b744-0c3122374203"
+				)
+			)

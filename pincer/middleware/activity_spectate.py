@@ -7,4 +7,3 @@ spectate a game
 """
 
 # TODO: Implement event
-

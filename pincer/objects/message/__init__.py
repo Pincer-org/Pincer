@@ -8,6 +8,7 @@ from .embed import (
     EmbedVideo, EmbedFooter
 )
 from .emoji import Emoji
+from .file import File
 from .message import Message
 from .component import MessageComponent
 from .context import MessageContext
@@ -21,6 +22,7 @@ from .user_message import (
     AllowedMentionTypes, UserMessage, AllowedMentions
 )
 
+
 __all__ = (
     "AllowedMentionTypes", "AllowedMentions", "Attachment", "Button",
     "ButtonStyle", "Embed", "EmbedAuthor", "EmbedField", "EmbedFooter",
@@ -28,5 +30,5 @@ __all__ = (
     "Message", "MessageActivity", "MessageActivityType", "MessageComponent",
     "MessageContext", "MessageFlags", "MessageReference", "MessageType",
     "Reaction", "Sticker", "StickerFormatType", "StickerItem", "StickerPack",
-    "StickerType", "UserMessage"
+    "StickerType", "UserMessage", "File"
 )

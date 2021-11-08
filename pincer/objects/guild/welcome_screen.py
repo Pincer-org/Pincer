@@ -3,33 +3,34 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from typing import Optional, List
 
 from ...utils.api_object import APIObject
-from ...utils.snowflake import Snowflake
+
+if TYPE_CHECKING:
+    from typing import Optional, List
+
+    from ...utils.snowflake import Snowflake
 
 
 @dataclass
 class WelcomeScreenChannel(APIObject):
-    """
-    Represents a welcome screen channel. This is a channel which gets
+    """Represents a welcome screen channel. This is a channel which gets
     shown on the welcome screen.
 
-    :param channel_id:
-        the channel's id
-
-    :param description:
-        the description shown for the channel
-
-    :param emoji_id:
-        the emoji id, if the emoji is custom
-
-    :param emoji_name:
-        the emoji name if custom, the unicode character if standard,
+    Attributes
+    ----------
+    channel_id: :class:`~pincer.utils.snowflake.Snowflake`
+        The channel's id
+    description: :class:`str`
+        The description shown for the channel
+    emoji_id: Optional[:class:`int`]
+        The emoji id, if the emoji is custom
+    emoji_name: Optional[:class:`str`]
+        The emoji name if custom, the unicode character if standard,
         or null if no emoji is set
     """
-
     channel_id: Snowflake
     description: str
 
@@ -39,15 +40,15 @@ class WelcomeScreenChannel(APIObject):
 
 @dataclass
 class WelcomeScreen(APIObject):
-    """
-    Representation of a Discord guild/server welcome screen.
+    """Representation of a Discord guild/server welcome screen.
 
-    :description:
-        the server description shown in the welcome screen
-
-    :welcome_channels:
-        the channels shown in the welcome screen, up to 5
-    """
+    Attributes
+    ----------
+    description: LIst[:class:`~pincer.objects.guild.welcome_screen.WelcomeScreenChannel`]
+        The server description shown in the welcome screen
+    welcome_channels: Optional[:class:`str`]
+        The channels shown in the welcome screen, up to 5
+    """  # noqa: E501
     welcome_channels: List[WelcomeScreenChannel]
 
     description: Optional[str] = None

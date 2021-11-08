@@ -29,3 +29,6 @@ MANIFEST
 
 # Pytest coverage db
 .coverage
+
+# IDE Ext's
+.history/
