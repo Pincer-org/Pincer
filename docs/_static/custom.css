@@ -61,15 +61,14 @@
 
 main .py-attribute-table-column > ul {
     list-style: none;
-    margin: 4px 0px;
+    margin: 4px 0;
     padding-left: 0;
     font-size: 0.95em;
 }
 
 .py-attribute-table-entry {
     margin: 0;
-    padding: 2px 0;
-    padding-left: 0.2em;
+    padding: 2px 0 2px 0.2em;
     border-left: 2px solid var(--attribute-table-entry-border);
     display: flex;
     line-height: 1.2em;
@@ -115,9 +114,9 @@ main .py-attribute-table-column > ul {
 
 /* note styling */
 .admonition.note {
-    border-left-color: #FFFF00;
+    border-left-color: var(--blue-4);
     color: #FFFFFF;
 }
 .admonition {
-    background-color: #0000FF;
+    background-color: var(--blue-6);
 }
