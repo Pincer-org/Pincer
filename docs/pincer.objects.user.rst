@@ -1,79 +1,45 @@
-.. currentmodule:: pincer.objects
-
-Pincer Objects User Section
+pincer.objects.user package
 ===========================
 
-Connection
+Submodules
 ----------
 
-Connection
-~~~~~~~~~~
+pincer.objects.user.connection module
+-------------------------------------
 
-.. attributetable:: Connection
+.. automodule:: pincer.objects.user.connection
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. autoclass:: Connection()
+pincer.objects.user.integration module
+--------------------------------------
 
-Integration
------------
+.. automodule:: pincer.objects.user.integration
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-IntegrationExpireBehavior
-~~~~~~~~~~~~~~~~~~~~~~~~~
+pincer.objects.user.user module
+-------------------------------
 
-.. attributetable:: IntegrationExpireBehavior
+.. automodule:: pincer.objects.user.user
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. autoclass:: IntegrationExpireBehavior()
+pincer.objects.user.voice\_state module
+---------------------------------------
 
-IntegrationAccount
-~~~~~~~~~~~~~~~~~~
+.. automodule:: pincer.objects.user.voice_state
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. attributetable:: IntegrationAccount
+Module contents
+---------------
 
-.. autoclass:: IntegrationAccount()
-
-IntegrationApplication
-~~~~~~~~~~~~~~~~~~~~~~
-
-.. attributetable:: IntegrationApplication
-
-.. autoclass:: IntegrationApplication()
-
-Integration
-~~~~~~~~~~~
-
-.. attributetable:: Integration
-
-.. autoclass:: Integration()
-
-User
-----
-
-PremiumTypes
-~~~~~~~~~~~~
-
-.. attributetable:: PremiumTypes
-
-.. autoclass:: PremiumTypes()
-
-VisibilityType
-~~~~~~~~~~~~~~
-
-.. attributetable:: VisibilityType
-
-.. autoclass:: VisibilityType()
-
-User
-~~~~
-
-.. attributetable:: User
-
-.. autoclass:: User()
-
-Voice State
------------
-
-VoiceState
-~~~~~~~~~~
-
-.. attributetable:: VoiceState
-
-.. autoclass:: VoiceState()
+.. automodule:: pincer.objects.user
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,112 +1,109 @@
-.. currentmodule:: pincer.utils
+pincer.utils package
+====================
 
-Pincer Utils Module
-===================
-
-Api Object
+Submodules
 ----------
 
-APIObject
-~~~~~~~~~
+pincer.utils.api\_object module
+-------------------------------
 
-.. attributetable:: APIObject
+.. automodule:: pincer.utils.api_object
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. autoclass:: APIObject()
+pincer.utils.conversion module
+------------------------------
 
-Directory
----------
+.. automodule:: pincer.utils.conversion
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-chdir
-~~~~~
+pincer.utils.convert\_message module
+------------------------------------
 
-.. autofunction:: chdir
+.. automodule:: pincer.utils.convert_message
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-Signature
----------
+pincer.utils.directory module
+-----------------------------
 
-get_signature_and_params
-~~~~~~~~~~~~~~~~~~~~~~~~
+.. automodule:: pincer.utils.directory
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. autofunction:: get_signature_and_params
+pincer.utils.extraction module
+------------------------------
 
-get_params
-~~~~~~~~~~
+.. automodule:: pincer.utils.extraction
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. autofunction:: get_params
+pincer.utils.insertion module
+-----------------------------
 
-Snowflake
----------
+.. automodule:: pincer.utils.insertion
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-Snowflake
-~~~~~~~~~
+pincer.utils.signature module
+-----------------------------
 
-.. attributetable:: Snowflake
+.. automodule:: pincer.utils.signature
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. autoclass:: Snowflake()
+pincer.utils.slidingwindow module
+---------------------------------
 
-Tasks
------
+.. automodule:: pincer.utils.slidingwindow
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-Task
-~~~~
+pincer.utils.snowflake module
+-----------------------------
 
-.. attributetable:: Task
+.. automodule:: pincer.utils.snowflake
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. autoclass:: Task()
+pincer.utils.tasks module
+-------------------------
 
-TaskScheduler
-~~~~~~~~~~~~~
+.. automodule:: pincer.utils.tasks
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. attributetable:: TaskScheduler
+pincer.utils.timestamp module
+-----------------------------
 
-.. autoclass:: TaskScheduler()
-   :exclude-members: loop
+.. automodule:: pincer.utils.timestamp
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-   .. automethod:: TaskScheduler.loop
-      :decorator:
+pincer.utils.types module
+-------------------------
 
-Timestamp
----------
+.. automodule:: pincer.utils.types
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-Timestamp
-~~~~~~~~~
+Module contents
+---------------
 
-.. attributetable:: Timestamp
-
-.. autoclass:: Timestamp()
-
-Types
------
-
-MissingType
-~~~~~~~~~~~
-
-.. autoclass:: MissingType()
-
-MISSING
-~~~~~~~
-
-.. data:: MISSING
-   :type: MissingType
-
-APINullable
-~~~~~~~~~~~
-
-.. data:: APINullable
-   :type: Union[T, MissingType]
-
-   Represents a value which is optionally returned from the API
-
-Coro
-~~~~
-
-.. data:: Coro
-   :type: TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
-
-   Represents a coroutine.
-
-choice_value_types
-~~~~~~~~~~~~~~~~~~
-
-.. data:: choice_value_types
-   :type: Tuple[str, int, float]
+.. automodule:: pincer.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

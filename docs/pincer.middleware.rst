@@ -1,171 +1,221 @@
-.. currentmodule:: pincer.middleware
+pincer.middleware package
+=========================
 
-Pincer Middleware Module
-========================
+Submodules
+----------
 
-Activity Join Request
----------------------
+pincer.middleware.activity\_join module
+---------------------------------------
 
-.. note::
-   Not implemented yet.
+.. automodule:: pincer.middleware.activity_join
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-Activity Join
--------------
+pincer.middleware.activity\_join\_request module
+------------------------------------------------
 
-.. note::
-   Not implemented yet.
+.. automodule:: pincer.middleware.activity_join_request
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-Activity Spectate
------------------
+pincer.middleware.activity\_spectate module
+-------------------------------------------
 
-.. note::
-   Not implemented yet.
+.. automodule:: pincer.middleware.activity_spectate
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-Channel Create
---------------
+pincer.middleware.channel\_create module
+----------------------------------------
 
-channel_create_middleware
-~~~~~~~~~~~~~~~~~~~~~~~~~
+.. automodule:: pincer.middleware.channel_create
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. autofunction:: pincer.middleware.channel_create.channel_create_middleware
+pincer.middleware.error module
+------------------------------
 
-Error
------
+.. automodule:: pincer.middleware.error
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-error_middleware
-~~~~~~~~~~~~~~~~
+pincer.middleware.guild\_create module
+--------------------------------------
 
-.. autofunction:: pincer.middleware.error.error_middleware
+.. automodule:: pincer.middleware.guild_create
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-Guild Create
-------------
+pincer.middleware.guild\_member\_add module
+-------------------------------------------
 
-guild_create_middleware
-~~~~~~~~~~~~~~~~~~~~~~~
+.. automodule:: pincer.middleware.guild_member_add
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. autofunction:: pincer.middleware.guild_create.guild_create_middleware
+pincer.middleware.guild\_member\_remove module
+----------------------------------------------
 
-Guild Status
-------------
+.. automodule:: pincer.middleware.guild_member_remove
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. note::
-   Not implemented yet.
+pincer.middleware.guild\_member\_update module
+----------------------------------------------
 
-Interaction Create
-------------------
+.. automodule:: pincer.middleware.guild_member_update
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-convert_message
-~~~~~~~~~~~~~~~
+pincer.middleware.guild\_members\_chunk module
+----------------------------------------------
 
-.. autofunction:: pincer.middleware.interaction_create.convert_message
+.. automodule:: pincer.middleware.guild_members_chunk
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-interaction_response_handler
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pincer.middleware.guild\_status module
+--------------------------------------
 
-.. autofunction:: pincer.middleware.interaction_create.interaction_response_handler
+.. automodule:: pincer.middleware.guild_status
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-interaction_handler
-~~~~~~~~~~~~~~~~~~~
+pincer.middleware.interaction\_create module
+--------------------------------------------
 
-.. autofunction:: pincer.middleware.interaction_create.interaction_handler
+.. automodule:: pincer.middleware.interaction_create
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-interaction_create_middleware
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pincer.middleware.message\_create module
+----------------------------------------
 
-.. autofunction:: pincer.middleware.interaction_create.interaction_create_middleware
+.. automodule:: pincer.middleware.message_create
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-Message Create
---------------
+pincer.middleware.message\_delete module
+----------------------------------------
 
-message_create_middleware
-~~~~~~~~~~~~~~~~~~~~~~~~~
+.. automodule:: pincer.middleware.message_delete
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. autofunction:: pincer.middleware.message_create.message_create_middleware
+pincer.middleware.message\_update module
+----------------------------------------
 
-Message Delete
---------------
+.. automodule:: pincer.middleware.message_update
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-on_message_delete_middleware
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pincer.middleware.notification\_create module
+---------------------------------------------
 
-.. autofunction:: pincer.middleware.message_delete.on_message_delete_middleware
+.. automodule:: pincer.middleware.notification_create
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-Message Update
---------------
+pincer.middleware.payload module
+--------------------------------
 
-message_update_middleware
-~~~~~~~~~~~~~~~~~~~~~~~~~
+.. automodule:: pincer.middleware.payload
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. autofunction:: pincer.middleware.message_update.message_update_middleware
+pincer.middleware.ready module
+------------------------------
 
-Notification Create
--------------------
+.. automodule:: pincer.middleware.ready
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. note::
-   Not implemented yet.
+pincer.middleware.speaking\_start module
+----------------------------------------
 
-Payload
--------
+.. automodule:: pincer.middleware.speaking_start
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-payload_middleware
-~~~~~~~~~~~~~~~~~~
+pincer.middleware.speaking\_stop module
+---------------------------------------
 
-.. autofunction:: pincer.middleware.payload.payload_middleware
+.. automodule:: pincer.middleware.speaking_stop
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-Ready
------
+pincer.middleware.voice\_channel\_select module
+-----------------------------------------------
 
-on_ready_middleware
-~~~~~~~~~~~~~~~~~~~
+.. automodule:: pincer.middleware.voice_channel_select
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. autofunction:: pincer.middleware.ready.on_ready_middleware
+pincer.middleware.voice\_connection\_status module
+--------------------------------------------------
 
-Speaking Start
---------------
+.. automodule:: pincer.middleware.voice_connection_status
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. note::
-   Not implemented yet.
+pincer.middleware.voice\_settings\_update module
+------------------------------------------------
 
-Speaking Stop
--------------
+.. automodule:: pincer.middleware.voice_settings_update
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. note::
-   Not implemented yet.
+pincer.middleware.voice\_state\_create module
+---------------------------------------------
 
-Voice Channel Select
---------------------
+.. automodule:: pincer.middleware.voice_state_create
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. note::
-   Not implemented yet.
+pincer.middleware.voice\_state\_delete module
+---------------------------------------------
 
-Voice Connection Status
------------------------
+.. automodule:: pincer.middleware.voice_state_delete
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. note::
-   Not implemented yet.
+pincer.middleware.voice\_state\_update module
+---------------------------------------------
 
-Voice Settings Update
----------------------
+.. automodule:: pincer.middleware.voice_state_update
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-.. note::
-   Not implemented yet.
+Module contents
+---------------
 
-Voice State Create
-------------------
-
-.. note::
-   Not implemented yet.
-
-Voice State Delete
-------------------
-
-.. note::
-   Not implemented yet.
-
-Voice State Update
-------------------
-
-voice_state_update_middleware
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. autofunction:: pincer.middleware.voice_state_update.voice_state_update_middleware
+.. automodule:: pincer.middleware
+   :members:
+   :undoc-members:
+   :show-inheritance:
