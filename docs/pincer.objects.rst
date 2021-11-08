@@ -1,13 +1,11 @@
-Pincer Objects Module
-=====================
+pincer.objects package
+======================
 
-Subpages
+Subpackages
 -----------
 
-Split so pages aren't so big
-
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 4
 
    pincer.objects.app
    pincer.objects.events
@@ -15,3 +13,11 @@ Split so pages aren't so big
    pincer.objects.message
    pincer.objects.user
    pincer.objects.voice
+
+Module contents
+---------------
+
+.. automodule:: pincer.objects
+   :members:
+   :undoc-members:
+   :show-inheritance:
