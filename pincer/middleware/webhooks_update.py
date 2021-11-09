@@ -7,14 +7,14 @@ sent when a user's voice state changes in a subscribed voice channel
 """
 
 from ..core.dispatch import GatewayDispatch
-from ..objects.events.webhook import WebhookUpdateEvent
+from ..objects.events.webhook import WebhooksUpdateEvent
 from ..utils.conversion import construct_client_dict
 
 
-async def webhook_update_middleware(self, payload: GatewayDispatch):
+async def webhooks_update_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_webhook_update`` event.
+    Middleware for ``on_webhooks_update`` event.
 
     Parameters
     ----------
@@ -23,13 +23,13 @@ async def webhook_update_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.webhook.WebhookUpdateEvent`]]
-        ``on_webhook_update`` and a ``WebhookUpdateEvent``
+    Tuple[:class:`str`, List[:class:`~pincer.objects.events.webhook.WebhooksUpdateEvent`]]
+        ``on_webhooks_update`` and a ``WebhooksUpdateEvent``
     """
-    return "on_webhook_update", [
-        WebhookUpdateEvent.from_dict(construct_client_dict(self, payload.data))
+    return "on_webhooks_update", [
+        WebhooksUpdateEvent.from_dict(construct_client_dict(self, payload.data))
     ]
 
 
 def export():
-    return webhook_update_middleware
+    return webhooks_update_middleware

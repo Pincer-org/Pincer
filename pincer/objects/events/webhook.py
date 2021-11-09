@@ -8,7 +8,7 @@ from ...utils.snowflake import Snowflake
 
 
 @dataclass
-class WebhookUpdateEvent(APIObject):
+class WebhooksUpdateEvent(APIObject):
     """
     Sent when a guild's channel webhook
     is created, updated, or deleted.
