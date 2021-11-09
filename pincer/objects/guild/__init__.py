@@ -14,7 +14,7 @@ from .followed_channel import FollowedChannel
 from .guild import (
     PremiumTier, GuildNSFWLevel, ExplicitContentFilterLevel, MFALevel,
     VerificationLevel, DefaultMessageNotificationLevel, SystemChannelFlags,
-    Guild
+    GuildFeature, Guild, UnavailableGuild
 )
 from .invite import (
     InviteTargetType, InviteStageInstance, InviteMetadata, Invite
@@ -35,11 +35,12 @@ __all__ = (
     "AuditLogEvent", "Ban", "BaseMember", "CategoryChannel", "Channel",
     "ChannelMention", "ChannelType", "DefaultMessageNotificationLevel",
     "ExplicitContentFilterLevel", "FollowedChannel", "Guild", "GuildFeature",
-    "GuildMember", "GuildNSFWLevel", "GuildTemplate", "GuildWidget", "Invite",
-    "InviteMetadata", "InviteStageInstance", "InviteTargetType", "MFALevel",
-    "NewsChannel", "Overwrite", "PartialGuildMember", "PremiumTier",
-    "PrivacyLevel", "Role", "RoleTags", "StageInstance", "SystemChannelFlags",
-    "TextChannel", "ThreadMember", "ThreadMetadata", "VerificationLevel",
-    "VoiceChannel", "Webhook", "WebhookType", "WelcomeScreen",
-    "WelcomeScreenChannel"
+    "GuildFeatures", "GuildMember", "GuildNSFWLevel", "GuildTemplate",
+    "GuildWidget", "Invite", "InviteMetadata", "InviteStageInstance",
+    "InviteTargetType", "MFALevel", "NewsChannel", "Overwrite",
+    "PartialGuildMember", "PremiumTier", "PrivacyLevel", "Role", "RoleTags",
+    "StageInstance", "SystemChannelFlags", "TextChannel", "ThreadMember",
+    "ThreadMetadata", "UnavailableGuild", "VerificationLevel", "VoiceChannel",
+    "Webhook", "WebhookType", "WelcomeScreen", "WelcomeScreenChannel",
+    "WelcomeScreenChannelGuildMember"
 )

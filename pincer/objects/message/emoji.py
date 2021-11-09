@@ -43,8 +43,8 @@ class Emoji(APIObject):
         User that created this emoji
     """
 
-    id: Optional[Snowflake]
     name: Optional[str]
+    id: APINullable[Snowflake] = MISSING
 
     animated: APINullable[bool] = MISSING
     available: APINullable[bool] = MISSING
