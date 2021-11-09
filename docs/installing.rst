@@ -53,9 +53,13 @@ Note: The command to install may vary system to system. Try another if one fails
 
    .. tab-item:: Linux or MacOS
 
+      .. code-block:: sh
           $ python3 -m pip install pincer # try replacing `3` with the version you have
 
 
    .. tab-item:: Install From Github
 
+      .. code-block:: sh
+
           $ pip install "git+https://github.com/pincer-org/pincer"
+
