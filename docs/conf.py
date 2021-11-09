@@ -37,6 +37,7 @@ branch = 'main' if __version__.endswith('a') else 'v' + __version__
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx_design',
     'sphinx.ext.napoleon',
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
