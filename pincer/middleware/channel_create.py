@@ -7,24 +7,35 @@ from ..objects import Channel
 from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
+from typing import TYPE_CHECKING
 
-def channel_create_middleware(self, payload: GatewayDispatch):
+from ..utils.conversion import construct_client_dict
+from ..objects.guild.channel import Channel
+
+if TYPE_CHECKING:
+    from typing import List, Tuple
+
+    from ..core.dispatch import GatewayDispatch
+
+def channel_create_middleware(
+    self,
+    payload: GatewayDispatch
+) -> Tuple[str, List[Channel]]:
     """|coro|
 
-    Middleware for ``on_channel_create`` event.
+    Middleware for ``on_channel_creation`` event.
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
-        The data recieved from the channel create event
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
+        The data received from the ready event.
 
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.guild.channel.Channel`]]
-        ``on_channel_create`` and a ``Channel``
+        ``"on_channel_creation"`` and a channel.
     """
-
-    return "on_channel_create", [
+    return "on_channel_creation", [
         Channel.from_dict(construct_client_dict(self, payload.data))
     ]
 

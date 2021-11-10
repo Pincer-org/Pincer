@@ -5,16 +5,25 @@
 non-subscription event sent immediately after connecting,
 contains server information
 """
+from __future__ import annotations
 
-from ..commands import ChatCommandHandler
-from ..core.dispatch import GatewayDispatch
+from typing import TYPE_CHECKING
+
+from ..objects.user.user import User
 from ..exceptions import InvalidPayload
-from ..objects import User
-from ..utils import Coro
+from ..commands import ChatCommandHandler
 from ..utils.conversion import construct_client_dict
 
+if TYPE_CHECKING:
+    from typing import Tuple
+    from ..utils.types import Coro
+    from ..core.dispatch import GatewayDispatch
 
-async def ready_middleware(self, payload: GatewayDispatch):
+
+async def on_ready_middleware(
+    self,
+    payload: GatewayDispatch
+) -> Tuple[str]:
     """|coro|
 
     Middleware for ``on_ready`` event.

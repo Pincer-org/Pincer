@@ -3,6 +3,7 @@
 
 from .region import VoiceRegion
 
+
 __all__ = (
     "VoiceRegion"
 )

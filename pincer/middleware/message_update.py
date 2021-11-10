@@ -3,13 +3,25 @@
 
 """sent when a message is updated in a subscribed text channel"""
 
-from ..core.dispatch import GatewayDispatch
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from ..objects import UserMessage
 from ..utils.conversion import construct_client_dict
 
+if TYPE_CHECKING:
+    from typing import List, Tuple
 
-async def message_update_middleware(self, payload: GatewayDispatch):
+    from ..core.dispatch import GatewayDispatch
+
+
+async def message_update_middleware(
+    self,
+    payload: GatewayDispatch
+) -> Tuple[str, List[UserMessage]]:
     """|coro|
+
 
     Middleware for ``on_message_update`` event,
         generate a class for the message that has been updated.

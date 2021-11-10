@@ -3,13 +3,15 @@
 
 from .connection import Connection
 from .integration import (
-    IntegrationExpireBehavior, IntegrationApplication, Integration
+    IntegrationExpireBehavior, IntegrationApplication,
+    Integration, IntegrationAccount
 )
 from .user import User, PremiumTypes, VisibilityType
 from .voice_state import VoiceState
 
+
 __all__ = (
-    "Connection", "Integration", "IntegrationApplication",
-    "IntegrationExpireBehavior", "PremiumTypes", "User", "VisibilityType",
-    "VoiceState"
+    "Connection", "Integration", "IntegrationAccount",
+    "IntegrationApplication", "IntegrationExpireBehavior", "PremiumTypes",
+    "User", "VisibilityType", "VoiceState"
 )

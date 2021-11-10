@@ -3,14 +3,16 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 
-from ...utils.api_object import APIObject
 from ...utils.types import MISSING
+from ...utils.api_object import APIObject
 
 if TYPE_CHECKING:
-    from ...utils import APINullable, Snowflake, Timestamp
+    from ...utils.types import APINullable
+    from ...utils.snowflake import Snowflake
+    from ...utils.timestamp import Timestamp
 
 
 @dataclass
@@ -18,23 +20,21 @@ class ThreadMetadata(APIObject):
     """
     Represents a Discord Thread Metadata object
 
-    :param archived:
-        whether the thread is archived
-
-    :param auto_archive_duration:
-        duration in minutes to automatically archive the thread
+    Attributes
+    ----------
+    archived: :class:`bool`
+        Whether the thread is archived
+    auto_archive_duration: :class:`int`
+        Duration in minutes to automatically archive the thread
         after recent activity, can be set to: 60, 1440, 4320, 10080
-
-    :param archive_timestamp:
-        timestamp when the thread's archive status was last changed,
+    archive_timestamp: :class:`~pincer.utils.timestamp.Timestamp`
+        Timestamp when the thread's archive status was last changed,
         used for calculating recent activity
-
-    :param locked:
-        whether the thread is locked; when a thread is locked,
+    locked: :class:`bool`
+        Whether the thread is locked; when a thread is locked,
         only users with MANAGE_THREADS can unarchive it
-
-    :param invitable:
-        whether non-moderators can add other non-moderators to a thread;
+    invitable: APINullable[:class:`bool`]
+        Whether non-moderators can add other non-moderators to a thread;
         only available on private threads
     """
     archived: bool
@@ -47,20 +47,18 @@ class ThreadMetadata(APIObject):
 
 @dataclass
 class ThreadMember(APIObject):
-    """
-    Represents a Discord Thread Member object
+    """Represents a Discord Thread Member object
 
-    :param join_timestamp:
-        the time the current user last joined the thread
-
-    :param flags:
-        any user-thread settings, currently only used for notifications
-
-    :param id:
-        id of the thread
-
-    :param user_id:
-        id of the user
+    Attributes
+    ----------
+    join_timestamp: :class:`~pincer.utils.timestamp.Timestamp`
+        The time the current user last joined the thread
+    flags: :class:`int`
+        Any user-thread settings, currently only used for notifications
+    id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        Id of the thread
+    user_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        Id of the user
     """
     join_timestamp: Timestamp
     flags: int

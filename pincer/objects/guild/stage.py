@@ -3,19 +3,25 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from enum import IntEnum
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 
-from ...utils import APIObject
+from ...utils.api_object import APIObject
 
 if TYPE_CHECKING:
-    from ...utils import Snowflake
+    from ...utils.snowflake import Snowflake
 
 
 class PrivacyLevel(IntEnum):
-    """
-    Represents the level of publicity of a stage.
+    """Represents the level of publicity of a stage.
+
+    Attributes
+    ----------
+    PUBLIC:
+        The stage is public.
+    GUILD_ONLY:
+        The stage of for guild members only.
     """
     PUBLIC = 1
     GUILD_ONLY = 2
@@ -23,26 +29,22 @@ class PrivacyLevel(IntEnum):
 
 @dataclass
 class StageInstance(APIObject):
-    """
-    Represents a Stage Instance object
+    """Represents a Stage Instance object
 
-    :param id:
-        id of this Stage instance
-
-    :param guild_id:
-        guild id of the associated Stage channel
-
-    :param channel_id:
-        id of the associated Stage channel
-
-    :param topic:
-        topic of the Stage instance (1-120 characters)
-
-    :param privacy_level:
-        privacy level of the Stage instance
-
-    :param discoverable:
-        is Stage Discovery enabled
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        Id of this Stage instance
+    guild_id: :class:`~pincer.utils.snowflake.Snowflake`
+        Guild id of the associated Stage channel
+    channel_id: :class:`~pincer.utils.snowflake.Snowflake`
+        Id of the associated Stage channel
+    topic: :class:`str`
+        Topic of the Stage instance (1-120 characters)
+    privacy_level: :class:`~pincer.objects.guild.stage.PrivacyLevel`
+        Privacy level of the Stage instance
+    discoverable: :class:`bool`
+        Is Stage Discovery enabled
     """
     id: Snowflake
     guild_id: Snowflake
@@ -50,7 +52,3 @@ class StageInstance(APIObject):
     topic: str
     privacy_level: PrivacyLevel
     discoverable: bool
-
-    @property
-    def discoverable_disabled(self) -> bool:
-        return not self.discoverable

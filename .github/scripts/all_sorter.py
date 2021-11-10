@@ -44,7 +44,7 @@ def sort__all__(content: str) -> str:
     __all__list = right_parsed[right_parsed.index('(') + 1:]
 
     __all__declaration = '__all__ = (\n\t%s\n)' % ', '.join(
-        f'"{w}"' for w in sorted(parse_list(__all__list))
+        f'"{w}"' for w in sorted(set(parse_list(__all__list)))
     )
 
     return (

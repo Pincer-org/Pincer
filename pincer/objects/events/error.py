@@ -3,20 +3,20 @@
 
 from dataclasses import dataclass
 
-from ...exceptions import PincerError
 from ...utils import APIObject
+from ...exceptions import PincerError
 
 
 @dataclass
 class DiscordError(PincerError, APIObject):
-    """
-    Represents an error event in the Discord Gateway.
+    """Represents an error event in the Discord Gateway.
 
-    :param code:
+    Attributes
+    ----------
+    code: :class:`int`
         The RPC error code.
-
-    :param message:
-        The error description..
+    message: :class:`str`
+        The error description.
     """
     code: int
     message: str

@@ -8,15 +8,13 @@ import re
 from asyncio import iscoroutinefunction, gather
 from copy import deepcopy
 from inspect import Signature, isasyncgenfunction
-from typing import (
-    Optional, Dict, List, Any, Tuple, get_origin, get_args, Union,
-    ForwardRef, _eval_type
-)
+from typing import TYPE_CHECKING, get_origin, get_args, Union, Tuple, List
 
 from . import __package__
+from .utils.snowflake import Snowflake
 from .exceptions import (
     CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
-    InvalidAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
+    InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
     InvalidCommandName
 )
 from .objects import ThrottleScope, AppCommand, Role, User, Channel, Guild
@@ -24,18 +22,20 @@ from .objects.app import (
     AppCommandOptionType, AppCommandOption, AppCommandOptionChoice,
     ClientCommandStructure, AppCommandType
 )
-from .utils import (
-    get_signature_and_params, get_index, should_pass_ctx, Coro, Snowflake,
-    MISSING, choice_value_types, Choices
-)
+from .utils import get_index, should_pass_ctx
+from .utils.signature import get_signature_and_params
+from .utils.types import Coro, MISSING, choice_value_types, Choices
 from .utils.types import Singleton, TypeCache, Descripted
+
+if TYPE_CHECKING:
+    from typing import Any, Optional, Dict
 
 COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 
 _log = logging.getLogger(__package__)
 
 _options_type_link = {
-    # TODO: Implement mentionable:
+    # TODO: Implement other types:
     Signature.empty: AppCommandOptionType.STRING,
     str: AppCommandOptionType.STRING,
     int: AppCommandOptionType.INTEGER,
@@ -47,18 +47,22 @@ _options_type_link = {
     Role: AppCommandOptionType.ROLE,
 }
 
+if TYPE_CHECKING:
+    from .client import Client
+
 
 def command(
-        name: Optional[str] = None,
-        description: Optional[str] = "Description not set",
-        enable_default: Optional[bool] = True,
-        guild: Union[Snowflake, int, str] = None,
-        cooldown: Optional[int] = 0,
-        cooldown_scale: Optional[float] = 60,
-        cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER
+    name: Optional[str] = None,
+    description: Optional[str] = "Description not set",
+    enable_default: Optional[bool] = True,
+    guild: Union[Snowflake, int, str] = None,
+    cooldown: Optional[int] = 0,
+    cooldown_scale: Optional[float] = 60,
+    cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER
 ):
-    """
-    Command option types are designated by using type hints.
+    """A decorator to create a command to register and respond to
+    with the discord API from a function.
+
     str - String
     int - Integer
     bool - Boolean
@@ -67,14 +71,71 @@ def command(
     pincer.objects.Channel - Channel
     pincer.objects.Role - Role
     Mentionable is not implemented
-    """
 
-    # TODO: Fix docs
-    # TODO: Fix docs w guild
-    # TODO: Fix docs w cooldown
-    # TODO: Fix docs w context
-    # TODO: Fix docs w argument descriptions
-    # TODO: Fix docs w argument choices
+    .. code-block:: python3
+
+        class Bot(Client):
+            @command(
+                name="test",
+                description="placeholder"
+            )
+            async def test_command(
+                self,
+                ctx,
+                amount: int,
+                name: Descripted[str, "ah yes"],
+                letter: Choices["a", "b", "c"]
+            ):
+                return Message(
+                    f"You chose {amount}, {name}, {letter}",
+                    flags=InteractionFlags.EPHEMERAL
+                )
+
+    References from above:
+        :class:`~client.Client`,
+        :class:`~objects.message.message.Message`,
+        :class:`~utils.types.Choices`,
+        :class:`~utils.types.Descripted`,
+        :class:`~objects.app.interactions.InteractionFlags`
+
+    Parameters
+    ----------
+    name : Optional[:class:`str`]
+        The name of the command |default| :data:`None`
+    description : Optional[:class:`str`]
+        The description of the command |default| ``Description not set``
+    enable_default : Optional[:class:`bool`]
+        Whether the command is enabled by default |default| :data:`True`
+    guild : Optional[Union[:class:`~pincer.utils.snowflake.Snowflake`, :class:`int`, :class:`str`]]
+        What guild to add it to (don't specify for global) |default| :data:`None`
+    cooldown : Optional[:class:`int`]
+        The amount of times in the cooldown_scale the command can be invoked
+        |default| ``0``
+    cooldown_scale : Optional[:class:`float`]
+        The 'checking time' of the cooldown |default| ``60``
+    cooldown_scope : :class:`~pincer.objects.app.throttle_scope.ThrottleScope`
+        What type of cooldown strategy to use |default| :attr:`ThrottleScope.USER`
+
+    Raises
+    ------
+    CommandIsNotCoroutine
+        If the command function is not a coro
+    InvalidCommandName
+        If the command name does not follow the regex ``^[\\w-]{1,32}$``
+    InvalidCommandGuild
+        If the guild id is invalid
+    CommandDescriptionTooLong
+        Descriptions max 100 characters
+        If the annotation on an argument is too long (also max 100)
+    CommandAlreadyRegistered
+        If the command already exists
+    TooManyArguments
+        Max 25 arguments to pass for commands
+    InvalidArgumentAnnotation
+        Annotation amount is max 25,
+        Not a valid argument type,
+        Annotations must consist of name and value
+    """  # noqa: E501
 
     def decorator(func: Coro):
         if not iscoroutinefunction(func) and not isasyncgenfunction(func):
@@ -168,7 +229,7 @@ def command(
                 args = get_args(annotation)
 
                 if len(args) > 25:
-                    raise InvalidAnnotation(
+                    raise InvalidArgumentAnnotation(
                         f"Choices/Literal annotation `{annotation}` on "
                         f"parameter `{param}` in command `{cmd}` "
                         f"(`{func.__name__}`) amount exceeds limit of 25 items!"
@@ -194,7 +255,7 @@ def command(
                             lambda x: x.__name__,
                             choice_value_types
                         ))
-                        raise InvalidAnnotation(
+                        raise InvalidArgumentAnnotation(
                             f"Choices/Literal annotation `{annotation}` on "
                             f"parameter `{param}` in command `{cmd}` "
                             f"(`{func.__name__}`), invalid type received. "
@@ -203,7 +264,7 @@ def command(
                             f"{type(choice).__name__} was given!"
                         )
                     elif not isinstance(choice, choice_type):
-                        raise InvalidAnnotation(
+                        raise InvalidArgumentAnnotation(
                             f"Choices/Literal annotation `{annotation}` on "
                             f"parameter `{param}` in command `{cmd}` "
                             f"(`{func.__name__}`), all values must be of the "
@@ -219,7 +280,7 @@ def command(
 
             param_type = _options_type_link.get(annotation)
             if not param_type:
-                raise InvalidAnnotation(
+                raise InvalidArgumentAnnotation(
                     f"Annotation `{annotation}` on parameter "
                     f"`{param}` in command `{cmd}` (`{func.__name__}`) is not "
                     "a valid type."
@@ -257,8 +318,16 @@ def command(
 
 
 class ChatCommandHandler(metaclass=Singleton):
-    """
-    Class containing methods used to handle various commands
+    """Metaclass containing methods used to handle various commands
+
+    Attributes
+    ----------
+    client: :class:`Client`
+        The client object
+    managers: Dict
+        Dictionary of managers
+    register: Dict
+        Dictionary of :class:`~objects.app.command.ClientCommandStructure`
     """
     managers: Dict[str, Any] = {}
     register: Dict[str, ClientCommandStructure] = {}
@@ -273,9 +342,7 @@ class ChatCommandHandler(metaclass=Singleton):
     __update_guild = "/guilds/{command.guild_id}/commands/{command.id}"
     __delete_guild = "/guilds/{command.guild_id}/commands/{command.id}"
 
-    # TODO: Fix docs
-    def __init__(self, client):
-        # TODO: Fix docs
+    def __init__(self, client: Client):
         self.client = client
         self._api_commands: List[AppCommand] = []
         logging.debug(
@@ -290,7 +357,15 @@ class ChatCommandHandler(metaclass=Singleton):
         self.__prefix = f"applications/{self.client.bot.id}"
 
     async def get_commands(self) -> List[AppCommand]:
-        # TODO: Fix docs
+        """|coro|
+
+        Get a list of app commands
+
+        Returns
+        -------
+        List[:class:`~pincer.objects.app.command.AppCommand`]
+            List of commands.
+        """
         # TODO: Update if discord adds bulk get guild commands
         guild_commands = await gather(*map(
             lambda guild: self.client.http.get(
@@ -307,7 +382,19 @@ class ChatCommandHandler(metaclass=Singleton):
         ))
 
     async def remove_command(self, cmd: AppCommand, keep=False):
-        # TODO: Fix docs
+        """|coro|
+
+        Remove a specific command
+
+        Parameters
+        ----------
+        cmd : :class:`~pincer.objects.app.command.AppCommand`
+            What command to delete
+        keep : bool
+            Whether the command should be removed from the ChatCommandHandler.
+            Set to :data:`True` to keep the command.
+            |default| :data:`False` 
+        """
         # TODO: Update if discord adds bulk delete commands
         remove_endpoint = self.__delete_guild if cmd.guild_id else self.__delete
 
@@ -324,14 +411,36 @@ class ChatCommandHandler(metaclass=Singleton):
             /,
             keep: List[AppCommand] = None
     ):
-        # TODO: Fix docs
+        """|coro|
+
+        Remove a list of commands
+
+        Parameters
+        ----------
+        commands : List[:class:`~pincer.objects.app.command.AppCommand`]
+            List of commands to delete
+        keep: List[:class:`~pincer.objects.app.command.AppCommand`]
+            List of commands that should not be removed from the
+            ChatCommandHandler.
+            |default| :data:`None`
+        """
         await gather(*list(map(
             lambda cmd: self.remove_command(cmd, cmd in (keep or [])),
             commands
         )))
 
     async def update_command(self, cmd: AppCommand, changes: Dict[str, Any]):
-        # TODO: Fix docs
+        """|coro|
+
+        Update a command with changes
+
+        Parameters
+        ----------
+        cmd : :class:`~objects.app.command.AppCommand`
+            What command to update
+        changes : Dict[:class:`str`, Any]
+            Dictionary of changes
+        """
         # TODO: Update if discord adds bulk update commands
         update_endpoint = self.__update_guild if cmd.guild_id else self.__update
 
@@ -347,14 +456,30 @@ class ChatCommandHandler(metaclass=Singleton):
             self,
             to_update: Dict[AppCommand, Dict[str, Any]]
     ):
-        # TODO: Fix docs
+        """|coro|
+
+        Update a list of app commands with changes
+
+        Parameters
+        ----------
+        to_update : Dict[:class:`~objects.app.command.AppCommand`, Dict[:class:`str`, Any]]
+            Dictionary of commands to changes where changes is a dictionary too
+        """  # noqa: E501
         await gather(*list(map(
             lambda cmd: self.update_command(cmd[0], cmd[1]),
             to_update.items()
         )))
 
     async def add_command(self, cmd: AppCommand):
-        # TODO: Fix docs
+        """|coro|
+
+        Add an app command
+
+        Parameters
+        ----------
+        cmd : :class:`~pincer.objects.app.command.AppCommand`
+            Command to add
+        """
         add_endpoint = self.__add
 
         if cmd.guild_id:
@@ -368,14 +493,25 @@ class ChatCommandHandler(metaclass=Singleton):
         ChatCommandHandler.register[cmd.name].app.id = Snowflake(res['id'])
 
     async def add_commands(self, commands: List[AppCommand]):
-        # TODO: Fix docs
+        """|coro|
+
+        Add a list of app commands
+
+        Parameters
+        ----------
+        commands : List[:class:`~pincer.objects.app.command.AppCommand`]
+            List of command objects to add
+        """
         await gather(*list(map(
             lambda cmd: self.add_command(cmd),
             commands
         )))
 
     async def __init_existing_commands(self):
-        # TODO: Fix docs
+        """|coro|
+
+        Initiate existing commands
+        """
         self._api_commands = await self.get_commands()
 
         for api_cmd in self._api_commands:
@@ -384,9 +520,10 @@ class ChatCommandHandler(metaclass=Singleton):
                 cmd.app = api_cmd
 
     async def __remove_unused_commands(self):
-        """
+        """|coro|
+
         Remove commands that are registered by discord but not in use
-        by the current client!
+        by the current client
         """
         registered_commands = list(map(
             lambda registered_cmd: registered_cmd.app,
@@ -413,7 +550,8 @@ class ChatCommandHandler(metaclass=Singleton):
         ))
 
     async def __update_existing_commands(self):
-        """
+        """|coro|
+
         Update all commands where its structure doesn't match the
         structure that discord has registered.
         """
@@ -487,12 +625,12 @@ class ChatCommandHandler(metaclass=Singleton):
         await self.update_commands(to_update)
 
     async def __add_commands(self):
-        """
+        """|coro|
+
         Add all new commands which have been registered by the decorator
-        to Discord!
+        to Discord
         """
         to_add = deepcopy(ChatCommandHandler.register)
-
         for reg_cmd in self._api_commands:
             try:
                 del to_add[reg_cmd.name]
@@ -505,7 +643,10 @@ class ChatCommandHandler(metaclass=Singleton):
         )))
 
     async def initialize(self):
-        # TODO: Fix docs
+        """|coro|
+
+        Call methods of this class to refresh all app commands
+        """
         await self.__init_existing_commands()
         await self.__remove_unused_commands()
         await self.__update_existing_commands()
