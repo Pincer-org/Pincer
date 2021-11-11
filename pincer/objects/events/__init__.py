@@ -29,7 +29,7 @@ from .presence import (
 from .thread import ThreadListSyncEvent, ThreadMembersUpdateEvent
 from .typing_start import TypingStartEvent
 from .voice import VoiceServerUpdateEvent
-from .webhook import WebhookUpdateEvent
+from .webhook import WebhooksUpdateEvent
 
 __all__ = (
     "Activity", "ActivityAssets", "ActivityButton", "ActivityEmoji",
@@ -46,5 +46,5 @@ __all__ = (
     "PresenceUpdateEvent", "ReadyEvent", "RequestGuildMembers", "Resume",
     "StatusType", "ThreadListSyncEvent", "ThreadMembersUpdateEvent",
     "TypingStartEvent", "UpdatePresence", "UpdateVoiceState",
-    "VoiceServerUpdateEvent", "WebhookUpdateEvent"
+    "VoiceServerUpdateEvent", "WebhooksUpdateEvent"
 )
