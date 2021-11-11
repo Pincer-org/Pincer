@@ -354,7 +354,7 @@ class Guild(APIObject):
     welcome_screen: APINullable[WelcomeScreen] = MISSING
 
     @classmethod
-    async def from_id(cls, client: Client, _id: Snowflake) -> Guild:
+    async def from_id(cls, client: Client, _id: Union[int, Snowflake]) -> Guild:
         """
         Parameters
         ----------
