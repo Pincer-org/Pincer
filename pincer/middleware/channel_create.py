@@ -2,6 +2,8 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 """Sent when a channel is created/joined on the client."""
+from __future__ import annotations
+
 from ..core.dispatch import GatewayDispatch
 from ..objects import Channel
 from ..utils.conversion import construct_client_dict
