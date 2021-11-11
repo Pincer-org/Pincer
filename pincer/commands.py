@@ -311,6 +311,8 @@ def command(
             )
         )
 
+        func.__is_command__ = True
+
         _log.info(f"Registered command `{cmd}` to `{func.__name__}`.")
         return func
 

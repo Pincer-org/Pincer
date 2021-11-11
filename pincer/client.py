@@ -4,10 +4,10 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 from collections import defaultdict
 from importlib import import_module
-from inspect import isasyncgenfunction
+from inspect import isasyncgenfunction, getmembers
 from typing import Any, Dict, List, Optional, Tuple, Union
 from asyncio import iscoroutinefunction, run, ensure_future
 
@@ -288,9 +288,15 @@ class Client(Dispatcher):
             calls
         ))
 
-    def load_cog(self, path: str, package: Optional[str] = None):
+    def load_cog(
+            self,
+            path: str,
+            package: Optional[str] = None,
+            name: Optional[str] = None,
+    ):
         """Load a cog from a string path, setup method in COG may
         optionally have a first argument which will contain the client!
+        The path will be used as the name of the cog if name is not provided.
 
         :Example usage:
 
@@ -325,23 +331,61 @@ class Client(Dispatcher):
         package : :class:`str`
             The package name for relative based imports.
             |default| :data:`None`
+        name: :class:`str`
+            The unique name used to identify the cog. Will be set to the path
+            if not provided.
+            |default| :data:`None`
         """
 
-        if ChatCommandHandler.managers.get(path):
+        if name is None:
+            name = path
+
+        if ChatCommandHandler.managers.get(name):
             raise CogAlreadyExists(
-                f"Cog `{path}` is trying to be loaded but already exists."
+                f"Cog `{name}` is trying to be loaded but already exists."
             )
 
         try:
             module = import_module(path, package=package)
         except ModuleNotFoundError:
-            raise CogNotFound(f"Cog `{path}` could not be found!")
+            raise CogNotFound(f"Cog at `{path}` could not be found!")
 
         setup = getattr(module, "setup", None)
+        self.load_cog_from_callable(name, setup)
+
+    def load_cog_from_callable(self, name: str, setup: Callable):
+        """Load a cog directly from it's setup method/callable. The setup method
+        may optionally have a first argument which will contain the client!
+
+        :Example usage:
+
+        run.py
+
+        .. code-block:: pycon
+
+            >>> from pincer import Client, command
+            >>>
+            >>> class SayCommand: # could be imported from another module
+            ...     @command()
+            ...     async def say(self, message: str) -> str:
+            ...         return message
+            >>>
+            >>> class MyClient(Client):
+            ...     def __init__(self, *args, **kwargs):
+            ...         self.load_cog(name="cogs.say", setup=SayCommand)
+            ...         super().__init__(*args, **kwargs)
+
+        Parameters
+        ----------
+        name : :class:`str`
+            The unique name used to identify the cog.
+        setup : :class:`Callable`
+            The setup method used to construct and return the cog manager.
+        """
 
         if not callable(setup):
             raise NoValidSetupMethod(
-                f"`setup` method was expected in `{path}` but none was found!"
+                f"`setup` method was expected for `{name}` but none was found!"
             )
 
         args, params = [], get_params(setup)
@@ -350,7 +394,7 @@ class Client(Dispatcher):
             args.append(self)
         elif (length := len(params)) > 1:
             raise TooManySetupArguments(
-                f"Setup method in `{path}` requested {length} arguments "
+                f"Setup method for `{name}` requested {length} arguments "
                 f"but the maximum is 1!"
             )
 
@@ -358,11 +402,17 @@ class Client(Dispatcher):
 
         if not cog_manager:
             raise NoCogManagerReturnFound(
-                f"Setup method in `{path}` didn't return a cog manager! "
+                f"Setup method for `{name}` didn't return a cog manager! "
                 "(Did you forget to return the cog?)"
             )
 
-        ChatCommandHandler.managers[path] = cog_manager
+        def is_command(f):
+            return getattr(f, '__is_command__', False)
+
+        for _, func in getmembers(type(cog_manager), is_command):
+            func.__cog_name__ = name
+
+        ChatCommandHandler.managers[name] = cog_manager
 
     @staticmethod
     def get_cogs() -> Dict[str, Any]:
@@ -377,23 +427,23 @@ class Client(Dispatcher):
         """
         return ChatCommandHandler.managers
 
-    async def unload_cog(self, path: str):
+    async def unload_cog(self, name: str):
         """|coro|
 
         Unload an already loaded cog! This removes all of its commands!
 
         Parameters
         ----------
-        path : :class:`str`
-            The path to the cog
+        name : :class:`str`
+            The name of the cog set when the cog was loaded
 
         Raises
         ------
         CogNotFound
-            When the cog is not in that path
+            When the cog with the given name is not found
         """
-        if not ChatCommandHandler.managers.get(path):
-            raise CogNotFound(f"Cog `{path}` could not be found!")
+        if not ChatCommandHandler.managers.get(name):
+            raise CogNotFound(f"Cog `{name}` could not be found!")
 
         to_remove: List[AppCommand] = []
 
@@ -401,7 +451,7 @@ class Client(Dispatcher):
             if not command:
                 continue
 
-            if command.call.__module__ == path:
+            if getattr(command.call, '__cog_name__', None) == name:
                 to_remove.append(command.app)
 
         await ChatCommandHandler(self).remove_commands(to_remove)
