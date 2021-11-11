@@ -9,7 +9,7 @@ from typing import Any, Callable, Union
 from .types import CheckFunction
 
 
-class Processable(ABC):
+class _Processable(ABC):
 
     @abstractmethod
     def process(self, event_name: str, *args):
@@ -18,8 +18,6 @@ class Processable(ABC):
     def matches_event(self, event_name: str, *args):
         if self.event_name != event_name:
             return False
-
-        self.return_value = args
 
         if self.check:
             return self.check(*args)
@@ -35,7 +33,7 @@ def _lowest_value(*args):
     )
 
 
-class _DiscordEvent(Event, Processable):
+class _Event(_Processable):
     """
     Attributes
     ----------
@@ -59,9 +57,13 @@ class _DiscordEvent(Event, Processable):
             Will be ignored if set to None.
         """
         self.event_name = event_name
+        self.event = Event()
         self.check = check
         self.return_value = None
         super().__init__()
+
+    async def wait(self):
+        await self.event.wait()
 
     def process(self, event_name: str, *args) -> bool:
         """
@@ -78,14 +80,15 @@ class _DiscordEvent(Event, Processable):
             Whether the event can be set
         """
         if self.matches_event(event_name, *args):
-            self.set()
+            self.return_value = args
+            self.event.set()
 
 
 class LoopEmptyError(Exception):
     "Raised when the _LoopMgr is empty and cannot accept new item"
 
 
-class _LoopMgr(Processable):
+class _LoopMgr(_Processable):
 
     def __init__(self, event_name: str, check: CheckFunction) -> None:
         self.event_name = event_name
@@ -124,31 +127,7 @@ class EventMgr:
     """
 
     def __init__(self):
-        self.event_list: Processable = []
-
-    def add_event(self, event_name: str, check: CheckFunction):
-        """
-        Parameters
-        ----------
-        event_name : str
-            The type of event to listen for. Uses the same naming scheme as
-            @Client.event.
-        check : Optional[Callable[[Any], bool]]
-            Expression to evaluate when checking if an event is valid. Will
-            return be set if this event is true. Will be ignored if set to
-            None.
-
-        Returns
-        -------
-        _DiscordEvent
-            Event that was added to the stack.
-        """
-        event = _DiscordEvent(
-            event_name=event_name,
-            check=check
-        )
-        self.event_list.append(event)
-        return event
+        self.event_list: _Processable = []
 
     def process_events(self, event_name, *args):
         """
@@ -184,7 +163,13 @@ class EventMgr:
         Any
             What the Discord API returns for this event.
         """
-        event = self.add_event(event_name, check)
+
+        event = _Event(
+            event_name=event_name,
+            check=check
+        )
+        self.event_list.append(event)
+
         try:
             await _wait_for(event.wait(), timeout=timeout)
         except TimeoutError:
@@ -238,7 +223,8 @@ class EventMgr:
                 )
 
             except TimeoutError:
-                # Loop timed out. Run out the rest of the loop.
+                # Loop timed out. Loop through the remaining events recieved
+                # before the timeout.
                 loop_mgr.can_expand = False
                 try:
                     while True:
@@ -253,4 +239,6 @@ class EventMgr:
             # loop_timeout can be below 0 if the user's code in the for loop
             # takes longer than the time left in loop_timeout
             if loop_timeout <= 0:
-                break
+                raise TimeoutError(
+                    "loop_for() timed out while waiting for an event"
+                )
