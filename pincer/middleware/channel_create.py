@@ -4,15 +4,11 @@
 """Sent when a channel is created/joined on the client."""
 from __future__ import annotations
 
-from ..core.dispatch import GatewayDispatch
-from ..objects import Channel
-from ..utils.conversion import construct_client_dict
-from ..utils.types import Coro
-
 from typing import TYPE_CHECKING
 
-from ..utils.conversion import construct_client_dict
+from ..core.dispatch import GatewayDispatch
 from ..objects.guild.channel import Channel
+from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from typing import List, Tuple
@@ -21,8 +17,8 @@ if TYPE_CHECKING:
 
 
 def channel_create_middleware(
-    self,
-    payload: GatewayDispatch
+        self,
+        payload: GatewayDispatch
 ) -> Tuple[str, List[Channel]]:
     """|coro|
 
@@ -45,4 +41,3 @@ def channel_create_middleware(
 
 def export():
     return channel_create_middleware
-
