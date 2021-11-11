@@ -554,7 +554,7 @@ class Client(Dispatcher):
     async def wait_for(
         self,
         event_name: str,
-        check: CheckFunction,
+        check: CheckFunction = None,
         timeout: Optional[float] = None
     ):
         """
@@ -578,7 +578,7 @@ class Client(Dispatcher):
     def loop_for(
         self,
         event_name: str,
-        check: CheckFunction,
+        check: CheckFunction = None,
         iteration_timeout: Optional[float] = None,
         loop_timeout: Optional[float] = None
     ):

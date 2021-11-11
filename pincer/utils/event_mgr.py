@@ -1,13 +1,41 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from asyncio import Event, wait_for as _wait_for, get_running_loop
+from abc import ABC, abstractmethod
+from asyncio import Event, wait_for as _wait_for, get_running_loop, TimeoutError
+from collections import deque
 from typing import Any, Callable, Union
 
 from .types import CheckFunction
 
 
-class _DiscordEvent(Event):
+class Processable(ABC):
+
+    @abstractmethod
+    def process(self, event_name: str, *args):
+        pass
+
+    def matches_event(self, event_name: str, *args):
+        if self.event_name != event_name:
+            return False
+
+        self.return_value = args
+
+        if self.check:
+            return self.check(*args)
+
+        return True
+
+
+def _lowest_value(*args):
+    return min(
+        [
+            n for n in args if n
+        ]
+    )
+
+
+class _DiscordEvent(Event, Processable):
     """
     Attributes
     ----------
@@ -35,7 +63,7 @@ class _DiscordEvent(Event):
         self.return_value = None
         super().__init__()
 
-    def can_be_set(self, event_name: str, *args) -> bool:
+    def process(self, event_name: str, *args) -> bool:
         """
         Parameters
         ----------
@@ -49,15 +77,42 @@ class _DiscordEvent(Event):
         bool
             Whether the event can be set
         """
-        if self.event_name != event_name:
-            return False
+        if self.matches_event(event_name, *args):
+            self.set()
 
-        self.return_value = args
 
-        if self.check:
-            return self.check(*args)
+class LoopEmptyError(Exception):
+    "Raised when the _LoopMgr is empty and cannot accept new item"
 
-        return True
+
+class _LoopMgr(Processable):
+
+    def __init__(self, event_name: str, check: CheckFunction) -> None:
+        self.event_name = event_name
+        self.check = check
+
+        self.can_expand = True
+        self.events = deque()
+        self.wait = Event()
+
+    def process(self, event_name: str, *args):
+        if not self.can_expand:
+            return
+
+        if self.matches_event(event_name, *args):
+            self.events.append(args)
+            self.wait.set()
+
+    async def get_next(self):
+        if len(self.events) == 0:
+            if not self.can_expand:
+                raise LoopEmptyError()
+
+            self.wait.clear()
+            await self.wait.wait()
+            return self.events.popleft()
+        else:
+            return self.events.popleft()
 
 
 class EventMgr:
@@ -69,7 +124,7 @@ class EventMgr:
     """
 
     def __init__(self):
-        self.event_list = []
+        self.event_list: Processable = []
 
     def add_event(self, event_name: str, check: CheckFunction):
         """
@@ -105,8 +160,7 @@ class EventMgr:
             The arguments returned from the middleware for this event.
         """
         for event in self.event_list:
-            if event.can_be_set(event_name, *args):
-                event.set()
+            event.process(event_name, *args)
 
     async def wait_for(
         self,
@@ -167,9 +221,8 @@ class EventMgr:
             What the Discord API returns for this event.
         """
 
-        if not loop_timeout:
-            while True:
-                yield await self.wait_for(event_name, check, iteration_timeout)
+        loop_mgr = _LoopMgr(event_name, check)
+        self.event_list.append(loop_mgr)
 
         loop = get_running_loop()
 
@@ -178,18 +231,22 @@ class EventMgr:
 
             try:
                 yield await _wait_for(
-                    self.wait_for(
-                        event_name,
-                        check,
-                        iteration_timeout
-                    ),
-                    timeout=loop_timeout
+                    loop_mgr.get_next(),
+                    timeout=_lowest_value(
+                        loop_timeout, iteration_timeout
+                    )
                 )
 
             except TimeoutError:
-                raise TimeoutError(
-                    "loop_for() timed out while waiting for an event"
-                )
+                # Loop timed out. Run out the rest of the loop.
+                loop_mgr.can_expand = False
+                try:
+                    while True:
+                        yield await loop_mgr.get_next()
+                except LoopEmptyError:
+                    raise TimeoutError(
+                        "loop_for() timed out while waiting for an event"
+                    )
 
             loop_timeout -= loop.time() - start_time
 
