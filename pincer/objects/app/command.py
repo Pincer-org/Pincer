@@ -53,7 +53,7 @@ class AppCommandOptionChoice(APIObject):
         Value of the choice, up to 100 characters if string
     """
     name: str
-    value: Union[choice_value_types]
+    value: choice_value_types
 
 
 @dataclass

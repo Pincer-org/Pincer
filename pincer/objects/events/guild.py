@@ -137,7 +137,9 @@ class GuildMemberRemoveEvent(APIObject):
     user: User
 
     def __post_init__(self):
-        self.user = User.from_dict(construct_client_dict(self._client, self.user))
+        self.user = User.from_dict(
+            construct_client_dict(self._client, self.user)
+        )
 
 
 @dataclass
@@ -180,7 +182,9 @@ class GuildMemberUpdateEvent(APIObject):
     pending: APINullable[bool] = MISSING
 
     def __post_init__(self):
-        self.user = User.from_dict(construct_client_dict(self._client, self.user))
+        self.user = User.from_dict(
+            construct_client_dict(self._client, self.user)
+        )
 
 
 @dataclass
