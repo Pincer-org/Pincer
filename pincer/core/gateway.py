@@ -246,10 +246,12 @@ class Dispatcher:
                     await self.close()
                     exception = self.__dispatch_errors.get(exc.code)
 
-                    if isinstance(exception, _InternalPerformReconnectError):
-                        if self.__reconnect:
-                            _log.debug("Connection closed, reconnecting...")
-                            return await self.restart()
+                    if (
+                        isinstance(exception, _InternalPerformReconnectError)
+                        and self.__reconnect
+                    ):
+                        _log.debug("Connection closed, reconnecting...")
+                        return await self.restart()
 
                     raise exception or UnhandledException(
                         f"Dispatch error ({exc.code}): {exc.reason}"
