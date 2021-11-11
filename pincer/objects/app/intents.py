@@ -68,7 +68,7 @@ class Intents(IntEnum):
     DIRECT_MESSAGE_TYPING = 1 << 14
 
     @staticmethod
-    def all() -> Intents:
+    def all() -> int:
         """
         :class:`~pincer.objects.app.intents.Intents`:
         Method of all intents
