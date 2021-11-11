@@ -25,7 +25,7 @@ async def on_message_delete_middleware(
     Parameters
     ----------
     payload : :class:`GatewayDispatch`
-        The data recieved from the message delete event
+        The data received from the message delete event
 
     Returns
     -------

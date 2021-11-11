@@ -31,7 +31,7 @@ async def on_ready_middleware(
     Parameters
     ----------
     payload : :class:`GatewayDispatch`
-        The data recieved from the stage instance create event
+        The data received from the stage instance create event
 
     Returns
     -------

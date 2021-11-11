@@ -17,7 +17,7 @@ async def integration_delete_middleware(self, payload: GatewayDispatch):
     Parameters
     ----------
     payload : :class:`GatewayDispatch`
-        The data recieved from the integration delete event
+        The data received from the integration delete event
 
     Returns
     -------

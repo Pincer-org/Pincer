@@ -84,7 +84,7 @@ class Channel(APIObject):  # noqa E501
         The id of this channel
     type: :class:`~pincer.objects.guild.channel.ChannelType`
         The type of channel
-    application_id: APInullable[:class:`~pincer.utils.snowflake.Snowflake`]
+    application_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Application id of the group DM creator if it is bot-created
     bitrate: APINullable[:class:`int`]
         The bitrate (in bits) of the voice channel
@@ -116,7 +116,7 @@ class Channel(APIObject):  # noqa E501
         Whether the channel is nsfw
     owner_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Id of the creator of the group DM or thread
-    parent_id: APInullable[Optional[:class:`~pincer.utils.snowflake.Snowflake`]]
+    parent_id: APINullable[Optional[:class:`~pincer.utils.snowflake.Snowflake`]]
         For guild channels: id of the parent category for a channel (each
         parent category can contain up to 50 channels), for threads: id of the
         text channel this thread was created
@@ -124,7 +124,7 @@ class Channel(APIObject):  # noqa E501
         Computed permissions for the invoking user in the channel, including
         overwrites, only included when part of the resolved data received on a
         slash command interaction
-    permission_overwrites: APINullable[List[:class:`~pincer.obects.guild.overwrite.Overwrite`]]
+    permission_overwrites: APINullable[List[:class:`~pincer.objects.guild.overwrite.Overwrite`]]
         Explicit permission overwrites for members and roles
     position: APINullable[:class:`int`]
         Sorting position of the channel

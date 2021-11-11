@@ -17,7 +17,7 @@ async def integration_update_middleware(self, payload: GatewayDispatch):
     Parameters
     ----------
     payload : :class:`GatewayDispatch`
-        The data recieved from the integration update event
+        The data received from the integration update event
 
     Returns
     -------

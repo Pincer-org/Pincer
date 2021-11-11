@@ -13,7 +13,7 @@ from ...utils.api_object import APIObject
 @dataclass
 class AvailableDevices(APIObject):
     """
-    Represents an availabe device for voice settings
+    Represents an available device for voice settings
 
     Attributes
     ----------

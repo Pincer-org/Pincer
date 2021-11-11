@@ -16,7 +16,7 @@ def stage_instance_create_middleware(self, payload: GatewayDispatch):
     Parameters
     ----------
     payload : :class:`GatewayDispatch`
-        The data recieved from the stage instance create event
+        The data received from the stage instance create event
 
     Returns
     -------

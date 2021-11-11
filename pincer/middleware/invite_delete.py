@@ -17,7 +17,7 @@ async def invite_delete_middleware(self, payload: GatewayDispatch):
     Parameters
     ----------
     payload : :class:`GatewayDispatch`
-        The data recieved from the invite delete event
+        The data received from the invite delete event
 
     Returns
     -------

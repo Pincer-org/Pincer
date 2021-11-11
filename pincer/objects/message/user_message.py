@@ -371,7 +371,7 @@ class UserMessage(APIObject):
         """|coro|
 
         Create a reaction for the message. Requires the
-        ``READ_MESSAGE_HISTORY` itent. ``ADD_REACTIONS`` intent is required if
+        ``READ_MESSAGE_HISTORY` intent. ``ADD_REACTIONS`` intent is required if
         nobody else has reacted using the emoji.
 
         Parameters

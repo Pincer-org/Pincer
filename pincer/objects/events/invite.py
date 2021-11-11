@@ -71,7 +71,7 @@ class InviteDeleteEvent(APIObject):
         The channel of the invite
     code: :class:`str`
         The unique invite code
-    guild_id: APINullabel[:class:`~pincer.utils.snowflake.Snowflake`]
+    guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The guild of the invite
     """
     channel_id: Snowflake

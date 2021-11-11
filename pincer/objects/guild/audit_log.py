@@ -28,7 +28,7 @@ class AuditLogEvent(IntEnum):
 
     Attributes
     ----------
-    GUILD_UPDAT:
+    GUILD_UPDATE:
         Guild updated.
     CHANNEL_CREATE:
         Channel created.
@@ -87,7 +87,7 @@ class AuditLogEvent(IntEnum):
     MESSAGE_DELETE:
         Message deleted.
     MESSAGE_BULK_DELETE:
-        Messave bulk delete.
+        Message bulk delete.
     MESSAGE_PIN:
         Message pinned.
     MESSAGE_UNPIN:

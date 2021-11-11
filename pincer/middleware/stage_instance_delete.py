@@ -16,7 +16,7 @@ def stage_instance_delete_middleware(self, payload: GatewayDispatch):
     Parameters
     ----------
     payload : :class:`GatewayDispatch`
-        The data recieved from the stage instance delete event
+        The data received from the stage instance delete event
 
     Returns
     -------

@@ -35,7 +35,7 @@ def convert(
             try:
                 if client and "_client" in getfullargspec(factory).args:
                     return factory(construct_client_dict(client, v))
-            except TypeError:  # Buildin type/has no signature
+            except TypeError:  # Building type/has no signature
                 pass
 
             return factory(v)
