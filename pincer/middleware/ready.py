@@ -51,8 +51,8 @@ async def on_ready_middleware(
     self.guilds = dict(map(lambda i: (i["id"], None), guilds))
 
     await ChatCommandHandler(self).initialize()
-    return ("on_ready",)
+    return "on_ready",
 
 
 def export() -> Coro:
-    return ready_middleware
+    return on_ready_middleware

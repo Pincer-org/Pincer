@@ -15,7 +15,7 @@ from ...utils.conversion import construct_client_dict
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from typing import Dict, List, Optional
+    from typing import Any, Dict, List, Optional
 
     from .features import GuildFeature
     from .role import Role

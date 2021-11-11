@@ -39,4 +39,4 @@ async def on_message_delete_middleware(
 
 
 def export():
-    return message_delete_middleware
+    return on_message_delete_middleware
