@@ -10,7 +10,8 @@ from ..utils.conversion import construct_client_dict
 
 async def message_reaction_remove_all_middleware(
     self,
-    payload: GatewayDispatch):
+    payload: GatewayDispatch
+):
     """|coro|
 
     Middleware for ``on_message_reaction_remove_all`` event.

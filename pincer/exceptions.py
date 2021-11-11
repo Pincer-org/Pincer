@@ -106,7 +106,6 @@ class TooManyArguments(CommandError):
     """
 
 
-
 class InvalidArgumentAnnotation(CommandError):
     """The provided argument annotation is not known, so it cannot be used."""
 

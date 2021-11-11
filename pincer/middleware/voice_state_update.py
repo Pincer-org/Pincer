@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
     from ..core.dispatch import GatewayDispatch
 
+
 async def voice_state_update_middleware(
     self,
     payload: GatewayDispatch
