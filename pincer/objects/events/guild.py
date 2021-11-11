@@ -5,11 +5,16 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ..guild.member import GuildMember
-from ..user.user import User
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
 from ...utils.types import MISSING, APINullable
+from ..guild.guild import Guild
+from ..guild.member import GuildMember
+from ..guild.role import Role
+from ..message.emoji import Emoji
+from ..message.sticker import Sticker
+from ..user import User
+from .presence import PresenceUpdateEvent
 
 if TYPE_CHECKING:
     from typing import Any, List, Optional
@@ -33,6 +38,7 @@ class GuildBanAddEvent(APIObject):
     user: :class:`~pincer.objects.user.user.User`
         The banned user
     """
+
     guild_id: Snowflake
     user: User
 
@@ -48,6 +54,7 @@ class GuildBanRemoveEvent(APIObject):
     user: :class:`~pincer.objects.user.user.User`
         The unbanned user
     """
+
     guild_id: Snowflake
     user: User
 
@@ -63,6 +70,7 @@ class GuildEmojisUpdateEvent(APIObject):
     emojis: List[:class:`~pincer.objects.message.emoji.Emoji`]
         Array of emojis
     """
+
     guild_id: Snowflake
     emojis: List[Emoji]
 
@@ -78,6 +86,7 @@ class GuildStickersUpdateEvent(APIObject):
     stickers: List[:class:`~pincer.objects.message.sticker.Sticker`]
         Array of stickers
     """
+
     guild_id: Snowflake
     stickers: List[Sticker]
 
@@ -91,6 +100,7 @@ class GuildIntegrationsUpdateEvent(APIObject):
     guild_id: :class:`~pincer.utils.snowflake.Snowflake`
         Id of the guild whose integrations were updated
     """
+
     guild_id: Snowflake
 
 
@@ -104,6 +114,7 @@ class GuildMemberAddEvent(GuildMember):
     guild_id: :class:`Snowflake`
         ID of the guild that the user joined.
     """
+
     # NOTE: This isn't a default value. I set it to this because you can't
     # have fields without default values after regular fields. Apparently that
     # carries over when you inherit from a dataclass.
@@ -121,13 +132,12 @@ class GuildMemberRemoveEvent(APIObject):
     user: :class:`~pincer.objects.user.user.User`
         the user who was removed
     """
+
     guild_id: Snowflake
     user: User
 
     def __post_init__(self):
-        self.user = User.from_dict(
-            construct_client_dict(self._client, self.user)
-        )
+        self.user = User.from_dict(construct_client_dict(self._client, self.user))
 
 
 @dataclass
@@ -158,6 +168,7 @@ class GuildMemberUpdateEvent(APIObject):
         whether the user has not yet passed the guild's
         Membership Screening requirements
     """  # noqa: E501
+
     guild_id: Snowflake
     roles: List[Snowflake]
     user: User
@@ -169,9 +180,7 @@ class GuildMemberUpdateEvent(APIObject):
     pending: APINullable[bool] = MISSING
 
     def __post_init__(self):
-        self.user = User.from_dict(construct_client_dict(
-            self._client, self.user
-        ))
+        self.user = User.from_dict(construct_client_dict(self._client, self.user))
 
 
 @dataclass
@@ -211,11 +220,7 @@ class GuildMembersChunkEvent(APIObject):
 
     def __post_init__(self):
         self.members = [
-            GuildMember.from_dict(
-                construct_client_dict(
-                    self._client, member
-                )
-            )
+            GuildMember.from_dict(construct_client_dict(self._client, member))
             for member in self.members
         ]
 
@@ -231,6 +236,7 @@ class GuildRoleCreateEvent(APIObject):
     role: :class:`~pincer.objects.guild.role.Role`
         The role created
     """
+
     guild_id: Snowflake
     role: Role
 
@@ -246,6 +252,7 @@ class GuildRoleUpdateEvent(APIObject):
     role: :class:`~pincer.objects.guild.role.Role`
         The role updated
     """
+
     guild_id: Snowflake
     role: Role
 
@@ -261,5 +268,24 @@ class GuildRoleDeleteEvent(APIObject):
     role_id: :class:`~pincer.utils.snowflake.Snowflake`
         Id of the role
     """
+
     guild_id: Snowflake
     role_id: Snowflake
+
+
+@dataclass
+class GuildStatusEvent(APIObject):
+    """
+    Sent when a subscribed server's state changes
+
+    Attributes
+    ----------
+    guild : :class:`Guild`
+        guild with requested id
+
+    online : :class:`int`
+        number of online users in guild (deprecated; always 0)
+    """
+
+    guild: Guild
+    online: int = 0

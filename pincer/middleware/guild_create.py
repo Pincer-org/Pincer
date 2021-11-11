@@ -11,26 +11,24 @@ from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from typing import List, Tuple
-
     from ..core.dispatch import GatewayDispatch
 
 
-def guild_create_middleware(
-    self,
-    payload: GatewayDispatch
-) -> Tuple[str, List[Guild]]:
+async def guild_create_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_guild_create`` event.
+    Middleware for ``on_guild_create``,
+        generate the guild class that was created
 
     Parameters
     ----------
-    payload : :class:`pincer.core.dispatch.GatewayDispatch`
-        The data received from the ready event.
+    payload : :class:`GatewayDispatch`
+        The data recieved from the guild create event
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.guild.Guild`]]
+    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.Guild`]]
+
         ``on_guild_create`` and a ``Guild``
     """
     guild = Guild.from_dict(construct_client_dict(self, payload.data))

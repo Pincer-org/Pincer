@@ -20,23 +20,23 @@ async def on_message_delete_middleware(
     payload: GatewayDispatch
 ) -> Tuple[str, List[MessageDeleteEvent]]:
     """|coro|
-
     Middleware for ``on_message_delete`` event.
 
     Parameters
     ----------
-    payload : :class:`pincer.core.dispatch.GatewayDispatch`
-        The data received from the ready event.
+    payload : :class:`GatewayDispatch`
+        The data recieved from the message delete event
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.message.MessageDeleteEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.message.MessageDeleteEvent`]
         ``on_message_delete`` and a ``MessageDeleteEvent``
-    """  # noqa: E501
+    """
+
     return "on_message_delete", [
         MessageDeleteEvent.from_dict(construct_client_dict(self, payload.data))
     ]
 
 
 def export():
-    return on_message_delete_middleware
+    return message_delete_middleware

@@ -8,11 +8,11 @@ from typing import TYPE_CHECKING
 from inspect import isasyncgenfunction, getfullargspec
 from typing import Dict, Any
 
-from pincer.utils import get_index
+from ..utils import get_index
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
 from ..objects import Interaction, MessageContext
-
+from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 from ..utils.conversion import construct_client_dict
 from ..utils.signature import get_params, get_signature_and_params
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
@@ -115,6 +115,7 @@ async def interaction_create_middleware(
     ----------
     payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the interaction event.
+
 
     Raises
     ------

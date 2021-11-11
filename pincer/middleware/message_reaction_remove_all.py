@@ -17,9 +17,6 @@ async def message_reaction_remove_all_middleware(
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot.
-
     payload : :class:`GatewayDispatch`
         The data received from the message reaction remove all event.
 

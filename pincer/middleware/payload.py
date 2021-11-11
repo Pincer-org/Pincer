@@ -22,6 +22,7 @@ async def payload_middleware(
     payload : :class:`pincer.core.dispatch.GatewayDispatch`
         The data received from the ready event.
 
+
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.core.dispatch.GatewayDispatch`]]
@@ -31,5 +32,4 @@ async def payload_middleware(
 
 
 def export():
-    """Export the middleware"""
     return payload_middleware

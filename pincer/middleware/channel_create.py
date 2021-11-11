@@ -1,8 +1,11 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-"""sent when a channel is created/joined on the client"""
-from __future__ import annotations
+"""Sent when a channel is created/joined on the client."""
+from ..core.dispatch import GatewayDispatch
+from ..objects import Channel
+from ..utils.conversion import construct_client_dict
+from ..utils.types import Coro
 
 from typing import TYPE_CHECKING
 
@@ -13,7 +16,6 @@ if TYPE_CHECKING:
     from typing import List, Tuple
 
     from ..core.dispatch import GatewayDispatch
-
 
 def channel_create_middleware(
     self,
@@ -36,3 +38,7 @@ def channel_create_middleware(
     return "on_channel_creation", [
         Channel.from_dict(construct_client_dict(self, payload.data))
     ]
+
+
+def export() -> Coro:
+    return channel_create_middleware

@@ -22,12 +22,19 @@ async def message_update_middleware(
 ) -> Tuple[str, List[UserMessage]]:
     """|coro|
 
-    Middleware for ``on_message_update`` event.
+
+    Middleware for ``on_message_update`` event,
+        generate a class for the message that has been updated.
 
     Parameters
     ----------
-    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
-        The data received from the ready event.
+    payload : :class:`GatewayDispatch`
+        The data recieved from the message update event event
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.message.user_message.UserMessage`]]
+        ``on_message_update`` and a ``UserMessage``
     """
     return "on_message_update", [
         UserMessage.from_dict(construct_client_dict(self, payload.data))

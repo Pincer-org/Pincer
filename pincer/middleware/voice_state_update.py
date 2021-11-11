@@ -17,25 +17,24 @@ if TYPE_CHECKING:
 
     from ..core.dispatch import GatewayDispatch
 
-
 async def voice_state_update_middleware(
     self,
     payload: GatewayDispatch
 ) -> Tuple[str, List[VoiceState]]:
     """|coro|
-
     Middleware for ``on_voice_state_update`` event.
 
     Parameters
     ----------
-    payload : :class:`pincer.core.dispatch.GatewayDispatch`
-        The data received from the ready event.
+    payload : :class:`GatewayDispatch`
+        The data received from the voice state update event.
 
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.user.voice_state.VoiceState`]]
         ``on_voice_state_update`` and a ``VoiceState``
     """  # noqa: E501
+
     return "on_voice_state_update", [
         VoiceState.from_dict(construct_client_dict(self, payload.data))
     ]

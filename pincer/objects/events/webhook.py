@@ -13,8 +13,9 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class WebhookUpdateEvent(APIObject):
-    """Sent when a guild's channel webhook
+class WebhooksUpdateEvent(APIObject):
+    """
+    Sent when a guild's channel webhook
     is created, updated, or deleted.
 
     Attributes
