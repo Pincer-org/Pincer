@@ -15,7 +15,7 @@ from ...utils.conversion import construct_client_dict
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from typing import Dict, List, Optional
+    from typing import Any, Dict, List, Optional
 
     from .features import GuildFeature
     from .role import Role
@@ -231,7 +231,7 @@ class Guild(APIObject):
         Approximate number of non-offline members in this guild,
         returned from the `GET /guilds/<id>`
         endpoint when with_counts is true
-    channels: APINullable[List[:class:`~pincer.objects.guild.chanenl.Channel`]]
+    channels: APINullable[List[:class:`~pincer.objects.guild.channel.Channel`]]
         Channels in the guild
     icon_hash: APINullable[Optional[:class:`str`]]
         Icon hash, returned when in the template object
@@ -420,7 +420,7 @@ class Guild(APIObject):
         mute : Optional[:class:`bool`]
             Whether the member is muted |default| :data:`None`
         deaf : Optional[:class:`bool`]
-            Whether the member is defaened |default| :data:`None`
+            Whether the member is deafened |default| :data:`None`
         channel_id : Optional[:class:`~pincer.utils.snowflake.Snowflake]
             Voice channel id to move to |default| :data:`None`
 
@@ -441,7 +441,7 @@ class Guild(APIObject):
         Parameters
         ----------
         data : :class: Dict
-            Guild data recieved from the discord API.
+            Guild data received from the discord API.
 
         Returns
         -------

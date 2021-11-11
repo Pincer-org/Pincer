@@ -17,7 +17,7 @@ async def message_delete_bulk_middleware(self, payload: GatewayDispatch):
     Parameters
     ----------
     payload : :class:`GatewayDispatch`
-        The data recieved from the message delete bulk event
+        The data received from the message delete bulk event
 
     Returns
     -------

@@ -46,7 +46,7 @@ class GuildFeature(Enum):
     MONETIZATION_ENABLED:
         Guild has monetization enabled.
     MORE_STICKERS:
-        GUild can have more stickers.
+        Guild can have more stickers.
     THREE_DAY_THREAD_ARCHIVE:
         Guild can have three day archive time for threads.
     SEVEN_DAY_THREAD_ARCHIVE:

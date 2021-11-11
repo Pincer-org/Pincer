@@ -45,7 +45,7 @@ class DefaultThrottleHandler(ThrottleInterface, ABC):
         Parameters
         ----------
         ctx : :class:`~pincer.objects.message.context.MessageContext`
-            The context to retrive with
+            The context to retrieve with
 
         Returns
         -------

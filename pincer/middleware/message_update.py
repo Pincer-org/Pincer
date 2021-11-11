@@ -29,7 +29,7 @@ async def message_update_middleware(
     Parameters
     ----------
     payload : :class:`GatewayDispatch`
-        The data recieved from the message update event event
+        The data received from the message update event event
 
     Returns
     -------

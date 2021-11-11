@@ -31,7 +31,7 @@ async def on_ready_middleware(
     Parameters
     ----------
     payload : :class:`GatewayDispatch`
-        The data recieved from the stage instance create event
+        The data received from the stage instance create event
 
     Returns
     -------
@@ -51,8 +51,8 @@ async def on_ready_middleware(
     self.guilds = dict(map(lambda i: (i["id"], None), guilds))
 
     await ChatCommandHandler(self).initialize()
-    return ("on_ready",)
+    return "on_ready",
 
 
 def export() -> Coro:
-    return ready_middleware
+    return on_ready_middleware

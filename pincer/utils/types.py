@@ -71,7 +71,7 @@ class _TypeInstanceMeta(type):
         if not isinstance(args, tuple) or len(args) != 2:
             raise InvalidArgumentAnnotation(
                 "Descripted arguments must be a tuple of length 2. "
-                "(if you are using this as the intented type, just "
+                "(if you are using this as the indented type, just "
                 "pass two arguments)"
             )
 

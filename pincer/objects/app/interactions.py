@@ -212,7 +212,7 @@ class Interaction(APIObject):
     async def convert(self, option: AppCommandInteractionDataOption):
         """|coro|
 
-        Sets an AppCommandInteractionDataOption value paramater to
+        Sets an AppCommandInteractionDataOption value parameter to
         the payload type
         """
         converter = self._convert_functions.get(option.type)
@@ -429,7 +429,7 @@ class Interaction(APIObject):
             followup: UserMessage,
             message: Message
     ):
-        """Process a folloup after it was sent.
+        """Process a followup after it was sent.
 
         Parameters
         ----------

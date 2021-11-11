@@ -88,7 +88,7 @@ class MessageContext:
 
         Send a response for an interaction.
         This object returns the sent object and may be used several
-        times after eachoter. (first one will always be the main
+        times after each other. (first one will always be the main
         interaction response)
 
         Uses

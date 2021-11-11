@@ -21,7 +21,7 @@ async def guild_ban_add_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildBaAaddEvent`]]
+    Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildBaAddEvent`]]
         ``on_guild_ban_add_update`` and a ``GuildBanAddEvent``
     """
 

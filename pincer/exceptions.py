@@ -127,7 +127,7 @@ class InteractionDoesNotExist(CommandError):
 
 
 class UseFollowup(CommandError):
-    """A reply has alrready been sent, please use a followup to
+    """A reply has already been sent, please use a followup to
     continue replying.
     """
 

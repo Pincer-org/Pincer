@@ -83,15 +83,15 @@ class GuildMember(BaseMember, APIObject):
     ----------
     nick: APINullable[Optional[:class:`str`]]
         This users guild nickname
-    pending: APInullable[:class:`bool`]
+    pending: APINullable[:class:`bool`]
         Whether the user has not yet passed the guild's Membership
         Screening requirements
     is_pending: APINullable[:class:`bool`]
         Deprecated version of pending.
-    permissions: APInullable[:class:`str`]
+    permissions: APINullable[:class:`str`]
         Total permissions of the member in the channel,
         including overwrites, returned when in the interaction object
-    premium_since: APInullable[Optional[:class:`~pincer.utils.timestamp.Timestamp`]]
+    premium_since: APINullable[Optional[:class:`~pincer.utils.timestamp.Timestamp`]]
         When the user started boosting the guild
     user: APINullable[:class:`~pincer.objects.user.user.User`]
         The user this guild member represents

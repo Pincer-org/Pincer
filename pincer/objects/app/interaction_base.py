@@ -53,7 +53,7 @@ class InteractionType(IntEnum):
     APPLICATION_COMMAND:
         A "slash" command.
     MESSAGE_COMPONENT:
-        A ui compoment like buttons and selects.
+        A ui component like buttons and selects.
     """
     PING = 1
     APPLICATION_COMMAND = 2

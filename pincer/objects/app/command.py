@@ -115,7 +115,7 @@ class AppCommand(APIObject):
     id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Unique id of the command
     version: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
-        Autoincrementing version identifier updated during substantial
+        Auto-incrementing version identifier updated during substantial
         record changes
     application_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Unique id of the parent application

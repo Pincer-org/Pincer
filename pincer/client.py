@@ -136,10 +136,10 @@ class Client(Dispatcher):
     ----------
     bot: :class:`~objects.user.user.User`
         The user object of the client
-    recieved_message: :class:`str`
+    received_message: :class:`str`
         The default message which will be sent when no response is given.
     http: :class:`~core.http.HTTPClient`
-        The http client used to comminicate with the discord API
+        The http client used to communicate with the discord API
 
     Parameters
     ----------

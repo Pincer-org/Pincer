@@ -16,7 +16,7 @@ def stage_instance_update_middleware(self, payload: GatewayDispatch):
     Parameters
     ----------
     payload : :class:`GatewayDispatch`
-        The data recieved from the stage instance update event
+        The data received from the stage instance update event
 
     Returns
     -------

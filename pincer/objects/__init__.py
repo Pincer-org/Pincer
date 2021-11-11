@@ -47,7 +47,7 @@ from .events.presence import (
 from .events.thread import ThreadListSyncEvent, ThreadMembersUpdateEvent
 from .events.typing_start import TypingStartEvent
 from .events.voice import VoiceServerUpdateEvent
-from .events.webhook import WebhookUpdateEvent
+from .events.webhook import WebhooksUpdateEvent
 from .guild.audit_log import (
     AuditLogEvent, AuditLogChange, AuditEntryInfo, AuditLogEntry, AuditLog
 )
@@ -146,6 +146,6 @@ __all__ = (
     "ThrottleScope", "TypingStartEvent", "UpdatePresence", "UpdateVoiceState",
     "User", "UserMessage", "VerificationLevel", "VisibilityType",
     "VoiceChannel", "VoiceRegion", "VoiceServerUpdateEvent", "VoiceState",
-    "Webhook", "WebhookType", "WebhookUpdateEvent", "WelcomeScreen",
+    "Webhook", "WebhookType", "WebhooksUpdateEvent", "WelcomeScreen",
     "WelcomeScreenChannel"
 )

@@ -17,7 +17,7 @@ async def invite_create_middleware(self, payload: GatewayDispatch):
     Parameters
     ----------
     payload : :class:`GatewayDispatch`
-        The data recieved from the invite create event
+        The data received from the invite create event
 
     Returns
     -------

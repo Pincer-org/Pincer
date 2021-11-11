@@ -17,7 +17,7 @@ async def integration_create_middleware(self, payload: GatewayDispatch):
     Parameters
     ----------
     payload : :class:`GatewayDispatch`
-        The data recieved from the sintegration create event
+        The data received from the integration create event
 
     Returns
     -------
