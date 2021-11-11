@@ -43,6 +43,6 @@ def channel_create_middleware(
     ]
 
 
-def export() -> Coro:
+def export():
     return channel_create_middleware
 
