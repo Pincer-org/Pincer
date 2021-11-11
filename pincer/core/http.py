@@ -29,7 +29,7 @@ _log = logging.getLogger(__package__)
 
 
 class HttpCallable(Protocol):
-    """aiohttp HTTP method"""
+    """Aiohttp HTTP method."""
     __name__: str
 
     def __call__(

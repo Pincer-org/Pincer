@@ -33,10 +33,12 @@ class Heartbeat:
 
     @classmethod
     async def __send(cls, socket: WebSocketClientProtocol):
-        """
+        """|Coro|
         Sends a heartbeat to the API gateway.
 
-        :param socket:
+        Parameters
+        ----------
+        socket : :class:`~ws:websockets.legacy.client.WebSocketClientProtocol`
             The socket to send the heartbeat to.
         """
         _log.debug("Sending heartbeat (seq: %s)", str(cls.__sequence))
@@ -136,7 +138,6 @@ class Heartbeat:
     def update_sequence(cls, seq: int):
         """
         Update the heartbeat sequence.
-
 
         Parameters
         ----------

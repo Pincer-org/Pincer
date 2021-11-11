@@ -33,7 +33,8 @@ class AppCommandInteractionDataOption(APIObject):
         Value of application command option type
     options: APINullable[List[:data:`~pincer.objects.app.command.AppCommandInteractionDataOption`]]
         Present if this option is a group or subcommand
-    """  # noqa: E501
+    """
+    # noqa: E501
     name: str
     value: APINullable[str] = MISSING
     type: APINullable[AppCommandOptionType] = MISSING
@@ -76,7 +77,8 @@ class AppCommandOption(APIObject):
     options: APINullable[List[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
         If the option is a subcommand or subcommand group type,
         this nested options will be the parameters
-    """  # noqa: E501
+    """
+    # noqa: E501
     type: AppCommandOptionType
     name: str
     description: str
@@ -126,7 +128,8 @@ class AppCommand(APIObject):
     default_permission: APINullable[:class:`bool`]
         Whether the command is enabled by default
         when the app is added to a guild
-    """  # noqa: E501
+    """
+    # noqa: E501
     type: AppCommandType
     name: str
     description: str

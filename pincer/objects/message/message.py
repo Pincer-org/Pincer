@@ -59,7 +59,8 @@ class Message:
         The interaction flags for the message.
     type: Optional[:class:`~pincer.objects.app.interaction_base.CallbackType`]
         The type of the callback.
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     content: str = ''
     attachments: Optional[List[File]] = None

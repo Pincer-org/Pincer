@@ -64,7 +64,8 @@ class ThreadMembersUpdateEvent(APIObject):
         The users who were added to the thread
     removed_member_ids: APINullable[List[:class:`~pincer.utils.snowflake.Snowflake`]]
         The id of the users who were removed from the thread
-    """  # noqa: E501
+    """
+    # noqa: E501
     id: Snowflake
     guild_id: Snowflake
     member_count: int

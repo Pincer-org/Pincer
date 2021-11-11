@@ -8,15 +8,17 @@ class AppCommandType(IntEnum):
     """
     Defines the different types of application commands.
 
-    :param CHAT_INPUT:
+    Attributes
+    ----------
+    CHAT_INPUT:
         Slash commands; a text-based command that shows up when a user
         types /
 
-    :param USER:
+    USER:
         A UI-based command that shows up when you right click or tap on
         a user
 
-    :param MESSAGE:
+    MESSAGE:
         A UI-based command that shows up when you right click or tap on
         a message
     """
@@ -29,34 +31,36 @@ class AppCommandOptionType(IntEnum):
     """
     Represents a parameter type.
 
-    :param SUB_COMMAND:
+    Attributes
+    ----------
+    SUB_COMMAND:
         The parameter will be a subcommand.
 
-    :param SUB_COMMAND_GROUP:
+    SUB_COMMAND_GROUP:
         The parameter will be a group of subcommands.
 
-    :param STRING:
+    STRING:
         The parameter will be a string.
 
-    :param INTEGER:
+    INTEGER:
         The parameter will be an integer/number. (-2^53 and 2^53)
 
-    :param BOOLEAN:
+    BOOLEAN:
         The parameter will be a boolean.
 
-    :param USER:
+    USER:
         The parameter will be a Discord user object.
 
-    :param CHANNEL:
+    CHANNEL:
         The parameter will be a Discord channel object.
 
-    :param ROLE:
+    ROLE:
         The parameter will be a Discord role object.
 
-    :param MENTIONABLE:
+    MENTIONABLE:
         The parameter will be mentionable.
 
-    :param NUMBER:
+    NUMBER:
         The parameter will be a float. (-2^53 and 2^53)
     """
     SUB_COMMAND = 1

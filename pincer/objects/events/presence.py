@@ -33,7 +33,8 @@ class ActivityType(IntEnum):
         \\{emoji} {name}; e.g. "\\:smiley: I am cool"; Not for bots; discord limitation
     COMPETING:
         Competing in {name}; e.g. "Competing in Arena World Champions"
-    """  # noqa: E501
+    """
+    # noqa: E501
     GAME = 0
     STREAMING = 1
     LISTENING = 2
@@ -196,7 +197,8 @@ class Activity(APIObject):
         describes what the payload includes
     buttons: APINullable[List[:class:`~pincer.objects.events.presence.ActivityButton`]]
         The url button on an activity.
-    """  # noqa: E501
+    """
+    # noqa: E501
     name: str
     type: ActivityType
     created_at: int

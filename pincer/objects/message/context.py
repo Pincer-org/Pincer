@@ -39,7 +39,8 @@ class MessageContext:
     channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
         The ID of the channel the interaction was invoked in.
         Can be None if it wasn't invoked in a channel.
-    """  # noqa: E501
+    """
+    # noqa: E501
     author: Union[GuildMember, User]
     command: ClientCommandStructure
     interaction: Interaction

@@ -313,7 +313,8 @@ class UserMessage(APIObject):
         action rows, or other interactive components
     sticker_items: APINullable[List[:class:`~pincer.objects.message.sticker.StickerItem`]]
         Sent if the message contains stickers
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     id: Snowflake
     channel_id: Snowflake

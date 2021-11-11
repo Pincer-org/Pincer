@@ -134,7 +134,8 @@ class DefaultMessageNotificationLevel(IntEnum):
         Members will receive notifications for all messages by default.
     ONLY_MENTIONS:
         Members will receive notifications only for messages that @mention them by default.
-    """  # noqa: E501
+    """
+    # noqa: E501
     ALL_MESSAGES = 0
     ONLY_MENTIONS = 1
 
@@ -285,7 +286,8 @@ class Guild(APIObject):
     welcome_screen: APINullable[:class:`~pincer.objects.guild.welcome_screen.WelcomeScreen`]
         The welcome screen of a Community guild, shown to new members,
         returned in an Invite's guild object
-    """  # noqa: E501
+    """
+    # noqa: E501
     afk_timeout: int
     default_message_notifications: DefaultMessageNotificationLevel
     emojis: List[Emoji]

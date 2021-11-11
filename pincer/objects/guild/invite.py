@@ -114,7 +114,8 @@ class Invite(APIObject):
     target_application: :class:`~pincer.objects.app.application.Application`
         The embedded application to open for this voice channel embedded
         application invite
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     channel: Channel
     code: str

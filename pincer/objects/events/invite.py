@@ -46,7 +46,8 @@ class InviteCreateEvent(APIObject):
         this voice channel stream invite
     uses: :class:`int`
         How many times the invite has been used (always will be ``0``)
-    """  # noqa: E501
+    """
+    # noqa: E501
     channel_id: Snowflake
     code: str
     created_at: Timestamp

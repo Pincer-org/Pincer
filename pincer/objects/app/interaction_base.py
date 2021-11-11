@@ -34,7 +34,8 @@ class CallbackType(IntEnum):
         For components, ACK an interaction and edit the original message later
     UPDATE_MESSAGE:
         For components, edit the message the component was attached to
-    """  # noqa: E501
+    """
+    # noqa: E501
     PONG = 1
     MESSAGE = 4
     DEFERRED_MESSAGE = 5

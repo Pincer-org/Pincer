@@ -50,7 +50,8 @@ class VoiceState(APIObject):
         The guild member this voice state is for
     self_stream: APINullable[:class:`bool`]
         Whether this user is streaming using "Go Live"
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     channel_id: Optional[Snowflake]
     user_id: Snowflake

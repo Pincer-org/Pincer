@@ -55,7 +55,9 @@ def _is_valid_url(url: str) -> bool:
 def _check_if_valid_url(url: str):
     """Checks if the provided url is valid.
 
-    :raises InvalidUrlError:
+    Raises
+    ------
+    :class:`~pincer.exceptions.InvalidUrlError`
         if the url didn't match the url regex.
         (which means that it was malformed or didn't match the http/attachment
         protocol).
@@ -282,7 +284,8 @@ class Embed(APIObject):
         Video information.
     type: APINullable[:class:`int`]
         type of message
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     title: APINullable[str] = MISSING
     description: APINullable[str] = MISSING

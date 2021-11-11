@@ -144,7 +144,8 @@ class Channel(APIObject):  # noqa E501
         The user limit of the voice channel
     video_quality_mode: APINullable[:class:`int`]
         The camera video quality mode of the voice channel, 1 when not present
-    """  # noqa: E501
+    """
+    # noqa: E501
     id: Snowflake
     type: ChannelType
 
