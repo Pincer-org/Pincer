@@ -13,7 +13,21 @@ class _Processable(ABC):
 
     @abstractmethod
     def process(self, event_name: str, *args):
-        """Method that is ran when an event is recieved from discord"""
+        """
+        Method that is ran when an event is recieved from discord.
+
+        Parameters
+        ----------
+        event_name : str
+            The name of the event.
+        *args : Any
+            Arguments to evaluate check with.
+
+        Returns
+        -------
+        bool
+            Whether the event can be set
+        """
 
     def matches_event(self, event_name: str, *args):
         """
@@ -46,6 +60,14 @@ def _lowest_value(*args):
 
 class _Event(_Processable):
     """
+    Parameters
+    ----------
+    event_name : str
+        The name of the event.
+    check : Optional[Callable[[Any], bool]]
+        ``can_be_set`` only returns true if this function returns true.
+        Will be ignored if set to None.
+
     Attributes
     ----------
     return_value : Optional[str]
@@ -58,48 +80,48 @@ class _Event(_Processable):
         event_name: str,
         check: CheckFunction
     ):
-        """
-        Parameters
-        ----------
-        event_name : str
-            The name of the event.
-        check : Optional[Callable[[Any], bool]]
-            ``can_be_set`` only returns true if this function returns true.
-            Will be ignored if set to None.
-        """
         self.event_name = event_name
-        self.event = Event()
         self.check = check
+        self.event = Event()
         self.return_value = None
         super().__init__()
 
     async def wait(self):
+        """
+        Waits until ``self.event`` is set.
+        """
         await self.event.wait()
 
     def process(self, event_name: str, *args) -> bool:
-        """
-        Parameters
-        ----------
-        event_name : str
-            The name of the event.
-        *args : Any
-            Arguments to evaluate check with.
-
-        Returns
-        -------
-        bool
-            Whether the event can be set
-        """
         if self.matches_event(event_name, *args):
             self.return_value = args
             self.event.set()
 
 
-class __LoopEmptyError(Exception):
+class _LoopEmptyError(Exception):
     "Raised when the _LoopMgr is empty and cannot accept new item"
 
 
 class _LoopMgr(_Processable):
+    """
+    Parameters
+    ----------
+    event_name : str
+        The name of the event.
+    check : Optional[Callable[[Any], bool]]
+        ``can_be_set`` only returns true if this function returns true.
+        Will be ignored if set to None.
+
+    Attributes
+    ----------
+    can_expand : bool
+        Whether the queue is allowed to grow. Turned to false once the
+        EventMgr's timer runs out.
+    events : :class:`collections.deque`
+        Qeue of events to be processed.
+    wait : :class:`asyncio.Event`
+        Used to make ``get_next()` wait for the next event.
+    """
 
     def __init__(self, event_name: str, check: CheckFunction) -> None:
         self.event_name = event_name
@@ -118,9 +140,13 @@ class _LoopMgr(_Processable):
             self.wait.set()
 
     async def get_next(self):
+        """
+        Returns the next item if the queue. If there are no items in the queue,
+        it will return the next event that happens.
+        """
         if len(self.events) == 0:
             if not self.can_expand:
-                raise __LoopEmptyError
+                raise _LoopEmptyError
 
             self.wait.clear()
             await self.wait.wait()
@@ -240,7 +266,7 @@ class EventMgr:
                 try:
                     while True:
                         yield await loop_mgr.get_next()
-                except __LoopEmptyError:
+                except _LoopEmptyError:
                     raise TimeoutError(
                         "loop_for() timed out while waiting for an event"
                     )
