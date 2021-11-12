@@ -74,6 +74,8 @@ class _Event(_Processable):
 
     Attributes
     ----------
+    event : :class:`asyncio.Event`
+        Even that is used to wait until the next valid discord event.
     return_value : Optional[str]
         Used to store the arguments from ``can_be_set`` so they can be
         returned later.
