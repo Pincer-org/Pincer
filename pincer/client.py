@@ -14,12 +14,13 @@ from asyncio import iscoroutinefunction, run, ensure_future
 from . import __package__
 from .core.http import HTTPClient
 from .commands import ChatCommandHandler
-from .utils.types import Coro
+from .utils.types import Coro, CheckFunction
 from .middleware import middleware
 from .core.gateway import Dispatcher
 from .utils.signature import get_params
 from .utils.extraction import get_index
 from .utils.insertion import should_pass_cls
+from .utils.event_mgr import EventMgr
 from .exceptions import (
     InvalidEventName, TooManySetupArguments, NoValidSetupMethod,
     NoCogManagerReturnFound, CogAlreadyExists, CogNotFound
