@@ -2,43 +2,45 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from typing import Optional, Union, TYPE_CHECKING
 
 
 if TYPE_CHECKING:
-    from ..app.interaction_flags import InteractionFlags
-    from ...utils.convert_message import MessageConvertable
+
+    from typing import Optional, Union
     from .user_message import UserMessage
     from ..app import ClientCommandStructure, Interaction
+    from ..app.interaction_flags import InteractionFlags
     from ..guild.member import GuildMember
-    from ..user import User
+    from ..user.user import User
+    from ...utils.convert_message import MessageConvertable
     from ...utils.snowflake import Snowflake
 
 
 @dataclass
 class MessageContext:
-    """
-    Represents the context of a message interaction.
+    """Represents the context of a message interaction.
 
-    :param author:
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        The ID of the interaction.
+    author: Union[:class:`~pincer.objects.guild.member.GuildMember`, :class:`~pincer.objects.user.user.User`]
+
         The user whom invoked the interaction.
-
-    :param command:
+    command: :class:`~pincer.objects.app.command.ClientCommandStructure`
         The local command object for the command to whom this context
         belongs.
 
-    interaction :class:`~pincer.objects.app.interaction.Interaction`
-        The interaction this command belongs to.
-
-    :param guild_id:
+    guild_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
         The ID of the guild the interaction was invoked in.
         Can be None if it wasn't invoked in a guild.
-
-    :param channel_id:
+    channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
         The ID of the channel the interaction was invoked in.
         Can be None if it wasn't invoked in a channel.
     """
+    # noqa: E501
     author: Union[GuildMember, User]
     command: ClientCommandStructure
     interaction: Interaction
@@ -87,7 +89,7 @@ class MessageContext:
 
         Send a response for an interaction.
         This object returns the sent object and may be used several
-        times after eachoter. (first one will always be the main
+        times after each other. (first one will always be the main
         interaction response)
 
         Uses

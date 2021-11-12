@@ -9,18 +9,18 @@ from typing import Optional, TYPE_CHECKING
 from ...utils import APIObject
 
 if TYPE_CHECKING:
-    from ..user import User
+    from ..user.user import User
 
 
 @dataclass
 class Ban(APIObject):
-    """
-    Representation of the Discord Ban object
+    """Representation of the Discord Ban object
 
-    :param reason:
+    Attributes
+    ----------
+    reason: Optional[:class:`str`]
         The reason for the ban
-
-    :param user:
+    user: :class:`~pincer.objects.user.user.User`
         The banned user
     """
     reason: Optional[str]

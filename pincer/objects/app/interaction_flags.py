@@ -6,7 +6,10 @@ from enum import IntEnum
 
 class InteractionFlags(IntEnum):
     """
-    :param EPHEMERAL:
+
+    Attributes
+    ----------
+    EPHEMERAL:
         only the user receiving the message can see it
     """
     EPHEMERAL = 1 << 6

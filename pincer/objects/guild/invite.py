@@ -3,31 +3,34 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from enum import IntEnum
-from typing import Optional, List, TYPE_CHECKING
+from typing import TYPE_CHECKING
+from dataclasses import dataclass
 
-from ..app.application import Application
-from ..guild.channel import Channel
-from ...utils.api_object import APIObject
 from ...utils.types import MISSING
+from ...utils.api_object import APIObject
 
 if TYPE_CHECKING:
-    from ..guild import Guild
-    from ..user import User
+    from typing import List, Optional
+
+    from .guild import Guild
+    from ..app.application import Application
+    from ..guild.channel import Channel
     from ..guild.member import GuildMember
-    from ...utils import APINullable, Timestamp
+    from ..user.user import User
+    from ...utils.timestamp import Timestamp
+    from ...utils.types import APINullable
 
 
 class InviteTargetType(IntEnum):
-    """
-    Represents the type of the invite.
+    """Represents the type of the invite.
 
-    :param STREAM:
+    Attributes
+    ----------
+    STREAM:
         A normal Discord invite, eg for a channel or guild.
-
-    :param EMBEDDED_APPLICATION:
-        An embedded application invite, eg poker-night etc
+    EMBEDDED_APPLICATION:
+        An embedded application invite, eg poker-night etc.
     """
     STREAM = 1
     EMBEDDED_APPLICATION = 2
@@ -35,22 +38,19 @@ class InviteTargetType(IntEnum):
 
 @dataclass
 class InviteStageInstance(APIObject):
-    """
-    Represents an invite for a Discord stages channel.
+    """Represents an invite for a Discord stages channel.
 
-    :param members:
+    Attributes
+    ----------
+    members: List[:class:`~pincer.objects.guild.member.GuildMember`]
         the members speaking in the Stage
-
-    :param participant_count:
+    participant_count: :class:`int`
         the number of users in the Stage
-
-    :param speaker_count:
+    speaker_count: :class:`int`
         the number of users speaking in the Stage
-
-    :param topic:
+    topic: :class:`str`
         the topic of the Stage instance (1-120 characters)
     """
-
     members: List[GuildMember]
     participant_count: int
     speaker_count: int
@@ -59,23 +59,20 @@ class InviteStageInstance(APIObject):
 
 @dataclass
 class InviteMetadata(APIObject):
-    """
-    Extra information about an invite, will extend the invite object.
+    """Extra information about an invite, will extend the invite object.
 
-    :param uses:
+    Attributes
+    ----------
+    uses: :class:`int`
         number of times this invite has been used
-
-    :param max_uses:
-        max number of times this invite can be used
-
-    :param max_age:
-        duration (in seconds) after which the invite expires
-
-    :param temporary:
-        whether this invite only grants temporary membership
-
-    :param created_at:
-        when this invite was created
+    max_uses: :class:`int`
+        Max number of times this invite can be used
+    max_age: :class:`int`
+        Duration (in seconds) after which the invite expires
+    temporary:  :class:`bool`
+        Whether this invite only grants temporary membership
+    created_at: :class:`~pincer.utils.timestamp.Timestamp`
+        When this invite was created
     """
     uses: int
     max_uses: int
@@ -86,47 +83,39 @@ class InviteMetadata(APIObject):
 
 @dataclass
 class Invite(APIObject):
-    """
-    Represents a Discord invite.
+    """Represents a Discord invite.
 
-    :param channel:
-        the channel this invite is for
-
-    :param code:
-        the invite code (unique ID)
-
-    :param approximate_member_count:
-        approximate count of total members, returned from the GET
+    Attributes
+    ----------
+    channel: :class:`~pincer.objects.guild.channel.Channel`
+        The channel this invite is for
+    code: :class:`str`
+        The invite code (unique ID)
+    approximate_member_count: APINullable[:class:`int`]
+        Approximate count of total members, returned from the GET
         /invites/<code> endpoint when with_counts is true
-
-    :param approximate_presence_count:
-        approximate count of online members, returned from the GET
+    approximate_presence_count: APINullable[:class:`int`]
+        Approximate count of online members, returned from the GET
         /invites/<code> endpoint when with_counts is true
-
-    :param expires_at:
-        the expiration date of this invite, returned from the GET
+    expires_at: APINullable[Optional[:class:`~pincer.utils.timestamp.Timestamp`]]
+        The expiration date of this invite, returned from the GET
         /invites/<code> endpoint when with_expiration is true
-
-    :param inviter:
-        the user who created the invite
-
-    :param guild:
-        the guild this invite is for
-
-    :param stage_instance:
-        stage instance data if there is a public Stage instance in the Stage
+    inviter: APINullable[:class:`~pincer.objects.user.user.User`]
+        The user who created the invite
+    guild: :class:`~pincer.objects.guild.guild.Guild`
+        The guild this invite is for
+    stage_instance: :class:`~pincer.objects.guild.invite.InviteStageInstance`
+        Stage instance data if there is a public Stage instance in the Stage
         channel this invite is for
-
-    :param target_type:
-        the type of target for this voice channel invite
-
-    :param target_user:
-        the user whose stream to display for this voice channel stream invite
-
-    :param target_application:
-        the embedded application to open for this voice channel embedded
+    target_type: :class:`~pincer.objects.guild.invite.InviteTargetType`
+        The type of target for this voice channel invite
+    target_user: :class:`~pincer.objects.user.user.User`
+        The user whose stream to display for this voice channel stream invite
+    target_application: :class:`~pincer.objects.app.application.Application`
+        The embedded application to open for this voice channel embedded
         application invite
     """
+    # noqa: E501
 
     channel: Channel
     code: str

@@ -4,31 +4,35 @@
 from __future__ import annotations
 
 import logging
-from asyncio import iscoroutinefunction, run, ensure_future
+from typing import TYPE_CHECKING
 from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
-from typing import Optional, Any, Union, Dict, Tuple, List, TYPE_CHECKING
+from typing import Any, Dict, List, Optional, Tuple, Union
+from asyncio import iscoroutinefunction, run, ensure_future
 
 from . import __package__
-from .commands import ChatCommandHandler
-from .core.dispatch import GatewayDispatch
-from .core.gateway import Dispatcher
 from .core.http import HTTPClient
+from .commands import ChatCommandHandler
+from .utils.types import Coro
+from .middleware import middleware
+from .core.gateway import Dispatcher
+from .utils.signature import get_params
+from .utils.extraction import get_index
+from .utils.insertion import should_pass_cls
 from .exceptions import (
     InvalidEventName, TooManySetupArguments, NoValidSetupMethod,
     NoCogManagerReturnFound, CogAlreadyExists, CogNotFound
 )
-from .middleware import middleware
-from .objects import Role, User, Intents, Guild, ThrottleInterface, Channel
-from .objects.app.throttling import DefaultThrottleHandler
-from .utils import get_index, should_pass_cls, Coro
-from .utils.signature import get_params
-from .utils.event_mgr import EventMgr
+from .objects import (
+    Role, Channel, DefaultThrottleHandler, User, Guild, Intents
+)
 
 if TYPE_CHECKING:
     from .objects.app import AppCommand
-    from .utils import Snowflake, CheckFunction
+    from .utils.snowflake import Snowflake
+    from .core.dispatch import GatewayDispatch
+    from .objects.app.throttling import ThrottleInterface
 
 _log = logging.getLogger(__package__)
 
@@ -39,8 +43,7 @@ _events: Dict[str, Optional[Union[List[_event], _event]]] = defaultdict(list)
 
 
 def event_middleware(call: str, *, override: bool = False):
-    """
-    Middleware are methods which can be registered with this decorator.
+    """Middleware are methods which can be registered with this decorator.
     These methods are invoked before any ``on_`` event.
     As the ``on_`` event is the final call.
 
@@ -82,16 +85,13 @@ def event_middleware(call: str, *, override: bool = False):
         >>> async def on_ready(bot: User):
         >>>     print(f"Signed in as {bot}")
 
-
-    :param call:
-        The call where the method should be registered.
-
-    Keyword Arguments:
-
-    :param override:
-        Setting this to True will allow you to override existing
-        middleware. Usage of this is discouraged, but can help you out
-        of some situations.
+    Parameters
+    ----------
+    call : :class:`str`
+        The call that the function should tie to
+    override : :class:`bool`
+        If it should override default middleware,
+        usually shouldn't be used |default| :data:`False`
     """
 
     def decorator(func: Coro):
@@ -122,11 +122,43 @@ def event_middleware(call: str, *, override: bool = False):
     return decorator
 
 
-for event, middleware in middleware.items():
-    event_middleware(event)(middleware)
+for event, middleware_ in middleware.items():
+    event_middleware(event)(middleware_)
 
 
 class Client(Dispatcher):
+    """The client is the main instance which is between the programmer
+    and the discord API.
+
+    This client represents your bot.
+
+    Attributes
+    ----------
+    bot: :class:`~objects.user.user.User`
+        The user object of the client
+    received_message: :class:`str`
+        The default message which will be sent when no response is given.
+    http: :class:`~core.http.HTTPClient`
+        The http client used to communicate with the discord API
+
+    Parameters
+    ----------
+    token : :class:`str`
+        The token to login with your bot from the developer portal
+    received : Optional[:class:`str`]
+        The default message which will be sent when no response is given.
+        |default| :data:`None`
+    intents : Optional[:class:`~objects.app.intents.Intents`]
+        The discord intents to use |default| :data:`None`
+    throttler : Optional[:class:`~objects.app.throttling.ThrottleInterface`]
+        The cooldown handler for your client,
+        defaults to :class:`~.objects.app.throttling.DefaultThrottleHandler`
+        *(which uses the WindowSliding technique)*.
+        Custom throttlers must derive from
+        :class:`~pincer.objects.app.throttling.ThrottleInterface`.
+        |default| :class:`~pincer.objects.app.throttling.DefaultThrottleHandler`
+    """
+
     def __init__(
             self,
             token: str, *,
@@ -135,26 +167,6 @@ class Client(Dispatcher):
             throttler: ThrottleInterface = DefaultThrottleHandler,
             reconnect: bool = True,
     ):
-        """
-        The client is the main instance which is between the programmer
-            and the discord API.
-
-        This client represents your bot.
-
-        :param token:
-            The secret bot token which can be found in
-            `<https://discord.com/developers/applications/<bot_id>/bot>`_
-
-        :param received:
-            The default message which will be sent when no response is
-            given.
-
-        :param intents:
-            The discord intents for your client.
-
-        auto_reconnect :class:`bool`
-            Whether the client should automatically reconnect.
-        """
         super().__init__(
             token,
             handlers={
@@ -179,10 +191,11 @@ class Client(Dispatcher):
         ChatCommandHandler.managers[self.__module__] = self
 
     @property
-    def chat_commands(self):
-        """
+    def chat_commands(self) -> List[str]:
+        """List[:class:`str`]: List of chat commands
+
         Get a list of chat command calls which have been registered in
-        the ChatCommandHandler.
+        the :class:`~pincer.commands.ChatCommandHandler`\\.
         """
         return list(map(
             lambda cmd: cmd.app.name,
@@ -191,10 +204,9 @@ class Client(Dispatcher):
 
     @staticmethod
     def event(coroutine: Coro):
-        """
-        Register a Discord gateway event listener. This event will get
-        called when the client receives a new event update from Discord
-        which matches the event name.
+        """A decorator to register a Discord gateway event listener.
+        This event will get called when the client receives a new event
+        update from Discord which matches the event name.
 
         The event name gets pulled from your method name, and this must
         start with ``on_``.
@@ -224,29 +236,21 @@ class Client(Dispatcher):
             >>> # Class based
             >>> from pincer import Client
             >>>
-            >>> class BotClient(Client):
+            >>> class MyClient(Client):
             ...     @Client.event
             ...     async def on_ready(self):
             ...         print(f"Signed in as {self.bot}")
             >>>
             >>> if __name__ == "__main__":
-            ...     BotClient("token").run()
+            ...     MyClient("token").run()
 
-
-        :param coroutine:
-            The event its coroutine, this is the method which will be
-            invoked when the event is received. Also the name of this
-            coroutine is the name of the event and must always start
-            with ``on_``.
-
-        :raises TypeError:
-            If the method is not a coroutine.
-
-        :raises InvalidEventName:
-            If the event name does not start with ``on_``, has already
-            been registered or is not a valid event name.
+        Raises
+        ------
+        TypeError
+            If the function is not a coro
+        InvalidEventName
+            If the function name is not a valid event (on_x)
         """
-
         if not iscoroutinefunction(coroutine) \
                 and not isasyncgenfunction(coroutine):
             raise TypeError(
@@ -271,6 +275,13 @@ class Client(Dispatcher):
 
     @staticmethod
     def get_event_coro(name: str) -> List[Optional[Coro]]:
+        """get the coroutine for an event
+
+        Parameters
+        ----------
+        name : :class:`str`
+            name of the event
+        """
         calls = _events.get(name.strip().lower())
 
         return [] if not calls else list(filter(
@@ -279,8 +290,7 @@ class Client(Dispatcher):
         ))
 
     def load_cog(self, path: str, package: Optional[str] = None):
-        """
-        Load a cog from a string path, setup method in COG may
+        """Load a cog from a string path, setup method in COG may
         optionally have a first argument which will contain the client!
 
         :Example usage:
@@ -291,7 +301,7 @@ class Client(Dispatcher):
 
             >>> from pincer import Client
             >>>
-            >>> class BotClient(Client):
+            >>> class MyClient(Client):
             ...     def __init__(self, *args, **kwargs):
             ...         self.load_cog("cogs.say")
             ...         super().__init__(*args, **kwargs)
@@ -309,12 +319,13 @@ class Client(Dispatcher):
             >>>
             >>> setup = SayCommand
 
-
-        :param path:
+        Parameters
+        ----------
+        path : :class:`str`
             The import path for the cog.
-
-        :param package:
+        package : :class:`str`
             The package name for relative based imports.
+            |default| :data:`None`
         """
 
         if ChatCommandHandler.managers.get(path):
@@ -355,20 +366,32 @@ class Client(Dispatcher):
         ChatCommandHandler.managers[path] = cog_manager
 
     @staticmethod
-    def get_cogs():
-        """
-        Get a dictionary of all loaded cogs.
+    def get_cogs() -> Dict[str, Any]:
+        """Get a dictionary of all loaded cogs.
 
         The key/value pair is import path/cog class.
+
+        Returns
+        -------
+        Dict[:class:`str`, Any]
+            The dictionary of cogs
         """
         return ChatCommandHandler.managers
 
     async def unload_cog(self, path: str):
-        """
+        """|coro|
+
         Unload an already loaded cog! This removes all of its commands!
 
-        :param path:
-            The path to the cog.
+        Parameters
+        ----------
+        path : :class:`str`
+            The path to the cog
+
+        Raises
+        ------
+        CogNotFound
+            When the cog is not in that path
         """
         if not ChatCommandHandler.managers.get(path):
             raise CogNotFound(f"Cog `{path}` could not be found!")
@@ -386,16 +409,17 @@ class Client(Dispatcher):
 
     @staticmethod
     def execute_event(calls: List[Coro], *args, **kwargs):
-        """
-        Invokes an event.
+        """Invokes an event.
 
-        :param calls:
-            A list of calls (methods) to which the event is registered.
+        Parameters
+        ----------
+        call: :data:`~pincer.utils.types.Coro`
+            The call (method) to which the event is registered.
 
-        :param \\*args:
+        \\*args:
             The arguments for the event.
 
-        :param \\*kwargs:
+        \\*\\*kwargs:
             The named arguments for the event.
         """
 
@@ -410,7 +434,7 @@ class Client(Dispatcher):
             ensure_future(call(*call_args, **kwargs))
 
     def run(self):
-        """Start the event listener"""
+        """start the event listener"""
         self.start_loop()
         run(self.http.close())
 
@@ -421,28 +445,30 @@ class Client(Dispatcher):
             *args,
             **kwargs
     ) -> Tuple[Optional[Coro], List[Any], Dict[str, Any]]:
-        """
+        """|coro|
+
         Handles all middleware recursively. Stops when it has found an
         event name which starts with ``on_``.
 
-        :param payload:
-            The original payload for the event.
+        Returns a tuple where the first element is the final executor
+        (so the event) its index in ``_events``.
 
-        :param key:
-            The index of the middleware in ``_events``.
+        The second and third element are the ``*args``
+        and ``**kwargs`` for the event.
 
-        :param \\*args:
-            The arguments which will be passed to the middleware.
+        Parameters
+        ----------
+        payload : :class:`~pincer.core.dispatch.GatewayDispatch`
+            The original payload for the event
+        key : :class:`str`
+            The index of the middleware in ``_events``
 
-        :param \\*\\*kwargs:
-            The named arguments which will be passed to the middleware.
-
-        :return:
-            A tuple where the first element is the final executor
-            (so the event) its index in ``_events``.
-
-            The second and third element are the ``*args``
-            and ``**kwargs`` for the event.
+        Raises
+        ------
+        RuntimeError
+            The return type must be a tuple
+        RuntimeError
+            Middleware has not been registered
         """
         ware: MiddlewareType = _events.get(key)
         next_call, arguments, params = ware, [], {}
@@ -477,20 +503,21 @@ class Client(Dispatcher):
             *args,
             **kwargs
     ):
-        """
+        """|coro|
+
         Raises an error if no appropriate error event has been found.
 
-        :param error:
-            The error which should be raised or passed to the event.
+        Parameters
+        ----------
+        error : :class:`Exception`
+            The error that should be passed to the event
+        name : :class:`str`
+            the name of the event |default| ``on_error``
 
-        :param name:
-            The name of the event, and how it is registered by the client.
-
-        :param \\*args:
-            The arguments for the event.
-
-        :param \\*kwargs:
-            The named arguments for the event.
+        Raises
+        ------
+        error
+            if ``call := self.get_event_coro(name)`` is :data:`False`
         """
         if calls := self.get_event_coro(name):
             self.execute_event(calls, error, *args, **kwargs)
@@ -498,14 +525,16 @@ class Client(Dispatcher):
             raise error
 
     async def process_event(self, name: str, payload: GatewayDispatch):
-        """
-        Processes and invokes an event and its middleware.
+        """|coro|
 
-        :param name:
+        Processes and invokes an event and its middleware
+
+        Parameters
+        ----------
+        name : :class:`str`
             The name of the event, this is also the filename in the
             middleware directory.
-
-        :param payload:
+        payload : :class:`~pincer.core.dispatch.GatewayDispatch`
             The payload sent from the Discord gateway, this contains the
             required data for the client to know what event it is and
             what specifically happened.
@@ -522,14 +551,16 @@ class Client(Dispatcher):
             await self.execute_error(e)
 
     async def event_handler(self, _, payload: GatewayDispatch):
-        """
+        """|coro|
+
         Handles all payload events with opcode 0.
 
-        :param _:
+        Parameters
+        ----------
+        _ :
             Socket param, but this isn't required for this handler. So
             its just a filler parameter, doesn't matter what is passed.
-
-        :param payload:
+        payload : :class:`~pincer.core.dispatch.GatewayDispatch`
             The payload sent from the Discord gateway, this contains the
             required data for the client to know what event it is and
             what specifically happened.
@@ -537,14 +568,16 @@ class Client(Dispatcher):
         await self.process_event(payload.event_name.lower(), payload)
 
     async def payload_event_handler(self, _, payload: GatewayDispatch):
-        """
+        """|coro|
+
         Special event which activates on_payload event!
 
-        :param _:
+        Parameters
+        ----------
+        _ :
             Socket param, but this isn't required for this handler. So
             its just a filler parameter, doesn't matter what is passed.
-
-        :param payload:
+        payload : :class:`~pincer.core.dispatch.GatewayDispatch`
             The payload sent from the Discord gateway, this contains the
             required data for the client to know what event it is and
             what specifically happened.
@@ -609,56 +642,65 @@ class Client(Dispatcher):
         )
 
     async def get_guild(self, guild_id: int) -> Guild:
-        """
+        """|coro|
+
         Fetch a guild object by the guild identifier.
 
-        :param guild_id:
+        Parameters
+        ----------
+        guild_id : :class:`int`
             The id of the guild which should be fetched from the Discord
             gateway.
-
-        :returns:
-            A Guild object.
         """
         return await Guild.from_id(self, guild_id)
 
     async def get_user(self, _id: int) -> User:
-        """
+        """|coro|
+
         Fetch a User from its identifier
 
-        :param _id:
+        Parameters
+        ----------
+        _id : :class:`int`
             The id of the user which should be fetched from the Discord
             gateway.
 
-        :returns:
-            A User object.
+        Returns
+        -------
+        :class:`~pincer.objects.user.user.User`
+            The user object.
         """
         return await User.from_id(self, _id)
 
     async def get_role(self, guild_id: int, role_id: int) -> Role:
-        """
+        """|coro|
+
         Fetch a role object by the role identifier.
 
-        :param guild_id:
+        guild_id: :class:`int`
             The guild in which the role resides.
 
-        :param role_id:
+        role_id: :class:`int`
             The id of the guild which should be fetched from the Discord
             gateway.
 
-        :returns:
-            A Guild object.
+        Returns
+        -------
+        :class:`~pincer.objects.guild.role.Role`
+            A Role object.
         """
         return await Role.from_id(self, guild_id, role_id)
 
     async def get_channel(self, _id: int) -> Channel:
-        """
-        Fetch a Channel from its identifier.
+        """Fetch a Channel from its identifier.
 
-        :param _id:
+        _id: :class:`int`
             The id of the user which should be fetched from the Discord
             gateway.
 
-        :returns:
+        Returns
+        -------
+        :class:`~pincer.objects.guild.channel.Channel`
             A Channel object.
         """
         return await Channel.from_id(self, _id)

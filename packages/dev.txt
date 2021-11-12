@@ -1,8 +1,8 @@
-coverage==6.1.1
-flake8==3.9.2
+coverage==6.1.2
+flake8==4.0.1
 tox==3.24.4
 pytest==6.2.5
 pytest-cov==3.0.0
 mypy==0.910
-twine==3.4.2
+twine==3.6.0
 wheel==0.37.0

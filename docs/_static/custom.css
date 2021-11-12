@@ -1,0 +1,124 @@
+/*noinspection CssUnknownTarget*/
+@import '../alabaster.css';
+
+:root {
+    --grey-1: #B0B6BD;
+    --grey-2: #A0A6AE;
+    --grey-3: #8F969F;
+    --grey-4: #7F868F;
+    --grey-5: #6F767F;
+    --grey-6: #61666D;
+    --grey-7: #53565C;
+    --grey-8: #44474A;
+
+    --blue-1: #5294CB;
+    --blue-2: #397FB9;
+    --blue-3: #306998;
+    --blue-4: #265377;
+    --blue-5: #1D3C56;
+    --blue-6: #122636;
+
+    --yellow-1: #FFE690;
+    --yellow-2: #FEDD67;
+    --yellow-3: #FDD33D;
+    --yellow-4: #FBC814;
+    --yellow-5: #E0B005;
+    --yellow-6: #B68F05;
+
+    --attribute-table-title: var(--grey-6);
+    --attribute-table-entry-border: var(--grey-3);
+    --attribute-table-entry-text: var(--grey-5);
+    --attribute-table-entry-hover-border: var(--blue-1);
+    --attribute-table-entry-hover-background: var(--grey-6);
+    --attribute-table-entry-hover-text: var(--blue-1);
+    --attribute-table-badge: var(--blue-2);
+}
+
+:root[data-theme="dark"] {
+    --attribute-table-entry-text: #FF0000;
+}
+
+/* attribute tables */
+/*noinspection ALL*/
+.py-attribute-table {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin: 0 2em;
+    padding-top: 16px;
+}
+
+.py-attribute-table-column {
+    flex: 1 1 auto;
+}
+
+.py-attribute-table-column:not(:first-child) {
+    margin-top: 1em;
+}
+
+.py-attribute-table-column > span {
+    font-weight: bold;
+    color: var(--attribute-table-title);
+}
+
+main .py-attribute-table-column > ul {
+    list-style: none;
+    margin: 4px 0;
+    padding-left: 0;
+    font-size: 0.95em;
+}
+
+.py-attribute-table-entry {
+    margin: 0;
+    padding: 2px 0 2px 0.2em;
+    border-left: 2px solid var(--attribute-table-entry-border);
+    display: flex;
+    line-height: 1.2em;
+}
+
+.py-attribute-table-entry > a {
+    padding-left: 0.5em;
+    color: var(--attribute-table-entry-text);
+    flex-grow: 1;
+}
+
+.py-attribute-table-entry > a:hover {
+    color: var(--attribute-table-entry-hover-text);
+    text-decoration: none;
+}
+
+.py-attribute-table-entry:hover {
+    background-color: var(--attribute-table-entry-hover-background);
+    border-left: 2px solid var(--attribute-table-entry-hover-border);
+    text-decoration: none;
+}
+
+.py-attribute-table-badge {
+    flex-basis: 3em;
+    text-align: right;
+    font-size: 0.9em;
+    color: var(--attribute-table-badge);
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* Defaults to... */
+.default-value-section {
+    margin-bottom: 6px;
+}
+.default-value-section .default-value-label {
+    font-style: italic;
+}
+.default-value-section code {
+    color: #306998;
+}
+
+/* note styling */
+.admonition.note {
+    border-left-color: var(--blue-4);
+    color: #FFFFFF;
+}
+.admonition {
+    background-color: var(--blue-6);
+}

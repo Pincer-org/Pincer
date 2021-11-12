@@ -13,9 +13,17 @@ class _Processable(ABC):
 
     @abstractmethod
     def process(self, event_name: str, *args):
-        pass
+        """Method that is ran when an event is recieved from discord"""
 
     def matches_event(self, event_name: str, *args):
+        """
+        Parameters
+        ----------
+        event_name : str
+            Name of event.
+        *args : Any
+            Arguments to evalue check with.
+        """
         if self.event_name != event_name:
             return False
 
@@ -26,6 +34,9 @@ class _Processable(ABC):
 
 
 def _lowest_value(*args):
+    """
+    Returns lowest value from list of numbers. None is not counted as a value.
+    """
     return min(
         [
             n for n in args if n
@@ -84,7 +95,7 @@ class _Event(_Processable):
             self.event.set()
 
 
-class LoopEmptyError(Exception):
+class __LoopEmptyError(Exception):
     "Raised when the _LoopMgr is empty and cannot accept new item"
 
 
@@ -109,7 +120,7 @@ class _LoopMgr(_Processable):
     async def get_next(self):
         if len(self.events) == 0:
             if not self.can_expand:
-                raise LoopEmptyError()
+                raise __LoopEmptyError
 
             self.wait.clear()
             await self.wait.wait()
@@ -229,7 +240,7 @@ class EventMgr:
                 try:
                     while True:
                         yield await loop_mgr.get_next()
-                except LoopEmptyError:
+                except __LoopEmptyError:
                     raise TimeoutError(
                         "loop_for() timed out while waiting for an event"
                     )

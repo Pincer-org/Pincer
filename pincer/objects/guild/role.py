@@ -3,30 +3,30 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 
-from ...utils.api_object import APIObject
 from ...utils.types import MISSING
+from ...utils.api_object import APIObject
 
 if TYPE_CHECKING:
-    from ...utils import APINullable, Snowflake
+    from ...utils.types import APINullable
+    from ...utils.snowflake import Snowflake
 
 
 @dataclass
 class RoleTags(APIObject):
-    """
-    Special tags/flags which have been defined for a role.
+    """Special tags/flags which have been defined for a role.
 
-    :bot_id:
+    Attributes
+    ----------
+    bot_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The id of the bot this role belongs to.
         (the role got created by adding the bot with this id)
-
-    :integration_id:
+    integration_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The id of the integration this role belongs to.
         (the role got created by adding an integration with this id)
-
-    :premium_subscriber:
+    premium_subscriber: APINullable[:class:`bool`]
         Whether this is the guild's premium subscriber role or not.
     """
     bot_id: APINullable[Snowflake] = MISSING
@@ -39,37 +39,31 @@ class Role(APIObject):
     """
     Represents a Discord guild/server role.
 
-    :param color:
-        integer representation of hexadecimal color code
-
-    :param hoist:
-        if this role is pinned in the user listing
-
-    :param id:
-        role id
-
-    :param managed:
-        whether this role is managed by an integration
-
-    :param mentionable:
-        whether this role is mentionable
-
-    :param name:
-        role name
-
-    :param permissions:
-        permission bit set
-
-    :param position:
-        position of this role
-
-    :param tags:
-        the tags this role has
-
-    :param mention:
-        structures a string to mention the role
+    Attributes
+    ----------
+    color: :class:`int`
+        Integer representation of hexadecimal color code
+    hoist: :class:`bool`
+        If this role is pinned in the user listing
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        Role id
+    managed: :class:`bool`
+        Whether this role is managed by an integration
+    mentionable: :class:`bool`
+        Whether this role is mentionable
+    name: :class:`str`
+        Role name
+    permissions:
+        Permission bit set
+    position: :class:`int`
+        Position of this role
+    icon: APINullable[:class:`str`]
+        The role's icon
+    unicode_emoji: APINullable[:class:`str`]
+        The unicode emoji for this role
+    tags: :class:`~pincer.objects.guild.role.RoleTags`
+        The tags this role has
     """
-
     color: int
     hoist: bool
     id: Snowflake
@@ -84,10 +78,11 @@ class Role(APIObject):
     tags: APINullable[RoleTags] = MISSING
 
     @property
-    def mention(self):
+    def mention(self) -> str:
+        """:class:`str`\\: Returns the mention string for this role."""
         return f"<@&{self.id}>"
 
-    # TODO: Implement Caching
+    # TODO: Implement Caching @Arthurdw
     @classmethod
     async def from_id(cls, client, guild_id: int, role_id: int) -> Role:
         roles: list = await client.http.get(f"/guilds/{guild_id}/roles")

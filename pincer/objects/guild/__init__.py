@@ -9,17 +9,17 @@ from .channel import (
     ChannelType, Channel, TextChannel, VoiceChannel, CategoryChannel,
     NewsChannel, ChannelMention
 )
-from .features import GuildFeatures
+from .features import GuildFeature
 from .followed_channel import FollowedChannel
 from .guild import (
     PremiumTier, GuildNSFWLevel, ExplicitContentFilterLevel, MFALevel,
     VerificationLevel, DefaultMessageNotificationLevel, SystemChannelFlags,
-    GuildFeature, Guild
+    Guild, UnavailableGuild
 )
 from .invite import (
     InviteTargetType, InviteStageInstance, InviteMetadata, Invite
 )
-from .member import GuildMember, PartialGuildMember
+from .member import GuildMember, PartialGuildMember, BaseMember
 from .overwrite import Overwrite
 from .role import RoleTags, Role
 from .stage import PrivacyLevel, StageInstance
@@ -29,16 +29,17 @@ from .webhook import WebhookType, Webhook
 from .welcome_screen import WelcomeScreenChannel, WelcomeScreen
 from .widget import GuildWidget
 
+
 __all__ = (
     "AuditEntryInfo", "AuditLog", "AuditLogChange", "AuditLogEntry",
-    "AuditLogEvent", "Ban", "CategoryChannel", "Channel", "ChannelMention",
-    "ChannelType", "DefaultMessageNotificationLevel",
+    "AuditLogEvent", "Ban", "BaseMember", "CategoryChannel", "Channel",
+    "ChannelMention", "ChannelType", "DefaultMessageNotificationLevel",
     "ExplicitContentFilterLevel", "FollowedChannel", "Guild", "GuildFeature",
-    "GuildFeatures", "GuildMember", "GuildNSFWLevel", "GuildTemplate",
-    "GuildWidget", "Invite", "InviteMetadata", "InviteStageInstance",
-    "InviteTargetType", "MFALevel", "NewsChannel", "Overwrite",
-    "PartialGuildMember", "PremiumTier", "PrivacyLevel", "Role", "RoleTags",
-    "StageInstance", "SystemChannelFlags", "TextChannel", "ThreadMember",
-    "ThreadMetadata", "VerificationLevel", "VoiceChannel", "Webhook",
-    "WebhookType", "WelcomeScreen", "WelcomeScreenChannel"
+    "GuildMember", "GuildNSFWLevel", "GuildTemplate", "GuildWidget", "Invite",
+    "InviteMetadata", "InviteStageInstance", "InviteTargetType", "MFALevel",
+    "NewsChannel", "Overwrite", "PartialGuildMember", "PremiumTier",
+    "PrivacyLevel", "Role", "RoleTags", "StageInstance", "SystemChannelFlags",
+    "TextChannel", "ThreadMember", "ThreadMetadata", "UnavailableGuild",
+    "VerificationLevel", "VoiceChannel", "Webhook", "WebhookType",
+    "WelcomeScreen", "WelcomeScreenChannel"
 )

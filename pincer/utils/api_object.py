@@ -15,7 +15,7 @@ from typing import (
 
 from .conversion import convert
 from .types import MissingType, MISSING, TypeCache
-from ..exceptions import InvalidAnnotation
+from ..exceptions import InvalidArgumentAnnotation
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -74,20 +74,20 @@ class HTTPMeta(type):
         # Iterates through the meta items, these are keys whom should
         # be added to every object. But to keep typehints we have to
         # define those in the parent class. Yet this gives a conflict
-        # because the value is not defined. (thats why we remove it)
+        # because the value is not defined. (that's why we remove it)
         for key in HTTPMeta.__meta_items:
             if mapping.get("__annotations__") and \
                     (value := mapping["__annotations__"].get(key)):
                 # We want to keep the type annotations of the objects
-                # tho, so lets statically store them so we can readd
+                # tho, so lets statically store them so we can read
                 # them later.
                 HTTPMeta.__ori_annotations.update({key: value})
                 del mapping["__annotations__"][key]
 
-        # Instanciate our object
+        # Instantiate our object
         http_object = super().__new__(mcs, name, base, mapping)
 
-        # Readd all removed items
+        # Read all removed items
         if getattr(http_object, "__annotations__", None):
             for k, v in HTTPMeta.__ori_annotations.items():
                 http_object.__annotations__[k] = v
@@ -122,7 +122,7 @@ class APIObject(metaclass=HTTPMeta):
 
         Raises
         ------
-        :class:`~pincer.exceptions.InvalidAnnotation`
+        :class:`~pincer.exceptions.InvalidArgumentAnnotation`
             Exception which is raised when the type annotation has not enough
             or too many arguments for the parser to handle.
         """
@@ -136,7 +136,7 @@ class APIObject(metaclass=HTTPMeta):
             if 2 <= len(args) < 4:
                 return args
 
-            raise InvalidAnnotation(
+            raise InvalidArgumentAnnotation(
                 f"Attribute `{attr}` in `{type(self).__name__}` has too many "
                 f"or not enough arguments! (got {len(args)} expected 2-3)"
             )
@@ -157,7 +157,7 @@ class APIObject(metaclass=HTTPMeta):
         Returns
         -------
         T
-            The instanciated version of the arg_type.
+            The instantiated version of the arg_type.
         """
         factory = attr_type
 
@@ -191,7 +191,7 @@ class APIObject(metaclass=HTTPMeta):
             ))
 
             if not types:
-                raise InvalidAnnotation(
+                raise InvalidArgumentAnnotation(
                     f"Attribute `{attr}` in `{type(self).__name__}` only "
                     "consisted of missing/optional type!"
                 )

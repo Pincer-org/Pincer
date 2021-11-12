@@ -3,37 +3,104 @@
 
 from __future__ import annotations
 
+from enum import Enum, IntEnum
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from enum import IntEnum, Enum
-from typing import Any, Generator, List, Optional, Union, TYPE_CHECKING
 
-from ..._config import GatewayConfig
-from ...utils.api_object import APIObject
+from .embed import Embed
+from .reaction import Reaction
+from .sticker import StickerItem
+from .attachment import Attachment
+from .component import MessageComponent
+from .reference import MessageReference
+from ..user.user import User
+from ..guild.role import Role
+from ..app.application import Application
+from ..app.interaction_base import MessageInteraction
+from ..guild.member import GuildMember
 from ...utils.types import MISSING
+from ..._config import GatewayConfig
+from ...utils.snowflake import Snowflake
+from ...utils.api_object import APIObject
+from ...utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
-    from ..app.application import Application
-    from ..app.interaction_base import MessageInteraction
+    from typing import Any, List, Optional, Union, Generator
+
     from ..guild.channel import Channel, ChannelMention
-    from ..guild.member import GuildMember
-    from ..guild.role import Role
-    from ..message.attachment import Attachment
-    from ..message.component import MessageComponent
-    from ..message.embed import Embed
-    from ..message.reaction import Reaction
-    from ..message.reference import MessageReference
-    from ..message.sticker import StickerItem
-    from ..user import User
-    from ...utils.snowflake import Snowflake
+    from ...utils.types import APINullable
     from ...utils.timestamp import Timestamp
-    from ...utils import APINullable
+
+
+class AllowedMentionTypes(str, Enum):
+    """The allowed mentions.
+
+    Attributes
+    ----------
+    ROLES:
+        Controls role mentions
+    USERS:
+        Controls user mentions
+    EVERYONE:
+        Controls @everyone and @here mentions
+    """
+    ROLES = "roles"
+    USERS = "users"
+    EVERYONE = "everyone"
+
+
+@dataclass
+class AllowedMentions(APIObject):
+    """Represents the entities the client can mention
+
+    Attributes
+    ----------
+    parse: List[:class:`~pincer.objects.message.user_message.AllowedMentionTypes`]
+        An array of allowed mention types to parse from the content.
+    roles: List[Union[:class:`~pincer.objects.guild.role.Role`, :class:`~pincer.utils.snowflake.Snowflake`]]
+        List of ``Role`` objects or snowflakes of allowed mentions.
+    users: List[Union[:class:`~pincer.objects.user.user.User` :class:`~pincer.utils.snowflake.Snowflake`]]
+        List of ``user`` objects or snowflakes of allowed mentions.
+    reply: :class:`bool`
+        If replies should mention the author.
+        |default| :data:`True`
+    """  # noqa: E501
+
+    parse: List[AllowedMentionTypes]
+    roles: List[Union[Role, Snowflake]]
+    users: List[Union[User, Snowflake]]
+    reply: bool = True
+
+    def to_dict(self):
+        def get_str_id(obj: Union[Snowflake, User, Role]) -> str:
+            if hasattr(obj, "id"):
+                obj = obj.id
+
+            return str(obj)
+
+        return {
+            "parse": self.parse,
+            "roles": list(map(get_str_id, self.roles)),
+            "users": list(map(get_str_id, self.users)),
+            "replied_user": self.reply
+        }
 
 
 class MessageActivityType(IntEnum):
-    """
-    The activity people can perform on a rich presence activity.
+    """The activity people can perform on a rich presence activity.
 
     Such an activity could for example be a spotify listen.
+
+    Attributes
+    ----------
+    JOIN:
+        Invite to join.
+    SPECTATE:
+        Invite to spectate.
+    LISTEN:
+        Invite to listen along.
+    JOIN_REQUEST:
+        Request to join.
     """
     JOIN = 1
     SPECTATE = 2
@@ -42,37 +109,31 @@ class MessageActivityType(IntEnum):
 
 
 class MessageFlags(IntEnum):
-    """
-    Special message properties.
+    """Special message properties.
 
-    :param CROSSPOSTED:
-        the message has been published to subscribed
+    Attributes
+    ----------
+    CROSSPOSTED:
+        The message has been published to subscribed
         channels (via Channel Following)
-
-    :param IS_CROSSPOST:
-        this message originated from a message
+    IS_CROSSPOST:
+        This message originated from a message
         in another channel (via Channel Following)
-
-    :param SUPPRESS_EMBEDS:
-        do not include any embeds when serializing this message
-
-    :param SOURCE_MESSAGE_DELETED:
-        the source message for this crosspost
+    SUPPRESS_EMBEDS:
+        Do not include any embeds when serializing this message
+    SOURCE_MESSAGE_DELETED:
+        The source message for this crosspost
         has been deleted (via Channel Following)
-
-    :param URGENT:
-        this message came from the urgent message system
-
-    :param HAS_THREAD:
-        this message has an associated thread,
+    URGENT:
+        This message came from the urgent message system
+    HAS_THREAD:
+        This message has an associated thread,
         with the same id as the message
-
-    :param EPHEMERAL:
-        this message is only visible to the user
+    EPHEMERAL:
+        This message is only visible to the user
         who invoked the Interaction
-
-    :param LOADING:
-        this message is an Interaction
+    LOADING:
+        This message is an Interaction
         Response and the bot is "thinking"
     """
     CROSSPOSTED = 1 << 0
@@ -86,8 +147,54 @@ class MessageFlags(IntEnum):
 
 
 class MessageType(IntEnum):
-    """
-    Represents the type of the message.
+    """Represents the type of the message.
+
+    Attributes
+    ----------
+    DEFAULT:
+        Normal message.
+    RECIPIENT_ADD:
+        Recipient is added.
+    RECIPIENT_REMOVE:
+        Recipient is removed.
+    CALL:
+        A call is being made.
+    CHANNEL_NAME_CHANGE:
+        The group channel name is changed.
+    CHANNEL_ICON_CHANGE:
+        The group channel icon is changed.
+    CHANNEL_PINNED_MESSAGE:
+        A message is pinned.
+    GUILD_MEMBER_JOIN:
+        A member joined.
+    USER_PREMIUM_GUILD_SUBSCRIPTION:
+        A boost.
+    USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_1:
+        A boost that reached tier 1.
+    USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_2:
+        A boost that reached tier 2.
+    USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3:
+        A boost that reached tier 3.
+    CHANNEL_FOLLOW_ADD:
+        A channel is subscribed to.
+    GUILD_DISCOVERY_DISQUALIFIED:
+        The guild is disqualified from discovery,
+    GUILD_DISCOVERY_REQUALIFIED:
+        The guild is requalified for discovery.
+    GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING:
+        Warning about discovery violations.
+    GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING:
+        Final warning about discovery violations.
+    THREAD_CREATED:
+        A thread is created.
+    REPLY:
+        A message reply.
+    APPLICATION_COMMAND:
+        Slash command is used and responded to.
+    THREAD_STARTER_MESSAGE:
+        The initial message in a thread when its created off a message.
+    GUILD_INVITE_REMINDER:
+        ??
     """
     DEFAULT = 0
     RECIPIENT_ADD = 1
@@ -122,160 +229,93 @@ class MessageType(IntEnum):
 
 @dataclass
 class MessageActivity(APIObject):
-    """
-    Represents a Discord Message Activity object
+    """Represents a Discord Message Activity object
 
-    :param type:
+    Attributes
+    ----------
+    type: :class:`~pincer.objects.message.user_message.MessageActivity`
         type of message activity
-
-    :param party_id:
+    party_id: APINullable[:class:`str`]
         party_id from a Rich Presence event
     """
     type: MessageActivityType
     party_id: APINullable[str] = MISSING
 
 
-class AllowedMentionTypes(str, Enum):
-    """
-    The allowed mentions.
-
-    :param ROLES:
-        Controls role mentions
-
-    :param USERS:
-        Controls user mentions
-
-    :param EVERYONE:
-        Controls @everyone and @here mentions
-    """
-    ROLES = "roles"
-    USERS = "users"
-    EVERYONE = "everyone"
-
-
-@dataclass
-class AllowedMentions(APIObject):
-    parse: List[AllowedMentionTypes]
-    roles: List[Union[Role, Snowflake]]
-    users: List[Union[User, Snowflake]]
-    reply: bool = True
-
-    @staticmethod
-    def get_str_id(obj: Union[Snowflake, User, Role]) -> str:
-        if hasattr(obj, "id"):
-            obj = obj.id
-
-        return str(obj)
-
-    def to_dict(self):
-        return {
-            "parse": self.parse,
-            "roles": list(map(self.get_str_id, self.roles)),
-            "users": list(map(self.get_str_id, self.users)),
-            "replied_user": self.reply
-        }
-
-
 @dataclass
 class UserMessage(APIObject):
-    """
-    Represents a message sent in a channel within Discord.
+    """Represents a message sent in a channel within Discord.
 
-    :param id:
-        id of the message
-
-    :param channel_id:
-        id of the channel the message was sent in
-
-    :param guild_id:
-        id of the guild the message was sent in
-
-    :param author:
-        the author of this message (not guaranteed to be a valid user)
-
-    :param member:
-        member properties for this message's author
-
-    :param content:
-        contents of the message
-
-    :param timestamp:
-        when this message was sent
-
-    :param edited_timestamp:
-        when this message was edited (or null if never)
-
-    :param tts:
-        whether this was a TTS message
-
-    :param mention_everyone:
-        whether this message mentions everyone
-
-    :param mentions:
-        users specifically mentioned in the message
-
-    :param mention_roles:
-        roles specifically mentioned in this message
-
-    :param mention_channels:
-        channels specifically mentioned in this message
-
-    :param attachments:
-        any attached files
-
-    :param embeds:
-        any embedded content
-
-    :param reactions:
-        reactions to the message
-
-    :param nonce:
-        user for validating a message was sent
-
-    :param pinned:
-        whether this message is pinned
-
-    :param webhook_id:
-        if the message is generated by a webhook,
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        Ud of the message
+    channel_id: :class:`~pincer.utils.snowflake.Snowflake`
+        Id of the channel the message was sent in
+    author: :class:`~pincer.objects.user.user.User`
+        The author of this message (not guaranteed to be a valid user)
+    content: :class:`str`
+        Contents of the message
+    timestamp: :class:`~pincer.utils.timestamp.Timestamp`
+        When this message was sent
+    edited_timestamp: Optional[:class:`~pincer.utils.timestamp.Timestamp`]
+        When this message was edited (or null if never)
+    tts: :class:`bool`
+        Whether this was a TTS message
+    mention_everyone: :class:`bool`
+        Whether this message mentions everyone
+    mentions: List[:class:`~pincer.objects.guild.member.GuildMember`]
+        Users specifically mentioned in the message
+    mention_roles: List[:class:`~pincer.objects.guild.role.Role`]
+        Roles specifically mentioned in this message
+    attachments: List[:class:`~pincer.objects.message.attachment.Attachment`]
+        Any attached files
+    embeds: List[:class:`~pincer.objects.message.embed.Embed`]
+        Any embedded content
+    pinned: :class:`bool`
+        Whether this message is pinned
+    type: :class:`~pincer.objects.message.user_message.MessageType`
+        Type of message
+    mention_channels: APINullable[List[:class:`~pincer.objects.guild.channel.Channel`]]
+        Channels specifically mentioned in this message
+    guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        Id of the guild the message was sent in
+    member: APINullable[:class:`~pincer.objects.guild.member.PartialGuildMember`]
+        Member properties for this message's author
+    reactions: APINullable[List[:class:`~pincer.objects.message.reaction.Reaction`]]
+        Reactions to the message
+    nonce: APINullable[Union[:class:`int`, :class:`str`]]
+        User for validating a message was sent
+    webhook_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        If the message is generated by a webhook,
         this is the webhook's id
-
-    :param type:
-        type of message
-
-    :param activity:
-        sent with Rich Presence-related chat embeds
-
-    :param application:
-        sent with Rich Presence-related chat embeds
-
-    :param application_id:
-        if the message is a response to an Interaction,
+    activity: APINullable[:class:`~pincer.objects.message.user_message.MessageActivity`]
+        Sent with Rich Presence-related chat embeds
+    application: APINullable[:class:`~pincer.objects.app.application.Application`]
+        Sent with Rich Presence-related chat embeds
+    application_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        If the message is a response to an Interaction,
         this is the id of the interaction's application
-
-    :param message_reference:
-        data showing the source of a crosspost,
+    message_reference: APINullable[:class:`~pincer.objects.message.reference.MessageReference`]
+        Data showing the source of a crosspost,
         channel follow add, pin, or reply message
-
-    :param flags:
-        message flags combined as a bitfield
-
-    :param referenced_message:
-        the message associated with the message_reference
-
-    :param interaction:
-        sent if the message is a response to an Interaction
-
-    :param thread:
-        the thread that was started from this message,
+    flags: APINullable[:class:`~pincer.objects.message.user_message.MessageFlags`]
+        Message flags combined as a bitfield
+    referenced_message: APINullable[Optional[:class:`~pincer.objects.message.user_message.UserMessage`]]
+        The message associated with the message_reference
+    interaction: APINullable[:class:`~pincer.objects.app.interaction_base.MessageInteraction`]
+        Sent if the message is a response to an Interaction
+    thread: APINullable[:class:`~pincer.objects.guild.channel.Channel`]
+        The thread that was started from this message,
         includes thread member object
-
-    :param components:
-        sent if the message contains components like buttons,
+    components: APINullable[List[:class:`~pincer.objects.message.component.MessageComponent`]]
+        Sent if the message contains components like buttons,
         action rows, or other interactive components
-
-    :param sticker_items:
-        sent if the message contains stickers
+    sticker_items: APINullable[List[:class:`~pincer.objects.message.sticker.StickerItem`]]
+        Sent if the message contains stickers
     """
+    # noqa: E501
+
     id: Snowflake
     channel_id: Snowflake
     author: User
@@ -312,7 +352,8 @@ class UserMessage(APIObject):
         return self.content
 
     async def get_most_recent(self):
-        """
+        """|coro|
+
         Certain Discord methods don't return the message object data after its
         updated. This function can be run to get the most recent version of the
         message object.
@@ -328,12 +369,15 @@ class UserMessage(APIObject):
         )
 
     async def react(self, emoji: str):
-        """
+        """|coro|
+
         Create a reaction for the message. Requires the
-        ``READ_MESSAGE_HISTORY` itent. ``ADD_REACTIONS`` intent is required if
+        ``READ_MESSAGE_HISTORY` intent. ``ADD_REACTIONS`` intent is required if
         nobody else has reacted using the emoji.
 
-        :param emoji:
+        Parameters
+        ----------
+        emoji: :class:`str`
             Character for emoji. Does not need to be URL encoded.
         """
 
@@ -342,10 +386,13 @@ class UserMessage(APIObject):
         )
 
     async def unreact(self, emoji: str):
-        """
+        """|coro|
+
         Delete a reaction the current user has made for the message.
 
-        :param emoji:
+        Parameters
+        ----------
+        emoji: :class:`str`
             Character for emoji. Does not need to be URL encoded.
         """
 
@@ -354,14 +401,16 @@ class UserMessage(APIObject):
         )
 
     async def remove_user_reaction(self, emoji: str, user_id: Snowflake):
-        """
+        """|coro|
+
         Deletes another user's reaction. Requires the ``MANAGE_MESSAGES``
         intent.
 
-        :param emoji:
+        Parameters
+        ----------
+        emoji: :class:`str`
             Character for emoji. Does not need to be URL encoded.
-
-        :param user_id:
+        user_id: :class:`~pincer.utils.snowflake.Snowflake`
             User ID
         """
 
@@ -374,14 +423,20 @@ class UserMessage(APIObject):
         self, emoji: str, after: Snowflake = 0, limit=25
     ) -> Generator[User, None, None]:
         # TODO: HTTP Client will need to refactored to allow parameters using aiohttp's system.
-        """
+        """|coro|
+
         Returns the users that reacted with this emoji.
 
-        :param after:
+        Parameters
+        ----------
+        emoji: :class:`str`
+            Emoji to get users for.
+        after: :class:`~pincer.utils.snowflake.Snowflake`
             Get users after this user ID. Returns all users if not provided.
-
-        :param limit:
-            Max number of users to return (1-100). 25 if not provided.
+            |default| ``0``
+        limit: :class:`int`
+            Max number of users to return (1-100).
+            |default| ``25``
         """
 
         for user in await self._http.get(
@@ -391,7 +446,8 @@ class UserMessage(APIObject):
             yield User.from_dict(user)
 
     async def remove_all_reactions(self):
-        """
+        """|coro|
+
         Delete all reactions on a message. Requires the ``MANAGE_MESSAGES``
         intent.
         """
@@ -401,11 +457,14 @@ class UserMessage(APIObject):
         )
 
     async def remove_emoji(self, emoji):
-        """
+        """|coro|
+
         Deletes all the reactions for a given emoji on a message. Requires the
         ``MANAGE_MESSAGES`` intent.
 
-        :param emoji:
+        Parameters
+        ----------
+        emoji: :class:`str`
             Character for emoji. Does not need to be URL encoded.
         """
 
@@ -423,7 +482,8 @@ class UserMessage(APIObject):
         attachments: List[Attachment] = None,
         components: List[MessageComponent] = None
     ):
-        """
+        """|coro|
+
         Edit a previously sent message. The fields content, embeds, and flags
         can be edited by the original message author. Other users can only
         edit flags and only if they have the ``MANAGE_MESSAGES`` permission in
@@ -431,23 +491,21 @@ class UserMessage(APIObject):
         all previously set flags/bits in addition to ones that you are
         modifying.
 
-        :param content:
+        Parameters
+        ----------
+        content: :class:`str`
             The message contents (up to 2000 characters)
-
-        :param embeds:
+            |default| ``None``
+        embeds: List[:class:`~pincer.objects.message.embed.Embed`]
             Embedded rich content (up to 6000 characters)
-
-        :param flags:
+        flags: :class:`int`
             Edit the flags of a message (only ``SUPPRESS_EMBEDS`` can
             currently be set/unset)
-
-        :param allowed_mentions:
+        allowed_mentions: :class:`~pincer.objects.message.message.AllowedMentions`
             allowed mentions for the message
-
-        :param attachments:
+        attachments: List[:class:`~pincer.objects.message.attachment.Attachment`]
             attached files to keep
-
-        :param components:
+        components: List[:class:`~pincer.objects.message.component.MessageComponent`]
             the components to include with the message
         """
 
@@ -472,7 +530,8 @@ class UserMessage(APIObject):
         )
 
     async def delete(self):
-        """
+        """|coro|
+
         Delete a message. Requires the ``MANAGE_MESSAGES`` intent if the
         message was not sent by the current user.
         """

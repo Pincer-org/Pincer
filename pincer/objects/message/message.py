@@ -3,14 +3,25 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from json import dumps
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 
-from aiohttp import FormData, Payload
+from aiohttp import FormData
 
 from ..message.file import File
 from ...exceptions import CommandReturnIsEmpty
+
+if TYPE_CHECKING:
+    from typing import Dict, Union, List, Optional, Tuple
+
+    from aiohttp import Payload
+
+    from .embed import Embed
+    from .component import MessageComponent
+    from ..app.interactions import InteractionFlags
+    from ..message.user_message import AllowedMentions
+    from ...objects.app import CallbackType
 
 PILLOW_IMPORT = True
 
@@ -19,36 +30,38 @@ try:
 except (ModuleNotFoundError, ImportError):
     PILLOW_IMPORT = False
 
-if TYPE_CHECKING:
-    from typing import Dict, Tuple, Union, List, Optional
-
-    from ...objects.app import CallbackType
-    from ..message.embed import Embed
-    from ..message.user_message import AllowedMentions
-    from ..app import InteractionFlags
-    from .component import MessageComponent
-
 
 @dataclass
 class Message:
-    # TODO: Docs for tts, allowed_mentions, components, flags, and type.
+    """A discord message that will be send to discord
 
-    """
-    A discord message that will be send to discord
-
-    :param content:
+    Attributes
+    ----------
+    content: :class:`str`
         The text in the message.
-
-    :param attachments:
+        |default| ``""``
+    attachments: Optional[List[:class:`~pincer.objects.message.file.File`]]
         Attachments on the message. This is a File object. You can also attach
         a Pillow Image or string. Pillow images will be converted to PNGs. They
-        will use the naming sceme ``image%`` where % is the images index in the
+        will use the naming scheme ``image%`` where % is the images index in the
         attachments array. Strings will be read as a filepath. The name of the
         file that the string points to will be used as the name.
-
-    :param embeds:
+    tts: Optional[:class:`bool`]
+        Whether the message should be spoken to the user.
+        |default| :data:`False`
+    embeds: Optional[List[:class:`~pincer.objects.message.embed.Embed`]]
         Embed attached to the message. This is an Embed object.
+    allowed_mentions: Optional[:class:`~pincer.objects.message.message.AllowedMentions`]
+        The allowed mentions for the message.
+    components: Optional[List[:class:`~pincer.objects.message.component.MessageComponent`]]
+        The components of the message.
+    flags: Optional[:class:`~pincer.objects.app.interactions.InteractionFlags`]
+        The interaction flags for the message.
+    type: Optional[:class:`~pincer.objects.app.interaction_base.CallbackType`]
+        The type of the callback.
     """
+    # noqa: E501
+
     content: str = ''
     attachments: Optional[List[File]] = None
     tts: Optional[bool] = False
@@ -68,29 +81,26 @@ class Message:
         if not self.attachments:
             return
 
-        attch = []
+        attachment = []
 
         for count, value in enumerate(self.attachments):
             if isinstance(value, File):
-                attch.append(value)
+                attachment.append(value)
             elif PILLOW_IMPORT and isinstance(value, Image):
-                attch.append(File.from_pillow_image(
+                attachment.append(File.from_pillow_image(
                     value,
                     f"image{count}.png",
                 ))
             elif isinstance(value, str):
-                attch.append(File.from_file(value))
+                attachment.append(File.from_file(value))
             else:
                 raise ValueError(f"Attachment {count} is invalid type.")
 
-        self.attachments = attch
+        self.attachments = attachment
 
     @property
     def isempty(self) -> bool:
-        """
-        :return:
-            Returns true if a message is empty.
-        """
+        """:class:`bool`: If the message is empty."""
 
         return (
             len(self.content) < 1
@@ -125,19 +135,25 @@ class Message:
             resp.items()
         ))
 
-    # TODO: Write docs.
     def serialize(
         self, message_type: Optional[CallbackType] = None
     ) -> Tuple[str, Union[Payload, Dict]]:
         """
-        Creates the data that the discord API wants for the message object
+        Parameters
+        ----------
+        message_type : Optional[:class:`pincer.objects.app.CallbackType`]
+            Callback type of message.
 
-        :return: (content_type, data)
+        Returns
+        -------
+        Tuple[str, Union[Payload, Dict]]
+            (content_type, data)
 
-        :raises CommandReturnIsEmpty:
+        Raises
+        ------
+        :class:`pincer.exceptions.CommandReturnIsEmpty`
             Command does not have content, an embed, or attachment.
         """
-
         if self.isempty:
             raise CommandReturnIsEmpty("Cannot return empty message.")
 

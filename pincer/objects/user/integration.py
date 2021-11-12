@@ -7,30 +7,40 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Optional, TYPE_CHECKING
 
-from ...utils.api_object import APIObject
 from ...utils.types import MISSING
+from ...utils.api_object import APIObject
 
 if TYPE_CHECKING:
     from .user import User
-    from ...utils import APINullable, Snowflake, Timestamp
+    from ...utils.types import APINullable
+    from ...utils.snowflake import Snowflake
+    from ...utils.timestamp import Timestamp
 
 
 class IntegrationExpireBehavior(IntEnum):
-    """Represents a Discord Integration expire behavior"""
+    """Represents a Discord Integration expire behavior
+
+    Attributes
+    ----------
+    REMOVE_ROLE:
+        Remove role on expire.
+    KICK:
+        Kick on expire.
+    """
     REMOVE_ROLE = 0
     KICK = 1
 
 
 @dataclass
 class IntegrationAccount(APIObject):
-    """
-    Represents a Discord Integration Account object
+    """Represents a Discord Integration Account object
 
-    :param id:
-        id of the account
-
-    :param name:
-        name of the account
+    Attributes
+    ----------
+    id: :class:`str`
+        Id of the account
+    name: :class:`str`
+        Name of the account
     """
     id: str
     name: str
@@ -38,26 +48,22 @@ class IntegrationAccount(APIObject):
 
 @dataclass
 class IntegrationApplication(APIObject):
-    """
-    Represents a Discord Integration Application object
+    """Represents a Discord Integration Application object
 
-    :param id:
-        the id of the app
-
-    :param name:
-        the name of the app
-
-    :param icon:
-        the icon hash of the app
-
-    :param description:
-        the description of the app
-
-    :param summary:
-        the summary of the app
-
-    :param bot:
-        the bot associated with this application
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        The id of the app
+    name: :class:`str`
+        The name of the app
+    icon: Optional[:class:`str`]
+        The icon hash of the app
+    description: :class:`str`
+        The description of the app
+    summary: :class:`str`
+        The summary of the app
+    bot: APINullable[:class:`~pincer.objects.user.user.User`]
+        The bot associated with this application
     """
     id: Snowflake
     name: str
@@ -69,55 +75,43 @@ class IntegrationApplication(APIObject):
 
 @dataclass
 class Integration(APIObject):
-    """
-    Represents a Discord Integration object
+    """Represents a Discord Integration object
 
-    :param id:
-        integration id
-
-    :param name:
-        integration name
-
-    :param type:
-        integration type (twitch, youtube, or discord)$
-
-    :param enabled:
-        is this integration enabled
-
-    :param syncing:
-        is this integration syncing
-
-    :param role_id:
-        id that this integration uses for subscribers
-
-    :param enable_emoticons:
-        whether emoticons should be synced for this integration
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        Integration id
+    name: :class:`str`
+        Integration name
+    type: :class:`str`
+        Integration type (twitch, youtube, or discord)$
+    enabled: :class:`bool`
+        Is this integration enabled
+    account: :class:`~pincer.objects.user.integration.IntegrationAccount`
+        Integration account information
+    syncing: APINullable[:class:`bool`]
+        Is this integration syncing
+    role_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        Id that this integration uses for subscribers
+    enable_emoticons: APINullable[:class:`bool`]
+        Whether emoticons should be synced for this integration
         (twitch only currently)
-
-    :param expire_behavior:
-        the behavior of expiring subscribers
-
-    :param expire_grace_period:
-        the grace period (in days) before expiring subscribers
-
-    :param user:
-        user for this integration
-
-    :param account:
-        integration account information
-
-    :param synced_at:
-        when this integration was last synced
-
-    :param subscriber_count:
-        how many subscribers this integration has
-
-    :param revoked:
-        has this integration been revoked
-
-    :param application:
+    expire_behavior: APINullable[:class:`~pincer.objects.user.integration.IntegrationExpireBehavior`]
+        The behavior of expiring subscribers
+    expire_grace_period: APINullable[:class:`int`]
+        The grace period (in days) before expiring subscribers
+    user: APINullable[:class:`~pincer.objects.user.user.User`]
+        User for this integration
+    synced_at: APINullable[:class:`~pincer.utils.timestamp.Timestamp`]
+        When this integration was last synced
+    subscriber_count: APINullable[:class:`int`]
+        How many subscribers this integration has
+    revoked: APINullable[:class:`bool`]
+        Has this integration been revoked
+    application: APINullable[:class:`~pincer.objects.user.integration.IntegrationApplication`]
         The bot/OAuth2 application for discord integrations
     """
+    # noqa: E501
 
     id: Snowflake
     name: str

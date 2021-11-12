@@ -3,44 +3,41 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from typing import Optional, TYPE_CHECKING
 
-from ...utils.api_object import APIObject
 from ...utils.types import MISSING
+from ...utils.api_object import APIObject
 
 if TYPE_CHECKING:
-    from ...utils import APINullable, Snowflake
+    from typing import Optional
+
+    from ...utils.types import APINullable
+    from ...utils.snowflake import Snowflake
 
 
 @dataclass
 class Attachment(APIObject):
-    """
-    Represents a Discord Attachment object
+    """Represents a Discord Attachment object
 
-    :param id:
-        attachment id
-
-    :param filename:
-        name of file attached
-
-    :param content_type:
-        the attachment's data type
-
-    :param size:
-        size of file in bytes
-
-    :param url:
-        source url of file
-
-    :param proxy_url:
-        a proxied url of file
-
-    :param height:
-        height of file (if image)
-
-    :param width:
-        width of file (if image)
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        Attachment id
+    filename: :class:`str`
+        Name of file attached
+    content_type: :class:`int`
+        The attachment's data type
+    size: :class:`str`
+        Size of file in bytes
+    url: :class:`str`
+        Source url of file
+    proxy_url: APINullable[:class:`str`]
+        A proxied url of file
+    height: APINullable[Optional[:class:`int`]]
+        Height of file (if image)
+    width: APINullable[Optional[:class:`int`]]
+        Width of file (if image)
     """
     id: Snowflake
     filename: str

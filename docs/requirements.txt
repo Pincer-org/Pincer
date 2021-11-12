@@ -1,2 +1,3 @@
-sphinx_rtd_theme
-sphinx-rtd-dark-mode
+furo
+sphinxcontrib-trio
+sphinx-design

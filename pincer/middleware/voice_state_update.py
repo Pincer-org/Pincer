@@ -5,23 +5,38 @@
 sent when a user's voice state changes in a subscribed voice channel
 (mute, volume, etc.)
 """
+from __future__ import annotations
 
-from ..core.dispatch import GatewayDispatch
-from ..objects.user import VoiceState
+from typing import TYPE_CHECKING
+
+from ..objects.user.voice_state import VoiceState
 from ..utils.conversion import construct_client_dict
 
+if TYPE_CHECKING:
+    from typing import List, Tuple
 
-async def voice_state_update_middleware(self, payload: GatewayDispatch):
-    """
+    from ..core.dispatch import GatewayDispatch
+
+
+async def voice_state_update_middleware(
+    self,
+    payload: GatewayDispatch
+) -> Tuple[str, List[VoiceState]]:
+    """|coro|
     Middleware for ``on_voice_state_update`` event.
 
-    :param self:
-        The current client.
+    Parameters
+    ----------
+    payload : :class:`GatewayDispatch`
+        The data received from the voice state update event.
 
-    :param payload:
-        The data received from the ready event.
-
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.user.voice_state.VoiceState`]]
+        ``on_voice_state_update`` and a ``VoiceState``
     """
+    # noqa: E501
+
     return "on_voice_state_update", [
         VoiceState.from_dict(construct_client_dict(self, payload.data))
     ]

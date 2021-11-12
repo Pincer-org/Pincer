@@ -7,13 +7,48 @@ from enum import IntEnum
 
 
 class Intents(IntEnum):
-    """
-    Discord client intents.
+    """Discord client intents.
 
     These give your client more permissions.
 
-    NOTE: The given Intents must also be enabled for your client on
-    the discord dashboard.
+    .. note::
+        The given Intents must also be enabled for your client on
+        the discord dashboard.
+
+    Attributes
+    ----------
+    NONE:
+        No intents.
+    GUILDS:
+        Guilds intent.
+    GUILD_MEMBERS:
+        Members intent.
+    GUILD_BANS:
+        Bans intent.
+    GUILD_EMOJIS_AND_STICKERS:
+        Emoji and Sticker intent.
+    GUILD_INTEGRATIONS:
+        Integrations intent.
+    GUILD_WEBHOOKS:
+        Webhooks intent.
+    GUILD_INVITES:
+        Invites intent.
+    GUILD_VOICE_STATES:
+        Voice states intent.
+    GUILD_PRESENCES:
+        Presences intent.
+    GUILD_MESSAGES:
+        Message intent.
+    GUILD_MESSAGE_REACTIONS:
+        Reactions to messages intent.
+    GUILD_MESSAGE_TYPING:
+        Typing to messages intent.
+    DIRECT_MESSAGES:
+        DM messages intent.
+    DIRECT_MESSAGE_REACTIONS:
+        DM reaction to messages intent.
+    DIRECT_MESSAGE_TYPING:
+        DM typing to messages intent.
     """
     NONE = 0
     GUILDS = 1 << 0
@@ -33,8 +68,11 @@ class Intents(IntEnum):
     DIRECT_MESSAGE_TYPING = 1 << 14
 
     @staticmethod
-    def all():
-        """Consists of all intents"""
+    def all() -> int:
+        """
+        :class:`~pincer.objects.app.intents.Intents`:
+        Method of all intents
+        """
         res = 0
 
         for intent in list(map(lambda itm: itm.value, Intents)):

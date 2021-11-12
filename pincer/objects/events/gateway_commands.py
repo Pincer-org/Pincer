@@ -1,44 +1,45 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from dataclasses import dataclass
-from enum import auto, Enum
-from typing import List, Optional, Tuple, Union, Dict
+from __future__ import annotations
 
-from .presence import Activity
-from ..app.intents import Intents
+from enum import auto, Enum
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
+
 from ...utils.api_object import APIObject
-from ...utils.snowflake import Snowflake
 from ...utils.types import APINullable, MISSING
+
+if TYPE_CHECKING:
+    from typing import Any, Dict, List, Optional, Tuple, Union
+
+    from .presence import Activity
+    from ..app.intents import Intents
+    from ...utils.snowflake import Snowflake
 
 
 @dataclass
 class Identify(APIObject):
-    """
-    Used to trigger the initial handshake with the gateway.
+    """Used to trigger the initial handshake with the gateway.
 
-    :param token:
-        authentication token
-
-    :param properties:
-        connection properties
-
-    :param compress:
-        whether this connection supports compression of packets
-
-    :param large_threshold:
-        value between 50 and 250, total number
+    Attributes
+    ----------
+    token: :class:`str`
+        Authentication token
+    properties: Dict[:class:`str`, :class:`str`]
+        Connection properties
+    intents: :class:`~pincer.objects.app.intents.Intents`
+        The Gateway Intents you wish to receive
+    compress: APINullable[:class:`bool`]
+        Whether this connection supports compression of packets
+    large_threshold: APINullable[:class:`int`]
+        Value between 50 and 250, total number
         of members where the gateway will stop sending offline
         members in the guild member list
-
-    :param shard:
-        used for Guild Sharding
-
-    :param presence:
-        presence structure for initial presence information
-
-    :param intents:
-        the Gateway Intents you wish to receive
+    shard: APINullable[Tuple[:class:`int`, :class:`int`]]
+        Used for Guild Sharding
+    presence: APINullable[Any]
+        Presence structure for initial presence information
     """
     token: str
     properties: Dict[str, str]
@@ -47,22 +48,21 @@ class Identify(APIObject):
     compress: APINullable[bool] = MISSING
     large_threshold: APINullable[int] = MISSING
     shard: APINullable[Tuple[int, int]] = MISSING
-    presence: APINullable[...] = MISSING  # FIXME
+    presence: APINullable[Any] = MISSING  # FIXME
 
 
 @dataclass
 class Resume(APIObject):
-    """
-    Used to replay missed events when a disconnected client resumes.
+    """Used to replay missed events when a disconnected client resumes.
 
-    :param token:
-        session token
-
-    :param session_id:
-        session id
-
-    :param seq:
-        last sequence number received
+    Attributes
+    ----------
+    token: :class:`str`
+        Session token
+    session_id: :class:`str`
+        Session id
+    seq: :class:`int`
+        Last sequence number received
     """
     token: str
     session_id: str
@@ -71,28 +71,27 @@ class Resume(APIObject):
 
 @dataclass
 class RequestGuildMembers(APIObject):
-    """
-    Used to request all members for a guild or a list of guilds.
+    """Used to request all members for a guild or a list of guilds.
 
-    :param guild_id:
+    guild_id:
         id of the guild to get members for
 
-    :param query:
+    query:
         string that username starts with, or an empty string
         to return all members
 
-    :param limit:
+    limit:
         maximum number of members to send matching the `query`;
         a limit of `0` can be used with an empty string `query`
         to return all members
 
-    :param presences:
+    presences:
         used to specify if we want the presences of the matches members
 
-    :param user_ids:
+    user_ids:
         used to specify which users you wish to fetch
 
-    :param nonce:
+    nonce:
         nonce to identify the Guild Members Chunk response
     """
     guild_id: Snowflake
@@ -106,21 +105,20 @@ class RequestGuildMembers(APIObject):
 
 @dataclass
 class UpdateVoiceState(APIObject):
-    """
-    Sent when a client wants to join, move,
+    """Sent when a client wants to join, move,
     or disconnect from a voice channel.
 
-    :param guild_id:
+    guild_id:
         id of the guild
 
-    :param channel_id:
+    channel_id:
         id of the voice channel client
         wants to join (null if disconnecting)
 
-    :param self_mute:
+    self_mute:
         is the client muted
 
-    :param self_deaf:
+    self_deaf:
         is the client deafened
     """
     guild_id: Snowflake
@@ -131,20 +129,19 @@ class UpdateVoiceState(APIObject):
 
 
 class StatusType(Enum):
-    """
-    :param online:
+    """online:
         Online
 
-    :param dnd:
+    dnd:
         Do Not Disturb
 
-    :param idle:
+    idle:
         AFK
 
-    :param invisible:
+    invisible:
         Invisible and shown as offline
 
-    :param offline:
+    offline:
         Offline
     """
     online = auto()
@@ -156,20 +153,19 @@ class StatusType(Enum):
 
 @dataclass
 class UpdatePresence(APIObject):
-    """
-    Sent by the client to indicate a presence or status update.
+    """Sent by the client to indicate a presence or status update.
 
-    :param since:
+    since:
         unix time (in milliseconds) of when the client went idle,
         or null if the client is not idle
 
-    :param activities:
+    activities:
         the user's activities
 
-    :param status:
+    status:
         the user's new status
 
-    :param afk:
+    afk:
         whether or not the client is afk
     """
     activities: List[Activity]

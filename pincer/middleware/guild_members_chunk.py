@@ -7,23 +7,25 @@ and ``chunk_count`` to calculate how many chunks are left for your request.
 """
 
 from ..core.dispatch import GatewayDispatch
+from ..objects.events.guild import GuildMembersChunkEvent
 from ..utils import Coro
 from ..utils.conversion import construct_client_dict
-from ..objects.events.guild import GuildMembersChunkEvent
 
 
 async def guild_member_chunk_middleware(self, payload: GatewayDispatch):
     """|coro|
-    
+
     Middleware for ``on_guild_member_chunk`` event.
 
     Parameters
     ----------
-    self : :class:`Client`
-        The current client/bot.
-
     payload : :class:`GatewayDispatch`
         The data received from the guild member chunk event.
+
+    Returns
+    -------
+    Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildMemberChunkEvent`]]
+        ``on_guild_member_chunk`` and a ``GuildMemberChunkEvent``
     """
 
     return (

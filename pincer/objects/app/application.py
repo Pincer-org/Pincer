@@ -3,80 +3,67 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from typing import Optional, List, TYPE_CHECKING
 
-from ..user import User
-from ...utils.api_object import APIObject
 from ...utils.types import MISSING
+from ...utils.api_object import APIObject
 
 if TYPE_CHECKING:
-    from ...utils import APINullable, Snowflake
+    from typing import List, Optional
+
+    from ..user.user import User
+    from ...utils.types import APINullable
+    from ...utils.snowflake import Snowflake
 
 
 @dataclass
 class Application(APIObject):
-    """
-    Represents a Discord application. (eg Bot, OAuth)
+    """Represents a Discord application. (eg Bot, OAuth)
 
-    :param bot_public:
+    Attributes
+    ----------
+    bot_public: :class:`bool`
         when false only app owner can join the app's bot to guilds
-
-    :param bot_require_code_grant:
+    bot_require_code_grant: :class:`bool`
         when true the app's bot will only join upon completion of the
         full oauth2 code grant flow
-
-    :param description:
+    description: :class:`str`
         the description of the app
-
-    :param id:
+    id: :class:`~pincer.utils.snowflake.Snowflake`
         the id of the app
-
-    :param icon:
+    icon: Optional[:class:`str`]
         the icon hash of the app
-
-    :param name:
+    name: :class:`str`
         the name of the app
-
-    :param privacy_policy_url:
+    privacy_policy_url: APINullable[:class:`str`]
         the url of the app's privacy policy
-
-    :param summary:
+    summary: :class:`str`
         if this application is a game sold on Discord, this field will be the
         summary field for the store page of its primary sku
-
-    :param verify_key:
+    verify_key: :class:`str`
         the hex encoded key for verification in interactions and the GameSDK's
         GetTicket
-
-    :param cover_image:
+    cover_image: APINullable[:class:`str`]
         the application's default rich presence invite cover image hash
-
-    :param flags:
+    flags: APINullable[:class:`int`]
         the application's public flags
-
-    :param guild_id:
+    guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         if this application is a game sold on Discord, this field will be the
         guild to which it has been linked
-
-    :param owner:
+    owner: APINullable[:class:`~pincer.objects.user.user.User`]
         partial user object containing info on the owner of the application
-
-    :param primary_sku_id:
+    primary_sku_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         if this application is a game sold on Discord, this field will be the
         id of the "Game SKU" that is created, if exists
-
-    :param rpc_origins:
+    rpc_origins: APINullable[List[:class:`str`]]
         an array of rpc origin urls, if rpc is enabled
-
-    :param slug:
+    slug: APINullable[:class:`str`]
         if this application is a game sold on Discord, this field will be the
         URL slug that links to the store page
-
-    :param terms_of_service_url:
+    terms_of_service_url: APINullable[:class:`str`]
         the url of the app's terms of service
     """
-
     bot_public: bool
     bot_require_code_grant: bool
     description: str

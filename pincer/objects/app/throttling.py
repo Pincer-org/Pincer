@@ -2,8 +2,8 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
+from abc import ABC, abstractmethod
 
 from .throttle_scope import ThrottleScope
 from ...exceptions import CommandCooldownError
@@ -11,29 +11,25 @@ from ...utils.slidingwindow import SlidingWindow
 
 if TYPE_CHECKING:
     from typing import Dict, Optional
+
+    from ...utils.types import Coro
     from ..message.context import MessageContext
-    from ...utils import Coro
 
 
 class ThrottleInterface(ABC):
+    """An ABC for throttling."""
     throttle: Dict[Coro, Dict[Optional[str], SlidingWindow]] = {}
 
     @staticmethod
     @abstractmethod
     def handle(ctx: MessageContext, **kwargs):
-        """
-        Handles a context. This method is executed before the command is.
-
-        :param ctx:
-            The context of the command.
-
-        :param kwargs:
-            The extra kwargs passed for the cooldown.
-        """
         raise NotImplementedError
 
 
 class DefaultThrottleHandler(ThrottleInterface, ABC):
+    """The default throttlehandler based off the
+    :class:`~pincer.objects.app.throttling.ThrottleInterface` ABC
+    """
     __throttle_scopes = {
         ThrottleScope.GLOBAL: None,
         ThrottleScope.GUILD: "guild_id",
@@ -43,9 +39,18 @@ class DefaultThrottleHandler(ThrottleInterface, ABC):
 
     @staticmethod
     def get_key_from_scope(ctx: MessageContext) -> Optional[int]:
-        """
-        Retrieve the the appropriate key from the context through the
+        """Retrieve the the appropriate key from the context through the
         throttle scope.
+
+        Parameters
+        ----------
+        ctx : :class:`~pincer.objects.message.context.MessageContext`
+            The context to retrieve with
+
+        Returns
+        -------
+        Optional[:class:`int`]
+            The throttlescope enum
         """
         scope = DefaultThrottleHandler.__throttle_scopes[
             ctx.command.cooldown_scope]

@@ -6,28 +6,58 @@ from __future__ import annotations
 from asyncio import sleep, ensure_future
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Dict, Optional, List, TYPE_CHECKING, Union, overload
+from typing import overload, TYPE_CHECKING
 
-from ..message.embed import Embed
 from ..message.user_message import UserMessage
+from ...utils.types import MISSING
 from ..._config import GatewayConfig
 from ...utils.api_object import APIObject
-from ...utils.conversion import construct_client_dict
 from ...utils.convert_message import convert_message
-from ...utils.types import MISSING
+from ...utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
-    from ..message import Message
-    from ..guild.overwrite import Overwrite
-    from ..guild.thread import ThreadMetadata
-    from ..guild.member import GuildMember
-    from ..user import User
-    from ... import Client
-    from ...utils import APINullable, Snowflake, Timestamp
+    from typing import Dict, List, Optional, Union
+
+    from .member import GuildMember
+    from .overwrite import Overwrite
+    from .thread import ThreadMetadata
+    from ..message.message import Message
+    from ..message.embed import Embed
+    from ..user.user import User
+    from ...client import Client
+    from ...utils.timestamp import Timestamp
+    from ...utils.types import APINullable
+    from ...utils.snowflake import Snowflake
 
 
 class ChannelType(IntEnum):
-    """Represents a channel its type."""
+    """Represents a channel its type.
+
+    Attributes
+    ----------
+    GUILD_TEXT:
+        A text channel.
+    DM:
+        A DM channel.
+    GUILD_VOICE:
+        A voice channel.
+    GROUP_DM:
+        A group DM channel.
+    GUILD_CATEGORY:
+        A category channel.
+    GUILD_NEWS:
+        A news channel.
+    GUILD_STORE:
+        A store channel.
+    GUILD_NEWS_THREAD:
+        A news thread.
+    GUILD_PUBLIC_THREAD:
+        A public thread.
+    GUILD_PRIVATE_THREAD:
+        A private thread.
+    GUILD_STAGE_VOICE:
+        A stage channel.
+    """
     GUILD_TEXT = 0
     DM = 1
     GUILD_VOICE = 2
@@ -45,103 +75,77 @@ class ChannelType(IntEnum):
 
 
 @dataclass
-class Channel(APIObject):
-    """
-    Represents a Discord Channel Mention object
+class Channel(APIObject):  # noqa E501
+    """Represents a Discord Channel Mention object
 
-    :param id:
-        the id of this channel
-
-    :param type:
-        the type of channel
-
-    :param application_id:
-        application id of the group DM creator if it is bot-created
-
-    :param bitrate:
-        the bitrate (in bits) of the voice channel
-
-    :param default_auto_archive_duration:
-        default duration for newly created threads, in minutes, to
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        The id of this channel
+    type: :class:`~pincer.objects.guild.channel.ChannelType`
+        The type of channel
+    application_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        Application id of the group DM creator if it is bot-created
+    bitrate: APINullable[:class:`int`]
+        The bitrate (in bits) of the voice channel
+    default_auto_archive_duration: APINullable[:class:`int`]
+        Default duration for newly created threads, in minutes, to
         automatically archive the thread after recent activity, can be set to:
         60, 1440, 4320, 10080
-
-    :param guild_id:
-        the id of the guild (may be missing for some channel objects received
+    guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        The id of the guild (may be missing for some channel objects received
         over gateway guild dispatches)
-
-    :param icon:
-        icon hash
-
-    :param last_message_id:
-        the id of the last message sent in this channel (may not point to an
+    icon: APINullable[Optional[:class:`str`]]
+        Icon hash
+    last_message_id: APINullable[Optional[:class:`~pincer.utils.snowflake.Snowflake`]]
+        The id of the last message sent in this channel (may not point to an
         existing or valid message)
-
-    :param last_pin_timestamp:
-        when the last pinned message was pinned. This may be null in events
+    last_pin_timestamp: APINullable[Optional[:class:`~pincer.utils.timestamp.Timestamp`]]
+        When the last pinned message was pinned. This may be null in events
         such as GUILD_CREATE when a message is not pinned.
-
-    :param member:
-        thread member object for the current user, if they have joined the
+    member: APINullable[:class:`~pincer.objects.guild.member.GuildMember`]
+        Thread member object for the current user, if they have joined the
         thread, only included on certain API endpoints
-
-    :param member_count:
-        an approximate count of users in a thread, stops counting at 50
-
-    :param message_count:
-        an approximate count of messages in a thread, stops counting at 50
-
-    :param name:
-        the name of the channel (1-100 characters)
-
-    :param nsfw:
-        whether the channel is nsfw
-
-    :param owner_id:
-        id of the creator of the group DM or thread
-
-    :param parent_id:
-        for guild channels: id of the parent category for a channel (each
+    member_count: APINullable[:class:`int`]
+        An approximate count of users in a thread, stops counting at 50
+    message_count: :class:`int`
+        An approximate count of messages in a thread, stops counting at 50
+    name: APINullable[:class:`str`]
+        The name of the channel (1-100 characters)
+    nsfw: APINullable[:class:`bool`]
+        Whether the channel is nsfw
+    owner_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        Id of the creator of the group DM or thread
+    parent_id: APINullable[Optional[:class:`~pincer.utils.snowflake.Snowflake`]]
+        For guild channels: id of the parent category for a channel (each
         parent category can contain up to 50 channels), for threads: id of the
         text channel this thread was created
-
-    :param permissions:
-        computed permissions for the invoking user in the channel, including
+    permissions: APINullable[:class:`str`]
+        Computed permissions for the invoking user in the channel, including
         overwrites, only included when part of the resolved data received on a
         slash command interaction
-
-    :param permission_overwrites:
-        explicit permission overwrites for members and roles
-
-    :param position:
-        sorting position of the channel
-
-    :param rate_limit_per_user:
-        amount of seconds a user has to wait before sending another message
+    permission_overwrites: APINullable[List[:class:`~pincer.objects.guild.overwrite.Overwrite`]]
+        Explicit permission overwrites for members and roles
+    position: APINullable[:class:`int`]
+        Sorting position of the channel
+    rate_limit_per_user: APINullable[:class:`int`]
+        Amount of seconds a user has to wait before sending another message
         (0-21600); bots, as well as users with the permission manage_messages
         or manage_channel, are unaffected
-
-    :param recipients:
-        the recipients of the DM
-
-    :param rtc_region:
-        voice region id for the voice channel, automatic when set to null
-
-    :param thread_metadata:
-        thread-specific fields not needed by other channels
-
-    :param topic:
-        the channel topic (0-1024 characters)
-
-    :param user_limit:
-        the user limit of the voice channel
-
-    :param video_quality_mode:
-        the camera video quality mode of the voice channel, 1 when not present
-
-    :param mention:
-        structures a string to mention the channel
+    recipients: APINullable[List[:class:`~pincer.objects.user.user.User`]]
+        The recipients of the DM
+    rtc_region: APINullable[Optional[:class:`str`]]
+        Voice region id for the voice channel, automatic when set to null
+    thread_metadata: APINullable[:class:`~pincer.objects.guild.thread.ThreadMetadata`]
+        Thread-specific fields not needed by other channels
+    topic: APINullable[Optional[:class:`str`]]
+        The channel topic (0-1024 characters)
+    user_limit: APINullable[:class:`int`]
+        The user limit of the voice channel
+    video_quality_mode: APINullable[:class:`int`]
+        The camera video quality mode of the voice channel, 1 when not present
     """
+    # noqa: E501
     id: Snowflake
     type: ChannelType
 
@@ -210,11 +214,21 @@ class Channel(APIObject):
             reason: Optional[str] = None,
             **kwargs
     ):
-        # TODO: Write docs
+        """Edit a channel with the given keyword arguments.
 
+        Parameters
+        ----------
+        \\*\\*kwargs :
+            The keyword arguments to edit the channel with.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.channel.Channel`
+            The updated channel object.
+        """
         headers = {}
 
-        if reason:
+        if reason is not None:
             headers["X-Audit-Log-Reason"] = str(reason)
 
         data = await self._http.patch(
@@ -250,7 +264,7 @@ class Channel(APIObject):
 
         headers = {}
 
-        if reason:
+        if reason is not None:
             headers["X-Audit-Log-Reason"] = str(reason)
 
         await self._http.delete(
@@ -316,6 +330,8 @@ class Channel(APIObject):
 
 
 class TextChannel(Channel):
+    """A subclass of ``Channel`` for text channels with all the same attributes."""
+
     @overload
     async def edit(
             self, name: str = None, type: ChannelType = None,
@@ -328,15 +344,24 @@ class TextChannel(Channel):
         ...
 
     async def edit(self, **kwargs):
-        return await super().edit(**kwargs)
+        """Edit a text channel with the given keyword arguments.
 
-    @property
-    def mention(self) -> str:
-        """Return a channel mention."""
-        return f"<#{self.id}>"
+        Parameters
+        ----------
+        \\*\\*kwargs :
+            The keyword arguments to edit the channel with.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.channel.Channel`
+            The updated channel object.
+        """
+        return await super().edit(**kwargs)
 
 
 class VoiceChannel(Channel):
+    """A subclass of ``Channel`` for voice channels with all the same attributes."""
+
     @overload
     async def edit(
             self, name: str = None, position: int = None, bitrate: int = None,
@@ -347,14 +372,31 @@ class VoiceChannel(Channel):
         ...
 
     async def edit(self, **kwargs):
+        """Edit a text channel with the given keyword arguments.
+
+        Parameters
+        ----------
+        \\*\\*kwargs :
+            The keyword arguments to edit the channel with.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.channel.Channel`
+            The updated channel object.
+        """
         return await super().edit(**kwargs)
 
 
 class CategoryChannel(Channel):
+    """A subclass of ``Channel`` for categories channels
+    with all the same attributes.
+    """
     pass
 
 
 class NewsChannel(Channel):
+    """A subclass of ``Channel`` for news channels with all the same attributes."""
+
     @overload
     async def edit(
             self, name: str = None, type: ChannelType = None,
@@ -366,25 +408,35 @@ class NewsChannel(Channel):
         ...
 
     async def edit(self, **kwargs):
+        """Edit a text channel with the given keyword arguments.
+
+        Parameters
+        ----------
+        \\*\\*kwargs :
+            The keyword arguments to edit the channel with.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.channel.Channel`
+            The updated channel object.
+        """
         return await super().edit(**kwargs)
 
 
 @dataclass
 class ChannelMention(APIObject):
-    """
-    Represents a Discord Channel Mention object
+    """Represents a Discord Channel Mention object
 
-    :param id:
-        id of the channel
-
-    :param guild_id:
-        id of the guild containing the channel
-
-    :param type:
-        the type of channel
-
-    :param name:
-        the name of the channel
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        Id of the channel
+    guild_id: :class:`~pincer.utils.snowflake.Snowflake`
+        Id of the guild containing the channel
+    type: :class:`~pincer.objects.guild.channel.ChannelType`
+        The type of channel
+    name: :class:`str`
+        The name of the channel
     """
     id: Snowflake
     guild_id: Snowflake

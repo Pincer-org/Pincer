@@ -3,17 +3,19 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from datetime import datetime
 from re import match
-from typing import Any, Callable, Dict, Iterable, Union, Optional, TYPE_CHECKING
+from datetime import datetime
+from typing import TYPE_CHECKING
+from dataclasses import dataclass, field
 
-from ...exceptions import InvalidUrlError, EmbedFieldError
-from ...utils.api_object import APIObject
 from ...utils.types import MISSING
+from ...utils.api_object import APIObject
+from ...exceptions import InvalidUrlError, EmbedFieldError
 
 if TYPE_CHECKING:
-    from ...utils import APINullable
+    from typing import Any, Callable, Dict, Iterable, Union, Optional
+
+    from ...utils.types import APINullable
 
 
 def _field_size(_field: str) -> int:
@@ -51,10 +53,11 @@ def _is_valid_url(url: str) -> bool:
 
 
 def _check_if_valid_url(url: str):
-    """
-    Checks if the provided url is valid.
+    """Checks if the provided url is valid.
 
-    :raises InvalidUrlError:
+    Raises
+    ------
+    :class:`~pincer.exceptions.InvalidUrlError`
         if the url didn't match the url regex.
         (which means that it was malformed or didn't match the http/attachment
         protocol).
@@ -67,19 +70,17 @@ def _check_if_valid_url(url: str):
 
 @dataclass
 class EmbedAuthor:
-    """
-    Representation of the Embed Author class
+    """Representation of the Embed Author class
 
-    :param name:
+    Attributes
+    ----------
+    name: APINullable[:class:`str`]
         Name of the author
-
-    :param url:
+    url: APINullable[:class:`str`]
         Url of the author
-
-    :param icon_url:
+    icon_url: APINullable[:class:`str`]
         Url of the author icon
-
-    :param proxy_icon_url:
+    proxy_icon_url: APINullable[:class:`str`]
         A proxied url of the author icon
     """
     icon_url: APINullable[str] = MISSING
@@ -87,16 +88,7 @@ class EmbedAuthor:
     proxy_icon_url: APINullable[str] = MISSING
     url: APINullable[str] = MISSING
 
-    def __post_init__(self):
-        """
-        :raises EmbedFieldError:
-            Name is longer than 256 characters.
-
-        :raises InvalidUrlError:
-            if the url didn't match the url regex.
-            (which means that it was malformed or didn't match the
-            http/attachment protocol).
-        """
+    def __post_init__(self):  # stop documenting special methods
         if _field_size(self.name) > 256:
             raise EmbedFieldError.from_desc("Author name", 256, len(self.name))
 
@@ -105,46 +97,38 @@ class EmbedAuthor:
 
 @dataclass
 class EmbedImage:
-    """
-    Representation of the Embed Image class
+    """Representation of the Embed Image class
 
-    :param url:
+    Attributes
+    ----------
+    url: APINullable[:class:`str`]
         Source url of the image
-
-    :param proxy_url:
+    proxy_url: APINullable[:class:`str`]
         A proxied url of the image
-
-    :param height:
+    height: APINullable[:class:`int`]
         Height of the image
-
-    :param width:
+    width: APINullable[:class:`int`]
         Width of the image
     """
 
-    height: APINullable[int] = MISSING
-    proxy_url: APINullable[str] = MISSING
     url: APINullable[str] = MISSING
+    proxy_url: APINullable[str] = MISSING
+    height: APINullable[int] = MISSING
     width: APINullable[int] = MISSING
 
     def __post_init__(self):
-        """
-        :raises InvalidUrlError:
-            if the url didn't match the url regex.
-            (which means that it was malformed or didn't match the
-            http/attachment protocol).
-        """
         _check_if_valid_url(self.url)
 
 
 @dataclass
 class EmbedProvider:
-    """
-    Representation of the Provider class
+    """Representation of the Provider class
 
-    :param name:
+    Attributes
+    ----------
+    name: APINullable[:class:`str`]
         Name of the provider
-
-    :param url:
+    url: APINullable[:class:`str`]
         Url of the provider
     """
     name: APINullable[str] = MISSING
@@ -153,53 +137,42 @@ class EmbedProvider:
 
 @dataclass
 class EmbedThumbnail:
-    """
-    Representation of the Embed Thumbnail class
+    """Representation of the Embed Thumbnail class
 
-    :param url:
+    Attributes
+    ----------
+    url: APINullable[:class:`str`]
         Source url of the thumbnail
-
-    :param proxy_url:
+    proxy_url: APINullable[:class:`str`]
         A proxied url of the thumbnail
-
-    :param height:
+    height: APINullable[:class:`int`]
         Height of the thumbnail
-
-    :param width:
+    width: APINullable[:class:`int`]
         Width of the thumbnail
-
     """
 
-    height: APINullable[int] = MISSING
-    proxy_url: APINullable[str] = MISSING
     url: APINullable[str] = MISSING
+    proxy_url: APINullable[str] = MISSING
+    height: APINullable[int] = MISSING
     width: APINullable[int] = MISSING
 
     def __post_init__(self):
-        """
-        :raises InvalidUrlError:
-            if the url didn't match the url regex.
-            (which means that it was malformed or didn't match the
-            http/attachment protocol).
-        """
         _check_if_valid_url(self.url)
 
 
 @dataclass
 class EmbedVideo:
-    """
-    Representation of the Embed Video class
+    """Representation of the Embed Video class
 
-    :param url:
+    Attributes
+    ----------
+    url: APINullable[:class:`str`]
         Source url of the video
-
-    :param proxy_url:
+    proxy_url: APINullable[:class:`str`]
         A proxied url of the video
-
-    :param height:
+    height: APINullable[:class:`int`]
         Height of the video
-
-    :param width:
+    width: APINullable[:class:`int`]
         Width of the video
     """
     height: APINullable[int] = MISSING
@@ -210,19 +183,20 @@ class EmbedVideo:
 
 @dataclass
 class EmbedFooter:
-    """
-    Representation of the Embed Footer class
+    """Representation of the Embed Footer class
 
-    :param text:
+    Attributes
+    ----------
+    text: :class:`str`
         Footer text
-
-    :param icon_url:
+    icon_url: APINullable[:class:`str`]
         Url of the footer icon
-
-    :param proxy_icon_url:
+    proxy_icon_url: APINullable[:class:`str`]
         A proxied url of the footer icon
 
-    :raises EmbedFieldError:
+    Raises
+    ------
+    EmbedFieldError:
         Text is longer than 2048 characters
     """
 
@@ -240,22 +214,22 @@ class EmbedFooter:
 
 @dataclass
 class EmbedField:
-    """
-    Representation of the Embed Field class
+    """Representation of the Embed Field class
 
-    :param name:
+    Attributes
+    ----------
+    name: :class:`str`
         The name of the field
-
-    :param value:
+    value: :class:`str`
         The text in the field
-
-    :param inline:
+    inline: APINullable[:class:`bool`]
         Whether or not this field should display inline
 
-    :raises EmbedFieldError:
+    Raises
+    ------
+    EmbedFieldError:
         Name is longer than 256 characters
-
-    :raises EmbedFieldError:
+    EmbedFieldError:
         Description is longer than 1024 characters
     """
 
@@ -282,48 +256,36 @@ class EmbedField:
 # This with the Embed class
 @dataclass
 class Embed(APIObject):
-    """
-    Representation of the discord Embed class
+    """Representation of the discord Embed class
 
-    :param title:
+    Attributes
+    ----------
+    title: APINullable[:class:`str`]
         Embed title.
-
-    :param description:
+    description: APINullable[:class:`str`]
         Embed description.
-
-    :param color:
+    color: APINullable[:class:`int`]
         Embed color code.
-
-    :param fields:
+    fields: List[:class:`~pincer.objects.message.embed.EmbedField`]
         Fields information.
-
-    :param footer:
+    footer: APINullable[:class:`~pincer.objects.message.embed.EmbedFooter`]
         Footer information.
-
-    :param image:
+    image: APINullable[:class:`~pincer.objects.message.embed.EmbedImage`]
         Image information.
-
-    :param provider:
+    provider: APINullable[:class:`~pincer.objects.message.embed.EmbedProvider`]
         Provider information.
-
-    :param thumbnail:
+    thumbnail: APINullable[:class:`~pincer.objects.message.embed.EmbedThumbnail`]
         Thumbnail information.
-
-    :param timestamp:
+    timestamp: APINullable[:class:`str`]
         Timestamp of embed content in ISO format.
-
-    :property author:
-        Author information.
-
-    :param url:
+    url: APINullable[:class:`str`]
         Embed url.
-
-    :param video:
+    video: APINullable[:class:`~pincer.objects.message.embed.EmbedVideo`]
         Video information.
-
-    :param type:
+    type: APINullable[:class:`int`]
         type of message
     """
+    # noqa: E501
 
     title: APINullable[str] = MISSING
     description: APINullable[str] = MISSING
@@ -340,14 +302,6 @@ class Embed(APIObject):
     type: APINullable[int] = MISSING
 
     def __post_init__(self):
-        """
-        :raises EmbedFieldError:
-            Embed title is longer than 256 characters.
-        :raises EmbedFieldError:
-            Embed description is longer than 4096 characters.
-        :raises EmbedFieldError:
-            Embed has more than 25 fields.
-        """
         if _field_size(self.title) > 256:
             raise EmbedFieldError.from_desc(
                 "Embed title", 256, len(self.title)
@@ -364,14 +318,18 @@ class Embed(APIObject):
             )
 
     def set_timestamp(self, time: datetime) -> Embed:
-        """
-        Discord uses iso format for time stamps.
+        """Discord uses iso format for time stamps.
         This function will set the time to that format.
 
-        :param time:
-            A datetime object.
+        Parameters
+        ----------
+        time : :class:`datetime.datetime`
+            The datetime to set the timestamp to.
 
-        :return: self
+        Returns
+        -------
+        :class:`~pincer.objects.message.embed.Embed`
+            The new embed object.
         """
         self.timestamp = time.isoformat()
 
@@ -384,24 +342,25 @@ class Embed(APIObject):
             proxy_icon_url: APINullable[str] = MISSING,
             url: APINullable[str] = MISSING
     ) -> Embed:
-        """
-        Set the author message for the embed. This is the top
+        """Set the author message for the embed. This is the top
         field of the embed.
 
-        :param icon_url:
+        Parameters
+        ----------
+        icon_url: APINullable[:class:`str`]
             The icon which will be next to the author name.
-
-        :param name:
+        name: APINullable[:class:`str`]
             The name for the author (so the message).
-
-        :param proxy_icon_url:
+        proxy_icon_url: APINullable[:class:`str`]
             A proxied url of the author icon.
-
-        :param url:
+        url: APINullable[:class:`str`]
             The url for the author name, this will make the
             name field a link/url.
 
-        :return: self
+        Returns
+        -------
+        :class:`~pincer.objects.message.embed.Embed`
+            The new embed object.
         """
 
         self.author = EmbedAuthor(
@@ -420,22 +379,23 @@ class Embed(APIObject):
             height: APINullable[int] = MISSING,
             width: APINullable[int] = MISSING
     ) -> Embed:
-        """
-        Sets an image for your embed.
+        """Sets an image for your embed.
 
-        :param url:
+        Parameters
+        ----------
+        url: APINullable[:class:`str`]
             Source url of the video
-
-        :param proxy_url:
+        proxy_url: APINullable[:class:`str`]
             A proxied url of the video
-
-        :param height:
+        height: APINullable[:class:`int`]
             Height of the video
-
-        :param width:
+        width: APINullable[:class:`int`]
             Width of the video
 
-        :return: self
+        Returns
+        -------
+        :class:`~pincer.objects.message.embed.Embed`
+            The new embed object.
         """
         self.image = EmbedImage(
             height=height,
@@ -452,24 +412,23 @@ class Embed(APIObject):
             url: APINullable[str] = MISSING,
             proxy_url: APINullable[str] = MISSING,
             width: APINullable[int] = MISSING
-    ) -> Embed:
-        """
-        Sets the thumbnail of the embed.
-        This image is bigger than the `image` property.
+    ) -> Embed:  # ? its normally smaller in the corner?
+        """Sets the thumbnail of the embed.
+        This image is bigger than the ``image`` property.
 
-        :param url:
+        url: APINullable[:class:`str`]
             Source url of the video
-
-        :param proxy_url:
+        proxy_url: APINullable[:class:`str`]
             A proxied url of the video
-
-        :param height:
+        height: APINullable[:class:`int`]
             Height of the video
-
-        :param width:
+        width: APINullable[:class:`int`]
             Width of the video
 
-        :return self:
+        Returns
+        -------
+        :class:`~pincer.objects.message.embed.Embed`
+            The new embed object.
         """
         self.thumbnail = EmbedThumbnail(
             height=height,
@@ -489,16 +448,19 @@ class Embed(APIObject):
         """
         Sets the embed footer. This is at the bottom of your embed.
 
-        :param text:
+        Parameters
+        ----------
+        text: :class:`str`
             Footer text
-
-        :param icon_url:
+        icon_url: APINullable[:class:`str`]
             Url of the footer icon
-
-        :param proxy_icon_url:
+        proxy_icon_url: APINullable[:class:`str`]
             A proxied url of the footer icon
 
-        :return: self
+        Returns
+        -------
+        :class:`~pincer.objects.message.embed.Embed`
+            The new embed object.
         """
         self.footer = EmbedFooter(
             text=text,
@@ -514,20 +476,21 @@ class Embed(APIObject):
             value: str,
             inline: APINullable[bool] = MISSING
     ) -> Embed:
-        """
-        Adds a field to the embed.
+        """Adds a field to the embed.
         An embed can contain up to 25 fields.
 
-        :param name:
+        Parameters
+        ----------
+        name: :class:`str`
             The name of the field
-
-        :param value:
+        value: :class:`str`
             The text in the field
-
-        :param inline:
+        inline: APINullable[:class:`bool`]
             Whether or not this field should display inline
 
-        :raises EmbedFieldError:
+        Raises
+        ------
+        EmbedFieldError:
             Raised when there are more than 25 fields in the embed
         """
         _field = EmbedField(
@@ -553,30 +516,32 @@ class Embed(APIObject):
             map_values: Optional[Callable[[Any], str]] = str,
             inline: bool = True
     ) -> Embed:
-        """
-        Add multiple fields from a list,
+        """Add multiple fields from a list,
         dict or generator of fields with possible mapping.
 
-        :param field_list:
+        Parameters
+        ----------
+        field_list: Union[Dict[Any, Any], Iterable[Iterable[Any, Any]]]
             A iterable or generator of the fields to add.
             If the field_list type is a dictionary, will take items.
-
-        :param checks:
+        checks: Optional[Callable[[Any], Any]]
             A filter function to remove embed fields.
-
-        :param map_title:
+        map_title: Optional[Callable[[Any], :class:`str`]]
             A transform function to change the titles.
-
-        :param map_values:
+        map_values: Optional[Callable[[Any], :class:`str`]]
             A transform function to change the values.
-
-        :param inline:
+        inline: :class:`bool`
             Whether to create grid or each field on a new line.
 
-        :raises EmbedFieldError:
+        Raises
+        ------
+        EmbedFieldError:
             Raised when there are more than 25 fields in the embed
 
-        :return: the embed for chaining methods.
+        Returns
+        -------
+        :class:`~pincer.objects.message.embed.Embed`
+            The new embed object.
         """
 
         if isinstance(field_list, dict):

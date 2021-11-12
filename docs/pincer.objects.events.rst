@@ -1,117 +1,337 @@
-pincer.objects.events package
+.. currentmodule:: pincer.objects
+
+Pincer Objects Events Section
 =============================
 
-Submodules
-----------
+Channel
+-------
 
-pincer.objects.events.channel module
-------------------------------------
+ChannelPinsUpdateEvent
+~~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: pincer.objects.events.channel
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: ChannelPinsUpdateEvent
 
-pincer.objects.events.error module
-----------------------------------
+.. autoclass:: ChannelPinsUpdateEvent()
 
-.. automodule:: pincer.objects.events.error
-   :members:
-   :undoc-members:
-   :show-inheritance:
+Error
+-----
 
-pincer.objects.events.gateway\_commands module
-----------------------------------------------
+DiscordError
+~~~~~~~~~~~~
 
-.. automodule:: pincer.objects.events.gateway_commands
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: DiscordError
 
-pincer.objects.events.guild module
-----------------------------------
+.. autoclass:: DiscordError()
 
-.. automodule:: pincer.objects.events.guild
-   :members:
-   :undoc-members:
-   :show-inheritance:
+Gateway Commands
+----------------
 
-pincer.objects.events.hello\_ready module
------------------------------------------
+Identify
+~~~~~~~~
 
-.. automodule:: pincer.objects.events.hello_ready
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: Identify
 
-pincer.objects.events.integration module
-----------------------------------------
+.. autoclass:: Identify()
 
-.. automodule:: pincer.objects.events.integration
-   :members:
-   :undoc-members:
-   :show-inheritance:
+Resume
+~~~~~~
 
-pincer.objects.events.invite module
------------------------------------
+.. attributetable:: Resume
 
-.. automodule:: pincer.objects.events.invite
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: Resume()
 
-pincer.objects.events.message module
-------------------------------------
+Guild
+-----
 
-.. automodule:: pincer.objects.events.message
-   :members:
-   :undoc-members:
-   :show-inheritance:
+GuildBanAddEvent
+~~~~~~~~~~~~~~~~
 
-pincer.objects.events.presence module
--------------------------------------
+.. attributetable:: GuildBanAddEvent
 
-.. automodule:: pincer.objects.events.presence
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: GuildBanAddEvent()
 
-pincer.objects.events.thread module
------------------------------------
+GuildBanRemoveEvent
+~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: pincer.objects.events.thread
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: GuildBanRemoveEvent
 
-pincer.objects.events.typing\_start module
-------------------------------------------
+.. autoclass:: GuildBanRemoveEvent()
 
-.. automodule:: pincer.objects.events.typing_start
-   :members:
-   :undoc-members:
-   :show-inheritance:
+GuildEmojisUpdateEvent
+~~~~~~~~~~~~~~~~~~~~~~
 
-pincer.objects.events.voice module
-----------------------------------
+.. attributetable:: GuildEmojisUpdateEvent
 
-.. automodule:: pincer.objects.events.voice
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: GuildEmojisUpdateEvent()
 
-pincer.objects.events.webhook module
-------------------------------------
+GuildStickersUpdateEvent
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: pincer.objects.events.webhook
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. attributetable:: GuildStickersUpdateEvent
 
-Module contents
----------------
+.. autoclass:: GuildStickersUpdateEvent()
 
-.. automodule:: pincer.objects.events
-   :members:
-   :undoc-members:
-   :show-inheritance:
+GuildIntegrationsUpdateEvent
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: GuildIntegrationsUpdateEvent
+
+.. autoclass:: GuildIntegrationsUpdateEvent()
+
+GuildMemberRemoveEvent
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: GuildMemberRemoveEvent
+
+.. autoclass:: GuildMemberRemoveEvent()
+
+GuildMemberUpdateEvent
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: GuildMemberUpdateEvent
+
+.. autoclass:: GuildMemberUpdateEvent()
+
+GuildMembersChunkEvent
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: GuildMembersChunkEvent
+
+.. autoclass:: GuildMembersChunkEvent()
+
+GuildRoleCreateEvent
+~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: GuildRoleCreateEvent
+
+.. autoclass:: GuildRoleCreateEvent()
+
+GuildRoleUpdateEvent
+~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: GuildRoleUpdateEvent
+
+.. autoclass:: GuildRoleUpdateEvent()
+
+GuildRoleDeleteEvent
+~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: GuildRoleDeleteEvent
+
+.. autoclass:: GuildRoleDeleteEvent()
+
+Hello Ready
+-----------
+
+HelloEvent
+~~~~~~~~~~
+
+.. attributetable:: HelloEvent
+
+.. autoclass:: HelloEvent()
+
+ReadyEvent
+~~~~~~~~~~
+
+.. attributetable:: ReadyEvent
+
+.. autoclass:: ReadyEvent()
+
+integration
+-----------
+
+IntegrationDeleteEvent
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: IntegrationDeleteEvent
+
+.. autoclass:: IntegrationDeleteEvent()
+
+Invite
+------
+
+InviteCreateEvent
+~~~~~~~~~~~~~~~~~
+
+.. attributetable:: InviteCreateEvent
+
+.. autoclass:: InviteCreateEvent()
+
+InviteDeleteEvent
+~~~~~~~~~~~~~~~~~
+
+.. attributetable:: InviteDeleteEvent
+
+.. autoclass:: InviteDeleteEvent()
+
+Message
+-------
+
+MessageDeleteEvent
+~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageDeleteEvent
+
+.. autoclass:: MessageDeleteEvent()
+
+MessageDeleteBulkEvent
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageDeleteBulkEvent
+
+.. autoclass:: MessageDeleteBulkEvent()
+
+MessageReactionAddEvent
+~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageReactionAddEvent
+
+.. autoclass:: MessageReactionAddEvent()
+
+MessageReactionRemoveEvent
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageReactionRemoveEvent
+
+.. autoclass:: MessageReactionRemoveEvent()
+
+MessageReactionRemoveAllEvent
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageReactionRemoveAllEvent
+
+.. autoclass:: MessageReactionRemoveAllEvent()
+
+MessageReactionRemoveEmojiEvent
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageReactionRemoveEmojiEvent
+
+.. autoclass:: MessageReactionRemoveEmojiEvent()
+
+Presence
+--------
+
+ActivityType
+~~~~~~~~~~~~
+
+.. attributetable:: ActivityType
+
+.. autoclass:: ActivityType()
+
+ActivityTimestamp
+~~~~~~~~~~~~~~~~~
+
+.. attributetable:: ActivityTimestamp
+
+.. autoclass:: ActivityTimestamp()
+
+ActivityEmoji
+~~~~~~~~~~~~~
+
+.. attributetable:: ActivityEmoji
+
+.. autoclass:: ActivityEmoji()
+
+ActivityParty
+~~~~~~~~~~~~~
+
+.. attributetable:: ActivityParty
+
+.. autoclass:: ActivityParty()
+
+ActivityAssets
+~~~~~~~~~~~~~~
+
+.. attributetable:: ActivityAssets
+
+.. autoclass:: ActivityAssets()
+
+ActivitySecrets
+~~~~~~~~~~~~~~~
+
+.. attributetable:: ActivitySecrets
+
+.. autoclass:: ActivitySecrets()
+
+ActivityFlags
+~~~~~~~~~~~~~
+
+.. attributetable:: ActivityFlags
+
+.. autoclass:: ActivityFlags()
+
+ActivityButton
+~~~~~~~~~~~~~~
+
+.. attributetable:: ActivityButton
+
+.. autoclass:: ActivityButton()
+
+Activity
+~~~~~~~~
+
+.. attributetable:: Activity
+
+.. autoclass:: Activity()
+
+ClientStatus
+~~~~~~~~~~~~
+
+.. attributetable:: ClientStatus
+
+.. autoclass:: ClientStatus()
+
+PresenceUpdateEvent
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: PresenceUpdateEvent
+
+.. autoclass:: PresenceUpdateEvent()
+
+Thread
+------
+
+ThreadListSyncEvent
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: ThreadListSyncEvent
+
+.. autoclass:: ThreadListSyncEvent()
+
+ThreadMembersUpdateEvent
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: ThreadMembersUpdateEvent
+
+.. autoclass:: ThreadMembersUpdateEvent()
+
+Typing Start
+------------
+
+TypingStartEvent
+~~~~~~~~~~~~~~~~
+
+.. attributetable:: TypingStartEvent
+
+.. autoclass:: TypingStartEvent()
+
+Voice
+-----
+
+VoiceServerUpdateEvent
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: VoiceServerUpdateEvent
+
+.. autoclass:: VoiceServerUpdateEvent()
+
+Webhook
+-------
+
+WebhookUpdateEvent
+~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: WebhookUpdateEvent
+
+.. autoclass:: WebhookUpdateEvent()

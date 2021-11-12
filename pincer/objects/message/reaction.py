@@ -3,28 +3,27 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 
 from ...utils.api_object import APIObject
 
 if TYPE_CHECKING:
-    from ..message.emoji import Emoji
+    from .emoji import Emoji
 
 
 @dataclass
 class Reaction(APIObject):
-    """
-    Represents a Discord Reaction object
+    """Represents a Discord Reaction object
 
-    :param count:
-        times this emoji has been used to react
-
-    :param me:
-        whether the current user reacted using this emoji
-
-    :param emoji:
-        emoji information
+    Attributes
+    ----------
+    count: :class:`int`
+        Times this emoji has been used to react
+    me: :class:`bool`
+        Whether the current user reacted using this emoji
+    emoji: :class:`~pincer.objects.message.emoji.Emoji`
+        Emoji information
     """
     count: int
     me: bool

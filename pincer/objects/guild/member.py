@@ -4,37 +4,36 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional, List, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
-from ..user import User
+from ..user.user import User
 from ...utils.api_object import APIObject
 from ...utils.snowflake import Snowflake
 from ...utils.timestamp import Timestamp
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from ... import Client
+    from typing import List, Optional
+
+    from ...client import Client
     from ...utils.types import APINullable
 
 
 @dataclass
 class BaseMember(APIObject):
-    """
-    Represents the base of a guild member.
+    """Represents the base of a guild member.
 
-    :param deaf:
-        whether the user is deafened in voice channels
-
-    :param joined_at:
-        when the user joined the guild
-
-    :param mute:
-        whether the user is muted in voice channels
-
-    :param roles:
-        array of role object ids
-
-    :param hoisted_role:
+    Attributes
+    ----------
+    deaf: :class:`bool`
+        Whether the user is deafened in voice channels
+    joined_at: :class:`~pincer.utils.timestamp.Timestamp`
+        Then the user joined the guild
+    mute: :class:`bool`
+        Whether the user is muted in voice channels
+    roles: List[:class:`~pincer.utils.snowflake.Snowflake`]
+        Array of role object ids
+    hoisted_role: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The user their top guild role!
     """
     deaf: bool
@@ -47,29 +46,25 @@ class BaseMember(APIObject):
 
 @dataclass
 class PartialGuildMember(APIObject):
-    """
-    Represents a partial guild member.
+    """Represents a partial guild member.
     This is a reference to a member from a guild which does not contain
     all information.
 
     This gets used in form example message mentions.
 
-    :param id:
-        the user's id
-
-    :param username:
-        the user's username, not unique across the platform
-
-    :param discriminator:
-        the user's 4-digit discord-tag
-
-    :param avatar:
-        the user's avatar hash
-
-    :param public_flags:
-        the flags on a user's account
-
-    :param member:
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        The user's id
+    username: :class:`str`
+        The user's username, not unique across the platform
+    discriminator: :class:`str`
+        The user's 4-digit discord-tag
+    avatar: :class:`str`
+        The user's avatar hash
+    public_flags: :class:`int`
+        The flags on a user's account
+    member: :class:`~pincer.objects.guild.member.BaseMember`
         The user their (partial) guild information.
     """
     id: Snowflake
@@ -82,38 +77,27 @@ class PartialGuildMember(APIObject):
 
 @dataclass
 class GuildMember(BaseMember, APIObject):
-    """
-    Represents a member which resides in a guild/server.
+    """Represents a member which resides in a guild/server.
 
-    :param _client:
-        reference to the Client
-
-    :param _http:
-        reference to the HTTPClient
-
-    :param nick:
-        this users guild nickname
-
-    :param pending:
-        whether the user has not yet passed the guild's Membership
+    Attributes
+    ----------
+    nick: APINullable[Optional[:class:`str`]]
+        This users guild nickname
+    pending: APINullable[:class:`bool`]
+        Whether the user has not yet passed the guild's Membership
         Screening requirements
-
-    :param is_pending:
+    is_pending: APINullable[:class:`bool`]
         Deprecated version of pending.
-
-    :param permissions:
-        total permissions of the member in the channel,
+    permissions: APINullable[:class:`str`]
+        Total permissions of the member in the channel,
         including overwrites, returned when in the interaction object
-
-    :param premium_since:
-        when the user started boosting the guild
-
-    :param user:
-        the user this guild member represents
-    """
-
-    # _client: Client
-    # _http: HTTPClient
+    premium_since: APINullable[Optional[:class:`~pincer.utils.timestamp.Timestamp`]]
+        When the user started boosting the guild
+    user: APINullable[:class:`~pincer.objects.user.user.User`]
+        The user this guild member represents
+    Avatar: APINullable[:class:`str`]
+        The user's avatar.
+    """  # noqa: E501
 
     nick: APINullable[Optional[str]] = MISSING
     pending: APINullable[bool] = MISSING

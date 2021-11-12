@@ -5,11 +5,27 @@
 from __future__ import annotations
 
 from json import dumps, loads
-from typing import Optional, Union, Dict, Any
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typing import Any, Dict, Optional, Tuple, Union
 
 
 class GatewayDispatch:
-    """Represents a websocket message."""
+    """Represents a websocket message.
+
+    Attributes
+    ----------
+    op: :class:`int`
+        The discord opcode which represents what the message means.
+    data: Optional[Union[:class:`int`, Dict[:class:`str`, Any]]]
+        The event data that has been sent/received.
+    seq: Optional[:class:`int`]
+        The sequence number of a message, which can be used
+        for resuming sessions and heartbeats.
+    event_name: Optional[:class:`str`]
+        The event name for the payload.
+    """
 
     def __init__(
             self,
@@ -18,34 +34,12 @@ class GatewayDispatch:
             seq: Optional[int] = None,
             name: Optional[str] = None
     ):
-        """
-        Instantiate a new GatewayDispatch object.
-
-        :param op:
-            The discord opcode which represents what the message means.
-
-        :param data:
-            The event data that has been sent/received.
-
-        :param seq:
-            The sequence number of a message, which can be used
-            for resuming sessions and heartbeats.
-
-        :param name:
-            The event name for the payload.
-        """
         self.op: int = op
         self.data: Optional[Union[int, Dict[str, Any]]] = data
         self.seq: Optional[int] = seq
         self.event_name: Optional[str] = name
 
     def __str__(self) -> str:
-        """
-        :return
-            The string representation of the GatewayDispatch object.
-
-        This can be used to send a websocket message to the gateway.
-        """
         return dumps(
             dict(
                 op=self.op,
@@ -57,15 +51,18 @@ class GatewayDispatch:
 
     @classmethod
     def from_string(cls, payload: str) -> GatewayDispatch:
-        """
-        Parses a given payload from a string format
-            and returns a GatewayDispatch.
+        """Parses a given payload from a string format
+        and returns a GatewayDispatch.
 
-        :param payload:
+        Parameters
+        ----------
+        payload : :class:`str`
             The payload to parse.
 
-        :return:
-            A proper GatewayDispatch object.
+        Returns
+        -------
+        :class:`~pincer.core.dispatch.GatewayDispatch`
+            The new class.
         """
         payload: Dict[str, Union[int, str, Dict[str, Any]]] = loads(payload)
         return cls(

@@ -6,23 +6,26 @@ from __future__ import annotations
 
 import logging
 import zlib
-from asyncio import get_event_loop, AbstractEventLoop, ensure_future
 from platform import system
+from typing import TYPE_CHECKING
+from asyncio import AbstractEventLoop, ensure_future, get_event_loop
 from typing import Dict, Callable, Awaitable, Optional
 
 from websockets import connect
-from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
 from websockets.legacy.client import WebSocketClientProtocol
+from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
 
 from . import __package__
-from .._config import GatewayConfig
 from ..core.dispatch import GatewayDispatch
 from ..core.heartbeat import Heartbeat
+from .._config import GatewayConfig
 from ..exceptions import (
     PincerError, InvalidTokenError, UnhandledException,
     _InternalPerformReconnectError, DisallowedIntentsError
 )
-from ..objects import Intents
+
+if TYPE_CHECKING:
+    from ..objects.app.intents import Intents
 
 ZLIB_SUFFIX = b'\x00\x00\xff\xff'
 
@@ -31,8 +34,7 @@ _log = logging.getLogger(__package__)
 
 
 class Dispatcher:
-    """
-    The Dispatcher handles all interactions with discord websocket API.
+    """The Dispatcher handles all interactions with discord websocket API.
     This also contains the main event loop, and handles the heartbeat.
 
     Running the dispatcher will create a connection with the
@@ -40,7 +42,7 @@ class Dispatcher:
 
     This token must be a bot token.
     (Which can be found on
-    `<https://discord.com/developers/applications/<bot_id>/bot>`_)
+    `<https://discord.com/developers/applications/>`_)
     """
 
     def __init__(
@@ -49,23 +51,6 @@ class Dispatcher:
             intents: Intents,
             reconnect: bool
     ) -> None:
-        """
-        :param token:
-            Bot token for discord's API.
-
-        :param intents:
-            Represents the discord bot intents.
-
-        :param handlers:
-            A hashmap of coroutines with as key the gateway opcode.
-
-        :raises InvalidTokenError:
-            Discord Token length is not 59 characters.
-
-        auto_reconnect :class:`bool`
-            Whether the dispatcher should automatically reconnect.
-        """
-
         if len(token) != 59:
             raise InvalidTokenError(
                 "Discord Token must have exactly 59 characters."
@@ -82,26 +67,29 @@ class Dispatcher:
                 socket: WebSocketClientProtocol,
                 payload: GatewayDispatch
         ):
-            """
+            """|coro|
+
             Identifies the client to the Discord Websocket API, this
             gets done when the client receives the ``hello`` (opcode 10)
             message from discord. Right after we send our identification
             the heartbeat starts.
 
-            :param socket:
+            Parameters
+            ----------
+            socket : :class:`~ws:websockets.legacy.client.WebSocketClientProtocol`
                 The current socket, which can be used to interact
                 with the Discord API.
-
-            :param payload:
+            payload : :class:`~pincer.core.dispatch.GatewayDispatch`
                 The received payload from Discord.
-            """
+            """  # noqa: E501
             _log.debug("Sending authentication/identification message.")
 
             await socket.send(self.__hello_socket)
             await Heartbeat.handle_hello(socket, payload)
 
         async def handle_reconnect(_, payload: GatewayDispatch):
-            """
+            """|coro|
+
             Closes the client and then reconnects it.
             """
             _log.debug("Reconnecting client...")
@@ -126,6 +114,7 @@ class Dispatcher:
 
     @property
     def intents(self):
+        """:class:`app.Intents`"""
         return self.__intents
 
     @property
@@ -156,15 +145,11 @@ class Dispatcher:
         This method gets invoked for every message that is received from
         Discord.
 
-        :meta public:
-
         :param socket:
             The current socket, which can be used to interact with
             the Discord API.
-
         :param payload:
             The received payload from Discord.
-
         :param loop:
             The current async loop on which the future is bound.
         """
@@ -200,8 +185,6 @@ class Dispatcher:
         """
         The main event loop.
         This handles all interactions with the websocket API.
-
-        :meta public:
 
         :param loop:
             The loop in which the dispatcher is running.
@@ -263,10 +246,12 @@ class Dispatcher:
                     await self.close()
                     exception = self.__dispatch_errors.get(exc.code)
 
-                    if isinstance(exception, _InternalPerformReconnectError):
-                        if self.__reconnect:
-                            _log.debug("Connection closed, reconnecting...")
-                            return await self.restart()
+                    if (
+                        isinstance(exception, _InternalPerformReconnectError)
+                        and self.__reconnect
+                    ):
+                        _log.debug("Connection closed, reconnecting...")
+                        return await self.restart()
 
                     raise exception or UnhandledException(
                         f"Dispatch error ({exc.code}): {exc.reason}"
@@ -276,16 +261,15 @@ class Dispatcher:
             self.__has_closed = True
 
     def start_loop(self, *, loop: AbstractEventLoop = None):
-        """
-        Instantiate the dispatcher, this will create a connection to the
+        """Instantiate the dispatcher, this will create a connection to the
         Discord websocket API on behalf of the client who's token has
         been passed.
 
-        Keyword Arguments:
-
-        :param loop:
+        Parameters
+        ----------
+        loop : :class:`~asyncio.AbstractEventLoop`
             The loop in which the Dispatcher will run. If no loop is
-            provided it will get a new one.
+            provided it will get a new one. |default| :data:`None`
         """
         loop = loop or get_event_loop()
         self.__keep_alive = True
@@ -311,7 +295,8 @@ class Dispatcher:
         self.__should_restart = True
 
     async def close(self):
-        """
+        """|coro|
+
         Stop the dispatcher from listening and responding to gateway
         events. This should let the client close on itself.
         """

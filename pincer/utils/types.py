@@ -5,10 +5,12 @@ from __future__ import annotations
 from sys import modules
 from typing import TypeVar, Callable, Coroutine, Any, Union, Literal, Tuple
 
-from pincer.exceptions import InvalidAnnotation
+from pincer.exceptions import InvalidArgumentAnnotation
 
 
 class MissingType:
+    """Type class for missing attributes and parameters."""
+
     def __repr__(self):
         return "<MISSING>"
 
@@ -18,15 +20,20 @@ class MissingType:
 
 MISSING = MissingType()
 
+
 T = TypeVar('T')
+
 
 # Represents a value which is optionally returned from the API
 APINullable = Union[T, MissingType]
 
+
 # Represents a coroutine.
 Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
 
+
 Choices = Literal
+
 
 choice_value_types = (str, int, float)
 
@@ -64,9 +71,9 @@ class TypeCache(metaclass=Singleton):
 class _TypeInstanceMeta(type):
     def __getitem__(cls, args: Tuple[T, str]):
         if not isinstance(args, tuple) or len(args) != 2:
-            raise InvalidAnnotation(
+            raise InvalidArgumentAnnotation(
                 "Descripted arguments must be a tuple of length 2. "
-                "(if you are using this as the intented type, just "
+                "(if you are using this as the indented type, just "
                 "pass two arguments)"
             )
 

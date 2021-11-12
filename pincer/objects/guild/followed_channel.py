@@ -3,24 +3,25 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 
-from ...utils import APIObject
+from ...utils.api_object import APIObject
 
 if TYPE_CHECKING:
-    from ...utils import Snowflake
+    from ...utils.snowflake import Snowflake
 
 
 @dataclass
 class FollowedChannel(APIObject):
     """Represents a Discord Followed Channel object
 
-    :param channel_id:
-        source channel id
-
-    :param webhook_id:
-        created target webhook id
+    Attributes
+    ----------
+    channel_id: :class:`~pincer.utils.snowflake.Snowflake`
+        Source channel id
+    webhook_id: :class:`~pincer.utils.snowflake.Snowflake`
+        Created target webhook id
     """
     channel_id: Snowflake
     webhook_id: Snowflake
