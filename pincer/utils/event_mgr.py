@@ -49,12 +49,16 @@ class _Processable(ABC):
 
 def _lowest_value(*args):
     """
-    Returns lowest value from list of numbers. None is not counted as a value.
+    Returns lowest value from list of numbers. ``None`` is not counted as a
+    value. ``None`` is returned if all arguments are ``None``.
     """
+    args_without_none = [n for n in args if n is not None]
+
+    if len(args_without_none) == 0:
+        return None
+
     return min(
-        [
-            n for n in args if n
-        ]
+        args_without_none
     )
 
 
