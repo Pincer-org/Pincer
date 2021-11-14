@@ -42,6 +42,7 @@ class PremiumTypes(IntEnum):
     NITRO:
         Full nitro subscription.
     """
+
     NONE = 0
     NITRO_CLASSIC = 1
     NITRO = 2
@@ -57,6 +58,7 @@ class VisibilityType(IntEnum):
     EVERYONE:
         Connection is visible to everyone.
     """
+
     NONE = 0
     EVERYONE = 1
 
@@ -103,6 +105,7 @@ class User(APIObject):
     verified: APINullable[:class:`bool`]
         Whether the email on this account has been verified
     """
+
     id: Snowflake
     username: APINullable[str] = MISSING
     discriminator: APINullable[str] = MISSING
@@ -127,9 +130,7 @@ class User(APIObject):
         user their premium type in a usable enum.
         """
         return (
-            MISSING
-            if self.premium_type is MISSING
-            else PremiumTypes(self.premium_type)
+            MISSING if self.premium_type is MISSING else PremiumTypes(self.premium_type)
         )
 
     @property
@@ -137,21 +138,36 @@ class User(APIObject):
         """:class:`str`: The user's mention string."""
         return f"<@!{self.id}>"
 
-    def get_avatar_url(self, size: int = 512, ext: str = 'png') -> str:
+    def get_avatar_url(self, size: int = 512, ext: str = "png") -> str:
         return (
             f"https://cdn.discordapp.com/avatars/{self.id}/{self.avatar}.{ext}"
             f"?size={size}"
         )
 
     if PILLOW_IMPORT:
-        async def get_avatar(self, size=512, ext='png') -> Image:
+
+        async def get_avatar(self, size: int = 512, ext: str = "png") -> Image:
+            """Get the user's avatar as a Pillow image.
+
+            Parameters
+            ----------
+            size : :class: int, optional
+                The size of the image to get. Defaults to 512.
+            ext : :class: str, optional
+                The file extension to use. Defaults to 'png'.
+
+            Returns
+            -------
+            :class: Image
+                The user's avatar as a Pillow image.
+            """
             async with ClientSession().get(url=self.get_avatar_url()) as resp:
                 avatar = io.BytesIO(await resp.read())
                 print(Image, dir(Image))
                 return Image.open(avatar).convert("RGBA")
 
     def __str__(self):
-        return self.username + '#' + self.discriminator
+        return self.username + "#" + self.discriminator
 
     @classmethod
     async def from_id(cls, client: Client, user_id: int) -> User:
