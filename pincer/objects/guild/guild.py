@@ -441,11 +441,27 @@ class Guild(APIObject):
         return GuildMember.from_dict(construct_client_dict(self._client, data))
 
     async def kick(self, member_id: int, **kwargs):
-        # TODO: docs
+        """|coro|
+        Kicks a guild member.
+
+        Parameters
+        ----------
+        member_id : :class: int
+            ID of the guild member to kick.
+        \\*\\* kwargs
+            Additional keyword arguments to kick the guild member with.
+        """
         await self._http.put(f"/guilds/{self.id}/bans/{member_id}", data=kwargs)
 
     async def ban(self, member_id: int):
-        # TODO: docs
+        """|coro|
+        Bans a guild member.
+
+        Parameters
+        ----------
+        member_id : :class: int
+            ID of the guild member to ban.
+        """
         await self._http.delete(f"/guilds/{self.id}/members/{member_id}")
 
     @classmethod
