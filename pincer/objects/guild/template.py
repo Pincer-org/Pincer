@@ -3,54 +3,48 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from typing import Optional, TYPE_CHECKING
 
 from ...utils import APIObject
 
 if TYPE_CHECKING:
+    from typing import Optional
+
     from ..guild import Guild
-    from ..user import User
-    from ...utils import Snowflake, Timestamp
+    from ..user.user import User
+    from ...utils.snowflake import Snowflake
+    from ...utils.timestamp import Timestamp
 
 
 @dataclass
 class GuildTemplate(APIObject):
-    """
-    Represents a code that when used,
+    """Represents a code that when used,
     creates a guild based on a snapshot of an existing guild.
 
-    :param code:
+    Attributes
+    ----------
+    code: :class:`str`
         the template code (unique ID)
-
-    :param name:
+    name: :class:`str`
         template name
-
-    :param description:
+    description: Optional[:class:`str`]
         the description for the template
-
-    :param usage_count:
+    usage_count: :class:`int`
         number of times this template has been used
-
-    :param creator_id:
+    creator_id: :class:`~pincer.utils.snowflake.Snowflake`
         the ID of the user who created the template
-
-    :param creator: the
+    creator: :class:`~pincer.objects.user.user.User`
         user who created the template
-
-    :param created_at:
+    created_at: :class:`~pincer.utils.timestamp.Timestamp`
         when this template was created
-
-    :param updated_at:
+    updated_at: :class:`~pincer.utils.timestamp.Timestamp`
         when this template was last synced to the source guild
-
-    :param source_guild_id:
+    source_guild_id: :class:`~pincer.utils.snowflake.Snowflake`
         the ID of the guild this template is based on
-
-    :param serialized_source_guild:
+    serialized_source_guild: :class:`~pincer.objects.guild.guild.Guild`
         the guild snapshot this template contains
-
-    :param is_dirty:
+    is_dirty: Optional[:class:`bool`]
         whether the template has unsynced changes
     """
     code: str

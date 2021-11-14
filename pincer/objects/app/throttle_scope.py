@@ -4,20 +4,18 @@ from enum import Enum, auto
 
 
 class ThrottleScope(Enum):
-    """
-    On what the cooldown should be set/on what should the cooldown be
+    """On what the cooldown should be set/on what should the cooldown be
     set.
 
-    :param GUILD:
+    Attributes
+    ----------
+    GUILD:
         The cooldown is per guild.
-
-    :param CHANNEL:
+    CHANNEL:
         The cooldown is per channel.
-
-    :param USER:
+    USER:
         The cooldown is per user.
-
-    :param GLOBAL:
+    GLOBAL:
         The cooldown is global.
     """
     GUILD = auto()

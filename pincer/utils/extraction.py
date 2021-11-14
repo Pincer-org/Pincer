@@ -8,7 +8,6 @@ T = TypeVar("T")
 
 class GetItem(Protocol):
     """Represents a class which implements the __getitem__ property."""
-
     def __getitem__(self, key: int) -> Any:
         return ...
 
@@ -18,24 +17,26 @@ def get_index(
         index: int,
         fallback: Optional[T] = None
 ) -> Optional[T]:
-    """
-    Gets an item from a collection through index.
+    """Gets an item from a collection through index.
     Allows you to provide a fallback for if that index is out of bounds.
 
-    :param collection:
+    Parameters
+    ----------
+    collection: :class:`~pincer.utils.extraction.GetItem`
         The collection from which the item is retrieved.
-
-    :param index:
+    index: :class:`int`
         The index of the item in the collection.
-
-    :param fallback:
+    fallback: Optional[T]
         The fallback value which will be used if the index doesn't
         exist. Default value is None.
 
-    :return:
+    Returns
+    -------
+    Optional[T]
         The item at the provided index from the collection, or if that
         item doesn't exist it will return the fallback value.
     """
+
     try:
         return collection[index]
 

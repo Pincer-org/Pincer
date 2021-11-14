@@ -3,26 +3,28 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from enum import IntEnum
-from typing import List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
+from dataclasses import dataclass
 
-from ...utils.api_object import APIObject
 from ...utils.types import MISSING
+from ...utils.api_object import APIObject
 
 if TYPE_CHECKING:
+    from typing import List, Optional
+
     from ..user import User
     from ...utils import APINullable, Snowflake
 
 
 class StickerType(IntEnum):
-    """
-    Displays from where the sticker comes from.
+    """Displays from where the sticker comes from.
 
-    :param STANDARD:
+    Attributes
+    ----------
+    STANDARD:
         Sticker is included in the default Discord sticker pack.
-
-    :param GUILD:
+    GUILD:
         Sticker is a custom sticker from a discord server.
     """
     STANDARD = 1
@@ -30,16 +32,15 @@ class StickerType(IntEnum):
 
 
 class StickerFormatType(IntEnum):
-    """
-    The type of the sticker.
+    """The type of the sticker.
 
-    :param PNG:
+    Attributes
+    ----------
+    PNG:
         Sticker is of PNG format.
-
-    :param APNG:
+    APNG:
         Sticker is animated with APNG format.
-
-    :param LOTTIE:
+    LOTTIE:
         Sticker is animated with with LOTTIE format. (vector based)
     """
     PNG = 1
@@ -49,43 +50,34 @@ class StickerFormatType(IntEnum):
 
 @dataclass
 class Sticker(APIObject):
-    """
-    Represents a Discord sticker.
+    """Represents a Discord sticker.
 
-    :param description:
+    Attributes
+    ----------
+    description: Optional[:class:`str`]
         description of the sticker
-
-    :param format_type:
+    format_type: :class:`~pincer.objects.message.sticker.StickerFormatType`
         type of sticker format
-
-    :param id:
+    id: :class:`~pincer.utils.snowflake.Snowflake`
         id of the sticker
-
-    :param name:
+    name: :class:`str`
         name of the sticker
-
-    :param tags:
+    tags: :class:`str`
         for guild stickers, the Discord name of a unicode emoji
         representing the sticker's expression. For standard stickers,
         a comma-separated list of related expressions.
-
-    :param type:
+    type: :class:`~pincer.objects.message.sticker.StickerType`
         type of sticker
-
-    :param available:
+    available: APINullable[:class:`bool`]
         whether this guild sticker can be used,
         may be false due to loss of Server Boosts
-
-    :param guild_id:
+    guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         id of the guild that owns this sticker
-
-    :param pack_id:
+    pack_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         for standard stickers, id of the pack the sticker is from
-
-    :param sort_value:
+    sort_value: APINullable[:class:`int`]
         the standard sticker's sort order within its pack
-
-    :param user:
+    user: APINullable[:class:`~pincer.objects.user.user.User`]
         the user that uploaded the guild sticker
     """
 
@@ -105,18 +97,17 @@ class Sticker(APIObject):
 
 @dataclass
 class StickerItem(APIObject):
-    """
-    Represents the smallest amount of data required to render a sticker.
+    """Represents the smallest amount of data required to render a sticker.
     A partial sticker object.
 
-    :param id:
-        id of the sticker
-
-    :param name:
-        name of the sticker
-
-    :param format_type:
-        type of sticker format
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        Id of the sticker
+    name: :class:`str`
+        Name of the sticker
+    format_type: :class:`~pincer.objects.message.sticker.StickerFormatType`
+        Type of sticker format
     """
 
     id: Snowflake
@@ -126,29 +117,24 @@ class StickerItem(APIObject):
 
 @dataclass
 class StickerPack(APIObject):
-    """
-    Represents a pack of standard stickers.
+    """Represents a pack of standard stickers.
 
-    :param id:
-        id of the sticker pack
-
-    :param stickers:
-        the stickers in the pack
-
-    :param name:
-        name of the sticker pack
-
-    :param sku_id:
-        id of the pack's SKU
-
-    :param description:
-        description of the sticker pack
-
-    :param cover_sticker_id:
-        id of a sticker in the pack which is shown as the pack's icon
-
-    :param banner_asset_id:
-        id of the sticker pack's banner image
+    Attributes
+    ----------
+    id: :class:`~pincer.utils.snowflake.Snowflake`
+        Id of the sticker pack
+    stickers: List[:class:`~pincer.objects.message.sticker.Sticker`]
+        The stickers in the pack
+    name: :class:`str`
+        Name of the sticker pack
+    sku_id: :class:`~pincer.utils.snowflake.Snowflake`
+        Id of the pack's SKU
+    description: :class:`str`
+        Description of the sticker pack
+    cover_sticker_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        Id of a sticker in the pack which is shown as the pack's icon
+    banner_asset_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
+        Id of the sticker pack's banner image
     """
 
     id: Snowflake
