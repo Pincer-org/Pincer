@@ -3,8 +3,8 @@
 
 from dataclasses import dataclass
 
-from ...utils import APIObject
 from ...exceptions import PincerError
+from ...utils import APIObject
 
 
 @dataclass

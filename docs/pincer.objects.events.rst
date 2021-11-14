@@ -329,9 +329,9 @@ VoiceServerUpdateEvent
 Webhook
 -------
 
-WebhookUpdateEvent
+WebhooksUpdateEvent
 ~~~~~~~~~~~~~~~~~~
 
-.. attributetable:: WebhookUpdateEvent
+.. attributetable:: WebhooksUpdateEvent
 
-.. autoclass:: WebhookUpdateEvent()
+.. autoclass:: WebhooksUpdateEvent()

@@ -3,14 +3,14 @@
 
 from __future__ import annotations
 
-from re import match
-from datetime import datetime
-from typing import TYPE_CHECKING
 from dataclasses import dataclass, field
+from datetime import datetime
+from re import match
+from typing import TYPE_CHECKING
 
-from ...utils.types import MISSING
-from ...utils.api_object import APIObject
 from ...exceptions import InvalidUrlError, EmbedFieldError
+from ...utils.api_object import APIObject
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import Any, Callable, Dict, Iterable, Union, Optional

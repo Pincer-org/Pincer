@@ -3,19 +3,19 @@
 from __future__ import annotations
 
 import logging
-from json import dumps
 from asyncio import sleep
+from json import dumps
 from typing import Protocol, TYPE_CHECKING
 
 from aiohttp import ClientSession, ClientResponse
 
 from . import __package__
+from .._config import GatewayConfig
 from ..exceptions import (
     NotFoundError, BadRequestError, NotModifiedError, UnauthorizedError,
     ForbiddenError, MethodNotAllowedError, RateLimitError, ServerError,
     HTTPError
 )
-from .._config import GatewayConfig
 
 if TYPE_CHECKING:
     from typing import Any, Dict, Optional, Union

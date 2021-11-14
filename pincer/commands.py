@@ -15,7 +15,7 @@ from .utils.snowflake import Snowflake
 from .exceptions import (
     CommandIsNotCoroutine, CommandAlreadyRegistered, TooManyArguments,
     InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
-    InvalidCommandName
+    InvalidCommandName, ForbiddenError
 )
 from .objects import (
     ThrottleScope, AppCommand, Role, User, Channel, Guild, MessageContext
@@ -521,7 +521,16 @@ class ChatCommandHandler(metaclass=Singleton):
 
         Initiate existing commands
         """
-        self._api_commands = await self.get_commands()
+
+        try:
+            self._api_commands = await self.get_commands()
+
+        except ForbiddenError:
+            logging.error(
+                "Cannot retrieve slash commands, skipping..."
+            )
+
+            return
 
         for api_cmd in self._api_commands:
             cmd = ChatCommandHandler.register.get(api_cmd.name)

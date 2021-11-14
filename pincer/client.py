@@ -4,30 +4,31 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
+from asyncio import iscoroutinefunction, run, ensure_future
 from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
 from typing import Any, Dict, List, Optional, Tuple, Union
-from asyncio import iscoroutinefunction, run, ensure_future
+from typing import TYPE_CHECKING
 
 from . import __package__
-from .core.http import HTTPClient
 from .commands import ChatCommandHandler
-from .utils.types import Coro, CheckFunction
-from .middleware import middleware
+from .core import HTTPClient
 from .core.gateway import Dispatcher
-from .utils.signature import get_params
-from .utils.extraction import get_index
-from .utils.insertion import should_pass_cls
-from .utils.event_mgr import EventMgr
 from .exceptions import (
     InvalidEventName, TooManySetupArguments, NoValidSetupMethod,
     NoCogManagerReturnFound, CogAlreadyExists, CogNotFound
 )
+from .middleware import middleware
 from .objects import (
     Role, Channel, DefaultThrottleHandler, User, Guild, Intents
 )
+from .utils.event_mgr import EventMgr
+from .utils.extraction import get_index
+from .utils.insertion import should_pass_cls
+from .utils.signature import get_params
+from .utils.types import CheckFunction
+from .utils.types import Coro
 
 if TYPE_CHECKING:
     from .objects.app import AppCommand
@@ -414,7 +415,7 @@ class Client(Dispatcher):
 
         Parameters
         ----------
-        call: :data:`~pincer.utils.types.Coro`
+        calls: :data:`~pincer.utils.types.Coro`
             The call (method) to which the event is registered.
 
         \\*args:

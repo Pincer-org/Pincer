@@ -9,11 +9,11 @@ from enum import IntEnum
 from typing import overload, TYPE_CHECKING
 
 from ..message.user_message import UserMessage
-from ...utils.types import MISSING
 from ..._config import GatewayConfig
 from ...utils.api_object import APIObject
-from ...utils.convert_message import convert_message
 from ...utils.conversion import construct_client_dict
+from ...utils.convert_message import convert_message
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import Dict, List, Optional, Union
@@ -218,6 +218,8 @@ class Channel(APIObject):  # noqa E501
 
         Parameters
         ----------
+        reason Optional[:class:`str`]
+            The reason of the channel delete.
         \\*\\*kwargs :
             The keyword arguments to edit the channel with.
 
@@ -358,6 +360,25 @@ class TextChannel(Channel):
         """
         return await super().edit(**kwargs)
 
+    async def fetch_message(self, message_id: int) -> UserMessage:
+        """|coro|
+        Returns a UserMessage from this channel with the given id.
+
+        Parameters
+        ----------
+        message_id : :class: int
+            The message ID to look for.
+
+        Returns
+        -------
+        :class:`~pincer.objects.message.user_message.UserMessage`
+            The requested message.
+        """
+        return UserMessage.from_dict(
+            await self._http.get(
+                f"/channels/{self.id}/messages/{message_id}"
+            )
+        )
 
 class VoiceChannel(Channel):
     """A subclass of ``Channel`` for voice channels with all the same attributes."""
