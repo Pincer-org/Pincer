@@ -38,7 +38,7 @@ Use the following command to install Pincer into your Python environment:
 pip install pincer
 ```
 
-To install our version with An aiohttp Speedup do:
+To install our version with Aiohttp Speedup do:
 
 ```py
 pip install pincer[speed]
