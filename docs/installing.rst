@@ -41,7 +41,7 @@ Note: The command to install may vary system to system. Try another if one fails
 
    .. tab-item:: pip
 
-      .. code-block:: sh
+      .. code-block:: python3
 
          $ pip install pincer  # should work on most systems
 
