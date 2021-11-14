@@ -3,8 +3,9 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from dataclasses import is_dataclass
 from inspect import getfullargspec
+from typing import TYPE_CHECKING
 
 from .types import T, MISSING
 
@@ -29,6 +30,9 @@ def convert(
 ) -> T:
     def handle_factory() -> T:
         def fin_fac(v: Any):
+            if is_dataclass(v):
+                return
+
             if check is not None and isinstance(v, check):
                 return v
 
