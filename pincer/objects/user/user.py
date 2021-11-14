@@ -10,6 +10,17 @@ from dataclasses import dataclass
 from ...utils.types import MISSING
 from ...utils.api_object import APIObject
 
+import io
+from aiohttp import ClientSession
+
+PILLOW_IMPORT = True
+
+try:
+    from PIL import Image
+except (ModuleNotFoundError, ImportError):
+    PILLOW_IMPORT = False
+
+
 if TYPE_CHECKING:
     from typing import Optional
 
@@ -125,6 +136,19 @@ class User(APIObject):
     def mention(self) -> str:
         """:class:`str`: The user's mention string."""
         return f"<@!{self.id}>"
+
+    def get_avatar_url(self, size: int = 512, ext: str = 'png') -> str:
+        return (
+            f"https://cdn.discordapp.com/avatars/{self.id}/{self.avatar}.{ext}"
+            f"?size={size}"
+        )
+
+    if PILLOW_IMPORT:
+        async def get_avatar(self, size=512, ext='png') -> Image:
+            async with ClientSession().get(url=self.get_avatar_url()) as resp:
+                avatar = io.BytesIO(await resp.read())
+                print(Image, dir(Image))
+                return Image.open(avatar).convert("RGBA")
 
     def __str__(self):
         return self.username + '#' + self.discriminator
