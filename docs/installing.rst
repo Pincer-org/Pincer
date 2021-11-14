@@ -47,20 +47,30 @@ Note: The command to install may vary system to system. Try another if one fails
 
    .. tab-item:: Windows
 
-      .. code-block:: sh
+      .. code-block:: python3
 
           $ py -m pip install pincer # should work on windows
 
    .. tab-item:: Linux or MacOS
 
-      .. code-block:: sh
+      .. code-block:: python3
 
           $ python3 -m pip install pincer # try replacing `3` with the version you have
 
 
    .. tab-item:: Install From Github
 
-      .. code-block:: sh
+      .. code-block:: python3
 
           $ pip install "git+https://github.com/pincer-org/pincer"
+          
+Installing [speed]
+-------------------
+To Get Our [speed] Version with aiohttp speed up just do this
+
+   .. tab-item:: Universal Download Command
+
+      .. code-block:: python3
+
+          $ python3 -m pip install pincer[speed] # try replacing `3` with the version you have
 
