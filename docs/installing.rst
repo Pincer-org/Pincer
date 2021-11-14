@@ -20,15 +20,15 @@ More information can be found in the `venv documentation <https://docs.python.or
 
       .. code-block:: sh
 
-         $ python3 -m venv venv
-         $ source venv/bin/activate
+          python3 -m venv venv
+          source venv/bin/activate
 
    .. tab-item:: Windows
 
       .. code-block:: sh
 
-         $ python3 -m venv venv
-         $ venv\Scripts\activate.bat # Windows
+          python3 -m venv venv
+          venv\Scripts\activate.bat # Windows
 
 
 Installing the package
@@ -43,26 +43,26 @@ Note: The command to install may vary system to system. Try another if one fails
 
       .. code-block:: python3
 
-         $ pip install pincer  # should work on most systems
+          pip install pincer  # should work on most systems
 
    .. tab-item:: Windows
 
       .. code-block:: python3
 
-          $ py -m pip install pincer # should work on windows
+           py -m pip install pincer # should work on windows
 
    .. tab-item:: Linux or MacOS
 
       .. code-block:: python3
 
-          $ python3 -m pip install pincer # try replacing `3` with the version you have
+           python3 -m pip install pincer # try replacing `3` with the version you have
 
 
    .. tab-item:: Install From Github
 
       .. code-block:: python3
 
-          $ pip install "git+https://github.com/pincer-org/pincer"
+           pip install "git+https://github.com/pincer-org/pincer"
           
 Installing [speed]
 -------------------
@@ -74,5 +74,5 @@ To Get Our [speed] Version with aiohttp speed up just do this
 
       .. code-block:: python3
 
-          $ python3 -m pip install pincer[speed] # try replacing `3` with the version you have
+           python3 -m pip install pincer[speed] # try replacing `3` with the version you have
 
