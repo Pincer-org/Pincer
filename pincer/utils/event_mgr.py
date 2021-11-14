@@ -4,7 +4,7 @@
 from abc import ABC, abstractmethod
 from asyncio import Event, wait_for as _wait_for, get_running_loop, TimeoutError
 from collections import deque
-from typing import Any, Callable, Union
+from typing import Any, List, Union
 
 from .types import CheckFunction
 from ..exceptions import TimeoutError as PincerTimeoutError
@@ -169,7 +169,7 @@ class EventMgr:
     """
 
     def __init__(self):
-        self.event_list: _Processable = []
+        self.event_list: List[_Processable] = []
 
     def process_events(self, event_name, *args):
         """
