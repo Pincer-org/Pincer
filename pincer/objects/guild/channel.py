@@ -218,6 +218,8 @@ class Channel(APIObject):  # noqa E501
 
         Parameters
         ----------
+        reason Optional[:class:`str`]
+            The reason of the channel delete.
         \\*\\*kwargs :
             The keyword arguments to edit the channel with.
 
@@ -359,7 +361,19 @@ class TextChannel(Channel):
         return await super().edit(**kwargs)
 
     async def fetch_message(self, message_id: int) -> UserMessage:
-        # TODO: docstring
+        """|coro|
+        Returns a UserMessage from this channel with the given id.
+
+        Parameters
+        ----------
+        message_id : :class: int
+            The message ID to look for.
+
+        Returns
+        -------
+        :class:`~pincer.objects.message.user_message.UserMessage`
+            The requested message.
+        """
         return UserMessage.from_dict(
             await self._http.get(
                 f"/channels/{self.id}/messages/{message_id}"
