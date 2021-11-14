@@ -5,7 +5,21 @@
 
 from pincer.middleware import guild_members_chunk
 from ..core.dispatch import GatewayDispatch
-from ..objects.events.guild import GuildBanAddEvent, GuildBanRemoveEvent, GuildEmojisUpdateEvent, GuildIntegrationsUpdateEvent, GuildMemberAddEvent, GuildMemberRemoveEvent, GuildMemberUpdateEvent, GuildMembersChunkEvent, GuildRoleCreateEvent, GuildRoleDeleteEvent, GuildRoleUpdateEvent, GuildStatusEvent , GuildStickersUpdateEvent 
+from ..objects.events.guild import (
+    GuildBanAddEvent,
+    GuildBanRemoveEvent,
+    GuildEmojisUpdateEvent,
+    GuildIntegrationsUpdateEvent,
+    GuildMemberAddEvent,
+    GuildMemberRemoveEvent,
+    GuildMemberUpdateEvent,
+    GuildMembersChunkEvent,
+    GuildRoleCreateEvent,
+    GuildRoleDeleteEvent,
+    GuildRoleUpdateEvent,
+    GuildStatusEvent,
+    GuildStickersUpdateEvent,
+)
 from ..utils import Coro
 from ..objects import Guild, Channel
 from ..utils.conversion import construct_client_dict
@@ -62,6 +76,7 @@ async def guild_ban_add_middleware(self, payload: GatewayDispatch):
         [GuildBanAddEvent.from_dict(construct_client_dict(self, payload.data))],
     )
 
+
 async def guild_unban_middleware(self, payload: GatewayDispatch):
     """|coro|
 
@@ -82,6 +97,7 @@ async def guild_unban_middleware(self, payload: GatewayDispatch):
         "on_guild_ban_remove",
         [GuildBanRemoveEvent.from_dict(construct_client_dict(self, payload.data))],
     )
+
 
 async def guild_delete_middleware(self, payload: GatewayDispatch):
     """|coro|
@@ -105,6 +121,7 @@ async def guild_delete_middleware(self, payload: GatewayDispatch):
 
     return "on_guild_delete", [guild]
 
+
 async def guild_emojis_update_middleware(self, payload: GatewayDispatch):
     """|coro|
 
@@ -123,12 +140,9 @@ async def guild_emojis_update_middleware(self, payload: GatewayDispatch):
 
     return (
         "on_guild_emojis_update",
-        [
-            GuildEmojisUpdateEvent.from_dict(
-                construct_client_dict(self, payload.data)
-            )
-        ],
+        [GuildEmojisUpdateEvent.from_dict(construct_client_dict(self, payload.data))],
     )
+
 
 async def guild_integrations_update_middleware(self, payload: GatewayDispatch):
     """|coro|
@@ -155,6 +169,7 @@ async def guild_integrations_update_middleware(self, payload: GatewayDispatch):
         ],
     )
 
+
 async def guild_member_add_middleware(self, payload: GatewayDispatch):
     """|coro|
 
@@ -174,6 +189,7 @@ async def guild_member_add_middleware(self, payload: GatewayDispatch):
     return "on_guild_member_add", [
         GuildMemberAddEvent.from_dict(construct_client_dict(self, payload.data))
     ]
+
 
 async def guild_member_remove_middleware(self, payload: GatewayDispatch):
     """|coro|
@@ -196,6 +212,7 @@ async def guild_member_remove_middleware(self, payload: GatewayDispatch):
         [GuildMemberRemoveEvent.from_dict(construct_client_dict(self, payload.data))],
     )
 
+
 async def guild_member_update_middleware(self, payload: GatewayDispatch):
     """|coro|
 
@@ -217,6 +234,7 @@ async def guild_member_update_middleware(self, payload: GatewayDispatch):
         [GuildMemberUpdateEvent.from_dict(construct_client_dict(self, payload.data))],
     )
 
+
 async def guild_member_chunk_middleware(self, payload: GatewayDispatch):
     """|coro|
 
@@ -235,10 +253,9 @@ async def guild_member_chunk_middleware(self, payload: GatewayDispatch):
 
     return (
         "on_guild_member_chunk",
-        [GuildMembersChunkEvent.from_dict(
-            construct_client_dict(self, payload.data)
-        )]
+        [GuildMembersChunkEvent.from_dict(construct_client_dict(self, payload.data))],
     )
+
 
 async def guild_role_create_middleware(self, payload: GatewayDispatch):
     """|coro|
@@ -261,6 +278,7 @@ async def guild_role_create_middleware(self, payload: GatewayDispatch):
         [GuildRoleCreateEvent.from_dict(construct_client_dict(self, payload.data))],
     )
 
+
 async def guild_role_delete_middleware(self, payload: GatewayDispatch):
     """|coro|
 
@@ -281,6 +299,7 @@ async def guild_role_delete_middleware(self, payload: GatewayDispatch):
         "on_guild_role_delete",
         [GuildRoleDeleteEvent.from_dict(construct_client_dict(self, payload.data))],
     )
+
 
 async def guild_update_middleware(self, payload: GatewayDispatch):
     """|coro|
@@ -305,14 +324,14 @@ async def guild_update_middleware(self, payload: GatewayDispatch):
         for channel in channel_list
     ]
 
-    guild = Guild.from_dict(construct_client_dict(
-        self,
-        {"channels": channels, **payload.data}
-    ))
+    guild = Guild.from_dict(
+        construct_client_dict(self, {"channels": channels, **payload.data})
+    )
     self.guild[guild.id] = guild
 
     return "on_guild_update", [guild]
-    
+
+
 async def guild_stickers_update_middleware(self, payload: GatewayDispatch):
     """|coro|
 
@@ -331,12 +350,9 @@ async def guild_stickers_update_middleware(self, payload: GatewayDispatch):
 
     return (
         "on_guild_stickers_update",
-        [
-            GuildStickersUpdateEvent.from_dict(
-                construct_client_dict(self, payload.data)
-            )
-        ],
+        [GuildStickersUpdateEvent.from_dict(construct_client_dict(self, payload.data))],
     )
+
 
 async def guild_status_middleware(self, payload: GatewayDispatch):
     """|coro|
@@ -359,4 +375,19 @@ async def guild_status_middleware(self, payload: GatewayDispatch):
 
 
 def export() -> Coro:
-    return guild_ban_add_middleware, guild_unban_middleware, guild_create_middleware, guild_delete_middleware, guild_emojis_update_middleware, guild_member_add_middleware, guild_integrations_update_middleware, guild_member_remove_middleware, guild_member_update_middleware, guild_members_chunk, guild_role_create_middleware, guild_update_middleware, guild_stickers_update_middleware, guild_status_middleware
+    return (
+        guild_ban_add_middleware,
+        guild_unban_middleware,
+        guild_create_middleware,
+        guild_delete_middleware,
+        guild_emojis_update_middleware,
+        guild_member_add_middleware,
+        guild_integrations_update_middleware,
+        guild_member_remove_middleware,
+        guild_member_update_middleware,
+        guild_members_chunk,
+        guild_role_create_middleware,
+        guild_update_middleware,
+        guild_stickers_update_middleware,
+        guild_status_middleware,
+    )

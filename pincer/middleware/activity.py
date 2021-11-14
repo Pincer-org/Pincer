@@ -31,6 +31,7 @@ async def activity_spectate_middleware(self, payload: GatewayDispatch):
         ActivitySpectateEvent.from_dict(construct_client_dict(self, payload.data))
     ]
 
+
 async def activity_join_request_middleware(self, payload: GatewayDispatch):
     """|coro|
 
@@ -49,6 +50,7 @@ async def activity_join_request_middleware(self, payload: GatewayDispatch):
     return "on_activity_join_request", [
         User.from_dict(construct_client_dict(self, payload.data))
     ]
+
 
 async def activity_join_middleware(self, payload: GatewayDispatch):
     """|coro|
@@ -71,4 +73,8 @@ async def activity_join_middleware(self, payload: GatewayDispatch):
 
 
 def export() -> Coro:
-    return activity_spectate_middleware, activity_join_middleware, activity_join_request_middleware
+    return (
+        activity_spectate_middleware,
+        activity_join_middleware,
+        activity_join_request_middleware,
+    )

@@ -18,8 +18,7 @@ if TYPE_CHECKING:
 
 
 def channel_create_middleware(
-        self,
-        payload: GatewayDispatch
+    self, payload: GatewayDispatch
 ) -> Tuple[str, List[Channel]]:
     """|coro|
 
@@ -38,6 +37,7 @@ def channel_create_middleware(
     return "on_channel_creation", [
         Channel.from_dict(construct_client_dict(self, payload.data))
     ]
+
 
 async def channel_delete_middleware(self, payload: GatewayDispatch):
     """|coro|
@@ -82,9 +82,8 @@ async def channel_pins_update_middleware(self, payload: GatewayDispatch):
         ``on_channel_pins_update`` and a ``Channel``
     """
 
-    return "on_channel_pins_update", [
-        ChannelPinsUpdateEvent.from_dict(payload.data)
-    ]
+    return "on_channel_pins_update", [ChannelPinsUpdateEvent.from_dict(payload.data)]
+
 
 async def channel_update_middleware(self, payload: GatewayDispatch):
     """|coro|
@@ -115,4 +114,8 @@ async def channel_update_middleware(self, payload: GatewayDispatch):
 
 
 def export():
-    return channel_create_middleware, channel_delete_middleware, channel_pins_update_middleware
+    return (
+        channel_create_middleware,
+        channel_delete_middleware,
+        channel_pins_update_middleware,
+    )

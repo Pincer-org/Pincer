@@ -18,10 +18,7 @@ if TYPE_CHECKING:
     from ..core.dispatch import GatewayDispatch
 
 
-def error_middleware(
-    self,
-    payload: GatewayDispatch
-) -> Tuple[str, List[DiscordError]]:
+def error_middleware(self, payload: GatewayDispatch) -> Tuple[str, List[DiscordError]]:
     """|coro|
 
     Middleware for ``on_error`` event.
