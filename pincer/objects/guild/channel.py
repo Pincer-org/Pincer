@@ -358,6 +358,13 @@ class TextChannel(Channel):
         """
         return await super().edit(**kwargs)
 
+    async def fetch_message(self, message_id: int) -> UserMessage:
+        # TODO: docstring
+        return UserMessage.from_dict(
+            await self._http.get(
+                f"/channels/{self.id}/messages/{message_id}"
+            )
+        )
 
 class VoiceChannel(Channel):
     """A subclass of ``Channel`` for voice channels with all the same attributes."""
