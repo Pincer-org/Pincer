@@ -1,8 +1,8 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
+from __future__ import annotations
 
 """Channel Middlewares"""
-from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
