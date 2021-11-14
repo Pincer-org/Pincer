@@ -148,7 +148,7 @@ class _LoopMgr(_Processable):
         Returns the next item if the queue. If there are no items in the queue,
         it will return the next event that happens.
         """
-        if len(self.events) == 0:
+        if not self.events:
             if not self.can_expand:
                 raise _LoopEmptyError
 
