@@ -68,7 +68,9 @@ Installing [speed]
 -------------------
 To Get Our [speed] Version with aiohttp speed up just do this
 
-   .. tab-item:: Universal Download Command
+.. tab-set::
+
+    .. tab-item:: Universal Download Command
 
       .. code-block:: python3
 
