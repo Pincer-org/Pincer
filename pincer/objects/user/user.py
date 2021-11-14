@@ -103,9 +103,9 @@ class User(APIObject):
     verified: APINullable[:class:`bool`]
         Whether the email on this account has been verified
     """
-    discriminator: str
     id: Snowflake
-    username: str
+    username: APINullable[str] = MISSING
+    discriminator: APINullable[str] = MISSING
 
     avatar: APINullable[str] = MISSING
     flags: APINullable[int] = MISSING
