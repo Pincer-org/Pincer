@@ -3,7 +3,7 @@
 
 """Guild events"""
 
-import __future__
+from __future__ import annotations
 from pincer.middleware import guild_members_chunk
 from ..core.dispatch import GatewayDispatch
 from ..objects.events.guild import (
@@ -24,7 +24,6 @@ from ..objects.events.guild import (
 from ..utils import Coro
 from ..objects import Guild, Channel
 from ..utils.conversion import construct_client_dict
-from __future__ import annotations
 from ..objects.guild import Guild, UnavailableGuild
 
 from typing import TYPE_CHECKING
