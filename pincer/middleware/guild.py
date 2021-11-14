@@ -384,7 +384,7 @@ def export() -> Coro:
         guild_integrations_update_middleware,
         guild_member_remove_middleware,
         guild_member_update_middleware,
-        guild_members_chunk,
+        guild_members_chunk_middleware,
         guild_role_create_middleware,
         guild_update_middleware,
         guild_stickers_update_middleware,
