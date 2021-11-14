@@ -254,6 +254,12 @@ class UnavailableGuildError(PincerError):
     """
 
 
+class TimeoutError(PincerError):
+    """Exception raised when :class:`~pincer.utils.event_mgr.EventMgr`
+    `wait_for` and `loop_for` methods time out
+    """
+
+
 # Discord HTTP Errors
 # `developers/docs/topics/opcodes-and-status-codes#http`
 

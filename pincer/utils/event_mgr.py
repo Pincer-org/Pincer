@@ -7,6 +7,7 @@ from collections import deque
 from typing import Any, Callable, Union
 
 from .types import CheckFunction
+from ..exceptions import TimeoutError as PincerTimeoutError
 
 
 class _Processable(ABC):
@@ -211,7 +212,7 @@ class EventMgr:
         try:
             await _wait_for(event.wait(), timeout=timeout)
         except TimeoutError:
-            raise TimeoutError(
+            raise PincerTimeoutError(
                 "wait_for() timed out while waiting for an event."
             )
         self.event_list.remove(event)
@@ -220,7 +221,7 @@ class EventMgr:
     async def loop_for(
         self,
         event_name: str,
-        check: Union[Callable[[Any], bool], None],
+        check: CheckFunction,
         iteration_timeout: Union[float, None],
         loop_timeout: Union[float, None],
     ) -> Any:
@@ -268,7 +269,7 @@ class EventMgr:
                     while True:
                         yield await loop_mgr.get_next()
                 except _LoopEmptyError:
-                    raise TimeoutError(
+                    raise PincerTimeoutError(
                         "loop_for() timed out while waiting for an event"
                     )
 
@@ -277,6 +278,6 @@ class EventMgr:
             # loop_timeout can be below 0 if the user's code in the for loop
             # takes longer than the time left in loop_timeout
             if loop_timeout <= 0:
-                raise TimeoutError(
+                raise PincerTimeoutError(
                     "loop_for() timed out while waiting for an event"
                 )
