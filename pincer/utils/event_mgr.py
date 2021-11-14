@@ -4,10 +4,14 @@
 from abc import ABC, abstractmethod
 from asyncio import Event, wait_for as _wait_for, get_running_loop, TimeoutError
 from collections import deque
-from typing import Any, List, Union
+from typing import TYPE_CHECKING
 
-from .types import CheckFunction
 from ..exceptions import TimeoutError as PincerTimeoutError
+
+
+if TYPE_CHECKING:
+    from typing import Any, List, Union
+    from .types import CheckFunction
 
 
 class _Processable(ABC):
