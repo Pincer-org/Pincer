@@ -14,9 +14,6 @@ from ..objects.events.channel import ChannelPinsUpdateEvent
 if TYPE_CHECKING:
     from typing import List, Tuple
 
-    from ..core.dispatch import GatewayDispatch
-
-
 def channel_create_middleware(
     self, payload: GatewayDispatch
 ) -> Tuple[str, List[Channel]]:
