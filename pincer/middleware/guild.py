@@ -4,7 +4,6 @@
 """Guild events"""
 
 from __future__ import annotations
-from pincer.middleware import guild_members_chunk
 from ..core.dispatch import GatewayDispatch
 from ..objects.events.guild import (
     GuildBanAddEvent,
