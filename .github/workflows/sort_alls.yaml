@@ -31,5 +31,5 @@ jobs:
         run: |
           git pull
           git add .
-          git diff-index --quiet HEAD || git commit -m "🎨 Automatic `__all__` sorting"
+          git diff-index --quiet HEAD || git commit -m ":art: Automatic `__all__` sorting"
           git push origin main
