@@ -598,9 +598,9 @@ class Client(Dispatcher):
         event_name : str
             The type of event. It should start with `on_`. This is the same
             name that is used for @Client.event.
-        check : Callable[[Any], bool], default=None
+        check : CheckFunction
             This function only returns a value if this return true.
-        timeout: Union[float, None]
+        timeout: Optional[float]
             Amount of seconds before timeout.
 
         Returns
