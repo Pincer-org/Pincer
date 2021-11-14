@@ -34,5 +34,5 @@ jobs:
         run: |
           git pull
           git add .
-          git diff-index --quiet HEAD || git commit -m "🔨  Automatic update of setup.cfg"
+          git diff-index --quiet HEAD || git commit -m ":hammer: Automatic update of setup.cfg"
           git push origin main
