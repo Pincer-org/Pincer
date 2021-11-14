@@ -57,9 +57,7 @@ def _lowest_value(*args):
     if len(args_without_none) == 0:
         return None
 
-    return min(
-        args_without_none
-    )
+    return min(args_without_none)
 
 
 class _Event(_Processable):
