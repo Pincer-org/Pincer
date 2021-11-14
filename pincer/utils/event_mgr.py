@@ -205,10 +205,7 @@ class EventMgr:
             What the Discord API returns for this event.
         """
 
-        event = _Event(
-            event_name=event_name,
-            check=check
-        )
+        event = _Event(event_name, check)
         self.event_list.append(event)
 
         try:
