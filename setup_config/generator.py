@@ -33,7 +33,7 @@ def main():
     with open("setup.cfg", "w") as f:
         f.write(
             base.format(
-                version=repr(__version__),
+                version=__version__,
                 packages=packages,
                 **dependencies
             )
