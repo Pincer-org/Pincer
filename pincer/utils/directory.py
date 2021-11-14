@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from contextlib import contextmanager
 from os import getcwd, chdir as os_chdir
 from typing import TYPE_CHECKING
-from contextlib import contextmanager
 
 if TYPE_CHECKING:
     from typing import Generator, Any

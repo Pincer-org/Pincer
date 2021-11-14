@@ -6,13 +6,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Union, TYPE_CHECKING
 
-from ...utils.types import MISSING
+from .command_types import AppCommandOptionType, AppCommandType
+from ...utils.api_object import APIObject
 from ...utils.conversion import convert
 from ...utils.snowflake import Snowflake
-from ...utils.extraction import get_index
-from ...utils.api_object import APIObject
 from ...utils.types import Coro, choice_value_types
-from .command_types import AppCommandOptionType, AppCommandType
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from ...utils.types import APINullable

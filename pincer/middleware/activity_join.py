@@ -6,9 +6,9 @@ Sent when the user clicks a Rich Presence join invite in chat
 to join a game.
 """
 
+from ..core.dispatch import GatewayDispatch
 from ..objects.events.activity import ActivityJoinEvent
 from ..utils.conversion import construct_client_dict
-from ..core.dispatch import GatewayDispatch
 from ..utils.types import Coro
 
 

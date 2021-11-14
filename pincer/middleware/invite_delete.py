@@ -3,10 +3,10 @@
 
 """sent when an invite is deleted"""
 
-from ..utils.types import Coro
 from ..core.dispatch import GatewayDispatch
 from ..objects.events.invite import InviteDeleteEvent
 from ..utils.conversion import construct_client_dict
+from ..utils.types import Coro
 
 
 async def invite_delete_middleware(self, payload: GatewayDispatch):
