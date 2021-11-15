@@ -67,17 +67,17 @@ following:
 
 - Unix systems can use pip3/python3 commands
 
-    ```py
+    ```sh
     pip3 install pincer
     ```
 
-    ```py
+    ```sh
     python3 -m pip install pincer
     ```
 
 - Using multiple Python versions
 
-    ```py
+    ```sh
     py -m pip install pincer
     ```
 
