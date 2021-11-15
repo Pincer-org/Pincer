@@ -2,6 +2,7 @@ import random
 
 from pincer import Client, command
 from pincer.objects import Intents, MessageContext
+from pincer.exceptions import TimeoutError
 
 
 class Bot(Client):
