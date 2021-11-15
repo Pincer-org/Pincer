@@ -68,11 +68,7 @@ Installing [speed]
 -------------------
 To Get Our [speed] Version with aiohttp speed up just do this
 
-.. tab-set::
-
-    .. tab-item:: Universal Download Command
-
       .. code-block:: sh
 
-          $ python3 -m pip install pincer[speed] # try replacing `3` with the version you have
+          $ pip install pincer[speed] # try replacing `3` with the version you have
 
