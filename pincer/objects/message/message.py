@@ -60,9 +60,10 @@ class Message:
     type: Optional[:class:`~pincer.objects.app.interaction_base.CallbackType`]
         The type of the callback.
     """
+
     # noqa: E501
 
-    content: str = ''
+    content: str = ""
     attachments: Optional[List[File]] = None
     tts: Optional[bool] = False
     embeds: Optional[List[Embed]] = None
@@ -87,10 +88,12 @@ class Message:
             if isinstance(value, File):
                 attachment.append(value)
             elif PILLOW_IMPORT and isinstance(value, Image):
-                attachment.append(File.from_pillow_image(
-                    value,
-                    f"image{count}.png",
-                ))
+                attachment.append(
+                    File.from_pillow_image(
+                        value,
+                        f"image{count}.png",
+                    )
+                )
             elif isinstance(value, str):
                 attachment.append(File.from_file(value))
             else:
@@ -103,16 +106,13 @@ class Message:
         """:class:`bool`: If the message is empty."""
 
         return (
-            len(self.content) < 1
-            and not self.embeds
-            and not self.attachments
+            len(self.content) < 1 and not self.embeds and not self.attachments
         )
 
     def to_dict(self):
 
         allowed_mentions = (
-            self.allowed_mentions.to_dict()
-            if self.allowed_mentions else {}
+            self.allowed_mentions.to_dict() if self.allowed_mentions else {}
         )
 
         # Attachments aren't serialized
@@ -125,15 +125,12 @@ class Message:
             "allowed_mentions": allowed_mentions,
             "components": [
                 components.to_dict() for components in (self.components or [])
-            ]
+            ],
         }
 
         # IDE does not recognise return type of filter properly.
         # noinspection PyTypeChecker
-        return dict(filter(
-            lambda kv: kv[1],
-            resp.items()
-        ))
+        return dict(filter(lambda kv: kv[1], resp.items()))
 
     def serialize(
         self, message_type: Optional[CallbackType] = None
@@ -161,10 +158,7 @@ class Message:
 
         if message_type is not None:
             json_data = json_payload
-            json_payload = {
-                "data": json_data,
-                "type": message_type
-            }
+            json_payload = {"data": json_data, "type": message_type}
 
         if not self.attachments:
             return "application/json", json_payload

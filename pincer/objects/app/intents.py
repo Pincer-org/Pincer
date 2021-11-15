@@ -50,6 +50,7 @@ class Intents(IntEnum):
     DIRECT_MESSAGE_TYPING:
         DM typing to messages intent.
     """
+
     NONE = 0
     GUILDS = 1 << 0
     GUILD_MEMBERS = 1 << 1

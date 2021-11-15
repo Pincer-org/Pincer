@@ -17,8 +17,7 @@ if TYPE_CHECKING:
 
 
 async def message_update_middleware(
-    self,
-    payload: GatewayDispatch
+    self, payload: GatewayDispatch
 ) -> Tuple[str, List[UserMessage]]:
     """|coro|
 

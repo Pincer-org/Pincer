@@ -27,7 +27,11 @@ async def guild_role_update_middleware(self, payload: GatewayDispatch):
 
     return (
         "on_guild_role_update",
-        [GuildRoleUpdateEvent.from_dict(construct_client_dict(self, payload.data))],
+        [
+            GuildRoleUpdateEvent.from_dict(
+                construct_client_dict(self, payload.data)
+            )
+        ],
     )
 
 

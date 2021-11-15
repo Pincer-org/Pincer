@@ -28,7 +28,9 @@ async def activity_spectate_middleware(self, payload: GatewayDispatch):
         ``on_activity_spectate`` and an ``ActivitySpectateEvent``
     """
     return "on_activity_spectate", [
-        ActivitySpectateEvent.from_dict(construct_client_dict(self, payload.data))
+        ActivitySpectateEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        )
     ]
 
 

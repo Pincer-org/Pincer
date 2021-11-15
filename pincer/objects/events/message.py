@@ -30,6 +30,7 @@ class MessageDeleteEvent(APIObject):
     guild_id: APIObject[:class:`~pincer.utils.snowflake.Snowflake`]
         The id of the guild
     """
+
     id: Snowflake
     channel_id: Snowflake
 
@@ -49,6 +50,7 @@ class MessageDeleteBulkEvent(APIObject):
     guild_id: APIObject[:class:`~pincer.utils.snowflake.Snowflake`]
         The id of the guild
     """
+
     ids: List[Snowflake]
     channel_id: Snowflake
 
@@ -74,6 +76,7 @@ class MessageReactionAddEvent(APIObject):
     member: :class:`~pincer.objects.guild.member.GuildMember`
         The member who reacted if this happened in a guild
     """
+
     user_id: Snowflake
     channel_id: Snowflake
     message_id: Snowflake
@@ -100,6 +103,7 @@ class MessageReactionRemoveEvent(APIObject):
     guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The id of the guild
     """
+
     user_id: Snowflake
     channel_id: Snowflake
     message_id: Snowflake
@@ -121,6 +125,7 @@ class MessageReactionRemoveAllEvent(APIObject):
     guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The id of the guild
     """
+
     channel_id: Snowflake
     message_id: Snowflake
     guild_id: APINullable[Snowflake] = MISSING
@@ -142,6 +147,7 @@ class MessageReactionRemoveEmojiEvent(APIObject):
     guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The id of the guild
     """
+
     channel_id: Snowflake
     message_id: Snowflake
     emoji: Emoji

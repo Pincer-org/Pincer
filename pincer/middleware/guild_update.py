@@ -32,10 +32,9 @@ async def guild_update_middleware(self, payload: GatewayDispatch):
         for channel in channel_list
     ]
 
-    guild = Guild.from_dict(construct_client_dict(
-        self,
-        {"channels": channels, **payload.data}
-    ))
+    guild = Guild.from_dict(
+        construct_client_dict(self, {"channels": channels, **payload.data})
+    )
     self.guild[guild.id] = guild
 
     return "on_guild_update", [guild]

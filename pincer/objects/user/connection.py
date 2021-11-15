@@ -42,6 +42,7 @@ class Connection(APIObject):
     integrations: APINullable[List[:class:`~pincer.objects.user.integration.Integration`]]
         An array of partial server integrations
     """
+
     # noqa: E501
 
     id: str

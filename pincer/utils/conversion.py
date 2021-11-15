@@ -15,18 +15,14 @@ if TYPE_CHECKING:
 
 
 def construct_client_dict(client: Client, data: Dict[...]):
-    return {
-        **data,
-        "_client": client,
-        "_http": client.http
-    }
+    return {**data, "_client": client, "_http": client.http}
 
 
 def convert(
-        value: Any,
-        factory: Callable[[Any], T],
-        check: Optional[T] = None,
-        client: Optional[Client] = None
+    value: Any,
+    factory: Callable[[Any], T],
+    check: Optional[T] = None,
+    client: Optional[Client] = None,
 ) -> T:
     def handle_factory() -> T:
         def fin_fac(v: Any):

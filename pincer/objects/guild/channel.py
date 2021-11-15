@@ -58,6 +58,7 @@ class ChannelType(IntEnum):
     GUILD_STAGE_VOICE:
         A stage channel.
     """
+
     GUILD_TEXT = 0
     DM = 1
     GUILD_VOICE = 2
@@ -145,6 +146,7 @@ class Channel(APIObject):  # noqa E501
     video_quality_mode: APINullable[:class:`int`]
         The camera video quality mode of the voice channel, 1 when not present
     """
+
     # noqa: E501
     id: Snowflake
     type: ChannelType
@@ -187,33 +189,36 @@ class Channel(APIObject):  # noqa E501
         # TODO: Write docs
         data = (await client.http.get(f"channels/{channel_id}")) or {}
 
-        data.update(construct_client_dict(
-            client,
-            {"type": ChannelType(data.pop("type"))}
-        ))
+        data.update(
+            construct_client_dict(
+                client, {"type": ChannelType(data.pop("type"))}
+            )
+        )
 
         channel_cls = _channel_type_map.get(data["type"], Channel)
         return channel_cls.from_dict(data)
 
     @overload
     async def edit(
-            self, *, name: str = None,
-            type: ChannelType = None,
-            position: int = None, topic: str = None, nsfw: bool = None,
-            rate_limit_per_user: int = None, bitrate: int = None,
-            user_limit: int = None,
-            permissions_overwrites: List[Overwrite] = None,
-            parent_id: Snowflake = None, rtc_region: str = None,
-            video_quality_mod: int = None,
-            default_auto_archive_duration: int = None
+        self,
+        *,
+        name: str = None,
+        type: ChannelType = None,
+        position: int = None,
+        topic: str = None,
+        nsfw: bool = None,
+        rate_limit_per_user: int = None,
+        bitrate: int = None,
+        user_limit: int = None,
+        permissions_overwrites: List[Overwrite] = None,
+        parent_id: Snowflake = None,
+        rtc_region: str = None,
+        video_quality_mod: int = None,
+        default_auto_archive_duration: int = None,
     ) -> Channel:
         ...
 
-    async def edit(
-            self,
-            reason: Optional[str] = None,
-            **kwargs
-    ):
+    async def edit(self, reason: Optional[str] = None, **kwargs):
         """Edit a channel with the given keyword arguments.
 
         Parameters
@@ -234,22 +239,21 @@ class Channel(APIObject):  # noqa E501
             headers["X-Audit-Log-Reason"] = str(reason)
 
         data = await self._http.patch(
-            f"channels/{self.id}",
-            kwargs,
-            headers=headers
+            f"channels/{self.id}", kwargs, headers=headers
         )
-        data.update(construct_client_dict(
-            self._client,
-            {"type": ChannelType(data.pop("type"))}
-        ))
+        data.update(
+            construct_client_dict(
+                self._client, {"type": ChannelType(data.pop("type"))}
+            )
+        )
         channel_cls = _channel_type_map.get(data["type"], Channel)
         return channel_cls.from_dict(data)
 
     async def delete(
-            self,
-            reason: Optional[str] = None,
-            /,
-            channel_id: Optional[Snowflake] = None
+        self,
+        reason: Optional[str] = None,
+        /,
+        channel_id: Optional[Snowflake] = None,
     ):
         """|coro|
 
@@ -269,10 +273,7 @@ class Channel(APIObject):  # noqa E501
         if reason is not None:
             headers["X-Audit-Log-Reason"] = str(reason)
 
-        await self._http.delete(
-            f"channels/{channel_id}",
-            headers
-        )
+        await self._http.delete(f"channels/{channel_id}", headers)
 
     async def __post_send_handler(self, message: Message):
         """Process a message after it was sent.
@@ -287,10 +288,7 @@ class Channel(APIObject):  # noqa E501
             await sleep(message.delete_after)
             await self.delete()
 
-    def __post_sent(
-            self,
-            message: Message
-    ):
+    def __post_sent(self, message: Message):
         """Ensure the `__post_send_handler` method its future.
 
         Parameters
@@ -318,9 +316,7 @@ class Channel(APIObject):  # noqa E501
         content_type, data = convert_message(self._client, message).serialize()
 
         resp = await self._http.post(
-            f"channels/{self.id}/messages",
-            data,
-            content_type=content_type
+            f"channels/{self.id}/messages", data, content_type=content_type
         )
         msg = UserMessage.from_dict(resp)
         self.__post_sent(msg)
@@ -336,12 +332,16 @@ class TextChannel(Channel):
 
     @overload
     async def edit(
-            self, name: str = None, type: ChannelType = None,
-            position: int = None, topic: str = None, nsfw: bool = None,
-            rate_limit_per_user: int = None,
-            permissions_overwrites: List[Overwrite] = None,
-            parent_id: Snowflake = None,
-            default_auto_archive_duration: int = None
+        self,
+        name: str = None,
+        type: ChannelType = None,
+        position: int = None,
+        topic: str = None,
+        nsfw: bool = None,
+        rate_limit_per_user: int = None,
+        permissions_overwrites: List[Overwrite] = None,
+        parent_id: Snowflake = None,
+        default_auto_archive_duration: int = None,
     ) -> Union[TextChannel, NewsChannel]:
         ...
 
@@ -375,20 +375,23 @@ class TextChannel(Channel):
             The requested message.
         """
         return UserMessage.from_dict(
-            await self._http.get(
-                f"/channels/{self.id}/messages/{message_id}"
-            )
+            await self._http.get(f"/channels/{self.id}/messages/{message_id}")
         )
+
 
 class VoiceChannel(Channel):
     """A subclass of ``Channel`` for voice channels with all the same attributes."""
 
     @overload
     async def edit(
-            self, name: str = None, position: int = None, bitrate: int = None,
-            user_limit: int = None,
-            permissions_overwrites: List[Overwrite] = None,
-            rtc_region: str = None, video_quality_mod: int = None
+        self,
+        name: str = None,
+        position: int = None,
+        bitrate: int = None,
+        user_limit: int = None,
+        permissions_overwrites: List[Overwrite] = None,
+        rtc_region: str = None,
+        video_quality_mod: int = None,
     ) -> VoiceChannel:
         ...
 
@@ -412,6 +415,7 @@ class CategoryChannel(Channel):
     """A subclass of ``Channel`` for categories channels
     with all the same attributes.
     """
+
     pass
 
 
@@ -420,11 +424,15 @@ class NewsChannel(Channel):
 
     @overload
     async def edit(
-            self, name: str = None, type: ChannelType = None,
-            position: int = None, topic: str = None, nsfw: bool = None,
-            permissions_overwrites: List[Overwrite] = None,
-            parent_id: Snowflake = None,
-            default_auto_archive_duration: int = None
+        self,
+        name: str = None,
+        type: ChannelType = None,
+        position: int = None,
+        topic: str = None,
+        nsfw: bool = None,
+        permissions_overwrites: List[Overwrite] = None,
+        parent_id: Snowflake = None,
+        default_auto_archive_duration: int = None,
     ) -> Union[TextChannel, NewsChannel]:
         ...
 
@@ -459,6 +467,7 @@ class ChannelMention(APIObject):
     name: :class:`str`
         The name of the channel
     """
+
     id: Snowflake
     guild_id: Snowflake
     type: ChannelType
@@ -470,5 +479,5 @@ _channel_type_map: Dict[ChannelType, Channel] = {
     ChannelType.GUILD_TEXT: TextChannel,
     ChannelType.GUILD_VOICE: VoiceChannel,
     ChannelType.GUILD_CATEGORY: CategoryChannel,
-    ChannelType.GUILD_NEWS: NewsChannel
+    ChannelType.GUILD_NEWS: NewsChannel,
 }

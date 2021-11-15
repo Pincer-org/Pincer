@@ -47,6 +47,7 @@ class GuildTemplate(APIObject):
     is_dirty: Optional[:class:`bool`]
         whether the template has unsynced changes
     """
+
     code: str
     name: str
     description: Optional[str]

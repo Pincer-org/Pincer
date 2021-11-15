@@ -25,6 +25,7 @@ class Reaction(APIObject):
     emoji: :class:`~pincer.objects.message.emoji.Emoji`
         Emoji information
     """
+
     count: int
     me: bool
     emoji: Emoji

@@ -27,7 +27,11 @@ async def guild_role_delete_middleware(self, payload: GatewayDispatch):
 
     return (
         "on_guild_role_delete",
-        [GuildRoleDeleteEvent.from_dict(construct_client_dict(self, payload.data))],
+        [
+            GuildRoleDeleteEvent.from_dict(
+                construct_client_dict(self, payload.data)
+            )
+        ],
     )
 
 

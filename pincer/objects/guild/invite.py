@@ -32,6 +32,7 @@ class InviteTargetType(IntEnum):
     EMBEDDED_APPLICATION:
         An embedded application invite, eg poker-night etc.
     """
+
     STREAM = 1
     EMBEDDED_APPLICATION = 2
 
@@ -51,6 +52,7 @@ class InviteStageInstance(APIObject):
     topic: :class:`str`
         the topic of the Stage instance (1-120 characters)
     """
+
     members: List[GuildMember]
     participant_count: int
     speaker_count: int
@@ -74,6 +76,7 @@ class InviteMetadata(APIObject):
     created_at: :class:`~pincer.utils.timestamp.Timestamp`
         When this invite was created
     """
+
     uses: int
     max_uses: int
     max_age: int
@@ -115,6 +118,7 @@ class Invite(APIObject):
         The embedded application to open for this voice channel embedded
         application invite
     """
+
     # noqa: E501
 
     channel: Channel

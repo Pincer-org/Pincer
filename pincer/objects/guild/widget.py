@@ -25,5 +25,6 @@ class GuildWidget(APIObject):
     channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
         The widget channel id
     """
+
     enabled: bool
     channel_id: Optional[Snowflake]

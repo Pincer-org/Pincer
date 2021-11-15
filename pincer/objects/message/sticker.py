@@ -27,6 +27,7 @@ class StickerType(IntEnum):
     GUILD:
         Sticker is a custom sticker from a discord server.
     """
+
     STANDARD = 1
     GUILD = 2
 
@@ -43,6 +44,7 @@ class StickerFormatType(IntEnum):
     LOTTIE:
         Sticker is animated with with LOTTIE format. (vector based)
     """
+
     PNG = 1
     APNG = 2
     LOTTIE = 3

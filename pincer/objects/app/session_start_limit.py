@@ -22,6 +22,7 @@ class SessionStartLimit(APIObject):
     max_concurrency: :class:`int`
         The number of identify requests allowed per 5 seconds
     """
+
     total: int
     remaining: int
     reset_after: int

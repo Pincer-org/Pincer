@@ -28,8 +28,8 @@ class ChannelPinsUpdateEvent(APIObject):
     last_pin_timestamp: APINullable[:class:`~pincer.utils.timestamp.Timestamp`]
         The time at which the most recent pinned message was pinned
     """
+
     channel_id: Snowflake
 
     guild_id: APINullable[Snowflake] = MISSING
     last_pin_timestamp: APINullable[Timestamp] = MISSING
-

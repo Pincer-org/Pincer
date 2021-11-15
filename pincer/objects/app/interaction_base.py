@@ -35,6 +35,7 @@ class CallbackType(IntEnum):
     UPDATE_MESSAGE:
         For components, edit the message the component was attached to
     """
+
     # noqa: E501
     PONG = 1
     MESSAGE = 4
@@ -56,6 +57,7 @@ class InteractionType(IntEnum):
     MESSAGE_COMPONENT:
         A ui component like buttons and selects.
     """
+
     PING = 1
     APPLICATION_COMMAND = 2
     MESSAGE_COMPONENT = 3
@@ -81,6 +83,7 @@ class MessageInteraction(APIObject):
     member: APINullable[Dict]
         The member who invoked the interaction
     """
+
     id: Snowflake
     type: InteractionType
     name: str

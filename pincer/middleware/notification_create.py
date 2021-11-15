@@ -30,7 +30,9 @@ async def notification_create_middleware(self, payload: GatewayDispatch):
     channel_id: int = payload.data.get("channel_id")
     payload.data["message"]["channel_id"] = channel_id
     return "on_notification_create", [
-        NotificationCreateEvent.from_dict(construct_client_dict(self, payload.data))
+        NotificationCreateEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        )
     ]
 
 

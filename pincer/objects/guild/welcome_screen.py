@@ -31,6 +31,7 @@ class WelcomeScreenChannel(APIObject):
         The emoji name if custom, the unicode character if standard,
         or null if no emoji is set
     """
+
     channel_id: Snowflake
     description: str
 
@@ -49,6 +50,7 @@ class WelcomeScreen(APIObject):
     welcome_channels: Optional[:class:`str`]
         The channels shown in the welcome screen, up to 5
     """  # noqa: E501
+
     welcome_channels: List[WelcomeScreenChannel]
 
     description: Optional[str] = None

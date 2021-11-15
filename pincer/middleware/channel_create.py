@@ -17,8 +17,7 @@ if TYPE_CHECKING:
 
 
 def channel_create_middleware(
-        self,
-        payload: GatewayDispatch
+    self, payload: GatewayDispatch
 ) -> Tuple[str, List[Channel]]:
     """|coro|
 

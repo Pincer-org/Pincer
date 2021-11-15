@@ -38,6 +38,7 @@ class ThreadListSyncEvent(APIObject):
         This array may contain channel_ids that have no active
         threads as well, so you know to clear that data.
     """
+
     guild_id: Snowflake
     threads: List[Channel]
     members: List[ThreadMember]
@@ -65,6 +66,7 @@ class ThreadMembersUpdateEvent(APIObject):
     removed_member_ids: APINullable[List[:class:`~pincer.utils.snowflake.Snowflake`]]
         The id of the users who were removed from the thread
     """
+
     # noqa: E501
     id: Snowflake
     guild_id: Snowflake

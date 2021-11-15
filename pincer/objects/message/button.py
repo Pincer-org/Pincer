@@ -37,6 +37,7 @@ class ButtonStyle(IntEnum):
         - color: gray, navigates to a URL
         - required_field: url
     """
+
     PRIMARY = 1
     SECONDARY = 2
     SUCCESS = 3
@@ -70,6 +71,7 @@ class Button(APIObject):
     disabled: APINullable[:class:`bool`]
         Whether the button is disabled (default `False`)
     """
+
     type: int
     style: ButtonStyle
 

@@ -54,6 +54,7 @@ class MessageComponent(APIObject):
     components: APINullable[List[:class:`~pincer.objects.message.component.MessageComponent`]]
         A list of child components
     """
+
     # noqa: E501
     type: int
     options: List[SelectOption]

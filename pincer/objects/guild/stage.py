@@ -23,6 +23,7 @@ class PrivacyLevel(IntEnum):
     GUILD_ONLY:
         The stage of for guild members only.
     """
+
     PUBLIC = 1
     GUILD_ONLY = 2
 
@@ -46,6 +47,7 @@ class StageInstance(APIObject):
     discoverable: :class:`bool`
         Is Stage Discovery enabled
     """
+
     id: Snowflake
     guild_id: Snowflake
     channel_id: Snowflake

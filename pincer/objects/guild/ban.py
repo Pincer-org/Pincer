@@ -23,5 +23,6 @@ class Ban(APIObject):
     user: :class:`~pincer.objects.user.user.User`
         The banned user
     """
+
     reason: Optional[str]
     user: User

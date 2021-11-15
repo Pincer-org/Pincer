@@ -54,6 +54,7 @@ class GuildFeature(Enum):
     PRIVATE_THREADS:
         Guild can have private threads.
     """
+
     ANIMATED_ICON = auto()
     BANNER = auto()
     COMMERCE = auto()

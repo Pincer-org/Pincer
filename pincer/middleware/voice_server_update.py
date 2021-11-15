@@ -25,7 +25,9 @@ async def voice_server_update_middleware(self, payload: GatewayDispatch):
         ``on_voice_server_update`` and a ``VoiceServerUpdateEvent``
     """
     return "on_voice_server_update", [
-        VoiceServerUpdateEvent.from_dict(construct_client_dict(self, payload.data))
+        VoiceServerUpdateEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        )
     ]
 
 

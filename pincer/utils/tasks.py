@@ -12,8 +12,10 @@ from typing import TYPE_CHECKING, Optional
 from . import __package__
 from .insertion import should_pass_cls
 from ..exceptions import (
-    TaskAlreadyRunning, TaskCancelError, TaskInvalidDelay,
-    TaskIsNotCoroutine
+    TaskAlreadyRunning,
+    TaskCancelError,
+    TaskInvalidDelay,
+    TaskIsNotCoroutine,
 )
 
 if TYPE_CHECKING:
@@ -41,7 +43,7 @@ class TaskScheduler:
         minutes=0,
         seconds=0,
         milliseconds=0,
-        microseconds=0
+        microseconds=0,
     ) -> Callable[[Coro], Task]:
         """A decorator to create a task that repeat the given amount of t
         :Example usage:
@@ -90,11 +92,12 @@ class TaskScheduler:
         TaskInvalidDelay:
             The delay is 0 or negative.
         """
+
         def decorator(func: Coro) -> Task:
             if not iscoroutinefunction(func):
                 raise TaskIsNotCoroutine(
-                    f'Task `{func.__name__}` is not a coroutine, '
-                    'which is required for tasks.'
+                    f"Task `{func.__name__}` is not a coroutine, "
+                    "which is required for tasks."
                 )
 
             delay = timedelta(
@@ -104,13 +107,13 @@ class TaskScheduler:
                 minutes=minutes,
                 seconds=seconds,
                 microseconds=microseconds,
-                milliseconds=milliseconds
+                milliseconds=milliseconds,
             ).total_seconds()
 
             if delay <= 0:
                 raise TaskInvalidDelay(
-                    f'Task `{func.__name__}` has a delay of {delay} seconds, '
-                    'which is invalid. Delay must be greater than zero.'
+                    f"Task `{func.__name__}` has a delay of {delay} seconds, "
+                    "which is invalid. Delay must be greater than zero."
                 )
 
             return Task(self, func, delay)
@@ -170,7 +173,7 @@ class Task:
             # Did the user forgot to call task.start() ?
             _log.warning(
                 "Task `%s` was not scheduled. Did you forget to start it ?",
-                self.coro.__name__
+                self.coro.__name__,
             )
 
     @property
@@ -189,7 +192,7 @@ class Task:
         """
         if self.running:
             raise TaskAlreadyRunning(
-                f'Task `{self.coro.__name__}` is already running.', self
+                f"Task `{self.coro.__name__}` is already running.", self
             )
 
         self._scheduler.register(self)
@@ -198,7 +201,7 @@ class Task:
         """Cancel the task."""
         if not self.running:
             raise TaskCancelError(
-                f'Task `{self.coro.__name__}` is not running.', self
+                f"Task `{self.coro.__name__}` is not running.", self
             )
 
         self._handle.cancel()

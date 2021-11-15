@@ -41,6 +41,7 @@ class Identify(APIObject):
     presence: APINullable[Any]
         Presence structure for initial presence information
     """
+
     token: str
     properties: Dict[str, str]
     intents: Intents
@@ -64,6 +65,7 @@ class Resume(APIObject):
     seq: :class:`int`
         Last sequence number received
     """
+
     token: str
     session_id: str
     seq: int
@@ -94,6 +96,7 @@ class RequestGuildMembers(APIObject):
     nonce:
         nonce to identify the Guild Members Chunk response
     """
+
     guild_id: Snowflake
     limit: int
 
@@ -121,6 +124,7 @@ class UpdateVoiceState(APIObject):
     self_deaf:
         is the client deafened
     """
+
     guild_id: Snowflake
     self_mute: bool
     self_deaf: bool
@@ -144,6 +148,7 @@ class StatusType(Enum):
     offline:
         Offline
     """
+
     online = auto()
     dnd = auto()
     idle = auto()
@@ -168,6 +173,7 @@ class UpdatePresence(APIObject):
     afk:
         whether or not the client is afk
     """
+
     activities: List[Activity]
     status: StatusType
     afk: bool

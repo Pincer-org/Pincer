@@ -28,6 +28,7 @@ class Heartbeat:
     This is what lets the server and client know that they are still
     both online and properly connected.
     """
+
     __heartbeat: float = 0
     __sequence: Optional[int] = None
 
@@ -66,9 +67,7 @@ class Heartbeat:
 
     @classmethod
     async def handle_hello(
-            cls,
-            socket: WebSocketClientProtocol,
-            payload: GatewayDispatch
+        cls, socket: WebSocketClientProtocol, payload: GatewayDispatch
     ):
         """|coro|
 
@@ -93,7 +92,8 @@ class Heartbeat:
         if not cls.__heartbeat:
             _log.error(
                 "No `heartbeat_interval` is present. Has the API changed? "
-                "(payload: %s)", payload
+                "(payload: %s)",
+                payload,
             )
 
             raise HeartbeatError(

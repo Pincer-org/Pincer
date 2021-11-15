@@ -26,6 +26,7 @@ class IntegrationDeleteEvent(APIObject):
     application_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         id of the bot/OAuth2 application for this discord integration
     """
+
     id: Snowflake
     guild_id: Snowflake
     application_id: APINullable[Snowflake] = MISSING
@@ -47,6 +48,7 @@ class IntegrationCreateEvent(APIObject):
     application_id : APINullable[:class:`Snowflake`]
         id of the bot/OAuth2 application for this discord integration
     """
+
     id: Snowflake
     guild_id: Snowflake
     application_id: APINullable[Snowflake] = MISSING
@@ -68,6 +70,7 @@ class IntegrationUpdateEvent(APIObject):
     application_id : APINullable[:class:`Snowflake`]
         id of the bot/OAuth2 application for this discord integration
     """
+
     id: Snowflake
     guild_id: Snowflake
     application_id: APINullable[Snowflake] = MISSING

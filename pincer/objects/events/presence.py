@@ -34,6 +34,7 @@ class ActivityType(IntEnum):
     COMPETING:
         Competing in {name}; e.g. "Competing in Arena World Champions"
     """
+
     # noqa: E501
     GAME = 0
     STREAMING = 1
@@ -54,6 +55,7 @@ class ActivityTimestamp(APIObject):
     end: APINullable[:class:`int`]
         Unix time (in milliseconds) of when the activity ends
     """
+
     start: APINullable[int] = MISSING
     end: APINullable[int] = MISSING
 
@@ -71,6 +73,7 @@ class ActivityEmoji(APIObject):
     animated: APINullable[:class:`bool`]
         Whether this emoji is animated
     """
+
     name: str
     id: APINullable[Snowflake] = MISSING
     animated: APINullable[bool] = MISSING
@@ -87,6 +90,7 @@ class ActivityParty(APIObject):
     size: APINullable[Tuple[:class:`int`, :class:`int`]]
         Array of two integers (current_size, max_size)
     """
+
     id: APINullable[str] = MISSING
     size: APINullable[Tuple[int, int]] = MISSING
 
@@ -108,6 +112,7 @@ class ActivityAssets(APIObject):
         text displayed when hovering over
         the small image of the activity
     """
+
     large_image: APINullable[str] = MISSING
     large_text: APINullable[str] = MISSING
     small_image: APINullable[str] = MISSING
@@ -127,6 +132,7 @@ class ActivitySecrets(APIObject):
     match: APINullable[:class:`str`]
         The secret for a specific instanced match
     """
+
     join: APINullable[str] = MISSING
     spectate: APINullable[str] = MISSING
     match_: APINullable[str] = MISSING
@@ -155,6 +161,7 @@ class ActivityButton(APIObject):
     url: :class:`str`
         The url opened when clicking the button (1-512 characters)
     """
+
     label: str
     url: str
 
@@ -198,6 +205,7 @@ class Activity(APIObject):
     buttons: APINullable[List[:class:`~pincer.objects.events.presence.ActivityButton`]]
         The url button on an activity.
     """
+
     # noqa: E501
     name: str
     type: ActivityType
@@ -236,6 +244,7 @@ class ClientStatus(APIObject):
         The user's status set for an active web
         (browser, bot account) application session
     """
+
     desktop: APINullable[str] = MISSING
     mobile: APINullable[str] = MISSING
     web: APINullable[str] = MISSING
@@ -259,6 +268,7 @@ class PresenceUpdateEvent(APIObject):
     client_status: :class:`~pincer.objects.events.presence.ClientStatus`
         User's platform-dependent status
     """
+
     user: User
     guild_id: Snowflake
     status: str
