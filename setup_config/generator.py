@@ -27,7 +27,8 @@ def main():
     dependencies = {
         "requires": get_dependencies("requirements.txt"),
         "testing_requires": get_dependencies("packages/dev.txt"),
-        "images_requires": get_dependencies("packages/img.txt")
+        "images_requires": get_dependencies("packages/img.txt"),
+        "speed_requires": get_dependencies("packages/speed.txt")
     }
 
     with open("setup.cfg", "w") as f:
