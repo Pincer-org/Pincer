@@ -4,18 +4,17 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
 from inspect import isasyncgenfunction, getfullargspec
 from typing import Dict, Any
+from typing import TYPE_CHECKING
 
-from ..utils import get_index
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
 from ..objects import Interaction, MessageContext
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
+from ..utils import get_index
 from ..utils.conversion import construct_client_dict
 from ..utils.signature import get_params, get_signature_and_params
-from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 
 if TYPE_CHECKING:
     from typing import List, Tuple

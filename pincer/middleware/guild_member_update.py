@@ -7,9 +7,9 @@ of a guild member changes.
 """
 
 from ..core.dispatch import GatewayDispatch
+from ..objects.events.guild import GuildMemberUpdateEvent
 from ..utils import Coro
 from ..utils.conversion import construct_client_dict
-from ..objects.events.guild import GuildMemberUpdateEvent
 
 
 async def guild_member_update_middleware(self, payload: GatewayDispatch):

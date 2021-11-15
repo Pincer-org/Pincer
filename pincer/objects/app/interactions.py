@@ -9,8 +9,8 @@ from typing import Dict, TYPE_CHECKING, Union, Optional
 
 from .command_types import AppCommandOptionType
 from .interaction_base import InteractionType, CallbackType
-from ..guild.member import GuildMember
 from ..app.select_menu import SelectOption
+from ..guild.member import GuildMember
 from ..message.context import MessageContext
 from ..message.message import Message
 from ..message.user_message import UserMessage
