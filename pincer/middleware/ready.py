@@ -9,9 +9,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..objects.user.user import User
-from ..exceptions import InvalidPayload
 from ..commands import ChatCommandHandler
+from ..exceptions import InvalidPayload
+from ..objects.user.user import User
 from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:

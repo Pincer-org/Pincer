@@ -7,9 +7,9 @@ with an extra ``guild_id`` key.
 """
 
 from ..core.dispatch import GatewayDispatch
+from ..objects.events.guild import GuildMemberAddEvent
 from ..utils import Coro
 from ..utils.conversion import construct_client_dict
-from ..objects.events.guild import GuildMemberAddEvent
 
 
 async def guild_member_add_middleware(self, payload: GatewayDispatch):

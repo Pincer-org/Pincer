@@ -3,12 +3,24 @@
 
 from __future__ import annotations
 
+import io
+from dataclasses import dataclass
 from enum import IntEnum
 from typing import TYPE_CHECKING
-from dataclasses import dataclass
 
-from ...utils.types import MISSING
+from aiohttp import ClientSession
+
 from ...utils.api_object import APIObject
+from ...utils.conversion import construct_client_dict
+from ...utils.types import MISSING
+
+PILLOW_IMPORT = True
+
+try:
+    from PIL import Image
+except (ModuleNotFoundError, ImportError):
+    PILLOW_IMPORT = False
+
 
 if TYPE_CHECKING:
     from typing import Optional
@@ -16,7 +28,6 @@ if TYPE_CHECKING:
     from ...client import Client
     from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
-    from ...utils.conversion import convert, construct_client_dict
 
 
 class PremiumTypes(IntEnum):
@@ -31,6 +42,7 @@ class PremiumTypes(IntEnum):
     NITRO:
         Full nitro subscription.
     """
+
     NONE = 0
     NITRO_CLASSIC = 1
     NITRO = 2
@@ -46,6 +58,7 @@ class VisibilityType(IntEnum):
     EVERYONE:
         Connection is visible to everyone.
     """
+
     NONE = 0
     EVERYONE = 1
 
@@ -92,9 +105,10 @@ class User(APIObject):
     verified: APINullable[:class:`bool`]
         Whether the email on this account has been verified
     """
-    discriminator: str
+
     id: Snowflake
-    username: str
+    username: APINullable[str] = MISSING
+    discriminator: APINullable[str] = MISSING
 
     avatar: APINullable[str] = MISSING
     flags: APINullable[int] = MISSING
@@ -116,9 +130,7 @@ class User(APIObject):
         user their premium type in a usable enum.
         """
         return (
-            MISSING
-            if self.premium_type is MISSING
-            else PremiumTypes(self.premium_type)
+            MISSING if self.premium_type is MISSING else PremiumTypes(self.premium_type)
         )
 
     @property
@@ -126,8 +138,36 @@ class User(APIObject):
         """:class:`str`: The user's mention string."""
         return f"<@!{self.id}>"
 
+    def get_avatar_url(self, size: int = 512, ext: str = "png") -> str:
+        return (
+            f"https://cdn.discordapp.com/avatars/{self.id}/{self.avatar}.{ext}"
+            f"?size={size}"
+        )
+
+    if PILLOW_IMPORT:
+
+        async def get_avatar(self, size: int = 512, ext: str = "png") -> Image:
+            """Get the user's avatar as a Pillow image.
+
+            Parameters
+            ----------
+            size : :class: int, optional
+                The size of the image to get. Defaults to 512.
+            ext : :class: str, optional
+                The file extension to use. Defaults to 'png'.
+
+            Returns
+            -------
+            :class: Image
+                The user's avatar as a Pillow image.
+            """
+            async with ClientSession().get(url=self.get_avatar_url()) as resp:
+                avatar = io.BytesIO(await resp.read())
+                print(Image, dir(Image))
+                return Image.open(avatar).convert("RGBA")
+
     def __str__(self):
-        return self.username + '#' + self.discriminator
+        return self.username + "#" + self.discriminator
 
     @classmethod
     async def from_id(cls, client: Client, user_id: int) -> User:

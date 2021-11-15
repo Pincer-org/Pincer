@@ -1,12 +1,12 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
+from .app.application import Application
 from .app.command import (
     AppCommandType, AppCommandOptionType, AppCommandInteractionDataOption,
     AppCommandOptionChoice, AppCommandOption, AppCommand,
     ClientCommandStructure
 )
-from .app.application import Application
 from .app.intents import Intents
 from .app.interaction_base import (
     CallbackType, InteractionType, MessageInteraction
@@ -77,6 +77,8 @@ from .guild.welcome_screen import WelcomeScreenChannel, WelcomeScreen
 from .guild.widget import GuildWidget
 from .message.attachment import Attachment
 from .message.button import ButtonStyle, Button
+from .message.component import MessageComponent
+from .message.context import MessageContext
 from .message.embed import (
     Embed, EmbedField, EmbedImage, EmbedAuthor, EmbedProvider, EmbedThumbnail,
     EmbedVideo, EmbedFooter
@@ -84,10 +86,8 @@ from .message.embed import (
 from .message.emoji import Emoji
 from .message.file import File
 from .message.message import Message
-from .message.component import MessageComponent
-from .message.context import MessageContext
-from .message.reference import MessageReference
 from .message.reaction import Reaction
+from .message.reference import MessageReference
 from .message.sticker import (
     StickerType, StickerFormatType, Sticker, StickerItem, StickerPack
 )

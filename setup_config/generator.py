@@ -17,7 +17,7 @@ def get_dependencies(path: str) -> str:
 
 def main():
     with open("VERSION", "w") as f:
-        f.write(repr(__version__))
+        f.write(__version__)
 
     packages = get_packages()
 
@@ -33,7 +33,7 @@ def main():
     with open("setup.cfg", "w") as f:
         f.write(
             base.format(
-                version=repr(__version__),
+                version=__version__,
                 packages=packages,
                 **dependencies
             )

@@ -3,6 +3,8 @@
 
 from .attachment import Attachment
 from .button import ButtonStyle, Button
+from .component import MessageComponent
+from .context import MessageContext
 from .embed import (
     Embed, EmbedField, EmbedImage, EmbedAuthor, EmbedProvider, EmbedThumbnail,
     EmbedVideo, EmbedFooter
@@ -10,10 +12,8 @@ from .embed import (
 from .emoji import Emoji
 from .file import File
 from .message import Message
-from .component import MessageComponent
-from .context import MessageContext
-from .reference import MessageReference
 from .reaction import Reaction
+from .reference import MessageReference
 from .sticker import (
     StickerType, StickerFormatType, Sticker, StickerItem, StickerPack
 )
@@ -21,7 +21,6 @@ from .user_message import (
     MessageActivityType, MessageFlags, MessageType, MessageActivity,
     AllowedMentionTypes, UserMessage, AllowedMentions
 )
-
 
 __all__ = (
     "AllowedMentionTypes", "AllowedMentions", "Attachment", "Button",

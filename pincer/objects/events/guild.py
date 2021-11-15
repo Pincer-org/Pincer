@@ -5,16 +5,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from ..guild.guild import Guild
+from ..guild.member import GuildMember
+from ..user import User
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
 from ...utils.types import MISSING, APINullable
-from ..guild.guild import Guild
-from ..guild.member import GuildMember
-from ..guild.role import Role
-from ..message.emoji import Emoji
-from ..message.sticker import Sticker
-from ..user import User
-from .presence import PresenceUpdateEvent
 
 if TYPE_CHECKING:
     from typing import Any, List, Optional

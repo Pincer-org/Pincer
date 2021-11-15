@@ -34,7 +34,7 @@ class BaseMember(APIObject):
     roles: List[:class:`~pincer.utils.snowflake.Snowflake`]
         Array of role object ids
     hoisted_role: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
-        The user their top guild role!
+        The user's top role in the guild.
     """
     deaf: bool
     joined_at: Timestamp

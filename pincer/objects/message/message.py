@@ -3,9 +3,9 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from json import dumps
 from typing import TYPE_CHECKING
-from dataclasses import dataclass
 
 from aiohttp import FormData
 

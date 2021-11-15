@@ -3,8 +3,8 @@
 
 from __future__ import annotations
 
-from enum import auto, Enum
 from dataclasses import dataclass
+from enum import auto, Enum
 from typing import TYPE_CHECKING
 
 from ...utils.api_object import APIObject

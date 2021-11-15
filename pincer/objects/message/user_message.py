@@ -3,26 +3,26 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from enum import Enum, IntEnum
 from typing import TYPE_CHECKING
-from dataclasses import dataclass
 
-from .embed import Embed
-from .reaction import Reaction
-from .sticker import StickerItem
 from .attachment import Attachment
 from .component import MessageComponent
+from .embed import Embed
+from .reaction import Reaction
 from .reference import MessageReference
-from ..user.user import User
-from ..guild.role import Role
+from .sticker import StickerItem
 from ..app.application import Application
 from ..app.interaction_base import MessageInteraction
 from ..guild.member import GuildMember
-from ...utils.types import MISSING
+from ..guild.role import Role
+from ..user.user import User
 from ..._config import GatewayConfig
-from ...utils.snowflake import Snowflake
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
+from ...utils.snowflake import Snowflake
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import Any, List, Optional, Union, Generator
