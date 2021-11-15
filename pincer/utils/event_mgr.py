@@ -1,13 +1,14 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from asyncio import Event, wait_for as _wait_for, get_running_loop, TimeoutError
 from collections import deque
 from typing import TYPE_CHECKING
 
 from ..exceptions import TimeoutError as PincerTimeoutError
-
 
 if TYPE_CHECKING:
     from typing import Any, List, Union
