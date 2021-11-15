@@ -70,5 +70,5 @@ To Get Our [speed] Version with aiohttp speed up just do this
 
       .. code-block:: sh
 
-          $ pip install pincer[speed] # try replacing `3` with the version you have
+          $ pip install pincer[speed] 
 
