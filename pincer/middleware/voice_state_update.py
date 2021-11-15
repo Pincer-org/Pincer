@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
     from ..core.dispatch import GatewayDispatch
 
+
 async def voice_state_update_middleware(
     self,
     payload: GatewayDispatch
@@ -33,7 +34,8 @@ async def voice_state_update_middleware(
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.user.voice_state.VoiceState`]]
         ``on_voice_state_update`` and a ``VoiceState``
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     return "on_voice_state_update", [
         VoiceState.from_dict(construct_client_dict(self, payload.data))

@@ -3,10 +3,10 @@
 
 """sent when an invite was created"""
 
-from ..utils.types import Coro
 from ..core.dispatch import GatewayDispatch
 from ..objects.events.invite import InviteCreateEvent
 from ..utils.conversion import construct_client_dict
+from ..utils.types import Coro
 
 
 async def invite_create_middleware(self, payload: GatewayDispatch):
@@ -17,7 +17,7 @@ async def invite_create_middleware(self, payload: GatewayDispatch):
     Parameters
     ----------
     payload : :class:`GatewayDispatch`
-        The data recieved from the invite create event
+        The data received from the invite create event
 
     Returns
     -------

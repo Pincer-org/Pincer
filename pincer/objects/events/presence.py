@@ -3,9 +3,9 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from enum import IntEnum
 from typing import TYPE_CHECKING
-from dataclasses import dataclass
 
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING, APINullable
@@ -33,7 +33,8 @@ class ActivityType(IntEnum):
         \\{emoji} {name}; e.g. "\\:smiley: I am cool"; Not for bots; discord limitation
     COMPETING:
         Competing in {name}; e.g. "Competing in Arena World Champions"
-    """  # noqa: E501
+    """
+    # noqa: E501
     GAME = 0
     STREAMING = 1
     LISTENING = 2
@@ -81,7 +82,7 @@ class ActivityParty(APIObject):
 
     Attributes
     ----------
-    id: APIullable[:class:`str`]
+    id: APINullable[:class:`str`]
         The id of the party
     size: APINullable[Tuple[:class:`int`, :class:`int`]]
         Array of two integers (current_size, max_size)
@@ -171,32 +172,33 @@ class Activity(APIObject):
     created_at: :class:`int`
         Unix timestamp (in milliseconds) of when
         the activity was added to the user's session
-    url: APInullable[Optional[:class:`str`]]
+    url: APINullable[Optional[:class:`str`]]
         Stream url, is validated when type is 1
-    timestamps: APInullable[:class:`~pincer.objects.events.presence.ActivityTimestamp`]
+    timestamps: APINullable[:class:`~pincer.objects.events.presence.ActivityTimestamp`]
         Unix timestamps for start and/or end of the game
-    application_id: APInullable[:class:`~pincer.utils.snowflake.Snowflake`]
+    application_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Application id for the game
-    details: APInullable[Optional[:class:`str`]]
+    details: APINullable[Optional[:class:`str`]]
         What the player is currently doing
-    state: APInullable[Optional[:class:`str`]]
+    state: APINullable[Optional[:class:`str`]]
         The user's current party status
-    emoji: APInullable[Optional[:class:`~pincer.objects.events.presence.AcitivityEmoji`]]
+    emoji: APINullable[Optional[:class:`~pincer.objects.events.presence.ActivityEmoji`]]
         The emoji used for a custom status
-    party: APInullable[:class:`~pincer.objects.events.presence.ActivityParty`]
+    party: APINullable[:class:`~pincer.objects.events.presence.ActivityParty`]
         Information for the current party of the player
-    assets: APInullable[:class:`~pincer.objects.events.presence.ActivityAssets`]
+    assets: APINullable[:class:`~pincer.objects.events.presence.ActivityAssets`]
         Images for the presence and their hover texts
-    secrets: APInullable[:class:`~pincer.objects.events.presence.ActivitySecrets`]
+    secrets: APINullable[:class:`~pincer.objects.events.presence.ActivitySecrets`]
         Secrets for Rich Presence joining and spectating
     instance: APINullable[:class:`bool`]
-        "hether or not the activity is an instanced game session
+        "nether or not the activity is an instanced game session
     flags: APINullable[:class:`~pincer.objects.events.presence.ActivityFlags`]
         Activity flags ``OR``\\d together,
         describes what the payload includes
-    buttons: APInullable[List[:class:`~pincer.objects.events.presence.ActivityButton`]]
+    buttons: APINullable[List[:class:`~pincer.objects.events.presence.ActivityButton`]]
         The url button on an activity.
-    """  # noqa: E501
+    """
+    # noqa: E501
     name: str
     type: ActivityType
     created_at: int

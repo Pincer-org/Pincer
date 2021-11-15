@@ -2,9 +2,8 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 from dataclasses import dataclass
-
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
 
@@ -39,7 +38,8 @@ class MessageContext:
     channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
         The ID of the channel the interaction was invoked in.
         Can be None if it wasn't invoked in a channel.
-    """  # noqa: E501
+    """
+    # noqa: E501
     author: Union[GuildMember, User]
     command: ClientCommandStructure
     interaction: Interaction
@@ -88,7 +88,7 @@ class MessageContext:
 
         Send a response for an interaction.
         This object returns the sent object and may be used several
-        times after eachoter. (first one will always be the main
+        times after each other. (first one will always be the main
         interaction response)
 
         Uses

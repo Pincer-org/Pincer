@@ -35,7 +35,8 @@ def error_middleware(
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.events.error.DiscordError`]]
         ``"on_error"`` and a ``DiscordError``
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     return "on_error", [
         DiscordError.from_dict(construct_client_dict(self, payload.data))

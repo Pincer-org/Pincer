@@ -3,9 +3,9 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from json import dumps
 from typing import TYPE_CHECKING
-from dataclasses import dataclass
 
 from aiohttp import FormData
 
@@ -43,7 +43,7 @@ class Message:
     attachments: Optional[List[:class:`~pincer.objects.message.file.File`]]
         Attachments on the message. This is a File object. You can also attach
         a Pillow Image or string. Pillow images will be converted to PNGs. They
-        will use the naming sceme ``image%`` where % is the images index in the
+        will use the naming scheme ``image%`` where % is the images index in the
         attachments array. Strings will be read as a filepath. The name of the
         file that the string points to will be used as the name.
     tts: Optional[:class:`bool`]
@@ -59,7 +59,8 @@ class Message:
         The interaction flags for the message.
     type: Optional[:class:`~pincer.objects.app.interaction_base.CallbackType`]
         The type of the callback.
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     content: str = ''
     attachments: Optional[List[File]] = None
@@ -80,22 +81,22 @@ class Message:
         if not self.attachments:
             return
 
-        attch = []
+        attachment = []
 
         for count, value in enumerate(self.attachments):
             if isinstance(value, File):
-                attch.append(value)
+                attachment.append(value)
             elif PILLOW_IMPORT and isinstance(value, Image):
-                attch.append(File.from_pillow_image(
+                attachment.append(File.from_pillow_image(
                     value,
                     f"image{count}.png",
                 ))
             elif isinstance(value, str):
-                attch.append(File.from_file(value))
+                attachment.append(File.from_file(value))
             else:
                 raise ValueError(f"Attachment {count} is invalid type.")
 
-        self.attachments = attch
+        self.attachments = attachment
 
     @property
     def isempty(self) -> bool:

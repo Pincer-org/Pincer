@@ -6,13 +6,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Union, TYPE_CHECKING
 
-from ...utils.types import MISSING
+from .command_types import AppCommandOptionType, AppCommandType
+from ...utils.api_object import APIObject
 from ...utils.conversion import convert
 from ...utils.snowflake import Snowflake
-from ...utils.extraction import get_index
-from ...utils.api_object import APIObject
 from ...utils.types import Coro, choice_value_types
-from .command_types import AppCommandOptionType, AppCommandType
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from ...utils.types import APINullable
@@ -33,7 +32,8 @@ class AppCommandInteractionDataOption(APIObject):
         Value of application command option type
     options: APINullable[List[:data:`~pincer.objects.app.command.AppCommandInteractionDataOption`]]
         Present if this option is a group or subcommand
-    """  # noqa: E501
+    """
+    # noqa: E501
     name: str
     value: APINullable[str] = MISSING
     type: APINullable[AppCommandOptionType] = MISSING
@@ -53,7 +53,7 @@ class AppCommandOptionChoice(APIObject):
         Value of the choice, up to 100 characters if string
     """
     name: str
-    value: Union[choice_value_types]
+    value: choice_value_types
 
 
 @dataclass
@@ -76,7 +76,8 @@ class AppCommandOption(APIObject):
     options: APINullable[List[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
         If the option is a subcommand or subcommand group type,
         this nested options will be the parameters
-    """  # noqa: E501
+    """
+    # noqa: E501
     type: AppCommandOptionType
     name: str
     description: str
@@ -115,7 +116,7 @@ class AppCommand(APIObject):
     id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Unique id of the command
     version: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
-        Autoincrementing version identifier updated during substantial
+        Auto-incrementing version identifier updated during substantial
         record changes
     application_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Unique id of the parent application
@@ -126,7 +127,8 @@ class AppCommand(APIObject):
     default_permission: APINullable[:class:`bool`]
         Whether the command is enabled by default
         when the app is added to a guild
-    """  # noqa: E501
+    """
+    # noqa: E501
     type: AppCommandType
     name: str
     description: str

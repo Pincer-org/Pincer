@@ -3,8 +3,8 @@
 
 from __future__ import annotations
 
-from enum import IntEnum
 from dataclasses import dataclass, field
+from enum import IntEnum
 from typing import overload, TYPE_CHECKING
 
 from .channel import Channel
@@ -15,7 +15,7 @@ from ...utils.conversion import construct_client_dict
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from typing import Dict, List, Optional
+    from typing import Any, Dict, List, Optional
 
     from .features import GuildFeature
     from .role import Role
@@ -134,7 +134,8 @@ class DefaultMessageNotificationLevel(IntEnum):
         Members will receive notifications for all messages by default.
     ONLY_MENTIONS:
         Members will receive notifications only for messages that @mention them by default.
-    """  # noqa: E501
+    """
+    # noqa: E501
     ALL_MESSAGES = 0
     ONLY_MENTIONS = 1
 
@@ -231,7 +232,7 @@ class Guild(APIObject):
         Approximate number of non-offline members in this guild,
         returned from the `GET /guilds/<id>`
         endpoint when with_counts is true
-    channels: APINullable[List[:class:`~pincer.objects.guild.chanenl.Channel`]]
+    channels: APINullable[List[:class:`~pincer.objects.guild.channel.Channel`]]
         Channels in the guild
     icon_hash: APINullable[Optional[:class:`str`]]
         Icon hash, returned when in the template object
@@ -285,7 +286,8 @@ class Guild(APIObject):
     welcome_screen: APINullable[:class:`~pincer.objects.guild.welcome_screen.WelcomeScreen`]
         The welcome screen of a Community guild, shown to new members,
         returned in an Invite's guild object
-    """  # noqa: E501
+    """
+    # noqa: E501
     afk_timeout: int
     default_message_notifications: DefaultMessageNotificationLevel
     emojis: List[Emoji]
@@ -352,7 +354,7 @@ class Guild(APIObject):
     welcome_screen: APINullable[WelcomeScreen] = MISSING
 
     @classmethod
-    async def from_id(cls, client: Client, _id: Snowflake) -> Guild:
+    async def from_id(cls, client: Client, _id: Union[int, Snowflake]) -> Guild:
         """
         Parameters
         ----------
@@ -420,7 +422,7 @@ class Guild(APIObject):
         mute : Optional[:class:`bool`]
             Whether the member is muted |default| :data:`None`
         deaf : Optional[:class:`bool`]
-            Whether the member is defaened |default| :data:`None`
+            Whether the member is deafened |default| :data:`None`
         channel_id : Optional[:class:`~pincer.utils.snowflake.Snowflake]
             Voice channel id to move to |default| :data:`None`
 
@@ -432,8 +434,35 @@ class Guild(APIObject):
         ...
 
     async def modify_member(self, _id: int, **kwargs) -> GuildMember:
-        data = await self._http.patch(f"guilds/{self.id}/members/{_id}", data=kwargs)
+        data = await self._http.patch(
+            f"guilds/{self.id}/members/{_id}",
+            data=kwargs
+        )
         return GuildMember.from_dict(construct_client_dict(self._client, data))
+
+    async def kick(self, member_id: int, **kwargs):
+        """|coro|
+        Kicks a guild member.
+
+        Parameters
+        ----------
+        member_id : :class: int
+            ID of the guild member to kick.
+        \\*\\* kwargs
+            Additional keyword arguments to kick the guild member with.
+        """
+        await self._http.put(f"/guilds/{self.id}/bans/{member_id}", data=kwargs)
+
+    async def ban(self, member_id: int):
+        """|coro|
+        Bans a guild member.
+
+        Parameters
+        ----------
+        member_id : :class: int
+            ID of the guild member to ban.
+        """
+        await self._http.delete(f"/guilds/{self.id}/members/{member_id}")
 
     @classmethod
     def from_dict(cls, data) -> Guild:
@@ -441,7 +470,7 @@ class Guild(APIObject):
         Parameters
         ----------
         data : :class: Dict
-            Guild data recieved from the discord API.
+            Guild data received from the discord API.
 
         Returns
         -------

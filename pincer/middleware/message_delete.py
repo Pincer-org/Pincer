@@ -6,8 +6,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..utils.conversion import construct_client_dict
 from ..objects.events.message import MessageDeleteEvent
+from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from typing import List, Tuple
@@ -25,7 +25,7 @@ async def on_message_delete_middleware(
     Parameters
     ----------
     payload : :class:`GatewayDispatch`
-        The data recieved from the message delete event
+        The data received from the message delete event
 
     Returns
     -------
@@ -39,4 +39,4 @@ async def on_message_delete_middleware(
 
 
 def export():
-    return message_delete_middleware
+    return on_message_delete_middleware

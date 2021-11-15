@@ -23,7 +23,7 @@ async def guild_create_middleware(self, payload: GatewayDispatch):
     Parameters
     ----------
     payload : :class:`GatewayDispatch`
-        The data recieved from the guild create event
+        The data received from the guild create event
 
     Returns
     -------

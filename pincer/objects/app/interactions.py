@@ -9,8 +9,8 @@ from typing import Dict, TYPE_CHECKING, Union, Optional
 
 from .command_types import AppCommandOptionType
 from .interaction_base import InteractionType, CallbackType
-from ..guild.member import GuildMember
 from ..app.select_menu import SelectOption
+from ..guild.member import GuildMember
 from ..message.context import MessageContext
 from ..message.message import Message
 from ..message.user_message import UserMessage
@@ -47,7 +47,8 @@ class ResolvedData(APIObject):
         Map of Snowflakes to partial channel objects
     messages: APINullable[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.message.user_message.UserMessage`]]
         Map of Snowflakes to partial message objects
-    """  # noqa: E501
+    """
+    # noqa: E501
     users: APINullable[Dict[Snowflake, User]] = MISSING
     members: APINullable[Dict[Snowflake, GuildMember]] = MISSING
     roles: APINullable[Dict[Snowflake, Role]] = MISSING
@@ -79,7 +80,8 @@ class InteractionData(APIObject):
         The values the user selected
     target_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Id of the user or message targeted by a user or message command
-    """  # noqa: E501
+    """
+    # noqa: E501
     id: Snowflake
     name: str
     type: int
@@ -120,7 +122,8 @@ class Interaction(APIObject):
         User object for the invoking user, if invoked in a DM
     message: APINullable[:class:`~pincer.objects.message.user_message.UserMessage`]
         For components, the message they were attached to
-    """  # noqa: E501
+    """
+    # noqa: E501
     id: Snowflake
     application_id: Snowflake
     type: InteractionType
@@ -212,7 +215,7 @@ class Interaction(APIObject):
     async def convert(self, option: AppCommandInteractionDataOption):
         """|coro|
 
-        Sets an AppCommandInteractionDataOption value paramater to
+        Sets an AppCommandInteractionDataOption value parameter to
         the payload type
         """
         converter = self._convert_functions.get(option.type)
@@ -429,7 +432,7 @@ class Interaction(APIObject):
             followup: UserMessage,
             message: Message
     ):
-        """Process a folloup after it was sent.
+        """Process a followup after it was sent.
 
         Parameters
         ----------

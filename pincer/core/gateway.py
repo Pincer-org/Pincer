@@ -5,20 +5,20 @@
 from __future__ import annotations
 
 import logging
-import zlib
-from platform import system
-from typing import TYPE_CHECKING
 from asyncio import AbstractEventLoop, ensure_future, get_event_loop
+from platform import system
 from typing import Dict, Callable, Awaitable, Optional
+from typing import TYPE_CHECKING
 
+import zlib
 from websockets import connect
-from websockets.legacy.client import WebSocketClientProtocol
 from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
+from websockets.legacy.client import WebSocketClientProtocol
 
 from . import __package__
+from .._config import GatewayConfig
 from ..core.dispatch import GatewayDispatch
 from ..core.heartbeat import Heartbeat
-from .._config import GatewayConfig
 from ..exceptions import (
     PincerError, InvalidTokenError, UnhandledException,
     _InternalPerformReconnectError, DisallowedIntentsError
@@ -246,10 +246,12 @@ class Dispatcher:
                     await self.close()
                     exception = self.__dispatch_errors.get(exc.code)
 
-                    if isinstance(exception, _InternalPerformReconnectError):
-                        if self.__reconnect:
-                            _log.debug("Connection closed, reconnecting...")
-                            return await self.restart()
+                    if (
+                        isinstance(exception, _InternalPerformReconnectError)
+                        and self.__reconnect
+                    ):
+                        _log.debug("Connection closed, reconnecting...")
+                        return await self.restart()
 
                     raise exception or UnhandledException(
                         f"Dispatch error ({exc.code}): {exc.reason}"

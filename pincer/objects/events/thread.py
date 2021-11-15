@@ -3,8 +3,8 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from ...utils.api_object import APIObject
 from ...utils.types import APINullable, MISSING
@@ -64,7 +64,8 @@ class ThreadMembersUpdateEvent(APIObject):
         The users who were added to the thread
     removed_member_ids: APINullable[List[:class:`~pincer.utils.snowflake.Snowflake`]]
         The id of the users who were removed from the thread
-    """  # noqa: E501
+    """
+    # noqa: E501
     id: Snowflake
     guild_id: Snowflake
     member_count: int

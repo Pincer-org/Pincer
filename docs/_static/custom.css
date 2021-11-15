@@ -1,3 +1,4 @@
+/*noinspection CssUnknownTarget*/
 @import '../alabaster.css';
 
 :root {
@@ -38,6 +39,7 @@
 }
 
 /* attribute tables */
+/*noinspection ALL*/
 .py-attribute-table {
     display: flex;
     flex-wrap: wrap;

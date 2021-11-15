@@ -9,11 +9,11 @@ from enum import IntEnum
 from typing import overload, TYPE_CHECKING
 
 from ..message.user_message import UserMessage
-from ...utils.types import MISSING
 from ..._config import GatewayConfig
 from ...utils.api_object import APIObject
-from ...utils.convert_message import convert_message
 from ...utils.conversion import construct_client_dict
+from ...utils.convert_message import convert_message
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import Dict, List, Optional, Union
@@ -84,7 +84,7 @@ class Channel(APIObject):  # noqa E501
         The id of this channel
     type: :class:`~pincer.objects.guild.channel.ChannelType`
         The type of channel
-    application_id: APInullable[:class:`~pincer.utils.snowflake.Snowflake`]
+    application_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Application id of the group DM creator if it is bot-created
     bitrate: APINullable[:class:`int`]
         The bitrate (in bits) of the voice channel
@@ -116,7 +116,7 @@ class Channel(APIObject):  # noqa E501
         Whether the channel is nsfw
     owner_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Id of the creator of the group DM or thread
-    parent_id: APInullable[Optional[:class:`~pincer.utils.snowflake.Snowflake`]]
+    parent_id: APINullable[Optional[:class:`~pincer.utils.snowflake.Snowflake`]]
         For guild channels: id of the parent category for a channel (each
         parent category can contain up to 50 channels), for threads: id of the
         text channel this thread was created
@@ -124,7 +124,7 @@ class Channel(APIObject):  # noqa E501
         Computed permissions for the invoking user in the channel, including
         overwrites, only included when part of the resolved data received on a
         slash command interaction
-    permission_overwrites: APINullable[List[:class:`~pincer.obects.guild.overwrite.Overwrite`]]
+    permission_overwrites: APINullable[List[:class:`~pincer.objects.guild.overwrite.Overwrite`]]
         Explicit permission overwrites for members and roles
     position: APINullable[:class:`int`]
         Sorting position of the channel
@@ -144,7 +144,8 @@ class Channel(APIObject):  # noqa E501
         The user limit of the voice channel
     video_quality_mode: APINullable[:class:`int`]
         The camera video quality mode of the voice channel, 1 when not present
-    """  # noqa: E501
+    """
+    # noqa: E501
     id: Snowflake
     type: ChannelType
 
@@ -217,6 +218,8 @@ class Channel(APIObject):  # noqa E501
 
         Parameters
         ----------
+        reason Optional[:class:`str`]
+            The reason of the channel delete.
         \\*\\*kwargs :
             The keyword arguments to edit the channel with.
 
@@ -357,6 +360,25 @@ class TextChannel(Channel):
         """
         return await super().edit(**kwargs)
 
+    async def fetch_message(self, message_id: int) -> UserMessage:
+        """|coro|
+        Returns a UserMessage from this channel with the given id.
+
+        Parameters
+        ----------
+        message_id : :class: int
+            The message ID to look for.
+
+        Returns
+        -------
+        :class:`~pincer.objects.message.user_message.UserMessage`
+            The requested message.
+        """
+        return UserMessage.from_dict(
+            await self._http.get(
+                f"/channels/{self.id}/messages/{message_id}"
+            )
+        )
 
 class VoiceChannel(Channel):
     """A subclass of ``Channel`` for voice channels with all the same attributes."""

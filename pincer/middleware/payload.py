@@ -12,7 +12,6 @@ if TYPE_CHECKING:
 
 
 async def payload_middleware(
-    self,
     payload: GatewayDispatch
 ) -> Tuple[str, List[GatewayDispatch]]:
     """Invoked when basically anything is received from gateway.

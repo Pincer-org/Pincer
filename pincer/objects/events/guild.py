@@ -5,16 +5,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from ..guild.guild import Guild
+from ..guild.member import GuildMember
+from ..user import User
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
 from ...utils.types import MISSING, APINullable
-from ..guild.guild import Guild
-from ..guild.member import GuildMember
-from ..guild.role import Role
-from ..message.emoji import Emoji
-from ..message.sticker import Sticker
-from ..user import User
-from .presence import PresenceUpdateEvent
 
 if TYPE_CHECKING:
     from typing import Any, List, Optional
@@ -137,7 +133,9 @@ class GuildMemberRemoveEvent(APIObject):
     user: User
 
     def __post_init__(self):
-        self.user = User.from_dict(construct_client_dict(self._client, self.user))
+        self.user = User.from_dict(
+            construct_client_dict(self._client, self.user)
+        )
 
 
 @dataclass
@@ -167,7 +165,8 @@ class GuildMemberUpdateEvent(APIObject):
     pending: APINullable[:class:`bool`]
         whether the user has not yet passed the guild's
         Membership Screening requirements
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     guild_id: Snowflake
     roles: List[Snowflake]
@@ -180,7 +179,9 @@ class GuildMemberUpdateEvent(APIObject):
     pending: APINullable[bool] = MISSING
 
     def __post_init__(self):
-        self.user = User.from_dict(construct_client_dict(self._client, self.user))
+        self.user = User.from_dict(
+            construct_client_dict(self._client, self.user)
+        )
 
 
 @dataclass
@@ -208,7 +209,8 @@ class GuildMembersChunkEvent(APIObject):
         of the returned members will be here
     nonce: APINullable[:class:`str`]
         The nonce used in the Guild Members Request
-    """  # noqa: E501
+    """
+    # noqa: E501
     guild_id: Snowflake
     members: List[GuildMember]
     chunk_index: int

@@ -106,7 +106,6 @@ class TooManyArguments(CommandError):
     """
 
 
-
 class InvalidArgumentAnnotation(CommandError):
     """The provided argument annotation is not known, so it cannot be used."""
 
@@ -127,7 +126,7 @@ class InteractionDoesNotExist(CommandError):
 
 
 class UseFollowup(CommandError):
-    """A reply has alrready been sent, please use a followup to
+    """A reply has already been sent, please use a followup to
     continue replying.
     """
 

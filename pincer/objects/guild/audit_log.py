@@ -28,7 +28,7 @@ class AuditLogEvent(IntEnum):
 
     Attributes
     ----------
-    GUILD_UPDAT:
+    GUILD_UPDATE:
         Guild updated.
     CHANNEL_CREATE:
         Channel created.
@@ -87,7 +87,7 @@ class AuditLogEvent(IntEnum):
     MESSAGE_DELETE:
         Message deleted.
     MESSAGE_BULK_DELETE:
-        Messave bulk delete.
+        Message bulk delete.
     MESSAGE_PIN:
         Message pinned.
     MESSAGE_UNPIN:
@@ -234,7 +234,8 @@ class AuditLogEntry(APIObject):
         Additional info for certain action types
     reason: APINullable[:class:`str`]
         The reason for the change x(0-512 characters)
-    """  # noqa: E501
+    """
+    # noqa: E501
     target_id: Optional[str]
     user_id: Optional[Snowflake]
     id: Snowflake
@@ -259,7 +260,8 @@ class AuditLog(APIObject):
         list of partial integration objects
     threads: List[:class:`~pincer.objects.guild.channel.Channel`]
         list of threads found in the audit log
-    """  # noqa: E501
+    """
+    # noqa: E501
     webhooks: List[Webhook]
     users: List[User]
     audit_log_entries: List[AuditLogEntry]

@@ -3,10 +3,10 @@
 
 """sent when multiple messages are deleted at once"""
 
-from ..utils.types import Coro
 from ..core.dispatch import GatewayDispatch
 from ..objects.events.message import MessageDeleteBulkEvent
 from ..utils.conversion import construct_client_dict
+from ..utils.types import Coro
 
 
 async def message_delete_bulk_middleware(self, payload: GatewayDispatch):
@@ -17,7 +17,7 @@ async def message_delete_bulk_middleware(self, payload: GatewayDispatch):
     Parameters
     ----------
     payload : :class:`GatewayDispatch`
-        The data recieved from the message delete bulk event
+        The data received from the message delete bulk event
 
     Returns
     -------

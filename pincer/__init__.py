@@ -33,7 +33,7 @@ __package__ = "pincer"
 __title__ = "Pincer library"
 __description__ = "Discord API wrapper rebuild from scratch."
 __author__ = "Sigmanificient, Arthurdw"
-__email__ = "contact@pincer.org"
+__email__ = "contact@pincer.dev"
 __license__ = "MIT"
 
 ReleaseType = Optional[Literal["alpha", "beta", "candidate", "final", "dev"]]
@@ -58,7 +58,7 @@ class VersionInfo(NamedTuple):
         )
 
 
-version_info = VersionInfo(0, 10, 0)
+version_info = VersionInfo(0, 11, 1)
 __version__ = repr(version_info)
 
 __all__ = (

@@ -18,7 +18,9 @@ class GatewayConfig:
     @classmethod
     def uri(cls) -> str:
         """
-        :return uri:
+        Returns
+        -------
+        :class:`str`:
             The GatewayConfig's uri.
         """
         return (
@@ -30,7 +32,9 @@ class GatewayConfig:
     @classmethod
     def compressed(cls) -> bool:
         """
-        :return compressed:
+        Returns
+        -------
+        :class:`bool`:
             Whether the Gateway should compress payloads or not.
         """
         return cls.compression in ["zlib-stream", "zlib-payload"]

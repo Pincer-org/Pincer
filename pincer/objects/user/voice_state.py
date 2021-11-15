@@ -3,11 +3,11 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from ...utils.types import MISSING
 from ...utils.api_object import APIObject
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import Optional
@@ -50,7 +50,8 @@ class VoiceState(APIObject):
         The guild member this voice state is for
     self_stream: APINullable[:class:`bool`]
         Whether this user is streaming using "Go Live"
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     channel_id: Optional[Snowflake]
     user_id: Snowflake

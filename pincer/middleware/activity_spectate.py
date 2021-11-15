@@ -6,9 +6,9 @@ sent when the user clicks a Rich Presence spectate invite in chat to
 spectate a game
 """
 
+from ..core.dispatch import GatewayDispatch
 from ..objects.events.activity import ActivitySpectateEvent
 from ..utils.conversion import construct_client_dict
-from ..core.dispatch import GatewayDispatch
 from ..utils.types import Coro
 
 

@@ -3,12 +3,12 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from enum import IntEnum
 from typing import TYPE_CHECKING
-from dataclasses import dataclass
 
-from ...utils.types import MISSING
 from ...utils.api_object import APIObject
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import List, Optional
@@ -114,7 +114,8 @@ class Invite(APIObject):
     target_application: :class:`~pincer.objects.app.application.Application`
         The embedded application to open for this voice channel embedded
         application invite
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     channel: Channel
     code: str

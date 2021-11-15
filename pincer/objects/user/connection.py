@@ -3,8 +3,8 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 from dataclasses import dataclass, MISSING
+from typing import TYPE_CHECKING
 
 from ...utils.api_object import APIObject
 
@@ -41,7 +41,8 @@ class Connection(APIObject):
         Whether the connection is revoked
     integrations: APINullable[List[:class:`~pincer.objects.user.integration.Integration`]]
         An array of partial server integrations
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     id: str
     name: str

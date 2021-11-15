@@ -3,12 +3,12 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from enum import IntEnum
 from typing import TYPE_CHECKING
-from dataclasses import dataclass
 
-from ...utils.types import MISSING
 from ...utils.api_object import APIObject
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import Dict
@@ -34,7 +34,8 @@ class CallbackType(IntEnum):
         For components, ACK an interaction and edit the original message later
     UPDATE_MESSAGE:
         For components, edit the message the component was attached to
-    """  # noqa: E501
+    """
+    # noqa: E501
     PONG = 1
     MESSAGE = 4
     DEFERRED_MESSAGE = 5
@@ -53,7 +54,7 @@ class InteractionType(IntEnum):
     APPLICATION_COMMAND:
         A "slash" command.
     MESSAGE_COMPONENT:
-        A ui compoment like buttons and selects.
+        A ui component like buttons and selects.
     """
     PING = 1
     APPLICATION_COMMAND = 2

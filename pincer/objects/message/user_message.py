@@ -3,26 +3,26 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from enum import Enum, IntEnum
 from typing import TYPE_CHECKING
-from dataclasses import dataclass
 
-from .embed import Embed
-from .reaction import Reaction
-from .sticker import StickerItem
 from .attachment import Attachment
 from .component import MessageComponent
+from .embed import Embed
+from .reaction import Reaction
 from .reference import MessageReference
-from ..user.user import User
-from ..guild.role import Role
+from .sticker import StickerItem
 from ..app.application import Application
 from ..app.interaction_base import MessageInteraction
 from ..guild.member import GuildMember
-from ...utils.types import MISSING
+from ..guild.role import Role
+from ..user.user import User
 from ..._config import GatewayConfig
-from ...utils.snowflake import Snowflake
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
+from ...utils.snowflake import Snowflake
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import Any, List, Optional, Union, Generator
@@ -313,7 +313,8 @@ class UserMessage(APIObject):
         action rows, or other interactive components
     sticker_items: APINullable[List[:class:`~pincer.objects.message.sticker.StickerItem`]]
         Sent if the message contains stickers
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     id: Snowflake
     channel_id: Snowflake
@@ -371,7 +372,7 @@ class UserMessage(APIObject):
         """|coro|
 
         Create a reaction for the message. Requires the
-        ``READ_MESSAGE_HISTORY` itent. ``ADD_REACTIONS`` intent is required if
+        ``READ_MESSAGE_HISTORY` intent. ``ADD_REACTIONS`` intent is required if
         nobody else has reacted using the emoji.
 
         Parameters

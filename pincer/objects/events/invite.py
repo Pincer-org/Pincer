@@ -3,8 +3,8 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from ...utils.api_object import APIObject
 from ...utils.types import APINullable, MISSING
@@ -46,7 +46,8 @@ class InviteCreateEvent(APIObject):
         this voice channel stream invite
     uses: :class:`int`
         How many times the invite has been used (always will be ``0``)
-    """  # noqa: E501
+    """
+    # noqa: E501
     channel_id: Snowflake
     code: str
     created_at: Timestamp
@@ -71,7 +72,7 @@ class InviteDeleteEvent(APIObject):
         The channel of the invite
     code: :class:`str`
         The unique invite code
-    guild_id: APINullabel[:class:`~pincer.utils.snowflake.Snowflake`]
+    guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The guild of the invite
     """
     channel_id: Snowflake

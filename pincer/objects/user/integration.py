@@ -7,8 +7,8 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Optional, TYPE_CHECKING
 
-from ...utils.types import MISSING
 from ...utils.api_object import APIObject
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from .user import User
@@ -110,7 +110,8 @@ class Integration(APIObject):
         Has this integration been revoked
     application: APINullable[:class:`~pincer.objects.user.integration.IntegrationApplication`]
         The bot/OAuth2 application for discord integrations
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     id: Snowflake
     name: str

@@ -6,8 +6,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ...utils.types import MISSING
 from ...utils.api_object import APIObject
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import List
@@ -53,7 +53,8 @@ class MessageComponent(APIObject):
         |default| ``1``, max ``25``
     components: APINullable[List[:class:`~pincer.objects.message.component.MessageComponent`]]
         A list of child components
-    """  # noqa: E501
+    """
+    # noqa: E501
     type: int
     options: List[SelectOption]
 
