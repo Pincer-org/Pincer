@@ -22,7 +22,6 @@ _testing.py
 
 # Packaging
 *.egg-info
-bin
 build
 dist
 MANIFEST
