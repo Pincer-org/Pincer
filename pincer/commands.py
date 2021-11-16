@@ -154,7 +154,7 @@ def command(
             )
 
         try:
-            guild_id = int(guild) if guild else MISSING
+            guild_id = Snowflake(guild) if guild else MISSING
         except ValueError:
             raise InvalidCommandGuild(
                 f"Command with call `{func.__name__}` its `guilds` parameter "
