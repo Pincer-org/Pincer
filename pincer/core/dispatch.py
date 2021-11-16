@@ -8,7 +8,7 @@ from json import dumps, loads
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Any, Dict, Optional, Tuple, Union
+    from typing import Any, Dict, Optional, Union
 
 
 class GatewayDispatch:

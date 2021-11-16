@@ -3,10 +3,10 @@
 
 """sent when an integration is updated"""
 
-from ..utils.types import Coro
 from ..core.dispatch import GatewayDispatch
 from ..objects.events.integration import IntegrationUpdateEvent
 from ..utils.conversion import construct_client_dict
+from ..utils.types import Coro
 
 
 async def integration_update_middleware(self, payload: GatewayDispatch):

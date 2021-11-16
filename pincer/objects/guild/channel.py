@@ -9,11 +9,11 @@ from enum import IntEnum
 from typing import overload, TYPE_CHECKING
 
 from ..message.user_message import UserMessage
-from ...utils.types import MISSING
 from ..._config import GatewayConfig
 from ...utils.api_object import APIObject
-from ...utils.convert_message import convert_message
 from ...utils.conversion import construct_client_dict
+from ...utils.convert_message import convert_message
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import Dict, List, Optional, Union

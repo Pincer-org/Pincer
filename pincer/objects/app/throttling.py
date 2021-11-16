@@ -2,8 +2,8 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
 
 from .throttle_scope import ThrottleScope
 from ...exceptions import CommandCooldownError

@@ -4,29 +4,29 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
+from asyncio import iscoroutinefunction, run, ensure_future
 from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
 from typing import Any, Dict, List, Optional, Tuple, Union
-from asyncio import iscoroutinefunction, run, ensure_future
+from typing import TYPE_CHECKING
 
 from . import __package__
-from .core.http import HTTPClient
 from .commands import ChatCommandHandler
-from .utils.types import Coro
-from .middleware import middleware
 from .core.gateway import Dispatcher
-from .utils.signature import get_params
-from .utils.extraction import get_index
-from .utils.insertion import should_pass_cls
+from .core.http import HTTPClient
 from .exceptions import (
     InvalidEventName, TooManySetupArguments, NoValidSetupMethod,
     NoCogManagerReturnFound, CogAlreadyExists, CogNotFound
 )
+from .middleware import middleware
 from .objects import (
     Role, Channel, DefaultThrottleHandler, User, Guild, Intents
 )
+from .utils.extraction import get_index
+from .utils.insertion import should_pass_cls
+from .utils.signature import get_params
+from .utils.types import Coro
 
 if TYPE_CHECKING:
     from .objects.app import AppCommand

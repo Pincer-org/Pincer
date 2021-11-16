@@ -1,8 +1,8 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from typing import Callable
 from inspect import signature, isclass
+from typing import Callable
 
 from .insertion import should_pass_cls
 

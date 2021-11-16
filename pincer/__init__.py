@@ -41,6 +41,7 @@ ReleaseType = Optional[Literal["alpha", "beta", "candidate", "final", "dev"]]
 
 class VersionInfo(NamedTuple):
     """A Class representing the version of the Pincer library."""
+
     major: int
     minor: int
     micro: int
@@ -49,16 +50,13 @@ class VersionInfo(NamedTuple):
     serial: int = 0
 
     def __repr__(self) -> str:
-        return (
-                f'{self.major}.{self.minor}.{self.micro}'
-                + (
-                        f'-{self.release_level}{self.serial}'
-                        * (self.release_level is not None)
-                )
+        return f"{self.major}.{self.minor}.{self.micro}" + (
+            f"-{self.release_level}{self.serial}"
+            * (self.release_level is not None)
         )
 
 
-version_info = VersionInfo(0, 10, 1, release_level="alpha")
+version_info = VersionInfo(0, 11, 2)
 __version__ = repr(version_info)
 
 __all__ = (

@@ -3,15 +3,16 @@
 
 from __future__ import annotations
 
+import io
+from dataclasses import dataclass
 from enum import IntEnum
 from typing import TYPE_CHECKING
-from dataclasses import dataclass
 
-from ...utils.types import MISSING
-from ...utils.api_object import APIObject
-
-import io
 from aiohttp import ClientSession
+
+from ...utils.api_object import APIObject
+from ...utils.conversion import construct_client_dict
+from ...utils.types import MISSING
 
 PILLOW_IMPORT = True
 
@@ -27,7 +28,6 @@ if TYPE_CHECKING:
     from ...client import Client
     from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
-    from ...utils.conversion import convert, construct_client_dict
 
 
 class PremiumTypes(IntEnum):
