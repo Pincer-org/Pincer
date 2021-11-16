@@ -524,6 +524,12 @@ class Guild(APIObject):
         """
         data = await self._http.get(f"/guilds/{self.id}/preview")
         return GuildPreview.from_dict(data)
+    
+    async def delete(self):
+        """|coro|
+        Deletes the guild. Returns `204 No Content` on success.
+        """
+        await self._http.delete(f"/guilds/{self.id}")
 
     @classmethod
     def from_dict(cls, data) -> Guild:
