@@ -15,7 +15,7 @@ from ...utils.conversion import construct_client_dict
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from typing import Any, Dict, List, Optional
+    from typing import Any, Dict, List, Optional, Union
 
     from .features import GuildFeature
     from .role import Role
@@ -45,6 +45,7 @@ class PremiumTier(IntEnum):
     TIER_3:
         Guild has unlocked Server Boost level 3 perks.
     """
+
     NONE = 0
     TIER_1 = 1
     TIER_2 = 2
@@ -65,6 +66,7 @@ class GuildNSFWLevel(IntEnum):
     AGE_RESTRICTED:
         Age restricted NSFW level.
     """
+
     DEFAULT = 0
     EXPLICIT = 1
     SAFE = 2
@@ -83,6 +85,7 @@ class ExplicitContentFilterLevel(IntEnum):
     ALL_MEMBERS:
         Media content sent by all members will be scanned.
     """
+
     DISABLED = 0
     MEMBERS_WITHOUT_ROLES = 1
     ALL_MEMBERS = 2
@@ -98,6 +101,7 @@ class MFALevel(IntEnum):
     ELEVATED:
         Guild has a 2FA requirement for moderation actions
     """
+
     NONE = 0
     ELEVATED = 1
 
@@ -118,6 +122,7 @@ class VerificationLevel(IntEnum):
     VERY_HIGH:
         Must have a verified phone number.
     """
+
     NONE = 0
     LOW = 1
     MEDIUM = 2
@@ -135,6 +140,7 @@ class DefaultMessageNotificationLevel(IntEnum):
     ONLY_MENTIONS:
         Members will receive notifications only for messages that @mention them by default.
     """
+
     # noqa: E501
     ALL_MESSAGES = 0
     ONLY_MENTIONS = 1
@@ -154,6 +160,7 @@ class SystemChannelFlags(IntEnum):
     SUPPRESS_JOIN_NOTIFICATION_REPLIES:
         Hide member join sticker reply buttons
     """
+
     SUPPRESS_JOIN_NOTIFICATIONS = 1 << 0
     SUPPRESS_PREMIUM_SUBSCRIPTIONS = 1 << 1
     SUPPRESS_GUILD_REMINDER_NOTIFICATIONS = 1 << 2
@@ -325,6 +332,7 @@ class Guild(APIObject):
         The welcome screen of a Community guild, shown to new members,
         returned in an Invite's guild object
     """
+
     # noqa: E501
     afk_timeout: int
     default_message_notifications: DefaultMessageNotificationLevel
@@ -436,13 +444,14 @@ class Guild(APIObject):
 
     @overload
     async def modify_member(
-            self, *,
-            _id: int,
-            nick: Optional[str] = None,
-            roles: Optional[List[Snowflake]] = None,
-            mute: Optional[bool] = None,
-            deaf: Optional[bool] = None,
-            channel_id: Optional[Snowflake] = None
+        self,
+        *,
+        _id: int,
+        nick: Optional[str] = None,
+        roles: Optional[List[Snowflake]] = None,
+        mute: Optional[bool] = None,
+        deaf: Optional[bool] = None,
+        channel_id: Optional[Snowflake] = None,
     ) -> GuildMember:
         """|coro|
 
@@ -473,27 +482,13 @@ class Guild(APIObject):
 
     async def modify_member(self, _id: int, **kwargs) -> GuildMember:
         data = await self._http.patch(
-            f"guilds/{self.id}/members/{_id}",
-            data=kwargs
+            f"guilds/{self.id}/members/{_id}", data=kwargs
         )
         return GuildMember.from_dict(construct_client_dict(self._client, data))
 
-    async def ban(self, member_id: int, **kwargs):
-        """|coro|
-        Bans a guild member.
-
-        Parameters
-        ----------
-        member_id : :class: int
-            ID of the guild member to ban.
-        \\*\\* kwargs
-            Additional keyword arguments to ban the guild member with.
-        """
-        await self._http.put(f"/guilds/{self.id}/bans/{member_id}", data=kwargs)
-
     async def kick(self, member_id: int):
         """|coro|
-        Kicks a guild member.
+        Bans a guild member.
 
         Parameters
         ----------
@@ -501,7 +496,20 @@ class Guild(APIObject):
             ID of the guild member to kick.
         """
         await self._http.delete(f"/guilds/{self.id}/members/{member_id}")
-    
+
+    async def ban(self, member_id: int, **kwargs):
+        """|coro|
+        Kicks a guild member.
+
+        Parameters
+        ----------
+        member_id : :class: int
+            ID of the guild member to ban.
+        \\*\\* kwargs
+            Additional keyword arguments to kick the guild member with.
+        """
+        await self._http.put(f"/guilds/{self.id}/bans/{member_id}", data=kwargs)
+
     async def edit(self, **kwargs):
         """|coro|
         Modifies the guild.
