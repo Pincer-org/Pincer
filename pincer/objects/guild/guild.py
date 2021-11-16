@@ -159,6 +159,44 @@ class SystemChannelFlags(IntEnum):
     SUPPRESS_GUILD_REMINDER_NOTIFICATIONS = 1 << 2
     SUPPRESS_JOIN_NOTIFICATION_REPLIES = 1 << 3
 
+@dataclass
+class GuildPreview(APIObject):
+    """Represents a guild preview.
+
+    Attributes
+    ----------
+    id: :class:`Snowflake`
+        The guild ID.
+    name: :class:`str`
+        The guild name.
+    icon: :class:`str`
+        The guild icon hash.
+    splash: :class:`str`
+        The guild splash hash.
+    discovery_splash: :class:`str`
+        The guild discovery splash hash.
+    emojis: :class:`List[Emoji]`
+        The guild emojis.
+    features: :class:`List[GuildFeature]`
+        The guild features.
+    approximate_member_count: :class:`int`
+        The approximate member count.
+    approximate_presence_count: :class:`int`
+        The approximate number of online members in this guild
+    description: :class:`str`
+        The guild description.
+    """
+    id: Snowflake
+    name: str
+    emojis: List[Emoji]
+    features: List[GuildFeature]
+    approximate_member_count: int
+    approximate_presence_count: int
+
+    icon: APINullable[str] = MISSING
+    splash: APINullable[str] = MISSING
+    discovery_splash: APINullable[str] = MISSING
+    description: APINullable[str] = MISSING
 
 @dataclass
 class Guild(APIObject):
@@ -474,6 +512,18 @@ class Guild(APIObject):
             Keyword arguments to modify the guild with.
         """
         await self._http.patch(f"/guilds/{self.id}", data=kwargs)
+    
+    async def preview(self):
+        """|coro|
+        Previews the guild.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.guild.GuildPreview`
+            The guild preview object.
+        """
+        data = await self._http.get(f"/guilds/{self.id}/preview")
+        return GuildPreview.from_dict(data)
 
     @classmethod
     def from_dict(cls, data) -> Guild:
