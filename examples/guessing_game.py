@@ -4,10 +4,13 @@ from pincer import Client, command
 from pincer.objects import Intents, MessageContext
 from pincer.exceptions import TimeoutError
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 
 class Bot(Client):
 
-    @command()
+    @command(guild=881531065859190804)
     async def guess(self, ctx: MessageContext, biggest_number: int):
 
         await ctx.reply(f"Starting the guessing game! Pick a number between 0 and {biggest_number}.")
@@ -35,9 +38,9 @@ class Bot(Client):
                     break
 
         except TimeoutError:
-            channel.send("You took too long! The game timed out.")
+            await channel.send("You took too long! The game timed out.")
 
 
 if __name__ == "__main__":
-    bot = Bot("XXXYOURBOTTOKENHEREXXX", intents=Intents.GUILD_MESSAGES)
+    bot = Bot("ODgxNTgzMzc5NTA0NTgyNzI3.YSu8gA.kUPT7OsIwGLH5MrAzLxI1px6wuY", intents=Intents.GUILD_MESSAGES)
     bot.run()
