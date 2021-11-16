@@ -19,15 +19,15 @@ class Snowflake(int):
     _MAX_VALUE: int = 9223372036854775807
     _MIN_VALUE: int = 0
 
-    def __init__(self, int_v):
+    def __init__(self, _):
         super().__init__()
 
-        if int_v < self._MIN_VALUE:
+        if self < self._MIN_VALUE:
             raise ValueError(
                 "snowflake value should be greater than or equal to 0."
             )
 
-        if int_v > self._MAX_VALUE:
+        if self > self._MAX_VALUE:
             raise ValueError(
                 "snowflake value should be less than"
                 " or equal to 9223372036854775807."
@@ -71,3 +71,7 @@ class Snowflake(int):
         this number is incremented.
         """
         return self % 2048
+
+    @property
+    def unix(self) -> int:
+        return self.timestamp + 1420070400000
