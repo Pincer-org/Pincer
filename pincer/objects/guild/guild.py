@@ -33,7 +33,6 @@ if TYPE_CHECKING:
 
 class PremiumTier(IntEnum):
     """Represents the boost tier of a guild.
-
     Attributes
     ----------
     NONE:
@@ -53,7 +52,6 @@ class PremiumTier(IntEnum):
 
 class GuildNSFWLevel(IntEnum):
     """Represents the NSFW level of a guild.
-
     Attributes
     ----------
     DEFAULT:
@@ -73,7 +71,6 @@ class GuildNSFWLevel(IntEnum):
 
 class ExplicitContentFilterLevel(IntEnum):
     """Represents the filter content level of a guild.
-
     Attributes
     ----------
     DISABLED:
@@ -90,7 +87,6 @@ class ExplicitContentFilterLevel(IntEnum):
 
 class MFALevel(IntEnum):
     """Represents the multi factor authentication level of a guild.
-
     Attributes
     ----------
     NONE:
@@ -104,7 +100,6 @@ class MFALevel(IntEnum):
 
 class VerificationLevel(IntEnum):
     """Represents the verification level of a guild.
-
     Attributes
     ----------
     NONE:
@@ -127,7 +122,6 @@ class VerificationLevel(IntEnum):
 
 class DefaultMessageNotificationLevel(IntEnum):
     """Represents the default message notification level of a guild.
-
     Attributes
     ----------
     ALL_MESSAGES:
@@ -142,7 +136,6 @@ class DefaultMessageNotificationLevel(IntEnum):
 
 class SystemChannelFlags(IntEnum):
     """Represents the system channel flags of a guild.
-
     Attributes
     ----------
     SUPPRESS_JOIN_NOTIFICATIONS:
@@ -162,7 +155,6 @@ class SystemChannelFlags(IntEnum):
 @dataclass
 class GuildPreview(APIObject):
     """Represents a guild preview.
-
     Attributes
     ----------
     id: :class:`Snowflake`
@@ -201,7 +193,6 @@ class GuildPreview(APIObject):
 @dataclass
 class Guild(APIObject):
     """Represents a Discord guild/server in which your client resides.
-
     Attributes
     ----------
     afk_channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
@@ -400,7 +391,6 @@ class Guild(APIObject):
             Client object to use the http gateway from.
         _id : :class: `pincer.utils.snowflake.Snowflake`
             Guild ID.
-
         Returns
         -------
         :class: `~pincer.objects.guild.guild.Guild`
@@ -418,15 +408,12 @@ class Guild(APIObject):
 
     async def get_member(self, _id: int) -> GuildMember:
         """|coro|
-
         Fetches a GuildMember from its identifier
-
         Parameters
         ----------
         _id:
             The id of the guild member which should be fetched from the Discord
             gateway.
-
         Returns
         -------
         :class:`~pincer.objects.guild.member.GuildMember`
@@ -445,10 +432,8 @@ class Guild(APIObject):
             channel_id: Optional[Snowflake] = None
     ) -> GuildMember:
         """|coro|
-
         Modifies a member in the guild from its identifier and based on the
         keyword arguments provided.
-
         Parameters
         ----------
         _id : int
@@ -463,7 +448,6 @@ class Guild(APIObject):
             Whether the member is deafened |default| :data:`None`
         channel_id : Optional[:class:`~pincer.utils.snowflake.Snowflake]
             Voice channel id to move to |default| :data:`None`
-
         Returns
         -------
         :class:`~pincer.objects.guild.member.GuildMember`
@@ -481,7 +465,6 @@ class Guild(APIObject):
     async def ban(self, member_id: int, **kwargs):
         """|coro|
         Bans a guild member.
-
         Parameters
         ----------
         member_id : :class: int
@@ -494,7 +477,6 @@ class Guild(APIObject):
     async def kick(self, member_id: int):
         """|coro|
         Kicks a guild member.
-
         Parameters
         ----------
         member_id : :class: int
@@ -505,7 +487,6 @@ class Guild(APIObject):
     async def edit(self, **kwargs):
         """|coro|
         Modifies the guild.
-
         Parameters
         ----------
         \\*\\* kwargs
@@ -516,7 +497,6 @@ class Guild(APIObject):
     async def preview(self) -> GuildPreview:
         """|coro|
         Previews the guild.
-
         Returns
         -------
         :class:`~pincer.objects.guild.guild.GuildPreview`
@@ -538,12 +518,10 @@ class Guild(APIObject):
         ----------
         data : :class: Dict
             Guild data received from the discord API.
-
         Returns
         -------
         :class: `~pincer.objects.guild.guild.Guild`
             The new guild object.
-
         Raises
         :class: `~pincer.exceptions.UnavailableGuildError`
             The guild is unavailable due to a discord outage.

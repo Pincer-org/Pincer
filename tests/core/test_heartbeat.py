@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, Mock, patch
 import pytest
 
 from pincer.core.heartbeat import Heartbeat
-from tests.utils import assert_not_raises
+from tests._utils import assert_not_raises
 
 
 @pytest.fixture
