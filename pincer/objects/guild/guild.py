@@ -463,6 +463,17 @@ class Guild(APIObject):
             ID of the guild member to kick.
         """
         await self._http.delete(f"/guilds/{self.id}/members/{member_id}")
+    
+    async def edit(self, **kwargs):
+        """|coro|
+        Modifies the guild.
+
+        Parameters
+        ----------
+        \\*\\* kwargs
+            Keyword arguments to modify the guild with.
+        """
+        await self._http.patch(f"/guilds/{self.id}", data=kwargs)
 
     @classmethod
     def from_dict(cls, data) -> Guild:
