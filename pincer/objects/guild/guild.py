@@ -501,7 +501,7 @@ class Guild(APIObject):
             ID of the guild member to kick.
         """
         await self._http.delete(f"/guilds/{self.id}/members/{member_id}")
-    
+
     async def edit(self, **kwargs):
         """|coro|
         Modifies the guild.
@@ -512,7 +512,7 @@ class Guild(APIObject):
             Keyword arguments to modify the guild with.
         """
         await self._http.patch(f"/guilds/{self.id}", data=kwargs)
-    
+
     async def preview(self) -> GuildPreview:
         """|coro|
         Previews the guild.
@@ -524,7 +524,7 @@ class Guild(APIObject):
         """
         data = await self._http.get(f"/guilds/{self.id}/preview")
         return GuildPreview.from_dict(data)
-    
+
     async def delete(self):
         """|coro|
         Deletes the guild. Returns `204 No Content` on success.
