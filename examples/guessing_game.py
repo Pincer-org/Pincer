@@ -15,7 +15,7 @@ class Bot(Client):
         number = random.randint(0, biggest_number)
 
         try:
-            async for next_message, in self.loop_for('on_message'):
+            async for next_message, in self.loop_for('on_message', loop_timeout=60):
                 if next_message.author.bot:
                     continue
 
@@ -32,9 +32,10 @@ class Bot(Client):
                 else:
                     await next_message.react("🚀")
                     await channel.send("Number is correct!")
+                    break
 
         except TimeoutError:
-            channel.send("Game timed out")
+            channel.send("You took too long! The game timed out.")
 
 
 if __name__ == "__main__":
