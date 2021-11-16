@@ -10,7 +10,7 @@ class Bot(Client):
     @command()
     async def guess(self, ctx: MessageContext, biggest_number: int):
 
-        await ctx.reply(f"Starting the guessing game! Picker a number between 0 and {biggest_number}.")
+        await ctx.reply(f"Starting the guessing game! Pick a number between 0 and {biggest_number}.")
         channel = await self.get_channel(ctx.channel_id)
         number = random.randint(0, biggest_number)
 

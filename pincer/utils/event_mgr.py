@@ -278,11 +278,14 @@ class EventMgr:
                         "loop_for() timed out while waiting for an event"
                     )
 
-            loop_timeout -= loop.time() - start_time
+            # `not` can't be used here because there is a check for
+            # `loop_timeout == 0`
+            if loop_timeout is not None:
+                loop_timeout -= loop.time() - start_time
 
-            # loop_timeout can be below 0 if the user's code in the for loop
-            # takes longer than the time left in loop_timeout
-            if loop_timeout <= 0:
-                raise PincerTimeoutError(
-                    "loop_for() timed out while waiting for an event"
-                )
+                # loop_timeout can be below 0 if the user's code in the for loop
+                # takes longer than the time left in loop_timeout
+                if loop_timeout <= 0:
+                    raise PincerTimeoutError(
+                        "loop_for() timed out while waiting for an event"
+                    )
