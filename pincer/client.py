@@ -580,6 +580,23 @@ class Client(Dispatcher):
             what specifically happened.
         """
         await self.process_event("payload", payload)
+    
+    async def create_guild(self, **kwargs):
+        """|coro|
+
+        Creates a guild.
+
+        Parameters
+        ----------
+        \\*\\*kwargs
+            The parameters for the guild.
+        
+        Returns
+        -------
+        :class:`~pincer.objects.guild.guild.Guild`
+            The guild that was created.
+        """
+        return await self.http.post("/guilds", data=kwargs)
 
     async def get_guild(self, guild_id: int) -> Guild:
         """|coro|
