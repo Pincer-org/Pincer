@@ -513,7 +513,7 @@ class Guild(APIObject):
         """
         await self._http.patch(f"/guilds/{self.id}", data=kwargs)
     
-    async def preview(self):
+    async def preview(self) -> GuildPreview:
         """|coro|
         Previews the guild.
 

@@ -581,7 +581,7 @@ class Client(Dispatcher):
         """
         await self.process_event("payload", payload)
     
-    async def create_guild(self, **kwargs):
+    async def create_guild(self, **kwargs) -> Guild:
         """|coro|
 
         Creates a guild.
