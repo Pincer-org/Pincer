@@ -27,7 +27,7 @@ from .utils.event_mgr import EventMgr
 from .utils.extraction import get_index
 from .utils.insertion import should_pass_cls
 from .utils.signature import get_params
-from .utils.types import APINullable, CheckFunction
+from .utils.types import CheckFunction
 from .utils.types import Coro
 
 if TYPE_CHECKING:
@@ -591,7 +591,7 @@ class Client(Dispatcher):
         self,
         *,
         name: str,
-        region: APINullable[Optional[str]] = None,
+        region: Optional[str] = None,
         icon: Optional[str] = None,
         verification_level: Optional[int] = None,
         default_message_notifications: Optional[int] = None,
@@ -609,7 +609,7 @@ class Client(Dispatcher):
         ----------
         name : :class:`str`
             Name of the guild (2-100 characters)
-        region : APINullable[Optional[:class:`str`]]
+        region : Optional[:class:`str`]
             Voice region id (deprecated) |default| :data:`None`
         icon : Optional[:class:`str`]
             base64 128x128 image for the guild icon |default| :data:`None`
