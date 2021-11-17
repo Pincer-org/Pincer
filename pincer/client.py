@@ -443,7 +443,8 @@ class Client(Dispatcher):
         self.start_loop()
 
     def __del__(self):
-        run(self.http.close())
+        if hasattr(self, 'http'):
+            run(self.http.close())
 
     async def handle_middleware(
             self,
