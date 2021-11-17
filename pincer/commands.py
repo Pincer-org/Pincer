@@ -17,7 +17,9 @@ from .exceptions import (
     InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
     InvalidCommandName, ForbiddenError
 )
-from .objects import ThrottleScope, AppCommand, Role, User, Channel, Guild
+from .objects import (
+    ThrottleScope, AppCommand, Role, User, Channel, Guild, MessageContext
+)
 from .objects.app import (
     AppCommandOptionType, AppCommandOption, AppCommandOptionChoice,
     ClientCommandStructure, AppCommandType
@@ -154,7 +156,7 @@ def command(
             )
 
         try:
-            guild_id = int(guild) if guild else MISSING
+            guild_id = Snowflake(guild) if guild else MISSING
         except ValueError:
             raise InvalidCommandGuild(
                 f"Command with call `{func.__name__}` its `guilds` parameter "
@@ -190,6 +192,12 @@ def command(
                 continue
 
             annotation, required = sig[param].annotation, True
+
+            # ctx is type MessageContext but should not be included in the
+            # slash command
+            if annotation == MessageContext:
+                return
+
             argument_description: Optional[str] = None
             choices: List[AppCommandOptionChoice] = []
 
@@ -279,6 +287,7 @@ def command(
                 annotation = choice_type
 
             param_type = _options_type_link.get(annotation)
+
             if not param_type:
                 raise InvalidArgumentAnnotation(
                     f"Annotation `{annotation}` on parameter "

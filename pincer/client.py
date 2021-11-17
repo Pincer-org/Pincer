@@ -13,8 +13,8 @@ from typing import TYPE_CHECKING
 
 from . import __package__
 from .commands import ChatCommandHandler
+from .core import HTTPClient
 from .core.gateway import Dispatcher
-from .core.http import HTTPClient
 from .exceptions import (
     InvalidEventName, TooManySetupArguments, NoValidSetupMethod,
     NoCogManagerReturnFound, CogAlreadyExists, CogNotFound
@@ -23,9 +23,11 @@ from .middleware import middleware
 from .objects import (
     Role, Channel, DefaultThrottleHandler, User, Guild, Intents
 )
+from .utils.event_mgr import EventMgr
 from .utils.extraction import get_index
 from .utils.insertion import should_pass_cls
 from .utils.signature import get_params
+from .utils.types import CheckFunction
 from .utils.types import Coro
 
 if TYPE_CHECKING:
@@ -183,6 +185,7 @@ class Client(Dispatcher):
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
         self.throttler = throttler
+        self.event_mgr = EventMgr()
         # TODO: Document guild prop
         # The guild value is only registered if the GUILD_MEMBERS
         # intent is enabled.
@@ -541,6 +544,8 @@ class Client(Dispatcher):
         try:
             key, args, kwargs = await self.handle_middleware(payload, name)
 
+            self.event_mgr.process_events(key, *args)
+
             if calls := self.get_event_coro(key):
                 self.execute_event(calls, *args, **kwargs)
 
@@ -580,6 +585,63 @@ class Client(Dispatcher):
             what specifically happened.
         """
         await self.process_event("payload", payload)
+
+    async def wait_for(
+        self,
+        event_name: str,
+        check: CheckFunction = None,
+        timeout: Optional[float] = None
+    ):
+        """
+        Parameters
+        ----------
+        event_name : str
+            The type of event. It should start with `on_`. This is the same
+            name that is used for @Client.event.
+        check : CheckFunction
+            This function only returns a value if this return true.
+        timeout: Optional[float]
+            Amount of seconds before timeout.
+
+        Returns
+        ------
+        Any
+            What the Discord API returns for this event.
+        """
+        return await self.event_mgr.wait_for(event_name, check, timeout)
+
+    def loop_for(
+        self,
+        event_name: str,
+        check: CheckFunction = None,
+        iteration_timeout: Optional[float] = None,
+        loop_timeout: Optional[float] = None
+    ):
+        """
+        Parameters
+        ----------
+        event_name : str
+            The type of event. It should start with `on_`. This is the same
+            name that is used for @Client.event.
+        check : Callable[[Any], bool], default=None
+            This function only returns a value if this return true.
+        iteration_timeout: Union[float, None]
+            Amount of seconds before timeout. Timeouts are for each loop.
+        loop_timeout: Union[float, None]
+            Amount of seconds before the entire loop times out. The generator
+            will only raise a timeout error while it is waiting for an event.
+
+        Yields
+        ------
+        Any
+            What the Discord API returns for this event.
+        """
+        return self.event_mgr.loop_for(
+            event_name,
+            check,
+            iteration_timeout,
+            loop_timeout
+        )
 
     async def get_guild(self, guild_id: int) -> Guild:
         """|coro|
