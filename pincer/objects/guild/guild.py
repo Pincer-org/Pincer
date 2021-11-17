@@ -5,10 +5,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import IntEnum
-from typing import overload, TYPE_CHECKING
+from typing import overload, TYPE_CHECKING, Union
 
 from .channel import Channel
 from .member import GuildMember
+from .. import Overwrite
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
@@ -439,6 +440,69 @@ class Guild(APIObject):
             data=kwargs
         )
         return GuildMember.from_dict(construct_client_dict(self._client, data))
+
+    @overload
+    async def create_channel(self, name: str,
+                             type: Optional[int] = None,
+                             topic: Optional[str] = None,
+                             bitrate: Optional[int] = None,
+                             user_limit: Optional[int] = None,
+                             rate_limit_per_user: Optional[int] = None,
+                             position: Optional[int] = None,
+                             permission_overwrites: Optional[
+                                 List[Overwrite]] = None,
+                             parent_id: Optional[Snowflake] = None,
+                             nsfw: Optional[bool] = None) -> Channel:
+        """|coro|
+        Create a new channel object for the guild.
+
+        Parameters
+        ----------
+        name : :class:`str`
+            channel name (1-100 characters)
+        type : :class:`Optional[int]`
+            the type of channel
+        topic : :class:`Optional[str]`
+            channel topic (0-1024 characters)
+        bitrate : :class:`Optional[int]`
+            the bitrate (in bits) of the voice channel (voice only)
+        user_limit : :class:`Optional[int]`
+            the user limit of the voice channel (voice only)
+        rate_limit_per_user : :class:`Optional[int]`
+            amount of seconds a user has to wait before sending another message (0-21600)
+            bots, as well as users with the permission manage_messages or manage_channel, are unaffected
+        position : :class:`Optional[int]`
+            sorting position of the channel
+        permission_overwrites : :class:`Optional[List[~pincer.objects.guild.overwrite.Overwrite]]`
+            the channel's permission overwrites
+        parent_id : :class:`Optional[~pincer.utils.snowflake.Snowflake]`
+            id of the parent category for a channel
+        nsfw : :class:`Optional[bool]`
+            whether the channel is nsfw
+
+        """
+        ...
+
+    async def create_channel(self, **kwargs):
+        data = await self._http.post(f"guilds/{self.id}/channels", data=kwargs)
+        return Channel.from_dict(construct_client_dict(self._client, data=data))
+
+    async def modify_channel_positions(
+            self, *channel: Dict[str, Optional[Union[int, bool, Snowflake]]]):
+        """|coro|
+        Create a new channel object for the guild.
+
+        Parameters
+        ----------
+
+        *channel : :class:`Dict[str, Optional[Union[int, bool, Snowflake]`
+            Keys:
+                id : :class:`~pincer.utils.snowflake.Snowflake`
+                position : :class:`Optional[int]`
+                lock_permissions : :class:`Optional[bool]`
+                parent_id : :class:`Optional[~pincer.utils.snowflake.Snowflake]`
+
+        """
 
     async def kick(self, member_id: int, **kwargs):
         """|coro|
