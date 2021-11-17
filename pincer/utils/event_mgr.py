@@ -60,7 +60,7 @@ def _lowest_value(*args):
     """
     args_without_none = [n for n in args if n is not None]
 
-    if len(args_without_none) == 0:
+    if not args_without_none:
         return None
 
     return min(args_without_none)
@@ -160,9 +160,7 @@ class _LoopMgr(_Processable):
 
             self.wait.clear()
             await self.wait.wait()
-            return self.events.popleft()
-        else:
-            return self.events.popleft()
+        return self.events.popleft()
 
 
 class EventMgr:
