@@ -438,6 +438,8 @@ class Client(Dispatcher):
     def run(self):
         """start the event listener"""
         self.start_loop()
+
+    def __del__(self):
         run(self.http.close())
 
     async def handle_middleware(
@@ -587,10 +589,10 @@ class Client(Dispatcher):
         await self.process_event("payload", payload)
 
     async def wait_for(
-        self,
-        event_name: str,
-        check: CheckFunction = None,
-        timeout: Optional[float] = None
+            self,
+            event_name: str,
+            check: CheckFunction = None,
+            timeout: Optional[float] = None
     ):
         """
         Parameters
@@ -611,11 +613,11 @@ class Client(Dispatcher):
         return await self.event_mgr.wait_for(event_name, check, timeout)
 
     def loop_for(
-        self,
-        event_name: str,
-        check: CheckFunction = None,
-        iteration_timeout: Optional[float] = None,
-        loop_timeout: Optional[float] = None
+            self,
+            event_name: str,
+            check: CheckFunction = None,
+            iteration_timeout: Optional[float] = None,
+            loop_timeout: Optional[float] = None
     ):
         """
         Parameters
