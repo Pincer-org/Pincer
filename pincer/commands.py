@@ -231,7 +231,7 @@ def command(
                 annotation = (
                     get_index(union_args, 0)
                     if len(union_args) == 1
-                    else Union[Tuple[List]]
+                    else Tuple[List]
                 )
 
             if get_origin(annotation) is Choices:

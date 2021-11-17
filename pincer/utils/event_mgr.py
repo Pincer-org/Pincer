@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING
 from ..exceptions import TimeoutError as PincerTimeoutError
 
 if TYPE_CHECKING:
-    from typing import Any, List, Union
+    from typing import Any, List, Union, Optional
     from .types import CheckFunction
 
 
@@ -109,7 +109,7 @@ class _Event(_Processable):
 
 
 class _LoopEmptyError(Exception):
-    "Raised when the _LoopMgr is empty and cannot accept new item"
+    """Raised when the _LoopMgr is empty and cannot accept new item"""
 
 
 class _LoopMgr(_Processable):
@@ -192,7 +192,7 @@ class EventMgr:
         self,
         event_name: str,
         check: CheckFunction,
-        timeout: Union[float, None]
+        timeout: Optional[float]
     ) -> Any:
         """
         Parameters
@@ -227,8 +227,8 @@ class EventMgr:
         self,
         event_name: str,
         check: CheckFunction,
-        iteration_timeout: Union[float, None],
-        loop_timeout: Union[float, None],
+        iteration_timeout: Optional[float],
+        loop_timeout: Optional[float],
     ) -> Any:
         """
         Parameters
