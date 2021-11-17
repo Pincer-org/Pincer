@@ -15,7 +15,7 @@ from ...utils.conversion import construct_client_dict
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from typing import Any, Dict, List, Optional
+    from typing import Any, Dict, List, Optional, Union
 
     from .features import GuildFeature
     from .role import Role
@@ -152,6 +152,7 @@ class SystemChannelFlags(IntEnum):
     SUPPRESS_GUILD_REMINDER_NOTIFICATIONS = 1 << 2
     SUPPRESS_JOIN_NOTIFICATION_REPLIES = 1 << 3
 
+
 @dataclass
 class GuildPreview(APIObject):
     """Represents a guild preview.
@@ -189,6 +190,7 @@ class GuildPreview(APIObject):
     splash: APINullable[str] = MISSING
     discovery_splash: APINullable[str] = MISSING
     description: APINullable[str] = MISSING
+
 
 @dataclass
 class Guild(APIObject):
