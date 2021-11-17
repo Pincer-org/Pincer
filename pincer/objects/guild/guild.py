@@ -497,10 +497,10 @@ class Guild(APIObject):
 
         *channel : :class:`Dict[str, Optional[Union[int, bool, Snowflake]`
             Keys:
-                id : :class:`~pincer.utils.snowflake.Snowflake`
-                position : :class:`Optional[int]`
-                lock_permissions : :class:`Optional[bool]`
-                parent_id : :class:`Optional[~pincer.utils.snowflake.Snowflake]`
+                - id : :class:`~pincer.utils.snowflake.Snowflake`
+                - position : :class:`Optional[int]`
+                - lock_permissions : :class:`Optional[bool]`
+                - parent_id : :class:`Optional[~pincer.utils.snowflake.Snowflake]`
 
         """
 
