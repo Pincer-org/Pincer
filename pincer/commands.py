@@ -137,7 +137,8 @@ def command(
         Annotation amount is max 25,
         Not a valid argument type,
         Annotations must consist of name and value
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     def decorator(func: Coro):
         if not iscoroutinefunction(func) and not isasyncgenfunction(func):
@@ -662,12 +663,17 @@ class ChatCommandHandler(metaclass=Singleton):
             to_add.values()
         )))
 
-    async def initialize(self):
+    async def initialize(self, remove_unused, update_existing):
         """|coro|
 
         Call methods of this class to refresh all app commands
         """
         await self.__init_existing_commands()
-        await self.__remove_unused_commands()
-        await self.__update_existing_commands()
+
+        if remove_unused:
+            await self.__remove_unused_commands()
+
+        if update_existing:
+            await self.__update_existing_commands()
+
         await self.__add_commands()
