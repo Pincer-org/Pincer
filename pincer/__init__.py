@@ -26,6 +26,11 @@ from .exceptions import (
     UnauthorizedError, ForbiddenError, NotFoundError, MethodNotAllowedError,
     RateLimitError, GatewayError, ServerError
 )
+from .oggparse import *
+from .opus import *
+from .player import *
+from .voice_client import *
+from .types import *
 from .objects import Intents
 from .utils import Choices, Descripted
 

@@ -31,7 +31,13 @@ class NoExportMethod(PincerError):
     """Exception which gets raised when an `export` method is expected but
     not found in a module.
     """
+class InvalidArgument(PincerError):
+    """Exception which gets thrown On A Invalid Argument
+    Introduced In 0.12.0"""
 
+class ClientException(PincerError):
+    """Get's Thrown On A Voice Client Error/Exception
+    Introduced In 0.12.0"""
 
 class CogError(PincerError):
     """Exception base class for errors related to Cogs."""
