@@ -521,6 +521,8 @@ class ChatCommandHandler(metaclass=Singleton):
 
         Initiate existing commands
         """
+        if not len(self.register):
+            return
 
         try:
             self._api_commands = await self.get_commands()
