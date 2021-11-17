@@ -39,6 +39,10 @@ class ClientException(PincerError):
     """Get's Thrown On A Voice Client Error/Exception
     Introduced In 0.12.0"""
 
+class ConnectionClosed(PincerError):
+    """Get's Thrown On A Voice Connection Closure.
+    Introduced In 0.12.0"""
+
 class CogError(PincerError):
     """Exception base class for errors related to Cogs."""
 
