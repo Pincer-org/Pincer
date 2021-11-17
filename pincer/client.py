@@ -601,7 +601,8 @@ class Client(Dispatcher):
         :class:`~pincer.objects.guild.guild.Guild`
             The guild that was created.
         """
-        return await self.http.post("/guilds", data=kwargs)
+        g = await self.http.post("/guilds", data=kwargs)
+        return await self.get_guild(g['id'])
 
     async def wait_for(
         self,
