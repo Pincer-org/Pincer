@@ -15,24 +15,17 @@ if TYPE_CHECKING:
 
 
 def construct_client_dict(client: Client, data: Dict[...]):
-    return {
-        **data,
-        "_client": client,
-        "_http": client.http
-    }
+    return {**data, "_client": client, "_http": client.http}
 
 
 def convert(
-        value: Any,
-        factory: Callable[[Any], T],
-        check: Optional[T] = None,
-        client: Optional[Client] = None
+    value: Any,
+    factory: Callable[[Any], T],
+    check: Optional[T] = None,
+    client: Optional[Client] = None,
 ) -> T:
     def handle_factory() -> T:
         def fin_fac(v: Any):
-            if is_dataclass(v):
-                return
-
             if check is not None and isinstance(v, check):
                 return v
 
@@ -41,6 +34,13 @@ def convert(
                     return factory(construct_client_dict(client, v))
             except TypeError:  # Building type/has no signature
                 pass
+
+            # The import has been placed locally to avoid circular imports
+            # TODO: Find a way to remove this monstrosity
+            from ..utils import APIObject
+
+            if isinstance(v, APIObject):
+                return v
 
             return factory(v)
 
