@@ -9,7 +9,6 @@ from typing import overload, TYPE_CHECKING, Union
 
 from .channel import Channel
 from .member import GuildMember
-from .. import Overwrite
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
@@ -19,6 +18,7 @@ if TYPE_CHECKING:
     from typing import Any, Dict, List, Optional
 
     from .features import GuildFeature
+    from .overwrite import Overwrite
     from .role import Role
     from .stage import StageInstance
     from .welcome_screen import WelcomeScreen
