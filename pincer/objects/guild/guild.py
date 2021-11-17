@@ -469,22 +469,22 @@ class Guild(APIObject):
         Bans a guild member.
         Parameters
         ----------
-        member_id : :class: int
+        member_id : :class:`int`
             ID of the guild member to ban.
         \\*\\* kwargs
             Additional keyword arguments to ban the guild member with.
         """
-        await self._http.put(f"/guilds/{self.id}/bans/{member_id}", data=kwargs)
+        await self._http.put(f"guilds/{self.id}/bans/{member_id}", data=kwargs)
 
     async def kick(self, member_id: int):
         """|coro|
         Kicks a guild member.
         Parameters
         ----------
-        member_id : :class: int
+        member_id : :class:`int`
             ID of the guild member to kick.
         """
-        await self._http.delete(f"/guilds/{self.id}/members/{member_id}")
+        await self._http.delete(f"guilds/{self.id}/members/{member_id}")
 
     async def edit(self, **kwargs):
         """|coro|
@@ -494,7 +494,7 @@ class Guild(APIObject):
         \\*\\* kwargs
             Keyword arguments to modify the guild with.
         """
-        await self._http.patch(f"/guilds/{self.id}", data=kwargs)
+        await self._http.patch(f"guilds/{self.id}", data=kwargs)
 
     async def preview(self) -> GuildPreview:
         """|coro|
@@ -504,21 +504,21 @@ class Guild(APIObject):
         :class:`~pincer.objects.guild.guild.GuildPreview`
             The guild preview object.
         """
-        data = await self._http.get(f"/guilds/{self.id}/preview")
+        data = await self._http.get(f"guilds/{self.id}/preview")
         return GuildPreview.from_dict(data)
 
     async def delete(self):
         """|coro|
         Deletes the guild. Returns `204 No Content` on success.
         """
-        await self._http.delete(f"/guilds/{self.id}")
+        await self._http.delete(f"guilds/{self.id}")
 
     @classmethod
     def from_dict(cls, data) -> Guild:
         """
         Parameters
         ----------
-        data : :class: Dict
+        data : :class:`Dict`
             Guild data received from the discord API.
         Returns
         -------
