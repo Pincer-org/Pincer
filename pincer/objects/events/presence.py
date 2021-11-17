@@ -260,7 +260,7 @@ class PresenceUpdateEvent(APIObject):
         User's platform-dependent status
     """
     user: User
-    guild_id: Snowflake
     status: str
     activities: List[Activity]
     client_status: ClientStatus
+    guild_id: APINullable[Snowflake] = MISSING
