@@ -97,3 +97,18 @@ class Descripted(metaclass=_TypeInstanceMeta):
 
         self.key = key
         self.description = description
+
+
+class HexColor:
+    def __init__(self, c: str) -> None:
+        # Conversion modified from this answer
+        # https://stackoverflow.com/a/29643643
+        self.hex = c
+        self.r, self.g, self.b = (int(c[n + 1:n + 3], 16) for n in (0, 2, 4))
+
+    @property
+    def rbg(self):
+        return (self.r, self.g, self.b)
+
+    def hex(self):
+        return self.c

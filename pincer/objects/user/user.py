@@ -29,7 +29,7 @@ if TYPE_CHECKING:
     from ..guild.channel import Channel
     from ...client import Client
     from ...objects.message.user_message import UserMessage
-    from ...utils.types import APINullable
+    from ...utils.types import APINullable, HexColor
     from ...utils.snowflake import Snowflake
 
 
@@ -117,7 +117,7 @@ class User(APIObject):
     flags: APINullable[int] = MISSING
     accent_color: APINullable[Optional[int]] = MISSING
     banner: APINullable[Optional[str]] = MISSING
-    banner_color: APINullable[Optional[int]] = MISSING
+    banner_color: APINullable[Optional[HexColor]] = MISSING
     bot: APINullable[bool] = MISSING
     email: APINullable[Optional[str]] = MISSING
     locale: APINullable[str] = MISSING
