@@ -108,7 +108,4 @@ class HexColor:
 
     @property
     def rbg(self):
-        return (self.r, self.g, self.b)
-
-    def hex(self):
-        return self.c
+        return self.r, self.g, self.b
