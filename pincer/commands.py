@@ -17,7 +17,9 @@ from .exceptions import (
     InvalidArgumentAnnotation, CommandDescriptionTooLong, InvalidCommandGuild,
     InvalidCommandName, ForbiddenError
 )
-from .objects import ThrottleScope, AppCommand, Role, User, Channel, Guild
+from .objects import (
+    ThrottleScope, AppCommand, Role, User, Channel, Guild, MessageContext
+)
 from .objects.app import (
     AppCommandOptionType, AppCommandOption, AppCommandOptionChoice,
     ClientCommandStructure, AppCommandType
@@ -135,7 +137,8 @@ def command(
         Annotation amount is max 25,
         Not a valid argument type,
         Annotations must consist of name and value
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     def decorator(func: Coro):
         if not iscoroutinefunction(func) and not isasyncgenfunction(func):
@@ -154,7 +157,7 @@ def command(
             )
 
         try:
-            guild_id = int(guild) if guild else MISSING
+            guild_id = Snowflake(guild) if guild else MISSING
         except ValueError:
             raise InvalidCommandGuild(
                 f"Command with call `{func.__name__}` its `guilds` parameter "
@@ -190,6 +193,12 @@ def command(
                 continue
 
             annotation, required = sig[param].annotation, True
+
+            # ctx is type MessageContext but should not be included in the
+            # slash command
+            if annotation == MessageContext:
+                return
+
             argument_description: Optional[str] = None
             choices: List[AppCommandOptionChoice] = []
 
@@ -222,7 +231,7 @@ def command(
                 annotation = (
                     get_index(union_args, 0)
                     if len(union_args) == 1
-                    else Union[Tuple[List]]
+                    else Tuple[List]
                 )
 
             if get_origin(annotation) is Choices:
@@ -279,6 +288,7 @@ def command(
                 annotation = choice_type
 
             param_type = _options_type_link.get(annotation)
+
             if not param_type:
                 raise InvalidArgumentAnnotation(
                     f"Annotation `{annotation}` on parameter "
@@ -512,6 +522,8 @@ class ChatCommandHandler(metaclass=Singleton):
 
         Initiate existing commands
         """
+        if not len(self.register):
+            return
 
         try:
             self._api_commands = await self.get_commands()
@@ -651,12 +663,17 @@ class ChatCommandHandler(metaclass=Singleton):
             to_add.values()
         )))
 
-    async def initialize(self):
+    async def initialize(self, remove_unused, update_existing):
         """|coro|
 
         Call methods of this class to refresh all app commands
         """
         await self.__init_existing_commands()
-        await self.__remove_unused_commands()
-        await self.__update_existing_commands()
+
+        if remove_unused:
+            await self.__remove_unused_commands()
+
+        if update_existing:
+            await self.__update_existing_commands()
+
         await self.__add_commands()

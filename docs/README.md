@@ -34,8 +34,14 @@ An asynchronous Python API wrapper meant to replace discord.py
 
 Use the following command to install Pincer into your Python environment:
 
-```bash
+```sh
 pip install pincer
+```
+
+To install our version with Aiohttp Speedup do:
+
+```sh
+pip install pincer[speed]
 ```
 
 <details>
