@@ -12,6 +12,7 @@ from aiohttp import ClientSession
 
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
+from ...utils.convert_message import MessageConvertable
 from ...utils.types import MISSING
 
 PILLOW_IMPORT = True
@@ -25,7 +26,9 @@ except (ModuleNotFoundError, ImportError):
 if TYPE_CHECKING:
     from typing import Optional
 
+    from ..guild.channel import Channel
     from ...client import Client
+    from ...objects.message.user_message import UserMessage
     from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
 
@@ -130,7 +133,8 @@ class User(APIObject):
         user their premium type in a usable enum.
         """
         return (
-            MISSING if self.premium_type is MISSING else PremiumTypes(self.premium_type)
+            MISSING if self.premium_type is MISSING else PremiumTypes(
+                self.premium_type)
         )
 
     @property
@@ -173,3 +177,20 @@ class User(APIObject):
     async def from_id(cls, client: Client, user_id: int) -> User:
         data = await client.http.get(f"users/{user_id}")
         return cls.from_dict(construct_client_dict(client, data))
+
+    async def get_dm_channel(self) -> Channel:
+        from ..guild.channel import Channel
+
+        return Channel.from_dict(
+            construct_client_dict(
+                self,
+                await self._http.post(
+                    "/users/@me/channels",
+                    data={"recipient_id": self.id}
+                )
+            )
+        )
+
+    async def send(self, message: MessageConvertable) -> UserMessage:
+        channel = await self.get_dm_channel()
+        return await channel.send(message)
