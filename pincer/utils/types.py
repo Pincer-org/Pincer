@@ -4,13 +4,13 @@ from __future__ import annotations
 
 from sys import modules
 from typing import (
-    TYPE_CHECKING, TypeVar, Callable, Coroutine, Any, Union, Literal
+    TYPE_CHECKING, TypeVar, Callable, Coroutine, Any, Union, Literal, Optional
 )
 
 from pincer.exceptions import InvalidArgumentAnnotation
 
 if TYPE_CHECKING:
-    from typing import Tuple, Optional
+    from typing import Tuple
 
 
 class MissingType:
