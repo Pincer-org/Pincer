@@ -509,16 +509,16 @@ class Guild(APIObject):
         """
         Parameters
         ----------
-        data : :class: Dict
+        data : :class:`Dict`
             Guild data received from the discord API.
 
         Returns
         -------
-        :class: `~pincer.objects.guild.guild.Guild`
+        :class:`~pincer.objects.guild.guild.Guild`
             The new guild object.
 
         Raises
-        :class: `~pincer.exceptions.UnavailableGuildError`
+        :class:`~pincer.exceptions.UnavailableGuildError`
             The guild is unavailable due to a discord outage.
         """
         if data.get("unavailable", False):
