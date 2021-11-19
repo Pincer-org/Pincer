@@ -522,9 +522,6 @@ class ChatCommandHandler(metaclass=Singleton):
 
         Initiate existing commands
         """
-        if not len(self.register):
-            return
-
         try:
             self._api_commands = await self.get_commands()
 
@@ -663,17 +660,12 @@ class ChatCommandHandler(metaclass=Singleton):
             to_add.values()
         )))
 
-    async def initialize(self, remove_unused, update_existing):
+    async def initialize(self):
         """|coro|
 
         Call methods of this class to refresh all app commands
         """
         await self.__init_existing_commands()
-
-        if remove_unused:
-            await self.__remove_unused_commands()
-
-        if update_existing:
-            await self.__update_existing_commands()
-
+        await self.__remove_unused_commands()
+        await self.__update_existing_commands()
         await self.__add_commands()

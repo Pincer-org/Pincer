@@ -33,7 +33,6 @@ if TYPE_CHECKING:
 
 class PremiumTier(IntEnum):
     """Represents the boost tier of a guild.
-
     Attributes
     ----------
     NONE:
@@ -45,7 +44,6 @@ class PremiumTier(IntEnum):
     TIER_3:
         Guild has unlocked Server Boost level 3 perks.
     """
-
     NONE = 0
     TIER_1 = 1
     TIER_2 = 2
@@ -54,7 +52,6 @@ class PremiumTier(IntEnum):
 
 class GuildNSFWLevel(IntEnum):
     """Represents the NSFW level of a guild.
-
     Attributes
     ----------
     DEFAULT:
@@ -66,7 +63,6 @@ class GuildNSFWLevel(IntEnum):
     AGE_RESTRICTED:
         Age restricted NSFW level.
     """
-
     DEFAULT = 0
     EXPLICIT = 1
     SAFE = 2
@@ -75,7 +71,6 @@ class GuildNSFWLevel(IntEnum):
 
 class ExplicitContentFilterLevel(IntEnum):
     """Represents the filter content level of a guild.
-
     Attributes
     ----------
     DISABLED:
@@ -85,7 +80,6 @@ class ExplicitContentFilterLevel(IntEnum):
     ALL_MEMBERS:
         Media content sent by all members will be scanned.
     """
-
     DISABLED = 0
     MEMBERS_WITHOUT_ROLES = 1
     ALL_MEMBERS = 2
@@ -93,7 +87,6 @@ class ExplicitContentFilterLevel(IntEnum):
 
 class MFALevel(IntEnum):
     """Represents the multi factor authentication level of a guild.
-
     Attributes
     ----------
     NONE:
@@ -101,14 +94,12 @@ class MFALevel(IntEnum):
     ELEVATED:
         Guild has a 2FA requirement for moderation actions
     """
-
     NONE = 0
     ELEVATED = 1
 
 
 class VerificationLevel(IntEnum):
     """Represents the verification level of a guild.
-
     Attributes
     ----------
     NONE:
@@ -122,7 +113,6 @@ class VerificationLevel(IntEnum):
     VERY_HIGH:
         Must have a verified phone number.
     """
-
     NONE = 0
     LOW = 1
     MEDIUM = 2
@@ -132,7 +122,6 @@ class VerificationLevel(IntEnum):
 
 class DefaultMessageNotificationLevel(IntEnum):
     """Represents the default message notification level of a guild.
-
     Attributes
     ----------
     ALL_MESSAGES:
@@ -140,7 +129,6 @@ class DefaultMessageNotificationLevel(IntEnum):
     ONLY_MENTIONS:
         Members will receive notifications only for messages that @mention them by default.
     """
-
     # noqa: E501
     ALL_MESSAGES = 0
     ONLY_MENTIONS = 1
@@ -148,7 +136,6 @@ class DefaultMessageNotificationLevel(IntEnum):
 
 class SystemChannelFlags(IntEnum):
     """Represents the system channel flags of a guild.
-
     Attributes
     ----------
     SUPPRESS_JOIN_NOTIFICATIONS:
@@ -160,7 +147,6 @@ class SystemChannelFlags(IntEnum):
     SUPPRESS_JOIN_NOTIFICATION_REPLIES:
         Hide member join sticker reply buttons
     """
-
     SUPPRESS_JOIN_NOTIFICATIONS = 1 << 0
     SUPPRESS_PREMIUM_SUBSCRIPTIONS = 1 << 1
     SUPPRESS_GUILD_REMINDER_NOTIFICATIONS = 1 << 2
@@ -168,9 +154,47 @@ class SystemChannelFlags(IntEnum):
 
 
 @dataclass
+class GuildPreview(APIObject):
+    """Represents a guild preview.
+    Attributes
+    ----------
+    id: :class:`Snowflake`
+        The guild ID.
+    name: :class:`str`
+        The guild name.
+    icon: :class:`str`
+        The guild icon hash.
+    splash: :class:`str`
+        The guild splash hash.
+    discovery_splash: :class:`str`
+        The guild discovery splash hash.
+    emojis: :class:`List[Emoji]`
+        The guild emojis.
+    features: :class:`List[GuildFeature]`
+        The guild features.
+    approximate_member_count: :class:`int`
+        The approximate member count.
+    approximate_presence_count: :class:`int`
+        The approximate number of online members in this guild
+    description: :class:`str`
+        The guild description.
+    """
+    id: Snowflake
+    name: str
+    emojis: List[Emoji]
+    features: List[GuildFeature]
+    approximate_member_count: int
+    approximate_presence_count: int
+
+    icon: APINullable[str] = MISSING
+    splash: APINullable[str] = MISSING
+    discovery_splash: APINullable[str] = MISSING
+    description: APINullable[str] = MISSING
+
+
+@dataclass
 class Guild(APIObject):
     """Represents a Discord guild/server in which your client resides.
-
     Attributes
     ----------
     afk_channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
@@ -294,7 +318,6 @@ class Guild(APIObject):
         The welcome screen of a Community guild, shown to new members,
         returned in an Invite's guild object
     """
-
     # noqa: E501
     afk_timeout: int
     default_message_notifications: DefaultMessageNotificationLevel
@@ -370,7 +393,6 @@ class Guild(APIObject):
             Client object to use the http gateway from.
         _id : :class: `pincer.utils.snowflake.Snowflake`
             Guild ID.
-
         Returns
         -------
         :class: `~pincer.objects.guild.guild.Guild`
@@ -388,15 +410,12 @@ class Guild(APIObject):
 
     async def get_member(self, _id: int) -> GuildMember:
         """|coro|
-
         Fetches a GuildMember from its identifier
-
         Parameters
         ----------
         _id:
             The id of the guild member which should be fetched from the Discord
             gateway.
-
         Returns
         -------
         :class:`~pincer.objects.guild.member.GuildMember`
@@ -406,20 +425,17 @@ class Guild(APIObject):
 
     @overload
     async def modify_member(
-        self,
-        *,
-        _id: int,
-        nick: Optional[str] = None,
-        roles: Optional[List[Snowflake]] = None,
-        mute: Optional[bool] = None,
-        deaf: Optional[bool] = None,
-        channel_id: Optional[Snowflake] = None,
+            self, *,
+            _id: int,
+            nick: Optional[str] = None,
+            roles: Optional[List[Snowflake]] = None,
+            mute: Optional[bool] = None,
+            deaf: Optional[bool] = None,
+            channel_id: Optional[Snowflake] = None
     ) -> GuildMember:
         """|coro|
-
         Modifies a member in the guild from its identifier and based on the
         keyword arguments provided.
-
         Parameters
         ----------
         _id : int
@@ -434,7 +450,6 @@ class Guild(APIObject):
             Whether the member is deafened |default| :data:`None`
         channel_id : Optional[:class:`~pincer.utils.snowflake.Snowflake]
             Voice channel id to move to |default| :data:`None`
-
         Returns
         -------
         :class:`~pincer.objects.guild.member.GuildMember`
@@ -444,41 +459,18 @@ class Guild(APIObject):
 
     async def modify_member(self, _id: int, **kwargs) -> GuildMember:
         data = await self._http.patch(
-            f"guilds/{self.id}/members/{_id}", data=kwargs
+            f"guilds/{self.id}/members/{_id}",
+            data=kwargs
         )
         return GuildMember.from_dict(construct_client_dict(self._client, data))
-
-    async def kick(self, member_id: int, reason: Optional[str] = None):
-        """|coro|
-        Kicks a guild member.
-
-        Parameters
-        ----------
-        member_id : :class:`int`
-            ID of the guild member to kick.
-        reason : Optional[:class:`str`]
-            Reason for the kick.
-        """
-
-        headers = {}
-
-        if reason is not None:
-            headers["X-Audit-Log-Reason"] = str(reason)
-
-        await self._http.delete(
-            f"/guilds/{self.id}/members/{member_id}",
-            header=headers
-        )
 
     async def ban(
         self,
         member_id: int,
-        reason: Optional[str] = None,
-        delete_message_days: Optional[int] = None,
+        reason: str = None,
+        delete_message_days: int = None
     ):
-        """|coro|
-        Bans a guild member.
-
+        """
         Parameters
         ----------
         member_id : :class:`int`
@@ -504,6 +496,132 @@ class Guild(APIObject):
             headers=headers
         )
 
+    async def kick(self, member_id: int, reason: Optional[str] = None):
+        """|coro|
+        Kicks a guild member.
+        Parameters
+        ----------
+        member_id : :class:`int`
+            ID of the guild member to kick.
+        reason : Optional[:class:`str`]
+            Reason for the kick.
+        """
+
+        headers = {}
+
+        if reason is not None:
+            headers["X-Audit-Log-Reason"] = str(reason)
+
+        await self._http.delete(
+            f"/guilds/{self.id}/members/{member_id}",
+            header=headers
+        )
+
+    @overload
+    async def edit(
+        self,
+        *,
+        name: Optional[str] = None,
+        region: Optional[str] = None,
+        verification_level: Optional[int] = None,
+        default_message_notifications: Optional[int] = None,
+        explicit_content_filter: Optional[int] = None,
+        afk_channel_id: Optional[Snowflake] = None,
+        afk_timeout: Optional[int] = None,
+        icon: Optional[str] = None,
+        owner_id: Optional[Snowflake] = None,
+        splash: Optional[str] = None,
+        discovery_splash: Optional[str] = None,
+        banner: Optional[str] = None,
+        system_channel_id: Optional[Snowflake] = None,
+        system_channel_flags: Optional[int] = None,
+        rules_channel_id: Optional[Snowflake] = None,
+        public_updates_channel_id: Optional[Snowflake] = None,
+        preferred_locale: Optional[str] = None,
+        features: Optional[List[GuildFeature]] = None,
+        description: Optional[str] = None
+    ) -> Guild:
+        """|coro|
+        Modifies the guild
+
+        Parameters
+        ----------
+        name : Optional[:class:`str`]
+            Guild name |default| :data:`None`
+        region : Optional[:class:`str`]
+            Guild voice region ID |default| :data:`None`
+        verification_level : Optional[:class:`int`]
+            Verification level |default| :data:`None`
+        default_message_notifications : Optional[:class:`int`]
+            Default message notification level |default| :data:`None`
+        explicit_content_filter : Optional[:class:`int`]
+            Explicit content filter level |default| :data:`None`
+        afk_channel_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            ID for AFK channel |default| :data:`None`
+        afk_timeout : Optional[:class:`int`]
+            AFK timeout in seconds |default| :data:`None`
+        icon : Optional[:class:`str`]
+            base64 1024x1024 png/jpeg/gif image for the guild icon
+            (can be animated gif when the server
+            has the `ANIMATED_ICON` feature) |default| :data:`None`
+        owner_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            User ID to transfer guild ownership to (must be owner) |default| :data:`None`
+        splash : Optional[:class:`str`]
+            base64 16:9 png/jpeg image for the guild splash (when the
+            server has the `INVITE_SPLASH` feature) |default| :data:`None`
+        discovery_splash : Optional[:class:`str`]
+            base64 16:9 png/jpeg image for the guild discovery splash
+            (when the server has the `DISCOVERABLE` feature) |default| :data:`None`
+        banner : Optional[:class:`str`]
+            base64 16:9 png/jpeg image for the guild banner (when the
+            server has the `BANNER` feature) |default| :data:`None`
+        system_channel_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            The ID of the channel where guild notices such as welcome
+            messages and boost events are posted |default| :data:`None`
+        system_channel_flags : Optional[:class:`int`]
+            System channel flags |default| :data:`None`
+        rules_channel_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            The ID of the channel where Community guilds display rules
+            and/or guidelines |default| :data:`None`
+        public_updates_channel_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            The ID of the channel where admins and moderators of
+            Community guilds receive notices from Discord |default| :data:`None`
+        preferred_locale : Optional[:class:`str`]
+            The preferred locale of a Community guild used in server
+            discovery and notices from Discord; defaults to "en-US" |default| :data:`None`
+        features : Optional[List[:class:`GuildFeature`]]
+            Enabled guild features |default| :data:`None`
+        description : Optional[:class:`str`]
+            The description for the guild, if the guild is discoverable |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.Guild`
+            The modified guild object.
+        """
+        ...
+
+    async def edit(self, **kwargs) -> Guild:
+        g = await self._http.patch(f"guilds/{self.id}", data=kwargs)
+        return Guild.from_dict(construct_client_dict(self._client, g))
+
+    async def preview(self) -> GuildPreview:
+        """|coro|
+        Previews the guild.
+        Returns
+        -------
+        :class:`~pincer.objects.guild.guild.GuildPreview`
+            The guild preview object.
+        """
+        data = await self._http.get(f"guilds/{self.id}/preview")
+        return GuildPreview.from_dict(data)
+
+    async def delete(self):
+        """|coro|
+        Deletes the guild. Returns `204 No Content` on success.
+        """
+        await self._http.delete(f"guilds/{self.id}")
+
     @classmethod
     def from_dict(cls, data) -> Guild:
         """
@@ -511,12 +629,10 @@ class Guild(APIObject):
         ----------
         data : :class:`Dict`
             Guild data received from the discord API.
-
         Returns
         -------
         :class:`~pincer.objects.guild.guild.Guild`
             The new guild object.
-
         Raises
         :class:`~pincer.exceptions.UnavailableGuildError`
             The guild is unavailable due to a discord outage.

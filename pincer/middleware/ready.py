@@ -50,10 +50,7 @@ async def on_ready_middleware(
     self.bot = User.from_dict(construct_client_dict(self, user))
     self.guilds = dict(map(lambda i: (i["id"], None), guilds))
 
-    await ChatCommandHandler(self).initialize(
-        self.remove_unused_commands,
-        self.update_existing_commands
-    )
+    await ChatCommandHandler(self).initialize()
     return "on_ready",
 
 
