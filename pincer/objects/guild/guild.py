@@ -562,7 +562,7 @@ class Guild(APIObject):
             Enabled guild features |default| :data:`None`
         description : Optional[:class:`str`]
             The description for the guild, if the guild is discoverable |default| :data:`None`
-        
+
         Returns
         -------
         :class:`~pincer.objects.guild.Guild`
