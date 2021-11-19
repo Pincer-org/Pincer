@@ -179,11 +179,17 @@ class User(APIObject):
         return cls.from_dict(construct_client_dict(client, data))
 
     async def get_dm_channel(self) -> Channel:
+        """
+        Returns
+        -------
+        :class:`~pincer.objects.guild.channel.Channel`
+            DM channel for this user.
+        """
         from ..guild.channel import Channel
 
         return Channel.from_dict(
             construct_client_dict(
-                self,
+                self._client,
                 await self._http.post(
                     "/users/@me/channels",
                     data={"recipient_id": self.id}
@@ -192,5 +198,13 @@ class User(APIObject):
         )
 
     async def send(self, message: MessageConvertable) -> UserMessage:
+        """
+        Sends a message to a user.
+
+        Parameters
+        ----------
+        message : :class:`~pincer.utils.convert_message.MessageConvertable`
+            Message to be sent to the user.
+        """
         channel = await self.get_dm_channel()
         return await channel.send(message)
