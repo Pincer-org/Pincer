@@ -15,8 +15,8 @@ from ...utils.conversion import construct_client_dict
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from typing import Any, Dict, List, Optional
-
+    from typing import Any, Dict, List, Optional, Tuple
+    from .channel import PublicThread, PrivateThread
     from .features import GuildFeature
     from .overwrite import Overwrite
     from .role import Role
@@ -503,6 +503,96 @@ class Guild(APIObject):
                 - parent_id : :class:`Optional[~pincer.utils.snowflake.Snowflake]`
 
         """
+
+    async def list_active_threads(self) -> Tuple[
+        List[Union[PublicThread, PrivateThread]], List[GuildMember]]:
+        """|coro|
+        Returns all active threads in the guild, including public and private threads.
+        """
+        data = await self._http.get(f"guilds/{self.id}/threads/active")
+
+        threads = [Channel.from_dict(channel) for channel in data["threads"]]
+        members = [GuildMember.from_dict(member) for member in data["members"]]
+
+        return threads, members
+
+    async def list_guild_members(self, limit: int = 1, after: int = 0):
+        """|coro|
+        Returns a list of guild member objects that are members of the guild.
+
+        Parameters
+        ----------
+        limit : int
+            max number of members to return (1-1000) |default| :data:`1`
+        after : int
+            the highest user id in the previous page |default| :data:`0`
+        """
+
+        return await self._http.get(
+            f"guilds/{self.id}/members?limit={limit}&after={after}"
+        )
+
+    async def search_guild_members(self, query: str,
+                                   limit: Optional[int] = None
+                                   ) -> List[GuildMember]:
+        """|coro|
+        Returns a list of guild member objects whose username or nickname starts with a provided string.
+
+        Parameters
+        ----------
+        query : str
+            Query string to match username(s) and nickname(s) against.
+        limit : :class:`Optional[int]`
+            max number of members to return (1-1000) |default| :data:`1`
+
+        """
+
+        data = await self._http.get(
+            f"guilds/{id}/members/search?query={query}"
+            f"&{limit}" if limit else ""
+        )
+
+        return [GuildMember.from_dict(member) for member in data]
+
+    @overload
+    async def add_guild_member(self, *, user_id: Snowflake,
+                               access_token: str,
+                               nick: Optional[str] = None,
+                               roles: Optional[List[Snowflake]] = None,
+                               mute: Optional[bool] = None,
+                               deaf: Optional[bool] = None
+                               ) -> Optional[GuildMember]:
+        """|coro|
+        Adds a user to the guild, provided you have a valid oauth2 access token for the user with the guilds.join scope.
+
+        Parameters
+        ----------
+        user_id : str
+            id of the user to be added
+        access_token : str
+            an oauth2 access token granted with the guilds.join to the bot's application for the user you want to add to the guild
+        nick : :class:`Optional[str]`
+        	value to set users nickname to
+        roles : :class:`Optional[List[~pincer.utils.snowflake.Snowflake]]`
+        	array of role ids the member is assigned
+        mute : :class:`Optional[bool]`
+        	whether the user is muted in voice channels
+        deaf : :class:`:Optional[bool]`
+        	whether the user is deafened in voice channels
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.member.GuildMember`
+            If the user is not in the guild
+        None
+            If the user is in the guild
+        """
+
+    async def add_guild_member(self, user_id, **kwargs):
+        data = self._http.put(f"guilds/{self.id}/members/{user_id}",
+                              data=kwargs)
+
+        return GuildMember.from_dict(data) if data else None
 
     async def kick(self, member_id: int, **kwargs):
         """|coro|
