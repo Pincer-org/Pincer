@@ -181,6 +181,9 @@ class Client(Dispatcher):
             reconnect=reconnect,
         )
 
+        self.remove_unused_commands = False
+        self.update_existing_commands = True
+
         self.bot: Optional[User] = None
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
@@ -438,7 +441,10 @@ class Client(Dispatcher):
     def run(self):
         """start the event listener"""
         self.start_loop()
-        run(self.http.close())
+
+    def __del__(self):
+        if hasattr(self, 'http'):
+            run(self.http.close())
 
     async def handle_middleware(
             self,
@@ -645,10 +651,10 @@ class Client(Dispatcher):
         return await self.get_guild(g['id'])
 
     async def wait_for(
-        self,
-        event_name: str,
-        check: CheckFunction = None,
-        timeout: Optional[float] = None
+            self,
+            event_name: str,
+            check: CheckFunction = None,
+            timeout: Optional[float] = None
     ):
         """
         Parameters
@@ -669,11 +675,11 @@ class Client(Dispatcher):
         return await self.event_mgr.wait_for(event_name, check, timeout)
 
     def loop_for(
-        self,
-        event_name: str,
-        check: CheckFunction = None,
-        iteration_timeout: Optional[float] = None,
-        loop_timeout: Optional[float] = None
+            self,
+            event_name: str,
+            check: CheckFunction = None,
+            iteration_timeout: Optional[float] = None,
+            loop_timeout: Optional[float] = None
     ):
         """
         Parameters
