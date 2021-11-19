@@ -444,6 +444,12 @@ class NewsChannel(Channel):
         return await super().edit(**kwargs)
 
 
+class PublicThread(Channel):
+    """A subclass of ``Channel`` for public threads with all the same attributes."""
+
+class PrivateThread(Channel):
+    """A subclass of ``Channel`` for private threads with all the same attributes."""
+
 @dataclass
 class ChannelMention(APIObject):
     """Represents a Discord Channel Mention object
@@ -470,5 +476,7 @@ _channel_type_map: Dict[ChannelType, Channel] = {
     ChannelType.GUILD_TEXT: TextChannel,
     ChannelType.GUILD_VOICE: VoiceChannel,
     ChannelType.GUILD_CATEGORY: CategoryChannel,
-    ChannelType.GUILD_NEWS: NewsChannel
+    ChannelType.GUILD_NEWS: NewsChannel,
+    ChannelType.GUILD_PUBLIC_THREAD: PublicThread,
+    ChannelType.GUILD_PRIVATE_THREAD: PrivateThread
 }
