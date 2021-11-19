@@ -485,7 +485,7 @@ class Guild(APIObject):
             ID of the guild member to kick.
         """
         await self._http.delete(f"guilds/{self.id}/members/{member_id}")
-    
+
     @overload
     async def edit(
         self,
