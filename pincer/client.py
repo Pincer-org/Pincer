@@ -181,9 +181,6 @@ class Client(Dispatcher):
             reconnect=reconnect,
         )
 
-        self.remove_unused_commands = False
-        self.update_existing_commands = True
-
         self.bot: Optional[User] = None
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
