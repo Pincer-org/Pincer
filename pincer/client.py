@@ -714,6 +714,11 @@ class Client(Dispatcher):
         guild_id : :class:`int`
             The id of the guild which should be fetched from the Discord
             gateway.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.guild.Guild`
+            The guild object.
         """
         return await Guild.from_id(self, guild_id)
 
@@ -755,8 +760,13 @@ class Client(Dispatcher):
         return await Role.from_id(self, guild_id, role_id)
 
     async def get_channel(self, _id: int) -> Channel:
-        """Fetch a Channel from its identifier.
+        """Fetch a Channel from its identifier. The ``get_dm_channel`` method
+        from :class:`~pincer.objects.user.user.User` should be used if you need
+        to creating a dm_channel; using the ``send()`` method from
+        :class:`~pincer.objects.user.user.User` is preferred.
 
+        Parameters
+        ----------
         _id: :class:`int`
             The id of the user which should be fetched from the Discord
             gateway.

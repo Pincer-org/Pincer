@@ -483,7 +483,7 @@ class Guild(APIObject):
         headers = {}
 
         if reason is not None:
-            headers["X-Audit-Log-Reason"] = str(reason)
+            headers["X-Audit-Log-Reason"] = reason
 
         data = {}
 
@@ -510,7 +510,7 @@ class Guild(APIObject):
         headers = {}
 
         if reason is not None:
-            headers["X-Audit-Log-Reason"] = str(reason)
+            headers["X-Audit-Log-Reason"] = reason
 
         await self._http.delete(
             f"/guilds/{self.id}/members/{member_id}",
