@@ -11,6 +11,7 @@ class Color:
         The hex color can be a string that optionally starts with an ``#`` or
         an int with the RGB values.
     Attributes
+    ---------
     r : :class:`int`
         The red value for this color.
     g : :class:`int`
@@ -46,6 +47,7 @@ class Color:
     def hex(self):
         """
         Returns
+        ---------
         str
             Str value for hex.
         """
