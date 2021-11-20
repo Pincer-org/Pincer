@@ -552,7 +552,10 @@ class UserMessage(APIObject):
                 r"\*(.*?)\*",  # italic
                 r"_(.*?)_",  # italic2
                 r"\*\*\*(.*?)\*\*\*",  # bold+italic
-                r"\_\_(.*?)\_\_"  # underline
+                r"\_\_(.*?)\_\_",  # underline
+                r"~~(.*?)~~",  # crossed
+                r"`(.*?)`",  # small code blocks
+                r"\|\|(.*?)\|\|"  # spoilers
         ]
         for i in subs:
             new_content = sub(i, r"\1", new_content)
