@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum, IntEnum
+from re import sub
 from typing import TYPE_CHECKING
 
 from .attachment import Attachment
@@ -539,3 +540,17 @@ class UserMessage(APIObject):
         await self._http.delete(
             f"/channels/{self.channel_id}/messages/{self.id}"
         )
+
+    @property
+    def clean_content(self):
+        """
+        The message content with any special characters removed.
+        """
+        remove_bold = sub(r"\*\*(.*?)\*\*", r"\1", self.content)
+        remove_italic1 = sub(r"\*(.*?)\*", r"\1", remove_bold)
+        remove_italic2 = sub(r"_(.*?)_", r"\1", remove_italic1)
+        remove_bold_italic = sub(r"\*\*\*(.*?)\*\*\*", r"\1", remove_italic2)
+        remove_underline = sub(r"\_\_(.*?)\_\_", r"\1", remove_bold_italic)
+        remove_code_blocks = sub(r"(.*?)```[a-zA-Z]+(\s*)+\n((?:.|\s)*?)```", r"\1\2\3", remove_underline)
+
+        return remove_code_blocks
