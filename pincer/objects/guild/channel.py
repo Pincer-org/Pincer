@@ -380,6 +380,7 @@ class TextChannel(Channel):
             )
         )
 
+
 class VoiceChannel(Channel):
     """A subclass of ``Channel`` for voice channels with all the same attributes."""
 

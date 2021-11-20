@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING
 from ..exceptions import TimeoutError as PincerTimeoutError
 
 if TYPE_CHECKING:
-    from typing import Any, List, Union
+    from typing import Any, List, Union, Optional
     from .types import CheckFunction
 
 
@@ -60,7 +60,7 @@ def _lowest_value(*args):
     """
     args_without_none = [n for n in args if n is not None]
 
-    if len(args_without_none) == 0:
+    if not args_without_none:
         return None
 
     return min(args_without_none)
@@ -102,7 +102,7 @@ class _Event(_Processable):
         """
         await self.event.wait()
 
-    def process(self, event_name: str, *args) -> bool:
+    def process(self, event_name: str, *args):
         if self.matches_event(event_name, *args):
             self.return_value = args
             self.event.set()
@@ -160,9 +160,7 @@ class _LoopMgr(_Processable):
 
             self.wait.clear()
             await self.wait.wait()
-            return self.events.popleft()
-        else:
-            return self.events.popleft()
+        return self.events.popleft()
 
 
 class EventMgr:
@@ -192,7 +190,7 @@ class EventMgr:
         self,
         event_name: str,
         check: CheckFunction,
-        timeout: Union[float, None]
+        timeout: Optional[float]
     ) -> Any:
         """
         Parameters
@@ -227,8 +225,8 @@ class EventMgr:
         self,
         event_name: str,
         check: CheckFunction,
-        iteration_timeout: Union[float, None],
-        loop_timeout: Union[float, None],
+        iteration_timeout: Optional[float],
+        loop_timeout: Optional[float],
     ) -> Any:
         """
         Parameters
