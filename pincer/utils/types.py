@@ -105,17 +105,16 @@ class Color:
 
     Parameters
     ---------
-    c : str
-        the hex color. Should be in the format ``#NNNNNN``
+    c : Union[:class:`str`,:class:`int`]
+        The hex color in the format ``#NNNNNN`` or an int with the RGB values.
     Attributes
-    r : int
+    r : :class:`int`
         The red value for this color.
-    g : int
+    g : :class:`int`
         The green value for this color.
-    b : int
+    b : :class:`int`
         The blue value for this color.
     """
-
     def __init__(self, c: Union[str, int]) -> None:
         if isinstance(c, int):
             self.r = c >> 16 & 255
