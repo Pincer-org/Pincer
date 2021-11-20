@@ -1,4 +1,5 @@
 import io
+import re
 import textwrap
 import urllib.request
 from datetime import datetime
@@ -25,6 +26,10 @@ class Bot(Client):
         await ctx.interaction.ack()
 
         message = content
+        for text_match, user_id in re.findall(re.compile(r"(<@!(\d+)>)"), message):
+            print(str(await self.get_user(user_id)))
+            message = message.replace(text_match, '@' + str(await self.get_user(user_id)))
+
         if len(message) > 280:
             return 'A tweet can be at maximum 280 characters long'
 
