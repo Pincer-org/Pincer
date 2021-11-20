@@ -184,10 +184,29 @@ class User(APIObject):
                 return Image.open(avatar).convert("RGBA")
 
     def __str__(self):
+        # TODO: fix docs
+        """
+
+        Returns
+        -------
+
+        """
         return self.username + "#" + self.discriminator
 
     @classmethod
     async def from_id(cls, client: Client, user_id: int) -> User:
+        # TODO: fix docs
+        """
+
+        Parameters
+        ----------
+        client
+        user_id
+
+        Returns
+        -------
+
+        """
         data = await client.http.get(f"users/{user_id}")
         return cls.from_dict(construct_client_dict(client, data))
 
