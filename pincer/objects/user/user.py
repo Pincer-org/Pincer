@@ -144,6 +144,18 @@ class User(APIObject):
         return f"<@!{self.id}>"
 
     def get_avatar_url(self, size: int = 512, ext: str = "png") -> str:
+        """
+        Returns the url of the user's avatar.
+
+        Parameters
+        ----------
+        size: :class:`int`: Avatar width & height in pixels
+        ext: :class:`str`: Image extension
+
+        Returns
+        -------
+        :class:`str`: Returns the url of the user's avatar.
+        """
         return (
             f"https://cdn.discordapp.com/avatars/{self.id}/{self.avatar}.{ext}"
             f"?size={size}"
@@ -152,7 +164,8 @@ class User(APIObject):
     if PILLOW_IMPORT:
 
         async def get_avatar(self, size: int = 512, ext: str = "png") -> Image:
-            """Get the user's avatar as a Pillow image.
+            """|Coro|
+            Get the user's avatar as a Pillow image.
 
             Parameters
             ----------
