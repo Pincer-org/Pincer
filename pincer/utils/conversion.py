@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from inspect import getfullargspec
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from .types import T, MISSING
 
