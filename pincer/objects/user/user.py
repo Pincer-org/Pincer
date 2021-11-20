@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING
 
 from aiohttp import ClientSession
 
+from ..guild import channel
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
 from ...utils.convert_message import MessageConvertable
@@ -26,7 +27,6 @@ except (ModuleNotFoundError, ImportError):
 if TYPE_CHECKING:
     from typing import Optional
 
-    from ..guild.channel import Channel
     from ...client import Client
     from ...objects.message.user_message import UserMessage
     from ...utils.types import APINullable, HexColor
@@ -178,16 +178,14 @@ class User(APIObject):
         data = await client.http.get(f"users/{user_id}")
         return cls.from_dict(construct_client_dict(client, data))
 
-    async def get_dm_channel(self) -> Channel:
+    async def get_dm_channel(self) -> channel.Channel:
         """
         Returns
         -------
         :class:`~pincer.objects.guild.channel.Channel`
             DM channel for this user.
         """
-        from ..guild.channel import Channel
-
-        return Channel.from_dict(
+        return channel.Channel.from_dict(
             construct_client_dict(
                 self._client,
                 await self._http.post(
