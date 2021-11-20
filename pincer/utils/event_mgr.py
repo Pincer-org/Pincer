@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING
 from ..exceptions import TimeoutError as PincerTimeoutError
 
 if TYPE_CHECKING:
-    from typing import Any, List, Union
+    from typing import Any, List, Union, Optional
     from .types import CheckFunction
 
 
@@ -20,7 +20,7 @@ class _Processable(ABC):
     @abstractmethod
     def process(self, event_name: str, *args):
         """
-        Method that is ran when an event is recieved from discord.
+        Method that is ran when an event is received from discord.
 
         Parameters
         ----------
@@ -42,7 +42,7 @@ class _Processable(ABC):
         event_name : str
             Name of event.
         *args : Any
-            Arguments to evalue check with.
+            Arguments to eval check with.
         """
         if self.event_name != event_name:
             return False
@@ -60,7 +60,7 @@ def _lowest_value(*args):
     """
     args_without_none = [n for n in args if n is not None]
 
-    if len(args_without_none) == 0:
+    if not args_without_none:
         return None
 
     return min(args_without_none)
@@ -109,7 +109,7 @@ class _Event(_Processable):
 
 
 class _LoopEmptyError(Exception):
-    "Raised when the _LoopMgr is empty and cannot accept new item"
+    """Raised when the _LoopMgr is empty and cannot accept new item"""
 
 
 class _LoopMgr(_Processable):
@@ -128,7 +128,7 @@ class _LoopMgr(_Processable):
         Whether the queue is allowed to grow. Turned to false once the
         EventMgr's timer runs out.
     events : :class:`collections.deque`
-        Qeue of events to be processed.
+        Queue of events to be processed.
     wait : :class:`asyncio.Event`
         Used to make ``get_next()` wait for the next event.
     """
@@ -160,9 +160,7 @@ class _LoopMgr(_Processable):
 
             self.wait.clear()
             await self.wait.wait()
-            return self.events.popleft()
-        else:
-            return self.events.popleft()
+        return self.events.popleft()
 
 
 class EventMgr:
@@ -192,7 +190,7 @@ class EventMgr:
         self,
         event_name: str,
         check: CheckFunction,
-        timeout: Union[float, None]
+        timeout: Optional[float]
     ) -> Any:
         """
         Parameters
@@ -227,8 +225,8 @@ class EventMgr:
         self,
         event_name: str,
         check: CheckFunction,
-        iteration_timeout: Union[float, None],
-        loop_timeout: Union[float, None],
+        iteration_timeout: Optional[float],
+        loop_timeout: Optional[float],
     ) -> Any:
         """
         Parameters
@@ -267,7 +265,7 @@ class EventMgr:
                 )
 
             except TimeoutError:
-                # Loop timed out. Loop through the remaining events recieved
+                # Loop timed out. Loop through the remaining events received
                 # before the timeout.
                 loop_mgr.can_expand = False
                 try:
