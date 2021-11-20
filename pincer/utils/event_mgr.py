@@ -20,7 +20,7 @@ class _Processable(ABC):
     @abstractmethod
     def process(self, event_name: str, *args):
         """
-        Method that is ran when an event is recieved from discord.
+        Method that is ran when an event is received from discord.
 
         Parameters
         ----------
@@ -42,7 +42,7 @@ class _Processable(ABC):
         event_name : str
             Name of event.
         *args : Any
-            Arguments to evalue check with.
+            Arguments to evaluate check with.
         """
         if self.event_name != event_name:
             return False
@@ -128,7 +128,7 @@ class _LoopMgr(_Processable):
         Whether the queue is allowed to grow. Turned to false once the
         EventMgr's timer runs out.
     events : :class:`collections.deque`
-        Qeue of events to be processed.
+        Queue of events to be processed.
     wait : :class:`asyncio.Event`
         Used to make ``get_next()` wait for the next event.
     """
@@ -265,7 +265,7 @@ class EventMgr:
                 )
 
             except TimeoutError:
-                # Loop timed out. Loop through the remaining events recieved
+                # Loop timed out. Loop through the remaining events received
                 # before the timeout.
                 loop_mgr.can_expand = False
                 try:
