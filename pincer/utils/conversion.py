@@ -25,29 +25,15 @@ def convert(
     client: Optional[Client] = None,
 ) -> T:
     def handle_factory() -> T:
-        def fin_fac(v: Any):
-            if check is not None and isinstance(v, check):
-                return v
+        if check is not None and isinstance(value, check):
+            return value
 
-            try:
-                if client and "_client" in getfullargspec(factory).args:
-                    return factory(construct_client_dict(client, v))
-            except TypeError:  # Building type/has no signature
-                pass
+        try:
+            if client and "_client" in getfullargspec(factory).args:
+                return factory(construct_client_dict(client, value))
+        except TypeError:  # Building type/has no signature
+            pass
 
-            # The import has been placed locally to avoid circular imports
-            # TODO: Find a way to remove this monstrosity
-            from ..utils import APIObject
-
-            if isinstance(v, APIObject):
-                return v
-
-            return factory(v)
-
-        return (
-            list(map(fin_fac, value))
-            if isinstance(value, list)
-            else fin_fac(value)
-        )
+        return factory(value)
 
     return MISSING if value is MISSING else handle_factory()
