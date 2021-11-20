@@ -8,7 +8,8 @@ class Color:
     Parameters
     ---------
     c : Union[:class:`str`,:class:`int`]
-        The hex color in the format ``#NNNNNN`` or an int with the RGB values.
+        The hex color can be a string that optionally starts with an ``#`` or
+        an int with the RGB values.
     Attributes
     r : :class:`int`
         The red value for this color.
@@ -27,7 +28,9 @@ class Color:
 
         # Conversion modified from this answer
         # https://stackoverflow.com/a/29643643
-        self.r, self.g, self.b = (int(c[n + 1:n + 3], 16) for n in (0, 2, 4))
+        if c.startswith("#"):
+            c = c[1:]
+        self.r, self.g, self.b = (int(c[n:n + 2], 16) for n in (0, 2, 4))
 
     @property
     def rbg(self):
