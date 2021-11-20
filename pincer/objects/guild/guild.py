@@ -359,14 +359,14 @@ class Guild(APIObject):
         """
         Parameters
         ----------
-        client : `~pincer.Client`
+        client : :class:`~pincer.Client`
             Client object to use the http gateway from.
-        _id : :class: `pincer.utils.snowflake.Snowflake`
+        _id : :class:`pincer.utils.snowflake.Snowflake`
             Guild ID.
 
         Returns
         -------
-        :class: `~pincer.objects.guild.guild.Guild`
+        :class:`~pincer.objects.guild.guild.Guild`
             The new guild object.
         """
         data = await client.http.get(f"/guilds/{_id}")
@@ -386,7 +386,7 @@ class Guild(APIObject):
 
         Parameters
         ----------
-        _id:
+        _id: int
             The id of the guild member which should be fetched from the Discord
             gateway.
 
@@ -458,26 +458,26 @@ class Guild(APIObject):
 
         Parameters
         ----------
-        name : :class:`str`
+        name : str
             channel name (1-100 characters)
-        type : :class:`Optional[int]`
+        type : Optional[int]
             the type of channel
-        topic : :class:`Optional[str]`
+        topic : Optional[str]
             channel topic (0-1024 characters)
-        bitrate : :class:`Optional[int]`
+        bitrate : `Optional[int]
             the bitrate (in bits) of the voice channel (voice only)
-        user_limit : :class:`Optional[int]`
+        user_limit : `Optional[int]
             the user limit of the voice channel (voice only)
-        rate_limit_per_user : :class:`Optional[int]`
+        rate_limit_per_user : `Optional[int]
             amount of seconds a user has to wait before sending another message (0-21600)
             bots, as well as users with the permission manage_messages or manage_channel, are unaffected
-        position : :class:`Optional[int]`
+        position : Optional[int]
             sorting position of the channel
-        permission_overwrites : :class:`Optional[List[~pincer.objects.guild.overwrite.Overwrite]]`
+        permission_overwrites : Optional[List[:class:`~pincer.objects.guild.overwrite.Overwrite`]]
             the channel's permission overwrites
-        parent_id : :class:`Optional[~pincer.utils.snowflake.Snowflake]`
+        parent_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
             id of the parent category for a channel
-        nsfw : :class:`Optional[bool]`
+        nsfw : `Optional[bool]
             whether the channel is nsfw
 
         """
@@ -495,12 +495,12 @@ class Guild(APIObject):
         Parameters
         ----------
 
-        *channel : :class:`Dict[str, Optional[Union[int, bool, Snowflake]`
+        *channel : Dict[str, Optional[Union[int, bool, :class:`~pincer.utils.snowflake.Snowflake`]
             Keys:
                 - id : :class:`~pincer.utils.snowflake.Snowflake`
-                - position : :class:`Optional[int]`
-                - lock_permissions : :class:`Optional[bool]`
-                - parent_id : :class:`Optional[~pincer.utils.snowflake.Snowflake]`
+                - position : Optional[int]
+                - lock_permissions : Optional[bool]
+                - parent_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
 
         """
 
@@ -542,7 +542,7 @@ class Guild(APIObject):
         ----------
         query : str
             Query string to match username(s) and nickname(s) against.
-        limit : :class:`Optional[int]`
+        limit : Optional[int]
             max number of members to return (1-1000) |default| :data:`1`
 
         """
@@ -571,13 +571,13 @@ class Guild(APIObject):
             id of the user to be added
         access_token : str
             an oauth2 access token granted with the guilds.join to the bot's application for the user you want to add to the guild
-        nick : :class:`Optional[str]`
+        nick : Optional[str]
         	value to set users nickname to
-        roles : :class:`Optional[List[~pincer.utils.snowflake.Snowflake]]`
+        roles : Optional[List[:class:`~pincer.utils.snowflake.Snowflake`]]
         	array of role ids the member is assigned
-        mute : :class:`Optional[bool]`
+        mute : Optional[bool]
         	whether the user is muted in voice channels
-        deaf : :class:`:Optional[bool]`
+        deaf : Optional[bool]
         	whether the user is deafened in voice channels
 
         Returns
