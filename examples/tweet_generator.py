@@ -27,7 +27,6 @@ class Bot(Client):
 
         message = content
         for text_match, user_id in re.findall(re.compile(r"(<@!(\d+)>)"), message):
-            print(str(await self.get_user(user_id)))
             message = message.replace(text_match, '@' + str(await self.get_user(user_id)))
 
         if len(message) > 280:
@@ -37,14 +36,9 @@ class Bot(Client):
         message = textwrap.wrap(message, 38)
 
         # download the profile picture and convert it into Image object
-        request = urllib.request.Request(
-            f"https://cdn.discordapp.com/avatars/{ctx.author.user.id}/{ctx.author.user.avatar}.webp?size=128",
-            headers={
-                'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'}
-        )
-        avatar = urllib.request.urlopen(request).read()
-        avatar = io.BytesIO(avatar)
-        avatar = Image.open(avatar).convert("RGBA").resize((128, 128))
+        avatar = await self.get_user(ctx.author.user.id)
+        avatar = await avatar.get_avatar()
+        avatar = avatar.resize((128, 128))
 
         # modify profile picture to be circular
         mask = Image.new('L', (128, 128), 0)
