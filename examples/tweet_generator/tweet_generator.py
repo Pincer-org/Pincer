@@ -56,9 +56,9 @@ class Bot(Client):
         )
 
         # add the fonts
-        font = ImageFont.truetype("Segoe UI.ttf", 40)
-        font_small = ImageFont.truetype("Segoe UI.ttf", 30)
-        font_bold = ImageFont.truetype("Segoe UI Bold.ttf", 40)
+        font = ImageFont.truetype("Segoe_UI.ttf", 40)
+        font_small = ImageFont.truetype("Segoe_UI.ttf", 30)
+        font_bold = ImageFont.truetype("Segoe_UI_Bold.ttf", 40)
 
         # write the name and username on the Image
         draw = ImageDraw.Draw(tweet)
