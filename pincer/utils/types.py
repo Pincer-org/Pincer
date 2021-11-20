@@ -100,6 +100,20 @@ class Descripted(metaclass=_TypeInstanceMeta):
 
 
 class HexColor:
+    """
+    Parameters
+    ---------
+    c : str
+        the hex color. Should be in the format ``#NNNNNN``
+    Attributes
+    r : int
+        The red value for this color.
+    g : int
+        The green value for this color.
+    b : int
+        The blue value for this color.
+    """
+
     def __init__(self, c: str) -> None:
         # Conversion modified from this answer
         # https://stackoverflow.com/a/29643643
@@ -108,4 +122,9 @@ class HexColor:
 
     @property
     def rbg(self):
+        """
+        Returns
+        -------
+        Tuple value for rgb.
+        """
         return self.r, self.g, self.b

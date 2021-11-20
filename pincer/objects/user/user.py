@@ -88,7 +88,7 @@ class User(APIObject):
         hexadecimal color code
     banner: APINullable[Optional[:class:`str`]]
         The user's banner, or null if unset
-    banner_color: APINullable[Optional[:class:`int`]]
+    banner_color: APINullable[Optional[:class:`~pincer.utils.types.HexColor`]]
         The color of the user's banner
     bot: APINullable[:class:`bool`]
         Whether the user belongs to an OAuth2 application
