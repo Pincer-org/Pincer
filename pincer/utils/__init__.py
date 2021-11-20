@@ -20,8 +20,8 @@ from .types import (
 
 
 __all__ = (
-    "APINullable", "APIObject", "CheckFunction", "Choices", "Coro", "Color",
-    "Descripted", "EventMgr", "HTTPMeta", "MISSING", "MissingType",
+    "APINullable", "APIObject", "CheckFunction", "Choices", "Color",
+    "Coro", "Descripted", "EventMgr", "HTTPMeta", "MISSING", "MissingType",
     "Snowflake", "Task", "TaskScheduler", "Timestamp", "chdir",
     "choice_value_types", "convert", "get_index", "get_params",
     "get_signature_and_params", "should_pass_cls", "should_pass_ctx"
