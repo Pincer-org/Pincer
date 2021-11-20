@@ -548,14 +548,14 @@ class UserMessage(APIObject):
         """
         new_content = self.content
         subs = [
-                r"\*\*(.*?)\*\*", # bold
-                r"\*(.*?)\*", # italic
-                r"_(.*?)_", # italic2
-                r"\*\*\*(.*?)\*\*\*", # bold+italic
-                r"\_\_(.*?)\_\_" # underline
+                r"\*\*(.*?)\*\*",  # bold
+                r"\*(.*?)\*",  # italic
+                r"_(.*?)_",  # italic2
+                r"\*\*\*(.*?)\*\*\*",  # bold+italic
+                r"\_\_(.*?)\_\_"  # underline
         ]
         for i in subs:
-                new_content = sub(i, r"\1", new_content)
-        remove_code_blocks = sub(r"(.*?)```[a-zA-Z]+(\s*)+\n((?:.|\s)*?)```", r"\1\2\3", remove_underline)
+            new_content = sub(i, r"\1", new_content)
+        remove_code_blocks = sub(r"(.*?)```[a-zA-Z]+(\s*)+\n((?:.|\s)*?)```", r"\1\2\3", new_content)
 
         return remove_code_blocks
