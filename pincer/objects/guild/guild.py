@@ -486,7 +486,7 @@ class Guild(APIObject):
             ID of the guild member to kick.
         """
         await self._http.delete(f"guilds/{self.id}/members/{member_id}")
-    
+
     async def get_roles(self):
         """|coro|
         Fetches all the roles in the guild.
@@ -498,7 +498,7 @@ class Guild(APIObject):
         """
         data = await self._http.get(f"guilds/{self.id}/roles")
         return [Role.from_dict(construct_client_dict(self._client, i)) for i in data]
-    
+
     @overload
     async def create_role(
         self,
@@ -542,10 +542,10 @@ class Guild(APIObject):
             The new role object.
         """
         ...
-    
+
     async def create_role(self, **kwargs) -> Role:
         return await self._http.post(f"guilds/{self.id}/roles", data=kwargs)
-    
+
     async def edit_role_position(
         self,
         id: Snowflake,
@@ -613,14 +613,14 @@ class Guild(APIObject):
             has the `ROLE_ICONS` feature) |default| data:`None`
         mentionable : Optional[:class:`bool`]
             Whether the role should be mentionable |default| data:`None`
-        
+
         Returns
         -------
         :class:`~pincer.objects.guild.role.Role`
             The edited role object.
         """
         ...
-    
+
     async def edit_role(self, id: Snowflake, **kwargs) -> Role:
         return Role.from_dict(
             construct_client_dict(
@@ -628,7 +628,7 @@ class Guild(APIObject):
                 await self._http.patch(f"guilds/{self.id}/roles/{id}", data=kwargs)
             )
         )
-    
+
     async def delete_role(self, id: Snowflake):
         """|coro|
         Deletes a role.
@@ -641,7 +641,7 @@ class Guild(APIObject):
             The role ID
         """
         await self._http.delete(f"guilds/{self.id}/roles/{id}")
-    
+
     async def get_bans(self) -> List[Ban]:
         """|coro|
         Fetches all the bans in the guild.
@@ -653,7 +653,7 @@ class Guild(APIObject):
         """
         data = await self._http.get(f"guilds/{self.id}/bans")
         return [Ban.from_dict(construct_client_dict(self._client, i)) for i in data]
-    
+
     async def get_ban(self, id: Snowflake) -> Ban:
         """|coro|
         Fetches a ban from the guild.
@@ -675,7 +675,7 @@ class Guild(APIObject):
                 await self._http.get(f"guilds/{self.id}/bans/{id}")
             )
         )
-    
+
     async def unban(self, id: Snowflake):
         """|coro|
         Unbans a user from the guild.
@@ -779,6 +779,7 @@ class Guild(APIObject):
     async def preview(self) -> GuildPreview:
         """|coro|
         Previews the guild.
+
         Returns
         -------
         :class:`~pincer.objects.guild.guild.GuildPreview`
