@@ -10,7 +10,8 @@ from ...utils.api_object import APIObject
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from ...utils.types import APINullable, Color
+    from ...utils.color import Color
+    from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
 
 
@@ -41,7 +42,7 @@ class Role(APIObject):
 
     Attributes
     ----------
-    color: :class:`int`
+    color: :class:`~pincer.utils.color.Color`
         Integer representation of hexadecimal color code
     hoist: :class:`bool`
         If this role is pinned in the user listing

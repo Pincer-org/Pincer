@@ -12,6 +12,7 @@ from aiohttp import ClientSession
 
 from ..guild import channel
 from ...utils.api_object import APIObject
+from ...utils.color import Color
 from ...utils.conversion import construct_client_dict
 from ...utils.convert_message import MessageConvertable
 from ...utils.types import MISSING
@@ -29,7 +30,7 @@ if TYPE_CHECKING:
 
     from ...client import Client
     from ...objects.message.user_message import UserMessage
-    from ...utils.types import APINullable, Color
+    from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
 
 
@@ -88,7 +89,7 @@ class User(APIObject):
         hexadecimal color code
     banner: APINullable[Optional[:class:`str`]]
         The user's banner, or null if unset
-    banner_color: APINullable[Optional[:class:`~pincer.utils.types.Color`]]
+    banner_color: APINullable[Optional[:class:`~pincer.utils.color.Color`]]
         The color of the user's banner
     bot: APINullable[:class:`bool`]
         Whether the user belongs to an OAuth2 application
