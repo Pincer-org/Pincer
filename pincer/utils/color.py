@@ -1,3 +1,4 @@
+import string
 from typing import Union
 
 
@@ -19,9 +20,14 @@ class Color:
     b : :class:`int`
         The blue value for this color.
     """
+    _MIN_VALUE = 0
+    _MAX_VALUE = 1 << 24
 
     def __init__(self, c: Union[str, int]) -> None:
         if isinstance(c, int):
+            if c < self._MIN_VALUE or c >= self._MAX_VALUE:
+                raise ValueError("The color must be between 0 and 16777215")
+
             self.r = c >> 16 & 255
             self.g = c >> 8 & 255
             self.b = c & 255
@@ -31,6 +37,13 @@ class Color:
         # https://stackoverflow.com/a/29643643
         if c.startswith("#"):
             c = c[1:]
+
+        if len(c) != 6:
+            raise ValueError("Hex value must be 6 characters.")
+
+        if any(digit not in string.hexdigits for digit in c):
+            raise ValueError("Illegal hex digit character.")
+
         self.r, self.g, self.b = (int(c[n:n + 2], 16) for n in (0, 2, 4))
 
     @property
