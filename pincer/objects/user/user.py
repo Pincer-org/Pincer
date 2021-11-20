@@ -29,7 +29,7 @@ if TYPE_CHECKING:
 
     from ...client import Client
     from ...objects.message.user_message import UserMessage
-    from ...utils.types import APINullable, HexColor
+    from ...utils.types import APINullable, Color
     from ...utils.snowflake import Snowflake
 
 
@@ -88,7 +88,7 @@ class User(APIObject):
         hexadecimal color code
     banner: APINullable[Optional[:class:`str`]]
         The user's banner, or null if unset
-    banner_color: APINullable[Optional[:class:`~pincer.utils.types.HexColor`]]
+    banner_color: APINullable[Optional[:class:`~pincer.utils.types.Color`]]
         The color of the user's banner
     bot: APINullable[:class:`bool`]
         Whether the user belongs to an OAuth2 application
@@ -117,7 +117,7 @@ class User(APIObject):
     flags: APINullable[int] = MISSING
     accent_color: APINullable[Optional[int]] = MISSING
     banner: APINullable[Optional[str]] = MISSING
-    banner_color: APINullable[Optional[HexColor]] = MISSING
+    banner_color: APINullable[Optional[Color]] = MISSING
     bot: APINullable[bool] = MISSING
     email: APINullable[Optional[str]] = MISSING
     locale: APINullable[str] = MISSING

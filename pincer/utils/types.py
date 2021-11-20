@@ -99,8 +99,10 @@ class Descripted(metaclass=_TypeInstanceMeta):
         self.description = description
 
 
-class HexColor:
+class Color:
     """
+    A color in RGB.
+
     Parameters
     ---------
     c : str
@@ -114,10 +116,15 @@ class HexColor:
         The blue value for this color.
     """
 
-    def __init__(self, c: str) -> None:
+    def __init__(self, c: Union[str, int]) -> None:
+        if isinstance(c, int):
+            self.r = c >> 16 & 255
+            self.g = c >> 8 & 255
+            self.b = c & 255
+            return
+
         # Conversion modified from this answer
         # https://stackoverflow.com/a/29643643
-        self.hex = c
         self.r, self.g, self.b = (int(c[n + 1:n + 3], 16) for n in (0, 2, 4))
 
     @property
@@ -128,3 +135,7 @@ class HexColor:
         Tuple value for rgb.
         """
         return self.r, self.g, self.b
+
+    @property
+    def hex(self):
+        return f"{hex(self.r)[2:]}{hex(self.g)[2:]}{hex(self.b)[2:]}"

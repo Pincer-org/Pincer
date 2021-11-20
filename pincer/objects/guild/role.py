@@ -10,7 +10,7 @@ from ...utils.api_object import APIObject
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from ...utils.types import APINullable
+    from ...utils.types import APINullable, Color
     from ...utils.snowflake import Snowflake
 
 
@@ -64,7 +64,7 @@ class Role(APIObject):
     tags: :class:`~pincer.objects.guild.role.RoleTags`
         The tags this role has
     """
-    color: int
+    color: Color
     hoist: bool
     id: Snowflake
     managed: bool
