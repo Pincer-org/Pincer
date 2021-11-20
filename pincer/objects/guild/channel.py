@@ -184,13 +184,12 @@ class Channel(APIObject):  # noqa E501
 
     @classmethod
     async def from_id(cls, client: Client, channel_id: int) -> Channel:
-        """
+        """|coro|
         Creates a channel object. You should use the ``get_channel`` method
         from :class:`~pincer.client.Client` most of the time. The
         ``get_dm_channel`` method from :class:`~pincer.objects.user.user.User`
-        should be used if you need to creating a dm_channel; using the
-        ``send()`` method from :class:`~pincer.objects.user.user.User` is
-        preferred.
+        should be used if you need to create a dm_channel. Using the ``send()``
+        method from :class:`~pincer.objects.user.user.User` is preferred.
 
         Parameters
         ----------

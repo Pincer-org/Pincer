@@ -131,10 +131,16 @@ class Color:
         """
         Returns
         -------
-        Tuple value for rgb.
+        Tuple[:class:`int`, :class:`int` :class:`int`]
+            Tuple value for rgb.
         """
         return self.r, self.g, self.b
 
     @property
     def hex(self):
+        """
+        Returns
+        str
+            Str value for hex.
+        """
         return f"{hex(self.r)[2:]}{hex(self.g)[2:]}{hex(self.b)[2:]}"
