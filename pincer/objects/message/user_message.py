@@ -546,11 +546,16 @@ class UserMessage(APIObject):
         """
         The message content with any special characters removed.
         """
-        remove_bold = sub(r"\*\*(.*?)\*\*", r"\1", self.content)
-        remove_italic1 = sub(r"\*(.*?)\*", r"\1", remove_bold)
-        remove_italic2 = sub(r"_(.*?)_", r"\1", remove_italic1)
-        remove_bold_italic = sub(r"\*\*\*(.*?)\*\*\*", r"\1", remove_italic2)
-        remove_underline = sub(r"\_\_(.*?)\_\_", r"\1", remove_bold_italic)
+        new_content = self.content
+        subs = [
+                r"\*\*(.*?)\*\*", # bold
+                r"\*(.*?)\*", # italic
+                r"_(.*?)_", # italic2
+                r"\*\*\*(.*?)\*\*\*", # bold+italic
+                r"\_\_(.*?)\_\_" # underline
+        ]
+        for i in subs:
+                new_content = sub(i, r"\1", new_content)
         remove_code_blocks = sub(r"(.*?)```[a-zA-Z]+(\s*)+\n((?:.|\s)*?)```", r"\1\2\3", remove_underline)
 
         return remove_code_blocks
