@@ -181,7 +181,6 @@ class User(APIObject):
             """
             async with ClientSession().get(url=self.get_avatar_url()) as resp:
                 avatar = io.BytesIO(await resp.read())
-                print(Image, dir(Image))
                 return Image.open(avatar).convert("RGBA")
 
     def __str__(self):
