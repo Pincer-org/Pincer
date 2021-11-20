@@ -1,7 +1,5 @@
-import io
 import re
 import textwrap
-import urllib.request
 from datetime import datetime
 from PIL import Image, ImageFont, ImageDraw, ImageOps
 from pincer import command, Client, Descripted
