@@ -687,8 +687,6 @@ class Guild(APIObject):
             The user ID
         """
         await self._http.delete(f"guilds/{self.id}/bans/{id}")
-    
-    remove_ban = unban
 
     @overload
     async def edit(
