@@ -51,4 +51,4 @@ class Color:
         str
             Str value for hex.
         """
-        return f"{self.r:2x}{self.g:2x}{self.b:2x}"
+        return f"{self.r:02x}{self.g:02x}{self.b:02x}"
