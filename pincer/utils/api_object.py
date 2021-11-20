@@ -205,7 +205,7 @@ class APIObject(metaclass=HTTPMeta):
 
             if isinstance(specific_tp, EnumMeta) and not attr_gotten:
                 attr_value = MISSING
-            if tp == list and attr_gotten and (classes := get_args(types[0])):
+            elif tp == list and attr_gotten and (classes := get_args(types[0])):
                 attr_value = [
                     self.__attr_convert(attr_item, classes[0])
                     for attr_item in attr_gotten

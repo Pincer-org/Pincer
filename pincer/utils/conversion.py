@@ -3,9 +3,8 @@
 
 from __future__ import annotations
 
-from dataclasses import is_dataclass
 from inspect import getfullargspec
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
 from .types import T, MISSING
 
