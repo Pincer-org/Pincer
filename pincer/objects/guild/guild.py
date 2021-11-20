@@ -594,6 +594,61 @@ class Guild(APIObject):
 
         return GuildMember.from_dict(data) if data else None
 
+    async def modify_current_member(self, nick: str) -> GuildMember:
+        """|coro|
+        Modifies the current member in a guild.
+
+        Parameters
+        ----------
+        nick : str
+            value to set users nickname to
+        """
+        data = self._http.patch(f"guilds/{self.id}/members/@me", {"nick": nick})
+        member = GuildMember.from_dict(data)
+        return member
+
+    async def add_guild_member_role(self, user_id: int, role_id: int) -> None:
+        """|coro|
+        Adds a role to a guild member.
+
+        Parameters
+        ----------
+        user_id : int
+            id of the user to give a role to
+        role_id : int
+            id of a role
+        """
+        data = await self._http.put(
+            f"guilds/{self.id}/{user_id}/roles/{role_id}", {})
+        # TODO: remove the blank dictionary once #233 is fixed
+
+    async def remove_guild_member_role(self, user_id: int,
+                                       role_id: int) -> None:
+        """|coro|
+        Removes a role to a guild member.
+
+        Parameters
+        ----------
+        user_id : int
+            id of the user to remove a role from
+        role_id : int
+            id of a role
+        """
+        await self._http.delete(f"guilds/{self.id}/{user_id}/roles/{role_id}",
+                                {})
+        # TODO: remove the blank dictionary and format once #233 is fixed
+
+    async def remove_guild_member(self, user_id: int) -> None:
+        """|coro|
+        Remove a member from a guild.
+
+        Parameters
+        ----------
+        user_id : int
+            id of the user to remove from the guild
+        """
+        await self._http.delete(f"guilds/{self.id}/members/{user_id}")
+
     async def kick(self, member_id: int, **kwargs):
         """|coro|
         Kicks a guild member.
