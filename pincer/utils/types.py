@@ -3,9 +3,14 @@
 from __future__ import annotations
 
 from sys import modules
-from typing import TypeVar, Callable, Coroutine, Any, Union, Literal, Tuple
+from typing import (
+    TYPE_CHECKING, TypeVar, Callable, Coroutine, Any, Union, Literal, Optional
+)
 
 from pincer.exceptions import InvalidArgumentAnnotation
+
+if TYPE_CHECKING:
+    from typing import Tuple
 
 
 class MissingType:
@@ -37,7 +42,7 @@ Choices = Literal
 
 choice_value_types = (str, int, float)
 
-CheckFunction = Union[Callable[[Any], bool], None]
+CheckFunction = Optional[Callable[[Any], bool]]
 
 
 class Singleton(type):

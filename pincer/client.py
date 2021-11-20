@@ -8,7 +8,7 @@ from asyncio import iscoroutinefunction, run, ensure_future
 from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union, overload
 from typing import TYPE_CHECKING
 
 from . import __package__
@@ -438,7 +438,10 @@ class Client(Dispatcher):
     def run(self):
         """start the event listener"""
         self.start_loop()
-        run(self.http.close())
+
+    def __del__(self):
+        if hasattr(self, 'http'):
+            run(self.http.close())
 
     async def handle_middleware(
             self,
@@ -585,12 +588,70 @@ class Client(Dispatcher):
             what specifically happened.
         """
         await self.process_event("payload", payload)
+    
+    @overload
+    async def create_guild(
+        self,
+        *,
+        name: str,
+        region: Optional[str] = None,
+        icon: Optional[str] = None,
+        verification_level: Optional[int] = None,
+        default_message_notifications: Optional[int] = None,
+        explicit_content_filter: Optional[int] = None,
+        roles: Optional[List[Role]] = None,
+        channels: Optional[List[Channel]] = None,
+        afk_channel_id: Optional[Snowflake] = None,
+        afk_timeout: Optional[int] = None,
+        system_channel_id: Optional[Snowflake] = None,
+        system_channel_flags: Optional[int] = None
+    ) -> Guild:
+        """Creates a guild.
+
+        Parameters
+        ----------
+        name : :class:`str`
+            Name of the guild (2-100 characters)
+        region : Optional[:class:`str`]
+            Voice region id (deprecated) |default| :data:`None`
+        icon : Optional[:class:`str`]
+            base64 128x128 image for the guild icon |default| :data:`None`
+        verification_level : Optional[:class:`int`]
+            Verification level |default| :data:`None`
+        default_message_notifications : Optional[:class:`int`]
+            Default message notification level |default| :data:`None`
+        explicit_content_filter : Optional[:class:`int`]
+            Explicit content filter level |default| :data:`None`
+        roles : Optional[List[:class:`~pincer.objects.guild.role.Role`]]
+            New guild roles |default| :data:`None`
+        channels : Optional[List[:class:`~pincer.objects.guild.channel.Channel`]]
+            New guild's channels |default| :data:`None`
+        afk_channel_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            ID for AFK channel |default| :data:`None`
+        afk_timeout : Optional[:class:`int`]
+            AFK timeout in seconds |default| :data:`None`
+        system_channel_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            The ID of the channel where guild notices such as welcome
+            messages and boost events are posted |default| :data:`None`
+        system_channel_flags : Optional[:class:`int`]
+            System channel flags |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.guild.Guild`
+            The created guild
+        """
+        ...
+    
+    async def create_guild(self, name: str, **kwargs) -> Guild:
+        g = await self.http.post("guilds", data={"name": name, **kwargs})
+        return await self.get_guild(g['id'])
 
     async def wait_for(
-        self,
-        event_name: str,
-        check: CheckFunction = None,
-        timeout: Optional[float] = None
+            self,
+            event_name: str,
+            check: CheckFunction = None,
+            timeout: Optional[float] = None
     ):
         """
         Parameters
@@ -611,11 +672,11 @@ class Client(Dispatcher):
         return await self.event_mgr.wait_for(event_name, check, timeout)
 
     def loop_for(
-        self,
-        event_name: str,
-        check: CheckFunction = None,
-        iteration_timeout: Optional[float] = None,
-        loop_timeout: Optional[float] = None
+            self,
+            event_name: str,
+            check: CheckFunction = None,
+            iteration_timeout: Optional[float] = None,
+            loop_timeout: Optional[float] = None
     ):
         """
         Parameters

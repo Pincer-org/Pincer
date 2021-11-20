@@ -63,4 +63,12 @@ Note: The command to install may vary system to system. Try another if one fails
       .. code-block:: sh
 
           $ pip install "git+https://github.com/pincer-org/pincer"
+          
+Installing [speed]
+-------------------
+To Get Our [speed] Version with aiohttp speed up just do this
+
+      .. code-block:: sh
+
+          $ pip install pincer[speed] 
 
