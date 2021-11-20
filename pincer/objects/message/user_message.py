@@ -554,7 +554,7 @@ class UserMessage(APIObject):
                 r"\*\*\*(.*?)\*\*\*",  # bold+italic
                 r"\_\_(.*?)\_\_",  # underline
                 r"~~(.*?)~~",  # crossed
-                r"`(.*?)`",  # small code blocks
+                r"`?`(.*?)`?`",  # small code blocks
                 r"\|\|(.*?)\|\|"  # spoilers
         ]
         for i in subs:
