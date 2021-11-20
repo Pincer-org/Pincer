@@ -9,7 +9,9 @@ class Color:
     ---------
     c : Union[:class:`str`,:class:`int`]
         The hex color in the format ``#NNNNNN`` or an int with the RGB values.
+
     Attributes
+    ---------
     r : :class:`int`
         The red value for this color.
     g : :class:`int`
@@ -43,6 +45,7 @@ class Color:
     def hex(self):
         """
         Returns
+        ---------
         str
             Str value for hex.
         """
