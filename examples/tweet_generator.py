@@ -33,10 +33,7 @@ class Bot(Client):
         # wrap the message to be multi-line
         message = textwrap.wrap(message, 38)
 
-        # download the profile picture and convert it into Image object
-        avatar = await self.get_user(ctx.author.user.id)
-        avatar = await avatar.get_avatar()
-        avatar = avatar.resize((128, 128))
+        avatar = (await ctx.author.user.get_avatar()).resize((128, 128))
 
         # modify profile picture to be circular
         mask = Image.new('L', (128, 128), 0)
