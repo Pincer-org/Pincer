@@ -49,10 +49,6 @@ FAKE_GUILD = {
     'nsfw': False,
     'nsfw_level': 0,
     'channels':
-    # This is not how channels are passed into Guild.from_dict in the code. A
-    # Channel object is passed in instead. I haven't done that here because the
-    # Guild.from_dict() method expects a Dict without APIObjects in it.
-    # The code should be changed to reflect that once this test is made passing.
     [
         {'id': '0',
          'type': 4,
