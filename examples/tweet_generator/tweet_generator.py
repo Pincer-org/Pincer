@@ -43,7 +43,7 @@ class Bot(Client):
         # modify profile picture to be circular
         mask = Image.new("L", (128, 128), 0)
         draw = ImageDraw.Draw(mask)
-        draw.ellipse((0, 0) + (128, 128), fill=255)
+        draw.ellipse((0, 0, 128, 128), fill=255)
         avatar = ImageOps.fit(avatar, mask.size, centering=(0.5, 0.5))
         avatar.putalpha(mask)
 
