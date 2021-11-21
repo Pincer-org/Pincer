@@ -15,6 +15,18 @@ if TYPE_CHECKING:
 
 
 def construct_client_dict(client: Client, data: Dict[...]):
+    # TODO: fix docs
+    """
+
+    Parameters
+    ----------
+    client
+    data
+
+    Returns
+    -------
+
+    """
     return {**data, "_client": client, "_http": client.http}
 
 
@@ -25,6 +37,13 @@ def convert(
     client: Optional[Client] = None,
 ) -> T:
     def handle_factory() -> T:
+        # TODO: fix docs
+        """
+
+        Returns
+        -------
+
+        """
         def fin_fac(v: Any):
             if check is not None and isinstance(v, check):
                 return v

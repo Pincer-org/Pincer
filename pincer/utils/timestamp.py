@@ -23,7 +23,8 @@ class Timestamp:
     Parameters
     ----------
     time: Union[:class:`str`, :class:`int`, :class:`float`, :class:`datetime.datetime`]
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     def __init__(self, time: Optional[TS] = None):
         self.__time = Timestamp.parse(time)
@@ -32,6 +33,17 @@ class Timestamp:
 
     @classmethod
     def __factory__(cls, time: Optional[TS] = None) -> datetime:
+        # TODO: fix docs
+        """
+
+        Parameters
+        ----------
+        time
+
+        Returns
+        -------
+
+        """
         return cls.parse(time)
 
     @staticmethod
@@ -91,7 +103,8 @@ class Timestamp:
         -------
         :class:`datetime.datetime`:
             The converted datetime object.
-        """  # noqa: E501
+        """
+        # noqa: E501
 
         if isinstance(time, datetime):
             return time
@@ -109,33 +122,130 @@ class Timestamp:
         return datetime.now()
 
     def __getattr__(self, key: str) -> int:
+        # TODO: fix docs
+        """
+
+        Parameters
+        ----------
+        key
+
+        Returns
+        -------
+
+        """
         return getattr(self.__time, key)
 
     def __str__(self) -> str:
+        # TODO: fix docs
+        """
+
+        Returns
+        -------
+
+        """
         if len(string := str(self.__time)) == 19:
             return string + ".000"
         return string[:-3]
 
     def __int__(self) -> int:
+        # TODO: fix docs
+        """
+
+        Returns
+        -------
+
+        """
         return self.__epoch  # in milliseconds
 
     def __float__(self) -> float:
+        """
+
+        Returns
+        -------
+
+        """
         return self.__epoch / 1000  # in seconds
 
     def __ge__(self, other: Timestamp) -> bool:
+        # TODO: fix docs
+        """
+
+        Parameters
+        ----------
+        other
+
+        Returns
+        -------
+
+        """
         return self.__epoch >= other.__epoch
 
     def __gt__(self, other: Timestamp) -> bool:
+        # TODO: fix docs
+        """
+
+        Parameters
+        ----------
+        other
+
+        Returns
+        -------
+
+        """
         return self.__epoch > other.__epoch
 
     def __le__(self, other: Timestamp) -> bool:
+        # TODO: fix docs
+        """
+
+        Parameters
+        ----------
+        other
+
+        Returns
+        -------
+
+        """
         return self.__epoch <= other.__epoch
 
     def __lt__(self, other: Timestamp) -> bool:
+        # TODO: fix docs
+        """
+
+        Parameters
+        ----------
+        other
+
+        Returns
+        -------
+
+        """
         return self.__epoch < other.__epoch
 
     def __eq__(self, other: Timestamp) -> bool:
+        # TODO: fix docs
+        """
+
+        Parameters
+        ----------
+        other
+
+        Returns
+        -------
+
+        """
         return self.__epoch == other.__epoch
 
     def __ne__(self, other: Timestamp) -> bool:
+        # TODO: fix docs
+        """
+
+        Parameters
+        ----------
+        other
+
+        Returns
+        -------
+
+        """
         return self.__epoch != other.__epoch

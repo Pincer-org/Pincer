@@ -436,10 +436,11 @@ class Client(Dispatcher):
             ensure_future(call(*call_args, **kwargs))
 
     def run(self):
-        """start the event listener"""
+        """Start the event listener."""
         self.start_loop()
 
     def __del__(self):
+        """Ensure close of the http client."""
         if hasattr(self, 'http'):
             run(self.http.close())
 

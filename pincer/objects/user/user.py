@@ -145,6 +145,18 @@ class User(APIObject):
         return f"<@!{self.id}>"
 
     def get_avatar_url(self, size: int = 512, ext: str = "png") -> str:
+        """
+        Returns the url of the user's avatar.
+
+        Parameters
+        ----------
+        size: :class:`int`: Avatar width & height in pixels
+        ext: :class:`str`: Image extension
+
+        Returns
+        -------
+        :class:`str`: Returns the url of the user's avatar.
+        """
         return (
             f"https://cdn.discordapp.com/avatars/{self.id}/{self.avatar}.{ext}"
             f"?size={size}"
@@ -153,7 +165,8 @@ class User(APIObject):
     if PILLOW_IMPORT:
 
         async def get_avatar(self, size: int = 512, ext: str = "png") -> Image:
-            """Get the user's avatar as a Pillow image.
+            """|Coro|
+            Get the user's avatar as a Pillow image.
 
             Parameters
             ----------
@@ -171,14 +184,32 @@ class User(APIObject):
                 url=self.get_avatar_url(size, ext)
             ) as resp:
                 avatar = io.BytesIO(await resp.read())
-                print(Image, dir(Image))
                 return Image.open(avatar).convert("RGBA")
 
     def __str__(self):
+        # TODO: fix docs
+        """
+
+        Returns
+        -------
+
+        """
         return self.username + "#" + self.discriminator
 
     @classmethod
     async def from_id(cls, client: Client, user_id: int) -> User:
+        # TODO: fix docs
+        """
+
+        Parameters
+        ----------
+        client
+        user_id
+
+        Returns
+        -------
+
+        """
         data = await client.http.get(f"users/{user_id}")
         return cls.from_dict(construct_client_dict(client, data))
 

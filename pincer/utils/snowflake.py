@@ -35,6 +35,17 @@ class Snowflake(int):
 
     @classmethod
     def __factory__(cls, string: str) -> Snowflake:
+        # TODO: fix docs
+        """
+        
+        Parameters
+        ----------
+        string
+
+        Returns
+        -------
+
+        """
         return cls.from_string(string)
 
     @classmethod

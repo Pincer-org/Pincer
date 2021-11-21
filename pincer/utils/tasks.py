@@ -207,4 +207,11 @@ class Task:
 
     @property
     def client_required(self):
+        # TODO: fix docs
+        """
+
+        Returns
+        -------
+
+        """
         return self._client_required

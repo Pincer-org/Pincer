@@ -504,7 +504,8 @@ class ChatCommandHandler(metaclass=Singleton):
         ----------
         to_update : Dict[:class:`~objects.app.command.AppCommand`, Dict[:class:`str`, Any]]
             Dictionary of commands to changes where changes is a dictionary too
-        """  # noqa: E501
+        """
+        # noqa: E501
         await gather(
             *list(
                 map(
