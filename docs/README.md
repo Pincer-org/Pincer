@@ -12,7 +12,6 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/Pincer-org/Pincer)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Pincer-org/Pincer)
 ![GitHub](https://img.shields.io/github/license/Pincer-org/Pincer)
-![Code Style](https://img.shields.io/badge/code%20style-pep8-green)
 ![Discord](https://img.shields.io/discord/881531065859190804)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
