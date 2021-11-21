@@ -512,6 +512,7 @@ class Guild(APIObject):
     @overload
     async def create_role(
         self,
+        reason: Optional[str] = None,
         *,
         name: Optional[str] = "new role",
         permissions: Optional[str] = None,
@@ -527,24 +528,26 @@ class Guild(APIObject):
 
         Parameters
         ----------
+        reason : Optional[:class:`str`]
+            Reason for creating the role. |default| :data:`None`
         name : Optional[:class:`str`]
-            name of the role |default| data:`"new role"`
+            name of the role |default| :data:`"new role"`
         permissions : Optional[:class:`str`]
             bitwise value of the enabled/disabled
-            permissions |default| data:`None`
+            permissions |default| :data:`None`
         color : Optional[:class:`int`]
-            RGB color value |default| data:`0`
+            RGB color value |default| :data:`0`
         hoist : Optional[:class:`bool`]
             whether the role should be displayed
-            separately in the sidebar |default| data:`False`
+            separately in the sidebar |default| :data:`False`
         icon : Optional[:class:`str`]
             the role's icon image (if the guild has
-            the `ROLE_ICONS` feature) |default| data:`None`
+            the `ROLE_ICONS` feature) |default| :data:`None`
         unicode_emoji : Optional[:class:`str`]
             the role's unicode emoji as a standard emoji (if the guild
-            has the `ROLE_ICONS` feature) |default| data:`None`
+            has the `ROLE_ICONS` feature) |default| :data:`None`
         mentionable : Optional[:class:`bool`]
-            whether the role should be mentionable |default| data:`False`
+            whether the role should be mentionable |default| :data:`False`
 
         Returns
         -------
@@ -553,17 +556,28 @@ class Guild(APIObject):
         """
         ...
 
-    async def create_role(self, **kwargs) -> Role:
+    async def create_role(
+        self,
+        reason: Optional[str] = None,
+        **kwargs
+    ) -> Role:
         return Role.from_dict(
             construct_client_dict(
                 self._client,
-                await self._http.post(f"guilds/{self.id}/roles", data=kwargs),
+                await self._http.post(
+                    f"guilds/{self.id}/roles",
+                    data=kwargs,
+                    headers={"X-Audit-Log-Reason": reason}
+                    if reason is not None
+                    else {},
+                ),
             )
         )
 
     async def edit_role_position(
         self,
         id: Snowflake,
+        reason: Optional[str] = None,
         position: Optional[int] = None
     ) -> AsyncGenerator[Role, None]:
         """|coro|
@@ -573,8 +587,10 @@ class Guild(APIObject):
         ----------
         id : :class:`~pincer.utils.snowflake.Snowflake`
             The role ID
+        reason : Optional[:class:`str`]
+            Reason for editing the role position. |default| :data:`None`
         position : Optional[:class:`int`]
-            Sorting position of the role |default| data:`None`
+            Sorting position of the role |default| :data:`None`
 
         Returns
         -------
@@ -584,13 +600,18 @@ class Guild(APIObject):
         data = await self._http.patch(
             f"guilds/{self.id}/roles",
             data={"id": id, "position": position},
+            headers={"X-Audit-Log-Reason": reason}
+            if reason is not None
+            else {}
         )
         for i in data:
             yield Role.from_dict(construct_client_dict(self._client, i))
+
     @overload
     async def edit_role(
         self,
         id: Snowflake,
+        reason: Optional[str] = None,
         *,
         name: Optional[str] = None,
         permissions: Optional[str] = None,
@@ -608,24 +629,26 @@ class Guild(APIObject):
         ----------
         id : :class:`~pincer.utils.snowflake.Snowflake`
             The role ID
+        reason : Optional[:class:`str`]
+            Reason for editing the role |default| :data:`None`
         name : Optional[:class:`str`]
-            Name of the role |default| data:`None`
+            Name of the role |default| :data:`None`
         permissions : Optional[:class:`str`]
             Bitwise value of the enabled/disabled
-            permissions |default| data:`None`
+            permissions |default| :data:`None`
         color : Optional[:class:`int`]
-            RGB color value |default| data:`None`
+            RGB color value |default| :data:`None`
         hoist : Optional[:class:`bool`]
             Whether the role should be displayed
-            separately in the sidebar |default| data:`None`
+            separately in the sidebar |default| :data:`None`
         icon : Optional[:class:`str`]
             The role's icon image (if the guild has
-            the `ROLE_ICONS` feature) |default| data:`None`
+            the `ROLE_ICONS` feature) |default| :data:`None`
         unicode_emoji : Optional[:class:`str`]
             The role's unicode emoji as a standard emoji (if the guild
-            has the `ROLE_ICONS` feature) |default| data:`None`
+            has the `ROLE_ICONS` feature) |default| :data:`None`
         mentionable : Optional[:class:`bool`]
-            Whether the role should be mentionable |default| data:`None`
+            Whether the role should be mentionable |default| :data:`None`
 
         Returns
         -------
@@ -634,17 +657,26 @@ class Guild(APIObject):
         """
         ...
 
-    async def edit_role(self, id: Snowflake, **kwargs) -> Role:
+    async def edit_role(
+        self,
+        id: Snowflake,
+        reason: Optional[str] = None,
+        **kwargs
+    ) -> Role:
         return Role.from_dict(
             construct_client_dict(
                 self._client,
                 await self._http.patch(
-                    f"guilds/{self.id}/roles/{id}", data=kwargs
+                    f"guilds/{self.id}/roles/{id}",
+                    data=kwargs,
+                    headers={"X-Audit-Log-Reason": reason}
+                    if reason is not None
+                    else {},
                 ),
             )
         )
 
-    async def delete_role(self, id: Snowflake):
+    async def delete_role(self, id: Snowflake, reason: Optional[str] = None):
         """|coro|
         Deletes a role.
         Requires the `MANAGE_ROLES` permission.
@@ -654,8 +686,15 @@ class Guild(APIObject):
         ----------
         id : :class:`~pincer.utils.snowflake.Snowflake`
             The role ID
+        reason : Optional[:class:`str`]
+            The reason for deleting the role |default| :data:`None`
         """
-        await self._http.delete(f"guilds/{self.id}/roles/{id}")
+        await self._http.delete(
+            f"guilds/{self.id}/roles/{id}",
+            headers={"X-Audit-Log-Reason": reason}
+            if reason is not None
+            else {},
+        )
 
     async def get_bans(self) -> AsyncGenerator[Ban, None]:
         """|coro|
@@ -692,7 +731,7 @@ class Guild(APIObject):
             )
         )
 
-    async def unban(self, id: Snowflake):
+    async def unban(self, id: Snowflake, reason: Optional[str] = None):
         """|coro|
         Unbans a user from the guild.
         Returns `204 No Content` on success.
@@ -701,8 +740,15 @@ class Guild(APIObject):
         ----------
         id : :class:`~pincer.utils.snowflake.Snowflake`
             The user ID
+        reason : Optional[:class:`str`]
+            The reason for unbanning the user |default| :data:`None`
         """
-        await self._http.delete(f"guilds/{self.id}/bans/{id}")
+        await self._http.delete(
+            f"guilds/{self.id}/bans/{id}",
+            headers={"X-Audit-Log-Reason": reason}
+            if reason is not None
+            else {}
+        )
 
     @overload
     async def edit(
