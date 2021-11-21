@@ -45,6 +45,7 @@ class PremiumTier(IntEnum):
     TIER_3:
         Guild has unlocked Server Boost level 3 perks.
     """
+
     NONE = 0
     TIER_1 = 1
     TIER_2 = 2
@@ -64,6 +65,7 @@ class GuildNSFWLevel(IntEnum):
     AGE_RESTRICTED:
         Age restricted NSFW level.
     """
+
     DEFAULT = 0
     EXPLICIT = 1
     SAFE = 2
@@ -81,6 +83,7 @@ class ExplicitContentFilterLevel(IntEnum):
     ALL_MEMBERS:
         Media content sent by all members will be scanned.
     """
+
     DISABLED = 0
     MEMBERS_WITHOUT_ROLES = 1
     ALL_MEMBERS = 2
@@ -95,6 +98,7 @@ class MFALevel(IntEnum):
     ELEVATED:
         Guild has a 2FA requirement for moderation actions
     """
+
     NONE = 0
     ELEVATED = 1
 
@@ -114,6 +118,7 @@ class VerificationLevel(IntEnum):
     VERY_HIGH:
         Must have a verified phone number.
     """
+
     NONE = 0
     LOW = 1
     MEDIUM = 2
@@ -130,6 +135,7 @@ class DefaultMessageNotificationLevel(IntEnum):
     ONLY_MENTIONS:
         Members will receive notifications only for messages that @mention them by default.
     """
+
     # noqa: E501
     ALL_MESSAGES = 0
     ONLY_MENTIONS = 1
@@ -148,6 +154,7 @@ class SystemChannelFlags(IntEnum):
     SUPPRESS_JOIN_NOTIFICATION_REPLIES:
         Hide member join sticker reply buttons
     """
+
     SUPPRESS_JOIN_NOTIFICATIONS = 1 << 0
     SUPPRESS_PREMIUM_SUBSCRIPTIONS = 1 << 1
     SUPPRESS_GUILD_REMINDER_NOTIFICATIONS = 1 << 2
@@ -180,6 +187,7 @@ class GuildPreview(APIObject):
     description: :class:`str`
         The guild description.
     """
+
     id: Snowflake
     name: str
     emojis: List[Emoji]
@@ -319,6 +327,7 @@ class Guild(APIObject):
         The welcome screen of a Community guild, shown to new members,
         returned in an Invite's guild object
     """
+
     # noqa: E501
     afk_timeout: int
     default_message_notifications: DefaultMessageNotificationLevel
@@ -426,13 +435,14 @@ class Guild(APIObject):
 
     @overload
     async def modify_member(
-            self, *,
-            _id: int,
-            nick: Optional[str] = None,
-            roles: Optional[List[Snowflake]] = None,
-            mute: Optional[bool] = None,
-            deaf: Optional[bool] = None,
-            channel_id: Optional[Snowflake] = None
+        self,
+        *,
+        _id: int,
+        nick: Optional[str] = None,
+        roles: Optional[List[Snowflake]] = None,
+        mute: Optional[bool] = None,
+        deaf: Optional[bool] = None,
+        channel_id: Optional[Snowflake] = None,
     ) -> GuildMember:
         """|coro|
         Modifies a member in the guild from its identifier and based on the
@@ -460,8 +470,7 @@ class Guild(APIObject):
 
     async def modify_member(self, _id: int, **kwargs) -> GuildMember:
         data = await self._http.patch(
-            f"guilds/{self.id}/members/{_id}",
-            data=kwargs
+            f"guilds/{self.id}/members/{_id}", data=kwargs
         )
         return GuildMember.from_dict(construct_client_dict(self._client, data))
 
@@ -497,7 +506,9 @@ class Guild(APIObject):
             A list of Role objects.
         """
         data = await self._http.get(f"guilds/{self.id}/roles")
-        return [Role.from_dict(construct_client_dict(self._client, i)) for i in data]
+        return [
+            Role.from_dict(construct_client_dict(self._client, i)) for i in data
+        ]
 
     @overload
     async def create_role(
@@ -509,7 +520,7 @@ class Guild(APIObject):
         hoist: Optional[bool] = False,
         icon: Optional[str] = None,
         unicode_emoji: Optional[str] = None,
-        mentionable: Optional[bool] = False
+        mentionable: Optional[bool] = False,
     ) -> Role:
         """|coro|
         Creates a new role for the guild.
@@ -544,7 +555,12 @@ class Guild(APIObject):
         ...
 
     async def create_role(self, **kwargs) -> Role:
-        return await self._http.post(f"guilds/{self.id}/roles", data=kwargs)
+        return Role.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.post(f"guilds/{self.id}/roles", data=kwargs),
+            )
+        )
 
     async def edit_role_position(
         self,
@@ -569,8 +585,7 @@ class Guild(APIObject):
         return [
             Role.from_dict(construct_client_dict(self._client, i))
             for i in await self._http.patch(
-                f"guilds/{self.id}/roles",
-                data={"id": id, "position": position}
+                f"guilds/{self.id}/roles", data={"id": id, "position": position}
             )
         ]
 
@@ -585,7 +600,7 @@ class Guild(APIObject):
         hoist: Optional[bool] = None,
         icon: Optional[str] = None,
         unicode_emoji: Optional[str] = None,
-        mentionable: Optional[bool] = None
+        mentionable: Optional[bool] = None,
     ) -> Role:
         """|coro|
         Edits a role.
@@ -625,7 +640,9 @@ class Guild(APIObject):
         return Role.from_dict(
             construct_client_dict(
                 self._client,
-                await self._http.patch(f"guilds/{self.id}/roles/{id}", data=kwargs)
+                await self._http.patch(
+                    f"guilds/{self.id}/roles/{id}", data=kwargs
+                ),
             )
         )
 
@@ -652,7 +669,9 @@ class Guild(APIObject):
             A list of Ban objects.
         """
         data = await self._http.get(f"guilds/{self.id}/bans")
-        return [Ban.from_dict(construct_client_dict(self._client, i)) for i in data]
+        return [
+            Ban.from_dict(construct_client_dict(self._client, i)) for i in data
+        ]
 
     async def get_ban(self, id: Snowflake) -> Ban:
         """|coro|
@@ -672,7 +691,7 @@ class Guild(APIObject):
         return Ban.from_dict(
             construct_client_dict(
                 self._client,
-                await self._http.get(f"guilds/{self.id}/bans/{id}")
+                await self._http.get(f"guilds/{self.id}/bans/{id}"),
             )
         )
 
@@ -710,7 +729,7 @@ class Guild(APIObject):
         public_updates_channel_id: Optional[Snowflake] = None,
         preferred_locale: Optional[str] = None,
         features: Optional[List[GuildFeature]] = None,
-        description: Optional[str] = None
+        description: Optional[str] = None,
     ) -> Guild:
         """|coro|
         Modifies the guild
