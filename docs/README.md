@@ -1,12 +1,9 @@
 # <img src="../assets/svg/pincer.svg" height="24px" alt="Pincer Logo"> Pincer
 
-<!--
-![PyPI - Downloads](https://img.shields.io/badge/dynamic/json?label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2FPincer)](https://pypi.org/project/Pincer)
+[![PyPI - Downloads](https://img.shields.io/badge/dynamic/json?label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2FPincer)](https://pypi.org/project/Pincer)
 ![PyPI](https://img.shields.io/pypi/v/Pincer)
 ![PyPI - Format](https://img.shields.io/pypi/format/Pincer)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Pincer)
--->
-
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Pincer-org/pincer/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/Pincer-org/pincer/?branch=main)
 [![Build Status](https://scrutinizer-ci.com/g/Pincer-org/Pincer/badges/build.png?b=main)](https://scrutinizer-ci.com/g/Pincer-org/Pincer/build-status/main)
 [![Documentation Status](https://readthedocs.org/projects/pincer/badge/?version=latest)](https://pincer.readthedocs.io/en/latest/?badge=latest)
@@ -17,6 +14,7 @@
 ![GitHub](https://img.shields.io/github/license/Pincer-org/Pincer)
 ![Code Style](https://img.shields.io/badge/code%20style-pep8-green)
 ![Discord](https://img.shields.io/discord/881531065859190804)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 An asynchronous Python API wrapper meant to replace discord.py
 
