@@ -25,7 +25,19 @@ def convert_message(
         client: Client,
         message: MessageConvertable
 ) -> Message:
-    """Converts a message to a Message object"""
+    # TODO: fix docs
+    """
+    Converts a message to a Message object.
+
+    Parameters
+    ----------
+    client
+    message
+
+    Returns
+    -------
+
+    """
     if isinstance(message, Embed):
         message = Message(embeds=[message])
     elif PILLOW_IMPORT and isinstance(message, (File, Image)):

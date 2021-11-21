@@ -14,6 +14,18 @@ if TYPE_CHECKING:
 
 
 def construct_client_dict(client: Client, data: Dict[...]):
+    # TODO: fix docs
+    """
+
+    Parameters
+    ----------
+    client
+    data
+
+    Returns
+    -------
+
+    """
     return {**data, "_client": client, "_http": client.http}
 
 
@@ -23,6 +35,18 @@ def convert(
     check: Optional[T] = None,
     client: Optional[Client] = None,
 ) -> T:
+    """
+    Parameters
+    ----------
+    Value : Any
+        The value that has to have its type converted.
+    Factory : Callable[[Any], T]
+        The conversion factory/object to use.
+    Check : Optional[T]
+        Skip conversion if ``value`` is already this type.
+    Client : Optional[:class:`~pincer.client.Client`]
+        Reference to :class:`~pincer.client.Client`
+    """
     def handle_factory() -> T:
         if check is not None and isinstance(value, check):
             return value

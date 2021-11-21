@@ -7,7 +7,7 @@ from pincer.exceptions import TimeoutError
 
 class Bot(Client):
 
-    @command()
+    @command()  # note that the parenthesis are optional
     async def guess(self, ctx: MessageContext, biggest_number: int):
 
         await ctx.reply(f"Starting the guessing game! Pick a number between 0 and {biggest_number}.")

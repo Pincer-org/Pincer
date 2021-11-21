@@ -222,6 +222,13 @@ class APIObject(metaclass=HTTPMeta):
         return cls.from_dict(*args, **kwargs)
 
     def __str__(self):
+        # TODO: fix docs
+        """
+
+        Returns
+        -------
+
+        """
         if self.__dict__.get('name'):
             return self.name
 
@@ -253,7 +260,5 @@ class APIObject(metaclass=HTTPMeta):
         )))
 
     def to_dict(self) -> Dict:
-        """
-        Transform the current object to a dictionary representation.
-        """
+        """Transform the current object to a dictionary representation."""
         return _asdict_ignore_none(self)

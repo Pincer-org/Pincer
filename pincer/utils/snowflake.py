@@ -16,9 +16,36 @@ class Snowflake(int):
     they are always returned as strings in the HTTP API
     to prevent integer overflows in some languages.
     """
+    _MAX_VALUE: int = 9223372036854775807
+    _MIN_VALUE: int = 0
+
+    def __init__(self, _):
+        super().__init__()
+
+        if self < self._MIN_VALUE:
+            raise ValueError(
+                "snowflake value should be greater than or equal to 0."
+            )
+
+        if self > self._MAX_VALUE:
+            raise ValueError(
+                "snowflake value should be less than"
+                " or equal to 9223372036854775807."
+            )
 
     @classmethod
     def __factory__(cls, string: str) -> Snowflake:
+        # TODO: fix docs
+        """
+        
+        Parameters
+        ----------
+        string
+
+        Returns
+        -------
+
+        """
         return cls.from_string(string)
 
     @classmethod
@@ -55,3 +82,7 @@ class Snowflake(int):
         this number is incremented.
         """
         return self % 2048
+
+    @property
+    def unix(self) -> int:
+        return self.timestamp + 1420070400000
