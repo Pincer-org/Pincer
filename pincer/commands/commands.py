@@ -2,6 +2,7 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 from __future__ import annotations
+from enum import auto
 
 import logging
 import re
@@ -12,7 +13,7 @@ from inspect import Signature, isasyncgenfunction
 from typing import TYPE_CHECKING, Union, Tuple, List
 
 from . import __package__
-from ..commands.arg_types import CommandArg, Description, Choices
+from ..commands.arg_types import ChannelTypes, CommandArg, Description, Choices, MaxValue, MinValue
 from ..utils.snowflake import Snowflake
 from ..exceptions import (
     CommandIsNotCoroutine,
@@ -247,14 +248,38 @@ def command(
         argument_description = annotation.get_arg(
             Description) or "Description not set"
         choices = annotation.get_arg(
-            Choices) or MISSING
+            Choices)
 
-        for choice in choices:
-            if isinstance(choice.value, int) and annotation.command_type == float:
-                continue
-            if not isinstance(choice.value, annotation.command_type):
+        if choices is not MISSING and annotation.command_type not in [int, float, str]:
+            raise InvalidArgumentAnnotation(
+                "Choice type is only allowed for str, int, and float"
+            )
+        if choices is not MISSING:
+            for choice in choices:
+                if isinstance(choice.value, int) and annotation.command_type == float:
+                    continue
+                if not isinstance(choice.value, annotation.command_type):
+                    raise InvalidArgumentAnnotation(
+                        "Choice value must match the command type"
+                    )
+
+        cannel_types = annotation.get_arg(ChannelTypes)
+        if cannel_types is not MISSING and annotation.command_type != Channel:
+            raise InvalidArgumentAnnotation(
+                "ChannelTypes is only available for Channel")
+
+        max_value = annotation.get_arg(MaxValue)
+        min_value = annotation.get_arg(MinValue)
+
+        for i, value in enumerate((min_value, max_value)):
+            if (
+                value is not MISSING
+                and annotation.command_type != int
+                and annotation.command_type != float
+            ):
+                t = ("MinValue", "MaxValue")
                 raise InvalidArgumentAnnotation(
-                    "Choice value must match the command type"
+                    f"{t[i]} is only available for int and float"
                 )
 
         options.append(
@@ -264,9 +289,11 @@ def command(
                 description=argument_description,
                 required=required,
                 choices=choices,
+                channel_types=cannel_types,
+                max_value=max_value,
+                min_value=min_value,
             )
         )
-        print(options[0].to_dict())
 
     ChatCommandHandler.register[cmd] = ClientCommandStructure(
         call=func,

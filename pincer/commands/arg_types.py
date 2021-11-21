@@ -69,3 +69,33 @@ class Choices(metaclass=_CommandTypeMeta):
 
     def get_payload(self) -> List[Union[str, int, float]]:
         return self.choices
+
+
+class ChannelTypes(metaclass=_CommandTypeMeta):
+    """Represents the channel types application command option type"""
+
+    def __init__(self, *types) -> None:
+        self.types = types
+
+    def get_payload(self):
+        return self.types
+
+
+class MaxValue(metaclass=_CommandTypeMeta):
+    """Represents the channel types application command option type"""
+
+    def __init__(self, max_value) -> None:
+        self.max_value = max_value
+
+    def get_payload(self):
+        return self.max_value
+
+
+class MinValue(metaclass=_CommandTypeMeta):
+    """Represents the channel types application command option type"""
+
+    def __init__(self, min_value) -> None:
+        self.min_value = min_value
+
+    def get_payload(self):
+        return self.min_value

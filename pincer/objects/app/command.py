@@ -6,7 +6,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Union, TYPE_CHECKING
 
+
 from .command_types import AppCommandOptionType, AppCommandType
+from ...objects.guild.channel import ChannelType
 from ...utils.api_object import APIObject
 from ...utils.conversion import convert
 from ...utils.snowflake import Snowflake
@@ -87,10 +89,17 @@ class AppCommandOption(APIObject):
     name: str
     description: str
 
-    required: APINullable[bool] = False
+    required: APINullable[bool] = MISSING
+    autocomplete: APINullable[bool] = MISSING
     choices: APINullable[List[AppCommandOptionChoice]] = MISSING
     options: APINullable[List[AppCommandOption]] = MISSING
+    channel_types: APINullable[List[ChannelType]] = MISSING
+    min_value: APINullable[Union[int, float]] = MISSING
+    max_value: APINullable[Union[int, float]] = MISSING
 
+    def __post_init__(self):
+        # Auto conversion is not needed for this class
+        pass
 
 @dataclass
 class AppCommand(APIObject):
