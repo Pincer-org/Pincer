@@ -27,7 +27,6 @@ from .exceptions import (
     RateLimitError, GatewayError, ServerError
 )
 from .objects import Intents
-from .utils import Choices, Descripted
 
 __package__ = "pincer"
 __title__ = "Pincer library"
@@ -60,11 +59,11 @@ version_info = VersionInfo(0, 11, 5)
 __version__ = repr(version_info)
 
 __all__ = (
-    "BadRequestError", "Bot", "ChatCommandHandler", "Choices",
+    "BadRequestError", "Bot", "ChatCommandHandler",
     "Client", "CogAlreadyExists", "CogError", "CogNotFound",
     "CommandAlreadyRegistered", "CommandCooldownError",
     "CommandDescriptionTooLong", "CommandError", "CommandIsNotCoroutine",
-    "CommandReturnIsEmpty", "Descripted", "DisallowedIntentsError",
+    "CommandReturnIsEmpty", "DisallowedIntentsError",
     "DispatchError", "EmbedFieldError", "ForbiddenError", "GatewayConfig",
     "GatewayError", "HTTPError", "HeartbeatError", "Intents",
     "InvalidArgumentAnnotation", "InvalidCommandGuild", "InvalidCommandName",

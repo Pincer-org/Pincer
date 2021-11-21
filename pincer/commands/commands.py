@@ -41,8 +41,8 @@ from ..objects.app import (
 )
 from ..utils import get_index, should_pass_ctx
 from ..utils.signature import get_signature_and_params
-from ..utils.types import Coro, MISSING, choice_value_types, Choices
-from ..utils.types import Singleton, TypeCache, Descripted
+from ..utils.types import MISSING, choice_value_types
+from ..utils.types import Singleton, TypeCache
 
 if TYPE_CHECKING:
     from typing import Any, Optional, Dict
@@ -64,7 +64,7 @@ _options_type_link = {
 }
 
 if TYPE_CHECKING:
-    from .client import Client
+    from ..client import Client
 
 
 def command(
