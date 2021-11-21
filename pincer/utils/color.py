@@ -20,6 +20,7 @@ class Color:
     b : :class:`int`
         The blue value for this color.
     """
+
     _MIN_VALUE = 0
     _MAX_VALUE = 1 << 24
 
@@ -45,6 +46,9 @@ class Color:
             raise ValueError("Illegal hex digit character.")
 
         self.r, self.g, self.b = (int(c[n:n + 2], 16) for n in (0, 2, 4))
+
+    def __eq__(self, other):
+        return self.r == other.r and self.g == other.g and self.b == other.b
 
     @property
     def rbg(self):
