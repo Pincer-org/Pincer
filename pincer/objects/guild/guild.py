@@ -524,7 +524,7 @@ class Guild(APIObject):
     ) -> Role:
         """|coro|
         Creates a new role for the guild.
-        Requires the `MANAGE_ROLES` permission.
+        Requires the ``MANAGE_ROLES`` permission.
 
         Parameters
         ----------
@@ -542,10 +542,10 @@ class Guild(APIObject):
             separately in the sidebar |default| :data:`False`
         icon : Optional[:class:`str`]
             the role's icon image (if the guild has
-            the `ROLE_ICONS` feature) |default| :data:`None`
+            the ``ROLE_ICONS`` feature) |default| :data:`None`
         unicode_emoji : Optional[:class:`str`]
             the role's unicode emoji as a standard emoji (if the guild
-            has the `ROLE_ICONS` feature) |default| :data:`None`
+            has the ``ROLE_ICONS`` feature) |default| :data:`None`
         mentionable : Optional[:class:`bool`]
             whether the role should be mentionable |default| :data:`False`
 
@@ -623,7 +623,7 @@ class Guild(APIObject):
     ) -> Role:
         """|coro|
         Edits a role.
-        Requires the `MANAGE_ROLES` permission.
+        Requires the ``MANAGE_ROLES`` permission.
 
         Parameters
         ----------
@@ -643,10 +643,10 @@ class Guild(APIObject):
             separately in the sidebar |default| :data:`None`
         icon : Optional[:class:`str`]
             The role's icon image (if the guild has
-            the `ROLE_ICONS` feature) |default| :data:`None`
+            the ``ROLE_ICONS`` feature) |default| :data:`None`
         unicode_emoji : Optional[:class:`str`]
             The role's unicode emoji as a standard emoji (if the guild
-            has the `ROLE_ICONS` feature) |default| :data:`None`
+            has the ``ROLE_ICONS`` feature) |default| :data:`None`
         mentionable : Optional[:class:`bool`]
             Whether the role should be mentionable |default| :data:`None`
 
@@ -680,7 +680,6 @@ class Guild(APIObject):
         """|coro|
         Deletes a role.
         Requires the `MANAGE_ROLES` permission.
-        Returns `204 No Content` on success.
 
         Parameters
         ----------
@@ -712,7 +711,6 @@ class Guild(APIObject):
     async def get_ban(self, id: Snowflake) -> Ban:
         """|coro|
         Fetches a ban from the guild.
-        Returns `404 Not Found` if the user is not banned.
 
         Parameters
         ----------
@@ -734,7 +732,6 @@ class Guild(APIObject):
     async def unban(self, id: Snowflake, reason: Optional[str] = None):
         """|coro|
         Unbans a user from the guild.
-        Returns `204 No Content` on success.
 
         Parameters
         ----------
