@@ -9,9 +9,10 @@ from asyncio import iscoroutinefunction, gather
 from copy import deepcopy
 from functools import partial
 from inspect import Signature, isasyncgenfunction
-from typing import TYPE_CHECKING, get_origin, get_args, Union, Tuple, List
+from typing import TYPE_CHECKING, Union, Tuple, List
 
 from . import __package__
+from ..commands.arg_types import CommandArg, Description, Choices
 from ..utils.snowflake import Snowflake
 from ..exceptions import (
     CommandIsNotCoroutine,
@@ -35,7 +36,6 @@ from ..objects import (
 from ..objects.app import (
     AppCommandOptionType,
     AppCommandOption,
-    AppCommandOptionChoice,
     ClientCommandStructure,
     AppCommandType,
 )
@@ -155,7 +155,7 @@ def command(
         Annotations must consist of name and value
     """
     # noqa: E501
-    
+
     if func is None:
         return partial(
             command,
@@ -223,115 +223,50 @@ def command(
 
         # ctx is type MessageContext but should not be included in the
         # slash command
-        if annotation == MessageContext:
+        if annotation == MessageContext and idx == 1:
             return
 
-        argument_description: Optional[str] = None
-        choices: List[AppCommandOptionChoice] = []
-
-        if isinstance(annotation, str):
-            TypeCache()
-            annotation = eval(annotation, TypeCache.cache, globals())
-
-        if isinstance(annotation, Descripted):
-            argument_description = annotation.description
-            annotation = annotation.key
-
-            if len(argument_description) > 100:
-                raise CommandDescriptionTooLong(
-                    f"Tuple annotation `{annotation}` on parameter "
-                    f"`{param}` in command `{cmd}` (`{func.__name__}`), "
-                    "argument description too long. (maximum length is 100 "
-                    "characters)"
-                )
-
-        if get_origin(annotation) is Union:
-            args = get_args(annotation)
-            if type(None) in args:
-                required = False
-
-            # Do NOT use isinstance as this is a comparison between
-            # two values of the type type and isinstance does NOT
-            # work here.
-            union_args = [t for t in args if t is not type(None)]
-
-            annotation = (
-                get_index(union_args, 0)
-                if len(union_args) == 1
-                else Tuple[List]
-            )
-
-        if get_origin(annotation) is Choices:
-            args = get_args(annotation)
-
-            if len(args) > 25:
-                raise InvalidArgumentAnnotation(
-                    f"Choices/Literal annotation `{annotation}` on "
-                    f"parameter `{param}` in command `{cmd}` "
-                    f"(`{func.__name__}`) amount exceeds limit of 25 items!"
-                )
-
-            choice_type = type(args[0])
-
-            if choice_type is Descripted:
-                choice_type = type(args[0].key)
-
-            for choice in args:
-                choice_description = choice
-                if isinstance(choice, Descripted):
-                    choice_description = choice.description
-                    choice = choice.key
-
-                    if choice_type is tuple:
-                        choice_type = type(choice)
-
-                if type(choice) not in choice_value_types:
-                    # Properly get all the names of the types
-                    valid_types = list(
-                        map(lambda x: x.__name__, choice_value_types)
-                    )
-                    raise InvalidArgumentAnnotation(
-                        f"Choices/Literal annotation `{annotation}` on "
-                        f"parameter `{param}` in command `{cmd}` "
-                        f"(`{func.__name__}`), invalid type received. "
-                        "Value must be a member of "
-                        f"{', '.join(valid_types)} but "
-                        f"{type(choice).__name__} was given!"
-                    )
-                elif not isinstance(choice, choice_type):
-                    raise InvalidArgumentAnnotation(
-                        f"Choices/Literal annotation `{annotation}` on "
-                        f"parameter `{param}` in command `{cmd}` "
-                        f"(`{func.__name__}`), all values must be of the "
-                        "same type!"
-                    )
-
-                choices.append(
-                    AppCommandOptionChoice(
-                        name=choice_description, value=choice
+        if type(annotation) != CommandArg:
+            if annotation in _options_type_link:
+                options.append(
+                    AppCommandOption(
+                        type=_options_type_link[annotation],
+                        name=param,
+                        description="Description not set",
+                        required=required
                     )
                 )
+                continue
 
-            annotation = choice_type
-
-        param_type = _options_type_link.get(annotation)
-
-        if not param_type:
+            # TODO: Write better exception
             raise InvalidArgumentAnnotation(
-                f"Annotation `{annotation}` on parameter "
-                f"`{param}` in command `{cmd}` (`{func.__name__}`) is not "
-                "a valid type."
+                "Type must be CommandArg or other valid type"
             )
+
+        command_type = _options_type_link[annotation.command_type]
+        argument_description = annotation.get_arg(
+            Description) or "Description not set"
+        choices = annotation.get_arg(
+            Choices) or MISSING
+
+        for choice in choices:
+            if isinstance(choice.value, int) and annotation.command_type == float:
+                continue
+            if not isinstance(choice.value, annotation.command_type):
+                raise InvalidArgumentAnnotation(
+                    "Choice value must match the command type"
+                )
 
         options.append(
             AppCommandOption(
-                type=param_type,
+                type=command_type,
                 name=param,
-                description=argument_description or "Description not set",
+                description=argument_description,
                 required=required,
-                choices=choices or MISSING,
+                choices=choices,
             )
         )
+        print(options[0].to_dict())
 
     ChatCommandHandler.register[cmd] = ClientCommandStructure(
         call=func,

@@ -55,6 +55,11 @@ class AppCommandOptionChoice(APIObject):
     name: str
     value: choice_value_types
 
+    def __post_init__(self):
+        # Default serialization causes too many issues with Union
+        # It isn't needed here anyway
+        return
+
 
 @dataclass
 class AppCommandOption(APIObject):
@@ -85,19 +90,6 @@ class AppCommandOption(APIObject):
     required: APINullable[bool] = False
     choices: APINullable[List[AppCommandOptionChoice]] = MISSING
     options: APINullable[List[AppCommandOption]] = MISSING
-
-    def __post_init__(self):
-        self.type = AppCommandOptionType(self.type)
-        self.choices = convert(
-            self.choices,
-            AppCommandOptionChoice.from_dict,
-            AppCommandOptionChoice
-        )
-        self.options = convert(
-            self.options,
-            AppCommandOption.from_dict,
-            AppCommandOption
-        )
 
 
 @dataclass

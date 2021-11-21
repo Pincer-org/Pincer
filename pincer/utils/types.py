@@ -31,7 +31,7 @@ APINullable = Union[T, MissingType]
 # Represents a coroutine.
 Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
 
-choice_value_types = (str, int, float)
+choice_value_types = Union[str, int, float]
 
 CheckFunction = Optional[Callable[[Any], bool]]
 
