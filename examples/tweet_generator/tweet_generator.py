@@ -84,7 +84,7 @@ class Bot(Client):
         #       {'color': (0, 154, 234), 'text': '@drawbu'}
         #   ]
         for word in message:
-            for index, text in enumerate(word.split("\n")):
+            for index, text in enumerate(word.splitlines()):
 
                 text += "\n" if index != len(word.split("\n")) - 1 else " "
 
