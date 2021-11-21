@@ -38,13 +38,13 @@ def convert(
     """
     Parameters
     ----------
-    Value : Any
+    value : Any
         The value that has to have its type converted.
-    Factory : Callable[[Any], T]
+    factory : Callable[[Any], T]
         The conversion factory/object to use.
-    Check : Optional[T]
+    check : Optional[T]
         Skip conversion if ``value`` is already this type.
-    Client : Optional[:class:`~pincer.client.Client`]
+    client : Optional[:class:`~pincer.client.Client`]
         Reference to :class:`~pincer.client.Client`
     """
     def handle_factory() -> T:
