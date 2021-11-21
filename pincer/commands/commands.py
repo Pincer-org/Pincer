@@ -12,8 +12,8 @@ from inspect import Signature, isasyncgenfunction
 from typing import TYPE_CHECKING, get_origin, get_args, Union, Tuple, List
 
 from . import __package__
-from .utils.snowflake import Snowflake
-from .exceptions import (
+from ..utils.snowflake import Snowflake
+from ..exceptions import (
     CommandIsNotCoroutine,
     CommandAlreadyRegistered,
     TooManyArguments,
@@ -23,7 +23,7 @@ from .exceptions import (
     InvalidCommandName,
     ForbiddenError,
 )
-from .objects import (
+from ..objects import (
     ThrottleScope,
     AppCommand,
     Role,
@@ -32,17 +32,17 @@ from .objects import (
     Guild,
     MessageContext,
 )
-from .objects.app import (
+from ..objects.app import (
     AppCommandOptionType,
     AppCommandOption,
     AppCommandOptionChoice,
     ClientCommandStructure,
     AppCommandType,
 )
-from .utils import get_index, should_pass_ctx
-from .utils.signature import get_signature_and_params
-from .utils.types import Coro, MISSING, choice_value_types, Choices
-from .utils.types import Singleton, TypeCache, Descripted
+from ..utils import get_index, should_pass_ctx
+from ..utils.signature import get_signature_and_params
+from ..utils.types import Coro, MISSING, choice_value_types, Choices
+from ..utils.types import Singleton, TypeCache, Descripted
 
 if TYPE_CHECKING:
     from typing import Any, Optional, Dict
