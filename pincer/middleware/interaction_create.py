@@ -88,7 +88,9 @@ async def interaction_handler(
     """
     self.throttler.handle(context)
 
-    defaults = {param: None for param in get_params(command)}
+    sig, params = get_signature_and_params(command)
+
+    defaults = {key: value.default for key, value in sig.items()}
     params = {}
 
     if interaction.data.options is not MISSING:

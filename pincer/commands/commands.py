@@ -9,7 +9,7 @@ import re
 from asyncio import iscoroutinefunction, gather
 from copy import deepcopy
 from functools import partial
-from inspect import Signature, isasyncgenfunction
+from inspect import Signature, isasyncgenfunction, _empty
 from typing import TYPE_CHECKING, Union, Tuple, List
 
 from . import __package__
@@ -204,8 +204,8 @@ def command(
             f"registered by `{reg.call.__name__}`."
         )
 
-    sig, params = get_signature_and_params(func)
-    pass_context = should_pass_ctx(sig, params)
+    signature, params = get_signature_and_params(func)
+    pass_context = should_pass_ctx(signature, params)
 
     if len(params) > (25 + pass_context):
         raise TooManyArguments(
@@ -220,7 +220,9 @@ def command(
         if idx == 0 and pass_context:
             continue
 
-        annotation, required = sig[param].annotation, True
+        sig = signature[param]
+
+        annotation, required = sig.annotation, sig.default is _empty
 
         # ctx is type MessageContext but should not be included in the
         # slash command
