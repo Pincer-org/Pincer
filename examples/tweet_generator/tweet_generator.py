@@ -108,7 +108,7 @@ class Bot(Client):
         y = 170
         for text in result:
             y -= font.getsize(" ")[1]
-            for l_index, line in enumerate(text["text"].split("\n")):
+            for l_index, line in enumerate(text["text"].splitlines()):
                 if l_index != 0:
                     x = 30
                 y += font.getsize(" ")[1]
