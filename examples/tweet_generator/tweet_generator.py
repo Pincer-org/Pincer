@@ -109,7 +109,7 @@ class Bot(Client):
         for text in result:
             y -= font.getsize(" ")[1]
             for l_index, line in enumerate(text["text"].splitlines()):
-                if l_index != 0:
+                if l_index:
                     x = 30
                 y += font.getsize(" ")[1]
                 draw.text((x, y), line, fill=text["color"], font=font)
