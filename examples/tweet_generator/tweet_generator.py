@@ -73,7 +73,7 @@ class Bot(Client):
         )
 
         # write the content of the tweet on the Image
-        message = "\n".join(message).split(" ")
+        message = "\n".join(message).split()
         result = []
 
         # generate a dict to set were the text need to be in different color.
