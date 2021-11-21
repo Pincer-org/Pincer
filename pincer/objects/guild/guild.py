@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import IntEnum
-from typing import overload, TYPE_CHECKING
+from typing import AsyncGenerator, overload, TYPE_CHECKING
 
 from .ban import Ban
 from .channel import Channel
@@ -496,19 +496,18 @@ class Guild(APIObject):
         """
         await self._http.delete(f"guilds/{self.id}/members/{member_id}")
 
-    async def get_roles(self):
+    async def get_roles(self) -> AsyncGenerator[Role, None]:
         """|coro|
         Fetches all the roles in the guild.
 
         Returns
         -------
-        List[:class:`~pincer.objects.guild.role.Role`]
-            A list of Role objects.
+        AsyncGenerator[:class:`~pincer.objects.guild.role.Role`, :data:`None`]
+            An async generator of Role objects.
         """
         data = await self._http.get(f"guilds/{self.id}/roles")
-        return [
-            Role.from_dict(construct_client_dict(self._client, i)) for i in data
-        ]
+        for i in data:
+            yield Role.from_dict(construct_client_dict(self._client, i))
 
     @overload
     async def create_role(
@@ -566,7 +565,7 @@ class Guild(APIObject):
         self,
         id: Snowflake,
         position: Optional[int] = None
-    ) -> List[Role]:
+    ) -> AsyncGenerator[Role, None]:
         """|coro|
         Edits the position of a role.
 
@@ -579,16 +578,15 @@ class Guild(APIObject):
 
         Returns
         -------
-        List[:class:`~pincer.objects.guild.role.Role`]
-            A list of all of the guild's role objects.
+        AsyncGenerator[:class:`~pincer.objects.guild.role.Role`, :data:`None`]
+            An async generator of all of the guild's role objects.
         """
-        return [
-            Role.from_dict(construct_client_dict(self._client, i))
-            for i in await self._http.patch(
-                f"guilds/{self.id}/roles", data={"id": id, "position": position}
-            )
-        ]
-
+        data = await self._http.patch(
+            f"guilds/{self.id}/roles",
+            data={"id": id, "position": position},
+        )
+        for i in data:
+            yield Role.from_dict(construct_client_dict(self._client, i))
     @overload
     async def edit_role(
         self,
@@ -659,19 +657,18 @@ class Guild(APIObject):
         """
         await self._http.delete(f"guilds/{self.id}/roles/{id}")
 
-    async def get_bans(self) -> List[Ban]:
+    async def get_bans(self) -> AsyncGenerator[Ban, None]:
         """|coro|
         Fetches all the bans in the guild.
 
         Returns
         -------
-        List[:class:`~pincer.objects.guild.ban.Ban`]
-            A list of Ban objects.
+        AsyncGenerator[:class:`~pincer.objects.guild.ban.Ban`, :data:`None`]
+            An async generator of Ban objects.
         """
         data = await self._http.get(f"guilds/{self.id}/bans")
-        return [
-            Ban.from_dict(construct_client_dict(self._client, i)) for i in data
-        ]
+        for i in data:
+            yield Ban.from_dict(construct_client_dict(self._client, i))
 
     async def get_ban(self, id: Snowflake) -> Ban:
         """|coro|
