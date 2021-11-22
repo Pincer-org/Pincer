@@ -506,8 +506,8 @@ class Guild(APIObject):
             An async generator of Role objects.
         """
         data = await self._http.get(f"guilds/{self.id}/roles")
-        for i in data:
-            yield Role.from_dict(construct_client_dict(self._client, i))
+        for role_data in data:
+            yield Role.from_dict(construct_client_dict(self._client, role_data))
 
     @overload
     async def create_role(
@@ -534,7 +534,8 @@ class Guild(APIObject):
             name of the role |default| :data:`"new role"`
         permissions : Optional[:class:`str`]
             bitwise value of the enabled/disabled
-            permissions |default| :data:`None`
+            permissions, set to @everyone permissions
+            by default |default| :data:`None`
         color : Optional[:class:`int`]
             RGB color value |default| :data:`0`
         hoist : Optional[:class:`bool`]
@@ -604,8 +605,8 @@ class Guild(APIObject):
             if reason is not None
             else {}
         )
-        for i in data:
-            yield Role.from_dict(construct_client_dict(self._client, i))
+        for role_data in data:
+            yield Role.from_dict(construct_client_dict(self._client, role_data))
 
     @overload
     async def edit_role(
@@ -705,8 +706,8 @@ class Guild(APIObject):
             An async generator of Ban objects.
         """
         data = await self._http.get(f"guilds/{self.id}/bans")
-        for i in data:
-            yield Ban.from_dict(construct_client_dict(self._client, i))
+        for ban_data in data:
+            yield Ban.from_dict(construct_client_dict(self._client, ban_data))
 
     async def get_ban(self, id: Snowflake) -> Ban:
         """|coro|
