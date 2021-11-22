@@ -102,8 +102,16 @@ def command(
                 self,
                 ctx,
                 amount: int,
-                name: Descripted[str, "ah yes"],
-                letter: Choices["a", "b", "c"]
+                name: CommandArg[
+                    str,
+                    Description["Do something cool"],
+                    Choices[Choice["first value", 1], 5]
+                ],
+                optional_int: CommandArg[
+                    int,
+                    MinValue[10],
+                    MaxValue[100],
+                ] = 50
             ):
                 return Message(
                     f"You chose {amount}, {name}, {letter}",
@@ -113,9 +121,14 @@ def command(
     References from above:
         :class:`~client.Client`,
         :class:`~objects.message.message.Message`,
-        :class:`~utils.types.Choices`,
-        :class:`~utils.types.Descripted`,
-        :class:`~objects.app.interactions.InteractionFlags`
+        :class:`~pincer.objects.app.interaction_flags.InteractionFlags`,
+        :class:`~pincer.commands.arg_types.Choices`,
+        :class:`~pincer.commands.arg_types.Choice`,
+        :class:`~pincer.commands.arg_types.CommandArg`,
+        :class:`~pincer.commands.arg_types.Description`,
+        :class:`~pincer.commands.arg_types.MinValue`,
+        :class:`~pincer.commands.arg_types.MaxValue`
+
 
     Parameters
     ----------

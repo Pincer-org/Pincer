@@ -9,6 +9,7 @@ Subpages
 
     pincer
     pincer.core
+    pincer.commands
     pincer.middleware
     pincer.objects
     pincer.utils

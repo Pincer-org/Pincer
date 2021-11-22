@@ -17,22 +17,6 @@ Client
     .. automethod:: Client.event()
         :decorator:
 
-Commands
---------
-
-command
-~~~~~~~
-
-.. autofunction:: command
-    :decorator:
-
-ChatCommandHandler
-~~~~~~~~~~~~~~~~~~
-
-.. attributetable:: ChatCommandHandler
-
-.. autoclass:: ChatCommandHandler()
-
 Exceptions
 ----------
 
