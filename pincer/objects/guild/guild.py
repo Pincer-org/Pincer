@@ -5,8 +5,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import IntEnum
-from typing import overload, TYPE_CHECKING
+from typing import AsyncGenerator, overload, TYPE_CHECKING
 
+from .ban import Ban
 from .channel import Channel
 from .member import GuildMember
 from ...exceptions import UnavailableGuildError
@@ -44,6 +45,7 @@ class PremiumTier(IntEnum):
     TIER_3:
         Guild has unlocked Server Boost level 3 perks.
     """
+
     NONE = 0
     TIER_1 = 1
     TIER_2 = 2
@@ -63,6 +65,7 @@ class GuildNSFWLevel(IntEnum):
     AGE_RESTRICTED:
         Age restricted NSFW level.
     """
+
     DEFAULT = 0
     EXPLICIT = 1
     SAFE = 2
@@ -80,6 +83,7 @@ class ExplicitContentFilterLevel(IntEnum):
     ALL_MEMBERS:
         Media content sent by all members will be scanned.
     """
+
     DISABLED = 0
     MEMBERS_WITHOUT_ROLES = 1
     ALL_MEMBERS = 2
@@ -94,6 +98,7 @@ class MFALevel(IntEnum):
     ELEVATED:
         Guild has a 2FA requirement for moderation actions
     """
+
     NONE = 0
     ELEVATED = 1
 
@@ -113,6 +118,7 @@ class VerificationLevel(IntEnum):
     VERY_HIGH:
         Must have a verified phone number.
     """
+
     NONE = 0
     LOW = 1
     MEDIUM = 2
@@ -129,6 +135,7 @@ class DefaultMessageNotificationLevel(IntEnum):
     ONLY_MENTIONS:
         Members will receive notifications only for messages that @mention them by default.
     """
+
     # noqa: E501
     ALL_MESSAGES = 0
     ONLY_MENTIONS = 1
@@ -147,6 +154,7 @@ class SystemChannelFlags(IntEnum):
     SUPPRESS_JOIN_NOTIFICATION_REPLIES:
         Hide member join sticker reply buttons
     """
+
     SUPPRESS_JOIN_NOTIFICATIONS = 1 << 0
     SUPPRESS_PREMIUM_SUBSCRIPTIONS = 1 << 1
     SUPPRESS_GUILD_REMINDER_NOTIFICATIONS = 1 << 2
@@ -179,6 +187,7 @@ class GuildPreview(APIObject):
     description: :class:`str`
         The guild description.
     """
+
     id: Snowflake
     name: str
     emojis: List[Emoji]
@@ -318,6 +327,7 @@ class Guild(APIObject):
         The welcome screen of a Community guild, shown to new members,
         returned in an Invite's guild object
     """
+
     # noqa: E501
     afk_timeout: int
     default_message_notifications: DefaultMessageNotificationLevel
@@ -425,13 +435,14 @@ class Guild(APIObject):
 
     @overload
     async def modify_member(
-            self, *,
-            _id: int,
-            nick: Optional[str] = None,
-            roles: Optional[List[Snowflake]] = None,
-            mute: Optional[bool] = None,
-            deaf: Optional[bool] = None,
-            channel_id: Optional[Snowflake] = None
+        self,
+        *,
+        _id: int,
+        nick: Optional[str] = None,
+        roles: Optional[List[Snowflake]] = None,
+        mute: Optional[bool] = None,
+        deaf: Optional[bool] = None,
+        channel_id: Optional[Snowflake] = None,
     ) -> GuildMember:
         """|coro|
         Modifies a member in the guild from its identifier and based on the
@@ -459,8 +470,7 @@ class Guild(APIObject):
 
     async def modify_member(self, _id: int, **kwargs) -> GuildMember:
         data = await self._http.patch(
-            f"guilds/{self.id}/members/{_id}",
-            data=kwargs
+            f"guilds/{self.id}/members/{_id}", data=kwargs
         )
         return GuildMember.from_dict(construct_client_dict(self._client, data))
 
@@ -517,6 +527,258 @@ class Guild(APIObject):
             header=headers
         )
 
+    async def get_roles(self) -> AsyncGenerator[Role, None]:
+        """|coro|
+        Fetches all the roles in the guild.
+
+        Returns
+        -------
+        AsyncGenerator[:class:`~pincer.objects.guild.role.Role`, :data:`None`]
+            An async generator of Role objects.
+        """
+        data = await self._http.get(f"guilds/{self.id}/roles")
+        for role_data in data:
+            yield Role.from_dict(construct_client_dict(self._client, role_data))
+
+    @overload
+    async def create_role(
+        self,
+        reason: Optional[str] = None,
+        *,
+        name: Optional[str] = "new role",
+        permissions: Optional[str] = None,
+        color: Optional[int] = 0,
+        hoist: Optional[bool] = False,
+        icon: Optional[str] = None,
+        unicode_emoji: Optional[str] = None,
+        mentionable: Optional[bool] = False,
+    ) -> Role:
+        """|coro|
+        Creates a new role for the guild.
+        Requires the ``MANAGE_ROLES`` permission.
+
+        Parameters
+        ----------
+        reason : Optional[:class:`str`]
+            Reason for creating the role. |default| :data:`None`
+        name : Optional[:class:`str`]
+            name of the role |default| :data:`"new role"`
+        permissions : Optional[:class:`str`]
+            bitwise value of the enabled/disabled
+            permissions, set to @everyone permissions
+            by default |default| :data:`None`
+        color : Optional[:class:`int`]
+            RGB color value |default| :data:`0`
+        hoist : Optional[:class:`bool`]
+            whether the role should be displayed
+            separately in the sidebar |default| :data:`False`
+        icon : Optional[:class:`str`]
+            the role's icon image (if the guild has
+            the ``ROLE_ICONS`` feature) |default| :data:`None`
+        unicode_emoji : Optional[:class:`str`]
+            the role's unicode emoji as a standard emoji (if the guild
+            has the ``ROLE_ICONS`` feature) |default| :data:`None`
+        mentionable : Optional[:class:`bool`]
+            whether the role should be mentionable |default| :data:`False`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.role.Role`
+            The new role object.
+        """
+        ...
+
+    async def create_role(
+        self,
+        reason: Optional[str] = None,
+        **kwargs
+    ) -> Role:
+        return Role.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.post(
+                    f"guilds/{self.id}/roles",
+                    data=kwargs,
+                    headers={"X-Audit-Log-Reason": reason}
+                    if reason is not None
+                    else {},
+                ),
+            )
+        )
+
+    async def edit_role_position(
+        self,
+        id: Snowflake,
+        reason: Optional[str] = None,
+        position: Optional[int] = None
+    ) -> AsyncGenerator[Role, None]:
+        """|coro|
+        Edits the position of a role.
+
+        Parameters
+        ----------
+        id : :class:`~pincer.utils.snowflake.Snowflake`
+            The role ID
+        reason : Optional[:class:`str`]
+            Reason for editing the role position. |default| :data:`None`
+        position : Optional[:class:`int`]
+            Sorting position of the role |default| :data:`None`
+
+        Returns
+        -------
+        AsyncGenerator[:class:`~pincer.objects.guild.role.Role`, :data:`None`]
+            An async generator of all of the guild's role objects.
+        """
+        data = await self._http.patch(
+            f"guilds/{self.id}/roles",
+            data={"id": id, "position": position},
+            headers={"X-Audit-Log-Reason": reason}
+            if reason is not None
+            else {}
+        )
+        for role_data in data:
+            yield Role.from_dict(construct_client_dict(self._client, role_data))
+
+    @overload
+    async def edit_role(
+        self,
+        id: Snowflake,
+        reason: Optional[str] = None,
+        *,
+        name: Optional[str] = None,
+        permissions: Optional[str] = None,
+        color: Optional[int] = None,
+        hoist: Optional[bool] = None,
+        icon: Optional[str] = None,
+        unicode_emoji: Optional[str] = None,
+        mentionable: Optional[bool] = None,
+    ) -> Role:
+        """|coro|
+        Edits a role.
+        Requires the ``MANAGE_ROLES`` permission.
+
+        Parameters
+        ----------
+        id : :class:`~pincer.utils.snowflake.Snowflake`
+            The role ID
+        reason : Optional[:class:`str`]
+            Reason for editing the role |default| :data:`None`
+        name : Optional[:class:`str`]
+            Name of the role |default| :data:`None`
+        permissions : Optional[:class:`str`]
+            Bitwise value of the enabled/disabled
+            permissions |default| :data:`None`
+        color : Optional[:class:`int`]
+            RGB color value |default| :data:`None`
+        hoist : Optional[:class:`bool`]
+            Whether the role should be displayed
+            separately in the sidebar |default| :data:`None`
+        icon : Optional[:class:`str`]
+            The role's icon image (if the guild has
+            the ``ROLE_ICONS`` feature) |default| :data:`None`
+        unicode_emoji : Optional[:class:`str`]
+            The role's unicode emoji as a standard emoji (if the guild
+            has the ``ROLE_ICONS`` feature) |default| :data:`None`
+        mentionable : Optional[:class:`bool`]
+            Whether the role should be mentionable |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.role.Role`
+            The edited role object.
+        """
+        ...
+
+    async def edit_role(
+        self,
+        id: Snowflake,
+        reason: Optional[str] = None,
+        **kwargs
+    ) -> Role:
+        return Role.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.patch(
+                    f"guilds/{self.id}/roles/{id}",
+                    data=kwargs,
+                    headers={"X-Audit-Log-Reason": reason}
+                    if reason is not None
+                    else {},
+                ),
+            )
+        )
+
+    async def delete_role(self, id: Snowflake, reason: Optional[str] = None):
+        """|coro|
+        Deletes a role.
+        Requires the `MANAGE_ROLES` permission.
+
+        Parameters
+        ----------
+        id : :class:`~pincer.utils.snowflake.Snowflake`
+            The role ID
+        reason : Optional[:class:`str`]
+            The reason for deleting the role |default| :data:`None`
+        """
+        await self._http.delete(
+            f"guilds/{self.id}/roles/{id}",
+            headers={"X-Audit-Log-Reason": reason}
+            if reason is not None
+            else {},
+        )
+
+    async def get_bans(self) -> AsyncGenerator[Ban, None]:
+        """|coro|
+        Fetches all the bans in the guild.
+
+        Returns
+        -------
+        AsyncGenerator[:class:`~pincer.objects.guild.ban.Ban`, :data:`None`]
+            An async generator of Ban objects.
+        """
+        data = await self._http.get(f"guilds/{self.id}/bans")
+        for ban_data in data:
+            yield Ban.from_dict(construct_client_dict(self._client, ban_data))
+
+    async def get_ban(self, id: Snowflake) -> Ban:
+        """|coro|
+        Fetches a ban from the guild.
+
+        Parameters
+        ----------
+        id : :class:`~pincer.utils.snowflake.Snowflake`
+            The user ID
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.ban.Ban`
+            The Ban object.
+        """
+        return Ban.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.get(f"guilds/{self.id}/bans/{id}"),
+            )
+        )
+
+    async def unban(self, id: Snowflake, reason: Optional[str] = None):
+        """|coro|
+        Unbans a user from the guild.
+
+        Parameters
+        ----------
+        id : :class:`~pincer.utils.snowflake.Snowflake`
+            The user ID
+        reason : Optional[:class:`str`]
+            The reason for unbanning the user |default| :data:`None`
+        """
+        await self._http.delete(
+            f"guilds/{self.id}/bans/{id}",
+            headers={"X-Audit-Log-Reason": reason}
+            if reason is not None
+            else {}
+        )
+
     @overload
     async def edit(
         self,
@@ -539,7 +801,7 @@ class Guild(APIObject):
         public_updates_channel_id: Optional[Snowflake] = None,
         preferred_locale: Optional[str] = None,
         features: Optional[List[GuildFeature]] = None,
-        description: Optional[str] = None
+        description: Optional[str] = None,
     ) -> Guild:
         """|coro|
         Modifies the guild
@@ -608,6 +870,7 @@ class Guild(APIObject):
     async def preview(self) -> GuildPreview:
         """|coro|
         Previews the guild.
+
         Returns
         -------
         :class:`~pincer.objects.guild.guild.GuildPreview`

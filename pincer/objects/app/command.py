@@ -10,7 +10,6 @@ from typing import List, Union, TYPE_CHECKING
 from .command_types import AppCommandOptionType, AppCommandType
 from ...objects.guild.channel import ChannelType
 from ...utils.api_object import APIObject
-from ...utils.conversion import convert
 from ...utils.snowflake import Snowflake
 from ...utils.types import Coro, choice_value_types
 from ...utils.types import MISSING
@@ -97,10 +96,6 @@ class AppCommandOption(APIObject):
     min_value: APINullable[Union[int, float]] = MISSING
     max_value: APINullable[Union[int, float]] = MISSING
 
-    def __post_init__(self):
-        # Auto conversion is not needed for this class
-        pass
-
 
 @dataclass
 class AppCommand(APIObject):
@@ -150,19 +145,7 @@ class AppCommand(APIObject):
     ]
 
     def __post_init__(self):
-        self.id = convert(self.id, Snowflake.from_string)
-        self.version = convert(self.version, Snowflake.from_string)
-        self.type = AppCommandType(self.type)
-        self.application_id = convert(
-            self.application_id, Snowflake.from_string
-        )
-
-        self.options = convert(
-            self.options,
-            AppCommandOption.from_dict,
-            AppCommandOption
-        )
-        self.guild_id = convert(self.guild_id, Snowflake.from_string)
+        super().__post_init__()
 
         self.options = [] if self.options is MISSING and self.type == AppCommandType.MESSAGE else self.options
 

@@ -143,7 +143,7 @@ class APIObject(metaclass=HTTPMeta):
 
         return arg_type,
 
-    def __attr_convert(self, attr: str, attr_type: T) -> T:
+    def __attr_convert(self, attr_value: Dict, attr_type: T) -> T:
         """Convert an attribute to the requested attribute type using
         the factory or the __init__.
 
@@ -166,7 +166,7 @@ class APIObject(metaclass=HTTPMeta):
             factory = attr_type.__factory__
 
         return convert(
-            getattr(self, attr),
+            attr_value,
             factory,
             attr_type,
             self._client
@@ -198,13 +198,21 @@ class APIObject(metaclass=HTTPMeta):
 
             specific_tp = types[0]
 
+            attr_gotten = getattr(self, attr)
+
             if tp := get_origin(specific_tp):
                 specific_tp = tp
 
-            if isinstance(specific_tp, EnumMeta) and not getattr(self, attr):
+            if isinstance(specific_tp, EnumMeta) and not attr_gotten:
                 attr_value = MISSING
+            elif tp == list and attr_gotten and (classes := get_args(types[0])):
+                attr_value = [
+                    self.__attr_convert(attr_item, classes[0])
+                    for attr_item in attr_gotten
+                ]
+
             else:
-                attr_value = self.__attr_convert(attr, specific_tp)
+                attr_value = self.__attr_convert(attr_gotten, specific_tp)
 
             setattr(self, attr, attr_value)
 
