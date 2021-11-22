@@ -78,6 +78,97 @@ def command(
     cooldown_scale: Optional[float] = 60,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
 ):
+    """A decorator to slash create a command to register and respond to
+    with the discord API from a function.
+
+    str - String
+    int - Integer
+    bool - Boolean
+    float - Number
+    pincer.objects.User - User
+    pincer.objects.Channel - Channel
+    pincer.objects.Role - Role
+    Mentionable is not implemented
+
+    .. code-block:: python3
+
+        class Bot(Client):
+            @command(
+                name="test",
+                description="placeholder"
+            )
+            async def test_command(
+                self,
+                ctx: MessageContext,
+                amount: int,
+                name: CommandArg[
+                    str,
+                    Description["Do something cool"],
+                    Choices[Choice["first value", 1], 5]
+                ],
+                optional_int: CommandArg[
+                    int,
+                    MinValue[10],
+                    MaxValue[100],
+                ] = 50
+            ):
+                return Message(
+                    f"You chose {amount}, {name}, {letter}",
+                    flags=InteractionFlags.EPHEMERAL
+                )
+
+    References from above:
+        :class:`~client.Client`,
+        :class:`~objects.message.message.Message`,
+        :class:`~objects.message.context.MessageContext`,
+        :class:`~pincer.objects.app.interaction_flags.InteractionFlags`,
+        :class:`~pincer.commands.arg_types.Choices`,
+        :class:`~pincer.commands.arg_types.Choice`,
+        :class:`~pincer.commands.arg_types.CommandArg`,
+        :class:`~pincer.commands.arg_types.Description`,
+        :class:`~pincer.commands.arg_types.MinValue`,
+        :class:`~pincer.commands.arg_types.MaxValue`
+
+
+    Parameters
+    ----------
+    name : Optional[:class:`str`]
+        The name of the command |default| :data:`None`
+    description : Optional[:class:`str`]
+        The description of the command |default| ``Description not set``
+    enable_default : Optional[:class:`bool`]
+        Whether the command is enabled by default |default| :data:`True`
+    guild : Optional[Union[:class:`~pincer.utils.snowflake.Snowflake`, :class:`int`, :class:`str`]]
+        What guild to add it to (don't specify for global) |default| :data:`None`
+    cooldown : Optional[:class:`int`]
+        The amount of times in the cooldown_scale the command can be invoked
+        |default| ``0``
+    cooldown_scale : Optional[:class:`float`]
+        The 'checking time' of the cooldown |default| ``60``
+    cooldown_scope : :class:`~pincer.objects.app.throttle_scope.ThrottleScope`
+        What type of cooldown strategy to use |default| :attr:`ThrottleScope.USER`
+
+    Raises
+    ------
+    CommandIsNotCoroutine
+        If the command function is not a coro
+    InvalidCommandName
+        If the command name does not follow the regex ``^[\\w-]{1,32}$``
+    InvalidCommandGuild
+        If the guild id is invalid
+    CommandDescriptionTooLong
+        Descriptions max 100 characters
+        If the annotation on an argument is too long (also max 100)
+    CommandAlreadyRegistered
+        If the command already exists
+    TooManyArguments
+        Max 25 arguments to pass for commands
+    InvalidArgumentAnnotation
+        Annotation amount is max 25,
+        Not a valid argument type,
+        Annotations must consist of name and value
+    """
+    # noqa: E501
     if func is None:
         return partial(
             command,
@@ -208,6 +299,62 @@ def user_command(
     cooldown_scale: Optional[float] = 60,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
 ):
+    """A decorator to create a user command to register and respond to
+    with the discord API from a function.
+
+    .. code-block:: python3
+
+        class Bot(Client):
+            @user_command
+            async def test_user_command(
+                self,
+                ctx: MessageContext,
+            ):
+                return Message(
+                    f"The messages author is {}"
+                )
+
+    References from above:
+        :class:`~client.Client`,
+        :class:`~objects.message.message.Message`,
+        :class:`~objects.message.context.MessageContext`,
+
+
+    Parameters
+    ----------
+    name : Optional[:class:`str`]
+        The name of the command |default| :data:`None`
+    enable_default : Optional[:class:`bool`]
+        Whether the command is enabled by default |default| :data:`True`
+    guild : Optional[Union[:class:`~pincer.utils.snowflake.Snowflake`, :class:`int`, :class:`str`]]
+        What guild to add it to (don't specify for global) |default| :data:`None`
+    cooldown : Optional[:class:`int`]
+        The amount of times in the cooldown_scale the command can be invoked
+        |default| ``0``
+    cooldown_scale : Optional[:class:`float`]
+        The 'checking time' of the cooldown |default| ``60``
+    cooldown_scope : :class:`~pincer.objects.app.throttle_scope.ThrottleScope`
+        What type of cooldown strategy to use |default| :attr:`ThrottleScope.USER`
+
+    Raises
+    ------
+    CommandIsNotCoroutine
+        If the command function is not a coro
+    InvalidCommandName
+        If the command name does not follow the regex ``^[\\w-]{1,32}$``
+    InvalidCommandGuild
+        If the guild id is invalid
+    CommandDescriptionTooLong
+        Descriptions max 100 characters
+        If the annotation on an argument is too long (also max 100)
+    CommandAlreadyRegistered
+        If the command already exists
+    InvalidArgumentAnnotation
+        Annotation amount is max 25,
+        Not a valid argument type,
+        Annotations must consist of name and value
+    """
+    # noqa: E501
     return register_command(
         func=func,
         app_command_type=AppCommandType.USER,
@@ -255,97 +402,6 @@ def register_command(
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
     command_options=MISSING
 ):
-    """A decorator to create a command to register and respond to
-    with the discord API from a function.
-
-    str - String
-    int - Integer
-    bool - Boolean
-    float - Number
-    pincer.objects.User - User
-    pincer.objects.Channel - Channel
-    pincer.objects.Role - Role
-    Mentionable is not implemented
-
-    .. code-block:: python3
-
-        class Bot(Client):
-            @command(
-                name="test",
-                description="placeholder"
-            )
-            async def test_command(
-                self,
-                ctx,
-                amount: int,
-                name: CommandArg[
-                    str,
-                    Description["Do something cool"],
-                    Choices[Choice["first value", 1], 5]
-                ],
-                optional_int: CommandArg[
-                    int,
-                    MinValue[10],
-                    MaxValue[100],
-                ] = 50
-            ):
-                return Message(
-                    f"You chose {amount}, {name}, {letter}",
-                    flags=InteractionFlags.EPHEMERAL
-                )
-
-    References from above:
-        :class:`~client.Client`,
-        :class:`~objects.message.message.Message`,
-        :class:`~pincer.objects.app.interaction_flags.InteractionFlags`,
-        :class:`~pincer.commands.arg_types.Choices`,
-        :class:`~pincer.commands.arg_types.Choice`,
-        :class:`~pincer.commands.arg_types.CommandArg`,
-        :class:`~pincer.commands.arg_types.Description`,
-        :class:`~pincer.commands.arg_types.MinValue`,
-        :class:`~pincer.commands.arg_types.MaxValue`
-
-
-    Parameters
-    ----------
-    name : Optional[:class:`str`]
-        The name of the command |default| :data:`None`
-    description : Optional[:class:`str`]
-        The description of the command |default| ``Description not set``
-    enable_default : Optional[:class:`bool`]
-        Whether the command is enabled by default |default| :data:`True`
-    guild : Optional[Union[:class:`~pincer.utils.snowflake.Snowflake`, :class:`int`, :class:`str`]]
-        What guild to add it to (don't specify for global) |default| :data:`None`
-    cooldown : Optional[:class:`int`]
-        The amount of times in the cooldown_scale the command can be invoked
-        |default| ``0``
-    cooldown_scale : Optional[:class:`float`]
-        The 'checking time' of the cooldown |default| ``60``
-    cooldown_scope : :class:`~pincer.objects.app.throttle_scope.ThrottleScope`
-        What type of cooldown strategy to use |default| :attr:`ThrottleScope.USER`
-
-    Raises
-    ------
-    CommandIsNotCoroutine
-        If the command function is not a coro
-    InvalidCommandName
-        If the command name does not follow the regex ``^[\\w-]{1,32}$``
-    InvalidCommandGuild
-        If the guild id is invalid
-    CommandDescriptionTooLong
-        Descriptions max 100 characters
-        If the annotation on an argument is too long (also max 100)
-    CommandAlreadyRegistered
-        If the command already exists
-    TooManyArguments
-        Max 25 arguments to pass for commands
-    InvalidArgumentAnnotation
-        Annotation amount is max 25,
-        Not a valid argument type,
-        Annotations must consist of name and value
-    """
-    # noqa: E501
-
     if func is None:
         return partial(
             register_command,
