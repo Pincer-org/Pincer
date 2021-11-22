@@ -47,7 +47,7 @@ class MessageContext:
     guild_id: Optional[Snowflake] = None
     channel_id: Optional[Snowflake] = None
 
-    async def ack(self, flags: InteractionFlags):
+    async def ack(self, flags: InteractionFlags = None):
         """|coro|
 
         Alias for :func:`~pincer.objects.app.interactions.Interaction.ack`.

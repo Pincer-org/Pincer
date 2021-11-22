@@ -97,12 +97,22 @@ class _Event(_Processable):
         super().__init__()
 
     async def wait(self):
-        """
-        Waits until ``self.event`` is set.
-        """
+        """Waits until ``self.event`` is set."""
         await self.event.wait()
 
     def process(self, event_name: str, *args) -> bool:
+        # TODO: fix docs
+        """
+
+        Parameters
+        ----------
+        event_name
+        args
+
+        Returns
+        -------
+
+        """
         if self.matches_event(event_name, *args):
             self.return_value = args
             self.event.set()
@@ -142,6 +152,18 @@ class _LoopMgr(_Processable):
         self.wait = Event()
 
     def process(self, event_name: str, *args):
+        # TODO: fix docs
+        """
+
+        Parameters
+        ----------
+        event_name
+        args
+
+        Returns
+        -------
+
+        """
         if not self.can_expand:
             return
 
