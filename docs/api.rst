@@ -172,7 +172,7 @@ Exception Hierarchy
                 - :exc:`ServerError`
 
 pincer.core
-------------
+============
 
 Dispatching
 -----------
@@ -219,7 +219,7 @@ HTTPClient
 
 
 pincer.middleware
-------------------
+==================
 
 Activity Join Request
 ---------------------
