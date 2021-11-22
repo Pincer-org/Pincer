@@ -107,6 +107,15 @@ async def interaction_handler(
         }
 
     args = []
+
+    if interaction.data.type == AppCommandType.USER:
+        # Add User and Member args
+        args.append(next(iter(interaction.data.resolved.users.values())))
+        args.append(next(iter(interaction.data.resolved.members.values())))
+    elif interaction.data.type == AppCommandType.MESSAGE:
+        # Add Message to args
+        args.append(next(iter(interaction.data.resolved.messages.values())))
+
     kwargs = {**defaults, **params}
 
     await interaction_response_handler(

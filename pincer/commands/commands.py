@@ -309,15 +309,19 @@ def user_command(
             async def test_user_command(
                 self,
                 ctx: MessageContext,
+                user: User,
+                member: GuildMember
             ):
                 return Message(
-                    f"The messages author is {}"
+                    f"The messages author is {user}"
                 )
 
     References from above:
         :class:`~client.Client`,
         :class:`~objects.message.message.Message`,
         :class:`~objects.message.context.MessageContext`,
+        :class:`~objects.user.user.User`,
+        :class:`~objects.guild.member.GuildMember`,
 
 
     Parameters
