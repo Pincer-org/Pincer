@@ -7,7 +7,7 @@ Before starting make sure Pincer is installed. See :doc:`installing`.
 Basic on_ready bot
 ------------------
 
-For a basic bot, creating a :class:`~.Client` class works well.
+For a basic bot, creating a :class:`~pincer.Client` class works well.
 
 .. code-block:: python3
 
@@ -26,7 +26,7 @@ For a basic bot, creating a :class:`~.Client` class works well.
 Inheriting from Client
 ----------------------
 
-Inheriting from :class:`~.Client` allows more flexibility and enables advance usage for a bot.
+Inheriting from :class:`~pincer.Client` allows more flexibility and enables advance usage for a bot.
 
 .. code-block:: python3
 
@@ -74,7 +74,7 @@ Available types are as follows:
 Sending private messages
 ------------------------
 
-See :class:`~.Message` for more.
+See :class:`~pincer.Message` for more.
 
 .. code-block:: python3
 
@@ -90,7 +90,7 @@ See :class:`~.Message` for more.
 Sending Embeds
 --------------
 
-See :class:`~.Embed` for more
+See :class:`~pincer.Embed` for more
 
 .. code-block:: python3
 
