@@ -13,6 +13,7 @@ GatewayDispatch
 .. attributetable:: GatewayDispatch
 
 .. autoclass:: GatewayDispatch()
+    :members:
 
 Gateway
 -------

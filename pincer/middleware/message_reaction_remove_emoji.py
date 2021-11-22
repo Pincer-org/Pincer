@@ -16,7 +16,7 @@ async def message_reaction_remove_emoji_middleware(self, payload: GatewayDispatc
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the message reaction remove emoji event.
 
 

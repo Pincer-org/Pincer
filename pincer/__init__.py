@@ -13,7 +13,7 @@ from ._config import GatewayConfig
 from .client import event_middleware, Client, Bot
 from .commands import command, ChatCommandHandler
 from .exceptions import (
-    PincerError, UnhandledException, NoExportMethod,
+    PincerError, InvalidPayload, UnhandledException, NoExportMethod,
     CogError, CogNotFound, CogAlreadyExists, NoValidSetupMethod,
     TooManySetupArguments, NoCogManagerReturnFound, CommandError,
     CommandCooldownError, CommandIsNotCoroutine, CommandAlreadyRegistered,
@@ -51,8 +51,8 @@ class VersionInfo(NamedTuple):
 
     def __repr__(self) -> str:
         return f"{self.major}.{self.minor}.{self.micro}" + (
-            f"-{self.release_level}{self.serial}"
-            * (self.release_level is not None)
+                f"-{self.release_level}{self.serial}"
+                * (self.release_level is not None)
         )
 
 
@@ -68,12 +68,12 @@ __all__ = (
     "DispatchError", "EmbedFieldError", "ForbiddenError", "GatewayConfig",
     "GatewayError", "HTTPError", "HeartbeatError", "Intents",
     "InvalidArgumentAnnotation", "InvalidCommandGuild", "InvalidCommandName",
-    "InvalidEventName", "InvalidTokenError", "InvalidUrlError",
-    "MethodNotAllowedError", "NoCogManagerReturnFound", "NoExportMethod",
-    "NoValidSetupMethod", "NotFoundError", "NotModifiedError", "PincerError",
-    "RateLimitError", "ServerError", "TaskAlreadyRunning", "TaskCancelError",
-    "TaskError", "TaskInvalidDelay", "TaskIsNotCoroutine", "TooManyArguments",
-    "TooManySetupArguments", "UnauthorizedError", "UnavailableGuildError",
-    "UnhandledException", "__author__", "__email__", "__package__",
-    "__title__", "__version__", "command", "event_middleware"
+    "InvalidEventName", "InvalidPayload", "InvalidTokenError",
+    "InvalidUrlError", "MethodNotAllowedError", "NoCogManagerReturnFound",
+    "NoExportMethod", "NoValidSetupMethod", "NotFoundError", "NotModifiedError",
+    "PincerError", "RateLimitError", "ServerError", "TaskAlreadyRunning",
+    "TaskCancelError", "TaskError", "TaskInvalidDelay", "TaskIsNotCoroutine",
+    "TooManyArguments", "TooManySetupArguments", "UnauthorizedError",
+    "UnavailableGuildError", "UnhandledException", "__author__", "__email__",
+    "__package__", "__title__", "__version__", "command", "event_middleware"
 )

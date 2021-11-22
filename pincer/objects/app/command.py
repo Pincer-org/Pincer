@@ -71,7 +71,7 @@ class AppCommandOption(APIObject):
     required: APINullable[:class:`bool`]
         If the parameter is required or optional |default| :data:`False`
     choices: APINullable[List[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
-        Choices for `STRING`, `INTEGER`, and `NUMBER`
+        Choices for ``STRING``, ``INTEGER``, and ``NUMBER``
         types for the user to pick from, max 25
     options: APINullable[List[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
         If the option is a subcommand or subcommand group type,

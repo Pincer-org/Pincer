@@ -16,7 +16,7 @@ async def speaking_start_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the speaking start event.
 
     Returns

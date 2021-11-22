@@ -215,7 +215,7 @@ class Interaction(APIObject):
     async def convert(self, option: AppCommandInteractionDataOption):
         """|coro|
 
-        Sets an AppCommandInteractionDataOption value parameter to
+        Sets an ``AppCommandInteractionDataOption`` value parameter to
         the payload type
         """
         converter = self._convert_functions.get(option.type)
@@ -266,7 +266,7 @@ class Interaction(APIObject):
 
         Parameters
         ----------
-        flags :class:`~pincer.objects.app.interaction_flags.InteractionFlags`
+        flags: :class:`~pincer.objects.app.interaction_flags.InteractionFlags`
             The flags which must be applied to the reply.
 
         Raises

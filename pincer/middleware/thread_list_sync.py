@@ -20,7 +20,7 @@ async def thread_list_sync(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the thread list sync event.
 
     Returns

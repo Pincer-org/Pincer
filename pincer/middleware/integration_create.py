@@ -16,7 +16,7 @@ async def integration_create_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the integration create event
 
     Returns

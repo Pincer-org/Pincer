@@ -16,7 +16,7 @@ async def guild_ban_add_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the guild ban add event.
 
     Returns

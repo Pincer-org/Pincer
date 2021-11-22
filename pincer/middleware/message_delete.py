@@ -24,7 +24,7 @@ async def on_message_delete_middleware(
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the message delete event
 
     Returns

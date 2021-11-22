@@ -222,10 +222,21 @@ integration_update_middleware
 Interaction Create
 ------------------
 
+interaction_response_handler
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autofunction:: pincer.middleware.interaction_create.interaction_response_handler
+
+interaction_handler
+~~~~~~~~~~~~~~~~~~~
+
+.. autofunction:: pincer.middleware.interaction_create.interaction_handler
+
 interaction_create_middleware
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. autofunction:: pincer.middleware.interaction_create.interaction_create_middleware
+
 
 Invite Create
 -------------
