@@ -46,6 +46,12 @@
    :caption: Contents:
 
    guide/index
-   guide/installing
    guide/quickstart
-   api
+   
+Pincer Modules
+================
+
+.. toctree::
+  :maxdepth: 1
+
+  api
