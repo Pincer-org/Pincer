@@ -101,6 +101,7 @@ class AppCommandOption(APIObject):
         # Auto conversion is not needed for this class
         pass
 
+
 @dataclass
 class AppCommand(APIObject):
     """Represents a Discord Application Command object
@@ -163,7 +164,7 @@ class AppCommand(APIObject):
         )
         self.guild_id = convert(self.guild_id, Snowflake.from_string)
 
-        self.options = [] if self.options is MISSING else self.options
+        self.options = [] if self.options is MISSING and self.type == AppCommandType.MESSAGE else self.options
 
     def __eq__(self, other: Union[AppCommand, ClientCommandStructure]):
         if isinstance(other, ClientCommandStructure):

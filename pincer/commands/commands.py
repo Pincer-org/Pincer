@@ -2,7 +2,6 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 from __future__ import annotations
-from enum import auto
 
 import logging
 import re
@@ -71,6 +70,79 @@ if TYPE_CHECKING:
 def command(
     func=None,
     *,
+    name: Optional[str] = None,
+    description: Optional[str] = "Description not set",
+    enable_default: Optional[bool] = True,
+    guild: Union[Snowflake, int, str] = None,
+    cooldown: Optional[int] = 0,
+    cooldown_scale: Optional[float] = 60,
+    cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
+):
+    return register_command(
+        func=func,
+        app_command_type=AppCommandType.CHAT_INPUT,
+        name=name,
+        description=description,
+        enable_default=enable_default,
+        guild=guild,
+        cooldown=cooldown,
+        cooldown_scale=cooldown_scale,
+        cooldown_scope=cooldown_scope
+    )
+
+
+def user_command(
+    func=None,
+    *,
+    name: Optional[str] = None,
+    description: Optional[str] = "Description not set",
+    enable_default: Optional[bool] = True,
+    guild: Union[Snowflake, int, str] = None,
+    cooldown: Optional[int] = 0,
+    cooldown_scale: Optional[float] = 60,
+    cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
+):
+    return register_command(
+        func=func,
+        app_command_type=AppCommandType.USER,
+        name=name,
+        description=description,
+        enable_default=enable_default,
+        guild=guild,
+        cooldown=cooldown,
+        cooldown_scale=cooldown_scale,
+        cooldown_scope=cooldown_scope
+    )
+
+
+def message_command(
+    func=None,
+    *,
+    name: Optional[str] = None,
+    description: Optional[str] = "Description not set",
+    enable_default: Optional[bool] = True,
+    guild: Union[Snowflake, int, str] = None,
+    cooldown: Optional[int] = 0,
+    cooldown_scale: Optional[float] = 60,
+    cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
+):
+    return register_command(
+        func=func,
+        app_command_type=AppCommandType.USER,
+        name=name,
+        description=description,
+        enable_default=enable_default,
+        guild=guild,
+        cooldown=cooldown,
+        cooldown_scale=cooldown_scale,
+        cooldown_scope=cooldown_scope
+    )
+
+
+def register_command(
+    func=None,
+    *,
+    app_command_type: AppCommandType = None,
     name: Optional[str] = None,
     description: Optional[str] = "Description not set",
     enable_default: Optional[bool] = True,
@@ -172,8 +244,9 @@ def command(
 
     if func is None:
         return partial(
-            command,
+            register_command,
             name=name,
+            app_command_type=app_command_type,
             description=description,
             enable_default=enable_default,
             guild=guild,
@@ -318,7 +391,7 @@ def command(
         app=AppCommand(
             name=cmd,
             description=description,
-            type=AppCommandType.CHAT_INPUT,
+            type=app_command_type,
             default_permission=enable_default,
             options=options,
             guild_id=guild_id,
