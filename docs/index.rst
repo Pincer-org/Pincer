@@ -45,7 +45,7 @@
    :maxdepth: 2
    :caption: Contents:
 
-   installing
-   quickstart
-   tutorial/index
+   guide/index
+   guide/installing
+   guide/quickstart
    api
