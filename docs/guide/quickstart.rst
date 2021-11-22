@@ -9,7 +9,7 @@ Basic on_ready bot
 
 For a basic bot, creating a :class:`~.Client` class works well.
 
-.. code-block:: python
+.. code-block:: python3
 
 	from time import perf_counter
 	from pincer import Client
@@ -28,7 +28,7 @@ Inheriting from Client
 
 Inheriting from :class:`~.Client` allows more flexibility and enables advance usage for a bot.
 
-.. code-block:: python
+.. code-block:: python3
 
 	from time import perf_counter
 	from pincer import Client
@@ -76,7 +76,7 @@ Sending private messages
 
 See :class:`~.Message` for more.
 
-.. code-block:: python
+.. code-block:: python3
 
 	from pincer import Client, command, Message
 
@@ -92,7 +92,7 @@ Sending Embeds
 
 See :class:`~.Embed` for more
 
-.. code-block:: python
+.. code-block:: python3
 
 	from pincer import Client, command, Embed
 
