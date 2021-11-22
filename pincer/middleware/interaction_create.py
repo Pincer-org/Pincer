@@ -4,13 +4,14 @@
 from __future__ import annotations
 
 import logging
-from inspect import isasyncgenfunction, getfullargspec
+from inspect import isasyncgenfunction, getfullargspec, _empty
 from typing import Dict, Any
 from typing import TYPE_CHECKING
 
+
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
-from ..objects import Interaction, MessageContext
+from ..objects import Interaction, MessageContext, AppCommandType
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 from ..utils import get_index
 from ..utils.conversion import construct_client_dict
@@ -28,6 +29,7 @@ async def interaction_response_handler(
         command: Coro,
         context: MessageContext,
         interaction: Interaction,
+        args: List[Any],
         kwargs: Dict[str, Any]
 ):
     """|coro|
@@ -45,16 +47,21 @@ async def interaction_response_handler(
     \\*\\*kwargs :
         The arguments to be passed to the command.
     """
+    maybe_self_and_context: List[Any] = []
+
     if should_pass_cls(command):
-        cls_keyword = getfullargspec(command).args[0]
-        kwargs[cls_keyword] = ChatCommandHandler.managers[command.__module__]
+        maybe_self_and_context.append(
+            ChatCommandHandler.managers[command.__module__]
+        )
 
     sig, params = get_signature_and_params(command)
     if should_pass_ctx(sig, params):
-        kwargs[params[0]] = context
+        maybe_self_and_context.append(context)
+
+    args = maybe_self_and_context + args
 
     if isasyncgenfunction(command):
-        message = command(**kwargs)
+        message = command(*args, **kwargs)
 
         async for msg in message:
             if interaction.has_replied:
@@ -62,7 +69,7 @@ async def interaction_response_handler(
             else:
                 await interaction.reply(msg)
     else:
-        message = await command(**kwargs)
+        message = await command(*args, **kwargs)
         if not interaction.has_replied:
             await interaction.reply(message)
 
@@ -90,7 +97,8 @@ async def interaction_handler(
 
     sig, params = get_signature_and_params(command)
 
-    defaults = {key: value.default for key, value in sig.items()}
+    defaults = {key: value.default for key,
+                value in sig.items() if value.default is not _empty}
     params = {}
 
     if interaction.data.options is not MISSING:
@@ -98,10 +106,11 @@ async def interaction_handler(
             opt.name: opt.value for opt in interaction.data.options
         }
 
+    args = []
     kwargs = {**defaults, **params}
 
     await interaction_response_handler(
-        self, command, context, interaction, kwargs
+        self, command, context, interaction, args, kwargs
     )
 
 
