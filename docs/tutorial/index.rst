@@ -1,9 +1,10 @@
-Tutorial on using Pincer (WIP)
-==============================
+The guide for using Pincer
+===========================
 
-*Note: Pincer is still in the planning phase so things are subject to change.*
-
-
-
-# TODO: Create tutorial once more stable
-
+.. toctree::
+    :maxdepth: 1
+    
+    installing
+    discord
+    basics
+    interactions
