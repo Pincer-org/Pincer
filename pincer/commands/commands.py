@@ -78,6 +78,112 @@ def command(
     cooldown_scale: Optional[float] = 60,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
 ):
+    if func is None:
+        return partial(
+            command,
+            name=name,
+            description=description,
+            enable_default=enable_default,
+            guild=guild,
+            cooldown=cooldown,
+            cooldown_scale=cooldown_scale,
+            cooldown_scope=cooldown_scope,
+        )
+
+    options: List[AppCommandOption] = []
+
+    signature, params = get_signature_and_params(func)
+    pass_context = should_pass_ctx(signature, params)
+
+    if len(params) > (25 + pass_context):
+        cmd = name or func.__name__
+        raise TooManyArguments(
+            f"Command `{cmd}` (`{func.__name__}`) can only have 25 "
+            f"arguments (excluding the context and self) yet {len(params)} "
+            "were provided!"
+        )
+
+    for idx, param in enumerate(params):
+        if idx == 0 and pass_context:
+            continue
+
+        sig = signature[param]
+
+        annotation, required = sig.annotation, sig.default is _empty
+
+        # ctx is type MessageContext but should not be included in the
+        # slash command
+        if annotation == MessageContext and idx == 1:
+            return
+
+        if type(annotation) != CommandArg:
+            if annotation in _options_type_link:
+                options.append(
+                    AppCommandOption(
+                        type=_options_type_link[annotation],
+                        name=param,
+                        description="Description not set",
+                        required=required
+                    )
+                )
+                continue
+
+            # TODO: Write better exception
+            raise InvalidArgumentAnnotation(
+                "Type must be CommandArg or other valid type"
+            )
+
+        command_type = _options_type_link[annotation.command_type]
+        argument_description = annotation.get_arg(
+            Description) or "Description not set"
+        choices = annotation.get_arg(
+            Choices)
+
+        if choices is not MISSING and annotation.command_type not in [int, float, str]:
+            raise InvalidArgumentAnnotation(
+                "Choice type is only allowed for str, int, and float"
+            )
+        if choices is not MISSING:
+            for choice in choices:
+                if isinstance(choice.value, int) and annotation.command_type == float:
+                    continue
+                if not isinstance(choice.value, annotation.command_type):
+                    raise InvalidArgumentAnnotation(
+                        "Choice value must match the command type"
+                    )
+
+        cannel_types = annotation.get_arg(ChannelTypes)
+        if cannel_types is not MISSING and annotation.command_type != Channel:
+            raise InvalidArgumentAnnotation(
+                "ChannelTypes is only available for Channel")
+
+        max_value = annotation.get_arg(MaxValue)
+        min_value = annotation.get_arg(MinValue)
+
+        for i, value in enumerate((min_value, max_value)):
+            if (
+                value is not MISSING
+                and annotation.command_type != int
+                and annotation.command_type != float
+            ):
+                t = ("MinValue", "MaxValue")
+                raise InvalidArgumentAnnotation(
+                    f"{t[i]} is only available for int and float"
+                )
+
+        options.append(
+            AppCommandOption(
+                type=command_type,
+                name=param,
+                description=argument_description,
+                required=required,
+                choices=choices,
+                channel_types=cannel_types,
+                max_value=max_value,
+                min_value=min_value,
+            )
+        )
+
     return register_command(
         func=func,
         app_command_type=AppCommandType.CHAT_INPUT,
@@ -87,7 +193,8 @@ def command(
         guild=guild,
         cooldown=cooldown,
         cooldown_scale=cooldown_scale,
-        cooldown_scope=cooldown_scope
+        cooldown_scope=cooldown_scope,
+        command_options=options
     )
 
 
@@ -150,6 +257,7 @@ def register_command(
     cooldown: Optional[int] = 0,
     cooldown_scale: Optional[float] = 60,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
+    command_options=MISSING
 ):
     """A decorator to create a command to register and respond to
     with the discord API from a function.
@@ -290,99 +398,6 @@ def register_command(
             f"registered by `{reg.call.__name__}`."
         )
 
-    signature, params = get_signature_and_params(func)
-    pass_context = should_pass_ctx(signature, params)
-
-    if len(params) > (25 + pass_context):
-        raise TooManyArguments(
-            f"Command `{cmd}` (`{func.__name__}`) can only have 25 "
-            f"arguments (excluding the context and self) yet {len(params)} "
-            "were provided!"
-        )
-
-    options: List[AppCommandOption] = []
-
-    for idx, param in enumerate(params):
-        if idx == 0 and pass_context:
-            continue
-
-        sig = signature[param]
-
-        annotation, required = sig.annotation, sig.default is _empty
-
-        # ctx is type MessageContext but should not be included in the
-        # slash command
-        if annotation == MessageContext and idx == 1:
-            return
-
-        if type(annotation) != CommandArg:
-            if annotation in _options_type_link:
-                options.append(
-                    AppCommandOption(
-                        type=_options_type_link[annotation],
-                        name=param,
-                        description="Description not set",
-                        required=required
-                    )
-                )
-                continue
-
-            # TODO: Write better exception
-            raise InvalidArgumentAnnotation(
-                "Type must be CommandArg or other valid type"
-            )
-
-        command_type = _options_type_link[annotation.command_type]
-        argument_description = annotation.get_arg(
-            Description) or "Description not set"
-        choices = annotation.get_arg(
-            Choices)
-
-        if choices is not MISSING and annotation.command_type not in [int, float, str]:
-            raise InvalidArgumentAnnotation(
-                "Choice type is only allowed for str, int, and float"
-            )
-        if choices is not MISSING:
-            for choice in choices:
-                if isinstance(choice.value, int) and annotation.command_type == float:
-                    continue
-                if not isinstance(choice.value, annotation.command_type):
-                    raise InvalidArgumentAnnotation(
-                        "Choice value must match the command type"
-                    )
-
-        cannel_types = annotation.get_arg(ChannelTypes)
-        if cannel_types is not MISSING and annotation.command_type != Channel:
-            raise InvalidArgumentAnnotation(
-                "ChannelTypes is only available for Channel")
-
-        max_value = annotation.get_arg(MaxValue)
-        min_value = annotation.get_arg(MinValue)
-
-        for i, value in enumerate((min_value, max_value)):
-            if (
-                value is not MISSING
-                and annotation.command_type != int
-                and annotation.command_type != float
-            ):
-                t = ("MinValue", "MaxValue")
-                raise InvalidArgumentAnnotation(
-                    f"{t[i]} is only available for int and float"
-                )
-
-        options.append(
-            AppCommandOption(
-                type=command_type,
-                name=param,
-                description=argument_description,
-                required=required,
-                choices=choices,
-                channel_types=cannel_types,
-                max_value=max_value,
-                min_value=min_value,
-            )
-        )
-
     ChatCommandHandler.register[cmd] = ClientCommandStructure(
         call=func,
         cooldown=cooldown,
@@ -393,7 +408,7 @@ def register_command(
             description=description,
             type=app_command_type,
             default_permission=enable_default,
-            options=options,
+            options=command_options,
             guild_id=guild_id,
         ),
     )
