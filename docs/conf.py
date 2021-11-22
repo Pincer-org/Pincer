@@ -20,7 +20,7 @@ from pincer import __version__
 # -- Project information -----------------------------------------------------
 
 
-project = "Pincer Library"
+project = "Pincer"
 copyright = '2021, Pincer'
 author = "Sigmanificient, Arthurdw"
 
