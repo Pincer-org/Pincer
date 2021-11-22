@@ -202,7 +202,6 @@ def user_command(
     func=None,
     *,
     name: Optional[str] = None,
-    description: Optional[str] = "Description not set",
     enable_default: Optional[bool] = True,
     guild: Union[Snowflake, int, str] = None,
     cooldown: Optional[int] = 0,
@@ -213,7 +212,6 @@ def user_command(
         func=func,
         app_command_type=AppCommandType.USER,
         name=name,
-        description=description,
         enable_default=enable_default,
         guild=guild,
         cooldown=cooldown,
@@ -226,7 +224,6 @@ def message_command(
     func=None,
     *,
     name: Optional[str] = None,
-    description: Optional[str] = "Description not set",
     enable_default: Optional[bool] = True,
     guild: Union[Snowflake, int, str] = None,
     cooldown: Optional[int] = 0,
@@ -235,9 +232,8 @@ def message_command(
 ):
     return register_command(
         func=func,
-        app_command_type=AppCommandType.USER,
+        app_command_type=AppCommandType.MESSAGE,
         name=name,
-        description=description,
         enable_default=enable_default,
         guild=guild,
         cooldown=cooldown,
@@ -251,7 +247,7 @@ def register_command(
     *,
     app_command_type: AppCommandType = None,
     name: Optional[str] = None,
-    description: Optional[str] = "Description not set",
+    description: Optional[str] = MISSING,
     enable_default: Optional[bool] = True,
     guild: Union[Snowflake, int, str] = None,
     cooldown: Optional[int] = 0,
@@ -386,7 +382,7 @@ def register_command(
             "contains a non valid guild id."
         )
 
-    if len(description) > 100:
+    if description and len(description) > 100:
         raise CommandDescriptionTooLong(
             f"Command `{cmd}` (`{func.__name__}`) its description exceeds "
             "the 100 character limit."
