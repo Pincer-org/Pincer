@@ -7,7 +7,7 @@ Before starting make sure Pincer is installed. See :doc:`installing`.
 Basic on_ready bot
 ------------------
 
-For a basic bot, creating a :class:`~.Client` class works well. 
+For a basic bot, creating a :class:`~.Client` class works well.
 
 .. code-block:: python
 
