@@ -180,9 +180,9 @@ Dispatching
 GatewayDispatch
 ~~~~~~~~~~~~~~~
 
-.. attributetable:: GatewayDispatch
+.. attributetable:: pincer.core.GatewayDispatch
 
-.. autoclass:: GatewayDispatch()
+.. autoclass:: pincer.core.GatewayDispatch()
 
 Gateway
 -------
@@ -190,9 +190,9 @@ Gateway
 Dispatcher
 ~~~~~~~~~~
 
-.. attributetable:: Dispatcher
+.. attributetable:: pincer.core.Dispatcher
 
-.. autoclass:: Dispatcher()
+.. autoclass:: pincer.core.Dispatcher()
     :exclude-members: __handler_manager, __dispatcher
 
 Heartbeat
@@ -201,9 +201,9 @@ Heartbeat
 Heartbeat
 ~~~~~~~~~
 
-.. attributetable:: Heartbeat
+.. attributetable:: pincer.core.Heartbeat
 
-.. autoclass:: Heartbeat()
+.. autoclass:: pincer.core.Heartbeat()
     :exclude-members: __send
 
 Http
@@ -212,9 +212,9 @@ Http
 HTTPClient
 ~~~~~~~~~~
 
-.. attributetable:: HTTPClient
+.. attributetable:: pincer.core.HTTPClient
 
-.. autoclass:: HTTPClient()
+.. autoclass:: pincer.core.HTTPClient()
     :exclude-members: __send, __handle_response
 
 
@@ -397,9 +397,9 @@ Api Object
 APIObject
 ~~~~~~~~~
 
-.. attributetable:: APIObject
+.. attributetable:: pincer.utils.APIObject
 
-.. autoclass:: APIObject()
+.. autoclass:: pincer.utils.APIObject()
 
 Directory
 ---------
@@ -415,12 +415,12 @@ Signature
 get_signature_and_params
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autofunction:: get_signature_and_params
+.. autofunction:: pincer.utils.get_signature_and_params
 
 get_params
 ~~~~~~~~~~
 
-.. autofunction:: get_params
+.. autofunction:: pincer.utils.get_params
 
 Snowflake
 ---------
@@ -428,9 +428,9 @@ Snowflake
 Snowflake
 ~~~~~~~~~
 
-.. attributetable:: Snowflake
+.. attributetable:: pincer.utils.Snowflake
 
-.. autoclass:: Snowflake()
+.. autoclass:: pincer.utils.Snowflake()
 
 Tasks
 -----
@@ -438,19 +438,19 @@ Tasks
 Task
 ~~~~
 
-.. attributetable:: Task
+.. attributetable:: pincer.utils.Task
 
-.. autoclass:: Task()
+.. autoclass:: pincer.utils.Task()
 
 TaskScheduler
 ~~~~~~~~~~~~~
 
-.. attributetable:: TaskScheduler
+.. attributetable:: pincer.utils.TaskScheduler
 
-.. autoclass:: TaskScheduler()
+.. autoclass:: pincer.utils.TaskScheduler()
    :exclude-members: loop
 
-   .. automethod:: TaskScheduler.loop
+   .. automethod:: pincer.utils.TaskScheduler.loop
       :decorator:
 
 Timestamp
@@ -459,9 +459,9 @@ Timestamp
 Timestamp
 ~~~~~~~~~
 
-.. attributetable:: Timestamp
+.. attributetable:: pincer.utils.Timestamp
 
-.. autoclass:: Timestamp()
+.. autoclass:: pincer.utils.Timestamp()
 
 Types
 -----
@@ -469,12 +469,12 @@ Types
 MissingType
 ~~~~~~~~~~~
 
-.. autoclass:: MissingType()
+.. autoclass:: pincer.utils.MissingType()
 
 MISSING
 ~~~~~~~
 
-.. data:: MISSING
+.. data:: pincer.utils.MISSING
    :type: MissingType
 
 APINullable
