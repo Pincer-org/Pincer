@@ -70,10 +70,11 @@ __all__ = (
     "InvalidArgumentAnnotation", "InvalidCommandGuild", "InvalidCommandName",
     "InvalidEventName", "InvalidPayload", "InvalidTokenError",
     "InvalidUrlError", "MethodNotAllowedError", "NoCogManagerReturnFound",
-    "NoExportMethod", "NoValidSetupMethod", "NotFoundError", "NotModifiedError",
-    "PincerError", "RateLimitError", "ServerError", "TaskAlreadyRunning",
-    "TaskCancelError", "TaskError", "TaskInvalidDelay", "TaskIsNotCoroutine",
-    "TooManyArguments", "TooManySetupArguments", "UnauthorizedError",
-    "UnavailableGuildError", "UnhandledException", "__author__", "__email__",
-    "__package__", "__title__", "__version__", "command", "event_middleware"
+    "NoExportMethod", "NoValidSetupMethod", "NotFoundError",
+    "NotModifiedError", "PincerError", "RateLimitError", "ServerError",
+    "TaskAlreadyRunning", "TaskCancelError", "TaskError", "TaskInvalidDelay",
+    "TaskIsNotCoroutine", "TooManyArguments", "TooManySetupArguments",
+    "UnauthorizedError", "UnavailableGuildError", "UnhandledException",
+    "__author__", "__email__", "__package__", "__title__", "__version__",
+    "command", "event_middleware"
 )
