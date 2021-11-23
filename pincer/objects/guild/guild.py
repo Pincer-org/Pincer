@@ -1001,8 +1001,12 @@ class Guild(APIObject):
         :class:`~pincer.objects.guild.widget.GuildWidget`
             The guild widget settings.
         """
-        data = await self._http.get(f"guilds/{self.id}/widget")
-        return GuildWidget.from_dict(construct_client_dict(self._client, data))
+        return GuildWidget.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.get(f"guilds/{self.id}/widget")
+            )
+        )
 
     async def modify_widget(
         self,
@@ -1040,7 +1044,8 @@ class Guild(APIObject):
         """
         return await self._http.get(f"guilds/{self.id}/widget.json")
 
-    async def get_vanity_url(self) -> Invite:
+    @property
+    async def vanity_url(self) -> Invite:
         """|coro|
         Returns the Vanity URL for the guild.
         Requires the ``MANAGE_GUILD`` permission.
