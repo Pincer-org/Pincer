@@ -16,7 +16,28 @@ class _CommandTypeMeta(type):
 
 
 class CommandArg(metaclass=_CommandTypeMeta):
-    """Holds all application command options"""
+    """
+    Holds all application command options
+
+    .. code-block:: python3
+
+        CommandArg[
+            # This is the type of command.
+            # Supported types are str, int, bool, float, User, Channel, and Role 
+            int,
+            # The modifiers to the command go here
+            Description["Pick a number 1-10"],
+            MinValue[1],
+            MaxValue[10]
+        ]
+
+    Parameters
+    ----------
+    command_type : T
+        The type of the command
+    *args : :class:`pincer.commands.arg_types.Modifier`
+
+    """
 
     def __init__(self, command_type, *args) -> None:
         self.command_type = command_type
@@ -30,8 +51,30 @@ class CommandArg(metaclass=_CommandTypeMeta):
         return MISSING
 
 
-class Description(metaclass=_CommandTypeMeta):
-    """Represents the description application command option type"""
+class Modifier(metaclass=_CommandTypeMeta):
+    """
+    Modifies a CommandArg by being added to
+    :class:`pincer.commands.arg_types.CommandArg`'s args.
+    """
+
+
+class Description(Modifier):
+    """
+    Represents the description application command option type
+
+    .. code-block:: python3
+
+        # Creates an int argument with the description "example description"
+        CommandArg[
+            int,
+            Description["example description"]
+        ]
+
+    Parameters
+    ----------
+    desc : str
+        The description for the command.
+    """
 
     def __init__(self, desc) -> None:
         self.desc = str(desc)
@@ -40,16 +83,51 @@ class Description(metaclass=_CommandTypeMeta):
         return self.desc
 
 
-class Choice(metaclass=_CommandTypeMeta):
-    """Represents an application command choice"""
+class Choice(Modifier):
+    """
+    Represents an application command choice
+
+    .. code-block:: python3
+
+        Choices[
+            Choice["First Number", 10],
+            Choice["Second Number", 20]
+        ]
+
+    Parameters
+    ----------
+    name : str
+        The name of the choice
+    value : Union[int, str, float]
+        The value of the choice
+    """
 
     def __init__(self, name, value) -> None:
         self.name = name
         self.value = value
 
 
-class Choices(metaclass=_CommandTypeMeta):
-    """Represents the choice application command option type"""
+class Choices(Modifier):
+    """
+    Represents the choice application command option type
+
+    .. code-block:: python3
+
+        CommandArg[
+            int,
+            Choices[
+                Choice["First Number", 10],
+                20,
+                50
+            ]
+        ]
+
+    Parameters
+    ----------
+    *choices : Union[:class:`pincer.commands.arg_types.Choice`, str, int, float]
+        A choice. If the type is not :class:`pincer.commands.arg_types.Choice`,
+        the same value will be used for the choice name and value.
+    """
 
     def __init__(self, *choices) -> None:
         self.choices = []
@@ -71,8 +149,27 @@ class Choices(metaclass=_CommandTypeMeta):
         return self.choices
 
 
-class ChannelTypes(metaclass=_CommandTypeMeta):
-    """Represents the channel types application command option type"""
+class ChannelTypes(Modifier):
+    """
+    Represents the channel types application command option type.
+
+    .. code-block:: python3
+
+        CommandArg[
+            Channel,
+            # The user will only be able to choice between GUILD_TEXT and
+            GUILD_TEXT channels.
+            ChannelTypes[
+                ChannelType.GUILD_TEXT,
+                ChannelType.GUILD_VOICE
+            ]
+        ]
+
+    Parameters
+    ----------
+    *types : :class:`pincer.objects.guild.channel.ChannelType`
+        A list of channel types that the user can pick from.
+    """
 
     def __init__(self, *types) -> None:
         self.types = types
@@ -81,8 +178,23 @@ class ChannelTypes(metaclass=_CommandTypeMeta):
         return self.types
 
 
-class MaxValue(metaclass=_CommandTypeMeta):
-    """Represents the channel types application command option type"""
+class MaxValue(Modifier):
+    """
+    Represents the channel types application command option type
+
+    .. code-block:: python3
+
+        CommandArg[
+            int,
+            # The user can't pick a number above 10
+            MaxValue[10]
+        ]
+
+    Parameters
+    ----------
+    max_value : Union[float, int]
+        The max value a user can choose.
+    """
 
     def __init__(self, max_value) -> None:
         self.max_value = max_value
@@ -91,8 +203,23 @@ class MaxValue(metaclass=_CommandTypeMeta):
         return self.max_value
 
 
-class MinValue(metaclass=_CommandTypeMeta):
-    """Represents the channel types application command option type"""
+class MinValue(Modifier):
+    """
+    Represents the channel types application command option type
+
+    .. code-block:: python3
+
+        CommandArg[
+            int,
+            # The user can't pick a number below 10
+            MinValue[10]
+        ]
+
+    Parameters
+    ----------
+    min_value : Union[float, int]
+        The minimum value a user can choose.
+    """
 
     def __init__(self, min_value) -> None:
         self.min_value = min_value
