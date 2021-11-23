@@ -16,7 +16,7 @@ def get_signature_and_params(func: Callable):
     Returns
     -------
     Tuple[List[Union[:class:`str`, :class:`inspect.Parameter`]]]
-        Signature and ist of parameters of the coroutine.
+        Signature and list of parameters of the coroutine.
     """
     if isclass(func):
         func = getattr(func, "__init__")
