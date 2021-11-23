@@ -13,10 +13,7 @@ if TYPE_CHECKING:
     from typing import Any, Callable, Dict, List, Optional, Set, Union
 
 
-<<<<<<< HEAD
 def construct_client_dict(client: Client, data: Dict) -> Dict:
-=======
-def construct_client_dict(client: Client, data: Dict[...]):
     # TODO: fix docs
     """
 
@@ -29,7 +26,6 @@ def construct_client_dict(client: Client, data: Dict[...]):
     -------
 
     """
->>>>>>> c636d240cbc1d61df9a46371005a9ce47c0cf0a3
     return {**data, "_client": client, "_http": client.http}
 
 
