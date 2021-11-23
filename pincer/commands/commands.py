@@ -456,17 +456,17 @@ def message_command(
 
 
 def register_command(
-    func=None,
+    func=None, # Missing typehint?
     *,
-    app_command_type: AppCommandType = None,
+    app_command_type: Optional[AppCommandType] = None,
     name: Optional[str] = None,
     description: Optional[str] = MISSING,
     enable_default: Optional[bool] = True,
-    guild: Union[Snowflake, int, str] = None,
+    guild: Optional[Union[Snowflake, int, str]] = None,
     cooldown: Optional[int] = 0,
     cooldown_scale: Optional[float] = 60,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
-    command_options=MISSING
+    command_options=MISSING # Missing typehint?
 ):
     if func is None:
         return partial(
