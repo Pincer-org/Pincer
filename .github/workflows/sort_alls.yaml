@@ -1,4 +1,4 @@
-name: Sort alls
+name: Sort All
 
 on:
   push:
