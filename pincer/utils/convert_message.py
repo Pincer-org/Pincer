@@ -1,3 +1,6 @@
+# Copyright Pincer 2021-Present
+# Full MIT License can be found in `LICENSE` at the project root.
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -25,7 +28,19 @@ def convert_message(
         client: Client,
         message: MessageConvertable
 ) -> Message:
-    """Converts a message to a Message object"""
+    # TODO: fix docs
+    """
+    Converts a message to a Message object.
+
+    Parameters
+    ----------
+    client
+    message
+
+    Returns
+    -------
+
+    """
     if isinstance(message, Embed):
         message = Message(embeds=[message])
     elif PILLOW_IMPORT and isinstance(message, (File, Image)):

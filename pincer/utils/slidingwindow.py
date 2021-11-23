@@ -14,6 +14,13 @@ class SlidingWindow:
         self.__cur_count: int = 0
 
     def allow(self) -> bool:
+        # TODO: fix docs
+        """
+
+        Returns
+        -------
+
+        """
         # Reset rate limit:
         if (time() - self.__cur_time) > self.time_unit:
             self.__cur_time = time()
