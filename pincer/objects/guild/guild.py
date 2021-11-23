@@ -863,7 +863,7 @@ class Guild(APIObject):
         self,
         days: Optional[int] = 7,
         include_roles: Optional[str] = None
-    ) -> Dict[str, int]:
+    ) -> int:
         """|coro|
         Returns the number of members that
         would be removed in a prune operation.
@@ -879,13 +879,12 @@ class Guild(APIObject):
 
         Returns
         -------
-        Dict[:class:`str`, :class:`int`]
-            An object with one 'pruned' key indicating
-            the number of members that would be removed.
+        :class:`int`
+            The number of members that would be removed.
         """
         return await self._http.get(
             f"guilds/{self.id}/prune?{days=}&{include_roles=!s}"
-        )
+        )["pruned"]
 
     async def prune(
         self,
@@ -893,7 +892,7 @@ class Guild(APIObject):
         compute_prune_days: Optional[bool] = True,
         include_roles: Optional[List[Snowflake]] = None,
         reason: Optional[str] = None
-    ) -> Dict[str, int]:
+    ) -> int:
         """|coro|
         Prunes members from the guild. Requires the ``KICK_MEMBERS`` permission.
 
@@ -913,9 +912,8 @@ class Guild(APIObject):
 
         Returns
         -------
-        Dict[:class:`str`, :class:`int`]
-            An object with one 'pruned' key indicating
-            the number of members that were removed.
+        :class:`int`
+            Tthe number of members that were removed.
         """
         return await self._http.post(
             f"guilds/{self.id}/prune",
@@ -927,7 +925,7 @@ class Guild(APIObject):
             headers={"X-Audit-Log-Reason": reason}
             if reason is not None
             else {}
-        )
+        )["pruned"]
 
     async def get_voice_regions(self) -> AsyncGenerator[VoiceRegion, None]:
         """|coro|
