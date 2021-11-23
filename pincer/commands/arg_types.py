@@ -39,7 +39,7 @@ class CommandArg(metaclass=_CommandTypeMeta):
 
     """
 
-    def __init__(self, command_type, *args) -> None:
+    def __init__(self, command_type, *args):
         self.command_type = command_type
         self.modifiers = args
 
@@ -76,7 +76,7 @@ class Description(Modifier):
         The description for the command.
     """
 
-    def __init__(self, desc) -> None:
+    def __init__(self, desc):
         self.desc = str(desc)
 
     def get_payload(self) -> str:
@@ -102,7 +102,7 @@ class Choice(Modifier):
         The value of the choice
     """
 
-    def __init__(self, name, value) -> None:
+    def __init__(self, name, value):
         self.name = name
         self.value = value
 
@@ -129,7 +129,7 @@ class Choices(Modifier):
         the same value will be used for the choice name and value.
     """
 
-    def __init__(self, *choices) -> None:
+    def __init__(self, *choices):
         self.choices = []
 
         for choice in choices:
@@ -171,7 +171,7 @@ class ChannelTypes(Modifier):
         A list of channel types that the user can pick from.
     """
 
-    def __init__(self, *types) -> None:
+    def __init__(self, *types):
         self.types = types
 
     def get_payload(self):
@@ -196,7 +196,7 @@ class MaxValue(Modifier):
         The max value a user can choose.
     """
 
-    def __init__(self, max_value) -> None:
+    def __init__(self, max_value):
         self.max_value = max_value
 
     def get_payload(self):
@@ -221,7 +221,7 @@ class MinValue(Modifier):
         The minimum value a user can choose.
     """
 
-    def __init__(self, min_value) -> None:
+    def __init__(self, min_value):
         self.min_value = min_value
 
     def get_payload(self):
