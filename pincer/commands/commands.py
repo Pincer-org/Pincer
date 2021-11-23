@@ -13,7 +13,12 @@ from typing import TYPE_CHECKING, Union, Tuple, List
 
 from . import __package__
 from ..commands.arg_types import (
-    ChannelTypes, CommandArg, Description, Choices, MaxValue, MinValue
+    ChannelTypes,
+    CommandArg,
+    Description,
+    Choices,
+    MaxValue,
+    MinValue,
 )
 from ..utils.snowflake import Snowflake
 from ..exceptions import (
@@ -216,7 +221,7 @@ def command(
                         type=_options_type_link[annotation],
                         name=param,
                         description="Description not set",
-                        required=required
+                        required=required,
                     )
                 )
                 continue
@@ -227,18 +232,25 @@ def command(
             )
 
         command_type = _options_type_link[annotation.command_type]
-        argument_description = annotation.get_arg(
-            Description) or "Description not set"
-        choices = annotation.get_arg(
-            Choices)
+        argument_description = (
+            annotation.get_arg(Description) or "Description not set"
+        )
+        choices = annotation.get_arg(Choices)
 
-        if choices is not MISSING and annotation.command_type not in {int, float, str}:
+        if choices is not MISSING and annotation.command_type not in {
+            int,
+            float,
+            str,
+        }:
             raise InvalidArgumentAnnotation(
                 "Choice type is only allowed for str, int, and float"
             )
         if choices is not MISSING:
             for choice in choices:
-                if isinstance(choice.value, int) and annotation.command_type is float:
+                if (
+                    isinstance(choice.value, int)
+                    and annotation.command_type is float
+                ):
                     continue
                 if not isinstance(choice.value, annotation.command_type):
                     raise InvalidArgumentAnnotation(
@@ -246,9 +258,13 @@ def command(
                     )
 
         cannel_types = annotation.get_arg(ChannelTypes)
-        if cannel_types is not MISSING and annotation.command_type is not Channel:
+        if (
+            cannel_types is not MISSING
+            and annotation.command_type is not Channel
+        ):
             raise InvalidArgumentAnnotation(
-                "ChannelTypes are only available for Channels")
+                "ChannelTypes are only available for Channels"
+            )
 
         max_value = annotation.get_arg(MaxValue)
         min_value = annotation.get_arg(MinValue)
@@ -287,7 +303,7 @@ def command(
         cooldown=cooldown,
         cooldown_scale=cooldown_scale,
         cooldown_scope=cooldown_scope,
-        command_options=options
+        command_options=options,
     )
 
 
@@ -302,66 +318,66 @@ def user_command(
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
 ):
     """A decorator to create a user command registering and responding
-   to the Discord API from a function.
+    to the Discord API from a function.
 
-    .. code-block:: python3
+     .. code-block:: python3
 
-        class Bot(Client):
-            @user_command
-            async def test_user_command(
-                self,
-                ctx: MessageContext,
-                user: User,
-                member: GuildMember
-            ):
-                if not member:
-                    # member is missing if this is a DM
-                    # This bot doesn't like being DMed so it won't respond
-                    return
+         class Bot(Client):
+             @user_command
+             async def test_user_command(
+                 self,
+                 ctx: MessageContext,
+                 user: User,
+                 member: GuildMember
+             ):
+                 if not member:
+                     # member is missing if this is a DM
+                     # This bot doesn't like being DMed so it won't respond
+                     return
 
-                return f"Hello {user.name}, this is a Guild."
-
-
-    References from above:
-        :class:`~client.Client`,
-        :class:`~objects.message.context.MessageContext`,
-        :class:`~objects.user.user.User`,
-        :class:`~objects.guild.member.GuildMember`,
+                 return f"Hello {user.name}, this is a Guild."
 
 
-    Parameters
-    ----------
-    name : Optional[:class:`str`]
-        The name of the command |default| :data:`None`
-    enable_default : Optional[:class:`bool`]
-        Whether the command is enabled by default |default| :data:`True`
-    guild : Optional[Union[:class:`~pincer.utils.snowflake.Snowflake`, :class:`int`, :class:`str`]]
-        What guild to add it to (don't specify for global) |default| :data:`None`
-    cooldown : Optional[:class:`int`]
-        The amount of times in the cooldown_scale the command can be invoked
-        |default| ``0``
-    cooldown_scale : Optional[:class:`float`]
-        The 'checking time' of the cooldown |default| ``60``
-    cooldown_scope : :class:`~pincer.objects.app.throttle_scope.ThrottleScope`
-        What type of cooldown strategy to use |default| :attr:`ThrottleScope.USER`
+     References from above:
+         :class:`~client.Client`,
+         :class:`~objects.message.context.MessageContext`,
+         :class:`~objects.user.user.User`,
+         :class:`~objects.guild.member.GuildMember`,
 
-    Raises
-    ------
-    CommandIsNotCoroutine
-        If the command function is not a coro
-    InvalidCommandName
-        If the command name does not follow the regex ``^[\\w-]{1,32}$``
-    InvalidCommandGuild
-        If the guild id is invalid
-    CommandDescriptionTooLong
-        Descriptions max 100 characters
-        If the annotation on an argument is too long (also max 100)
-    CommandAlreadyRegistered
-        If the command already exists
-    InvalidArgumentAnnotation
-        Annotation amount is max 25,
-        Not a valid argument type,
-        Annotations must consist of name and value
+
+     Parameters
+     ----------
+     name : Optional[:class:`str`]
+         The name of the command |default| :data:`None`
+     enable_default : Optional[:class:`bool`]
+         Whether the command is enabled by default |default| :data:`True`
+     guild : Optional[Union[:class:`~pincer.utils.snowflake.Snowflake`, :class:`int`, :class:`str`]]
+         What guild to add it to (don't specify for global) |default| :data:`None`
+     cooldown : Optional[:class:`int`]
+         The amount of times in the cooldown_scale the command can be invoked
+         |default| ``0``
+     cooldown_scale : Optional[:class:`float`]
+         The 'checking time' of the cooldown |default| ``60``
+     cooldown_scope : :class:`~pincer.objects.app.throttle_scope.ThrottleScope`
+         What type of cooldown strategy to use |default| :attr:`ThrottleScope.USER`
+
+     Raises
+     ------
+     CommandIsNotCoroutine
+         If the command function is not a coro
+     InvalidCommandName
+         If the command name does not follow the regex ``^[\\w-]{1,32}$``
+     InvalidCommandGuild
+         If the guild id is invalid
+     CommandDescriptionTooLong
+         Descriptions max 100 characters
+         If the annotation on an argument is too long (also max 100)
+     CommandAlreadyRegistered
+         If the command already exists
+     InvalidArgumentAnnotation
+         Annotation amount is max 25,
+         Not a valid argument type,
+         Annotations must consist of name and value
     """
     # noqa: E501
     return register_command(
@@ -372,7 +388,7 @@ def user_command(
         guild=guild,
         cooldown=cooldown,
         cooldown_scale=cooldown_scale,
-        cooldown_scope=cooldown_scope
+        cooldown_scope=cooldown_scope,
     )
 
 
@@ -451,12 +467,12 @@ def message_command(
         guild=guild,
         cooldown=cooldown,
         cooldown_scale=cooldown_scale,
-        cooldown_scope=cooldown_scope
+        cooldown_scope=cooldown_scope,
     )
 
 
 def register_command(
-    func=None, # Missing typehint?
+    func=None,  # Missing typehint?
     *,
     app_command_type: Optional[AppCommandType] = None,
     name: Optional[str] = None,
@@ -466,7 +482,7 @@ def register_command(
     cooldown: Optional[int] = 0,
     cooldown_scale: Optional[float] = 60,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
-    command_options=MISSING # Missing typehint?
+    command_options=MISSING,  # Missing typehint?
 ):
     if func is None:
         return partial(

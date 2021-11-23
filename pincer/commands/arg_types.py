@@ -10,7 +10,7 @@ from ..objects.app.command import AppCommandOptionChoice
 class _CommandTypeMeta(type):
     def __getitem__(cls, args: Union[Tuple, Any]):
         if not isinstance(args, tuple):
-            args = args,
+            args = (args,)
 
         return cls(*args)
 
@@ -134,16 +134,14 @@ class Choices(Modifier):
 
         for choice in choices:
             if isinstance(choice, Choice):
-                self.choices.append(AppCommandOptionChoice(
-                    name=choice.name,
-                    value=choice.value
-                ))
+                self.choices.append(
+                    AppCommandOptionChoice(name=choice.name, value=choice.value)
+                )
                 continue
 
-            self.choices.append(AppCommandOptionChoice(
-                name=str(choice),
-                value=choice
-            ))
+            self.choices.append(
+                AppCommandOptionChoice(name=str(choice), value=choice)
+            )
 
     def get_payload(self) -> List[Union[str, int, float]]:
         return self.choices
