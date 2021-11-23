@@ -23,7 +23,7 @@ class CommandArg(metaclass=_CommandTypeMeta):
 
         CommandArg[
             # This is the type of command.
-            # Supported types are str, int, bool, float, User, Channel, and Role 
+            # Supported types are str, int, bool, float, User, Channel, and Role
             int,
             # The modifiers to the command go here
             Description["Pick a number 1-10"],
