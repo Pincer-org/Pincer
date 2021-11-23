@@ -62,13 +62,22 @@ def convert(
     return MISSING if value is MISSING else handle_factory()
 
 def remove_none(obj: Union[List, Dict, Set]) -> Union[List, Dict, Set]:
+    """
+    Removes all ``None`` values from a list, dict or set.
+
+    Parameters
+    ----------
+    obj : Union[List, Dict, Set]
+        The list, dict or set to remove ``None`` values from.
+
+    Returns
+    -------
+    Union[List, Dict, Set]
+        The list, dict or set without ``None`` values.
+    """
     if isinstance(obj, list):
-        while None in obj:
-            obj.remove(None)
+        return [i for i in obj if i is not None]
     elif isinstance(obj, set):
-        obj.discard(None)
+        return obj - {None}
     elif isinstance(obj, dict):
-        to_del = [k for k, v in obj.items() if None in {k, v}]
-        for k in to_del:
-            del obj[k]
-    return obj
+        return {k: v for k, v in obj.items() if None not in {k, v}}
