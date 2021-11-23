@@ -80,7 +80,7 @@ def command(
     cooldown_scale: Optional[float] = 60,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
 ):
-    """A decorator to slash create a command to register and respond to
+    """A decorator to create a slash command to register and respond to
     with the discord API from a function.
 
     str - String
@@ -248,7 +248,7 @@ def command(
         cannel_types = annotation.get_arg(ChannelTypes)
         if cannel_types is not MISSING and annotation.command_type != Channel:
             raise InvalidArgumentAnnotation(
-                "ChannelTypes is only available for Channel")
+                "ChannelTypes are only available for Channels")
 
         max_value = annotation.get_arg(MaxValue)
         min_value = annotation.get_arg(MinValue)
@@ -301,8 +301,8 @@ def user_command(
     cooldown_scale: Optional[float] = 60,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
 ):
-    """A decorator to create a user command to register and respond to
-    with the discord API from a function.
+    """A decorator to create a user command registering and responding
+   to the Discord API from a function.
 
     .. code-block:: python3
 
@@ -386,8 +386,8 @@ def message_command(
     cooldown_scale: Optional[float] = 60,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
 ):
-    """A decorator to create a user command to register and respond to
-    with the discord API from a function.
+    """A decorator to create a user command to register and respond
+    to the Discord API from a function.
 
     .. code-block:: python3
 

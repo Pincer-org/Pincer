@@ -35,7 +35,7 @@ class CommandArg(metaclass=_CommandTypeMeta):
     ----------
     command_type : T
         The type of the command
-    *args : :class:`pincer.commands.arg_types.Modifier`
+    \*args : :class:`~pincer.commands.arg_types.Modifier`
 
     """
 
@@ -54,13 +54,13 @@ class CommandArg(metaclass=_CommandTypeMeta):
 class Modifier(metaclass=_CommandTypeMeta):
     """
     Modifies a CommandArg by being added to
-    :class:`pincer.commands.arg_types.CommandArg`'s args.
+    :class:`~pincer.commands.arg_types.CommandArg`'s args.
     """
 
 
 class Description(Modifier):
     """
-    Represents the description application command option type
+    Represents the description of an application command option type
 
     .. code-block:: python3
 
@@ -109,7 +109,7 @@ class Choice(Modifier):
 
 class Choices(Modifier):
     """
-    Represents the choice application command option type
+    Represents a Group of Application Command Choices
 
     .. code-block:: python3
 
@@ -124,8 +124,8 @@ class Choices(Modifier):
 
     Parameters
     ----------
-    *choices : Union[:class:`pincer.commands.arg_types.Choice`, str, int, float]
-        A choice. If the type is not :class:`pincer.commands.arg_types.Choice`,
+    \*choices : Union[:class:`~pincer.commands.arg_types.Choice`, str, int, float]
+        A choice. If the type is not :class:`~pincer.commands.arg_types.Choice`,
         the same value will be used for the choice name and value.
     """
 
@@ -167,7 +167,7 @@ class ChannelTypes(Modifier):
 
     Parameters
     ----------
-    *types : :class:`pincer.objects.guild.channel.ChannelType`
+    \*types : :class:`~pincer.objects.guild.channel.ChannelType`
         A list of channel types that the user can pick from.
     """
 
@@ -192,7 +192,7 @@ class MaxValue(Modifier):
 
     Parameters
     ----------
-    max_value : Union[float, int]
+    max_value : Union[:class:`float`, :class:`int`]
         The max value a user can choose.
     """
 
@@ -217,7 +217,7 @@ class MinValue(Modifier):
 
     Parameters
     ----------
-    min_value : Union[float, int]
+    min_value : Union[:class:`float`, :class:`int`]
         The minimum value a user can choose.
     """
 
