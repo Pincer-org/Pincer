@@ -47,18 +47,12 @@ async def interaction_response_handler(
     \\*\\*kwargs :
         The arguments to be passed to the command.
     """
-    maybe_self_and_context: List[Any] = []
-
-    if should_pass_cls(command):
-        maybe_self_and_context.append(
-            ChatCommandHandler.managers[command.__module__]
-        )
-
     sig, params = get_signature_and_params(command)
     if should_pass_ctx(sig, params):
-        maybe_self_and_context.append(context)
+        args.insert(0, context)
 
-    args = maybe_self_and_context + args
+    if should_pass_cls(command):
+        args.insert(0, ChatCommandHandler.managers[command.__module__])
 
     if isasyncgenfunction(command):
         message = command(*args, **kwargs)
