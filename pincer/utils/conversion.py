@@ -61,6 +61,7 @@ def convert(
 
     return MISSING if value is MISSING else handle_factory()
 
+
 def remove_none(obj: Union[List, Dict, Set]) -> Union[List, Dict, Set]:
     """
     Removes all ``None`` values from a list, dict or set.
