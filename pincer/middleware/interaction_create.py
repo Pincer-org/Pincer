@@ -106,8 +106,7 @@ async def interaction_handler(
         # Add User and Member args
         args.append(next(iter(interaction.data.resolved.users.values())))
 
-        members = interaction.data.resolved.members
-        if members:
+        if members := interaction.data.resolved.members:
             args.append(next(iter(members.values())))
         else:
             args.append(MISSING)
