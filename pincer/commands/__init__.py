@@ -6,8 +6,8 @@ from .arg_types import (
     CommandArg, Description, Choice, Choices, ChannelTypes, MaxValue, MinValue
 )
 
-__all__ = [
+__all__ = (
     "command", "ChatCommandHandler", "CommandArg", "Description", "Choice",
     "Choices", "ChannelTypes", "MaxValue", "MinValue", "user_command",
     "message_command"
-]
+)
