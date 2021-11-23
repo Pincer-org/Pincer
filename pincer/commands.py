@@ -359,10 +359,10 @@ class ChatCommandHandler(metaclass=Singleton):
     ----------
     client: :class:`Client`
         The client object
-    managers: Dict
+    managers: Dict[:class:`str`, :class:`~typing.Any`]
         Dictionary of managers
-    register: Dict
-        Dictionary of :class:`~objects.app.command.ClientCommandStructure`
+    register: Dict[:class:`str`, :class:`~objects.app.command.ClientCommandStructure`]
+        Dictionary of ``ClientCommandStructure``
     """
 
     managers: Dict[str, Any] = {}

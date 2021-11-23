@@ -15,7 +15,7 @@ async def guild_delete_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the guild delete event.
 
     Returns
@@ -23,6 +23,9 @@ async def guild_delete_middleware(self, payload: GatewayDispatch):
     Tuple[:class:`str`, List[:class:`~pincer.objects.guild.guild.UnavailableGuild`]]
         ``on_guild_delete`` and an ``UnavailableGuild``
     """
+    # TODO: Fix docs on line 23 (three lines above)
+    # http://docs.pincer.dev/pincer.middleware#pincer.middleware.guild_delete.guild_delete_middleware
+
     guild = UnavailableGuild.from_dict(construct_client_dict(self, payload.data))
 
     if guild.id in self.guilds.key():

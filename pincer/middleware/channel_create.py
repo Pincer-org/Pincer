@@ -32,7 +32,7 @@ def channel_create_middleware(
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.guild.channel.Channel`]]
-        ``"on_channel_creation"`` and a channel.
+        ``on_channel_creation`` and a channel.
     """
     return "on_channel_creation", [
         Channel.from_dict(construct_client_dict(self, payload.data))

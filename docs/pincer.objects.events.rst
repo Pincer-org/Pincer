@@ -330,7 +330,7 @@ Webhook
 -------
 
 WebhooksUpdateEvent
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 .. attributetable:: WebhooksUpdateEvent
 

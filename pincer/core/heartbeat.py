@@ -84,7 +84,7 @@ class Heartbeat:
 
         Raises
         ------
-        HeartbeatError
+        :class:`~pincer.exceptions.HeartbeatError`
             No ``heartbeat_interval`` is present.
         """
         _log.debug("Handling initial discord hello websocket message.")

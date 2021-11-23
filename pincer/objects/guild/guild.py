@@ -421,9 +421,10 @@ class Guild(APIObject):
     async def get_member(self, _id: int) -> GuildMember:
         """|coro|
         Fetches a GuildMember from its identifier
+
         Parameters
         ----------
-        _id:
+        _id: int
             The id of the guild member which should be fetched from the Discord
             gateway.
         Returns

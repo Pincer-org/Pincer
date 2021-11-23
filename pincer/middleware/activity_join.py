@@ -19,12 +19,12 @@ async def activity_join_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the activity join event.
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`ActivityJoinEvent`]]
+    Tuple[:class:`str`, List[:class:`~pincer.objects.events.activity.ActivityJoinEvent`]]
         ``on_activity_join`` and an ``ActivityJoinEvent``
     """
     return "on_activity_join", [
