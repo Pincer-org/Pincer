@@ -25,7 +25,7 @@ async def guild_member_chunk_middleware(self, payload: GatewayDispatch):
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildMembersChunkEvent`]]
-        ``on_guild_member_chunk`` and a ``GuildMemberChunkEvent``
+        ``on_guild_member_chunk`` and a ``GuildMembersChunkEvent``
     """
 
     return (
