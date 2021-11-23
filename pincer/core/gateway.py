@@ -34,7 +34,7 @@ _log = logging.getLogger(__package__)
 
 
 class Dispatcher:
-    """The Dispatcher handles all interactions with the discord websocket API.
+    """The Dispatcher handles all interactions with the Discord WebSocket API.
     This also contains the main event loop, and handles the heartbeat.
 
     Running the dispatcher will create a connection with the
