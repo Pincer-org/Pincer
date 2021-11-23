@@ -122,8 +122,8 @@ You have the possibility to use your own class to inherit from the Pincer bot
 base.
 
 ```py
-from pincer import Client, command, CommandArg, Description
-
+from pincer import Client
+from pincer.commands import command, CommandArg, Description
 
 class Bot(Client):
     def __init__(self) -> None:

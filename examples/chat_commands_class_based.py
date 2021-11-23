@@ -1,4 +1,5 @@
-from pincer import Client, command, Descripted
+from pincer import Client
+from pincer.commands import command, CommandArg, Description
 from pincer.objects import Message, InteractionFlags, Embed
 
 
@@ -17,13 +18,13 @@ class Bot(Client):
     @command(description="Add two numbers!")
     async def add(
             self,
-            first: Descripted[int, "The first number"],
-            second: Descripted[int, "The second number"]
+            first: CommandArg[int, Description["The first number"]],
+            second: CommandArg[int, Description["The second number"]]
     ):
         return f"The addition of `{first}` and `{second}` is `{first + second}`"
 
     @command(guild=1324567890)
-    async def private_say(self, message: Descripted[str, "The content of the message"]):
+    async def private_say(self, message: CommandArg[str, Description["The content of the message"]]):
         return Message(message, flags=InteractionFlags.EPHEMERAL)
 
     @command(description="How to make embed!")
