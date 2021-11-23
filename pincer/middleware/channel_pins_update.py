@@ -10,7 +10,7 @@ from ..objects.events.channel import ChannelPinsUpdateEvent
 async def channel_pins_update_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_channel_pins_update``,
+    Middleware for the ``on_channel_pins_update`` event.
 
     Parameters
     ----------

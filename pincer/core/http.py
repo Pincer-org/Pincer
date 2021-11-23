@@ -54,7 +54,7 @@ class HTTPClient:
 
     def __init__(self, token: str, *, version: int = None, ttl: int = 5):
         """
-        Instantiate a new HttpApi object.
+        Instantiate a new HTTPAPI object.
 
         token:
             Discord API token
@@ -63,7 +63,7 @@ class HTTPClient:
 
         version:
             The discord API version.
-            See `<https://discord.com/developers/docs/reference#api-versioning>`_.
+            See `<https://discord.dev/reference#api-versioning>`_.
         ttl:
             Max amount of attempts after error code 5xx
         """

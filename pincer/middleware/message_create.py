@@ -21,7 +21,7 @@ async def message_create_middleware(
 ) -> Tuple[str, List[UserMessage]]:  # noqa: E501
     """|coro|
 
-    Middleware for ``on_message`` event.
+    Middleware for the ``on_message`` event.
 
     Parameters
     ----------

@@ -12,7 +12,7 @@ from ..utils.conversion import construct_client_dict
 async def message_reaction_remove_emoji_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_message_reaction_remove_emoji`` event.
+    Middleware for the ``on_message_reaction_remove_emoji`` event.
 
     Parameters
     ----------

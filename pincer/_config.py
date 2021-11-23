@@ -7,7 +7,7 @@ from typing import Optional
 
 @dataclass
 class GatewayConfig:
-    """This file is to make maintaining the library its gateway
+    """This file is to make maintaining the library and its gateway
     configuration easier.
     """
     socket_base_url: str = "wss://gateway.discord.gg/"

@@ -23,7 +23,7 @@ async def message_update_middleware(
     """|coro|
 
 
-    Middleware for ``on_message_update`` event,
+    Middleware for the ``on_message_update`` event.
         generate a class for the message that has been updated.
 
     Parameters

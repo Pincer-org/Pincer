@@ -24,7 +24,7 @@ def error_middleware(
 ) -> Tuple[str, List[DiscordError]]:
     """|coro|
 
-    Middleware for ``on_error`` event.
+    Middleware for the ``on_error`` event.
 
     Parameters
     ----------

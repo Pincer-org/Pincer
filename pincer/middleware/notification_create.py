@@ -15,7 +15,7 @@ from ..utils.types import Coro
 async def notification_create_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_notification_create`` event.
+    Middleware for the ``on_notification_create`` event.
 
     Parameters
     ----------

@@ -12,7 +12,7 @@ from ..utils.types import Coro
 async def activity_join_request_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_activity_join_request`` event.
+    Middleware for the ``on_activity_join_request`` event.
 
     Parameters
     ----------

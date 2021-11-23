@@ -12,7 +12,7 @@ from ..utils.conversion import construct_client_dict
 async def guild_role_create_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_guild_role_create`` event.
+    Middleware for the ``on_guild_role_create`` event.
 
     Parameters
     ----------

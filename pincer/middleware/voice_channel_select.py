@@ -12,7 +12,7 @@ from ..utils.types import Coro
 async def voice_channel_select_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_voice_channel_select`` event.
+    Middleware for the ``on_voice_channel_select`` event.
 
     Parameters
     ----------

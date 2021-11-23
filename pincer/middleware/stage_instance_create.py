@@ -11,7 +11,7 @@ from ..utils.types import Coro
 def stage_instance_create_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_stage_instance_create`` event.
+    Middleware for the ``on_stage_instance_create`` event.
 
     Parameters
     ----------

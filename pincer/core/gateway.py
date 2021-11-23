@@ -34,7 +34,7 @@ _log = logging.getLogger(__package__)
 
 
 class Dispatcher:
-    """The Dispatcher handles all interactions with discord websocket API.
+    """The Dispatcher handles all interactions with the discord websocket API.
     This also contains the main event loop, and handles the heartbeat.
 
     Running the dispatcher will create a connection with the
@@ -184,7 +184,7 @@ class Dispatcher:
     async def __dispatcher(self, loop: AbstractEventLoop):
         """
         The main event loop.
-        This handles all interactions with the websocket API.
+        This handles all interactions with the Websocket API.
 
         :param loop:
             The loop in which the dispatcher is running.
@@ -209,7 +209,7 @@ class Dispatcher:
 
             if GatewayConfig.compression == "zlib-stream":
                 # Create an inflator for compressed data as defined in
-                # https://discord.com/developers/docs/topics/gateway
+                # https://discord.dev/topics/gateway
                 inflator = zlib.decompressobj()
 
             while self.__keep_alive:

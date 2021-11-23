@@ -11,7 +11,7 @@ from ..utils.conversion import construct_client_dict
 def thread_create_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_thread_create`` event.
+    Middleware for the ``on_thread_create`` event.
 
     Parameters
     ----------

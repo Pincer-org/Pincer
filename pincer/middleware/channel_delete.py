@@ -11,7 +11,7 @@ from ..utils.conversion import construct_client_dict
 async def channel_delete_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_channel_delete``,
+    Middleware for the ``on_channel_delete`` event.
 
     Parameters
     ----------

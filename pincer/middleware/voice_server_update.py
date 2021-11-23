@@ -12,7 +12,7 @@ from ..utils.types import Coro
 async def voice_server_update_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_voice_server_update`` event.
+    Middleware for the ``on_voice_server_update`` event.
 
     Parameters
     ----------

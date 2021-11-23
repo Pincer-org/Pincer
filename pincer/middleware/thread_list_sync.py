@@ -16,7 +16,7 @@ from ..utils.conversion import construct_client_dict
 async def thread_list_sync(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_thread_list_sync`` event.
+    Middleware for the ``on_thread_list_sync`` event.
 
     Parameters
     ----------

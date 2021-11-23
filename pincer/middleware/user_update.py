@@ -12,7 +12,7 @@ from ..utils.types import Coro
 async def user_update_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_user_update`` event.
+    Middleware for the ``on_user_update`` event.
 
     Parameters
     ----------

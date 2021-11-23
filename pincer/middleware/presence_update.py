@@ -12,7 +12,7 @@ from ..utils.types import Coro
 async def presence_update_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_presence_update`` event.
+    Middleware for the ``on_presence_update`` event.
 
     Parameters
     ----------

@@ -26,7 +26,7 @@ async def on_ready_middleware(
 ) -> Tuple[str]:
     """|coro|
 
-    Middleware for ``on_ready`` event.
+    Middleware for the ``on_ready`` event.
 
     Parameters
     ----------
