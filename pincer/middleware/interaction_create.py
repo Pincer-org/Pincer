@@ -89,7 +89,7 @@ async def interaction_handler(
     """
     self.throttler.handle(context)
 
-    sig, params = get_signature_and_params(command)
+    sig, _ = get_signature_and_params(command)
 
     defaults = {key: value.default for key,
                 value in sig.items() if value.default is not _empty}
