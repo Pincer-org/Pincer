@@ -436,10 +436,11 @@ class Client(Dispatcher):
             ensure_future(call(*call_args, **kwargs))
 
     def run(self):
-        """start the event listener"""
+        """Start the event listener."""
         self.start_loop()
 
     def __del__(self):
+        """Ensure close of the http client."""
         if hasattr(self, 'http'):
             run(self.http.close())
 
@@ -588,7 +589,7 @@ class Client(Dispatcher):
             what specifically happened.
         """
         await self.process_event("payload", payload)
-    
+
     @overload
     async def create_guild(
         self,
@@ -642,7 +643,7 @@ class Client(Dispatcher):
             The created guild
         """
         ...
-    
+
     async def create_guild(self, name: str, **kwargs) -> Guild:
         g = await self.http.post("guilds", data={"name": name, **kwargs})
         return await self.get_guild(g['id'])
@@ -714,6 +715,11 @@ class Client(Dispatcher):
         guild_id : :class:`int`
             The id of the guild which should be fetched from the Discord
             gateway.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.guild.Guild`
+            The guild object.
         """
         return await Guild.from_id(self, guild_id)
 
@@ -755,8 +761,14 @@ class Client(Dispatcher):
         return await Role.from_id(self, guild_id, role_id)
 
     async def get_channel(self, _id: int) -> Channel:
-        """Fetch a Channel from its identifier.
+        """|coro|
+        Fetch a Channel from its identifier. The ``get_dm_channel`` method from
+        :class:`~pincer.objects.user.user.User` should be used if you need to
+        create a dm_channel; using the ``send()`` method from
+        :class:`~pincer.objects.user.user.User` is preferred.
 
+        Parameters
+        ----------
         _id: :class:`int`
             The id of the user which should be fetched from the Discord
             gateway.

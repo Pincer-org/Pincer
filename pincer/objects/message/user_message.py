@@ -64,7 +64,8 @@ class AllowedMentions(APIObject):
     reply: :class:`bool`
         If replies should mention the author.
         |default| :data:`True`
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     parse: List[AllowedMentionTypes]
     roles: List[Union[Role, Snowflake]]

@@ -479,27 +479,58 @@ class Guild(APIObject):
         )
         return GuildMember.from_dict(construct_client_dict(self._client, data))
 
-    async def ban(self, member_id: int, **kwargs):
-        """|coro|
-        Bans a guild member.
+    async def ban(
+        self,
+        member_id: int,
+        reason: str = None,
+        delete_message_days: int = None
+    ):
+        """
         Parameters
         ----------
         member_id : :class:`int`
             ID of the guild member to ban.
-        \\*\\* kwargs
-            Additional keyword arguments to ban the guild member with.
+        reason : Optional[:class:`str`]
+            Reason for the kick.
+        delete_message_days : Optional[:class:`int`]
+            Number of days to delete messages for (0-7)
         """
-        await self._http.put(f"guilds/{self.id}/bans/{member_id}", data=kwargs)
+        headers = {}
 
-    async def kick(self, member_id: int):
+        if reason is not None:
+            headers["X-Audit-Log-Reason"] = reason
+
+        data = {}
+
+        if delete_message_days is not None:
+            data["delete_message_days"] = delete_message_days
+
+        await self._http.put(
+            f"/guilds/{self.id}/bans/{member_id}",
+            data=data,
+            headers=headers
+        )
+
+    async def kick(self, member_id: int, reason: Optional[str] = None):
         """|coro|
         Kicks a guild member.
         Parameters
         ----------
         member_id : :class:`int`
             ID of the guild member to kick.
+        reason : Optional[:class:`str`]
+            Reason for the kick.
         """
-        await self._http.delete(f"guilds/{self.id}/members/{member_id}")
+
+        headers = {}
+
+        if reason is not None:
+            headers["X-Audit-Log-Reason"] = reason
+
+        await self._http.delete(
+            f"/guilds/{self.id}/members/{member_id}",
+            header=headers
+        )
 
     async def get_roles(self) -> AsyncGenerator[Role, None]:
         """|coro|
@@ -1228,10 +1259,10 @@ class Guild(APIObject):
             Guild data received from the discord API.
         Returns
         -------
-        :class: `~pincer.objects.guild.guild.Guild`
+        :class:`~pincer.objects.guild.guild.Guild`
             The new guild object.
         Raises
-        :class: `~pincer.exceptions.UnavailableGuildError`
+        :class:`~pincer.exceptions.UnavailableGuildError`
             The guild is unavailable due to a discord outage.
         """
         if data.get("unavailable", False):

@@ -56,8 +56,8 @@ class MessageComponent(APIObject):
     """
     # noqa: E501
     type: int
-    options: List[SelectOption]
 
+    options: List[SelectOption] = MISSING
     custom_id: APINullable[str] = MISSING
     disabled: APINullable[bool] = False
     style: APINullable[ButtonStyle] = MISSING
