@@ -102,7 +102,7 @@ async def interaction_handler(
 
     args = []
 
-    if interaction.data.type == AppCommandType.USER:
+    if interaction.data.type is AppCommandType.USER:
         # Add User and Member args
         args.append(next(iter(interaction.data.resolved.users.values())))
 
@@ -112,7 +112,7 @@ async def interaction_handler(
         else:
             args.append(MISSING)
 
-    elif interaction.data.type == AppCommandType.MESSAGE:
+    elif interaction.data.type is AppCommandType.MESSAGE:
         # Add Message to args
         args.append(next(iter(interaction.data.resolved.messages.values())))
 

@@ -209,7 +209,7 @@ def command(
         if annotation == MessageContext and idx == 1:
             return
 
-        if type(annotation) != CommandArg:
+        if type(annotation) is not CommandArg:
             if annotation in _options_type_link:
                 options.append(
                     AppCommandOption(
@@ -238,7 +238,7 @@ def command(
             )
         if choices is not MISSING:
             for choice in choices:
-                if isinstance(choice.value, int) and annotation.command_type == float:
+                if isinstance(choice.value, int) and annotation.command_type is float:
                     continue
                 if not isinstance(choice.value, annotation.command_type):
                     raise InvalidArgumentAnnotation(
@@ -246,7 +246,7 @@ def command(
                     )
 
         cannel_types = annotation.get_arg(ChannelTypes)
-        if cannel_types is not MISSING and annotation.command_type != Channel:
+        if cannel_types is not MISSING and annotation.command_type is not Channel:
             raise InvalidArgumentAnnotation(
                 "ChannelTypes are only available for Channels")
 
@@ -256,8 +256,8 @@ def command(
         for i, value in enumerate((min_value, max_value)):
             if (
                 value is not MISSING
-                and annotation.command_type != int
-                and annotation.command_type != float
+                and annotation.command_type is not int
+                and annotation.command_type is not float
             ):
                 t = ("MinValue", "MaxValue")
                 raise InvalidArgumentAnnotation(
