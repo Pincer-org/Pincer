@@ -143,7 +143,7 @@ class Choices(Modifier):
                 AppCommandOptionChoice(name=str(choice), value=choice)
             )
 
-    def get_payload(self) -> List[Union[str, int, float]]:
+    def get_payload(self) -> List[AppCommandOptionChoice]:
         return self.choices
 
 
