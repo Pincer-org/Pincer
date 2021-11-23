@@ -492,7 +492,7 @@ def register_command(
     if not re.match(COMMAND_NAME_REGEX, cmd):
         raise InvalidCommandName(
             f"Command `{cmd}` doesn't follow the name requirements."
-            "Ensure to match the following regex:"
+            " Ensure to match the following regex:"
             f" {COMMAND_NAME_REGEX.pattern}"
         )
 
