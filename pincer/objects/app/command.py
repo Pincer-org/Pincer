@@ -147,7 +147,8 @@ class AppCommand(APIObject):
     def __post_init__(self):
         super().__post_init__()
 
-        self.options = [] if self.options is MISSING and self.type == AppCommandType.MESSAGE else self.options
+        if self.options is MISSING and self.type == AppCommandType.MESSAGE:
+            self.options = []
 
     def __eq__(self, other: Union[AppCommand, ClientCommandStructure]):
         if isinstance(other, ClientCommandStructure):

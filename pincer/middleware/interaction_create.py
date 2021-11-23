@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import logging
-from inspect import isasyncgenfunction, getfullargspec, _empty
+from inspect import isasyncgenfunction, _empty
 from typing import Dict, Any
 from typing import TYPE_CHECKING
 
@@ -15,7 +15,7 @@ from ..objects import Interaction, MessageContext, AppCommandType
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 from ..utils import get_index
 from ..utils.conversion import construct_client_dict
-from ..utils.signature import get_params, get_signature_and_params
+from ..utils.signature import get_signature_and_params
 
 if TYPE_CHECKING:
     from typing import List, Tuple

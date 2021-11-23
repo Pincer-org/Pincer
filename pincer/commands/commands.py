@@ -12,7 +12,9 @@ from inspect import Signature, isasyncgenfunction, _empty
 from typing import TYPE_CHECKING, Union, Tuple, List
 
 from . import __package__
-from ..commands.arg_types import ChannelTypes, CommandArg, Description, Choices, MaxValue, MinValue
+from ..commands.arg_types import (
+    ChannelTypes, CommandArg, Description, Choices, MaxValue, MinValue
+)
 from ..utils.snowflake import Snowflake
 from ..exceptions import (
     CommandIsNotCoroutine,
@@ -41,8 +43,8 @@ from ..objects.app import (
 )
 from ..utils import get_index, should_pass_ctx
 from ..utils.signature import get_signature_and_params
-from ..utils.types import MISSING, choice_value_types
-from ..utils.types import Singleton, TypeCache
+from ..utils.types import MISSING
+from ..utils.types import Singleton
 
 if TYPE_CHECKING:
     from typing import Any, Optional, Dict

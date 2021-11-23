@@ -45,7 +45,7 @@ class CommandArg(metaclass=_CommandTypeMeta):
 
     def get_arg(self, arg_type: T) -> T:
         for arg in self.modifiers:
-            if type(arg) == arg_type:
+            if isinstance(arg, arg_type):
                 return arg.get_payload()
 
         return MISSING
