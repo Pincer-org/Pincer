@@ -75,7 +75,7 @@ def event_middleware(call: str, *, override: bool = False):
 
     :Implementation example:
 
-    .. code-block:: pycon
+    .. code-block:: python3
 
          @event_middleware("ready", override=True)
          async def custom_ready(_, payload: GatewayDispatch):
