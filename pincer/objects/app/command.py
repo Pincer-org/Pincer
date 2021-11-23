@@ -56,11 +56,6 @@ class AppCommandOptionChoice(APIObject):
     name: str
     value: choice_value_types
 
-    def __post_init__(self):
-        # Default serialization causes too many issues with Union
-        # It isn't needed here anyway
-        return
-
 
 @dataclass
 class AppCommandOption(APIObject):
