@@ -11,10 +11,10 @@ from .types import T, MISSING
 
 if TYPE_CHECKING:
     from ..client import Client
-    from typing import Dict, Callable, Any, Optional
+    from typing import Any, Callable, Dict, List, Optional, Set, Union
 
 
-def construct_client_dict(client: Client, data: Dict[...]):
+def construct_client_dict(client: Client, data: Dict) -> Dict:
     return {**data, "_client": client, "_http": client.http}
 
 
@@ -45,9 +45,21 @@ def convert(
             return factory(v)
 
         return (
-            list(map(fin_fac, value))
+            [*map(fin_fac, value)]
             if isinstance(value, list)
             else fin_fac(value)
         )
 
     return MISSING if value is MISSING else handle_factory()
+
+def remove_none(obj: Union[List, Dict, Set]) -> Union[List, Dict, Set]:
+    if isinstance(obj, list):
+        while None in obj:
+            obj.remove(None)
+    elif isinstance(obj, set):
+        obj.discard(None)
+    elif isinstance(obj, dict):
+        to_del = [k for k, v in obj.items() if None in {k, v}]
+        for k in to_del:
+            del obj[k]
+    return obj
