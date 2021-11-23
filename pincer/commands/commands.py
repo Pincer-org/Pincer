@@ -232,7 +232,7 @@ def command(
         choices = annotation.get_arg(
             Choices)
 
-        if choices is not MISSING and annotation.command_type not in [int, float, str]:
+        if choices is not MISSING and annotation.command_type not in {int, float, str}:
             raise InvalidArgumentAnnotation(
                 "Choice type is only allowed for str, int, and float"
             )
