@@ -48,4 +48,4 @@
    installing
    quickstart
    tutorial/index
-   api
+   api/index

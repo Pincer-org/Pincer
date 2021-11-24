@@ -2,7 +2,7 @@
 .. currentmodule:: pincer.objects
 
 Pincer Objects Voice Section
-============================
+-----------------------------
 
 Region
 ------

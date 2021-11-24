@@ -2,7 +2,7 @@
 .. currentmodule:: pincer.core
 
 Pincer Core Module
-==================
+-------------------
 
 Dispatching
 -----------

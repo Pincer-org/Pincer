@@ -1,7 +1,7 @@
 .. currentmodule:: pincer.middleware
 
 Pincer Middleware Module
-========================
+----------------------------
 
 Activity Join
 -------------

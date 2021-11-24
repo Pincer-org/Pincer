@@ -1,7 +1,7 @@
 .. currentmodule:: pincer
 
 Pincer Module
-=============
+--------------
 
 Clients
 -------

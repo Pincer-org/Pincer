@@ -1,7 +1,7 @@
 .. currentmodule:: pincer.utils
 
 Pincer Utils Module
-===================
+--------------------
 
 Api Object
 ----------
