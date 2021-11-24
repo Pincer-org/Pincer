@@ -110,7 +110,7 @@ class User(APIObject):
         Whether the email on this account has been verified
     """
 
-    id: Snowflake
+    id: Snowflake = None
     username: APINullable[str] = MISSING
     discriminator: APINullable[str] = MISSING
 
@@ -186,15 +186,15 @@ class User(APIObject):
                 avatar = io.BytesIO(await resp.read())
                 return Image.open(avatar).convert("RGBA")
 
-    def __str__(self):
-        # TODO: fix docs
-        """
+    # def __str__(self):
+    #     # TODO: fix docs
+    #     """
 
-        Returns
-        -------
+    #     Returns
+    #     -------
 
-        """
-        return self.username + "#" + self.discriminator
+    #     """
+    #     return self.username + "#" + self.discriminator
 
     @classmethod
     async def from_id(cls, client: Client, user_id: int) -> User:

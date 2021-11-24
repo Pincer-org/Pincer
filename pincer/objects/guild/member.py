@@ -36,8 +36,8 @@ class BaseMember(APIObject):
     hoisted_role: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The user's top role in the guild.
     """
-    joined_at: Timestamp
-    roles: List[Snowflake]
+    joined_at: Timestamp = None
+    roles: List[Snowflake] = None
     deaf: bool = MISSING
     mute: bool = MISSING
 
@@ -76,7 +76,7 @@ class PartialGuildMember(APIObject):
 
 
 @dataclass
-class GuildMember(BaseMember, APIObject):
+class GuildMember(BaseMember, User, APIObject):
     """Represents a member which resides in a guild/server.
 
     Attributes
@@ -106,6 +106,28 @@ class GuildMember(BaseMember, APIObject):
     premium_since: APINullable[Optional[Timestamp]] = MISSING
     user: APINullable[User] = MISSING
     avatar: APINullable[str] = MISSING
+
+    def __post_init__(self):
+        super().__post_init__()
+
+        if self.user is not MISSING:
+            self.set_user_data(self.user)
+
+    def set_user_data(self, user: User):
+        """
+        Used to set the user parameters of a GuildMember instance
+
+        user: APINullable[:class:`~pincer.objects.user.user.User`]
+            A user class to copy the fields from
+        """
+
+        # Inspired from this thread
+        # https://stackoverflow.com/questions/57962873/easiest-way-to-copy-all-fields-from-one-dataclass-instance-to-another
+
+        for key, value in user.__dict__.items():
+            setattr(self, key, value)
+
+        self.user = MISSING
 
     @classmethod
     async def from_id(

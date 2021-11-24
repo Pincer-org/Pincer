@@ -3,9 +3,10 @@
 
 from __future__ import annotations
 
-from asyncio import gather, iscoroutine, sleep, ensure_future
+from asyncio import sleep, ensure_future
 from dataclasses import dataclass
-from typing import Dict, TYPE_CHECKING, Union, Optional, List
+from functools import partial
+from typing import Dict, TYPE_CHECKING, Union, Optional, List, T
 
 from .command_types import AppCommandOptionType
 from .interaction_base import InteractionType, CallbackType
@@ -142,61 +143,36 @@ class Interaction(APIObject):
     def __post_init__(self):
         super().__post_init__()
 
-        self._convert_functions = {
-            AppCommandOptionType.SUB_COMMAND: None,
-            AppCommandOptionType.SUB_COMMAND_GROUP: None,
+        for option in self.data.options:
 
-            AppCommandOptionType.STRING: str,
-            AppCommandOptionType.INTEGER: int,
-            AppCommandOptionType.BOOLEAN: bool,
-            AppCommandOptionType.NUMBER: float,
+            if option.type is AppCommandOptionType.STRING:
+                option.value = str(option.value)
+            elif option.type is AppCommandOptionType.INTEGER:
+                option.value = int(option.value)
+            elif option.type is AppCommandOptionType.BOOLEAN:
+                option.value = bool(option.value)
+            elif option.type is AppCommandOptionType.NUMBER:
+                option.value = float(option.value)
 
-            AppCommandOptionType.USER: lambda value:
-            self._client.get_user(
-                convert(value, Snowflake.from_string)
-            ),
-            AppCommandOptionType.CHANNEL: lambda value:
-            self._client.get_channel(
-                convert(value, Snowflake.from_string)
-            ),
-            AppCommandOptionType.ROLE: lambda value:
-            self._client.get_role(
-                convert(self.guild_id, Snowflake.from_string),
-                convert(value, Snowflake.from_string)
-            ),
-            AppCommandOptionType.MENTIONABLE: None
-        }
+            elif option.type is AppCommandOptionType.USER:
+                nv = self.return_type(option, self.data.resolved.members)
+                nv.set_user_data(self.return_type(option, self.data.resolved.users))
+                option.value = nv
 
-    async def build(self):
-        """|coro|
+            elif option.type is AppCommandOptionType.CHANNEL:
+                option.value = self.return_type(option, self.data.resolved.channels)
+            elif option.type is AppCommandOptionType.ROLE:
+                option.value = self.return_type(option, self.data.resolved.roles)
 
-        Sets the parameters in the interaction that need information
-        from the discord API.
-        """
-        if not self.data.options:
-            return
+            elif option.type is AppCommandOptionType.MENTIONABLE:
+                pass
 
-        await gather(
-            *map(self.convert, self.data.options)
-        )
+    def convert_type(t: T, option) -> T:
+        return t(option)
 
-    async def convert(self, option: AppCommandInteractionDataOption):
-        """|coro|
-
-        Sets an ``AppCommandInteractionDataOption`` value parameter to
-        the payload type
-        """
-        converter = self._convert_functions.get(option.type)
-
-        if not converter:
-            raise NotImplementedError(
-                f"Handling for AppCommandOptionType {option.type} is not "
-                "implemented"
-            )
-
-        res = converter(option.value)
-
-        option.value = (await res) if iscoroutine(res) else res
+    def return_type(self, option, t) -> APIObject:
+        if option.value in t:
+            return t[option.value]
 
     def convert_to_message_context(self, command):
         return MessageContext(
