@@ -10,10 +10,10 @@ from .types import T, MISSING
 
 if TYPE_CHECKING:
     from ..client import Client
-    from typing import Dict, Callable, Any, Optional
+    from typing import Any, Callable, Dict, List, Optional, Set, Union
 
 
-def construct_client_dict(client: Client, data: Dict[...]):
+def construct_client_dict(client: Client, data: Dict) -> Dict:
     # TODO: fix docs
     """
 
@@ -60,3 +60,25 @@ def convert(
         return factory(value)
 
     return MISSING if value is MISSING else handle_factory()
+
+
+def remove_none(obj: Union[List, Dict, Set]) -> Union[List, Dict, Set]:
+    """
+    Removes all ``None`` values from a list, dict or set.
+
+    Parameters
+    ----------
+    obj : Union[List, Dict, Set]
+        The list, dict or set to remove ``None`` values from.
+
+    Returns
+    -------
+    Union[List, Dict, Set]
+        The list, dict or set without ``None`` values.
+    """
+    if isinstance(obj, list):
+        return [i for i in obj if i is not None]
+    elif isinstance(obj, set):
+        return obj - {None}
+    elif isinstance(obj, dict):
+        return {k: v for k, v in obj.items() if None not in {k, v}}
