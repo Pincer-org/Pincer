@@ -924,7 +924,7 @@ class Guild(APIObject):
         days : Optional[:class:`int`]
             Number of days to prune (1-30) |default| :data:`7`
         compute_prune_days : Optional[:class:`bool`]
-            Whether 'pruned' is returned, discouraged for large guilds
+            Whether ``pruned`` is returned, discouraged for large guilds
             |default| :data:`True`
         include_roles : Optional[List[:class:`~pincer.utils.snowflake.Snowflake`]]
             role(s) to include |default| :data:`None`
