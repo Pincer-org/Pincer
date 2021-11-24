@@ -17,7 +17,7 @@ class _CommandTypeMeta(type):
 
 class CommandArg(metaclass=_CommandTypeMeta):
     """
-    Holds all application command options
+    Holds the parameters of an application command option
 
     .. code-block:: python3
 
@@ -60,7 +60,7 @@ class Modifier(metaclass=_CommandTypeMeta):
 
 class Description(Modifier):
     """
-    Represents the description of an application command option type
+    Represents the description of an application command option
 
     .. code-block:: python3
 
@@ -85,7 +85,7 @@ class Description(Modifier):
 
 class Choice(Modifier):
     """
-    Represents an application command choice
+    Represents a choice that the user can pick from
 
     .. code-block:: python3
 
@@ -109,7 +109,7 @@ class Choice(Modifier):
 
 class Choices(Modifier):
     """
-    Represents a Group of Application Command Choices
+    Represents a group of application command choices that a user can pick from
 
     .. code-block:: python3
 
@@ -149,7 +149,7 @@ class Choices(Modifier):
 
 class ChannelTypes(Modifier):
     """
-    Represents the channel types application command option type.
+    Represents a group of channel types that a user can pick from
 
     .. code-block:: python3
 
@@ -178,7 +178,7 @@ class ChannelTypes(Modifier):
 
 class MaxValue(Modifier):
     """
-    Represents the channel types application command option type
+    Represents the max value for a number
 
     .. code-block:: python3
 
@@ -203,7 +203,7 @@ class MaxValue(Modifier):
 
 class MinValue(Modifier):
     """
-    Represents the channel types application command option type
+    Represents the minimum value for a number
 
     .. code-block:: python3
 
