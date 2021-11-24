@@ -934,7 +934,7 @@ class Guild(APIObject):
         Returns
         -------
         :class:`int`
-            Tthe number of members that were removed.
+            The number of members that were removed.
         """
         return await self._http.post(
             f"guilds/{self.id}/prune",
