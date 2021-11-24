@@ -15,7 +15,7 @@ def stage_instance_delete_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the stage instance delete event
 
     Returns

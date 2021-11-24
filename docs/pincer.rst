@@ -22,6 +22,8 @@ Exceptions
 
 .. autoexception:: PincerError()
 
+.. autoexception:: InvalidPayload()
+
 .. autoexception:: UnhandledException()
 
 .. autoexception:: NoExportMethod()
@@ -112,7 +114,7 @@ Exception Hierarchy
 
     - :exc:`Exception`
         - :exc:`PincerError`
-            - :exc: `InvalidPayload`
+            - :exc:`InvalidPayload`
             - :exc:`UnhandledException`
             - :exc:`NoExportMethod`
             - :exc:`CogError`

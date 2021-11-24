@@ -16,7 +16,7 @@ async def activity_join_request_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the activity join request event.
 
     Returns

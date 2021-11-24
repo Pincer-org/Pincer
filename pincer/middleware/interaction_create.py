@@ -38,7 +38,7 @@ async def interaction_response_handler(
 
     Parameters
     ----------
-    command : :data:`~pincer.utils.types.Coro`
+    command : :class:`~pincer.utils.types.Coro`
         The coroutine which will be seen as a command.
     context : :class:`~pincer.objects.message.context.MessageContext`
         The context of the command.
@@ -84,7 +84,7 @@ async def interaction_handler(
         The interaction which is linked to the command.
     context : :class:`~pincer.objects.message.context.MessageContext`
         The context of the command.
-    command : :data:`~pincer.utils.types.Coro`
+    command : :class:`~pincer.utils.types.Coro`
         The coroutine which will be seen as a command.
     """
     self.throttler.handle(context)
