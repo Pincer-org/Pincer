@@ -18,7 +18,7 @@
 
 An asynchronous Python API wrapper meant to replace discord.py
 
-## The package is currently within the planning phase
+## The package is currently within the pre-alpha phase
 
 ## 📌 Links
 
