@@ -15,6 +15,7 @@ from .app.interaction_flags import InteractionFlags
 from .app.interactions import (
     ResolvedData, InteractionData, Interaction
 )
+from .app.mentionable import Mentionable
 from .app.select_menu import SelectOption, SelectMenu
 from .app.session_start_limit import SessionStartLimit
 from .app.throttle_scope import ThrottleScope
@@ -147,5 +148,5 @@ __all__ = (
     "User", "UserMessage", "VerificationLevel", "VisibilityType",
     "VoiceChannel", "VoiceRegion", "VoiceServerUpdateEvent", "VoiceState",
     "Webhook", "WebhookType", "WebhooksUpdateEvent", "WelcomeScreen",
-    "WelcomeScreenChannel"
+    "WelcomeScreenChannel", "Mentionable"
 )

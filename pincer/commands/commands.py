@@ -38,6 +38,7 @@ from ..objects import (
     User,
     Channel,
     Guild,
+    Mentionable,
     MessageContext,
 )
 from ..objects.app import (
@@ -68,6 +69,7 @@ _options_type_link = {
     User: AppCommandOptionType.USER,
     Channel: AppCommandOptionType.CHANNEL,
     Role: AppCommandOptionType.ROLE,
+    Mentionable: AppCommandOptionType.MENTIONABLE
 }
 
 if TYPE_CHECKING:

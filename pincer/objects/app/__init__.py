@@ -12,6 +12,7 @@ from .intents import Intents
 from .interaction_base import CallbackType, InteractionType, MessageInteraction
 from .interaction_flags import InteractionFlags
 from .interactions import ResolvedData, InteractionData, Interaction
+from .mentionable import Mentionable
 from .select_menu import SelectOption, SelectMenu
 from .session_start_limit import SessionStartLimit
 from .throttle_scope import ThrottleScope
@@ -25,5 +26,5 @@ __all__ = (
     "DefaultThrottleHandler", "Intents", "Interaction", "InteractionData",
     "InteractionFlags", "InteractionType", "MessageInteraction",
     "ResolvedData", "SelectMenu", "SelectOption", "SessionStartLimit",
-    "ThrottleInterface", "ThrottleScope"
+    "ThrottleInterface", "ThrottleScope", "Mentionable"
 )

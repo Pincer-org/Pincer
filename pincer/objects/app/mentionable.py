@@ -3,11 +3,22 @@
 
 from dataclasses import dataclass
 
-from ...utils.api_object import APIObject
-from ...utils.types import MISSING
+
+from ...objects.guild.role import Role
+from ...objects.user.user import User
+from ...utils.types import MISSING, APINullable
 
 
+# Inspired by Rust (🚀) enums 🚀
 @dataclass
-class Mentionable(APIObject):
-    user = MISSING
-    role = MISSING
+class Mentionable:
+    user: APINullable[User] = MISSING
+    role: APINullable[Role] = MISSING
+
+    @property
+    def is_user(self):
+        return self.user is not MISSING
+
+    @property
+    def is_role(self):
+        return self.role is not MISSING

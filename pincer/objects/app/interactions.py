@@ -4,12 +4,13 @@
 from __future__ import annotations
 
 from asyncio import sleep, ensure_future
+from contextlib import suppress
 from dataclasses import dataclass
-from functools import partial
-from typing import Dict, TYPE_CHECKING, Union, Optional, List, T
+from typing import Dict, TYPE_CHECKING, Type, Union, Optional, List, T
 
 from .command_types import AppCommandOptionType
 from .interaction_base import InteractionType, CallbackType
+from .mentionable import Mentionable
 from ..app.select_menu import SelectOption
 from ..guild.member import GuildMember
 from ..message.context import MessageContext
@@ -18,7 +19,7 @@ from ..message.user_message import UserMessage
 from ..user import User
 from ...exceptions import InteractionDoesNotExist, UseFollowup, \
     InteractionAlreadyAcknowledged, NotFoundError, InteractionTimedOut
-from ...utils import APIObject, convert
+from ...utils import APIObject
 from ...utils.convert_message import convert_message
 from ...utils.snowflake import Snowflake
 from ...utils.types import MISSING
@@ -156,23 +157,46 @@ class Interaction(APIObject):
 
             elif option.type is AppCommandOptionType.USER:
                 nv = self.return_type(option, self.data.resolved.members)
-                nv.set_user_data(self.return_type(option, self.data.resolved.users))
+                nv.set_user_data(self.return_type(
+                    option, self.data.resolved.users)
+                )
                 option.value = nv
 
             elif option.type is AppCommandOptionType.CHANNEL:
-                option.value = self.return_type(option, self.data.resolved.channels)
+                option.value = self.return_type(
+                    option, self.data.resolved.channels
+                )
+
             elif option.type is AppCommandOptionType.ROLE:
-                option.value = self.return_type(option, self.data.resolved.roles)
+                option.value = self.return_type(
+                    option, self.data.resolved.roles
+                )
 
             elif option.type is AppCommandOptionType.MENTIONABLE:
-                pass
+                user = self.return_type(option, self.data.resolved.members)
+                if user is not MISSING:
+                    user.set_user_data(self.return_type(
+                        option, self.data.resolved.users)
+                    )
+
+                role = self.return_type(
+                    option, self.data.resolved.roles
+                )
+
+                option.value = Mentionable(
+                    user,
+                    role
+                )
 
     def convert_type(t: T, option) -> T:
         return t(option)
 
     def return_type(self, option, t) -> APIObject:
-        if option.value in t:
+
+        with suppress(TypeError, KeyError):
             return t[option.value]
+
+        return MISSING
 
     def convert_to_message_context(self, command):
         return MessageContext(
