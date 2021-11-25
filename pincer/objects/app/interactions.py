@@ -6,7 +6,7 @@ from __future__ import annotations
 from asyncio import sleep, ensure_future
 from contextlib import suppress
 from dataclasses import dataclass
-from typing import Dict, TYPE_CHECKING, Type, Union, Optional, List, T
+from typing import Any, Dict, TYPE_CHECKING, Type, Union, Optional, List, T
 
 from .command_types import AppCommandOptionType
 from .interaction_base import InteractionType, CallbackType
@@ -156,11 +156,11 @@ class Interaction(APIObject):
                 option.value = float(option.value)
 
             elif option.type is AppCommandOptionType.USER:
-                nv = self.return_type(option, self.data.resolved.members)
-                nv.set_user_data(self.return_type(
-                    option, self.data.resolved.users)
+                user = self.return_type(option, self.data.resolved.members)
+                user.set_user_data(
+                    self.return_type(option, self.data.resolved.users)
                 )
-                option.value = nv
+                option.value = user
 
             elif option.type is AppCommandOptionType.CHANNEL:
                 option.value = self.return_type(
@@ -174,29 +174,35 @@ class Interaction(APIObject):
 
             elif option.type is AppCommandOptionType.MENTIONABLE:
                 user = self.return_type(option, self.data.resolved.members)
-                if user is not MISSING:
+                if user:
                     user.set_user_data(self.return_type(
                         option, self.data.resolved.users)
                     )
 
-                role = self.return_type(
-                    option, self.data.resolved.roles
-                )
-
                 option.value = Mentionable(
                     user,
-                    role
+                    self.return_type(
+                        option, self.data.resolved.roles
+                    )
                 )
 
-    def convert_type(t: T, option) -> T:
-        return t(option)
+    def return_type(
+        self,
+        option: Snowflake,
+        data: Dict[Snowflake, Any]
+    ) -> APIObject:
+        """
+        Returns a value from the option or None if it doesn't exist.
 
-    def return_type(self, option, t) -> APIObject:
-
+        option : :class:`~pincer.utils.types.Snowflake`
+            Snowflake to search ``data`` for.
+        data : Dict[:class:`~pincer.utils.types.Snowflake`, Any]
+            Resolved data to search through.
+        """
         with suppress(TypeError, KeyError):
-            return t[option.value]
+            return data[option.value]
 
-        return MISSING
+        return None
 
     def convert_to_message_context(self, command):
         return MessageContext(
