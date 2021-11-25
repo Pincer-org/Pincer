@@ -7,7 +7,7 @@ from .arg_types import (
 )
 
 __all__ = (
-    "command", "ChatCommandHandler", "CommandArg", "Description", "Choice",
-    "Choices", "ChannelTypes", "MaxValue", "MinValue", "user_command",
-    "message_command"
+    "ChannelTypes", "ChatCommandHandler", "Choice", "Choices",
+    "CommandArg", "Description", "MaxValue", "MinValue", "command",
+    "message_command", "user_command"
 )
