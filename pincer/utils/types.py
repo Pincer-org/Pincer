@@ -4,13 +4,8 @@ from __future__ import annotations
 
 from sys import modules
 from typing import (
-    TYPE_CHECKING, TypeVar, Callable, Coroutine, Any, Union, Literal, Optional
+    TYPE_CHECKING, TypeVar, Callable, Coroutine, Any, Union, Optional
 )
-
-from pincer.exceptions import InvalidArgumentAnnotation
-
-if TYPE_CHECKING:
-    from typing import Tuple
 
 
 class MissingType:
@@ -38,11 +33,7 @@ APINullable = Union[T, MissingType]
 #: Represents a coroutine.
 Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
 
-
-Choices = Literal
-
-
-choice_value_types = (str, int, float)
+choice_value_types = Union[str, int, float]
 
 CheckFunction = Optional[Callable[[Any], bool]]
 
@@ -73,29 +64,3 @@ class TypeCache(metaclass=Singleton):
                 continue
 
             TypeCache.cache.update(lcp[module].__dict__)
-
-
-class _TypeInstanceMeta(type):
-    def __getitem__(cls, args: Tuple[T, str]):
-        if not isinstance(args, tuple) or len(args) != 2:
-            raise InvalidArgumentAnnotation(
-                "Descripted arguments must be a tuple of length 2. "
-                "(if you are using this as the indented type, just "
-                "pass two arguments)"
-            )
-
-        return cls(*args)
-
-
-class Descripted(metaclass=_TypeInstanceMeta):
-    # TODO: Write example & more docs
-    """Description type."""
-
-    def __init__(self, key: Any, description: str):
-        if not isinstance(description, str):
-            raise RuntimeError(
-                "The description value must always be a string!"
-            )
-
-        self.key = key
-        self.description = description

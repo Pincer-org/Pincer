@@ -210,7 +210,11 @@ class APIObject(metaclass=HTTPMeta):
                     self.__attr_convert(attr_item, classes[0])
                     for attr_item in attr_gotten
                 ]
-
+            elif tp == dict and attr_gotten and (classes := get_args(types[0])):
+                attr_value = {
+                    key: self.__attr_convert(value, classes[1])
+                    for key, value in attr_gotten.items()
+                }
             else:
                 attr_value = self.__attr_convert(attr_gotten, specific_tp)
 
