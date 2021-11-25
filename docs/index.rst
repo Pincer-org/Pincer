@@ -49,3 +49,11 @@
    quickstart
    tutorial/index
    api
+
+.. toctree::
+   :maxdepth: 10
+   :caption: Reference
+   :hidden:
+
+   Github repository <https://github.com/pincer-org/pincer>
+   Discord server <https://discord.gg/pincer>
