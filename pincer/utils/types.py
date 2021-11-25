@@ -21,7 +21,9 @@ class MissingType:
 MISSING = MissingType()
 
 
-T = TypeVar('T')
+T = TypeVar("T")
+
+JSONSerializable = TypeVar("JSONSerializable", str, int, float, list, dict, bool, None)
 
 
 # Represents a value which is optionally returned from the API

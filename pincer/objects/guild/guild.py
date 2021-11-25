@@ -7,28 +7,33 @@ from dataclasses import dataclass, field
 from enum import IntEnum
 from typing import AsyncGenerator, overload, TYPE_CHECKING
 
-from .ban import Ban
-from .channel import Channel
-from .member import GuildMember
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
-from ...utils.conversion import construct_client_dict
+from ...utils.conversion import construct_client_dict, remove_none
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import Any, Dict, List, Optional, Union
 
+    from .ban import Ban
+    from .channel import Channel
+    from .invite import Invite
+    from .member import GuildMember
+    from .widget import GuildWidget
     from .features import GuildFeature
     from .role import Role
     from .stage import StageInstance
-    from .welcome_screen import WelcomeScreen
+    from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
+    from ..user.user import User
+    from ..user.integration import Integration
+    from ..voice.region import VoiceRegion
     from ..events.presence import PresenceUpdateEvent
     from ..message.emoji import Emoji
     from ..message.sticker import Sticker
     from ..user.voice_state import VoiceState
     from ...client import Client
     from ...utils.timestamp import Timestamp
-    from ...utils.types import APINullable
+    from ...utils.types import APINullable, JSONSerializable
     from ...utils.snowflake import Snowflake
 
 
@@ -600,9 +605,7 @@ class Guild(APIObject):
                 await self._http.post(
                     f"guilds/{self.id}/roles",
                     data=kwargs,
-                    headers={"X-Audit-Log-Reason": reason}
-                    if reason is not None
-                    else {},
+                    headers=remove_none({"X-Audit-Log-Reason": reason})
                 ),
             )
         )
@@ -633,9 +636,7 @@ class Guild(APIObject):
         data = await self._http.patch(
             f"guilds/{self.id}/roles",
             data={"id": id, "position": position},
-            headers={"X-Audit-Log-Reason": reason}
-            if reason is not None
-            else {}
+            headers=remove_none({"X-Audit-Log-Reason": reason})
         )
         for role_data in data:
             yield Role.from_dict(construct_client_dict(self._client, role_data))
@@ -702,9 +703,7 @@ class Guild(APIObject):
                 await self._http.patch(
                     f"guilds/{self.id}/roles/{id}",
                     data=kwargs,
-                    headers={"X-Audit-Log-Reason": reason}
-                    if reason is not None
-                    else {},
+                    headers=remove_none({"X-Audit-Log-Reason": reason})
                 ),
             )
         )
@@ -723,9 +722,7 @@ class Guild(APIObject):
         """
         await self._http.delete(
             f"guilds/{self.id}/roles/{id}",
-            headers={"X-Audit-Log-Reason": reason}
-            if reason is not None
-            else {},
+            headers=remove_none({"X-Audit-Log-Reason": reason})
         )
 
     async def get_bans(self) -> AsyncGenerator[Ban, None]:
@@ -775,9 +772,7 @@ class Guild(APIObject):
         """
         await self._http.delete(
             f"guilds/{self.id}/bans/{id}",
-            headers={"X-Audit-Log-Reason": reason}
-            if reason is not None
-            else {}
+            headers=remove_none({"X-Audit-Log-Reason": reason})
         )
 
     @overload
@@ -885,6 +880,361 @@ class Guild(APIObject):
         Deletes the guild. Returns `204 No Content` on success.
         """
         await self._http.delete(f"guilds/{self.id}")
+
+    async def prune_count(
+        self,
+        days: Optional[int] = 7,
+        include_roles: Optional[str] = None
+    ) -> int:
+        """|coro|
+        Returns the number of members that
+        would be removed in a prune operation.
+        Requires the ``KICK_MEMBERS`` permission.
+
+        Parameters
+        ----------
+        days : Optional[:class:`int`]
+            Number of days to count prune for (1-30) |default| :data:`7`
+        include_roles : Optional[:class:`str`]
+            Comma-delimited array of Snowflakes;
+            role(s) to include |default| :data:`None`
+
+        Returns
+        -------
+        :class:`int`
+            The number of members that would be removed.
+        """
+        return await self._http.get(
+            f"guilds/{self.id}/prune?{days=}&{include_roles=!s}"
+        )["pruned"]
+
+    async def prune(
+        self,
+        days: Optional[int] = 7,
+        compute_prune_days: Optional[bool] = True,
+        include_roles: Optional[List[Snowflake]] = None,
+        reason: Optional[str] = None
+    ) -> int:
+        """|coro|
+        Prunes members from the guild. Requires the ``KICK_MEMBERS`` permission.
+
+        Parameters
+
+        Parameters
+        ----------
+        days : Optional[:class:`int`]
+            Number of days to prune (1-30) |default| :data:`7`
+        compute_prune_days : Optional[:class:`bool`]
+            Whether ``pruned`` is returned, discouraged for large guilds
+            |default| :data:`True`
+        include_roles : Optional[List[:class:`~pincer.utils.snowflake.Snowflake`]]
+            role(s) to include |default| :data:`None`
+        reason : Optional[:class:`str`]
+            Reason for the prune |default| :data:`None`
+
+        Returns
+        -------
+        :class:`int`
+            The number of members that were removed.
+        """
+        return await self._http.post(
+            f"guilds/{self.id}/prune",
+            data={
+                "days": days,
+                "compute_prune_days": compute_prune_days,
+                "include_roles": include_roles
+            },
+            headers=remove_none({"X-Audit-Log-Reason": reason})
+        )["pruned"]
+
+    async def get_voice_regions(self) -> AsyncGenerator[VoiceRegion, None]:
+        """|coro|
+        Returns an async generator of voice regions.
+
+        Returns
+        -------
+        AsyncGenerator[:class:`~pincer.objects.voice.VoiceRegion`, :data:`None`]
+            An async generator of voice regions.
+        """
+        data = await self._http.get(f"guilds/{self.id}/regions")
+        for voice_region_data in data:
+            yield VoiceRegion.from_dict(construct_client_dict(self._client, voice_region_data))
+
+    async def get_invites(self) -> AsyncGenerator[Invite, None]:
+        """|coro|
+        Returns an async generator of invites for the guild.
+        Requires the ``MANAGE_GUILD`` permission.
+
+        Returns
+        -------
+        AsyncGenerator[:class:`~pincer.objects.invite.Invite`, :data:`None`]
+            An async generator of invites.
+        """
+        data = await self._http.get(f"guilds/{self.id}/invites")
+        for invite_data in data:
+            yield Invite.from_dict(construct_client_dict(self._client, invite_data))
+
+    async def get_integrations(self) -> AsyncGenerator[Integration, None]:
+        """|coro|
+        Returns an async generator of integrations for the guild.
+        Requires the ``MANAGE_GUILD`` permission.
+
+        Returns
+        -------
+        AsyncGenerator[:class:`~pincer.objects.integration.Integration`, :data:`None`]
+            An async generator of integrations.
+        """
+        data = await self._http.get(f"guilds/{self.id}/integrations")
+        for integration_data in data:
+            yield Integration.from_dict(construct_client_dict(self._client, integration_data))
+
+    async def delete_integration(
+        self,
+        integration: Integration,
+        reason: Optional[str] = None
+    ):
+        """|coro|
+        Deletes an integration.
+        Requires the ``MANAGE_GUILD`` permission.
+
+        Parameters
+        ----------
+        integration : :class:`~pincer.objects.integration.Integration`
+            The integration to delete.
+        reason : Optional[:class:`str`]
+            Reason for the deletion |default| :data:`None`
+        """
+        await self._http.delete(
+            f"guilds/{self.id}/integrations/{integration.id}",
+            headers=remove_none({"X-Audit-Log-Reason": reason})
+        )
+
+    async def get_widget_settings(self) -> GuildWidget:
+        """|coro|
+        Returns the guild widget settings.
+        Requires the ``MANAGE_GUILD`` permission.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.widget.GuildWidget`
+            The guild widget settings.
+        """
+        return GuildWidget.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.get(f"guilds/{self.id}/widget")
+            )
+        )
+
+    async def modify_widget(
+        self,
+        reason: Optional[str] = None,
+        **kwargs
+    ) -> GuildWidget:
+        """|coro|
+        Modifies the guild widget for the guild.
+        Requires the ``MANAGE_GUILD`` permission.
+
+        Parameters
+        ----------
+        reason : Optional[:class:`str`]
+            Reason for the modification |default| :data:`None`
+        \\*\\*kwargs
+            The widget settings to modify
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.widget.GuildWidget`
+            The updated GuildWidget object
+        """
+        data = await self._http.patch(
+            f"guilds/{self.id}/widget",
+            data=kwargs,
+            headers=remove_none({"X-Audit-Log-Reason": reason})
+        )
+        return GuildWidget.from_dict(construct_client_dict(self._client, data))
+
+    async def get_widget(self) -> Dict[str, JSONSerializable]:
+        """|coro|
+        Returns the widget for the guild
+        """
+        return await self._http.get(f"guilds/{self.id}/widget.json")
+
+    @property
+    async def vanity_url(self) -> Invite:
+        """|coro|
+        Returns the Vanity URL for the guild.
+        Requires the ``MANAGE_GUILD`` permission.
+        ``code`` will be null if a vanity URL has not been set.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.invite.Invite`
+            The vanity url for the guild.
+        """
+        data = await self._http.get(f"guilds/{self.id}/vanity-url")
+        return Invite.from_dict(construct_client_dict(self._client, data))
+
+    async def get_widget_image(self, style: Optional[str] = "shield") -> str:  # TODO Replace str with ImageURL object
+        """|coro|
+        Returns a PNG image widget for the guild.
+        Requires no permissions or authentication.
+
+        Widget Style Options
+        -------------------
+        * [``shield``](https://discord.com/api/guilds/81384788765712384/widget.png?style=shield)
+          shield style widget with Discord icon and guild members online count
+        * [``banner1``](https://discord.com/api/guilds/81384788765712384/widget.png?style=banner1)
+          large image with guild icon, name and online count.
+          "POWERED BY DISCORD" as the footer of the widget
+        * [``banner2``](https://discord.com/api/guilds/81384788765712384/widget.png?style=banner2)
+          smaller widget style with guild icon, name and online count.
+          Split on the right with Discord logo
+        * [``banner3``](https://discord.com/api/guilds/81384788765712384/widget.png?style=banner3)
+          large image with guild icon, name and online count.
+          In the footer, Discord logo on the
+          left and "Chat Now" on the right
+        * [``banner4``](https://discord.com/api/guilds/81384788765712384/widget.png?style=banner4)
+          large Discord logo at the top of the widget.
+          Guild icon, name and online count in the middle portion
+          of the widget and a "JOIN MY SERVER" button at the bottom
+
+        Parameters
+        ----------
+        style : Optional[:class:`str`]
+            Style of the widget image returned |default| :data:`"shield"`
+
+        Returns
+        -------
+        :class:`str`
+            A PNG image of the guild widget.
+        """
+        return await self._http.get(f"guilds/{self.id}/widget.png?{style=!s}")
+
+    async def get_welcome_screen(self) -> WelcomeScreen:
+        """Returns the welcome screen for the guild.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.welcome_screen.WelcomeScreen`
+            The welcome screen for the guild.
+        """
+        data = await self._http.get(f"guilds/{self.id}/welcome-screen")
+        return WelcomeScreen.from_dict(construct_client_dict(self._client, data))
+
+    async def modify_welcome_screen(
+        self,
+        enabled: Optional[bool] = None,
+        welcome_channels: Optional[List[WelcomeScreenChannel]] = None,
+        description: Optional[str] = None,
+        reason: Optional[str] = None
+    ) -> WelcomeScreen:
+        """|coro|
+        Modifies the guild's Welcome Screen.
+        Requires the ``MANAGE_GUILD`` permission.
+
+        Parameters
+        ----------
+        enabled : Optional[:class:`bool`]
+            Whether the welcome screen is enabled |default| :data:`None`
+        welcome_channels : Optional[List[:class:`~pincer.objects.guild.welcome_screen.WelcomeScreenChannel`]]
+            Channels linked in the welcome screen and
+            their display options |default| :data:`None`
+        description : Optional[:class:`str`]
+            The server description to show
+            in the welcome screen |default| :data:`None`
+        reason : Optional[:class:`str`]
+            Reason for the modification |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.welcome_screen.WelcomeScreen`
+            The updated WelcomeScreen object
+        """
+        data = await self._http.patch(
+            f"guilds/{self.id}/welcome-screen",
+            data={
+                "enabled": enabled,
+                "welcome_channels": welcome_channels,
+                "description": description
+            },
+            headers=remove_none({"X-Audit-Log-Reason": reason})
+        )
+        return WelcomeScreen.from_dict(construct_client_dict(self._client, data))
+
+    async def modify_curent_user_voice_state(
+        self,
+        channel_id: Snowflake,
+        suppress: Optional[bool] = None,
+        request_to_speak_timestamp: Optional[Timestamp] = None
+    ):
+        """|coro|
+        Updates the current user's voice state.
+
+        There are currently several caveats for this endpoint:
+        * ``channel_id`` must currently point to a stage channel
+        * current user must already have joined ``channel_id``
+        * You must have the ``MUTE_MEMBERS`` permission to
+          unsuppress yourself. You can always suppress yourself.
+        * You must have the ``REQUEST_TO_SPEAK`` permission to request
+          to speak. You can always clear your own request to speak.
+        * You are able to set ``request_to_speak_timestamp`` to any
+          present or future time.
+
+        Parameters
+        ----------
+        channel_id : :class:`~pincer.utils.snowflake.Snowflake`
+            The ID of the channel the user is currently in
+        suppress : Optional[:class:`bool`]
+            Toggles the user's suppress state |default| :data:`None`
+        request_to_speak_timestamp : Optional[:class:`~pincer.utils.timestamp.Timestamp`]
+            Sets the user's request to speak
+        """
+        await self._http.patch(
+            f"guilds/{self.id}/voice-states/@me",
+            data={
+                "channel_id": channel_id,
+                "suppress": suppress,
+                "request_to_speak_timestamp": request_to_speak_timestamp
+            }
+        )
+
+    async def modify_user_voice_state(
+        self,
+        user: User,
+        channel_id: Snowflake,
+        suppress: Optional[bool] = None
+    ):
+        """|coro|
+        Updates another user's voice state.
+
+        There are currently several caveats for this endpoint:
+        * ``channel_id`` must currently point to a stage channel
+        * User must already have joined ``channel_id``
+        * You must have the ``MUTE_MEMBERS`` permission.
+          (Since suppression is the only thing that is available currently.)
+        * When unsuppressed, non-bot users will have their
+          ``request_to_speak_timestamp`` set to the current time.
+          Bot users will not.
+        * When suppressed, the user will have their
+          ``request_to_speak_timestamp`` removed.
+
+        Parameters
+        ----------
+        user : :class:`~pincer.objects.guild.member.Member`
+            The user to update
+        channel_id : :class:`~pincer.utils.snowflake.Snowflake`
+            The ID of the channel the user is currently in
+        suppress : Optional[:class:`bool`]
+            Toggles the user's suppress state |default| :data:`None`
+        """
+        await self._http.patch(
+            f"guilds/{self.id}/voice-states/{user.id}",
+            data={
+                "channel_id": channel_id,
+                "suppress": suppress
+            }
+        )
 
     @classmethod
     def from_dict(cls, data) -> Guild:

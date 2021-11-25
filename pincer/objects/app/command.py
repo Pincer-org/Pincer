@@ -83,7 +83,7 @@ class AppCommandOption(APIObject):
     name: str
     description: str
 
-    required: APINullable[bool] = MISSING
+    required: bool = False
     autocomplete: APINullable[bool] = MISSING
     choices: APINullable[List[AppCommandOptionChoice]] = MISSING
     options: APINullable[List[AppCommandOption]] = MISSING
