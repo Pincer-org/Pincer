@@ -164,3 +164,10 @@ DefaultThrottleHandler
 .. attributetable:: DefaultThrottleHandler
 
 .. autoclass:: DefaultThrottleHandler()
+
+Mentionable
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: Mentionable
+
+.. autoclass:: Mentionable()
