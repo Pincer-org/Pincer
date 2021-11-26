@@ -36,8 +36,8 @@ class BaseMember(APIObject):
     hoisted_role: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The user's top role in the guild.
     """
-    joined_at: Timestamp = None
-    roles: List[Snowflake] = None
+    joined_at: APINullable[Timestamp] = MISSING
+    roles: APINullable[List[Snowflake]] = MISSING
     deaf: bool = MISSING
     mute: bool = MISSING
 
