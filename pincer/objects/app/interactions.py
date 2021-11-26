@@ -6,7 +6,7 @@ from __future__ import annotations
 from asyncio import sleep, ensure_future
 from contextlib import suppress
 from dataclasses import dataclass
-from typing import Any, Dict, TYPE_CHECKING, Type, Union, Optional, List, T
+from typing import Any, Dict, TYPE_CHECKING, Union, Optional, List
 
 from .command_types import AppCommandOptionType
 from .interaction_base import InteractionType, CallbackType
@@ -186,8 +186,8 @@ class Interaction(APIObject):
                     )
                 )
 
+    @staticmethod
     def return_type(
-        self,
         option: Snowflake,
         data: Dict[Snowflake, Any]
     ) -> APIObject:
