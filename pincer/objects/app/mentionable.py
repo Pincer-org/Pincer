@@ -24,8 +24,10 @@ class Mentionable:
 
     @property
     def is_user(self):
+        """Returns true if the Mentionable object has a User"""
         return self.user is not None
 
     @property
     def is_role(self):
+        """Returns true if the Mentionable object has a Role"""
         return self.role is not None
