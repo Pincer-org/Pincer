@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 from asyncio import sleep, ensure_future
-from contextlib import suppress
 from dataclasses import dataclass
 from typing import Any, Dict, TYPE_CHECKING, Union, Optional, List
 
@@ -190,7 +189,7 @@ class Interaction(APIObject):
     def return_type(
         option: Snowflake,
         data: Dict[Snowflake, Any]
-    ) -> APIObject:
+    ) -> Optional[APIObject]:
         """
         Returns a value from the option or None if it doesn't exist.
 
@@ -199,7 +198,7 @@ class Interaction(APIObject):
         data : Dict[:class:`~pincer.utils.types.Snowflake`, Any]
             Resolved data to search through.
         """
-        with suppress(TypeError, KeyError):
+        if data:
             return data[option.value]
 
         return None
