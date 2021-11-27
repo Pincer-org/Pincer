@@ -21,12 +21,13 @@ async def presence_update_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.user.voice_state.PresenceUpdateEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.user.voice_state.PresenceUpdateEvent`]
         ``on_presence_update`` and a ``PresenceUpdateEvent``
-    """
-    return "on_presence_update", [
+    """  # noqa: E501
+    return (
+        "on_presence_update",
         PresenceUpdateEvent.from_dict(construct_client_dict(self, payload.data))
-    ]
+    )
 
 
 def export() -> Coro:

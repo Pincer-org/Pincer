@@ -21,12 +21,13 @@ async def guild_status_middleware(self, payload: GatewayDispatch):
 
     Return
     ------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildStatusEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.guild.GuildStatusEvent`]
         ``on_guild_status`` and a ``GuildStatusEvent``
     """
-    return "on_guild_status", [
+    return (
+        "on_guild_status",
         GuildStatusEvent.from_dict(construct_client_dict(self, payload.data))
-    ]
+    )
 
 
 def export() -> Coro:

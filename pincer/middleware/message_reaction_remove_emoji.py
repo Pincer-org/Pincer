@@ -9,7 +9,9 @@ from ..objects.events.message import MessageReactionRemoveEmojiEvent
 from ..utils.conversion import construct_client_dict
 
 
-async def message_reaction_remove_emoji_middleware(self, payload: GatewayDispatch):
+async def message_reaction_remove_emoji_middleware(
+    self, payload: GatewayDispatch
+):
     """|coro|
 
     Middleware for ``on_message_reaction_remove_emoji`` event.
@@ -22,11 +24,12 @@ async def message_reaction_remove_emoji_middleware(self, payload: GatewayDispatc
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.message.MessageReactionRemoveEmojiEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.message.MessageReactionRemoveEmojiEvent`]
         ``on_message_reaction_remove_emoji`` and an ``MessageReactionRemoveEmojiEvent``
-    """
+    """  # noqa: E501
 
-    return "on_message_reaction_remove_emoji", [
+    return (
+        "on_message_reaction_remove_emoji",
         MessageReactionRemoveEmojiEvent.from_dict(
             construct_client_dict(
                 self,
@@ -37,7 +40,7 @@ async def message_reaction_remove_emoji_middleware(self, payload: GatewayDispatc
                     **payload.data
                 }
             ))
-    ]
+    )
 
 
 def export():

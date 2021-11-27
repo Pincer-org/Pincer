@@ -22,11 +22,12 @@ async def message_reaction_remove_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.message.MessageReactionRemoveEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.message.MessageReactionRemoveEvent`]
         ``on_message_reaction_remove`` and an ``MessageReactionRemoveEvent``
-    """
+    """  # noqa: E501
 
-    return "on_message_reaction_remove", [
+    return (
+        "on_message_reaction_remove",
         MessageReactionRemoveEvent.from_dict(
             construct_client_dict(
                 self,
@@ -37,7 +38,7 @@ async def message_reaction_remove_middleware(self, payload: GatewayDispatch):
                     **payload.data
                 }
             ))
-    ]
+    )
 
 
 def export():
