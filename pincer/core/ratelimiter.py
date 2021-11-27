@@ -5,12 +5,15 @@ from __future__ import annotations
 
 from asyncio import sleep
 from dataclasses import dataclass
+import logging
 from time import time
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing import Dict
     from .http import HttpCallable
+
+_log = logging.getLogger(__name__)
 
 
 @dataclass
@@ -45,6 +48,8 @@ class RateLimiter:
                 time_cached=time()
             )
 
+            _log.info("Rate limit bucket detected with ID %s.", bucket_id)
+
     async def wait_until_not_ratelimited(
         self,
         endpoint: str,
@@ -59,4 +64,17 @@ class RateLimiter:
         cur_time = time()
 
         if bucket.remaining == 0:
-            await sleep(cur_time - bucket.time_cached + bucket.reset_after)
+            sleep_time = cur_time - bucket.time_cached + bucket.reset_after
+
+            _log.info(
+                "Waiting for %ss until rate limit for bucket %s is over.",
+                sleep_time,
+                bucket_id
+            )
+
+            await sleep(sleep_time)
+
+            _log.info(
+                "Message sent. Bucket %s rate limit ended.",
+                bucket_id
+            )
