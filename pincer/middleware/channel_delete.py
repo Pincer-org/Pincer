@@ -20,7 +20,7 @@ async def channel_delete_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.channel.Channel`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.guild.channel.Channel`]
         ``on_channel_delete`` and a ``Channel``
     """
 
@@ -32,7 +32,7 @@ async def channel_delete_middleware(self, payload: GatewayDispatch):
         if old:
             guild.channels.remove(old)
 
-    return "on_channel_delete", [channel]
+    return "on_channel_delete", channel
 
 
 def export():

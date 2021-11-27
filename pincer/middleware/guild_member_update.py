@@ -24,13 +24,15 @@ async def guild_member_update_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildMemberUpdateEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.guild.GuildMemberUpdateEvent`]
         ``on_guild_member_update`` and a ``GuildMemberUpdateEvent``
-    """
+    """  # noqa: E501
 
     return (
         "on_guild_member_update",
-        [GuildMemberUpdateEvent.from_dict(construct_client_dict(self, payload.data))],
+        GuildMemberUpdateEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        ),
     )
 
 

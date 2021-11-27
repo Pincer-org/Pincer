@@ -32,14 +32,15 @@ async def voice_state_update_middleware(
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.user.voice_state.VoiceState`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.user.voice_state.VoiceState`]
         ``on_voice_state_update`` and a ``VoiceState``
     """
     # noqa: E501
 
-    return "on_voice_state_update", [
+    return (
+        "on_voice_state_update",
         VoiceState.from_dict(construct_client_dict(self, payload.data))
-    ]
+    )
 
 
 def export():
