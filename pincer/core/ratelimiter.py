@@ -1,10 +1,16 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
+from __future__ import annotations
+
 from asyncio import sleep
 from dataclasses import dataclass
 from time import time
-from typing import Dict
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typing import Dict
+    from .http import HttpCallable
 
 
 @dataclass
@@ -24,7 +30,7 @@ class RateLimiter:
     def save_response_bucket(
         self,
         endpoint: str,
-        method,
+        method: HttpCallable,
         header: Dict
     ):
 
@@ -42,7 +48,7 @@ class RateLimiter:
     async def wait_until_not_ratelimited(
         self,
         endpoint: str,
-        method
+        method: HttpCallable
     ):
         bucket_id = self.bucket_map.get((endpoint, method), None)
 

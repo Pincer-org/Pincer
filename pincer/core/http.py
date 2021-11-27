@@ -48,7 +48,8 @@ class HTTPClient:
     Attributes
     ----------
     url: :class:`str`
-        ``f"https://discord.com/api/v{version}"`` "Base url for all HTTP requests"
+        ``f"https://discord.com/api/v{version}"``
+        "Base url for all HTTP requests"
     max_tts: :class:`int`
         Max amount of attempts after error code 5xx
     """
@@ -64,7 +65,7 @@ class HTTPClient:
 
         version:
             The discord API version.
-            See `<https://discord.com/developers/docs/reference#api-versioning>`_.
+            See `<https://discord.com/developers/docs/reference#api-versioning>`
         ttl:
             Max amount of attempts after error code 5xx
         """
