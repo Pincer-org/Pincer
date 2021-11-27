@@ -110,7 +110,7 @@ class User(APIObject):
         Whether the email on this account has been verified
     """
 
-    id: Snowflake = None
+    id: APINullable[Snowflake] = MISSING
     username: APINullable[str] = MISSING
     discriminator: APINullable[str] = MISSING
 
