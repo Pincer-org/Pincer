@@ -1254,6 +1254,21 @@ class Guild(APIObject):
             )
         )
 
+    async def get_emojis(self) -> AsyncGenerator[Emoji, None]:
+        """|coro|
+        Returns an async generator of tl emojis in the guild.
+
+        Yields
+        ------
+        :class:`~pincer.objects.guild.emoji.Emoji`
+            The emoji object.
+        """
+        data = await self._http.get(f"guilds/{self.id}/emojis")
+        for emoji_data in data:
+            yield Emoji.from_dict(
+                construct_client_dict(self._client, emoji_data)
+            )
+
     @classmethod
     def from_dict(cls, data) -> Guild:
         """
