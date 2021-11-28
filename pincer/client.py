@@ -415,7 +415,7 @@ class Client(Dispatcher):
 
         Parameters
         ----------
-        calls: :data:`~pincer.utils.types.Coro`
+        calls: :class:`~pincer.utils.types.Coro`
             The call (method) to which the event is registered.
 
         \\*args:
@@ -488,14 +488,13 @@ class Client(Dispatcher):
                 )
 
             next_call = get_index(extractable, 0, "")
-            arguments = get_index(extractable, 1, [])
-            params = get_index(extractable, 2, {})
+            ret_object = get_index(extractable, 1, None)
 
         if next_call is None:
             raise RuntimeError(f"Middleware `{key}` has not been registered.")
 
         return (
-            (next_call, arguments, params)
+            (next_call, ret_object)
             if next_call.startswith("on_")
             else await self.handle_middleware(
                 payload, next_call, *arguments, **params
@@ -546,12 +545,12 @@ class Client(Dispatcher):
             what specifically happened.
         """
         try:
-            key, args, kwargs = await self.handle_middleware(payload, name)
+            key, ret_object = await self.handle_middleware(payload, name)
 
-            self.event_mgr.process_events(key, *args)
+            self.event_mgr.process_events(key, ret_object)
 
             if calls := self.get_event_coro(key):
-                self.execute_event(calls, *args, **kwargs)
+                self.execute_event(calls, ret_object)
 
         except Exception as e:
             await self.execute_error(e)

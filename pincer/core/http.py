@@ -270,11 +270,11 @@ class HTTPClient:
             The Discord REST endpoint to send a delete request to.
         headers: Optional[Dict[:class:`str`, Any]]
             The request headers.
-            |default| ``None``
+            |default| :data:`None`
 
         Returns
         -------
-        Optional[Dict]
+        Optional[:class:`dict`]
             The response from discord.
         """
         return await self.__send(
@@ -295,7 +295,7 @@ class HTTPClient:
 
         Returns
         -------
-        Optional[Dict]
+        Optional[:class:`dict`]
             The response from discord.
         """
         return await self.__send(self.__session.get, route)
@@ -312,7 +312,7 @@ class HTTPClient:
 
         Returns
         -------
-        Optional[Dict]
+        Optional[:class:`dict`]
             The response from discord.
         """
         return await self.__send(self.__session.head, route)
@@ -329,7 +329,7 @@ class HTTPClient:
 
         Returns
         -------
-        Optional[Dict]
+        Optional[:class:`dict`]
             The response from discord.
         """
         return await self.__send(self.__session.options, route)
@@ -347,9 +347,9 @@ class HTTPClient:
 
         Parameters
         ----------
-        route : :class:`str``
+        route : :class:`str`
             The Discord REST endpoint to send a patch request to.
-        data : Dict
+        data : :class:`dict`
             The update data for the patch request.
         content_type: :class:`str`
             Body content type.
@@ -359,7 +359,7 @@ class HTTPClient:
 
         Returns
         -------
-        Optional[Dict]
+        Optional[:class:`dict`]
             JSON response from the discord API.
         """
         return await self.__send(
@@ -394,7 +394,7 @@ class HTTPClient:
 
         Returns
         -------
-        Optional[Dict]
+        Optional[:class:`dict`]
             JSON response from the discord API.
         """
         return await self.__send(
@@ -429,7 +429,7 @@ class HTTPClient:
 
         Returns
         -------
-        Optional[Dict]
+        Optional[:class:`dict`]
             JSON response from the discord API.
         """
         return await self.__send(

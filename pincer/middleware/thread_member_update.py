@@ -16,16 +16,17 @@ async def thread_member_update_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the thread member update event.
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.thread.ThreadMember`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.guild.thread.ThreadMember`]
         ``on_thread_member_update`` and an ``ThreadMember``
     """
 
-    return "on_thread_member_update", [
+    return (
+        "on_thread_member_update",
         ThreadMember.from_dict(construct_client_dict(
             self,
             {
@@ -33,7 +34,7 @@ async def thread_member_update_middleware(self, payload: GatewayDispatch):
                 **payload.data
             }
         ))
-    ]
+    )
 
 
 def export():

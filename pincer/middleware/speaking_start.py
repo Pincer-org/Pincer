@@ -16,17 +16,18 @@ async def speaking_start_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the speaking start event.
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`SpeakingStartEvent`]]
+    Tuple[:class:`str`, :class:`SpeakingStartEvent`]
         ``on_speaking_start`` and a ``SpeakingStartEvent``
     """
-    return "on_speaking_start", [
+    return (
+        "on_speaking_start",
         SpeakingStartEvent.from_dict(construct_client_dict(self, payload.data))
-    ]
+    )
 
 
 def export() -> Coro:

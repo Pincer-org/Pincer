@@ -15,12 +15,12 @@ async def channel_update_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the channel update event.
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.channel.channel.Channel`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.channel.channel.Channel`]
         ``on_channel_update`` and a ``Channel``
     """
 
@@ -33,7 +33,7 @@ async def channel_update_middleware(self, payload: GatewayDispatch):
             guild.channels.remove(old)
         guild.channels.append(channel)
 
-    return "on_channel_update", [channel]
+    return "on_channel_update", channel
 
 
 def export():

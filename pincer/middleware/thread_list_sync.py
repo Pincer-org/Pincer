@@ -20,14 +20,14 @@ async def thread_list_sync(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the thread list sync event.
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.events.thread.ThreadListSyncEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.guild.events.thread.ThreadListSyncEvent`]
         ``on_thread_list_sync`` and an ``ThreadListSyncEvent``
-    """
+    """  # noqa: E501
 
     threads: List[Channel] = [
         Channel.from_dict(construct_client_dict(self, thread))
@@ -39,11 +39,12 @@ async def thread_list_sync(self, payload: GatewayDispatch):
         for member in payload.data.pop("members")
     ]
 
-    return "on_thread_list_sync", [
+    return (
+        "on_thread_list_sync",
         ThreadListSyncEvent.from_dict(
             {"threads": threads, "members": members, **payload.data}
         )
-    ]
+    )
 
 
 def export():

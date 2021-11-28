@@ -16,22 +16,20 @@ async def guild_stickers_update_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the guild stickers update event.
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildStickersUpdateEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.guild.GuildStickersUpdateEvent`]
         ``on_guild_sticker_update`` and a ``GuildStickersUpdateEvent``
-    """
+    """  # noqa: E501
 
     return (
         "on_guild_stickers_update",
-        [
-            GuildStickersUpdateEvent.from_dict(
-                construct_client_dict(self, payload.data)
-            )
-        ],
+        GuildStickersUpdateEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        )
     )
 
 

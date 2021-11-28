@@ -16,17 +16,18 @@ async def voice_state_delete_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the voice state delete event.
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.user.voice_state.VoiceState`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.user.voice_state.VoiceState`]
         ``on_voice_state_delete`` and a ``VoiceState``
     """
-    return "on_voice_state_delete", [
+    return (
+        "on_voice_state_delete",
         VoiceState.from_dict(construct_client_dict(self, payload.data))
-    ]
+    )
 
 
 def export() -> Coro:

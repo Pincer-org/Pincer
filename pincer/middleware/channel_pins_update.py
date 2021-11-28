@@ -19,13 +19,14 @@ async def channel_pins_update_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.channel.Channel`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.guild.channel.Channel`]
         ``on_channel_pins_update`` and a ``Channel``
     """
 
-    return "on_channel_pins_update", [
+    return (
+        "on_channel_pins_update",
         ChannelPinsUpdateEvent.from_dict(payload.data)
-    ]
+    )
 
 
 def export():

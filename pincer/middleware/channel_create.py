@@ -6,20 +6,18 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..core.dispatch import GatewayDispatch
 from ..objects.guild.channel import Channel
 from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from typing import List, Tuple
-
     from ..core.dispatch import GatewayDispatch
 
 
 def channel_create_middleware(
         self,
         payload: GatewayDispatch
-) -> Tuple[str, List[Channel]]:
+) -> Tuple[str, Channel]:
     """|coro|
 
     Middleware for the ``on_channel_creation`` event.
@@ -32,11 +30,12 @@ def channel_create_middleware(
     Returns
     -------
     Tuple[:class:`str`, List[:class:`~pincer.objects.guild.channel.Channel`]]
-        ``"on_channel_creation"`` and a channel.
+        ``on_channel_creation`` and a channel.
     """
-    return "on_channel_creation", [
+    return (
+        "on_channel_creation",
         Channel.from_dict(construct_client_dict(self, payload.data))
-    ]
+    )
 
 
 def export():

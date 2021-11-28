@@ -8,7 +8,7 @@
 [![Build Status](https://scrutinizer-ci.com/g/Pincer-org/Pincer/badges/build.png?b=main)](https://scrutinizer-ci.com/g/Pincer-org/Pincer/build-status/main)
 [![Documentation Status](https://readthedocs.org/projects/pincer/badge/?version=latest)](https://pincer.readthedocs.io/en/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/Pincer-org/Pincer/branch/main/graph/badge.svg?token=T15T34KOQW)](https://codecov.io/gh/Pincer-org/Pincer)
-![Lines of code](https://img.shields.io/tokei/lines/github/Pincer-org/Pincer)
+![Lines of code](https://tokei.rs/b1/github/pincer-org/pincer?category=code&path=pincer)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Pincer-org/Pincer)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Pincer-org/Pincer)
 ![GitHub](https://img.shields.io/github/license/Pincer-org/Pincer)
@@ -128,7 +128,8 @@ You have the possibility to use your own class to inherit from the Pincer bot
 base.
 
 ```py
-from pincer import Client, command, Descripted
+from pincer import Client
+from pincer.commands import command, CommandArg, Description
 
 
 class Bot(Client):
@@ -148,16 +149,16 @@ class Bot(Client):
     # pincer.objects.User - User
     # pincer.objects.Channel - Channel
     # pincer.objects.Role - Role
-    # Mentionable is not implemented
+    # pincer.objects.Mentionable - Mentionable
     async def say(self, message: str):
         return message
 
     @command(description="Add two numbers!")
     async def add(
-            self, 
-            first: Descripted[int, "The first number"],
-            second: Descripted[int, "The second number"]
-    ): 
+            self,
+            first: CommandArg[int, Description["The first number"]],
+            second: CommandArg[int, Description["The second number"]]
+    ):
         return f"The addition of `{first}` and `{second}` is `{first + second}`"
 ```
 

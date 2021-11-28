@@ -115,7 +115,7 @@ class Dispatcher:
 
     @property
     def intents(self):
-        """:class:`app.Intents`"""
+        """:class:`~pincer.objects.app.intents.Intents`"""
         return self.__intents
 
     @property
@@ -286,7 +286,7 @@ class Dispatcher:
 
         Parameters
         ----------
-        seq Optional[:class:`int`]
+        seq: Optional[:class:`int`]
             The sequence number of the last dispatched event.
             If not provided, the dispatcher will restart with no base
             sequence.

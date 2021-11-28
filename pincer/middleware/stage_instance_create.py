@@ -15,18 +15,19 @@ def stage_instance_create_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the stage instance create event
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.stage.StageInstance`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.guild.stage.StageInstance`]
         ``on_stage_instance_create`` and a ``StageInstance``
     """
 
-    return "on_stage_instance_create", [
+    return (
+        "on_stage_instance_create",
         StageInstance.from_dict(construct_client_dict(self, payload.data))
-    ]
+    )
 
 
 def export() -> Coro:

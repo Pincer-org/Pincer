@@ -19,17 +19,17 @@ async def activity_spectate_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the activity spectate event.
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`ActivitySpectateEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.event.activity.ActivitySpectateEvent`]
         ``on_activity_spectate`` and an ``ActivitySpectateEvent``
-    """
-    return "on_activity_spectate", [
-        ActivitySpectateEvent.from_dict(construct_client_dict(self, payload.data))
-    ]
+    """  # noqa: E501
+    return "on_activity_spectate", ActivitySpectateEvent.from_dict(
+        construct_client_dict(self, payload.data)
+    )
 
 
 def export() -> Coro:

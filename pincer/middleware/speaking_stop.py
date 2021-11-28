@@ -16,17 +16,18 @@ async def speaking_stop_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the speaking stop event.
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`Snowflake`]]
+    Tuple[:class:`str`, :class:`Snowflake`]
         ``on_speaking_stop`` and a ``Snowflake`` (user_id)
     """
-    return "on_speaking_stop", [
+    return (
+        "on_speaking_stop",
         SpeakingStopEvent.from_dict(construct_client_dict(self, payload.data))
-    ]
+    )
 
 
 def export() -> Coro:

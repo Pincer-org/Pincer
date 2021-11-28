@@ -16,6 +16,7 @@ async def payload_middleware(
 ) -> Tuple[str, List[GatewayDispatch]]:
     """Invoked when anything is received from gateway.
 
+
     Parameters
     ----------
     payload : :class:`pincer.core.dispatch.GatewayDispatch`
@@ -24,10 +25,10 @@ async def payload_middleware(
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.core.dispatch.GatewayDispatch`]]
+    Tuple[:class:`str`, :class:`~pincer.core.dispatch.GatewayDispatch`]
         ``on_payload`` and a ``payload``
     """
-    return "on_payload", [payload]
+    return "on_payload", payload
 
 
 def export():

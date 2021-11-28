@@ -4,9 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-websockets = "*"
-aiohttp = "*"
-Pillow = "*"
+websockets = ">=10.0"
+aiohttp = ">=3.7.4post0,<4.1.0"
+Pillow = "==8.4.0"
 
 [dev-packages]
 flake8 = "==4.0.1"

@@ -110,7 +110,7 @@ class User(APIObject):
         Whether the email on this account has been verified
     """
 
-    id: Snowflake
+    id: APINullable[Snowflake] = MISSING
     username: APINullable[str] = MISSING
     discriminator: APINullable[str] = MISSING
 
@@ -134,8 +134,9 @@ class User(APIObject):
         user their premium type in a usable enum.
         """
         return (
-            MISSING if self.premium_type is MISSING else PremiumTypes(
-                self.premium_type)
+            MISSING
+            if self.premium_type is MISSING
+            else PremiumTypes(self.premium_type)
         )
 
     @property
@@ -179,7 +180,9 @@ class User(APIObject):
             :class: Image
                 The user's avatar as a Pillow image.
             """
-            async with ClientSession().get(url=self.get_avatar_url()) as resp:
+            async with ClientSession().get(
+                url=self.get_avatar_url(size, ext)
+            ) as resp:
                 avatar = io.BytesIO(await resp.read())
                 return Image.open(avatar).convert("RGBA")
 
@@ -221,9 +224,8 @@ class User(APIObject):
             construct_client_dict(
                 self._client,
                 await self._http.post(
-                    "/users/@me/channels",
-                    data={"recipient_id": self.id}
-                )
+                    "/users/@me/channels", data={"recipient_id": self.id}
+                ),
             )
         )
 

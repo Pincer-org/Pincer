@@ -58,7 +58,7 @@ Available types are as follows:
 - pincer.objects.User - User
 - pincer.objects.Channel - Channel
 - pincer.objects.Role - Role
-- Mentionable is not implemented
+- pincer.objects.Mentionable - Mentionable
 
 .. code-block:: python
 

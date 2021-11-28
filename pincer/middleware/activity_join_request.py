@@ -16,17 +16,18 @@ async def activity_join_request_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the activity join request event.
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.user.user.User`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.user.user.User`]
         ``on_activity_join_request`` and a ``User``
     """
-    return "on_activity_join_request", [
+    return (
+        "on_activity_join_request",
         User.from_dict(construct_client_dict(self, payload.data))
-    ]
+    )
 
 
 def export() -> Coro:

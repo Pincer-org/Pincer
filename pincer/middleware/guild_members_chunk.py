@@ -19,20 +19,20 @@ async def guild_member_chunk_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the guild member chunk event.
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildMemberChunkEvent`]]
-        ``on_guild_member_chunk`` and a ``GuildMemberChunkEvent``
-    """
+    Tuple[:class:`str`, :class:`~pincer.objects.events.guild.GuildMembersChunkEvent`]
+        ``on_guild_member_chunk`` and a ``GuildMembersChunkEvent``
+    """  # noqa: E501
 
     return (
         "on_guild_member_chunk",
-        [GuildMembersChunkEvent.from_dict(
+        GuildMembersChunkEvent.from_dict(
             construct_client_dict(self, payload.data)
-        )]
+        )
     )
 
 

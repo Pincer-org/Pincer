@@ -30,7 +30,7 @@ async def on_ready_middleware(
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the stage instance create event
 
     Returns

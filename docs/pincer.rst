@@ -17,26 +17,12 @@ Client
     .. automethod:: Client.event()
         :decorator:
 
-Commands
---------
-
-command
-~~~~~~~
-
-.. autofunction:: command
-    :decorator:
-
-ChatCommandHandler
-~~~~~~~~~~~~~~~~~~
-
-.. attributetable:: ChatCommandHandler
-
-.. autoclass:: ChatCommandHandler()
-
 Exceptions
 ----------
 
 .. autoexception:: PincerError()
+
+.. autoexception:: InvalidPayload()
 
 .. autoexception:: UnhandledException()
 
@@ -128,7 +114,7 @@ Exception Hierarchy
 
     - :exc:`Exception`
         - :exc:`PincerError`
-            - :exc: `InvalidPayload`
+            - :exc:`InvalidPayload`
             - :exc:`UnhandledException`
             - :exc:`NoExportMethod`
             - :exc:`CogError`
