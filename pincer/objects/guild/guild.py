@@ -1256,7 +1256,7 @@ class Guild(APIObject):
 
     async def get_emojis(self) -> AsyncGenerator[Emoji, None]:
         """|coro|
-        Returns an async generator of tl emojis in the guild.
+        Returns an async generator of the emojis in the guild.
 
         Yields
         ------
