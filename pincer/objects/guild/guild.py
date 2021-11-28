@@ -538,7 +538,7 @@ class Guild(APIObject):
         """|coro|
         Fetches all the roles in the guild.
 
-        Returns
+        Yields
         -------
         AsyncGenerator[:class:`~pincer.objects.guild.role.Role`, :data:`None`]
             An async generator of Role objects.
@@ -629,7 +629,7 @@ class Guild(APIObject):
         position : Optional[:class:`int`]
             Sorting position of the role |default| :data:`None`
 
-        Returns
+        Yields
         -------
         AsyncGenerator[:class:`~pincer.objects.guild.role.Role`, :data:`None`]
             An async generator of all of the guild's role objects.
@@ -730,7 +730,7 @@ class Guild(APIObject):
         """|coro|
         Fetches all the bans in the guild.
 
-        Returns
+        Yields
         -------
         AsyncGenerator[:class:`~pincer.objects.guild.ban.Ban`, :data:`None`]
             An async generator of Ban objects.
@@ -952,7 +952,7 @@ class Guild(APIObject):
         """|coro|
         Returns an async generator of voice regions.
 
-        Returns
+        Yields
         -------
         AsyncGenerator[:class:`~pincer.objects.voice.VoiceRegion`, :data:`None`]
             An async generator of voice regions.
@@ -966,7 +966,7 @@ class Guild(APIObject):
         Returns an async generator of invites for the guild.
         Requires the ``MANAGE_GUILD`` permission.
 
-        Returns
+        Yields
         -------
         AsyncGenerator[:class:`~pincer.objects.invite.Invite`, :data:`None`]
             An async generator of invites.
@@ -980,7 +980,7 @@ class Guild(APIObject):
         Returns an async generator of integrations for the guild.
         Requires the ``MANAGE_GUILD`` permission.
 
-        Returns
+        Yields
         -------
         AsyncGenerator[:class:`~pincer.objects.integration.Integration`, :data:`None`]
             An async generator of integrations.
