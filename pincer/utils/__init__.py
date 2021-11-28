@@ -14,15 +14,14 @@ from .tasks import Task, TaskScheduler
 from .timestamp import Timestamp
 
 from .types import (
-    APINullable, Coro, MISSING, Descripted, MissingType, Choices,
-    choice_value_types, CheckFunction
+    APINullable, Coro, MISSING, MissingType, choice_value_types, CheckFunction
 )
 
 
 __all__ = (
-    "APINullable", "APIObject", "CheckFunction", "Choices", "Color",
-    "Coro", "Descripted", "EventMgr", "HTTPMeta", "MISSING", "MissingType",
-    "Snowflake", "Task", "TaskScheduler", "Timestamp", "chdir",
-    "choice_value_types", "convert", "get_index", "get_params",
-    "get_signature_and_params", "should_pass_cls", "should_pass_ctx"
+    "APINullable", "APIObject", "CheckFunction", "Color", "Coro",
+    "EventMgr", "HTTPMeta", "MISSING", "MissingType", "Snowflake", "Task",
+    "TaskScheduler", "Timestamp", "chdir", "choice_value_types", "convert",
+    "get_index", "get_params", "get_signature_and_params", "should_pass_cls",
+    "should_pass_ctx"
 )

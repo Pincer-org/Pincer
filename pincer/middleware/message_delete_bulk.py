@@ -16,7 +16,7 @@ async def message_delete_bulk_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the message delete bulk event
 
     Returns

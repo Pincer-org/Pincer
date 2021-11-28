@@ -22,12 +22,12 @@ async def guild_create_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the guild create event
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.Guild`]]
+    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.guild.Guild`]]
 
         ``on_guild_create`` and a ``Guild``
     """

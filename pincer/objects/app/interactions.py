@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from asyncio import gather, iscoroutine, sleep, ensure_future
 from dataclasses import dataclass
-from typing import Dict, TYPE_CHECKING, Union, Optional
+from typing import Dict, TYPE_CHECKING, Union, Optional, List
 
 from .command_types import AppCommandOptionType
 from .interaction_base import InteractionType, CallbackType
@@ -87,7 +87,7 @@ class InteractionData(APIObject):
     type: int
 
     resolved: APINullable[ResolvedData] = MISSING
-    options: APINullable[AppCommandInteractionDataOption] = MISSING
+    options: APINullable[List[AppCommandInteractionDataOption]] = MISSING
     custom_id: APINullable[str] = MISSING
     component_type: APINullable[int] = MISSING
     values: APINullable[SelectOption] = MISSING
@@ -140,39 +140,7 @@ class Interaction(APIObject):
     has_acknowledged: bool = False
 
     def __post_init__(self):
-        self.id = convert(self.id, Snowflake.from_string)
-        self.application_id = convert(
-            self.application_id, Snowflake.from_string
-        )
-        self.type = convert(self.type, InteractionType)
-        self.data = convert(
-            self.data,
-            InteractionData.from_dict,
-            InteractionData
-        )
-        self.guild_id = convert(self.guild_id, Snowflake.from_string)
-        self.channel_id = convert(self.channel_id, Snowflake.from_string)
-
-        self.member = convert(
-            self.member,
-            GuildMember.from_dict,
-            GuildMember,
-            client=self._client
-        )
-
-        self.user = convert(
-            self.user,
-            User.from_dict,
-            User,
-            client=self._client
-        )
-
-        self.message = convert(
-            self.message,
-            UserMessage.from_dict,
-            UserMessage,
-            client=self._client
-        )
+        super().__post_init__()
 
         self._convert_functions = {
             AppCommandOptionType.SUB_COMMAND: None,
@@ -215,7 +183,7 @@ class Interaction(APIObject):
     async def convert(self, option: AppCommandInteractionDataOption):
         """|coro|
 
-        Sets an AppCommandInteractionDataOption value parameter to
+        Sets an ``AppCommandInteractionDataOption`` value parameter to
         the payload type
         """
         converter = self._convert_functions.get(option.type)
@@ -266,7 +234,7 @@ class Interaction(APIObject):
 
         Parameters
         ----------
-        flags :class:`~pincer.objects.app.interaction_flags.InteractionFlags`
+        flags: :class:`~pincer.objects.app.interaction_flags.InteractionFlags`
             The flags which must be applied to the reply.
 
         Raises

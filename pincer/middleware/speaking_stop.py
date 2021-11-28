@@ -16,7 +16,7 @@ async def speaking_stop_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the speaking stop event.
 
     Returns

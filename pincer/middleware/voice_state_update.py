@@ -27,7 +27,7 @@ async def voice_state_update_middleware(
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the voice state update event.
 
     Returns

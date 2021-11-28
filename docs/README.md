@@ -1,22 +1,19 @@
 # <img src="../assets/svg/pincer.svg" height="24px" alt="Pincer Logo"> Pincer
 
-<!--
-![PyPI - Downloads](https://img.shields.io/badge/dynamic/json?label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2FPincer)](https://pypi.org/project/Pincer)
+[![PyPI - Downloads](https://img.shields.io/badge/dynamic/json?label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2FPincer)](https://pypi.org/project/Pincer)
 ![PyPI](https://img.shields.io/pypi/v/Pincer)
 ![PyPI - Format](https://img.shields.io/pypi/format/Pincer)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Pincer)
--->
-
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Pincer-org/pincer/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/Pincer-org/pincer/?branch=main)
 [![Build Status](https://scrutinizer-ci.com/g/Pincer-org/Pincer/badges/build.png?b=main)](https://scrutinizer-ci.com/g/Pincer-org/Pincer/build-status/main)
 [![Documentation Status](https://readthedocs.org/projects/pincer/badge/?version=latest)](https://pincer.readthedocs.io/en/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/Pincer-org/Pincer/branch/main/graph/badge.svg?token=T15T34KOQW)](https://codecov.io/gh/Pincer-org/Pincer)
-![Lines of code](https://img.shields.io/tokei/lines/github/Pincer-org/Pincer)
+![Lines of code](https://tokei.rs/b1/github/pincer-org/pincer?category=code&path=pincer)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Pincer-org/Pincer)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Pincer-org/Pincer)
 ![GitHub](https://img.shields.io/github/license/Pincer-org/Pincer)
-![Code Style](https://img.shields.io/badge/code%20style-pep8-green)
 ![Discord](https://img.shields.io/discord/881531065859190804)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 An asynchronous Python API wrapper meant to replace discord.py
 
@@ -131,7 +128,8 @@ You have the possibility to use your own class to inherit from the Pincer bot
 base.
 
 ```py
-from pincer import Client, command, Descripted
+from pincer import Client
+from pincer.commands import command, CommandArg, Description
 
 
 class Bot(Client):
@@ -157,10 +155,10 @@ class Bot(Client):
 
     @command(description="Add two numbers!")
     async def add(
-            self, 
-            first: Descripted[int, "The first number"],
-            second: Descripted[int, "The second number"]
-    ): 
+            self,
+            first: CommandArg[int, Description["The first number"]],
+            second: CommandArg[int, Description["The second number"]]
+    ):
         return f"The addition of `{first}` and `{second}` is `{first + second}`"
 ```
 

@@ -415,7 +415,7 @@ class Client(Dispatcher):
 
         Parameters
         ----------
-        calls: :data:`~pincer.utils.types.Coro`
+        calls: :class:`~pincer.utils.types.Coro`
             The call (method) to which the event is registered.
 
         \\*args:

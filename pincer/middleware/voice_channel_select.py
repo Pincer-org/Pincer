@@ -16,7 +16,7 @@ async def voice_channel_select_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the voice channel select event.
 
     Returns

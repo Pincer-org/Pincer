@@ -4,17 +4,18 @@
 from __future__ import annotations
 
 import logging
-from inspect import isasyncgenfunction, getfullargspec
+from inspect import isasyncgenfunction, _empty
 from typing import Dict, Any
 from typing import TYPE_CHECKING
 
+
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
-from ..objects import Interaction, MessageContext
+from ..objects import Interaction, MessageContext, AppCommandType
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 from ..utils import get_index
 from ..utils.conversion import construct_client_dict
-from ..utils.signature import get_params, get_signature_and_params
+from ..utils.signature import get_signature_and_params
 
 if TYPE_CHECKING:
     from typing import List, Tuple
@@ -28,6 +29,7 @@ async def interaction_response_handler(
         command: Coro,
         context: MessageContext,
         interaction: Interaction,
+        args: List[Any],
         kwargs: Dict[str, Any]
 ):
     """|coro|
@@ -36,7 +38,7 @@ async def interaction_response_handler(
 
     Parameters
     ----------
-    command : :data:`~pincer.utils.types.Coro`
+    command : :class:`~pincer.utils.types.Coro`
         The coroutine which will be seen as a command.
     context : :class:`~pincer.objects.message.context.MessageContext`
         The context of the command.
@@ -45,16 +47,15 @@ async def interaction_response_handler(
     \\*\\*kwargs :
         The arguments to be passed to the command.
     """
-    if should_pass_cls(command):
-        cls_keyword = getfullargspec(command).args[0]
-        kwargs[cls_keyword] = ChatCommandHandler.managers[command.__module__]
-
     sig, params = get_signature_and_params(command)
     if should_pass_ctx(sig, params):
-        kwargs[params[0]] = context
+        args.insert(0, context)
+
+    if should_pass_cls(command):
+        args.insert(0, ChatCommandHandler.managers[command.__module__])
 
     if isasyncgenfunction(command):
-        message = command(**kwargs)
+        message = command(*args, **kwargs)
 
         async for msg in message:
             if interaction.has_replied:
@@ -62,7 +63,7 @@ async def interaction_response_handler(
             else:
                 await interaction.reply(msg)
     else:
-        message = await command(**kwargs)
+        message = await command(*args, **kwargs)
         if not interaction.has_replied:
             await interaction.reply(message)
 
@@ -83,12 +84,15 @@ async def interaction_handler(
         The interaction which is linked to the command.
     context : :class:`~pincer.objects.message.context.MessageContext`
         The context of the command.
-    command : :data:`~pincer.utils.types.Coro`
+    command : :class:`~pincer.utils.types.Coro`
         The coroutine which will be seen as a command.
     """
     self.throttler.handle(context)
 
-    defaults = {param: None for param in get_params(command)}
+    sig, _ = get_signature_and_params(command)
+
+    defaults = {key: value.default for key,
+                value in sig.items() if value.default is not _empty}
     params = {}
 
     if interaction.data.options is not MISSING:
@@ -96,10 +100,25 @@ async def interaction_handler(
             opt.name: opt.value for opt in interaction.data.options
         }
 
+    args = []
+
+    if interaction.data.type is AppCommandType.USER:
+        # Add User and Member args
+        args.append(next(iter(interaction.data.resolved.users.values())))
+
+        if members := interaction.data.resolved.members:
+            args.append(next(iter(members.values())))
+        else:
+            args.append(MISSING)
+
+    elif interaction.data.type is AppCommandType.MESSAGE:
+        # Add Message to args
+        args.append(next(iter(interaction.data.resolved.messages.values())))
+
     kwargs = {**defaults, **params}
 
     await interaction_response_handler(
-        self, command, context, interaction, kwargs
+        self, command, context, interaction, args, kwargs
     )
 
 
