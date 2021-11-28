@@ -147,8 +147,8 @@ def add_color_to_mentions(message):
                 continue
 
             if not text.startswith("@"):
-                if result[-1:][0]["color"] == (0, 0, 0):
-                    result[-1:][0]["text"] += text
+                if result[-1]["color"] == (0, 0, 0):
+                    result[-1]["text"] += text
                     continue
 
                 result.append({"color": (0, 0, 0), "text": text})
