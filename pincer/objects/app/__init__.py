@@ -24,7 +24,7 @@ __all__ = (
     "AppCommandOption", "AppCommandOptionChoice", "AppCommandOptionType",
     "AppCommandType", "Application", "CallbackType", "ClientCommandStructure",
     "DefaultThrottleHandler", "Intents", "Interaction", "InteractionData",
-    "InteractionFlags", "InteractionType", "MessageInteraction",
+    "InteractionFlags", "InteractionType", "Mentionable", "MessageInteraction",
     "ResolvedData", "SelectMenu", "SelectOption", "SessionStartLimit",
-    "ThrottleInterface", "ThrottleScope", "Mentionable"
+    "ThrottleInterface", "ThrottleScope"
 )
