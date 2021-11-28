@@ -160,4 +160,4 @@ if __name__ == "__main__":
     # Of course we have to run our client, you can replace the
     # XXXYOURBOTTOKENHEREXXX with your token, or dynamically get it
     # through a dotenv/env.
-    Bot("OTA1MzczMDYwMjcyNjMxODI4.YYJIXg.Jvr4NseqVed1lPliN1kyJiNqnO0").run()
+    Bot("XXXYOURBOTTOKENHEREXXX").run()
