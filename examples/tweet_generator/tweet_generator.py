@@ -145,12 +145,12 @@ class Bot(Client):
 
 
 # https://stackoverflow.com/a/53663233/15485584
-def trans_paste(fg_img, bg_img, alpha=1.0, box=(0, 0)):
+def trans_paste(fg_img, bg_img, box=(0, 0)):
     """
     paste an image into one another
     """
     fg_img_trans = Image.new("RGBA", fg_img.size)
-    fg_img_trans = Image.blend(fg_img_trans, fg_img, alpha)
+    fg_img_trans = Image.blend(fg_img_trans, fg_img, 1.0)
     bg_img.paste(fg_img_trans, box, fg_img_trans)
     return bg_img
 
