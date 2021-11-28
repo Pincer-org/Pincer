@@ -138,9 +138,10 @@ def add_color_to_mentions(message):
     message = "\n".join(message).split(" ")
     result = []
     for word in message:
-        for index, text in enumerate(word.splitlines()):
+        wordlines = word.splitlines()
+        for index, text in enumerate(wordlines):
 
-            text += "\n" if index != len(word.split("\n")) - 1 else " "
+            text += "\n" if index != len(wordlines) - 1 else " "
 
             if not result:
                 result.append({"color": (0, 0, 0), "text": text})
