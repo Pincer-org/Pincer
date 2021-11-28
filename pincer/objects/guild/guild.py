@@ -15,15 +15,16 @@ from ...utils.types import MISSING
 if TYPE_CHECKING:
     from typing import Any, Dict, List, Optional, Union
 
+    from .audit_log import AuditLog
     from .ban import Ban
     from .channel import Channel
     from .invite import Invite
     from .member import GuildMember
-    from .widget import GuildWidget
     from .features import GuildFeature
     from .role import Role
     from .stage import StageInstance
     from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
+    from .widget import GuildWidget
     from ..user.user import User
     from ..user.integration import Integration
     from ..voice.region import VoiceRegion
@@ -1234,6 +1235,23 @@ class Guild(APIObject):
                 "channel_id": channel_id,
                 "suppress": suppress
             }
+        )
+
+    async def get_audit_log(self) -> AuditLog:
+        """|coro|
+        Returns an audit log object for the guild.
+        Requires the ``VIEW_AUDIT_LOG`` permission.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.audit_log.AuditLog`
+            The audit log object for the guild.
+        """
+        return AuditLog.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.get(f"guilds/{self.id}/audit-logs")
+            )
         )
 
     @classmethod
