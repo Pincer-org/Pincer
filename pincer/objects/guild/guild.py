@@ -1290,6 +1290,50 @@ class Guild(APIObject):
             )
         )
 
+    async def create_emoji(
+        self,
+        *,
+        name: str,
+        image: str,
+        roles: List[Snowflake],
+        reason: Optional[str] = None
+    ) -> Emoji:
+        """|coro|
+        Creates a new emoji for the guild.
+        Requires the ``MANAGE_EMOJIS_AND_STICKERS`` permission.
+
+        Emojis and animated emojis have a maximum file size of 256kb.
+        Attempting to upload an emoji larger than this limit will fail.
+
+        Parameters
+        ----------
+        name : :class:`str`
+            Name of the emoji
+        image : :class:`str`
+            The 128x128 emoji image data
+        roles : List[:class:`~pincer.utils.snowflake.Snowflake`]
+            Roles allowed to use this emoji
+        reason : Optional[:class:`str`]
+            The reason for creating the emoji |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.emoji.Emoji`
+            The newly created emoji object.
+        """
+        data = await self._http.post(
+            f"guilds/{self.id}/emojis",
+            data={
+                "name": name,
+                "image": image,
+                "roles": roles
+            },
+            headers=remove_none({"X-Audit-Log-Reason": reason})
+        )
+        return Emoji.from_dict(
+            construct_client_dict(self._client, data)
+        )
+
     @classmethod
     def from_dict(cls, data) -> Guild:
         """
