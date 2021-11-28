@@ -71,13 +71,16 @@ class Bot(Client):
         # write the name and username on the Image
         draw = ImageDraw.Draw(tweet)
         draw.text(
-            (180, 20), str(ctx.author.user),
-            fill=(0, 0, 0), font=font_bold
+            (180, 20),
+            str(ctx.author.user),
+            fill=(0, 0, 0),
+            font=font_bold
         )
         draw.text(
             (180, 70),
             f"@{ctx.author.user.username}",
-            fill=(120, 120, 120), font=font_normal,
+            fill=(120, 120, 120),
+            font=font_normal
         )
 
         content = add_color_to_mentions(content)
