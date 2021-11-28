@@ -143,8 +143,10 @@ class Interaction(APIObject):
     def __post_init__(self):
         super().__post_init__()
 
-        for option in self.data.options:
+        if not self.data.options:
+            return
 
+        for option in self.data.options:
             if option.type is AppCommandOptionType.STRING:
                 option.value = str(option.value)
             elif option.type is AppCommandOptionType.INTEGER:
