@@ -149,7 +149,7 @@ class Bot(Client):
     # pincer.objects.User - User
     # pincer.objects.Channel - Channel
     # pincer.objects.Role - Role
-    # Mentionable is not implemented
+    # pincer.objects.Mentionable - Mentionable
     async def say(self, message: str):
         return message
 

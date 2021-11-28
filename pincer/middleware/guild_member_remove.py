@@ -23,13 +23,15 @@ async def guild_member_remove_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildMemberRemoveEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.guild.GuildMemberRemoveEvent`]
         ``on_guild_member_remove`` and a ``GuildMemberRemoveEvent``
-    """
+    """  # noqa: E501
 
     return (
         "on_guild_member_remove",
-        [GuildMemberRemoveEvent.from_dict(construct_client_dict(self, payload.data))],
+        GuildMemberRemoveEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        ),
     )
 
 

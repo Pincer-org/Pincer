@@ -3,12 +3,13 @@
 
 from __future__ import annotations
 
-from asyncio import gather, iscoroutine, sleep, ensure_future
+from asyncio import sleep, ensure_future
 from dataclasses import dataclass
-from typing import Dict, TYPE_CHECKING, Union, Optional, List
+from typing import Any, Dict, TYPE_CHECKING, Union, Optional, List
 
 from .command_types import AppCommandOptionType
 from .interaction_base import InteractionType, CallbackType
+from .mentionable import Mentionable
 from ..app.select_menu import SelectOption
 from ..guild.member import GuildMember
 from ..message.context import MessageContext
@@ -17,7 +18,7 @@ from ..message.user_message import UserMessage
 from ..user import User
 from ...exceptions import InteractionDoesNotExist, UseFollowup, \
     InteractionAlreadyAcknowledged, NotFoundError, InteractionTimedOut
-from ...utils import APIObject, convert
+from ...utils import APIObject
 from ...utils.convert_message import convert_message
 from ...utils.snowflake import Snowflake
 from ...utils.types import MISSING
@@ -142,61 +143,65 @@ class Interaction(APIObject):
     def __post_init__(self):
         super().__post_init__()
 
-        self._convert_functions = {
-            AppCommandOptionType.SUB_COMMAND: None,
-            AppCommandOptionType.SUB_COMMAND_GROUP: None,
+        for option in self.data.options:
 
-            AppCommandOptionType.STRING: str,
-            AppCommandOptionType.INTEGER: int,
-            AppCommandOptionType.BOOLEAN: bool,
-            AppCommandOptionType.NUMBER: float,
+            if option.type is AppCommandOptionType.STRING:
+                option.value = str(option.value)
+            elif option.type is AppCommandOptionType.INTEGER:
+                option.value = int(option.value)
+            elif option.type is AppCommandOptionType.BOOLEAN:
+                option.value = bool(option.value)
+            elif option.type is AppCommandOptionType.NUMBER:
+                option.value = float(option.value)
 
-            AppCommandOptionType.USER: lambda value:
-            self._client.get_user(
-                convert(value, Snowflake.from_string)
-            ),
-            AppCommandOptionType.CHANNEL: lambda value:
-            self._client.get_channel(
-                convert(value, Snowflake.from_string)
-            ),
-            AppCommandOptionType.ROLE: lambda value:
-            self._client.get_role(
-                convert(self.guild_id, Snowflake.from_string),
-                convert(value, Snowflake.from_string)
-            ),
-            AppCommandOptionType.MENTIONABLE: None
-        }
+            elif option.type is AppCommandOptionType.USER:
+                user = self.return_type(option, self.data.resolved.members)
+                user.set_user_data(
+                    self.return_type(option, self.data.resolved.users)
+                )
+                option.value = user
 
-    async def build(self):
-        """|coro|
+            elif option.type is AppCommandOptionType.CHANNEL:
+                option.value = self.return_type(
+                    option, self.data.resolved.channels
+                )
 
-        Sets the parameters in the interaction that need information
-        from the discord API.
+            elif option.type is AppCommandOptionType.ROLE:
+                option.value = self.return_type(
+                    option, self.data.resolved.roles
+                )
+
+            elif option.type is AppCommandOptionType.MENTIONABLE:
+                user = self.return_type(option, self.data.resolved.members)
+                if user:
+                    user.set_user_data(self.return_type(
+                        option, self.data.resolved.users)
+                    )
+
+                option.value = Mentionable(
+                    user,
+                    self.return_type(
+                        option, self.data.resolved.roles
+                    )
+                )
+
+    @staticmethod
+    def return_type(
+        option: Snowflake,
+        data: Dict[Snowflake, Any]
+    ) -> Optional[APIObject]:
         """
-        if not self.data.options:
-            return
+        Returns a value from the option or None if it doesn't exist.
 
-        await gather(
-            *map(self.convert, self.data.options)
-        )
-
-    async def convert(self, option: AppCommandInteractionDataOption):
-        """|coro|
-
-        Sets an ``AppCommandInteractionDataOption`` value parameter to
-        the payload type
+        option : :class:`~pincer.utils.types.Snowflake`
+            Snowflake to search ``data`` for.
+        data : Dict[:class:`~pincer.utils.types.Snowflake`, Any]
+            Resolved data to search through.
         """
-        converter = self._convert_functions.get(option.type)
+        if data:
+            return data[option.value]
 
-        if not converter:
-            raise NotImplementedError(
-                f"Handling for AppCommandOptionType {option.type} is not "
-                "implemented"
-            )
-
-        res = converter(option.value)
-
-        option.value = (await res) if iscoroutine(res) else res
+        return None
 
     def convert_to_message_context(self, command):
         return MessageContext(

@@ -21,12 +21,15 @@ async def message_delete_bulk_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.events.message.MessageDeleteBulkEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.events.message.MessageDeleteBulkEvent`]
         ``on_message_delete_bulk`` and an ``MessageDeleteBulkEvent``
     """
-    return "on_message_delete_bulk", [
-        MessageDeleteBulkEvent.from_dict(construct_client_dict(self, payload.data))
-    ]
+    return (
+        "on_message_delete_bulk",
+        MessageDeleteBulkEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        )
+    )
 
 
 def export() -> Coro:

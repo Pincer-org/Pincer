@@ -21,12 +21,13 @@ async def invite_create_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.invite.InviteCreateEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.invite.InviteCreateEvent`]
         ``on_invite_create`` and an ``InviteCreateEvent``
-    """
-    return "on_invite_create", [
+    """  # noqa: E501
+    return (
+        "on_invite_create",
         InviteCreateEvent.from_dict(construct_client_dict(self, payload.data))
-    ]
+    )
 
 
 def export() -> Coro:

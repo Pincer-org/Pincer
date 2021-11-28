@@ -21,12 +21,15 @@ async def integration_delete_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.events.integration.IntegrationDeleteEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.events.integration.IntegrationDeleteEvent`]
         ``on_integration_delete`` and an ``IntegrationDeleteEvent``
-    """
-    return "on_integration_delete", [
-        IntegrationDeleteEvent.from_dict(construct_client_dict(self, payload.data))
-    ]
+    """  # noqa: E501
+    return (
+        "on_integration_delete",
+        IntegrationDeleteEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        )
+    )
 
 
 def export() -> Coro:

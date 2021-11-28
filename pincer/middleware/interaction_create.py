@@ -125,7 +125,7 @@ async def interaction_handler(
 async def interaction_create_middleware(
     self,
     payload: GatewayDispatch
-) -> Tuple[str, List[Interaction]]:
+) -> Tuple[str, Interaction]:
     """Middleware for ``on_interaction``, which handles command
     execution.
 
@@ -143,13 +143,12 @@ async def interaction_create_middleware(
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.app.interactions.Interaction`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.app.interactions.Interaction`]
         ``on_interaction_create`` and an ``Interaction``
-    """  # noqa: E501
+    """
     interaction: Interaction = Interaction.from_dict(
         construct_client_dict(self, payload.data)
     )
-    await interaction.build()
     command = ChatCommandHandler.register.get(interaction.data.name)
 
     if command:
@@ -177,7 +176,7 @@ async def interaction_create_middleware(
             else:
                 raise e
 
-    return "on_interaction_create", [interaction]
+    return "on_interaction_create", interaction
 
 
 def export() -> Coro:

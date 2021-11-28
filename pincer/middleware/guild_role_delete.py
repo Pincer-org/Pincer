@@ -21,13 +21,15 @@ async def guild_role_delete_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildRoleDeleteEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.guild.GuildRoleDeleteEvent`]
         ``on_guild_role_delete`` and a ``GuildRoleDeleteEvent``
-    """
+    """  # noqa: E501
 
     return (
         "on_guild_role_delete",
-        [GuildRoleDeleteEvent.from_dict(construct_client_dict(self, payload.data))],
+        GuildRoleDeleteEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        ),
     )
 
 

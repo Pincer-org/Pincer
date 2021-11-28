@@ -15,6 +15,7 @@ from .app.interaction_flags import InteractionFlags
 from .app.interactions import (
     ResolvedData, InteractionData, Interaction
 )
+from .app.mentionable import Mentionable
 from .app.select_menu import SelectOption, SelectMenu
 from .app.session_start_limit import SessionStartLimit
 from .app.throttle_scope import ThrottleScope
@@ -129,10 +130,10 @@ __all__ = (
     "IntegrationExpireBehavior", "Intents", "Interaction", "InteractionData",
     "InteractionFlags", "InteractionType", "Invite", "InviteCreateEvent",
     "InviteDeleteEvent", "InviteMetadata", "InviteStageInstance",
-    "InviteTargetType", "MFALevel", "Message", "MessageActivity",
-    "MessageActivityType", "MessageComponent", "MessageContext",
-    "MessageDeleteBulkEvent", "MessageDeleteEvent", "MessageFlags",
-    "MessageInteraction", "MessageReactionAddEvent",
+    "InviteTargetType", "MFALevel", "Mentionable", "Message",
+    "MessageActivity", "MessageActivityType", "MessageComponent",
+    "MessageContext", "MessageDeleteBulkEvent", "MessageDeleteEvent",
+    "MessageFlags", "MessageInteraction", "MessageReactionAddEvent",
     "MessageReactionRemoveAllEvent", "MessageReactionRemoveEmojiEvent",
     "MessageReactionRemoveEvent", "MessageReference", "MessageType",
     "NewsChannel", "Overwrite", "PartialGuildMember", "PremiumTier",

@@ -21,13 +21,14 @@ async def thread_update_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.channel.Channel`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.guild.channel.Channel`]
         ``on_thread_update`` and an ``Channel``
     """
 
-    return "on_thread_update", [
+    return (
+        "on_thread_update",
         Channel.from_dict(construct_client_dict(self, payload.data))
-    ]
+    )
 
 
 def export():

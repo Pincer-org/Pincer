@@ -21,13 +21,13 @@ async def guild_ban_remove_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildBanRemoveEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.guild.GuildBanRemoveEvent`]
         ``on_guild_ban_remove_update`` and a ``GuildBanRemoveEvent``
-    """
+    """  # noqa: E501
 
     return (
         "on_guild_ban_remove",
-        [GuildBanRemoveEvent.from_dict(construct_client_dict(self, payload.data))],
+        GuildBanRemoveEvent.from_dict(construct_client_dict(self, payload.data))
     )
 
 

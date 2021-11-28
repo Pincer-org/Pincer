@@ -20,13 +20,14 @@ def stage_instance_update_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.stage.StageInstance`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.guild.stage.StageInstance`]
         ``on_stage_instance_update`` and a ``StageInstance``
     """
 
-    return "on_stage_instance_update", [
+    return (
+        "on_stage_instance_update",
         StageInstance.from_dict(construct_client_dict(self, payload.data))
-    ]
+    )
 
 
 def export() -> Coro:
