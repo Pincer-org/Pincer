@@ -19,6 +19,12 @@ if not all(
             "NotoSans-Bold.ttf"
         ]
 ):
+    print(
+        "You don't have the font files installed! you need to manually "
+        "download the font files and put them into the folder "
+        "./examples/tweet_generator/ to make the script works using this link: "
+        "https://fonts.google.com/share?selection.family=Noto%20Sans:wght@400;700"
+    )
     sys.exit()
 
 
