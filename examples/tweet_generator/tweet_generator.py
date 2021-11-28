@@ -1,9 +1,18 @@
 import re
 import textwrap
+import os
+import sys
 from datetime import datetime
 from PIL import Image, ImageFont, ImageDraw, ImageOps
 from pincer import command, Client, Descripted
 from pincer.objects import Message, Embed, MessageContext
+
+
+# you need to manually download the font files and put them into the folder
+# ./examples/tweet_generator/ to make the script works using this link:
+# https://fonts.google.com/share?selection.family=Noto%20Sans:wght@400;700
+if not all(font in os.listdir() for font in ["NotoSans-Regular.ttf", "NotoSans-Bold.ttf"]):
+    sys.exit()
 
 
 class Bot(Client):
@@ -17,6 +26,7 @@ class Bot(Client):
     @command(
         name="twitter",
         description="to create fake tweets",
+        guild=690604075775164437
     )
     async def twitter(
         self, ctx: MessageContext, content: Descripted[str, "..."]
@@ -56,9 +66,9 @@ class Bot(Client):
         )
 
         # add the fonts
-        font = ImageFont.truetype("Segoe_UI.ttf", 40)
-        font_small = ImageFont.truetype("Segoe_UI.ttf", 30)
-        font_bold = ImageFont.truetype("Segoe_UI_Bold.ttf", 40)
+        font = ImageFont.truetype("NotoSans-Regular.ttf", 40)
+        font_small = ImageFont.truetype("NotoSans-Regular.ttf", 30)
+        font_bold = ImageFont.truetype("NotoSans-Bold.ttf", 40)
 
         # write the name and username on the Image
         draw = ImageDraw.Draw(tweet)
@@ -150,4 +160,4 @@ if __name__ == "__main__":
     # Of course we have to run our client, you can replace the
     # XXXYOURBOTTOKENHEREXXX with your token, or dynamically get it
     # through a dotenv/env.
-    Bot("XXXYOURBOTTOKENHEREXXX").run()
+    Bot("OTA1MzczMDYwMjcyNjMxODI4.YYJIXg.Jvr4NseqVed1lPliN1kyJiNqnO0").run()
