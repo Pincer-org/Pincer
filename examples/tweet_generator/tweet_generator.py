@@ -87,7 +87,7 @@ class Bot(Client):
 
         return Message(
             embeds=[
-                Embed(title="Twitter for Discord", description="").set_image(
+                Embed(title="Twitter for Discord").set_image(
                     url="attachment://image0.png"
                 )
             ],
