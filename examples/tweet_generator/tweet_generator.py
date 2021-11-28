@@ -24,9 +24,7 @@ class Bot(Client):
             f"Registered commands: {', '.join(self.chat_commands)}"
         )
 
-    @command(
-        description="to create fake tweets",
-    )
+    @command(description="to create fake tweets")
     async def twitter(
         self,
         ctx: MessageContext,
