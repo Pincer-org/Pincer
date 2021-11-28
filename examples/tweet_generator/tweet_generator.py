@@ -32,97 +32,48 @@ class Bot(Client):
     ):
         await ctx.interaction.ack()
 
-        message = content
         for text_match, user_id in re.findall(
-            re.compile(r"(<@!(\d+)>)"), message
+            re.compile(r"(<@!(\d+)>)"), content
         ):
-            message = message.replace(
+            content = content.replace(
                 text_match, f"@{await self.get_user(user_id)}"
             )
 
-        if len(message) > 280:
+        if len(content) > 280:
             return "A tweet can be at maximum 280 characters long"
-
-        # wrap the message to be multi-line
-        message = textwrap.wrap(message, 38)
 
         # download the profile picture and convert it into Image object
         avatar = (await ctx.author.user.get_avatar()).resize((128, 128))
-
-        # modify profile picture to be circular
-        mask = Image.new("L", (128, 128), 0)
-        draw = ImageDraw.Draw(mask)
-        draw.ellipse((0, 0, 128, 128), fill=255)
-        avatar = ImageOps.fit(avatar, mask.size, centering=(0.5, 0.5))
-        avatar.putalpha(mask)
+        avatar = circular_avatar(avatar)
 
         # create the tweet by pasting the profile picture into a white image
         tweet = trans_paste(
             avatar,
-            # background
-            Image.new("RGBA", (800, 250 + 50 * len(message)), (255, 255, 255)),
+            Image.new("RGBA", (800, 250 + 50 * len(textwrap.wrap(content, 38))), (255, 255, 255)),
             box=(15, 15),
         )
 
         # add the fonts
-        font = ImageFont.truetype("NotoSans-Regular.ttf", 40)
+        font_normal = ImageFont.truetype("NotoSans-Regular.ttf", 40)
         font_small = ImageFont.truetype("NotoSans-Regular.ttf", 30)
         font_bold = ImageFont.truetype("NotoSans-Bold.ttf", 40)
 
         # write the name and username on the Image
         draw = ImageDraw.Draw(tweet)
         draw.text(
-            (180, 20), str(ctx.author.user), fill=(0, 0, 0), font=font_bold
+            (180, 20), str(ctx.author.user),
+            fill=(0, 0, 0), font=font_bold
         )
         draw.text(
             (180, 70),
-            "@" + ctx.author.user.username,
-            fill=(120, 120, 120),
-            font=font,
+            f"@{ctx.author.user.username}",
+            fill=(120, 120, 120), font=font_normal,
         )
 
-        # write the content of the tweet on the Image
-        message = "\n".join(message).split(" ")
-        result = []
-
-        # generate a dict to set were the text need to be in different color.
-        # for example, if a word starts with '@' it will be write in blue.
-        # example:
-        #   [
-        #       {'color': (0, 0, 0), 'text': 'hello world '},
-        #       {'color': (0, 154, 234), 'text': '@drawbu'}
-        #   ]
-        for word in message:
-            for index, text in enumerate(word.splitlines()):
-
-                text += "\n" if index != len(word.split("\n")) - 1 else " "
-
-                if not result:
-                    result.append({"color": (0, 0, 0), "text": text})
-                    continue
-
-                if not text.startswith("@"):
-                    if result[-1:][0]["color"] == (0, 0, 0):
-                        result[-1:][0]["text"] += text
-                        continue
-
-                    result.append({"color": (0, 0, 0), "text": text})
-                    continue
-
-                result.append({"color": (0, 154, 234), "text": text})
+        content = add_color_to_mentions(content)
 
         # write the text
-        draw = ImageDraw.Draw(tweet)
-        x = 30
-        y = 170
-        for text in result:
-            y -= font.getsize(" ")[1]
-            for l_index, line in enumerate(text["text"].splitlines()):
-                if l_index:
-                    x = 30
-                y += font.getsize(" ")[1]
-                draw.text((x, y), line, fill=text["color"], font=font)
-                x += font.getsize(line)[0]
+        tweet = draw_multicolored_text(tweet, content, font_normal)
 
         # write the footer
         draw.text(
@@ -144,15 +95,82 @@ class Bot(Client):
         )
 
 
-# https://stackoverflow.com/a/53663233/15485584
 def trans_paste(fg_img, bg_img, box=(0, 0)):
     """
+    https://stackoverflow.com/a/53663233/15485584
     paste an image into one another
     """
     fg_img_trans = Image.new("RGBA", fg_img.size)
     fg_img_trans = Image.blend(fg_img_trans, fg_img, 1.0)
     bg_img.paste(fg_img_trans, box, fg_img_trans)
     return bg_img
+
+
+def circular_avatar(avatar):
+    mask = Image.new("L", (128, 128), 0)
+    draw = ImageDraw.Draw(mask)
+    draw.ellipse((0, 0, 128, 128), fill=255)
+    avatar = ImageOps.fit(avatar, mask.size, centering=(0.5, 0.5))
+    avatar.putalpha(mask)
+    return avatar
+
+
+def add_color_to_mentions(message):
+    """
+    generate a dict to set were the text need to be in different colors.
+    if a word starts with '@' it will be write in blue.
+
+    Parameters
+    ----------
+    message: the text
+
+    Returns
+    -------
+    a list with all colors selected
+    example:
+        [
+            {'color': (0, 0, 0), 'text': 'hello world '},
+            {'color': (0, 154, 234), 'text': '@drawbu'}
+        ]
+
+    """
+    message = textwrap.wrap(message, 38)
+    message = "\n".join(message).split(" ")
+    result = []
+    for word in message:
+        for index, text in enumerate(word.splitlines()):
+
+            text += "\n" if index != len(word.split("\n")) - 1 else " "
+
+            if not result:
+                result.append({"color": (0, 0, 0), "text": text})
+                continue
+
+            if not text.startswith("@"):
+                if result[-1:][0]["color"] == (0, 0, 0):
+                    result[-1:][0]["text"] += text
+                    continue
+
+                result.append({"color": (0, 0, 0), "text": text})
+                continue
+
+            result.append({"color": (0, 154, 234), "text": text})
+    return result
+
+
+def draw_multicolored_text(image, message, font):
+    draw = ImageDraw.Draw(image)
+    x = 30
+    y = 170
+    for text in message:
+        y -= font.getsize(" ")[1]
+        for l_index, line in enumerate(text["text"].splitlines()):
+            if l_index:
+                x = 30
+            y += font.getsize(" ")[1]
+            draw.text((x, y), line, fill=text["color"], font=font)
+            x += font.getsize(line)[0]
+    return image
 
 
 if __name__ == "__main__":
