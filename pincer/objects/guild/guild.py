@@ -1334,6 +1334,46 @@ class Guild(APIObject):
             construct_client_dict(self._client, data)
         )
 
+    async def edit_emoji(
+        self,
+        id: Snowflake,
+        *,
+        name: Optional[str] = None,
+        roles: Optional[List[Snowflake]] = None,
+        reason: Optional[str] = None
+    ) -> Emoji:
+        """|coro|
+        Modifies the given emoji.
+        Requires the ``MANAGE_EMOJIS_AND_STICKERS`` permission.
+
+        Parameters
+        ----------
+        id : :class:`~pincer.utils.snowflake.Snowflake`
+            The ID of the emoji
+        name : Optional[:class:`str`]
+            Name of the emoji |default| :data:`None`
+        roles : Optional[List[:class:`~pincer.utils.snowflake.Snowflake`]]
+            Roles allowed to use this emoji |default| :data:`None`
+        reason : Optional[:class:`str`]
+            The reason for editing the emoji |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.emoji.Emoji`
+            The modified emoji object.
+        """
+        data = await self._http.patch(
+            f"guilds/{self.id}/emojis/{id}",
+            data={
+                "name": name,
+                "roles": roles
+            },
+            headers=remove_none({"X-Audit-Log-Reason": reason})
+        )
+        return Emoji.from_dict(
+            construct_client_dict(self._client, data)
+        )
+
     @classmethod
     def from_dict(cls, data) -> Guild:
         """
