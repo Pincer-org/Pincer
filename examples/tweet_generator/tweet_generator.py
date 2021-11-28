@@ -24,9 +24,7 @@ class Bot(Client):
         )
 
     @command(
-        name="twitter",
         description="to create fake tweets",
-        guild=690604075775164437
     )
     async def twitter(
         self, ctx: MessageContext, content: Descripted[str, "..."]
