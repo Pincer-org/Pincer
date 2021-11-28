@@ -163,12 +163,13 @@ def draw_multicolored_text(image, message, font):
     draw = ImageDraw.Draw(image)
     x = 30
     y = 170
+    y_fontsize = font.getsize(" ")[1]
     for text in message:
-        y -= font.getsize(" ")[1]
+        y -= y_fontsize
         for l_index, line in enumerate(text["text"].splitlines()):
             if l_index:
                 x = 30
-            y += font.getsize(" ")[1]
+            y += y_fontsize
             draw.text((x, y), line, fill=text["color"], font=font)
             x += font.getsize(line)[0]
     return image
