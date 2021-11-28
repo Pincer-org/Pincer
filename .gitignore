@@ -32,3 +32,9 @@ MANIFEST
 
 # IDE Ext's
 .history/
+
+# tweet_generator example
+examples/tweet_generator/NotoSans-Bold.ttf
+examples/tweet_generator/NotoSans-BoldItalic.ttf
+examples/tweet_generator/NotoSans-Italic.ttf
+examples/tweet_generator/NotoSans-Regular.ttf
