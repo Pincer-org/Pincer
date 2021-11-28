@@ -49,7 +49,11 @@ class Bot(Client):
         # create the tweet by pasting the profile picture into a white image
         tweet = trans_paste(
             avatar,
-            Image.new("RGBA", (800, 250 + 50 * len(textwrap.wrap(content, 38))), (255, 255, 255)),
+            Image.new(
+                "RGBA",
+                (800, 250 + 50 * len(textwrap.wrap(content, 38))),
+                (255, 255, 255)
+            ),
             box=(15, 15),
         )
 
