@@ -85,7 +85,11 @@ class RateLimiter:
             time_cached=time()
         )
 
-        _log.info("Rate limit bucket detected with ID %s.", bucket_id)
+        _log.info(
+            "Rate limit bucket detected: %s - %r.",
+            bucket_id,
+            self.buckets[bucket_id]
+        )
 
     async def wait_until_not_ratelimited(
         self,
