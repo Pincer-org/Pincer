@@ -7,7 +7,7 @@ from asyncio import sleep
 from dataclasses import dataclass
 import logging
 from time import time
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Tuple
 
 if TYPE_CHECKING:
     from typing import Dict
@@ -18,6 +18,21 @@ _log = logging.getLogger(__name__)
 
 @dataclass
 class Bucket:
+    """Represents a rate limit bucket
+
+    Attributes
+    ----------
+    limit : int
+        The number of requests that can be made.
+    remaining : int
+        The number of remaining requests that can be made.
+    reset : float
+        Epoch time at which rate limit resets.
+    reset_after : float
+        Total time in seconds until rate limit resets.
+    time_cached : float
+        Time since epoch when this bucket was last saved.
+    """
     limit: int
     remaining: int
     reset: float
@@ -26,8 +41,17 @@ class Bucket:
 
 
 class RateLimiter:
+    """Prevents ``user`` rate limits
+    Attributes
+    ----------
+    bucket_map : Tuple[str, :class:`~pincer.core.http.HttpCallable`]
+        Maps endpoints and methods to a rate limit bucket
+    buckets : Dict[str, :class:`~pincer.core.ratelimiter.Bucket`]
+        Dictionary of buckets
+    """
+
     def __init__(self) -> None:
-        self.bucket_map: Dict[str, str] = {}
+        self.bucket_map: Dict[Tuple[str, HttpCallable], str] = {}
         self.buckets: Dict[str, Bucket] = {}
 
     def save_response_bucket(
@@ -36,28 +60,52 @@ class RateLimiter:
         method: HttpCallable,
         header: Dict
     ):
+        """
+        Parameters
+        ----------
+        endpoint : str
+            The endpoint
+        method : :class:`~pincer.core.http.HttpCallable`
+            The method used on the endpoint (Eg. ``Get``, ``Post``, ``Patch``)
+        header : :class:`aiohttp.typedefs.CIMultiDictProxy`
+            The headers from the response
+        """
+        bucket_id = header.get("X-RateLimit-Bucket")
 
-        if bucket_id := header.get("X-RateLimit-Bucket"):
-            self.bucket_map[endpoint, method] = bucket_id
+        if not bucket_id:
+            return
 
-            self.buckets[bucket_id] = Bucket(
-                limit=int(header["X-RateLimit-Limit"]),
-                remaining=int(header["X-RateLimit-Remaining"]),
-                reset=float(header["X-RateLimit-Reset"]),
-                reset_after=float(header["X-RateLimit-Reset-After"]),
-                time_cached=time()
-            )
+        self.bucket_map[endpoint, method] = bucket_id
 
-            _log.info("Rate limit bucket detected with ID %s.", bucket_id)
+        self.buckets[bucket_id] = Bucket(
+            limit=int(header["X-RateLimit-Limit"]),
+            remaining=int(header["X-RateLimit-Remaining"]),
+            reset=float(header["X-RateLimit-Reset"]),
+            reset_after=float(header["X-RateLimit-Reset-After"]),
+            time_cached=time()
+        )
+
+        _log.info("Rate limit bucket detected with ID %s.", bucket_id)
 
     async def wait_until_not_ratelimited(
         self,
         endpoint: str,
         method: HttpCallable
     ):
-        bucket_id = self.bucket_map.get((endpoint, method), None)
+        """
+        Waits until the response no longer needs to be blocked to prevent a
+        429 response because of ``user`` rate limits.
 
-        if bucket_id is None:
+        Parameters
+        ----------
+        endpoint : str
+            The endpoint
+        method : :class:`~pincer.core.http.HttpCallable`
+            The method used on the endpoint (Eg. ``Get``, ``Post``, ``Patch``)
+        """
+        bucket_id = self.bucket_map.get((endpoint, method))
+
+        if not bucket_id:
             return
 
         bucket = self.buckets[bucket_id]

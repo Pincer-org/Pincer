@@ -5,8 +5,10 @@ from .dispatch import GatewayDispatch
 from .gateway import Dispatcher
 from .heartbeat import Heartbeat
 from .http import HTTPClient
+from .ratelimiter import RateLimiter, Bucket
 
 
 __all__ = (
-    "Dispatcher", "GatewayDispatch", "HTTPClient", "Heartbeat"
+    "Dispatcher", "GatewayDispatch", "HTTPClient", "Heartbeat", "RateLimiter",
+    "Bucket"
 )
