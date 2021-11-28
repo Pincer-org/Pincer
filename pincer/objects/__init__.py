@@ -130,10 +130,10 @@ __all__ = (
     "IntegrationExpireBehavior", "Intents", "Interaction", "InteractionData",
     "InteractionFlags", "InteractionType", "Invite", "InviteCreateEvent",
     "InviteDeleteEvent", "InviteMetadata", "InviteStageInstance",
-    "InviteTargetType", "MFALevel", "Message", "MessageActivity",
-    "MessageActivityType", "MessageComponent", "MessageContext",
-    "MessageDeleteBulkEvent", "MessageDeleteEvent", "MessageFlags",
-    "MessageInteraction", "MessageReactionAddEvent",
+    "InviteTargetType", "MFALevel", "Mentionable", "Message",
+    "MessageActivity", "MessageActivityType", "MessageComponent",
+    "MessageContext", "MessageDeleteBulkEvent", "MessageDeleteEvent",
+    "MessageFlags", "MessageInteraction", "MessageReactionAddEvent",
     "MessageReactionRemoveAllEvent", "MessageReactionRemoveEmojiEvent",
     "MessageReactionRemoveEvent", "MessageReference", "MessageType",
     "NewsChannel", "Overwrite", "PartialGuildMember", "PremiumTier",
@@ -148,5 +148,5 @@ __all__ = (
     "User", "UserMessage", "VerificationLevel", "VisibilityType",
     "VoiceChannel", "VoiceRegion", "VoiceServerUpdateEvent", "VoiceState",
     "Webhook", "WebhookType", "WebhooksUpdateEvent", "WelcomeScreen",
-    "WelcomeScreenChannel", "Mentionable"
+    "WelcomeScreenChannel"
 )
