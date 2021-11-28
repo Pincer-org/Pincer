@@ -20,7 +20,7 @@ class Bot(Client):
     async def on_ready(self):
         print(
             f"Started client on {self.bot}\n"
-            "Registered commands: " + ", ".join(self.chat_commands)
+            f"Registered commands: {', '.join(self.chat_commands)}"
         )
 
     @command(
@@ -36,7 +36,7 @@ class Bot(Client):
             re.compile(r"(<@!(\d+)>)"), message
         ):
             message = message.replace(
-                text_match, "@%s" % await self.get_user(user_id)
+                text_match, f"@{await self.get_user(user_id)}"
             )
 
         if len(message) > 280:
