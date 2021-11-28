@@ -26,7 +26,6 @@ class Bot(Client):
 
     @command(
         description="to create fake tweets",
-        guild=690604075775164437
     )
     async def twitter(
         self, ctx: MessageContext, content: CommandArg[str, Description["The content of the message"]]
@@ -160,4 +159,4 @@ if __name__ == "__main__":
     # Of course we have to run our client, you can replace the
     # XXXYOURBOTTOKENHEREXXX with your token, or dynamically get it
     # through a dotenv/env.
-    Bot("OTA1MzczMDYwMjcyNjMxODI4.YYJIXg.oegS9NPilP449bk_BCKIpYWjq5Y").run()
+    Bot("XXXYOURBOTTOKENHEREXXX").run()
