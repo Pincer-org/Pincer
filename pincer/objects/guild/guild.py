@@ -1269,6 +1269,27 @@ class Guild(APIObject):
                 construct_client_dict(self._client, emoji_data)
             )
 
+    async def get_emoji(self, id: Snowflake) -> Emoji:
+        """|coro|
+        Returns an emoji object for the given ID.
+
+        Parameters
+        ----------
+        id : :class:`~pincer.utils.snowflake.Snowflake`
+            The ID of the emoji
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.emoji.Emoji`
+            The emoji object.
+        """
+        return Emoji.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.get(f"guilds/{self.id}/emojis/{id}")
+            )
+        )
+
     @classmethod
     def from_dict(cls, data) -> Guild:
         """
