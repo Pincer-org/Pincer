@@ -231,7 +231,7 @@ class HTTPClient:
 
                 _log.exception(
                     f"RateLimitError: {res.reason}."
-                    f" The scope is {res.headers.get('X-RateLimit-Scope')}"
+                    f" The scope is {res.headers.get('X-RateLimit-Scope')}."
                     f" Retrying in {timeout} seconds"
                 )
                 await sleep(timeout)
