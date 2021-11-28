@@ -1374,6 +1374,28 @@ class Guild(APIObject):
             construct_client_dict(self._client, data)
         )
 
+    async def delete_emoji(
+        self,
+        id: Snowflake,
+        *,
+        reason: Optional[str] = None
+    ):
+        """|coro|
+        Deletes the given emoji.
+        Requires the ``MANAGE_EMOJIS_AND_STICKERS`` permission.
+
+        Parameters
+        ----------
+        id : :class:`~pincer.utils.snowflake.Snowflake`
+            The ID of the emoji
+        reason : Optional[:class:`str`]
+            The reason for deleting the emoji |default| :data:`None`
+        """
+        await self._http.delete(
+            f"guilds/{self.id}/emojis/{id}",
+            headers=remove_none({"X-Audit-Log-Reason": reason})
+        )
+
     @classmethod
     def from_dict(cls, data) -> Guild:
         """
