@@ -24,15 +24,15 @@ async def guild_member_chunk_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildMembersChunkEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.guild.GuildMembersChunkEvent`]
         ``on_guild_member_chunk`` and a ``GuildMembersChunkEvent``
-    """
+    """  # noqa: E501
 
     return (
         "on_guild_member_chunk",
-        [GuildMembersChunkEvent.from_dict(
+        GuildMembersChunkEvent.from_dict(
             construct_client_dict(self, payload.data)
-        )]
+        )
     )
 
 

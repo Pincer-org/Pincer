@@ -21,12 +21,13 @@ async def invite_delete_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.events.invite.InviteDeleteEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.events.invite.InviteDeleteEvent`]
         ``on_invite_delete`` and an ``InviteDeleteEvent``
     """
-    return "on_invite_delete", [
+    return (
+        "on_invite_delete",
         InviteDeleteEvent.from_dict(construct_client_dict(self, payload.data))
-    ]
+    )
 
 
 def export() -> Coro:

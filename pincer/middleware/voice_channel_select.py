@@ -21,12 +21,15 @@ async def voice_channel_select_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.voice.VoiceChannelSelectEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.voice.VoiceChannelSelectEvent`]
         ``on_voice_channel_select`` and a ``VoiceChannelSelectEvent``
-    """
-    return "on_voice_channel_select", [
-        VoiceChannelSelectEvent.from_dict(construct_client_dict(self, payload.data))
-    ]
+    """  # noqa: E501
+    return (
+        "on_voice_channel_select",
+        VoiceChannelSelectEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        )
+    )
 
 
 def export() -> Coro:

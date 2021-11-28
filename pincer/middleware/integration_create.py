@@ -21,12 +21,15 @@ async def integration_create_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.events.integration.IntegrationCreateEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.events.integration.IntegrationCreateEvent`]
         ``on_integration_create`` and an ``IntegrationCreateEvent``
-    """
-    return "on_integration_create", [
-        IntegrationCreateEvent.from_dict(construct_client_dict(self, payload.data))
-    ]
+    """  # noqa: E501
+    return (
+        "on_integration_create",
+        IntegrationCreateEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        )
+    )
 
 
 def export() -> Coro:

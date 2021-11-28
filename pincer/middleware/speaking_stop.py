@@ -21,12 +21,13 @@ async def speaking_stop_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`Snowflake`]]
+    Tuple[:class:`str`, :class:`Snowflake`]
         ``on_speaking_stop`` and a ``Snowflake`` (user_id)
     """
-    return "on_speaking_stop", [
+    return (
+        "on_speaking_stop",
         SpeakingStopEvent.from_dict(construct_client_dict(self, payload.data))
-    ]
+    )
 
 
 def export() -> Coro:

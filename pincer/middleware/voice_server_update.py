@@ -21,12 +21,15 @@ async def voice_server_update_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.voice.VoiceServerUpdateEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.voice.VoiceServerUpdateEvent`]
         ``on_voice_server_update`` and a ``VoiceServerUpdateEvent``
-    """
-    return "on_voice_server_update", [
-        VoiceServerUpdateEvent.from_dict(construct_client_dict(self, payload.data))
-    ]
+    """  # noqa: E501
+    return (
+        "on_voice_server_update",
+        VoiceServerUpdateEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        )
+    )
 
 
 def export() -> Coro:

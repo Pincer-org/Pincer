@@ -27,13 +27,13 @@ async def guild_create_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.guild.Guild`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.guild.guild.Guild`]
 
         ``on_guild_create`` and a ``Guild``
     """
     guild = Guild.from_dict(construct_client_dict(self, payload.data))
     self.guilds[guild.id] = guild
-    return "on_guild_create", [guild]
+    return "on_guild_create", guild
 
 
 def export():

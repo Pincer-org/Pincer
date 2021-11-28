@@ -21,12 +21,13 @@ async def typing_start_middleware(self, payload: GatewayDispatch):
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.typing_start.TypingStartEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.typing_start.TypingStartEvent`]
         ``on_typing_start`` and a ``TypingStartEvent``
-    """
-    return "on_typing_start", [
+    """  # noqa: E501
+    return (
+        "on_typing_start",
         TypingStartEvent.from_dict(construct_client_dict(self, payload.data))
-    ]
+    )
 
 
 def export() -> Coro:

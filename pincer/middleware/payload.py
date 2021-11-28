@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 async def payload_middleware(
     payload: GatewayDispatch
-) -> Tuple[str, List[GatewayDispatch]]:
+) -> Tuple[str, GatewayDispatch]:
     """Invoked when basically anything is received from gateway.
 
     Parameters
@@ -24,10 +24,10 @@ async def payload_middleware(
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.core.dispatch.GatewayDispatch`]]
+    Tuple[:class:`str`, :class:`~pincer.core.dispatch.GatewayDispatch`]
         ``on_payload`` and a ``payload``
     """
-    return "on_payload", [payload]
+    return "on_payload", payload
 
 
 def export():

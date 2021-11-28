@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 class _Processable(ABC):
 
     @abstractmethod
-    def process(self, event_name: str, *args):
+    def process(self, event_name: str, event_value: Any):
         """
         Method that is ran when an event is received from discord.
 
@@ -26,8 +26,8 @@ class _Processable(ABC):
         ----------
         event_name : str
             The name of the event.
-        *args : Any
-            Arguments to evaluate check with.
+        event_value : Any
+            Object to evaluate check with.
 
         Returns
         -------
@@ -35,20 +35,20 @@ class _Processable(ABC):
             Whether the event can be set
         """
 
-    def matches_event(self, event_name: str, *args):
+    def matches_event(self, event_name: str, event_value: Any):
         """
         Parameters
         ----------
         event_name : str
             Name of event.
-        *args : Any
-            Arguments to eval check with.
+        event_value : Any
+            Object to eval check with.
         """
         if self.event_name != event_name:
             return False
 
         if self.check:
-            return self.check(*args)
+            return self.check(event_value)
 
         return True
 
@@ -100,7 +100,7 @@ class _Event(_Processable):
         """Waits until ``self.event`` is set."""
         await self.event.wait()
 
-    def process(self, event_name: str, *args) -> bool:
+    def process(self, event_name: str, event_value: Any) -> bool:
         # TODO: fix docs
         """
 
@@ -113,8 +113,8 @@ class _Event(_Processable):
         -------
 
         """
-        if self.matches_event(event_name, *args):
-            self.return_value = args
+        if self.matches_event(event_name, event_value):
+            self.return_value = event_value
             self.event.set()
 
 
@@ -151,7 +151,7 @@ class _LoopMgr(_Processable):
         self.events = deque()
         self.wait = Event()
 
-    def process(self, event_name: str, *args):
+    def process(self, event_name: str, event_value: Any):
         # TODO: fix docs
         """
 
@@ -167,8 +167,8 @@ class _LoopMgr(_Processable):
         if not self.can_expand:
             return
 
-        if self.matches_event(event_name, *args):
-            self.events.append(args)
+        if self.matches_event(event_name, event_value):
+            self.events.append(event_value)
             self.wait.set()
 
     async def get_next(self):
@@ -196,17 +196,17 @@ class EventMgr:
     def __init__(self):
         self.event_list: List[_Processable] = []
 
-    def process_events(self, event_name, *args):
+    def process_events(self, event_name, event_value):
         """
         Parameters
         ----------
         event_name : str
             The name of the event to be processed.
-        *args : Any
-            The arguments returned from the middleware for this event.
+        event_value : Any
+            The object returned from the middleware for this event.
         """
         for event in self.event_list:
-            event.process(event_name, *args)
+            event.process(event_name, event_value)
 
     async def wait_for(
         self,

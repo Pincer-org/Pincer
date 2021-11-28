@@ -24,15 +24,16 @@ async def message_reaction_remove_all_middleware(
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.message.MessageReactionRemoveAllEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.message.MessageReactionRemoveAllEvent`]
         ``on_message_reaction_remove_all`` and an ``MessageReactionRemoveAllEvent``
-    """
+    """  # noqa: E501
 
-    return "on_message_reaction_remove_all", [
+    return (
+        "on_message_reaction_remove_all",
         MessageReactionRemoveAllEvent.from_dict(
             construct_client_dict(self, payload.data)
         )
-    ]
+    )
 
 
 def export():
