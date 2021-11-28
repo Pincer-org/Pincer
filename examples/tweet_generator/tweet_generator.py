@@ -28,7 +28,9 @@ class Bot(Client):
         description="to create fake tweets",
     )
     async def twitter(
-        self, ctx: MessageContext, content: CommandArg[str, Description["The content of the message"]]
+        self,
+        ctx: MessageContext,
+        content: CommandArg[str, Description["The content of the message"]]
     ):
         await ctx.interaction.ack()
 
