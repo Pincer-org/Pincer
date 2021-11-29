@@ -1469,6 +1469,44 @@ class Guild(APIObject):
             construct_client_dict(self._client, data)
         )
 
+    async def edit_template(
+        self,
+        template: GuildTemplate,
+        *,
+        name: Optional[str] = None,
+        description: Optional[str] = None
+    ) -> GuildTemplate:
+        """|coro|
+        Modifies the template's metadata.
+        Requires the ``MANAGE_GUILD`` permission.
+
+        Parameters
+        ----------
+        template : :class:`~pincer.objects.guild.template.GuildTemplate`
+            The template to edit
+        name : Optional[:class:`str`]
+            Name of the template (1-100 characters)
+            |default| :data:`None`
+        description : Optional[:class:`str`]
+            Description of the template (0-120 characters)
+            |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.template.GuildTemplate`
+            The edited template object.
+        """
+        data = await self._http.patch(
+            f"guilds/{self.id}/templates/{template.code}",
+            data={
+                "name": name,
+                "description": description
+            }
+        )
+        return GuildTemplate.from_dict(
+            construct_client_dict(self._client, data)
+        )
+
     @classmethod
     def from_dict(cls, data) -> Guild:
         """
