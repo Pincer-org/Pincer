@@ -419,7 +419,7 @@ class Guild(APIObject):
         channel_data = await client.http.get(f"/guilds/{_id}/channels")
 
         data["channels"]: List[Channel] = [
-            Channel.from_dict({**i, "_client": client, "_http": client.http})
+            Channel.from_dict({**i, "_client": client})
             for i in (channel_data or [])
         ]
 
