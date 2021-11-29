@@ -490,7 +490,7 @@ class Client(Dispatcher):
                 )
 
             next_call = get_index(extractable, 0, "")
-            ret_object = get_index(extractable, 1, None)
+            ret_object = get_index(extractable, 1)
 
         if next_call is None:
             raise RuntimeError(f"Middleware `{key}` has not been registered.")

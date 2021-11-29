@@ -238,5 +238,5 @@ class User(APIObject):
         message : :class:`~pincer.utils.convert_message.MessageConvertable`
             Message to be sent to the user.
         """
-        channel = await self.get_dm_channel()
-        return await channel.send(message)
+        _channel = await self.get_dm_channel()
+        return await _channel.send(message)
