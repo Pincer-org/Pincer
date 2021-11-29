@@ -81,8 +81,7 @@ class Dispatcher:
                 with the Discord API.
             payload : :class:`~pincer.core.dispatch.GatewayDispatch`
                 The received payload from Discord.
-            """
-            # noqa: E501
+            """ # noqa: E501
             _log.debug("Sending authentication/identification message.")
 
             await socket.send(self.__hello_socket)
