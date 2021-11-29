@@ -233,10 +233,7 @@ class APIObject(metaclass=HTTPMeta):
         -------
 
         """
-        if self.__dict__.get('name'):
-            return self.name
-
-        return super().__str__()
+        return getattr(self, 'id', None) or super().__str__()
 
     @classmethod
     def from_dict(
