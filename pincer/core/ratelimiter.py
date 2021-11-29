@@ -7,10 +7,10 @@ from asyncio import sleep
 from dataclasses import dataclass
 import logging
 from time import time
-from typing import TYPE_CHECKING, Tuple
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Dict
+    from typing import Dict, Tuple
     from .http import HttpCallable
 
 _log = logging.getLogger(__name__)
