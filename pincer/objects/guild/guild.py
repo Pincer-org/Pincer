@@ -23,6 +23,7 @@ if TYPE_CHECKING:
     from .features import GuildFeature
     from .role import Role
     from .stage import StageInstance
+    from .template import GuildTemplate
     from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
     from .widget import GuildWidget
     from ..user.user import User
@@ -1394,6 +1395,141 @@ class Guild(APIObject):
         await self._http.delete(
             f"guilds/{self.id}/emojis/{id}",
             headers=remove_none({"X-Audit-Log-Reason": reason})
+        )
+
+    async def get_templates(self) -> AsyncGenerator[GuildTemplate, None]:
+        """|coro|
+        Returns an async generator of the guild templates.
+
+        Yields
+        -------
+        AsyncGenerator[:class:`~pincer.objects.guild.template.GuildTemplate`, :data:`None`]
+            The guild template object.
+        """
+        data = await self._http.get(f"guilds/{self.id}/templates")
+        for template_data in data:
+            yield GuildTemplate.from_dict(
+                construct_client_dict(self._client, template_data)
+            )
+
+    async def create_template(
+        self,
+        name: str,
+        description: Optional[str] = None
+    ) -> GuildTemplate:
+        """|coro|
+        Creates a new template for the guild.
+        Requires the ``MANAGE_GUILD`` permission.
+
+        Parameters
+        ----------
+        name : :class:`str`
+            Name of the template (1-100 characters)
+        description : Optional[:class:`str`]
+            Description of the template
+            (0-120 characters) |default| :data:`None`
+        Returns
+        -------
+        :class:`~pincer.objects.guild.template.GuildTemplate`
+            The newly created template object.
+        """
+        data = await self._http.post(
+            f"guilds/{self.id}/templates",
+            data={
+                "name": name,
+                "description": description
+            }
+        )
+        return GuildTemplate.from_dict(
+            construct_client_dict(self._client, data)
+        )
+
+    async def sync_template(
+        self,
+        template: GuildTemplate
+    ) -> GuildTemplate:
+        """|coro|
+        Syncs the given template.
+        Requires the ``MANAGE_GUILD`` permission.
+
+        Parameters
+        ----------
+        template : :class:`~pincer.objects.guild.template.GuildTemplate`
+            The template to sync
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.template.GuildTemplate`
+            The synced template object.
+        """
+        data = await self._http.put(
+            f"guilds/{self.id}/templates/{template.code}"
+        )
+        return GuildTemplate.from_dict(
+            construct_client_dict(self._client, data)
+        )
+
+    async def edit_template(
+        self,
+        template: GuildTemplate,
+        *,
+        name: Optional[str] = None,
+        description: Optional[str] = None
+    ) -> GuildTemplate:
+        """|coro|
+        Modifies the template's metadata.
+        Requires the ``MANAGE_GUILD`` permission.
+
+        Parameters
+        ----------
+        template : :class:`~pincer.objects.guild.template.GuildTemplate`
+            The template to edit
+        name : Optional[:class:`str`]
+            Name of the template (1-100 characters)
+            |default| :data:`None`
+        description : Optional[:class:`str`]
+            Description of the template (0-120 characters)
+            |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.template.GuildTemplate`
+            The edited template object.
+        """
+        data = await self._http.patch(
+            f"guilds/{self.id}/templates/{template.code}",
+            data={
+                "name": name,
+                "description": description
+            }
+        )
+        return GuildTemplate.from_dict(
+            construct_client_dict(self._client, data)
+        )
+
+    async def delete_template(
+        self,
+        template: GuildTemplate
+    ) -> GuildTemplate:
+        """|coro|
+        Deletes the given template.
+        Requires the ``MANAGE_GUILD`` permission.
+
+        Parameters
+        ----------
+        template : :class:`~pincer.objects.guild.template.GuildTemplate`
+            The template to delete
+        
+        Returns
+        -------
+        :class:`~pincer.objects.guild.template.GuildTemplate`
+            The deleted template object.
+        """
+        data = await self._http.delete(
+            f"guilds/{self.id}/templates/{template.code}"
+        )
+        return GuildTemplate.from_dict(
+            construct_client_dict(self._client, data)
         )
 
     @classmethod

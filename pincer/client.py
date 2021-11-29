@@ -21,8 +21,10 @@ from .exceptions import (
 )
 from .middleware import middleware
 from .objects import (
-    Role, Channel, DefaultThrottleHandler, User, Guild, Intents
+    Role, Channel, DefaultThrottleHandler, User, Guild, Intents,
+    GuildTemplate
 )
+from .utils.conversion import construct_client_dict
 from .utils.event_mgr import EventMgr
 from .utils.extraction import get_index
 from .utils.insertion import should_pass_cls
@@ -646,6 +648,60 @@ class Client(Dispatcher):
     async def create_guild(self, name: str, **kwargs) -> Guild:
         g = await self.http.post("guilds", data={"name": name, **kwargs})
         return await self.get_guild(g['id'])
+
+    async def get_guild_template(self, code: str) -> GuildTemplate:
+        """|coro|
+        Retrieves a guild template by its code.
+
+        Parameters
+        ----------
+        code : :class:`str`
+            The code of the guild template
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.template.GuildTemplate`
+            The guild template
+        """
+        return GuildTemplate.from_dict(
+            construct_client_dict(
+                self, 
+                await self.http.get(f"guilds/templates/{code}")
+            )
+        )
+
+    async def create_guild_from_template(
+        self,
+        template: GuildTemplate,
+        name: str,
+        icon: Optional[str] = None
+    ) -> Guild:
+        """|coro|
+        Creates a guild from a template.
+
+        Parameters
+        ----------
+        template : :class:`~pincer.objects.guild.template.GuildTemplate`
+            The guild template
+        name : :class:`str`
+            Name of the guild (2-100 characters)
+        icon : Optional[:class:`str`]
+            base64 128x128 image for the guild icon |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.guild.Guild`
+            The created guild
+        """
+        return Guild.from_dict(
+            construct_client_dict(
+                self,
+                await self.http.post(
+                    f"guilds/templates/{template.code}",
+                    data={"name": name, "icon": icon}
+                )
+            )
+        )
 
     async def wait_for(
             self,
