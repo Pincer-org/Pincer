@@ -1,0 +1,12 @@
+flowchart TD
+
+A[Gateway] --> B[Middleware]
+
+B -->|Interaction Create| C[Handle Commands]
+B -->|Other| E
+
+C --> |Err| D[On Command Error]
+C --> |Ok| E
+D --> E
+
+E[Create Interaction Object] --> F[User Functions]

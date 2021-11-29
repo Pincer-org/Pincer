@@ -1,21 +1,6 @@
-<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-
 # Gateway
-<div class="mermaid">
+<img src="../docs/mermaid/gateway.png" alt="Gateway Graph">
 
-     flowchart TD
-
-     A[Gateway] --> B[Middleware]
-
-     B -->|Interaction Create| C[Handle Commands]
-     B -->|Other| E
-
-     C --> |Err| D[On Command Error]
-     C --> |Ok| E
-     D --> E
-
-     E[Create Interaction Object] --> F[User Functions]
-</div>
 
 ### Gateway
 The gateway is where events from Discord are recieved. Sharding is not currently implemented in the lib but when it is, it will be mentioned in this section.
