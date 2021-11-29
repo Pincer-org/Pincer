@@ -1507,6 +1507,31 @@ class Guild(APIObject):
             construct_client_dict(self._client, data)
         )
 
+    async def delete_template(
+        self,
+        template: GuildTemplate
+    ) -> GuildTemplate:
+        """|coro|
+        Deletes the given template.
+        Requires the ``MANAGE_GUILD`` permission.
+
+        Parameters
+        ----------
+        template : :class:`~pincer.objects.guild.template.GuildTemplate`
+            The template to delete
+        
+        Returns
+        -------
+        :class:`~pincer.objects.guild.template.GuildTemplate`
+            The deleted template object.
+        """
+        data = await self._http.delete(
+            f"guilds/{self.id}/templates/{template.code}"
+        )
+        return GuildTemplate.from_dict(
+            construct_client_dict(self._client, data)
+        )
+
     @classmethod
     def from_dict(cls, data) -> Guild:
         """
