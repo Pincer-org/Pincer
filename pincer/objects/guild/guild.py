@@ -1444,6 +1444,31 @@ class Guild(APIObject):
             construct_client_dict(self._client, data)
         )
 
+    async def sync_template(
+        self,
+        template: GuildTemplate
+    ) -> GuildTemplate:
+        """|coro|
+        Syncs the given template.
+        Requires the ``MANAGE_GUILD`` permission.
+
+        Parameters
+        ----------
+        template : :class:`~pincer.objects.guild.template.GuildTemplate`
+            The template to sync
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.template.GuildTemplate`
+            The synced template object.
+        """
+        data = await self._http.put(
+            f"guilds/{self.id}/templates/{template.code}"
+        )
+        return GuildTemplate.from_dict(
+            construct_client_dict(self._client, data)
+        )
+
     @classmethod
     def from_dict(cls, data) -> Guild:
         """
