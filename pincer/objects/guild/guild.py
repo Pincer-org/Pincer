@@ -23,6 +23,7 @@ if TYPE_CHECKING:
     from .features import GuildFeature
     from .role import Role
     from .stage import StageInstance
+    from .template import GuildTemplate
     from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
     from .widget import GuildWidget
     from ..user.user import User
@@ -1395,6 +1396,21 @@ class Guild(APIObject):
             f"guilds/{self.id}/emojis/{id}",
             headers=remove_none({"X-Audit-Log-Reason": reason})
         )
+
+    async def get_templates(self) -> AsyncGenerator[GuildTemplate, None]:
+        """|coro|
+        Returns an async generator of the guild templates.
+
+        Yields
+        -------
+        AsyncGenerator[:class:`~pincer.objects.guild.template.GuildTemplate`, :data:`None`]
+            The guild template object.
+        """
+        data = await self._http.get(f"guilds/{self.id}/templates")
+        for template_data in data:
+            yield GuildTemplate.from_dict(
+                construct_client_dict(self._client, template_data)
+            )
 
     @classmethod
     def from_dict(cls, data) -> Guild:
