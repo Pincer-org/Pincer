@@ -15,15 +15,16 @@ from ...utils.types import MISSING
 if TYPE_CHECKING:
     from typing import Any, Dict, List, Optional, Union
 
+    from .audit_log import AuditLog
     from .ban import Ban
     from .channel import Channel
     from .invite import Invite
     from .member import GuildMember
-    from .widget import GuildWidget
     from .features import GuildFeature
     from .role import Role
     from .stage import StageInstance
     from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
+    from .widget import GuildWidget
     from ..user.user import User
     from ..user.integration import Integration
     from ..voice.region import VoiceRegion
@@ -537,7 +538,7 @@ class Guild(APIObject):
         """|coro|
         Fetches all the roles in the guild.
 
-        Returns
+        Yields
         -------
         AsyncGenerator[:class:`~pincer.objects.guild.role.Role`, :data:`None`]
             An async generator of Role objects.
@@ -628,7 +629,7 @@ class Guild(APIObject):
         position : Optional[:class:`int`]
             Sorting position of the role |default| :data:`None`
 
-        Returns
+        Yields
         -------
         AsyncGenerator[:class:`~pincer.objects.guild.role.Role`, :data:`None`]
             An async generator of all of the guild's role objects.
@@ -729,7 +730,7 @@ class Guild(APIObject):
         """|coro|
         Fetches all the bans in the guild.
 
-        Returns
+        Yields
         -------
         AsyncGenerator[:class:`~pincer.objects.guild.ban.Ban`, :data:`None`]
             An async generator of Ban objects.
@@ -951,7 +952,7 @@ class Guild(APIObject):
         """|coro|
         Returns an async generator of voice regions.
 
-        Returns
+        Yields
         -------
         AsyncGenerator[:class:`~pincer.objects.voice.VoiceRegion`, :data:`None`]
             An async generator of voice regions.
@@ -965,7 +966,7 @@ class Guild(APIObject):
         Returns an async generator of invites for the guild.
         Requires the ``MANAGE_GUILD`` permission.
 
-        Returns
+        Yields
         -------
         AsyncGenerator[:class:`~pincer.objects.invite.Invite`, :data:`None`]
             An async generator of invites.
@@ -979,7 +980,7 @@ class Guild(APIObject):
         Returns an async generator of integrations for the guild.
         Requires the ``MANAGE_GUILD`` permission.
 
-        Returns
+        Yields
         -------
         AsyncGenerator[:class:`~pincer.objects.integration.Integration`, :data:`None`]
             An async generator of integrations.
@@ -1234,6 +1235,165 @@ class Guild(APIObject):
                 "channel_id": channel_id,
                 "suppress": suppress
             }
+        )
+
+    async def get_audit_log(self) -> AuditLog:
+        """|coro|
+        Returns an audit log object for the guild.
+        Requires the ``VIEW_AUDIT_LOG`` permission.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.audit_log.AuditLog`
+            The audit log object for the guild.
+        """
+        return AuditLog.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.get(f"guilds/{self.id}/audit-logs")
+            )
+        )
+
+    async def get_emojis(self) -> AsyncGenerator[Emoji, None]:
+        """|coro|
+        Returns an async generator of the emojis in the guild.
+
+        Yields
+        ------
+        :class:`~pincer.objects.guild.emoji.Emoji`
+            The emoji object.
+        """
+        data = await self._http.get(f"guilds/{self.id}/emojis")
+        for emoji_data in data:
+            yield Emoji.from_dict(
+                construct_client_dict(self._client, emoji_data)
+            )
+
+    async def get_emoji(self, id: Snowflake) -> Emoji:
+        """|coro|
+        Returns an emoji object for the given ID.
+
+        Parameters
+        ----------
+        id : :class:`~pincer.utils.snowflake.Snowflake`
+            The ID of the emoji
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.emoji.Emoji`
+            The emoji object.
+        """
+        return Emoji.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.get(f"guilds/{self.id}/emojis/{id}")
+            )
+        )
+
+    async def create_emoji(
+        self,
+        *,
+        name: str,
+        image: str,
+        roles: List[Snowflake],
+        reason: Optional[str] = None
+    ) -> Emoji:
+        """|coro|
+        Creates a new emoji for the guild.
+        Requires the ``MANAGE_EMOJIS_AND_STICKERS`` permission.
+
+        Emojis and animated emojis have a maximum file size of 256kb.
+        Attempting to upload an emoji larger than this limit will fail.
+
+        Parameters
+        ----------
+        name : :class:`str`
+            Name of the emoji
+        image : :class:`str`
+            The 128x128 emoji image data
+        roles : List[:class:`~pincer.utils.snowflake.Snowflake`]
+            Roles allowed to use this emoji
+        reason : Optional[:class:`str`]
+            The reason for creating the emoji |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.emoji.Emoji`
+            The newly created emoji object.
+        """
+        data = await self._http.post(
+            f"guilds/{self.id}/emojis",
+            data={
+                "name": name,
+                "image": image,
+                "roles": roles
+            },
+            headers=remove_none({"X-Audit-Log-Reason": reason})
+        )
+        return Emoji.from_dict(
+            construct_client_dict(self._client, data)
+        )
+
+    async def edit_emoji(
+        self,
+        id: Snowflake,
+        *,
+        name: Optional[str] = None,
+        roles: Optional[List[Snowflake]] = None,
+        reason: Optional[str] = None
+    ) -> Emoji:
+        """|coro|
+        Modifies the given emoji.
+        Requires the ``MANAGE_EMOJIS_AND_STICKERS`` permission.
+
+        Parameters
+        ----------
+        id : :class:`~pincer.utils.snowflake.Snowflake`
+            The ID of the emoji
+        name : Optional[:class:`str`]
+            Name of the emoji |default| :data:`None`
+        roles : Optional[List[:class:`~pincer.utils.snowflake.Snowflake`]]
+            Roles allowed to use this emoji |default| :data:`None`
+        reason : Optional[:class:`str`]
+            The reason for editing the emoji |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.emoji.Emoji`
+            The modified emoji object.
+        """
+        data = await self._http.patch(
+            f"guilds/{self.id}/emojis/{id}",
+            data={
+                "name": name,
+                "roles": roles
+            },
+            headers=remove_none({"X-Audit-Log-Reason": reason})
+        )
+        return Emoji.from_dict(
+            construct_client_dict(self._client, data)
+        )
+
+    async def delete_emoji(
+        self,
+        id: Snowflake,
+        *,
+        reason: Optional[str] = None
+    ):
+        """|coro|
+        Deletes the given emoji.
+        Requires the ``MANAGE_EMOJIS_AND_STICKERS`` permission.
+
+        Parameters
+        ----------
+        id : :class:`~pincer.utils.snowflake.Snowflake`
+            The ID of the emoji
+        reason : Optional[:class:`str`]
+            The reason for deleting the emoji |default| :data:`None`
+        """
+        await self._http.delete(
+            f"guilds/{self.id}/emojis/{id}",
+            headers=remove_none({"X-Audit-Log-Reason": reason})
         )
 
     @classmethod
