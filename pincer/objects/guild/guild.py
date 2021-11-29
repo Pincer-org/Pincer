@@ -1163,7 +1163,7 @@ class Guild(APIObject):
         )
         return WelcomeScreen.from_dict(construct_client_dict(self._client, data))
 
-    async def modify_curent_user_voice_state(
+    async def modify_current_user_voice_state(
         self,
         channel_id: Snowflake,
         suppress: Optional[bool] = None,

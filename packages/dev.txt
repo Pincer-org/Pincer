@@ -1,4 +1,4 @@
-coverage==6.1.2
+coverage==6.2
 flake8==4.0.1
 tox==3.24.4
 pre-commit==2.15.0
