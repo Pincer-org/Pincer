@@ -44,7 +44,7 @@ class RateLimiter:
     """Prevents ``user`` rate limits
     Attributes
     ----------
-    bucket_map : Tuple[str, :class:`~pincer.core.http.HttpCallable`]
+    bucket_map : Dict[Tuple[str, :class:`~pincer.core.http.HttpCallable`], str]
         Maps endpoints and methods to a rate limit bucket
     buckets : Dict[str, :class:`~pincer.core.ratelimiter.Bucket`]
         Dictionary of buckets
