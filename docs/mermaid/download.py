@@ -29,24 +29,13 @@ async def download_file(file):
 
 
 async def download_all(directory):
-    funcs = []
-    files = []
-
     if not directory:
         directory = ""
 
-    for file in glob.glob(directory + "*.mmd"):
-        with open(file) as f:
-            contents = f.read()
-            graphbytes = contents.encode("ascii")
-            base64_bytes = base64.b64encode(graphbytes)
-            files.append(os.path.splitext(file)[0])
-            funcs.append(download_img(base64_bytes))
-
-    res = await asyncio.gather(*funcs)
-
-    for file, image in zip(files, res):
-        image.save(file + ".png")
+    await asyncio.gather(*(
+        download_file(file)
+        for file in glob.glob(directory + "*.mmd")
+    ))
 
 
 def main():
