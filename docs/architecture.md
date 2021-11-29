@@ -1,6 +1,7 @@
 # Gateway
 ```mermaid
 flowchart TD
+
     A[Gateway] --> B[Middleware]
 
     B -->|Interaction Create| C[Handle Commands]
