@@ -1412,6 +1412,38 @@ class Guild(APIObject):
                 construct_client_dict(self._client, template_data)
             )
 
+    async def create_template(
+        self,
+        name: str,
+        description: Optional[str] = None
+    ) -> GuildTemplate:
+        """|coro|
+        Creates a new template for the guild.
+        Requires the ``MANAGE_GUILD`` permission.
+
+        Parameters
+        ----------
+        name : :class:`str`
+            Name of the template (1-100 characters)
+        description : Optional[:class:`str`]
+            Description of the template
+            (0-120 characters) |default| :data:`None`
+        Returns
+        -------
+        :class:`~pincer.objects.guild.template.GuildTemplate`
+            The newly created template object.
+        """
+        data = await self._http.post(
+            f"guilds/{self.id}/templates",
+            data={
+                "name": name,
+                "description": description
+            }
+        )
+        return GuildTemplate.from_dict(
+            construct_client_dict(self._client, data)
+        )
+
     @classmethod
     def from_dict(cls, data) -> Guild:
         """
