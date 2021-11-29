@@ -670,6 +670,39 @@ class Client(Dispatcher):
             )
         )
 
+    async def create_guild_from_template(
+        self,
+        template: GuildTemplate,
+        name: str,
+        icon: Optional[str] = None
+    ) -> Guild:
+        """|coro|
+        Creates a guild from a template.
+
+        Parameters
+        ----------
+        template : :class:`~pincer.objects.guild.template.GuildTemplate`
+            The guild template
+        name : :class:`str`
+            Name of the guild (2-100 characters)
+        icon : Optional[:class:`str`]
+            base64 128x128 image for the guild icon |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.guild.Guild`
+            The created guild
+        """
+        return Guild.from_dict(
+            construct_client_dict(
+                self,
+                await self.http.post(
+                    f"guilds/templates/{template.code}",
+                    data={"name": name, "icon": icon}
+                )
+            )
+        )
+
     async def wait_for(
             self,
             event_name: str,
