@@ -460,24 +460,24 @@ class Guild(APIObject):
         ----------
         name : str
             channel name (1-100 characters)
-        type : Optional[int]
+        type : Optional[:class:int`]
             the type of channel
-        topic : Optional[str]
+        topic : Optional[:class:str`]
             channel topic (0-1024 characters)
-        bitrate : `Optional[int]
+        bitrate : Optional[:class:`int`]
             the bitrate (in bits) of the voice channel (voice only)
-        user_limit : `Optional[int]
+        user_limit : Optional[:class:`int`]
             the user limit of the voice channel (voice only)
-        rate_limit_per_user : `Optional[int]
+        rate_limit_per_user : Optional[:class:`int`]
             amount of seconds a user has to wait before sending another message (0-21600)
             bots, as well as users with the permission manage_messages or manage_channel, are unaffected
-        position : Optional[int]
+        position : Optional[:class:`int`]
             sorting position of the channel
         permission_overwrites : Optional[List[:class:`~pincer.objects.guild.overwrite.Overwrite`]]
             the channel's permission overwrites
         parent_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
             id of the parent category for a channel
-        nsfw : `Optional[bool]
+        nsfw : Optional[:class:`bool`]
             whether the channel is nsfw
 
         """
@@ -495,11 +495,11 @@ class Guild(APIObject):
         Parameters
         ----------
 
-        *channel : Dict[str, Optional[Union[int, bool, :class:`~pincer.utils.snowflake.Snowflake`]
+        \*channel : Dict[str, Optional[Union[int, bool, :class:`~pincer.utils.snowflake.Snowflake`]
             Keys:
                 - id : :class:`~pincer.utils.snowflake.Snowflake`
-                - position : Optional[int]
-                - lock_permissions : Optional[bool]
+                - position : Optional[:class:`int`]
+                - lock_permissions : Optional[:class:`bool`]
                 - parent_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
 
         """
