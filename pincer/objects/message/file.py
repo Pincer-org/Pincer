@@ -164,4 +164,4 @@ class File:
 
         encoded_bytes = b64encode(self.content).decode('ascii')
 
-        return f"data:image/{self.image_format};base64;{encoded_bytes}"
+        return f"data:image/{self.image_format};base64,{encoded_bytes}"
