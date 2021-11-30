@@ -35,7 +35,7 @@ class CommandArg(metaclass=_CommandTypeMeta):
     ----------
     command_type : T
         The type of the command
-    \*args : :class:`~pincer.commands.arg_types.Modifier`
+    \\*args : :class:`~pincer.commands.arg_types.Modifier`
 
     """
 
@@ -124,7 +124,7 @@ class Choices(Modifier):
 
     Parameters
     ----------
-    \*choices : Union[:class:`~pincer.commands.arg_types.Choice`, str, int, float]
+    \\*choices : Union[:class:`~pincer.commands.arg_types.Choice`, str, int, float]
         A choice. If the type is not :class:`~pincer.commands.arg_types.Choice`,
         the same value will be used for the choice name and value.
     """
@@ -165,7 +165,7 @@ class ChannelTypes(Modifier):
 
     Parameters
     ----------
-    \*types : :class:`~pincer.objects.guild.channel.ChannelType`
+    \\*types : :class:`~pincer.objects.guild.channel.ChannelType`
         A list of channel types that the user can pick from.
     """
 

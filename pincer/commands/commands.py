@@ -259,9 +259,9 @@ def command(
                         "Choice value must match the command type"
                     )
 
-        cannel_types = annotation.get_arg(ChannelTypes)
+        channel_types = annotation.get_arg(ChannelTypes)
         if (
-            cannel_types is not MISSING
+            channel_types is not MISSING
             and annotation.command_type is not Channel
         ):
             raise InvalidArgumentAnnotation(
@@ -289,7 +289,7 @@ def command(
                 description=argument_description,
                 required=required,
                 choices=choices,
-                channel_types=cannel_types,
+                channel_types=channel_types,
                 max_value=max_value,
                 min_value=min_value,
             )
