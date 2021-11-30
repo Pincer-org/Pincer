@@ -118,7 +118,7 @@ class Webhook(APIObject):
         """
         request_route = (
             f"webhooks/{self.id}"
-            + (f"?{token=!s}" if token else "")
+            + (f"/{token}" if token else "")
         )
         request_data = {
             "name": name,
@@ -133,10 +133,22 @@ class Webhook(APIObject):
             data=request_data
         )
         return Webhook.from_dict(
-            construct_client_dict(
-                self._client,
-                data
-            )
+            construct_client_dict(self._client, data)
+        )
+
+    async def delete(self, token: Optional[str] = None) -> None:
+        """
+        Deletes a webhook.
+        Requires the ``MANAGE_WEBHOOKS`` permission.
+
+        Parameters
+        ----------
+        token: Optional[:class:`str`]
+            The token of the webhook
+        """
+        await self._http.delete(
+            f"webhooks/{self.id}"
+            + (f"/{token}" if token else "")
         )
 
     @classmethod
