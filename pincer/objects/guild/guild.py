@@ -486,17 +486,19 @@ class Guild(APIObject):
 
       
     @overload
-    async def create_channel(self, name: str,
-                             type: Optional[int] = None,
-                             topic: Optional[str] = None,
-                             bitrate: Optional[int] = None,
-                             user_limit: Optional[int] = None,
-                             rate_limit_per_user: Optional[int] = None,
-                             position: Optional[int] = None,
-                             permission_overwrites: Optional[
-                                 List[Overwrite]] = None,
-                             parent_id: Optional[Snowflake] = None,
-                             nsfw: Optional[bool] = None) -> Channel:
+    async def create_channel(
+        self, 
+        name: str,               
+        type: Optional[int] = None,
+        topic: Optional[str] = None,
+        bitrate: Optional[int] = None,
+        user_limit: Optional[int] = None,
+        rate_limit_per_user: Optional[int] = None,
+        position: Optional[int] = None,
+        permission_overwrites: Optional[List[Overwrite]] = None,
+        parent_id: Optional[Snowflake] = None,
+        nsfw: Optional[bool] = None
+    ) -> Channel:
         """|coro|
         Create a new channel object for the guild.
 
@@ -539,7 +541,7 @@ class Guild(APIObject):
         Parameters
         ----------
 
-        \*channel : Dict[str, Optional[Union[int, bool, :class:`~pincer.utils.snowflake.Snowflake`]
+        \\*channel : Dict[str, Optional[Union[int, bool, :class:`~pincer.utils.snowflake.Snowflake`]
             Keys:
                 - id : :class:`~pincer.utils.snowflake.Snowflake`
                 - position : Optional[:class:`int`]
