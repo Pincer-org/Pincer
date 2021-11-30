@@ -3,21 +3,26 @@
 
 from __future__ import annotations
 
+from base64 import b64encode
 import os
 from dataclasses import dataclass
 from io import BytesIO
-from typing import Any
-from typing import TYPE_CHECKING
+from json import dumps
+from typing import TYPE_CHECKING, Tuple
+
+from aiohttp import FormData
+from aiohttp.payload import Payload
 
 from ...utils import APIObject
+from ...exceptions import ImageEncodingError
 
 if TYPE_CHECKING:
-    from typing import Optional
+    from typing import Optional, Dict, Any, List, Union
 
+    IMAGE_TYPE = Any
 
 PILLOW_IMPORT = True
 
-IMAGE_TYPE = Any
 
 try:
     from PIL.Image import Image
@@ -28,8 +33,33 @@ except (ModuleNotFoundError, ImportError):
     PILLOW_IMPORT = False
 
 
+def create_form(
+    json_payload: Dict[Any], files: List[File]
+) -> Tuple[str, Union[Payload, Dict]]:
+    form = FormData()
+    form.add_field("payload_json", dumps(json_payload))
+
+    for file in files:
+        if not file.filename:
+            raise ImageEncodingError(
+                "A filename is required for uploading attachments"
+            )
+
+        form.add_field("file", file.content, filename=file.filename)
+
+    payload = form()
+    return payload.headers["Content-Type"], payload
+
+
+def _get_file_extension(filename):
+    path = os.path.splitext(filename)
+    if len(path) >= 2:
+        return path[1][1:]
+    return None
+
+
 @dataclass
-class File(APIObject):
+class File:
     """A file that is prepared by the user to be send to the discord
     API.
 
@@ -42,7 +72,8 @@ class File(APIObject):
     """
 
     content: bytes
-    filename: str
+    image_format: str
+    filename: Optional[str] = None
 
     @classmethod
     def from_file(cls, filepath: str, filename: str = None) -> File:
@@ -64,6 +95,7 @@ class File(APIObject):
 
         return cls(
             content=file,
+            image_format=_get_file_extension(filename),
             filename=filename or os.path.basename(filepath)
         )
 
@@ -71,7 +103,7 @@ class File(APIObject):
     def from_pillow_image(
             cls,
             img: IMAGE_TYPE,
-            filename: str,
+            filename: Optional[str] = None,
             image_format: Optional[str] = None,
             **kwargs
     ) -> File:
@@ -106,7 +138,7 @@ class File(APIObject):
             )
 
         if image_format is None:
-            image_format = os.path.splitext(filename)[1][1:]
+            image_format = _get_file_extension(filename)
 
             if image_format == "jpg":
                 image_format = "jpeg"
@@ -119,5 +151,17 @@ class File(APIObject):
 
         return cls(
             content=img_bytes,
+            image_format=image_format,
             filename=filename
         )
+
+    def get_uri(self) -> str:
+        if self.image_format not in {"jpeg", "png", "gif"}:
+            raise ImageEncodingError(
+                "Only image types \"jpeg\", \"png\", and \"gif\" can be sent in"
+                " an Image URI"
+            )
+
+        encoded_bytes = b64encode(self.content).decode('ascii')
+
+        return f"data:image/{self.image_format};base64;{encoded_bytes}"
