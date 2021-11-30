@@ -433,7 +433,7 @@ class Client(Dispatcher):
             if should_pass_cls(call):
                 call_args = (
                     ChatCommandHandler.managers[call.__module__],
-                    *args
+                    *(arg for arg in args if arg is not None)
                 )
 
             ensure_future(call(*call_args, **kwargs))
@@ -496,12 +496,11 @@ class Client(Dispatcher):
         if next_call is None:
             raise RuntimeError(f"Middleware `{key}` has not been registered.")
 
-        return (
-            (next_call, ret_object)
-            if next_call.startswith("on_")
-            else await self.handle_middleware(
-                payload, next_call, *arguments, **params
-            )
+        if next_call.startswith("on_"):
+            return (next_call, ret_object)
+
+        return await self.handle_middleware(
+            payload, next_call, *arguments, **params
         )
 
     async def execute_error(
@@ -548,12 +547,11 @@ class Client(Dispatcher):
             what specifically happened.
         """
         try:
-            key, ret_object = await self.handle_middleware(payload, name)
-
-            self.event_mgr.process_events(key, ret_object)
+            key, args = await self.handle_middleware(payload, name)
+            self.event_mgr.process_events(key, args)
 
             if calls := self.get_event_coro(key):
-                self.execute_event(calls, ret_object)
+                self.execute_event(calls, args)
 
         except Exception as e:
             await self.execute_error(e)
@@ -666,7 +664,7 @@ class Client(Dispatcher):
         """
         return GuildTemplate.from_dict(
             construct_client_dict(
-                self, 
+                self,
                 await self.http.get(f"guilds/templates/{code}")
             )
         )
