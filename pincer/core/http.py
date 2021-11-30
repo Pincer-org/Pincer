@@ -45,6 +45,21 @@ class HttpCallable(Protocol):
 class HTTPClient:
     """Interacts with Discord API through HTTP protocol
 
+    Parameters
+    ----------
+    Instantiate a new HttpApi object.
+
+    token:
+        Discord API token
+
+    Keyword Arguments:
+
+    version:
+        The discord API version.
+        See `<https://discord.com/developers/docs/reference#api-versioning>`_.
+    ttl:
+        Max amount of attempts after error code 5xx
+
     Attributes
     ----------
     url: :class:`str`
@@ -55,20 +70,6 @@ class HTTPClient:
     """
 
     def __init__(self, token: str, *, version: int = None, ttl: int = 5):
-        """
-        Instantiate a new HttpApi object.
-
-        token:
-            Discord API token
-
-        Keyword Arguments:
-
-        version:
-            The discord API version.
-            See `<https://discord.com/developers/docs/reference#api-versioning>`
-        ttl:
-            Max amount of attempts after error code 5xx
-        """
         version = version or GatewayConfig.version
         self.url: str = f"https://discord.com/api/v{version}"
         self.max_ttl: int = ttl
