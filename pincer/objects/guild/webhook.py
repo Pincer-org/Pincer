@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import IntEnum
+from enum import Enum, IntEnum
 from typing import TYPE_CHECKING
 
 from ...utils.api_object import APIObject
@@ -12,8 +12,13 @@ from ...utils.conversion import construct_client_dict
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from typing import Optional
+    from typing import List, Optional, overload
 
+    from ..message.attachment import Attachment
+    from ..message.component import MessageComponent
+    from ..message.embed import Embed
+    from ..message.user_message import UserMessage
+    from ..message.user_message import AllowedMentions
     from ..user.user import User
     from ..guild.guild import Guild
     from ..guild.channel import Channel
@@ -21,6 +26,10 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
     from ...client import Client
 
+class WebhookCompatibility(Enum):
+    GitHub = "/github"
+    Slack = "/slack"
+    Default = ""
 
 class WebhookType(IntEnum):
     """Represents the type of a webhook.
@@ -128,7 +137,7 @@ class Webhook(APIObject):
 
         if token:
             del request_data["channel_id"]
-        
+
         data = await self._http.patch(
             request_route,
             data=request_data
@@ -152,13 +161,100 @@ class Webhook(APIObject):
             + (f"/{token}" if token else "")
         )
 
-    async def execute_slack(
+    @overload
+    async def execute(
         self,
+        webhook_compatibility: WebhookCompatibility = WebhookCompatibility.Default,
+        *,
+        thread_id: Optional[Snowflake] = None,
+        wait: Optional[bool] = None,
+        content: Optional[str] = None,
+        username: Optional[str] = None,
+        avatar_url: Optional[str] = None,
+        tts: Optional[bool] = None,
+        embeds: Optional[List[Embed]] = None,
+        allowed_mentions: Optional[AllowedMentions] = None,
+        components: Optional[List[MessageComponent]] = None,
+        files: Optional[str] = None,  # TODO: Add support for files
+        payload_json: Optional[str] = None,
+        attachments: Optional[List[Attachment]] = None
+    ):
+        """|coro|
+        Executes a webhook.
+
+        Note that when sending a message, you must provide a value
+        for at least one of ``content``, ``embeds``, or ``file``.
+
+        Parameters
+        ----------
+        webhook_compatibility: :class:`~pincer.objects.guild.webhook.WebhookCompatibility`
+            The compatibility of the webhook
+        thread_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            ID of the thread to send message in
+        wait: Optional[:class:`bool`]
+            Waits for server confirmation of message send before
+            response (defaults to ``true``, when ``false`` a message
+            that is not saved does not return an error)
+        content: Optional[:class:`str`]
+            The message contents (up to 2000 characters)
+        username: Optional[:class:`str`]
+            Override the default username of the webhook
+        avatar_url: Optional[:class:`str`]
+            Override the default avatar of the webhook
+        tts: Optional[:class:`bool`]
+            True if this is a TTS message
+        embeds: Optional[List[:class:`~pincer.objects.message.embed.Embed`]]
+            Embedded ``rich`` content
+        allowed_mentions: Optional[:class:`~pincer.objects.message.allowed_mentions.AllowedMentions`]
+            Allowed mentions for the message
+        components: Optional[List[:class:`~pincer.objects.message.component.MessageComponent`]]
+            The components to include in the message
+        files: Optional[:class:`str`]
+            The contents of the file being sent
+        payload_json: Optional[:class:`str`]
+            JSON encoded body of non-file params
+        attachments: Optional[List[:class:`~pincer.objects.message.attachment.Attachment`]]
+            Attachment objects with filename and description
+        """
+        ...
+
+    async def execute(
+        self,
+        webhook_compatibility: WebhookCompatibility = WebhookCompatibility.Default, # noqa: E501
+        *,
+        thread_id: Optional[Snowflake] = None,
+        wait: Optional[bool] = None,
+        **kwargs
+    ):
+        request_route = f"webhooks/{self.id}/{self.token}"
+
+        # Adding the subdirectory
+        request_route += webhook_compatibility.value
+
+        # Adding query params
+        request_route += f"?{wait=}" if wait else ""
+        request_route += (
+            ("&?"[wait is None]
+            + f"{thread_id=}")
+            if thread_id else ""
+        )
+
+
+        if webhook_compatibility == WebhookCompatibility.Default:
+            request_data = kwargs
+        else:
+            request_data = None
+
+        await self._http.post(request_route, data=request_data)
+
+    async def execute_github(
+        self,
+        *,
         thread_id: Optional[Snowflake] = None,
         wait: Optional[bool] = None
     ):
         """|coro|
-        Executes a webhook in Slack.
+        Executes a GitHub compatible webhook.
 
         Parameters
         ----------
@@ -169,12 +265,56 @@ class Webhook(APIObject):
             response (defaults to ``true``, when ``false`` a message
             that is not saved does not return an error)
         """
-        await self._http.post(
-            f"webhooks/{self.id}/{self.token}/slack"
-            + (f"?{wait=!s}" if wait else "")
-            + (
-                ("&?"[wait is None] + f"{thread_id=!s}")
-                if thread_id else ""
+        await self.execute(
+            WebhookCompatibility.GitHub,
+            thread_id=thread_id,
+            wait=wait
+        )
+
+    async def execute_slack(
+        self,
+        *,
+        thread_id: Optional[Snowflake] = None,
+        wait: Optional[bool] = None
+    ):
+        """|coro|
+        Executes a Slack compatible webhook.
+
+        Parameters
+        ----------
+        thread_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            ID of the thread to send message in
+        wait: Optional[:class:`bool`]
+            Waits for server confirmation of message send before
+            response (defaults to ``true``, when ``false`` a message
+            that is not saved does not return an error)
+        """
+        await self.execute(
+            WebhookCompatibility.Slack,
+            thread_id=thread_id,
+            wait=wait
+        )
+
+    async def get_message(self, message_id: Snowflake) -> UserMessage:
+        """|coro|
+        Gets a message from a webhook.
+
+        Parameters
+        ----------
+        message_id: :class:`~pincer.utils.snowflake.Snowflake`
+            The ID of the message to get
+
+        Returns
+        -------
+        :class:`~pincer.objects.message.message.Message`
+            The message
+        """
+        return UserMessage.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.get(
+                    f"webhooks/{self.id}/{self.token}/{message_id}"
+                )
             )
         )
 
@@ -190,11 +330,11 @@ class Webhook(APIObject):
 
         Parameters
         ----------
-        client : `~pincer.client.Client`
+        client: `~pincer.client.Client`
             The client to use to make the request.
-        id : `~pincer.utils.snowflake.Snowflake`
+        id: `~pincer.utils.snowflake.Snowflake`
             The ID of the webhook to get.
-        token : Optional[:class:`str`]
+        token: Optional[:class:`str`]
             The token of the webhook to get.
 
         Returns
