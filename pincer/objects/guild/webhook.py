@@ -95,9 +95,11 @@ class Webhook(APIObject):
 
     async def edit(
         self,
+        *,
         name: Optional[str] = None,
         avatar: Optional[str] = None,
         channel_id: Optional[Snowflake] = None,
+        token: Optional[str] = None
     ) -> None:
         """
         Modifies a webhook and returns it.
@@ -111,14 +113,24 @@ class Webhook(APIObject):
             The new avatar hash of the webhook
         channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
             The new channel id this webhook is for
+        token: Optional[:class:`str`]
+            The new token of the webhook
         """
+        request_route = (
+            f"webhooks/{self.id}"
+            + (f"?{token=!s}" if token else "")
+        )
+        request_data = {
+            "name": name,
+            "avatar": avatar
+        }
+
+        if not token:
+            request_data["channel_id"] = channel_id
+        
         data = await self._http.patch(
-            f"webhooks/{self.id}",
-            data={
-                "name": name,
-                "avatar": avatar,
-                "channel_id": channel_id
-            }
+            request_route,
+            data=request_data
         )
         return Webhook.from_dict(
             construct_client_dict(
