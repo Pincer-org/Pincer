@@ -10,6 +10,7 @@ from typing import Protocol, TYPE_CHECKING
 from aiohttp import ClientSession, ClientResponse
 
 from . import __package__
+from .ratelimiter import RateLimiter
 from .._config import GatewayConfig
 from ..exceptions import (
     NotFoundError, BadRequestError, NotModifiedError, UnauthorizedError,
@@ -44,29 +45,31 @@ class HttpCallable(Protocol):
 class HTTPClient:
     """Interacts with Discord API through HTTP protocol
 
+    Parameters
+    ----------
+    Instantiate a new HttpApi object.
+
+    token:
+        Discord API token
+
+    Keyword Arguments:
+
+    version:
+        The discord API version.
+        See `<https://discord.com/developers/docs/reference#api-versioning>`_.
+    ttl:
+        Max amount of attempts after error code 5xx
+
     Attributes
     ----------
     url: :class:`str`
-        ``f"https://discord.com/api/v{version}"`` "Base url for all HTTP requests"
+        ``f"https://discord.com/api/v{version}"``
+        "Base url for all HTTP requests"
     max_tts: :class:`int`
         Max amount of attempts after error code 5xx
     """
 
     def __init__(self, token: str, *, version: int = None, ttl: int = 5):
-        """
-        Instantiate a new HTTPAPI object.
-
-        token:
-            Discord API token
-
-        Keyword Arguments:
-
-        version:
-            The discord API version.
-            See `<https://discord.dev/reference#api-versioning>`_.
-        ttl:
-            Max amount of attempts after error code 5xx
-        """
         version = version or GatewayConfig.version
         self.url: str = f"https://discord.com/api/v{version}"
         self.max_ttl: int = ttl
@@ -74,6 +77,7 @@ class HTTPClient:
         headers: Dict[str, str] = {
             "Authorization": f"Bot {token}",
         }
+        self.__rate_limiter = RateLimiter()
         self.__session: ClientSession = ClientSession(headers=headers)
 
         self.__http_exceptions: Dict[int, HTTPError] = {
@@ -148,6 +152,11 @@ class HTTPClient:
         # TODO: Adjust to work non-json types
         _log.debug(f"{method.__name__.upper()} {endpoint} | {data}")
 
+        await self.__rate_limiter.wait_until_not_ratelimited(
+            endpoint,
+            method
+        )
+
         url = f"{self.url}/{endpoint}"
         async with method(
                 url,
@@ -196,6 +205,11 @@ class HTTPClient:
             (Eg set to 1 for 1 max retry)
         """
         _log.debug(f"Received response for {endpoint} | {await res.text()}")
+
+        self.__rate_limiter.save_response_bucket(
+            endpoint, method, res.headers
+        )
+
         if res.ok:
             if res.status == 204:
                 _log.debug(
@@ -218,6 +232,7 @@ class HTTPClient:
 
                 _log.exception(
                     f"RateLimitError: {res.reason}."
+                    f" The scope is {res.headers.get('X-RateLimit-Scope')}."
                     f" Retrying in {timeout} seconds"
                 )
                 await sleep(timeout)
