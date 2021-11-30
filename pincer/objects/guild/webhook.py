@@ -164,7 +164,7 @@ class Webhook(APIObject):
     @overload
     async def execute(
         self,
-        webhook_compatibility: WebhookCompatibility = WebhookCompatibility.Default,
+        webhook_compatibility: WebhookCompatibility = WebhookCompatibility.Default, # noqa: E501
         *,
         thread_id: Optional[Snowflake] = None,
         wait: Optional[bool] = None,
