@@ -110,7 +110,7 @@ class Webhook(APIObject):
         avatar: Optional[str] = None,
         channel_id: Optional[Snowflake] = None,
         token: Optional[str] = None
-    ) -> None:
+    ) -> Webhook:
         """
         Modifies a webhook and returns it.
         Requires the ``MANAGE_WEBHOOKS`` permission.
@@ -147,7 +147,7 @@ class Webhook(APIObject):
             construct_client_dict(self._client, data)
         )
 
-    async def delete(self, token: Optional[str] = None) -> None:
+    async def delete(self, token: Optional[str] = None):
         """
         Deletes a webhook.
         Requires the ``MANAGE_WEBHOOKS`` permission.
@@ -330,7 +330,7 @@ class Webhook(APIObject):
         self,
         message_id: Snowflake,
         thread_id: Snowflake
-    ) -> None:
+    ):
         """|coro|
         Deletes a message created by a webhook.
 
