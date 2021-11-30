@@ -13,7 +13,7 @@ from ...utils.conversion import construct_client_dict, remove_none
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from typing import Any, Dict, List, Optional, Tuple, Union
+    from typing import Any, Dict, List, Optional, Tuple, Union, Generator
     from .channel import PublicThread, PrivateThread
 
     from .audit_log import AuditLog
@@ -552,14 +552,14 @@ class Guild(APIObject):
         """
 
     async def list_active_threads(self) -> Tuple[
-        List[Union[PublicThread, PrivateThread]], List[GuildMember]]:
+        Generator[Union[PublicThread, PrivateThread]], Generator[GuildMember]]:
         """|coro|
         Returns all active threads in the guild, including public and private threads.
         """
         data = await self._http.get(f"guilds/{self.id}/threads/active")
 
-        threads = [Channel.from_dict(channel) for channel in data["threads"]]
-        members = [GuildMember.from_dict(member) for member in data["members"]]
+        threads = (Channel.from_dict(channel) for channel in data["threads"])
+        members = (GuildMember.from_dict(member) for member in data["members"])
 
         return threads, members
 
