@@ -836,7 +836,11 @@ class Client(Dispatcher):
         """
         return await Channel.from_id(self, _id)
 
-    async def get_webhook(self, id: Snowflake) -> Webhook:
+    async def get_webhook(
+        self,
+        id: Snowflake,
+        token: Optional[str] = None
+    ) -> Webhook:
         """|coro|
         Fetch a Webhook from its identifier.
 
@@ -845,13 +849,14 @@ class Client(Dispatcher):
         id: :class:`int`
             The id of the webhook which should be
             fetched from the Discord gateway.
+        token: Optional[:class:`str`]
+            The webhook token.
 
         Returns
         -------
         :class:`~pincer.objects.guild.webhook.Webhook`
             A Webhook object.
         """
-        return await Webhook.from_id(self, id)
-
+        return await Webhook.from_id(self, id, token)
 
 Bot = Client
