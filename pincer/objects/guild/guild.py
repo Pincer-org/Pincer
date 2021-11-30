@@ -575,9 +575,11 @@ class Guild(APIObject):
             the highest user id in the previous page |default| :data:`0`
         """
 
-        return await self._http.get(
+        members = await self._http.get(
             f"guilds/{self.id}/members?limit={limit}&after={after}"
         )
+        
+        return (GuildMember.from_dict(memeber) for member in members)
 
     async def search_guild_members(
         self, query: str,
