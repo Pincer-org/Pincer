@@ -204,8 +204,8 @@ class Webhook(APIObject):
         tts: Optional[:class:`bool`]
             True if this is a TTS message
         embeds: Optional[List[:class:`~pincer.objects.message.embed.Embed`]]
-            Embedded ``rich`` content
-        allowed_mentions: Optional[:class:`~pincer.objects.message.allowed_mentions.AllowedMentions`]
+            Embedded ``rich`` content, up to 10 embeds
+        allowed_mentions: Optional[:class:`~pincer.objects.message.user_message.AllowedMentions`]
             Allowed mentions for the message
         components: Optional[List[:class:`~pincer.objects.message.component.MessageComponent`]]
             The components to include in the message
@@ -226,6 +226,8 @@ class Webhook(APIObject):
         wait: Optional[bool] = None,
         **kwargs
     ):
+        if embeds := kwargs.get("embeds"):
+            assert len(embeds) <= 10, "You can only include up to 10 embeds"
         request_route = f"webhooks/{self.id}/{self.token}"
 
         # Adding the subdirectory
@@ -319,7 +321,8 @@ class Webhook(APIObject):
             construct_client_dict(
                 self._client,
                 await self._http.get(
-                    f"webhooks/{self.id}/{self.token}/messages/{message_id}?{thread_id=}"
+                    f"webhooks/{self.id}/{self.token}/messages/{message_id}"
+                    + (f"?{thread_id=}" if thread_id else "")
                 )
             )
         )
@@ -340,7 +343,68 @@ class Webhook(APIObject):
             The ID of the thread to delete the message from
         """
         await self._http.delete(
-            f"webhooks/{self.id}/{self.token}/messages/{message_id}?{thread_id=}"
+            f"webhooks/{self.id}/{self.token}/messages/{message_id}"
+            + (f"?{thread_id=}" if thread_id else "")
+        )
+
+    @overload
+    async def edit_message(
+        self,
+        message_id: Snowflake,
+        *,
+        thread_id: Optional[Snowflake] = None,
+        content: Optional[str] = None,
+        embeds: Optional[List[Embed]] = None,
+        allowed_mentions: Optional[AllowedMentions] = None,
+        components: Optional[List[MessageComponent]] = None,
+        files: Optional[str] = None,  # TODO: Add support for files
+        payload_json: Optional[str] = None,
+        attachments: Optional[List[Attachment]] = None
+    ) -> UserMessage:
+        """|coro|
+        Edits a previously-sent webhook message from the same token.
+
+        Parameters
+        ----------
+        message_id: :class:`~pincer.utils.snowflake.Snowflake`
+            The ID of the message to edit
+        thread_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            ID of the thread the message is in
+        content: Optional[:class:`str`]
+            The new content of the message (up to 2000 characters)
+        embeds: Optional[List[:class:`~pincer.objects.message.embed.Embed`]]
+            Embedded ``rich`` content, up to 10 embeds
+        allowed_mentions: Optional[:class:`~pincer.objects.message.user_message.AllowedMentions`]
+            Allowed mentions for the message
+        components: Optional[List[:class:`~pincer.objects.message.component.MessageComponent`]]
+            The components to include in the message
+        files: Optional[:class:`str`]
+            The contents of the file being sent/edited
+        payload_json: Optional[:class:`str`]
+            JSON encoded body of non-file params
+            (multipart/form-data only)
+        attachments: Optional[List[:class:`~pincer.objects.message.attachment.Attachment`]]
+            Attached files to keep and
+            possible descriptions for new files
+        """
+        ...
+
+    async def edit_message(
+        self,
+        message_id: Snowflake,
+        *,
+        thread_id: Optional[Snowflake] = None,
+        **kwargs
+    ) -> UserMessage:
+        if embeds := kwargs.get("embeds"):
+            assert len(embeds) <= 10, "You can only include up to 10 embeds"
+        data = await self._http.patch(
+            f"webhooks/{self.id}/{self.token}/messages/{message_id}"
+            + (f"?{thread_id=}" if thread_id else ""),
+            data=kwargs
+        )
+        return UserMessage.from_dict(
+            construct_client_dict(self._client, data)
         )
 
     @classmethod
