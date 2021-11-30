@@ -295,14 +295,20 @@ class Webhook(APIObject):
             wait=wait
         )
 
-    async def get_message(self, message_id: Snowflake) -> UserMessage:
+    async def get_message(
+        self,
+        message_id: Snowflake,
+        thread_id: Snowflake
+    ) -> UserMessage:
         """|coro|
-        Gets a message from a webhook.
+        Returns a previously-sent webhook message from the same token.
 
         Parameters
         ----------
         message_id: :class:`~pincer.utils.snowflake.Snowflake`
             The ID of the message to get
+        thread_id: :class:`~pincer.utils.snowflake.Snowflake`
+            The ID of the thread to get the message from
 
         Returns
         -------
@@ -313,9 +319,28 @@ class Webhook(APIObject):
             construct_client_dict(
                 self._client,
                 await self._http.get(
-                    f"webhooks/{self.id}/{self.token}/{message_id}"
+                    f"webhooks/{self.id}/{self.token}/messages/{message_id}?{thread_id=}"
                 )
             )
+        )
+
+    async def delete_message(
+        self,
+        message_id: Snowflake,
+        thread_id: Snowflake
+    ) -> None:
+        """|coro|
+        Deletes a message created by a webhook.
+
+        Parameters
+        ----------
+        message_id: :class:`~pincer.utils.snowflake.Snowflake`
+            The ID of the message to delete
+        thread_id: :class:`~pincer.utils.snowflake.Snowflake`
+            The ID of the thread to delete the message from
+        """
+        await self._http.delete(
+            f"webhooks/{self.id}/{self.token}/messages/{message_id}?{thread_id=}"
         )
 
     @classmethod
