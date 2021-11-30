@@ -152,6 +152,32 @@ class Webhook(APIObject):
             + (f"/{token}" if token else "")
         )
 
+    async def execute_slack(
+        self,
+        thread_id: Optional[Snowflake] = None,
+        wait: Optional[bool] = None
+    ):
+        """|coro|
+        Executes a webhook in Slack.
+
+        Parameters
+        ----------
+        thread_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            ID of the thread to send message in
+        wait: Optional[:class:`bool`]
+            Waits for server confirmation of message send before
+            response (defaults to ``true``, when ``false`` a message
+            that is not saved does not return an error)
+        """
+        await self._http.post(
+            f"webhooks/{self.id}/{self.token}/slack"
+            + (f"?{wait=!s}" if wait else "")
+            + (
+                ("&?"[wait is None] + f"{thread_id=!s}")
+                if thread_id else ""
+            )
+        )
+
     @classmethod
     async def from_id(
         cls,
