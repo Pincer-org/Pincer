@@ -347,8 +347,8 @@ class Channel(APIObject):  # noqa E501
 
     async def get_webhooks(self) -> AsyncGenerator[Webhook, None]:
         """|coro|
-
         Get all webhooks in the channel.
+        Requires the ``MANAGE_WEBHOOKS`` permission.
 
         Returns
         -------
