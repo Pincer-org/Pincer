@@ -96,7 +96,7 @@ class RateLimiter:
         endpoint: str,
         method: HttpCallable
     ):
-        """
+        """|coro|
         Waits until the response no longer needs to be blocked to prevent a
         429 response because of ``user`` rate limits.
 
