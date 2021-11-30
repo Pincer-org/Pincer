@@ -5,14 +5,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum, IntEnum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, overload
 
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from typing import List, Optional, overload
+    from typing import List, Optional
 
     from ..message.attachment import Attachment
     from ..message.component import MessageComponent
