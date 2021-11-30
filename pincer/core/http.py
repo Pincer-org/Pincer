@@ -9,6 +9,8 @@ from typing import Protocol, TYPE_CHECKING
 
 from aiohttp import ClientSession, ClientResponse
 
+# Im open for ideas on how to get __version__ without doing this
+import pincer
 from . import __package__
 from .._config import GatewayConfig
 from ..exceptions import (
@@ -73,6 +75,7 @@ class HTTPClient:
 
         headers: Dict[str, str] = {
             "Authorization": f"Bot {token}",
+            "User-Agent": f"DiscordBot (https://github.com/Pincer-org/Pincer, {pincer.__version__})"  # noqa: E501
         }
         self.__session: ClientSession = ClientSession(headers=headers)
 
