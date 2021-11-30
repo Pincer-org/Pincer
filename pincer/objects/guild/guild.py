@@ -531,7 +531,7 @@ class Guild(APIObject):
 
     async def create_channel(self, **kwargs):
         data = await self._http.post(f"guilds/{self.id}/channels", data=kwargs)
-        return Channel.from_dict(construct_client_dict(self._client, data=data))
+        return Channel.from_dict(construct_client_dict(self._client, data))
 
     async def modify_channel_positions(
         self, *channel: Dict[str, Optional[Union[int, bool, Snowflake]]]
