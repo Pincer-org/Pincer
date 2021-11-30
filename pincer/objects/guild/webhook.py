@@ -122,11 +122,12 @@ class Webhook(APIObject):
         )
         request_data = {
             "name": name,
-            "avatar": avatar
+            "avatar": avatar,
+            "channel_id": channel_id
         }
 
-        if not token:
-            request_data["channel_id"] = channel_id
+        if token:
+            del request_data["channel_id"]
         
         data = await self._http.patch(
             request_route,
