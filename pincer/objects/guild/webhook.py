@@ -93,6 +93,40 @@ class Webhook(APIObject):
 
     guild_id: APINullable[Optional[Snowflake]] = MISSING
 
+    async def edit(
+        self,
+        name: Optional[str] = None,
+        avatar: Optional[str] = None,
+        channel_id: Optional[Snowflake] = None,
+    ) -> None:
+        """
+        Modifies a webhook and returns it.
+        Requires the ``MANAGE_WEBHOOKS`` permission.
+
+        Parameters
+        ----------
+        name: Optional[:class:`str`]
+            The new name of the webhook
+        avatar: Optional[:class:`str`]
+            The new avatar hash of the webhook
+        channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            The new channel id this webhook is for
+        """
+        data = await self._http.patch(
+            f"webhooks/{self.id}",
+            data={
+                "name": name,
+                "avatar": avatar,
+                "channel_id": channel_id
+            }
+        )
+        return Webhook.from_dict(
+            construct_client_dict(
+                self._client,
+                data
+            )
+        )
+
     @classmethod
     async def from_id(
         cls,
