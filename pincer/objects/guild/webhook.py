@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from enum import Enum, IntEnum
 from typing import TYPE_CHECKING, overload
 
+from ...exceptions import EmbedOverflow
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
 from ...utils.types import MISSING
@@ -226,21 +227,19 @@ class Webhook(APIObject):
         wait: Optional[bool] = None,
         **kwargs
     ):
-        if embeds := kwargs.get("embeds"):
-            assert len(embeds) <= 10, "You can only include up to 10 embeds"
+        if len(kwargs.get("embeds", [])) > 10:
+            raise EmbedOverflow("You can only include up to 10 embeds")
+        
         request_route = f"webhooks/{self.id}/{self.token}"
 
         # Adding the subdirectory
         request_route += webhook_compatibility.value
 
         # Adding query params
-        request_route += f"?{wait=}" if wait else ""
-        request_route += (
-            ("&?"[wait is None]
-            + f"{thread_id=}")
-            if thread_id else ""
-        )
-
+        if wait is not None:
+            request_route += f"?{wait=}"
+        if thread_id is not None:
+            request_route += "&?"[wait is None] + f"{thread_id=}"
 
         if webhook_compatibility == WebhookCompatibility.Default:
             request_data = kwargs
@@ -396,8 +395,9 @@ class Webhook(APIObject):
         thread_id: Optional[Snowflake] = None,
         **kwargs
     ) -> UserMessage:
-        if embeds := kwargs.get("embeds"):
-            assert len(embeds) <= 10, "You can only include up to 10 embeds"
+        if len(kwargs.get("embeds", [])) > 10:
+            raise EmbedOverflow("You can only include up to 10 embeds")
+
         data = await self._http.patch(
             f"webhooks/{self.id}/{self.token}/messages/{message_id}"
             + (f"?{thread_id=}" if thread_id else ""),
