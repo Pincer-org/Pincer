@@ -1299,7 +1299,7 @@ class Guild(APIObject):
         *,
         name: str,
         image: File,
-        roles: List[Snowflake],
+        roles: List[Snowflake] = [],
         reason: Optional[str] = None
     ) -> Emoji:
         """|coro|
