@@ -143,7 +143,7 @@ class APIObject(metaclass=HTTPMeta):
 
         return arg_type,
 
-    def __attr_convert(self, attr: str, attr_type: T) -> T:
+    def __attr_convert(self, attr_value: Dict, attr_type: T) -> T:
         """Convert an attribute to the requested attribute type using
         the factory or the __init__.
 
@@ -166,7 +166,7 @@ class APIObject(metaclass=HTTPMeta):
             factory = attr_type.__factory__
 
         return convert(
-            getattr(self, attr),
+            attr_value,
             factory,
             attr_type,
             self._client
@@ -198,13 +198,25 @@ class APIObject(metaclass=HTTPMeta):
 
             specific_tp = types[0]
 
+            attr_gotten = getattr(self, attr)
+
             if tp := get_origin(specific_tp):
                 specific_tp = tp
 
-            if isinstance(specific_tp, EnumMeta) and not getattr(self, attr):
+            if isinstance(specific_tp, EnumMeta) and not attr_gotten:
                 attr_value = MISSING
+            elif tp == list and attr_gotten and (classes := get_args(types[0])):
+                attr_value = [
+                    self.__attr_convert(attr_item, classes[0])
+                    for attr_item in attr_gotten
+                ]
+            elif tp == dict and attr_gotten and (classes := get_args(types[0])):
+                attr_value = {
+                    key: self.__attr_convert(value, classes[1])
+                    for key, value in attr_gotten.items()
+                }
             else:
-                attr_value = self.__attr_convert(attr, specific_tp)
+                attr_value = self.__attr_convert(attr_gotten, specific_tp)
 
             setattr(self, attr, attr_value)
 
@@ -214,10 +226,14 @@ class APIObject(metaclass=HTTPMeta):
         return cls.from_dict(*args, **kwargs)
 
     def __str__(self):
-        if self.__dict__.get('name'):
-            return self.name
+        # TODO: fix docs
+        """
 
-        return super().__str__()
+        Returns
+        -------
+
+        """
+        return getattr(self, 'id', None) or super().__str__()
 
     @classmethod
     def from_dict(
@@ -245,7 +261,5 @@ class APIObject(metaclass=HTTPMeta):
         )))
 
     def to_dict(self) -> Dict:
-        """
-        Transform the current object to a dictionary representation.
-        """
+        """Transform the current object to a dictionary representation."""
         return _asdict_ignore_none(self)

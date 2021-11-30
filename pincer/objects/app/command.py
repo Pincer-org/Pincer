@@ -6,9 +6,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Union, TYPE_CHECKING
 
+
 from .command_types import AppCommandOptionType, AppCommandType
+from ...objects.guild.channel import ChannelType
 from ...utils.api_object import APIObject
-from ...utils.conversion import convert
 from ...utils.snowflake import Snowflake
 from ...utils.types import Coro, choice_value_types
 from ...utils.types import MISSING
@@ -71,7 +72,7 @@ class AppCommandOption(APIObject):
     required: APINullable[:class:`bool`]
         If the parameter is required or optional |default| :data:`False`
     choices: APINullable[List[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
-        Choices for `STRING`, `INTEGER`, and `NUMBER`
+        Choices for ``STRING``, ``INTEGER``, and ``NUMBER``
         types for the user to pick from, max 25
     options: APINullable[List[:class:`~pincer.objects.app.command.AppCommandOptionChoice`]]
         If the option is a subcommand or subcommand group type,
@@ -82,22 +83,13 @@ class AppCommandOption(APIObject):
     name: str
     description: str
 
-    required: APINullable[bool] = False
+    required: bool = False
+    autocomplete: APINullable[bool] = MISSING
     choices: APINullable[List[AppCommandOptionChoice]] = MISSING
     options: APINullable[List[AppCommandOption]] = MISSING
-
-    def __post_init__(self):
-        self.type = AppCommandOptionType(self.type)
-        self.choices = convert(
-            self.choices,
-            AppCommandOptionChoice.from_dict,
-            AppCommandOptionChoice
-        )
-        self.options = convert(
-            self.options,
-            AppCommandOption.from_dict,
-            AppCommandOption
-        )
+    channel_types: APINullable[List[ChannelType]] = MISSING
+    min_value: APINullable[Union[int, float]] = MISSING
+    max_value: APINullable[Union[int, float]] = MISSING
 
 
 @dataclass
@@ -148,21 +140,10 @@ class AppCommand(APIObject):
     ]
 
     def __post_init__(self):
-        self.id = convert(self.id, Snowflake.from_string)
-        self.version = convert(self.version, Snowflake.from_string)
-        self.type = AppCommandType(self.type)
-        self.application_id = convert(
-            self.application_id, Snowflake.from_string
-        )
+        super().__post_init__()
 
-        self.options = convert(
-            self.options,
-            AppCommandOption.from_dict,
-            AppCommandOption
-        )
-        self.guild_id = convert(self.guild_id, Snowflake.from_string)
-
-        self.options = [] if self.options is MISSING else self.options
+        if self.options is MISSING and self.type is AppCommandType.MESSAGE:
+            self.options = []
 
     def __eq__(self, other: Union[AppCommand, ClientCommandStructure]):
         if isinstance(other, ClientCommandStructure):

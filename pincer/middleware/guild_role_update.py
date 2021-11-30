@@ -16,18 +16,20 @@ async def guild_role_update_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the guild role update event.
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildRoleUpdateEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.guild.GuildRoleUpdateEvent`]
         ``on_guild_role_update`` and a ``GuildRoleUpdateEvent``
-    """
+    """  # noqa: E501
 
     return (
         "on_guild_role_update",
-        [GuildRoleUpdateEvent.from_dict(construct_client_dict(self, payload.data))],
+        GuildRoleUpdateEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        ),
     )
 
 

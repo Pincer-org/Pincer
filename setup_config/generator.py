@@ -1,3 +1,6 @@
+# Copyright Pincer 2021-Present
+# Full MIT License can be found in `LICENSE` at the project root.
+
 from os import walk
 
 from pincer import __version__
@@ -27,7 +30,8 @@ def main():
     dependencies = {
         "requires": get_dependencies("requirements.txt"),
         "testing_requires": get_dependencies("packages/dev.txt"),
-        "images_requires": get_dependencies("packages/img.txt")
+        "images_requires": get_dependencies("packages/img.txt"),
+        "speed_requires": get_dependencies("packages/speed.txt")
     }
 
     with open("setup.cfg", "w") as f:

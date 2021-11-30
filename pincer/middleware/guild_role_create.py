@@ -16,18 +16,20 @@ async def guild_role_create_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the guild role create event.
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildRoleCreateEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.guild.GuildRoleCreateEvent`]
         ``on_guild_role_create`` and a ``GuildRoleCreateEvent``
-    """
+    """  # noqa: E501
 
     return (
         "on_guild_role_create",
-        [GuildRoleCreateEvent.from_dict(construct_client_dict(self, payload.data))],
+        GuildRoleCreateEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        )
     )
 
 

@@ -10,8 +10,11 @@ from typing import TYPE_CHECKING
 
 from aiohttp import ClientSession
 
+from ..guild import channel
 from ...utils.api_object import APIObject
+from ...utils.color import Color
 from ...utils.conversion import construct_client_dict
+from ...utils.convert_message import MessageConvertable
 from ...utils.types import MISSING
 
 PILLOW_IMPORT = True
@@ -26,6 +29,7 @@ if TYPE_CHECKING:
     from typing import Optional
 
     from ...client import Client
+    from ...objects.message.user_message import UserMessage
     from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
 
@@ -85,7 +89,7 @@ class User(APIObject):
         hexadecimal color code
     banner: APINullable[Optional[:class:`str`]]
         The user's banner, or null if unset
-    banner_color: APINullable[Optional[:class:`int`]]
+    banner_color: APINullable[Optional[:class:`~pincer.utils.color.Color`]]
         The color of the user's banner
     bot: APINullable[:class:`bool`]
         Whether the user belongs to an OAuth2 application
@@ -106,7 +110,7 @@ class User(APIObject):
         Whether the email on this account has been verified
     """
 
-    id: Snowflake
+    id: APINullable[Snowflake] = MISSING
     username: APINullable[str] = MISSING
     discriminator: APINullable[str] = MISSING
 
@@ -114,7 +118,7 @@ class User(APIObject):
     flags: APINullable[int] = MISSING
     accent_color: APINullable[Optional[int]] = MISSING
     banner: APINullable[Optional[str]] = MISSING
-    banner_color: APINullable[Optional[int]] = MISSING
+    banner_color: APINullable[Optional[Color]] = MISSING
     bot: APINullable[bool] = MISSING
     email: APINullable[Optional[str]] = MISSING
     locale: APINullable[str] = MISSING
@@ -130,7 +134,9 @@ class User(APIObject):
         user their premium type in a usable enum.
         """
         return (
-            MISSING if self.premium_type is MISSING else PremiumTypes(self.premium_type)
+            MISSING
+            if self.premium_type is MISSING
+            else PremiumTypes(self.premium_type)
         )
 
     @property
@@ -139,6 +145,18 @@ class User(APIObject):
         return f"<@!{self.id}>"
 
     def get_avatar_url(self, size: int = 512, ext: str = "png") -> str:
+        """
+        Returns the url of the user's avatar.
+
+        Parameters
+        ----------
+        size: :class:`int`: Avatar width & height in pixels
+        ext: :class:`str`: Image extension
+
+        Returns
+        -------
+        :class:`str`: Returns the url of the user's avatar.
+        """
         return (
             f"https://cdn.discordapp.com/avatars/{self.id}/{self.avatar}.{ext}"
             f"?size={size}"
@@ -147,7 +165,8 @@ class User(APIObject):
     if PILLOW_IMPORT:
 
         async def get_avatar(self, size: int = 512, ext: str = "png") -> Image:
-            """Get the user's avatar as a Pillow image.
+            """|Coro|
+            Get the user's avatar as a Pillow image.
 
             Parameters
             ----------
@@ -161,15 +180,63 @@ class User(APIObject):
             :class: Image
                 The user's avatar as a Pillow image.
             """
-            async with ClientSession().get(url=self.get_avatar_url()) as resp:
+            async with ClientSession().get(
+                url=self.get_avatar_url(size, ext)
+            ) as resp:
                 avatar = io.BytesIO(await resp.read())
-                print(Image, dir(Image))
                 return Image.open(avatar).convert("RGBA")
 
     def __str__(self):
+        # TODO: fix docs
+        """
+
+        Returns
+        -------
+
+        """
         return self.username + "#" + self.discriminator
 
     @classmethod
     async def from_id(cls, client: Client, user_id: int) -> User:
+        # TODO: fix docs
+        """
+
+        Parameters
+        ----------
+        client
+        user_id
+
+        Returns
+        -------
+
+        """
         data = await client.http.get(f"users/{user_id}")
         return cls.from_dict(construct_client_dict(client, data))
+
+    async def get_dm_channel(self) -> channel.Channel:
+        """
+        Returns
+        -------
+        :class:`~pincer.objects.guild.channel.Channel`
+            DM channel for this user.
+        """
+        return channel.Channel.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.post(
+                    "/users/@me/channels", data={"recipient_id": self.id}
+                ),
+            )
+        )
+
+    async def send(self, message: MessageConvertable) -> UserMessage:
+        """
+        Sends a message to a user.
+
+        Parameters
+        ----------
+        message : :class:`~pincer.utils.convert_message.MessageConvertable`
+            Message to be sent to the user.
+        """
+        _channel = await self.get_dm_channel()
+        return await _channel.send(message)

@@ -8,24 +8,28 @@ from asyncio import iscoroutinefunction, run, ensure_future
 from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union, overload
 from typing import TYPE_CHECKING
 
 from . import __package__
 from .commands import ChatCommandHandler
+from .core import HTTPClient
 from .core.gateway import Dispatcher
-from .core.http import HTTPClient
 from .exceptions import (
     InvalidEventName, TooManySetupArguments, NoValidSetupMethod,
     NoCogManagerReturnFound, CogAlreadyExists, CogNotFound
 )
 from .middleware import middleware
 from .objects import (
-    Role, Channel, DefaultThrottleHandler, User, Guild, Intents
+    Role, Channel, DefaultThrottleHandler, User, Guild, Intents,
+    GuildTemplate
 )
+from .utils.conversion import construct_client_dict
+from .utils.event_mgr import EventMgr
 from .utils.extraction import get_index
 from .utils.insertion import should_pass_cls
 from .utils.signature import get_params
+from .utils.types import CheckFunction
 from .utils.types import Coro
 
 if TYPE_CHECKING:
@@ -183,6 +187,7 @@ class Client(Dispatcher):
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
         self.throttler = throttler
+        self.event_mgr = EventMgr()
         # TODO: Document guild prop
         # The guild value is only registered if the GUILD_MEMBERS
         # intent is enabled.
@@ -412,7 +417,7 @@ class Client(Dispatcher):
 
         Parameters
         ----------
-        calls: :data:`~pincer.utils.types.Coro`
+        calls: :class:`~pincer.utils.types.Coro`
             The call (method) to which the event is registered.
 
         \\*args:
@@ -433,9 +438,13 @@ class Client(Dispatcher):
             ensure_future(call(*call_args, **kwargs))
 
     def run(self):
-        """start the event listener"""
+        """Start the event listener."""
         self.start_loop()
-        run(self.http.close())
+
+    def __del__(self):
+        """Ensure close of the http client."""
+        if hasattr(self, 'http'):
+            run(self.http.close())
 
     async def handle_middleware(
             self,
@@ -481,14 +490,13 @@ class Client(Dispatcher):
                 )
 
             next_call = get_index(extractable, 0, "")
-            arguments = get_index(extractable, 1, [])
-            params = get_index(extractable, 2, {})
+            ret_object = get_index(extractable, 1)
 
         if next_call is None:
             raise RuntimeError(f"Middleware `{key}` has not been registered.")
 
         return (
-            (next_call, arguments, params)
+            (next_call, ret_object)
             if next_call.startswith("on_")
             else await self.handle_middleware(
                 payload, next_call, *arguments, **params
@@ -539,10 +547,12 @@ class Client(Dispatcher):
             what specifically happened.
         """
         try:
-            key, args, kwargs = await self.handle_middleware(payload, name)
+            key, ret_object = await self.handle_middleware(payload, name)
+
+            self.event_mgr.process_events(key, ret_object)
 
             if calls := self.get_event_coro(key):
-                self.execute_event(calls, *args, **kwargs)
+                self.execute_event(calls, ret_object)
 
         except Exception as e:
             await self.execute_error(e)
@@ -581,6 +591,175 @@ class Client(Dispatcher):
         """
         await self.process_event("payload", payload)
 
+    @overload
+    async def create_guild(
+        self,
+        *,
+        name: str,
+        region: Optional[str] = None,
+        icon: Optional[str] = None,
+        verification_level: Optional[int] = None,
+        default_message_notifications: Optional[int] = None,
+        explicit_content_filter: Optional[int] = None,
+        roles: Optional[List[Role]] = None,
+        channels: Optional[List[Channel]] = None,
+        afk_channel_id: Optional[Snowflake] = None,
+        afk_timeout: Optional[int] = None,
+        system_channel_id: Optional[Snowflake] = None,
+        system_channel_flags: Optional[int] = None
+    ) -> Guild:
+        """Creates a guild.
+
+        Parameters
+        ----------
+        name : :class:`str`
+            Name of the guild (2-100 characters)
+        region : Optional[:class:`str`]
+            Voice region id (deprecated) |default| :data:`None`
+        icon : Optional[:class:`str`]
+            base64 128x128 image for the guild icon |default| :data:`None`
+        verification_level : Optional[:class:`int`]
+            Verification level |default| :data:`None`
+        default_message_notifications : Optional[:class:`int`]
+            Default message notification level |default| :data:`None`
+        explicit_content_filter : Optional[:class:`int`]
+            Explicit content filter level |default| :data:`None`
+        roles : Optional[List[:class:`~pincer.objects.guild.role.Role`]]
+            New guild roles |default| :data:`None`
+        channels : Optional[List[:class:`~pincer.objects.guild.channel.Channel`]]
+            New guild's channels |default| :data:`None`
+        afk_channel_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            ID for AFK channel |default| :data:`None`
+        afk_timeout : Optional[:class:`int`]
+            AFK timeout in seconds |default| :data:`None`
+        system_channel_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            The ID of the channel where guild notices such as welcome
+            messages and boost events are posted |default| :data:`None`
+        system_channel_flags : Optional[:class:`int`]
+            System channel flags |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.guild.Guild`
+            The created guild
+        """
+        ...
+
+    async def create_guild(self, name: str, **kwargs) -> Guild:
+        g = await self.http.post("guilds", data={"name": name, **kwargs})
+        return await self.get_guild(g['id'])
+
+    async def get_guild_template(self, code: str) -> GuildTemplate:
+        """|coro|
+        Retrieves a guild template by its code.
+
+        Parameters
+        ----------
+        code : :class:`str`
+            The code of the guild template
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.template.GuildTemplate`
+            The guild template
+        """
+        return GuildTemplate.from_dict(
+            construct_client_dict(
+                self, 
+                await self.http.get(f"guilds/templates/{code}")
+            )
+        )
+
+    async def create_guild_from_template(
+        self,
+        template: GuildTemplate,
+        name: str,
+        icon: Optional[str] = None
+    ) -> Guild:
+        """|coro|
+        Creates a guild from a template.
+
+        Parameters
+        ----------
+        template : :class:`~pincer.objects.guild.template.GuildTemplate`
+            The guild template
+        name : :class:`str`
+            Name of the guild (2-100 characters)
+        icon : Optional[:class:`str`]
+            base64 128x128 image for the guild icon |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.guild.Guild`
+            The created guild
+        """
+        return Guild.from_dict(
+            construct_client_dict(
+                self,
+                await self.http.post(
+                    f"guilds/templates/{template.code}",
+                    data={"name": name, "icon": icon}
+                )
+            )
+        )
+
+    async def wait_for(
+            self,
+            event_name: str,
+            check: CheckFunction = None,
+            timeout: Optional[float] = None
+    ):
+        """
+        Parameters
+        ----------
+        event_name : str
+            The type of event. It should start with `on_`. This is the same
+            name that is used for @Client.event.
+        check : CheckFunction
+            This function only returns a value if this return true.
+        timeout: Optional[float]
+            Amount of seconds before timeout.
+
+        Returns
+        ------
+        Any
+            What the Discord API returns for this event.
+        """
+        return await self.event_mgr.wait_for(event_name, check, timeout)
+
+    def loop_for(
+            self,
+            event_name: str,
+            check: CheckFunction = None,
+            iteration_timeout: Optional[float] = None,
+            loop_timeout: Optional[float] = None
+    ):
+        """
+        Parameters
+        ----------
+        event_name : str
+            The type of event. It should start with `on_`. This is the same
+            name that is used for @Client.event.
+        check : Callable[[Any], bool], default=None
+            This function only returns a value if this return true.
+        iteration_timeout: Union[float, None]
+            Amount of seconds before timeout. Timeouts are for each loop.
+        loop_timeout: Union[float, None]
+            Amount of seconds before the entire loop times out. The generator
+            will only raise a timeout error while it is waiting for an event.
+
+        Yields
+        ------
+        Any
+            What the Discord API returns for this event.
+        """
+        return self.event_mgr.loop_for(
+            event_name,
+            check,
+            iteration_timeout,
+            loop_timeout
+        )
+
     async def get_guild(self, guild_id: int) -> Guild:
         """|coro|
 
@@ -591,6 +770,11 @@ class Client(Dispatcher):
         guild_id : :class:`int`
             The id of the guild which should be fetched from the Discord
             gateway.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.guild.Guild`
+            The guild object.
         """
         return await Guild.from_id(self, guild_id)
 
@@ -632,8 +816,14 @@ class Client(Dispatcher):
         return await Role.from_id(self, guild_id, role_id)
 
     async def get_channel(self, _id: int) -> Channel:
-        """Fetch a Channel from its identifier.
+        """|coro|
+        Fetch a Channel from its identifier. The ``get_dm_channel`` method from
+        :class:`~pincer.objects.user.user.User` should be used if you need to
+        create a dm_channel; using the ``send()`` method from
+        :class:`~pincer.objects.user.user.User` is preferred.
 
+        Parameters
+        ----------
         _id: :class:`int`
             The id of the user which should be fetched from the Discord
             gateway.

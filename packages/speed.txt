@@ -1,0 +1,4 @@
+orjson>=3.5.4
+Brotli>=1.0.9
+aiodns>=1.1
+cchardet>=2.1.7

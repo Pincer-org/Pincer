@@ -184,7 +184,25 @@ class Channel(APIObject):  # noqa E501
 
     @classmethod
     async def from_id(cls, client: Client, channel_id: int) -> Channel:
-        # TODO: Write docs
+        """|coro|
+        Creates a channel object. You should use the ``get_channel`` method
+        from :class:`~pincer.client.Client` most of the time. The
+        ``get_dm_channel`` method from :class:`~pincer.objects.user.user.User`
+        should be used if you need to create a dm_channel. Using the ``send()``
+        method from :class:`~pincer.objects.user.user.User` is preferred.
+
+        Parameters
+        ----------
+        client : :class:`~pincer.client.Client`
+            Client object to use the HTTP class of.
+        channel_id : :class:`int`
+            ID of the channel you want.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.channel.Channel`
+            The channel object.
+        """
         data = (await client.http.get(f"channels/{channel_id}")) or {}
 
         data.update(construct_client_dict(
@@ -379,6 +397,7 @@ class TextChannel(Channel):
                 f"/channels/{self.id}/messages/{message_id}"
             )
         )
+
 
 class VoiceChannel(Channel):
     """A subclass of ``Channel`` for voice channels with all the same attributes."""

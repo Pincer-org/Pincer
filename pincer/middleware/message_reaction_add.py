@@ -16,16 +16,17 @@ async def message_reaction_add_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the message reaction add event.
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.message.MessageReactionAddEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.message.MessageReactionAddEvent`]
         ``on_message_reaction_add`` and an ``MessageReactionAddEvent``
-    """
+    """  # noqa: E501
 
-    return "on_message_reaction_add", [
+    return (
+        "on_message_reaction_add",
         MessageReactionAddEvent.from_dict(
             construct_client_dict(
                 self,
@@ -39,7 +40,7 @@ async def message_reaction_add_middleware(self, payload: GatewayDispatch):
                     **payload.data
                 }
             ))
-    ]
+    )
 
 
 def export():

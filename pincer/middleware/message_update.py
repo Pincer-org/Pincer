@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 async def message_update_middleware(
     self,
     payload: GatewayDispatch
-) -> Tuple[str, List[UserMessage]]:
+) -> Tuple[str, UserMessage]:
     """|coro|
 
 
@@ -28,17 +28,18 @@ async def message_update_middleware(
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the message update event event
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.message.user_message.UserMessage`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.message.user_message.UserMessage`]
         ``on_message_update`` and a ``UserMessage``
-    """
-    return "on_message_update", [
+    """  # noqa: E501
+    return (
+        "on_message_update",
         UserMessage.from_dict(construct_client_dict(self, payload.data))
-    ]
+    )
 
 
 def export():

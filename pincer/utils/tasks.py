@@ -47,6 +47,7 @@ class TaskScheduler:
         :Example usage:
 
         .. code-block:: python
+
             from pincer import Client
             from pincer.utils import TaskScheduler
 
@@ -207,4 +208,11 @@ class Task:
 
     @property
     def client_required(self):
+        # TODO: fix docs
+        """
+
+        Returns
+        -------
+
+        """
         return self._client_required

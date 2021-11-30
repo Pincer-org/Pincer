@@ -64,7 +64,8 @@ class AllowedMentions(APIObject):
     reply: :class:`bool`
         If replies should mention the author.
         |default| :data:`True`
-    """  # noqa: E501
+    """
+    # noqa: E501
 
     parse: List[AllowedMentionTypes]
     roles: List[Union[Role, Snowflake]]
@@ -225,6 +226,7 @@ class MessageType(IntEnum):
         THREAD_STARTER_MESSAGE = 21
 
     GUILD_INVITE_REMINDER = 22
+    CONTEXT_MENU_COMMAND = 23
 
 
 @dataclass

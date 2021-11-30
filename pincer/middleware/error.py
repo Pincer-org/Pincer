@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 def error_middleware(
     self,
     payload: GatewayDispatch
-) -> Tuple[str, List[DiscordError]]:
+) -> Tuple[str, DiscordError]:
     """|coro|
 
     Middleware for ``on_error`` event.
@@ -33,14 +33,15 @@ def error_middleware(
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.error.DiscordError`]]
-        ``"on_error"`` and a ``DiscordError``
+    Tuple[:class:`str`, :class:`~pincer.objects.events.error.DiscordError`]
+        ``on_error`` and a ``DiscordError``
     """
     # noqa: E501
 
-    return "on_error", [
+    return (
+        "on_error",
         DiscordError.from_dict(construct_client_dict(self, payload.data))
-    ]
+    )
 
 
 def export() -> Coro:

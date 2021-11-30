@@ -18,17 +18,18 @@ async def webhooks_update_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the webhooks update event.
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.webhook.WebhooksUpdateEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.webhook.WebhooksUpdateEvent`]
         ``on_webhooks_update`` and a ``WebhooksUpdateEvent``
-    """
-    return "on_webhooks_update", [
+    """  # noqa: E501
+    return (
+        "on_webhooks_update",
         WebhooksUpdateEvent.from_dict(construct_client_dict(self, payload.data))
-    ]
+    )
 
 
 def export():

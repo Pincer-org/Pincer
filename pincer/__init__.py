@@ -13,7 +13,7 @@ from ._config import GatewayConfig
 from .client import event_middleware, Client, Bot
 from .commands import command, ChatCommandHandler
 from .exceptions import (
-    PincerError, UnhandledException, NoExportMethod,
+    PincerError, InvalidPayload, UnhandledException, NoExportMethod,
     CogError, CogNotFound, CogAlreadyExists, NoValidSetupMethod,
     TooManySetupArguments, NoCogManagerReturnFound, CommandError,
     CommandCooldownError, CommandIsNotCoroutine, CommandAlreadyRegistered,
@@ -27,7 +27,6 @@ from .exceptions import (
     RateLimitError, GatewayError, ServerError
 )
 from .objects import Intents
-from .utils import Choices, Descripted
 
 __package__ = "pincer"
 __title__ = "Pincer library"
@@ -41,6 +40,7 @@ ReleaseType = Optional[Literal["alpha", "beta", "candidate", "final", "dev"]]
 
 class VersionInfo(NamedTuple):
     """A Class representing the version of the Pincer library."""
+
     major: int
     minor: int
     micro: int
@@ -49,33 +49,30 @@ class VersionInfo(NamedTuple):
     serial: int = 0
 
     def __repr__(self) -> str:
-        return (
-                f'{self.major}.{self.minor}.{self.micro}'
-                + (
-                        f'-{self.release_level}{self.serial}'
-                        * (self.release_level is not None)
-                )
+        return f"{self.major}.{self.minor}.{self.micro}" + (
+                f"-{self.release_level}{self.serial}"
+                * (self.release_level is not None)
         )
 
 
-version_info = VersionInfo(0, 11, 1)
+version_info = VersionInfo(0, 13, 0)
 __version__ = repr(version_info)
 
 __all__ = (
-    "BadRequestError", "Bot", "ChatCommandHandler", "Choices",
-    "Client", "CogAlreadyExists", "CogError", "CogNotFound",
-    "CommandAlreadyRegistered", "CommandCooldownError",
-    "CommandDescriptionTooLong", "CommandError", "CommandIsNotCoroutine",
-    "CommandReturnIsEmpty", "Descripted", "DisallowedIntentsError",
+    "BadRequestError", "Bot", "ChatCommandHandler", "Client",
+    "CogAlreadyExists", "CogError", "CogNotFound", "CommandAlreadyRegistered",
+    "CommandCooldownError", "CommandDescriptionTooLong", "CommandError",
+    "CommandIsNotCoroutine", "CommandReturnIsEmpty", "DisallowedIntentsError",
     "DispatchError", "EmbedFieldError", "ForbiddenError", "GatewayConfig",
     "GatewayError", "HTTPError", "HeartbeatError", "Intents",
     "InvalidArgumentAnnotation", "InvalidCommandGuild", "InvalidCommandName",
-    "InvalidEventName", "InvalidTokenError", "InvalidUrlError",
-    "MethodNotAllowedError", "NoCogManagerReturnFound", "NoExportMethod",
-    "NoValidSetupMethod", "NotFoundError", "NotModifiedError", "PincerError",
-    "RateLimitError", "ServerError", "TaskAlreadyRunning", "TaskCancelError",
-    "TaskError", "TaskInvalidDelay", "TaskIsNotCoroutine", "TooManyArguments",
-    "TooManySetupArguments", "UnauthorizedError", "UnavailableGuildError",
-    "UnhandledException", "__author__", "__email__", "__package__",
-    "__title__", "__version__", "command", "event_middleware"
+    "InvalidEventName", "InvalidPayload", "InvalidTokenError",
+    "InvalidUrlError", "MethodNotAllowedError", "NoCogManagerReturnFound",
+    "NoExportMethod", "NoValidSetupMethod", "NotFoundError",
+    "NotModifiedError", "PincerError", "RateLimitError", "ServerError",
+    "TaskAlreadyRunning", "TaskCancelError", "TaskError", "TaskInvalidDelay",
+    "TaskIsNotCoroutine", "TooManyArguments", "TooManySetupArguments",
+    "UnauthorizedError", "UnavailableGuildError", "UnhandledException",
+    "__author__", "__email__", "__package__", "__title__", "__version__",
+    "command", "event_middleware"
 )

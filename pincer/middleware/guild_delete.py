@@ -15,20 +15,25 @@ async def guild_delete_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the guild delete event.
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.guild.guild.UnavailableGuild`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.guild.guild.UnavailableGuild`]
         ``on_guild_delete`` and an ``UnavailableGuild``
     """
-    guild = UnavailableGuild.from_dict(construct_client_dict(self, payload.data))
+    # TODO: Fix docs on line 23 (three lines above)
+    # http://docs.pincer.dev/pincer.middleware#pincer.middleware.guild_delete.guild_delete_middleware
+
+    guild = UnavailableGuild.from_dict(
+        construct_client_dict(self, payload.data)
+    )
 
     if guild.id in self.guilds.key():
         self.guilds.pop(guild.id)
 
-    return "on_guild_delete", [guild]
+    return "on_guild_delete", guild
 
 
 def export():

@@ -16,22 +16,20 @@ async def guild_emojis_update_middleware(self, payload: GatewayDispatch):
 
     Parameters
     ----------
-    payload : :class:`GatewayDispatch`
+    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
         The data received from the guild emojis update event.
 
     Returns
     -------
-    Tuple[:class:`str`, List[:class:`~pincer.objects.events.guild.GuildEmojisUpdateEvent`]]
+    Tuple[:class:`str`, :class:`~pincer.objects.events.guild.GuildEmojisUpdateEvent`]
         ``on_guild_emoji_update`` and a ``GuildEmojisUpdateEvent``
-    """
+    """  # noqa: E501
 
     return (
         "on_guild_emojis_update",
-        [
-            GuildEmojisUpdateEvent.from_dict(
-                construct_client_dict(self, payload.data)
-            )
-        ],
+        GuildEmojisUpdateEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        )
     )
 
 

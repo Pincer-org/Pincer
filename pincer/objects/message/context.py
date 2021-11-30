@@ -47,7 +47,7 @@ class MessageContext:
     guild_id: Optional[Snowflake] = None
     channel_id: Optional[Snowflake] = None
 
-    async def ack(self, flags: InteractionFlags):
+    async def ack(self, flags: InteractionFlags = None):
         """|coro|
 
         Alias for :func:`~pincer.objects.app.interactions.Interaction.ack`.
@@ -93,16 +93,16 @@ class MessageContext:
 
         Uses
         ----
-        :func:`~pincer.objects.message.context.MessageContext.reply`
+        :func:`reply() <reply>`
             Method gets called for initial send.
-        :func:`~pincer.objects.app.interactions.Interaction.response`
+        :func:`response() <Interaction.response>`
             Method gets called for initial send to get response.
-        :func:`~pincer.objects.message.context.MessageContext.followup`
+        :func:`followup() <MessageContext.followup>`
             Method gets called for second message and onwards.
 
-         Returns
-         -------
-         :class:`~pincer.objects.message.user_message.UserMessage`
+        Returns
+        -------
+        :class:`~pincer.objects.message.user_message.UserMessage`
             The message that was sent.
         """
         if self.interaction.has_replied:
