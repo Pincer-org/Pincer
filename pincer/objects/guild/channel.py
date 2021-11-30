@@ -16,11 +16,12 @@ from ...utils.convert_message import convert_message
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from typing import Dict, List, Optional, Union
+    from typing import AsyncGenerator, Dict, List, Optional, Union
 
     from .member import GuildMember
     from .overwrite import Overwrite
     from .thread import ThreadMetadata
+    from .webhook import Webhook
     from ..message.message import Message
     from ..message.embed import Embed
     from ..user.user import User
@@ -343,6 +344,24 @@ class Channel(APIObject):  # noqa E501
         msg = UserMessage.from_dict(resp)
         self.__post_sent(msg)
         return msg
+
+    async def get_webhooks(self) -> AsyncGenerator[Webhook, None]:
+        """|coro|
+
+        Get all webhooks in the channel.
+
+        Returns
+        -------
+        AsyncGenerator[:class:`~.pincer.objects.guild.webhook.Webhook`, None]
+        """
+        data = await self._http.get(f"channels/{self.id}/webhooks")
+        for webhook_data in data:
+            yield Webhook.from_dict(
+                construct_client_dict(
+                    self._client,
+                    webhook_data
+                )
+            )
 
     def __str__(self):
         """return the discord tag when object gets used as a string."""
