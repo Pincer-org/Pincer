@@ -534,7 +534,8 @@ class Guild(APIObject):
         return Channel.from_dict(construct_client_dict(self._client, data=data))
 
     async def modify_channel_positions(
-            self, *channel: Dict[str, Optional[Union[int, bool, Snowflake]]]):
+        self, *channel: Dict[str, Optional[Union[int, bool, Snowflake]]]
+    ):
         """|coro|
         Create a new channel object for the guild.
 
@@ -578,9 +579,10 @@ class Guild(APIObject):
             f"guilds/{self.id}/members?limit={limit}&after={after}"
         )
 
-    async def search_guild_members(self, query: str,
-                                   limit: Optional[int] = None
-                                   ) -> List[GuildMember]:
+    async def search_guild_members(
+        self, query: str,
+        limit: Optional[int] = None
+    ) -> List[GuildMember]:
         """|coro|
         Returns a list of guild member objects whose username or nickname starts with a provided string.
 
@@ -601,13 +603,15 @@ class Guild(APIObject):
         return [GuildMember.from_dict(member) for member in data]
 
     @overload
-    async def add_guild_member(self, *, user_id: Snowflake,
-                               access_token: str,
-                               nick: Optional[str] = None,
-                               roles: Optional[List[Snowflake]] = None,
-                               mute: Optional[bool] = None,
-                               deaf: Optional[bool] = None
-                               ) -> Optional[GuildMember]:
+    async def add_guild_member(
+        self, *,
+        user_id: Snowflake,
+        access_token: str,
+        nick: Optional[str] = None,
+        roles: Optional[List[Snowflake]] = None,
+        mute: Optional[bool] = None,
+        deaf: Optional[bool] = None
+    ) -> Optional[GuildMember]:
         """|coro|
         Adds a user to the guild, provided you have a valid oauth2 access token for the user with the guilds.join scope.
 
@@ -680,8 +684,9 @@ class Guild(APIObject):
         role_id : int
             id of a role
         """
-        await self._http.delete(f"guilds/{self.id}/{user_id}/roles/{role_id}",
-                                {})
+        await self._http.delete(
+            f"guilds/{self.id}/{user_id}/roles/{role_id}",
+        )
         # TODO: remove the blank dictionary and format once #233 is fixed
 
     async def remove_guild_member(self, user_id: int) -> None:
