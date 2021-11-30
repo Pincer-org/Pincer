@@ -47,17 +47,3 @@ HTTPClient
 
 .. autoclass:: HTTPClient()
     :exclude-members: __send, __handle_response
-
-Rate Limiting
--------------
-
-Bucket
-~~~~~~
-
-.. autoclass:: Bucket()
-
-RateLimiter
-~~~~~~~~~~~
-
-.. attributetable:: RateLimiter
-.. autoclass:: RateLimiter()
