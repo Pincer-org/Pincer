@@ -8,6 +8,7 @@ from enum import IntEnum
 from typing import TYPE_CHECKING
 
 from ...utils.api_object import APIObject
+from ...utils.conversion import construct_client_dict
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
@@ -18,6 +19,7 @@ if TYPE_CHECKING:
     from ..guild.channel import Channel
     from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
+    from ...client import Client
 
 
 class WebhookType(IntEnum):
@@ -90,3 +92,27 @@ class Webhook(APIObject):
     url: APINullable[str] = MISSING
 
     guild_id: APINullable[Optional[Snowflake]] = MISSING
+
+    @classmethod
+    async def from_id(cls, client: Client, id: Snowflake) -> Webhook:
+        """|coro|
+        Gets a webhook by its ID.
+
+        Parameters
+        ----------
+        client : `~pincer.client.Client`
+            The client to use to make the request.
+        id : `~pincer.utils.snowflake.Snowflake`
+            The ID of the webhook to get.
+
+        Returns
+        -------
+        `~pincer.objects.guild.webhook.Webhook`
+            The webhook with the given ID.
+        """
+        return cls.from_dict(
+            construct_client_dict(
+                client,
+                await client.http.get(f"webhooks/{id}")
+            )
+        )
