@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from enum import IntEnum
 from typing import AsyncGenerator, overload, TYPE_CHECKING
 
+from .channel import Channel
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict, remove_none
@@ -17,7 +18,6 @@ if TYPE_CHECKING:
 
     from .audit_log import AuditLog
     from .ban import Ban
-    from .channel import Channel
     from .invite import Invite
     from .member import GuildMember
     from .features import GuildFeature
