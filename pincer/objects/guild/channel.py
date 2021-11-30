@@ -350,7 +350,7 @@ class Channel(APIObject):  # noqa E501
         Get all webhooks in the channel.
         Requires the ``MANAGE_WEBHOOKS`` permission.
 
-        Returns
+        Yields
         -------
         AsyncGenerator[:class:`~.pincer.objects.guild.webhook.Webhook`, None]
         """
