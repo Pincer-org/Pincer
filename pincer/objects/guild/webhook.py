@@ -94,7 +94,12 @@ class Webhook(APIObject):
     guild_id: APINullable[Optional[Snowflake]] = MISSING
 
     @classmethod
-    async def from_id(cls, client: Client, id: Snowflake) -> Webhook:
+    async def from_id(
+        cls,
+        client: Client,
+        id: Snowflake,
+        token: Optional[str] = None
+    ) -> Webhook:
         """|coro|
         Gets a webhook by its ID.
 
@@ -104,6 +109,8 @@ class Webhook(APIObject):
             The client to use to make the request.
         id : `~pincer.utils.snowflake.Snowflake`
             The ID of the webhook to get.
+        token : Optional[:class:`str`]
+            The token of the webhook to get.
 
         Returns
         -------
@@ -113,6 +120,9 @@ class Webhook(APIObject):
         return cls.from_dict(
             construct_client_dict(
                 client,
-                await client.http.get(f"webhooks/{id}")
+                await client.http.get(
+                    f"webhooks/{id}"
+                    + (f"/{token}" if token else "")
+                )
             )
         )
