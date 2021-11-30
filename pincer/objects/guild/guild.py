@@ -671,7 +671,7 @@ class Guild(APIObject):
     async def remove_guild_member_role(self, user_id: int,
                                        role_id: int) -> None:
         """|coro|
-        Removes a role to a guild member.
+        Removes a role from a guild member.
 
         Parameters
         ----------
