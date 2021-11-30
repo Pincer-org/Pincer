@@ -216,15 +216,21 @@ class Channel(APIObject):  # noqa E501
 
     @overload
     async def edit(
-            self, *, name: str = None,
-            type: ChannelType = None,
-            position: int = None, topic: str = None, nsfw: bool = None,
-            rate_limit_per_user: int = None, bitrate: int = None,
-            user_limit: int = None,
-            permissions_overwrites: List[Overwrite] = None,
-            parent_id: Snowflake = None, rtc_region: str = None,
-            video_quality_mod: int = None,
-            default_auto_archive_duration: int = None
+        self,
+        *,
+        name: str = None,
+        type: ChannelType = None,
+        position: int = None,
+        topic: str = None,
+        nsfw: bool = None,
+        rate_limit_per_user: int = None,
+        bitrate: int = None,
+        user_limit: int = None,
+        permissions_overwrites: List[Overwrite] = None,
+        parent_id: Snowflake = None,
+        rtc_region: str = None,
+        video_quality_mod: int = None,
+        default_auto_archive_duration: int = None
     ) -> Channel:
         ...
 
