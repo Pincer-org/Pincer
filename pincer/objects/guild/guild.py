@@ -1316,7 +1316,7 @@ class Guild(APIObject):
         image : :class:`~pincer.objects.message.file.File`
             The File for the 128x128 emoji image data
         roles : List[:class:`~pincer.utils.snowflake.Snowflake`]
-            Roles allowed to use this emoji
+            Roles allowed to use this emoji |default| :data:`[]`
         reason : Optional[:class:`str`]
             The reason for creating the emoji |default| :data:`None`
 

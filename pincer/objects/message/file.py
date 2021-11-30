@@ -10,10 +10,8 @@ from io import BytesIO
 from json import dumps
 from typing import TYPE_CHECKING, Tuple
 
-from aiohttp import FormData
-from aiohttp.payload import Payload
+from aiohttp import FormData, Payload
 
-from ...utils import APIObject
 from ...exceptions import ImageEncodingError
 
 if TYPE_CHECKING:
@@ -36,6 +34,19 @@ except (ModuleNotFoundError, ImportError):
 def create_form(
     json_payload: Dict[Any], files: List[File]
 ) -> Tuple[str, Union[Payload, Dict]]:
+    """
+    Creates a aiohttp payload from an array of File objects.
+
+    json_payload : Dict[Any]
+        The json part of the request
+    files : List[`~pincer.objects.message.file.File`]
+        A list of files to be used in the request.
+
+    Returns
+    -------
+    `aiohttp.Payload`
+        The payload to be send in an HTTP request.
+    """
     form = FormData()
     form.add_field("payload_json", dumps(json_payload))
 
@@ -51,7 +62,19 @@ def create_form(
     return payload.headers["Content-Type"], payload
 
 
-def _get_file_extension(filename):
+def _get_file_extension(filename: str) -> Optional[str]:
+    """
+    Returns the file extension from a str if it exists, otherwise
+    return :data:`None`.
+
+    filename : str
+        The filename
+
+    Returns
+    -------
+    Optional[str]
+        The file extension or :data:`None`
+    """
     path = os.path.splitext(filename)
     if len(path) >= 2:
         return path[1][1:]
@@ -89,6 +112,11 @@ class File:
         filename: :class:`str`
             The name of the file. Will override the default name.
             |default| ``os.path.basename(filepath)``
+
+        Returns
+        -------
+        :class:`~pincer.objects.message.file.File`
+            The new file object.
         """
         with open(filepath, "rb") as data:
             file = data.read()
@@ -156,6 +184,13 @@ class File:
         )
 
     def get_uri(self) -> str:
+        """
+        Returns
+        -------
+        str
+            The uri for the image.
+            See `<https://discord.com/developers/docs/reference#api-versioning>`_.
+        """  # noqa: E501
         if self.image_format not in {"jpeg", "png", "gif"}:
             raise ImageEncodingError(
                 "Only image types \"jpeg\", \"png\", and \"gif\" can be sent in"
