@@ -14,7 +14,7 @@ from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import Any, Dict, List, Optional, Tuple, Union, Generator
-    from .channel import PublicThread, PrivateThread
+    from .channel import PublicThread, PrivateThread, ChannelType
 
     from .audit_log import AuditLog
     from .ban import Ban
@@ -489,7 +489,7 @@ class Guild(APIObject):
     async def create_channel(
         self, 
         name: str,               
-        type: Optional[int] = None,
+        type: Optional[ChannelType] = None,
         topic: Optional[str] = None,
         bitrate: Optional[int] = None,
         user_limit: Optional[int] = None,
@@ -525,7 +525,10 @@ class Guild(APIObject):
             id of the parent category for a channel
         nsfw : Optional[:class:`bool`]
             whether the channel is nsfw
-
+        Returns
+        -------
+        :class:`~pincer.objects.guild.channel.Channel`
+            The new channel object.
         """
         ...
 
@@ -548,18 +551,29 @@ class Guild(APIObject):
                 - position : Optional[:class:`int`]
                 - lock_permissions : Optional[:class:`bool`]
                 - parent_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
-
         """
+        await self._http.patch(f"guilds/{self.id}/channels", data=channel)
 
     async def list_active_threads(self) -> Tuple[
         Generator[Union[PublicThread, PrivateThread]], Generator[GuildMember]]:
         """|coro|
         Returns all active threads in the guild, including public and private threads.
+        
+        Returns
+        -------
+        Generator[Union[:class:`~pincer.objects.guild.channel.PublicThread`, :class:`~pincer.objects.guild.channel.PrivateThread`]], Generator[:class:`~pincer.objects.guild.member.GuildMember`]]
+            The new member object.
         """
         data = await self._http.get(f"guilds/{self.id}/threads/active")
 
-        threads = (Channel.from_dict(channel) for channel in data["threads"])
-        members = (GuildMember.from_dict(member) for member in data["members"])
+        threads = (
+            Channel.from_dict(construct_client_dict(self._client, data))
+            for channel in data["threads"]
+        )
+        members = (
+            GuildMember.from_dict(construct_client_dict(self._client, data))
+            for member in data["members"]
+        )
 
         return threads, members
 
@@ -579,10 +593,11 @@ class Guild(APIObject):
             f"guilds/{self.id}/members?limit={limit}&after={after}"
         )
         
-        return (GuildMember.from_dict(memeber) for member in members)
+        return (GuildMember.from_dict(construct_client_dict(self._client, data)) for member in members)
 
     async def search_guild_members(
-        self, query: str,
+        self, 
+        query: str,
         limit: Optional[int] = None
     ) -> List[GuildMember]:
         """|coro|
@@ -594,7 +609,10 @@ class Guild(APIObject):
             Query string to match username(s) and nickname(s) against.
         limit : Optional[int]
             max number of members to return (1-1000) |default| :data:`1`
-
+        Returns
+        -------
+        List[:class:`~pincer.objects.guild.member.GuildMember`]
+            list of guild member objects
         """
 
         data = await self._http.get(
@@ -602,7 +620,7 @@ class Guild(APIObject):
             f"&{limit}" if limit else ""
         )
 
-        return [GuildMember.from_dict(member) for member in data]
+        return (GuildMember.from_dict(member) for member in data)
 
     @overload
     async def add_guild_member(
@@ -622,7 +640,8 @@ class Guild(APIObject):
         user_id : str
             id of the user to be added
         access_token : str
-            an oauth2 access token granted with the guilds.join to the bot's application for the user you want to add to the guild
+            an oauth2 access token granted with the guilds.join to 
+            the bot's application for the user you want to add to the guild
         nick : Optional[str]
         	value to set users nickname to
         roles : Optional[List[:class:`~pincer.utils.snowflake.Snowflake`]]
@@ -641,8 +660,9 @@ class Guild(APIObject):
         """
 
     async def add_guild_member(self, user_id, **kwargs):
-        data = self._http.put(f"guilds/{self.id}/members/{user_id}",
-                              data=kwargs)
+        data = await self._http.put(
+            f"guilds/{self.id}/members/{user_id}", data=kwargs
+        )
 
         return GuildMember.from_dict(data) if data else None
 
@@ -654,10 +674,13 @@ class Guild(APIObject):
         ----------
         nick : str
             value to set users nickname to
+        Returns
+        -------
+        class:`~pincer.objects.guild.member.GuildMember
+            current guild member
         """
         data = self._http.patch(f"guilds/{self.id}/members/@me", {"nick": nick})
-        member = GuildMember.from_dict(data)
-        return member
+        return GuildMember.from_dict(construct_client_dict(self._client, data))
 
     async def add_guild_member_role(self, user_id: int, role_id: int) -> None:
         """|coro|
@@ -671,11 +694,14 @@ class Guild(APIObject):
             id of a role
         """
         data = await self._http.put(
-            f"guilds/{self.id}/{user_id}/roles/{role_id}", {})
-        # TODO: remove the blank dictionary once #233 is fixed
+            f"guilds/{self.id}/{user_id}/roles/{role_id}", {}
+        )
 
-    async def remove_guild_member_role(self, user_id: int,
-                                       role_id: int) -> None:
+    async def remove_guild_member_role(
+        self, 
+        user_id: int,
+        role_id: int
+    ) -> None:
         """|coro|
         Removes a role from a guild member.
 
@@ -687,9 +713,8 @@ class Guild(APIObject):
             id of a role
         """
         await self._http.delete(
-            f"guilds/{self.id}/{user_id}/roles/{role_id}",
+            f"guilds/{self.id}/{user_id}/roles/{role_id}"
         )
-        # TODO: remove the blank dictionary and format once #233 is fixed
 
     async def remove_guild_member(self, user_id: int) -> None:
         """|coro|
