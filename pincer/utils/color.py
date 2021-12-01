@@ -53,7 +53,10 @@ class Color:
     def __eq__(self, other):
         return self.r == other.r and self.g == other.g and self.b == other.b
 
-    def __repr__(self) -> str:
+    def __repr__(self):
+        return f"Color(r={self.r}, g={self.g}, b={self.b})"
+
+    def __str__(self) -> str:
         return f"#{self.hex}"
 
     @property
