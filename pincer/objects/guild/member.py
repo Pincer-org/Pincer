@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from ..user.user import User
 from ...utils.api_object import APIObject
+from ...utils.conversion import construct_client_dict
 from ...utils.snowflake import Snowflake
 from ...utils.timestamp import Timestamp
 from ...utils.types import MISSING
@@ -134,7 +135,7 @@ class GuildMember(BaseMember, User, APIObject):
             cls,
             client: Client,
             guild_id: int,
-            _id: int
+            user_id: int
     ) -> GuildMember:
-        data = await client.http.get(f"guilds/{guild_id}/members/{_id}")
-        return cls.from_dict({**data, "_client": client, "_http": client.http})
+        data = await client.http.get(f"guilds/{guild_id}/members/{user_id}")
+        return cls.from_dict(construct_client_dict(client, data))

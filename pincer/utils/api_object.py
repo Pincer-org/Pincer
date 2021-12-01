@@ -102,7 +102,6 @@ class APIObject(metaclass=HTTPMeta):
     Represents an object which has been fetched from the Discord API.
     """
     _client: Client
-    _http: HTTPClient
 
     def __get_types(self, attr: str, arg_type: type) -> Tuple[type]:
         """Get the types from type annotations.
@@ -173,6 +172,7 @@ class APIObject(metaclass=HTTPMeta):
         )
 
     def __post_init__(self):
+        self._http = getattr(self._client, "http", None)
         TypeCache()
 
         # Get all type annotations for the attributes.
