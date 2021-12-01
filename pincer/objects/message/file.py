@@ -15,7 +15,7 @@ from aiohttp import FormData, Payload
 from ...exceptions import ImageEncodingError
 
 if TYPE_CHECKING:
-    from typing import Any, Dict, List, Optional, Tuple, Union
+    from typing import Any, Dict, List, Optional, Tuple
 
     IMAGE_TYPE = Any
 
