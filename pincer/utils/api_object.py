@@ -228,7 +228,7 @@ class APIObject(metaclass=HTTPMeta):
     def __repr__(self):
         attrs = ', '.join(
             f"{k}={v!r}" for k, v in self.__dict__.items()
-            if not k.startswith('_') and v
+            if v and not k.startswith('_')
         )
 
         return f"{type(self).__name__}({attrs})"
