@@ -1329,7 +1329,7 @@ class Guild(APIObject):
             f"guilds/{self.id}/emojis",
             data={
                 "name": name,
-                "image": image.get_uri(),
+                "image": image.uri,
                 "roles": roles
             },
             headers=remove_none({"X-Audit-Log-Reason": reason})

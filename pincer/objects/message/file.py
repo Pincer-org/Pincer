@@ -8,14 +8,14 @@ import os
 from dataclasses import dataclass
 from io import BytesIO
 from json import dumps
-from typing import TYPE_CHECKING, Tuple
+from typing import TYPE_CHECKING
 
 from aiohttp import FormData, Payload
 
 from ...exceptions import ImageEncodingError
 
 if TYPE_CHECKING:
-    from typing import Optional, Dict, Any, List, Union
+    from typing import Any, Dict, List, Optional, Tuple, Union
 
     IMAGE_TYPE = Any
 
@@ -168,8 +168,8 @@ class File:
         if image_format is None:
             image_format = _get_file_extension(filename)
 
-            if image_format == "jpg":
-                image_format = "jpeg"
+        if image_format == "jpg":
+            image_format = "jpeg"
 
         # https://stackoverflow.com/questions/33101935/convert-pil-image-to-byte-array
         # Credit goes to second answer
@@ -183,7 +183,8 @@ class File:
             filename=filename
         )
 
-    def get_uri(self) -> str:
+    @property
+    def uri(self) -> str:
         """
         Returns
         -------
