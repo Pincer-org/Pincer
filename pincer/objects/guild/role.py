@@ -79,10 +79,13 @@ class Role(APIObject):
     tags: APINullable[RoleTags] = MISSING
 
     def __repr__(self) -> str:
-        return f"Role({self.name})"
+        return (
+            f"Role(id={self.id}, name={self.name}, position={self.position},"
+            f"color={self.color=}, permissions={self.permissions})"
+        )
 
     def __str__(self) -> str:
-        return self.mention
+        return self.name
 
     @property
     def mention(self) -> str:
