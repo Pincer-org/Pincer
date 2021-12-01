@@ -24,7 +24,7 @@ from .exceptions import (
     DispatchError, DisallowedIntentsError, InvalidTokenError, HeartbeatError,
     UnavailableGuildError, HTTPError, NotModifiedError, BadRequestError,
     UnauthorizedError, ForbiddenError, NotFoundError, MethodNotAllowedError,
-    RateLimitError, GatewayError, ServerError
+    RateLimitError, GatewayError, ServerError, EmbedOverflow
 )
 from .objects import Intents
 
@@ -63,7 +63,7 @@ __all__ = (
     "CogAlreadyExists", "CogError", "CogNotFound", "CommandAlreadyRegistered",
     "CommandCooldownError", "CommandDescriptionTooLong", "CommandError",
     "CommandIsNotCoroutine", "CommandReturnIsEmpty", "DisallowedIntentsError",
-    "DispatchError", "EmbedFieldError", "ForbiddenError", "GatewayConfig",
+    "DispatchError", "EmbedFieldError", "EmbedOverflow", "ForbiddenError", "GatewayConfig",
     "GatewayError", "HTTPError", "HeartbeatError", "Intents",
     "InvalidArgumentAnnotation", "InvalidCommandGuild", "InvalidCommandName",
     "InvalidEventName", "InvalidPayload", "InvalidTokenError",
