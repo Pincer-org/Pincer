@@ -78,6 +78,12 @@ class Role(APIObject):
     unicode_emoji: APINullable[str] = MISSING
     tags: APINullable[RoleTags] = MISSING
 
+    def __repr__(self) -> str:
+        return f"Role({self.name})"
+
+    def __str__(self) -> str:
+        return self.mention
+
     @property
     def mention(self) -> str:
         """:class:`str`\\: Returns the mention string for this role."""
