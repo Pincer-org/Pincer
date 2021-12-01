@@ -590,7 +590,7 @@ class Guild(APIObject):
         """
 
         members = await self._http.get(
-            f"guilds/{self.id}/members?limit={limit}&after={after}"
+            f"guilds/{self.id}/members?{limit=!s}&{after=!s}"
         )
         
         return (GuildMember.from_dict(construct_client_dict(self._client, data)) for member in members)
