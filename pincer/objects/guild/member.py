@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, T
+from typing import TYPE_CHECKING
 
 from ..user.user import User
 from ...utils.api_object import APIObject
