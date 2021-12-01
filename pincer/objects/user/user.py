@@ -162,29 +162,33 @@ class User(APIObject):
             f"?size={size}"
         )
 
-    if PILLOW_IMPORT:
+    async def get_avatar(self, size: int = 512, ext: str = "png") -> Image:
+        """|Coro|
+        Get the user's avatar as a Pillow image.
 
-        async def get_avatar(self, size: int = 512, ext: str = "png") -> Image:
-            """|Coro|
-            Get the user's avatar as a Pillow image.
+        Parameters
+        ----------
+        size : :class: int, optional
+            The size of the image to get. Defaults to 512.
+        ext : :class: str, optional
+            The file extension to use. Defaults to 'png'.
 
-            Parameters
-            ----------
-            size : :class: int, optional
-                The size of the image to get. Defaults to 512.
-            ext : :class: str, optional
-                The file extension to use. Defaults to 'png'.
+        Returns
+        -------
+        :class: Image
+            The user's avatar as a Pillow image.
+        """
+        if not PILLOW_IMPORT:
+            raise ModuleNotFoundError(
+                "The `Pillow` library is required for sending and converting "
+                "pillow images,"
+            )
 
-            Returns
-            -------
-            :class: Image
-                The user's avatar as a Pillow image.
-            """
-            async with ClientSession().get(
-                url=self.get_avatar_url(size, ext)
-            ) as resp:
-                avatar = io.BytesIO(await resp.read())
-                return Image.open(avatar).convert("RGBA")
+        async with ClientSession().get(
+            url=self.get_avatar_url(size, ext)
+        ) as resp:
+            avatar = io.BytesIO(await resp.read())
+            return Image.open(avatar).convert("RGBA")
 
     def __str__(self):
         # TODO: fix docs
