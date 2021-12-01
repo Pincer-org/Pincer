@@ -225,6 +225,14 @@ class APIObject(metaclass=HTTPMeta):
     def __factory__(cls: Generic[T], *args, **kwargs) -> T:
         return cls.from_dict(*args, **kwargs)
 
+    def __repr__(self):
+        attrs = ', '.join(
+            f"{k}={v!r}" for k, v in self.__dict__.items()
+            if not k.startswith('_') and v
+        )
+
+        return f"{type(self).__name__}({attrs})"
+
     def __str__(self):
         # TODO: fix docs
         """
