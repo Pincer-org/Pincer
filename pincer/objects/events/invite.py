@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from ..guild.invite import InviteTargetType
 
 
-@dataclass
+@dataclass(repr=False)
 class InviteCreateEvent(APIObject):
     """Sent when a new invite to a channel is created.
 
@@ -62,7 +62,7 @@ class InviteCreateEvent(APIObject):
     uses: int = 0
 
 
-@dataclass
+@dataclass(repr=False)
 class InviteDeleteEvent(APIObject):
     """Sent when an invite is deleted.
 

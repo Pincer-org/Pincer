@@ -48,7 +48,7 @@ class StickerFormatType(IntEnum):
     LOTTIE = 3
 
 
-@dataclass
+@dataclass(repr=False)
 class Sticker(APIObject):
     """Represents a Discord sticker.
 
@@ -95,7 +95,7 @@ class Sticker(APIObject):
     user: APINullable[User] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class StickerItem(APIObject):
     """Represents the smallest amount of data required to render a sticker.
     A partial sticker object.
@@ -115,7 +115,7 @@ class StickerItem(APIObject):
     format_type: StickerFormatType
 
 
-@dataclass
+@dataclass(repr=False)
 class StickerPack(APIObject):
     """Represents a pack of standard stickers.
 

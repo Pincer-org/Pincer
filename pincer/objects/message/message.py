@@ -31,7 +31,7 @@ except (ModuleNotFoundError, ImportError):
     PILLOW_IMPORT = False
 
 
-@dataclass
+@dataclass(repr=False)
 class Message:
     """A discord message that will be send to discord
 

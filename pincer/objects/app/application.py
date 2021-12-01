@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class Application(APIObject):
     """Represents a Discord application. (eg Bot, OAuth)
 
