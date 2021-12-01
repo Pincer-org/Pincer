@@ -177,3 +177,6 @@ class Message:
 
         payload = form()
         return payload.headers["Content-Type"], payload
+
+    def __str__(self):
+        return self.content
