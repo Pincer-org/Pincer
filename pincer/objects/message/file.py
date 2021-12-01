@@ -33,7 +33,7 @@ except (ModuleNotFoundError, ImportError):
 
 def create_form(
     json_payload: Dict[Any], files: List[File]
-) -> Tuple[str, Union[Payload, Dict]]:
+) -> Tuple[str, Payload]:
     """
     Creates a aiohttp payload from an array of File objects.
 
@@ -44,8 +44,8 @@ def create_form(
 
     Returns
     -------
-    `aiohttp.Payload`
-        The payload to be send in an HTTP request.
+    Tuple[str, :class:`aiohttp.Payload`]
+        The content type and the payload to be send in an HTTP request.
     """
     form = FormData()
     form.add_field("payload_json", dumps(json_payload))
