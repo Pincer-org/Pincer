@@ -130,6 +130,9 @@ class Invite(APIObject):
     target_user: APINullable[User] = MISSING
     target_application: APINullable[Application] = MISSING
 
+    def __repr__(self) -> str:
+        return f"Invite(code={self.code}, channel={self.channel})"
+
     def __str__(self) -> str:
         return self.link
 
