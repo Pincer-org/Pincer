@@ -11,7 +11,7 @@
 ![Lines of code](https://tokei.rs/b1/github/pincer-org/pincer?category=code&path=pincer)
 ![Repo Size](https://img.shields.io/github/repo-size/Pincer-org/Pincer)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Pincer-org/Pincer)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Pincer-org/Pincer)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Pincer-org/Pincer?label=commits)
 ![GitHub](https://img.shields.io/github/license/Pincer-org/Pincer)
 ![Discord](https://img.shields.io/discord/881531065859190804)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
