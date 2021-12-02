@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from enum import IntEnum
 from typing import AsyncGenerator, overload, TYPE_CHECKING
 
-
+from .invite import Invite
 from .channel import Channel
 from ..message.emoji import Emoji
 from ..message.file import File
@@ -22,7 +22,6 @@ if TYPE_CHECKING:
 
     from .audit_log import AuditLog
     from .ban import Ban
-    from .invite import Invite
     from .member import GuildMember
     from .features import GuildFeature
     from .role import Role
@@ -171,7 +170,6 @@ class SystemChannelFlags(IntEnum):
     SUPPRESS_JOIN_NOTIFICATION_REPLIES = 1 << 3
 
 
-@dataclass
 class GuildPreview(APIObject):
     """Represents a guild preview.
     Attributes
@@ -339,21 +337,23 @@ class Guild(APIObject):
     """
 
     # noqa: E501
-    afk_timeout: int
-    default_message_notifications: DefaultMessageNotificationLevel
-    emojis: List[Emoji]
-    explicit_content_filter: ExplicitContentFilterLevel
     features: List[GuildFeature]
     id: Snowflake
-    mfa_level: MFALevel
     name: str
     nsfw_level: GuildNSFWLevel
-    owner_id: Snowflake
-    preferred_locale: str
-    premium_tier: PremiumTier
-    roles: List[Role]
-    system_channel_flags: SystemChannelFlags
     verification_level: VerificationLevel
+
+    # Guild invites missing
+    system_channel_flags: APINullable[SystemChannelFlags] = MISSING
+    explicit_content_filter: APINullable[ExplicitContentFilterLevel] = MISSING
+    premium_tier: APINullable[PremiumTier] = MISSING
+    default_message_notifications: APINullable[DefaultMessageNotificationLevel] = MISSING
+    mfa_level: APINullable[MFALevel] = MISSING
+    owner_id: APINullable[Snowflake] = MISSING
+    afk_timeout: APINullable[int] = MISSING
+    emojis: APINullable[List[Emoji]] = MISSING
+    preferred_locale: APINullable[str] = MISSING
+    roles: APINullable[List[Role]] = MISSING
 
     guild_scheduled_events: APINullable[List] = MISSING
     lazy: APINullable[bool] = MISSING
