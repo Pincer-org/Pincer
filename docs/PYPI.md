@@ -9,6 +9,7 @@
 [![Documentation Status](https://readthedocs.org/projects/pincer/badge/?version=latest)](https://pincer.readthedocs.io/en/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/Pincer-org/Pincer/branch/main/graph/badge.svg?token=T15T34KOQW)](https://codecov.io/gh/Pincer-org/Pincer)
 ![Lines of code](https://tokei.rs/b1/github/pincer-org/pincer?category=code&path=pincer)
+![Repo Size](https://img.shields.io/github/repo-size/Pincer-org/Pincer)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Pincer-org/Pincer)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Pincer-org/Pincer)
 ![GitHub](https://img.shields.io/github/license/Pincer-org/Pincer)

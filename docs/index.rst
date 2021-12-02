@@ -7,6 +7,19 @@
 |LOGO| Pincer Documentation
 ===================================
 
+.. image:: https://img.shields.io/badge/dynamic/json?label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2FPincer
+   :target: https://pypi.org/project/Pincer
+   :alt: Pincer Downloads
+
+.. image:: https://img.shields.io/pypi/v/Pincer
+   :alt: Pincer Version
+
+.. image:: https://img.shields.io/pypi/format/Pincer
+   :alt: Pincer Format
+
+.. image:: https://img.shields.io/pypi/pyversions/Pincer
+   :alt: Pincer Python Versions
+
 .. image:: https://scrutinizer-ci.com/g/Pincer-org/pincer/badges/quality-score.png?b=main
    :target: https://scrutinizer-ci.com/g/Pincer-org/pincer/?branch=main
    :alt: Scrutinizer Code Quality
@@ -14,6 +27,13 @@
 .. image:: https://scrutinizer-ci.com/g/Pincer-org/Pincer/badges/build.png?b=main
    :target: https://scrutinizer-ci.com/g/Pincer-org/Pincer/build-status/main
    :alt: Build Status
+
+.. image:: https://codecov.io/gh/Pincer-org/Pincer/branch/main/graph/badge.svg?token=T15T34KOQW
+   :target: https://codecov.io/gh/Pincer-org/Pincer/branch/main
+   :alt: Code Coverage
+
+.. image:: https://tokei.rs/b1/github/pincer-org/pincer?category=code&path=pincer
+   :alt: Lines of Code
 
 .. image:: https://img.shields.io/github/repo-size/Pincer-org/Pincer
    :alt: GitHub repo size
