@@ -47,9 +47,6 @@
 .. image:: https://img.shields.io/github/license/Pincer-org/Pincer
    :alt: GitHub
 
-.. image:: https://img.shields.io/badge/code%20style-pep8-green
-   :alt: Code Style
-
 .. image:: https://img.shields.io/discord/881531065859190804
    :alt: Discord
 
