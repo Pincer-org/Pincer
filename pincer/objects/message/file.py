@@ -72,7 +72,7 @@ def _get_file_extension(filename: str) -> Optional[str]:
 
     Returns
     -------
-    Optional[str]
+    Optional[:class:`str`]
         The file extension or :data:`None`
     """
     path = os.path.splitext(filename)
