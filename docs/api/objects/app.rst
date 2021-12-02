@@ -1,7 +1,7 @@
 .. currentmodule:: pincer.objects
 
-Pincer Objects App Section
-==========================
+Pincer Objects App
+==================
 
 Applications
 ------------
