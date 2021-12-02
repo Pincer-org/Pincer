@@ -27,10 +27,12 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
     from ...client import Client
 
+
 class WebhookCompatibility(Enum):
-    GitHub = "/github"
-    Slack = "/slack"
+    GitHub = "github"
+    Slack = "slack"
     Default = ""
+
 
 class WebhookType(IntEnum):
     """Represents the type of a webhook.
@@ -165,7 +167,7 @@ class Webhook(APIObject):
     @overload
     async def execute(
         self,
-        webhook_compatibility: WebhookCompatibility = WebhookCompatibility.Default, # noqa: E501
+        webhook_compatibility: WebhookCompatibility = WebhookCompatibility.Default,  # noqa: E501
         *,
         thread_id: Optional[Snowflake] = None,
         wait: Optional[bool] = None,
@@ -221,7 +223,7 @@ class Webhook(APIObject):
 
     async def execute(
         self,
-        webhook_compatibility: WebhookCompatibility = WebhookCompatibility.Default, # noqa: E501
+        webhook_compatibility: WebhookCompatibility = WebhookCompatibility.Default,  # noqa: E501
         *,
         thread_id: Optional[Snowflake] = None,
         wait: Optional[bool] = None,
@@ -229,11 +231,12 @@ class Webhook(APIObject):
     ):
         if len(kwargs.get("embeds", [])) > 10:
             raise EmbedOverflow("You can only include up to 10 embeds")
-        
+
         request_route = f"webhooks/{self.id}/{self.token}"
 
         # Adding the subdirectory
-        request_route += webhook_compatibility.value
+        if webhook_compatibility:
+            request_route += f"/{webhook_compatibility.value}"
 
         # Adding query params
         if wait is not None:
