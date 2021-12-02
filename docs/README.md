@@ -1,4 +1,4 @@
-# <img src="../assets/svg/pincer.svg" height="24px" alt="Pincer Logo"> Pincer
+<img src="../assets/svg/banner.svg" width="100%" alt="Pincer Logo">
 
 [![PyPI - Downloads](https://img.shields.io/badge/dynamic/json?label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2FPincer)](https://pypi.org/project/Pincer)
 ![PyPI](https://img.shields.io/pypi/v/Pincer)
@@ -16,6 +16,7 @@
 ![Discord](https://img.shields.io/discord/881531065859190804)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
+# <img src="../assets/svg/pincer.svg" height="24px" alt="Pincer Logo"> Pincer
 An asynchronous Python API wrapper meant to replace discord.py
 
 | :exclamation: | The package is currently within Pre-Alpha phase |
