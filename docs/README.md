@@ -17,7 +17,7 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 # <img src="../assets/svg/pincer.svg" height="24px" alt="Pincer Logo"> Pincer
-An asynchronous Python API wrapper meant to replace discord.py
+The snappy asynchronous discord api wrapper API wrapper written with aiohttp & websockets.
 
 | :exclamation: | The package is currently within Pre-Alpha phase |
 | ------------- | :---------------------------------------------- |
