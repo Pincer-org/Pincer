@@ -559,6 +559,9 @@ class UserMessage(APIObject):
         ]
         for i in subs:
             new_content = sub(i, r"\1", new_content)
-        remove_code_blocks = sub(r"(.*?)```[a-zA-Z]+(\s*)+\n((?:.|\s)*?)```", r"\1\2\3", new_content)
 
-        return remove_code_blocks
+        return sub(
+            r"(.*?)```[a-zA-Z]+(\s*)+\n((?:.|\s)*?)```",
+            r"\1\2\3",
+            new_content
+        )
