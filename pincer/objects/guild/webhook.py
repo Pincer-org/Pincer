@@ -235,7 +235,7 @@ class Webhook(APIObject):
         request_route = f"webhooks/{self.id}/{self.token}"
 
         # Adding the subdirectory
-        if webhook_compatibility:
+        if webhook_compatibility.value:
             request_route += f"/{webhook_compatibility.value}"
 
         # Adding query params
