@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class VoiceServerUpdateEvent(APIObject):
     """Sent when a guild's voice server is updated.
     This is sent when initially connecting to voice,
@@ -36,7 +36,7 @@ class VoiceServerUpdateEvent(APIObject):
     endpoint: Optional[str] = None
 
 
-@dataclass
+@dataclass(repr=False)
 class VoiceChannelSelectEvent(APIObject):
     """
     Sent when the client joins a voice channel
@@ -102,7 +102,7 @@ class VoiceConnectionStates(Enum):
     ICE_CHECKING = auto()
 
 
-@dataclass
+@dataclass(repr=False)
 class VoiceConnectionStatusEvent(APIObject):
     """
     Sent when the client's voice connection status changes
@@ -131,7 +131,7 @@ class VoiceConnectionStatusEvent(APIObject):
     last_ping: int
 
 
-@dataclass
+@dataclass(repr=False)
 class SpeakingStartEvent(APIObject):
     """
     Sent when a user in a subscribed voice channel speaks
@@ -145,7 +145,7 @@ class SpeakingStartEvent(APIObject):
     user_id: Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class SpeakingStopEvent(APIObject):
     """
     Sent when a user in a subscribed voice channel stops speaking

@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from ...utils.timestamp import Timestamp
 
 
-@dataclass
+@dataclass(repr=False)
 class ChannelPinsUpdateEvent(APIObject):
     """Sent when a message is pinned or unpinned in a text channel.
     This is not sent when a pinned message is deleted.

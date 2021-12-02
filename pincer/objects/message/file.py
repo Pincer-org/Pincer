@@ -28,7 +28,7 @@ except (ModuleNotFoundError, ImportError):
     PILLOW_IMPORT = False
 
 
-@dataclass
+@dataclass(repr=False)
 class File(APIObject):
     """A file that is prepared by the user to be send to the discord
     API.

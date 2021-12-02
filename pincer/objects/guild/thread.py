@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from ...utils.timestamp import Timestamp
 
 
-@dataclass
+@dataclass(repr=False)
 class ThreadMetadata(APIObject):
     """
     Represents a Discord Thread Metadata object
@@ -45,7 +45,7 @@ class ThreadMetadata(APIObject):
     invitable: APINullable[bool] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class ThreadMember(APIObject):
     """Represents a Discord Thread Member object
 

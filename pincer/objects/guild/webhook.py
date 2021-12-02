@@ -39,7 +39,7 @@ class WebhookType(IntEnum):
     APPLICATION = 3
 
 
-@dataclass
+@dataclass(repr=False)
 class Webhook(APIObject):
     """Represents a Discord channel webhook.
 

@@ -96,7 +96,7 @@ class HTTPMeta(type):
         return http_object
 
 
-@dataclass
+@dataclass(repr=False)
 class APIObject(metaclass=HTTPMeta):
     """
     Represents an object which has been fetched from the Discord API.
@@ -225,6 +225,14 @@ class APIObject(metaclass=HTTPMeta):
     def __factory__(cls: Generic[T], *args, **kwargs) -> T:
         return cls.from_dict(*args, **kwargs)
 
+    def __repr__(self):
+        attrs = ', '.join(
+            f"{k}={v!r}" for k, v in self.__dict__.items()
+            if v and not k.startswith('_')
+        )
+
+        return f"{type(self).__name__}({attrs})"
+
     def __str__(self):
         # TODO: fix docs
         """
@@ -233,7 +241,10 @@ class APIObject(metaclass=HTTPMeta):
         -------
 
         """
-        return getattr(self, 'id', None) or super().__str__()
+        if _name := getattr(self, "__name__", None):
+            return f"{_name} {self.__class__.__name__.lower()}"
+
+        return super().__str__()
 
     @classmethod
     def from_dict(

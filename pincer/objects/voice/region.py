@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from ...utils.api_object import APIObject
 
 
-@dataclass
+@dataclass(repr=False)
 class VoiceRegion(APIObject):
     """Represents a Discord Voice Region object
 

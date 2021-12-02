@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from ...utils.types import APINullable
 
 
-@dataclass
+@dataclass(repr=False)
 class MessageComponent(APIObject):
     """Represents a Discord Message Component object
 

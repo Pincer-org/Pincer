@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from ...utils.types import APINullable
 
 
-@dataclass
+@dataclass(repr=False)
 class BaseMember(APIObject):
     """Represents the base of a guild member.
 
@@ -45,7 +45,7 @@ class BaseMember(APIObject):
     hoisted_role: APINullable[Snowflake] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class PartialGuildMember(APIObject):
     """Represents a partial guild member.
     This is a reference to a member from a guild which does not contain
@@ -76,7 +76,7 @@ class PartialGuildMember(APIObject):
     member: Optional[BaseMember]
 
 
-@dataclass
+@dataclass(repr=False)
 class GuildMember(BaseMember, User, APIObject):
     """Represents a member which resides in a guild/server.
 

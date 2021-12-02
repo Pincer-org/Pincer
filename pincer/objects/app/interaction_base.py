@@ -61,7 +61,7 @@ class InteractionType(IntEnum):
     MESSAGE_COMPONENT = 3
 
 
-@dataclass
+@dataclass(repr=False)
 class MessageInteraction(APIObject):
     """Represents a Discord Message Interaction object
 

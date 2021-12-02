@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class WebhooksUpdateEvent(APIObject):
     """
     Sent when a guild's channel webhook

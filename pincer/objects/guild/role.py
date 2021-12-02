@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class RoleTags(APIObject):
     """Special tags/flags which have been defined for a role.
 
@@ -35,7 +35,7 @@ class RoleTags(APIObject):
     premium_subscriber: APINullable[bool] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class Role(APIObject):
     """
     Represents a Discord guild/server role.
@@ -77,6 +77,15 @@ class Role(APIObject):
     icon: APINullable[str] = MISSING
     unicode_emoji: APINullable[str] = MISSING
     tags: APINullable[RoleTags] = MISSING
+
+    def __repr__(self) -> str:
+        return (
+            f"Role(id={self.id}, name={self.name}, position={self.position},"
+            f"color={self.color=}, permissions={self.permissions})"
+        )
+
+    def __str__(self) -> str:
+        return self.name
 
     @property
     def mention(self) -> str:

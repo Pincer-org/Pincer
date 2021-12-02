@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class IntegrationDeleteEvent(APIObject):
     """Sent when an integration is deleted.
 
@@ -31,7 +31,7 @@ class IntegrationDeleteEvent(APIObject):
     application_id: APINullable[Snowflake] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class IntegrationCreateEvent(APIObject):
     """
     Sent when an integration is created.
@@ -52,7 +52,7 @@ class IntegrationCreateEvent(APIObject):
     application_id: APINullable[Snowflake] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class IntegrationUpdateEvent(APIObject):
     """
     Sent when an integration is updated.

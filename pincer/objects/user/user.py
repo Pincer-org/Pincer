@@ -67,7 +67,7 @@ class VisibilityType(IntEnum):
     EVERYONE = 1
 
 
-@dataclass
+@dataclass(repr=False)
 class User(APIObject):
     """Represents a Discord user. This can be a bot account or a
     human account.
