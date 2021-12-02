@@ -3,9 +3,9 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from enum import Enum, IntEnum
-from re import sub
 from typing import TYPE_CHECKING
 
 from .attachment import Attachment
@@ -31,6 +31,18 @@ if TYPE_CHECKING:
     from ..guild.channel import Channel, ChannelMention
     from ...utils.types import APINullable
     from ...utils.timestamp import Timestamp
+
+
+MARKDOWN_PATTERNS = (
+    re.compile(r"\*\*(.*?)\*\*"),  # bold
+    re.compile(r"\*(.*?)\*"),  # italic
+    re.compile(r"_(.*?)_"),  # italic2
+    re.compile(r"\*\*\*(.*?)\*\*\*"),  # bold+italic
+    re.compile(r"\_\_(.*?)\_\_"),  # underline
+    re.compile(r"~~(.*?)~~"),  # crossed
+    re.compile(r"`?`(.*?)`?`"),  # small code blocks
+    re.compile(r"\|\|(.*?)\|\|")  # spoilers
+)
 
 
 class AllowedMentionTypes(str, Enum):
@@ -547,21 +559,12 @@ class UserMessage(APIObject):
         The message content with any special characters removed.
         """
         new_content = self.content
-        subs = [
-                r"\*\*(.*?)\*\*",  # bold
-                r"\*(.*?)\*",  # italic
-                r"_(.*?)_",  # italic2
-                r"\*\*\*(.*?)\*\*\*",  # bold+italic
-                r"\_\_(.*?)\_\_",  # underline
-                r"~~(.*?)~~",  # crossed
-                r"`?`(.*?)`?`",  # small code blocks
-                r"\|\|(.*?)\|\|"  # spoilers
-        ]
-        for i in subs:
-            new_content = sub(i, r"\1", new_content)
 
-        return sub(
-            r"(.*?)```[a-zA-Z]+(\s*)+\n((?:.|\s)*?)```",
+        for pattern in MARKDOWN_PATTERNS:
+            new_content = re.sub(pattern, r"\1", new_content)
+
+        return re.sub(
+            re.compile(r"(.*?)```[a-zA-Z]+(\s*)+\n((?:.|\s)*?)```"),
             r"\1\2\3",
             new_content
         )
