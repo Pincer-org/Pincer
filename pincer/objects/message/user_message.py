@@ -554,9 +554,12 @@ class UserMessage(APIObject):
         )
 
     @property
-    def clean_content(self):
+    def clean_content(self) -> str:
         """
-        The message content with any special characters removed.
+        Returns
+        -------
+        :class:`str`
+            The message content with any special characters removed.
         """
         new_content = self.content
 
