@@ -1,7 +1,7 @@
 .. currentmodule:: pincer.objects
 
-Pincer Objects Message Section
-==============================
+Pincer Objects Message
+======================
 
 Attachment
 ----------
