@@ -1,7 +1,7 @@
 API Reference
 ==============
 
-The full Pincer API Referance
+The Full Pincer API Referance
 
 .. toctree::
     :maxdepth: 1
