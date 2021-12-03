@@ -33,7 +33,7 @@ To register your command a guild do:
     async def some_command(self):
         pass
 
-Sending messages to the user is extemely easy. What you want to return is inferred by the object's return type. A :class:`str` can be returned to send an image.
+Sending messages to the user is extemely easy. What you want to return is inferred by the object's return type. A :class:`str` can be returned to send a text message.
 Heres a simple ping command.
 
 .. code-block:: python
