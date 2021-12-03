@@ -139,7 +139,7 @@ type.
         ctx: MessageContext,
         word: CommandArg[
           str,
-          # This will likely marked as incorrect by your linter but it is
+          # This will likely be marked as incorrect by your linter but it is
           # valid python. Simply append # type: ignore for most linters and
           # noqa: F722 if you are using Flake8.
           Description["A word that the bot will say."]  # type: ignore # noqa: F722
