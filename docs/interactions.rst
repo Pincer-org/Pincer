@@ -46,7 +46,7 @@ Here's a simple ping command.
 If you need access to more information, you can pass in the :data:`ctx` object.
 
 .. note::
-    `ctx` and `self` should be those exact names or the correct value will not be passed in.
+    ``ctx`` and ``self`` should be those exact names or the correct value will not be passed in.
 
 .. code-block:: python
 
