@@ -163,6 +163,10 @@ class InvalidUrlError(PincerError, ValueError):
     """Exception raised when an invalid url has been provided."""
 
 
+class ImageEncodingError(PincerError):
+    """Exception raised when an image cannot be encoded for Discord"""
+
+
 class EmbedFieldError(PincerError, ValueError):
     """Exception that is raised when an embed field is too large."""
 

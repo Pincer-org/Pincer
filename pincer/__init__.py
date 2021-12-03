@@ -24,7 +24,7 @@ from .exceptions import (
     DispatchError, DisallowedIntentsError, InvalidTokenError, HeartbeatError,
     UnavailableGuildError, HTTPError, NotModifiedError, BadRequestError,
     UnauthorizedError, ForbiddenError, NotFoundError, MethodNotAllowedError,
-    RateLimitError, GatewayError, ServerError
+    RateLimitError, GatewayError, ServerError, ImageEncodingError
 )
 from .objects import Intents
 
@@ -74,5 +74,5 @@ __all__ = (
     "TaskIsNotCoroutine", "TooManyArguments", "TooManySetupArguments",
     "UnauthorizedError", "UnavailableGuildError", "UnhandledException",
     "__author__", "__email__", "__package__", "__title__", "__version__",
-    "command", "event_middleware"
+    "command", "event_middleware", "ImageEncodingError"
 )

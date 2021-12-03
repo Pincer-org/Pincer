@@ -4,12 +4,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from json import dumps
 from typing import TYPE_CHECKING
 
-from aiohttp import FormData
-
-from ..message.file import File
+from ..message.file import File, create_form
 from ...exceptions import CommandReturnIsEmpty
 
 if TYPE_CHECKING:
@@ -169,14 +166,7 @@ class Message:
         if not self.attachments:
             return "application/json", json_payload
 
-        form = FormData()
-        form.add_field("payload_json", dumps(json_payload))
-
-        for file in self.attachments:
-            form.add_field("file", file.content, filename=file.filename)
-
-        payload = form()
-        return payload.headers["Content-Type"], payload
+        return create_form(json_payload, self.attachments)
 
     def __str__(self):
         return self.content
