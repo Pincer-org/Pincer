@@ -58,10 +58,31 @@ If you need access to more information, you can pass in the :data:`ctx` object.
         # Returns the name of the user that initiated the interaction
         return f"hello {ctx.author}"
 
+Application Command Types
+-------------------------
+Pincer provides an API for all three interaction command types. The only thing that varies is the function signiture.
+
+.. code-block:: python
+
+    from pincer.commands import command, user_command, message_command
+    ...
+
+    @command
+    # Can have any amount of inputs
+    async def ping(self, ctx: MessageContext, arg1: str, arg2: str):
+        return "pong"
+
+    #
+    async def user_ping(self, ctx: MessageContext, arg1: str, arg2: str):
+        return "pong"
+
+    async def message_ping(self, ctx: MessageContext, arg1: str, arg2: str):
+        return "pong"
+
 Interaction Timeout
 -------------------
 Interactions time out after 3 seconds. To extend the timeout to 15 minutes you can run :meth:`ack` from
-:class:`~pincer.objects.MessageContext`.
+:class:`~pincer.objects.MessageContext`. :class:`~pincer.objects.app.interaction_flags.InteractionFlags` is available in this method.
 
 Arguments
 ---------
@@ -77,7 +98,7 @@ Pincer uses type hints to infer the argument type that you want.
 
 The list of possible type hints is as follows:
 
-.. list-table:: Title
+.. list-table::
    :widths: 50 50
    :header-rows: 1
 
@@ -115,8 +136,9 @@ type.
         word: CommandArg[
           str,
           # This will likely marked as incorrect by your linter but it is
-          # valid python
-          Description["A word that the bot will say."]
+          # valid python. Simply append # type: ignore for most linters and
+          # noqa: F722 if you are using Flake8.
+          Description["A word that the bot will say."]  # type: ignore # noqa: F722
         ]
     ):
         # Returns the name of the user that initiated the interaction
@@ -126,7 +148,7 @@ Arguments will be an optional argument in Discord if they are an optional argume
 
 These are the available modifiers:
 
-.. list-table:: Modifier Types
+.. list-table::
    :widths: 25 40 35
    :header-rows: 1
 
@@ -152,7 +174,8 @@ These are the available modifiers:
 Return Types
 ------------
 :class:`str` isn't the only thing you can return. For a more complex message you can return a :class:`~pincer.objects.message.message.Message` object.
-The message object allows you to return embeds and attachments.
+The message object allows you to return embeds and attachments. :class:`~pincer.objects.app.interaction_flags.InteractionFlags` are only available in the response
+if you return a :class:`~pincer.objects.message.message.Message` object.
 
 .. code-block:: python
 
@@ -210,3 +233,38 @@ Additionally, Pillow Images, Files, and Embeds can be returned directly without 
         "with aiohttp & websockets"
       )
     )
+
+.. list-table:: Possible Return Types
+   :widths: 50 50
+   :header-rows: 1
+
+   * - Return Type
+     - Discord Message
+   * - :class:`str`
+     - text only message
+   * - :class:`~pincer.objects.message.embed.Embed`
+     - Discord embed
+   * - :class:`~pincer.objects.message.file.File`
+     - file attachment
+   * - :class:`PIL.Image.Image`
+     - single image attachment
+
+
+Sending Messages Without Return
+-------------------------------
+The :class:`~pincer.objects.message.context.MessageContext` object provides methods to send a response to an interaction.
+
+.. code-block:: python
+
+    from pincer.objects import MessageContext, Message
+
+    @command
+    async def some_command(self, ctx: MessageContext):
+        ctx.send(Message("Hello word!")) # Sends hello world as the response to the interaction
+        return # No response will be sent now that the interaction has been completed
+
+    @command
+    async def some_other_command(self, ctx: MessageContext):
+        channel = await self.get_channel(ctx.channel_id)
+        channel.send(Message("Hello word!")) # Sends a message in the channel
+        return "Hello world 2" # This is sent because the interaction was not "used up"
