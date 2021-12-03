@@ -125,7 +125,7 @@ The list of possible type hints is as follows:
    * - :class:`pincer.objects.Mentionable`
      - Mentionable
 
-You might want to specify more information for your arguments. If you want a description for your command you will have to use the
+You might want to specify more information for your arguments. If you want a description for your command, you will have to use the
 :class:`~pincer.commands.arg_types.Description` type. Modifier types like this need to be inside of the :class:`~pincer.commands.arg_types.CommandArg`
 type.
 
