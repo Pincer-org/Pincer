@@ -29,6 +29,7 @@ if TYPE_CHECKING:
     from .template import GuildTemplate
     from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
     from .widget import GuildWidget
+    from .webhook import Webhook
     from ..user.user import User
     from ..user.integration import Integration
     from ..voice.region import VoiceRegion
@@ -1536,6 +1537,21 @@ class Guild(APIObject):
         return GuildTemplate.from_dict(
             construct_client_dict(self._client, data)
         )
+
+    async def get_webhooks(self) -> AsyncGenerator[Webhook, None]:
+        """|coro|
+        Returns an async generator of the guild webhooks.
+
+        Yields
+        -------
+        AsyncGenerator[:class:`~pincer.objects.guild.webhook.Webhook`, None]
+            The guild webhook object.
+        """
+        data = await self._http.get(f"guilds/{self.id}/webhooks")
+        for webhook_data in data:
+            yield Webhook.from_dict(
+                construct_client_dict(self._client, webhook_data)
+            )
 
     @classmethod
     def from_dict(cls, data) -> Guild:

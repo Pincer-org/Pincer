@@ -189,6 +189,10 @@ class EmbedFieldError(PincerError, ValueError):
         )
 
 
+class EmbedOverflow(PincerError):
+    """Exception that is raised when too many embeds are passed in."""
+
+
 class TaskError(PincerError):
     """Base class for exceptions that are related to tasks.
 

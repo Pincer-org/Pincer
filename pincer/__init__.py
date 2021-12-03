@@ -24,7 +24,11 @@ from .exceptions import (
     DispatchError, DisallowedIntentsError, InvalidTokenError, HeartbeatError,
     UnavailableGuildError, HTTPError, NotModifiedError, BadRequestError,
     UnauthorizedError, ForbiddenError, NotFoundError, MethodNotAllowedError,
+<<<<<<< HEAD
+    RateLimitError, GatewayError, ServerError, EmbedOverflow
+=======
     RateLimitError, GatewayError, ServerError, ImageEncodingError
+>>>>>>> upstream/main
 )
 from .objects import Intents
 
@@ -63,15 +67,15 @@ __all__ = (
     "CogAlreadyExists", "CogError", "CogNotFound", "CommandAlreadyRegistered",
     "CommandCooldownError", "CommandDescriptionTooLong", "CommandError",
     "CommandIsNotCoroutine", "CommandReturnIsEmpty", "DisallowedIntentsError",
-    "DispatchError", "EmbedFieldError", "ForbiddenError", "GatewayConfig",
-    "GatewayError", "HTTPError", "HeartbeatError", "ImageEncodingError",
-    "Intents", "InvalidArgumentAnnotation", "InvalidCommandGuild",
-    "InvalidCommandName", "InvalidEventName", "InvalidPayload",
-    "InvalidTokenError", "InvalidUrlError", "MethodNotAllowedError",
-    "NoCogManagerReturnFound", "NoExportMethod", "NoValidSetupMethod",
-    "NotFoundError", "NotModifiedError", "PincerError", "RateLimitError",
-    "ServerError", "TaskAlreadyRunning", "TaskCancelError", "TaskError",
-    "TaskInvalidDelay", "TaskIsNotCoroutine", "TooManyArguments",
+    "DispatchError", "EmbedFieldError", "EmbedOverflow", "ForbiddenError",
+    "GatewayConfig", "GatewayError", "HTTPError", "HeartbeatError",
+    "ImageEncodingError", "Intents", "InvalidArgumentAnnotation",
+    "InvalidCommandGuild", "InvalidCommandName", "InvalidEventName",
+    "InvalidPayload", "InvalidTokenError", "InvalidUrlError",
+    "MethodNotAllowedError", "NoCogManagerReturnFound", "NoExportMethod",
+    "NoValidSetupMethod", "NotFoundError", "NotModifiedError", "PincerError",
+    "RateLimitError", "ServerError", "TaskAlreadyRunning", "TaskCancelError",
+    "TaskError", "TaskInvalidDelay", "TaskIsNotCoroutine", "TooManyArguments",
     "TooManySetupArguments", "UnauthorizedError", "UnavailableGuildError",
     "UnhandledException", "__author__", "__email__", "__package__",
     "__title__", "__version__", "command", "event_middleware"
