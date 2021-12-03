@@ -19,7 +19,7 @@ Pincer makes it extremely easy to create an interaction. All you need to do is c
   bot = Bot("TOKEN")
   bot.run()
 
-This registers a command called "some_command". Its pretty useless right now so lets take a closer look at what else you can do.
+This registers a command called "some_command". It's pretty useless right now, so let's take a closer look at what else you can do.
 
 .. note::
     If you aren't seeing your command register, its likely because it takes up to one hour for a global slash command.
