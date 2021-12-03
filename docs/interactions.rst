@@ -264,11 +264,11 @@ The :class:`~pincer.objects.message.context.MessageContext` object provides meth
 
     @command
     async def some_command(self, ctx: MessageContext):
-        ctx.send("Hello word!") # Sends hello world as the response to the interaction
+        ctx.send("Hello world!") # Sends hello world as the response to the interaction
         return # No response will be sent now that the interaction has been completed
 
     @command
     async def some_other_command(self, ctx: MessageContext):
         channel = await self.get_channel(ctx.channel_id)
-        channel.send("Hello word!") # Sends a message in the channel
+        channel.send("Hello world!") # Sends a message in the channel
         return "Hello world 2" # This is sent because the interaction was not "used up"
