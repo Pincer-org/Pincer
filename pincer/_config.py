@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 
-@dataclass
+@dataclass(repr=False)
 class GatewayConfig:
     """This file is to make maintaining the library its gateway
     configuration easier.

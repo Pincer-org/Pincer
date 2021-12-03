@@ -9,7 +9,7 @@ from ...objects.guild.role import Role
 from ...objects.user.user import User
 
 
-@dataclass
+@dataclass(repr=False)
 class Mentionable:
     """
     Represents the Mentionable type

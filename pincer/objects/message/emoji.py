@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class Emoji(APIObject):
     """Representation of an emoji in a class.
 

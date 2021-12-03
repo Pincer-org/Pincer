@@ -44,7 +44,7 @@ class ButtonStyle(IntEnum):
     LINK = 5
 
 
-@dataclass
+@dataclass(repr=False)
 class Button(APIObject):
     """Represents a Discord Button object.
     Buttons are interactive components that render on messages.

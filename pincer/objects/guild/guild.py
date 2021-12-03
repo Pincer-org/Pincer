@@ -170,6 +170,8 @@ class SystemChannelFlags(IntEnum):
     SUPPRESS_JOIN_NOTIFICATION_REPLIES = 1 << 3
 
 
+
+@dataclass(repr=False)
 class GuildPreview(APIObject):
     """Represents a guild preview.
     Attributes
@@ -209,7 +211,7 @@ class GuildPreview(APIObject):
     description: APINullable[str] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class Guild(APIObject):
     """Represents a Discord guild/server in which your client resides.
     Attributes
@@ -422,7 +424,7 @@ class Guild(APIObject):
         channel_data = await client.http.get(f"/guilds/{_id}/channels")
 
         data["channels"]: List[Channel] = [
-            Channel.from_dict({**i, "_client": client, "_http": client.http})
+            Channel.from_dict(construct_client_dict(client, i))
             for i in (channel_data or [])
         ]
 
@@ -1559,7 +1561,7 @@ class Guild(APIObject):
         return super().from_dict(data)
 
 
-@dataclass
+@dataclass(repr=False)
 class UnavailableGuild(APIObject):
     id: Snowflake
     unavailable: bool = True

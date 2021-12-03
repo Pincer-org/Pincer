@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from ..app.throttle_scope import ThrottleScope
 
 
-@dataclass
+@dataclass(repr=False)
 class AppCommandInteractionDataOption(APIObject):
     """Represents a Discord Application Command Interaction Data Option
 
@@ -42,7 +42,7 @@ class AppCommandInteractionDataOption(APIObject):
         List[AppCommandInteractionDataOption]] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class AppCommandOptionChoice(APIObject):
     """Represents a Discord Application Command Option Choice object
 
@@ -57,7 +57,7 @@ class AppCommandOptionChoice(APIObject):
     value: choice_value_types
 
 
-@dataclass
+@dataclass(repr=False)
 class AppCommandOption(APIObject):
     """Represents a Discord Application Command Option object
 
@@ -92,7 +92,7 @@ class AppCommandOption(APIObject):
     max_value: APINullable[Union[int, float]] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class AppCommand(APIObject):
     """Represents a Discord Application Command object
 
@@ -171,7 +171,7 @@ class AppCommand(APIObject):
             self.options = [option]
 
 
-@dataclass
+@dataclass(repr=False)
 class ClientCommandStructure:
     """Represents the structure of how the client saves the existing
     commands in the register.

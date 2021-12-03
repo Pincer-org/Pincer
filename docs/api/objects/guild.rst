@@ -1,7 +1,7 @@
 .. currentmodule:: pincer.objects
 
-Pincer Objects Guild Section
-=============================
+Pincer Objects Guild
+====================
 
 Audit Log
 ---------

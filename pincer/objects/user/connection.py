@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from ...utils.types import APINullable
 
 
-@dataclass
+@dataclass(repr=False)
 class Connection(APIObject):
     """The connection object that the user has attached.
 

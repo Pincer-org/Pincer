@@ -7,7 +7,7 @@ from ...exceptions import PincerError
 from ...utils import APIObject
 
 
-@dataclass
+@dataclass(repr=False)
 class DiscordError(PincerError, APIObject):
     """Represents an error event in the Discord Gateway.
 

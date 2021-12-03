@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from ...utils.api_object import APIObject
 
 
-@dataclass
+@dataclass(repr=False)
 class SessionStartLimit(APIObject):
     """Represents a Discord Session Start Limit object
 

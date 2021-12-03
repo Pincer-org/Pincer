@@ -28,7 +28,7 @@ except (ModuleNotFoundError, ImportError):
     PILLOW_IMPORT = False
 
 
-@dataclass
+@dataclass(repr=False)
 class Message:
     """A discord message that will be send to discord
 
@@ -167,3 +167,6 @@ class Message:
             return "application/json", json_payload
 
         return create_form(json_payload, self.attachments)
+
+    def __str__(self):
+        return self.content

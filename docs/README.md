@@ -1,4 +1,4 @@
-# <img src="../assets/svg/pincer.svg" height="24px" alt="Pincer Logo"> Pincer
+<img src="../assets/svg/banner.svg" width="100%" alt="Pincer Logo">
 
 [![PyPI - Downloads](https://img.shields.io/badge/dynamic/json?label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2FPincer)](https://pypi.org/project/Pincer)
 ![PyPI](https://img.shields.io/pypi/v/Pincer)
@@ -9,13 +9,15 @@
 [![Documentation Status](https://readthedocs.org/projects/pincer/badge/?version=latest)](https://pincer.readthedocs.io/en/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/Pincer-org/Pincer/branch/main/graph/badge.svg?token=T15T34KOQW)](https://codecov.io/gh/Pincer-org/Pincer)
 ![Lines of code](https://tokei.rs/b1/github/pincer-org/pincer?category=code&path=pincer)
+![Repo Size](https://img.shields.io/github/repo-size/Pincer-org/Pincer)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Pincer-org/Pincer)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Pincer-org/Pincer)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Pincer-org/Pincer?label=commits)
 ![GitHub](https://img.shields.io/github/license/Pincer-org/Pincer)
 ![Discord](https://img.shields.io/discord/881531065859190804)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-An asynchronous Python API wrapper meant to replace discord.py
+# <img src="../assets/svg/pincer.svg" height="24px" alt="Pincer Logo"> Pincer
+The snappy asynchronous discord api wrapper API wrapper written with aiohttp & websockets.
 
 | :exclamation: | The package is currently within Pre-Alpha phase |
 | ------------- | :---------------------------------------------- |
