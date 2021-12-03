@@ -4,7 +4,7 @@ Interactions
 Pincer makes it extremely easy to create an interaction. All you need to do is create a method with the `@command` decorator.
 
 .. note::
-    Although purely functional bots are possible, its recommended to inherit from the `Client` class as seen in the example below.
+    Although purely functional bots are possible, it's recommended to inherit from the `Client` class as seen in the example below.
 
 .. code-block:: python
 
