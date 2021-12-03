@@ -1,10 +1,10 @@
 Interactions
 ============
 
-Pincer makes it extemely easy to create an interaction. All you need to do is create a method with the `@command` decorator.
+Pincer makes it extremely easy to create an interaction. All you need to do is create a method with the `@command` decorator.
 
 .. note::
-    Although purely functional bots are possible, its reccomended to inherit from the `Client` class as seen in the example below.
+    Although purely functional bots are possible, its recommended to inherit from the `Client` class as seen in the example below.
 
 .. code-block:: python
 
@@ -22,7 +22,7 @@ Pincer makes it extemely easy to create an interaction. All you need to do is cr
 This registers a command called "some_command". Its pretty useless right now so lets take a closer look at what else you can do.
 
 .. note::
-    If you aren't seing your command register, its likely because it takes up to one hour for a global slash command.
+    If you aren't seeing your command register, its likely because it takes up to one hour for a global slash command.
     Specify the guild in the command decorator to have application commands register instantly.
 
 To register your command a guild do:
@@ -33,7 +33,7 @@ To register your command a guild do:
     async def some_command(self):
         ...
 
-Sending messages to the user is extemely easy. What you want to return is inferred by the object's return type. A :class:`str` can be returned to send a text message.
+Sending messages to the user is extremely easy. What you want to return is inferred by the object's return type. A :class:`str` can be returned to send a text message.
 Heres a simple ping command.
 
 .. code-block:: python
@@ -111,7 +111,7 @@ The list of possible type hints is as follows:
    * - :class:`str`
      - String
    * - :class:`int`
-     - Interger
+     - Integer
    * - :class:`bool`
      - Boolean
    * - :class:`float`
