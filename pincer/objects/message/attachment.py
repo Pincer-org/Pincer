@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class Attachment(APIObject):
     """Represents a Discord Attachment object
 

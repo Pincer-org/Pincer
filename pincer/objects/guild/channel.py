@@ -75,7 +75,7 @@ class ChannelType(IntEnum):
     GUILD_STAGE_VOICE = 13
 
 
-@dataclass
+@dataclass(repr=False)
 class Channel(APIObject):  # noqa E501
     """Represents a Discord Channel Mention object
 
@@ -488,7 +488,7 @@ class NewsChannel(Channel):
         return await super().edit(**kwargs)
 
 
-@dataclass
+@dataclass(repr=False)
 class ChannelMention(APIObject):
     """Represents a Discord Channel Mention object
 

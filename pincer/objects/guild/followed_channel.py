@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class FollowedChannel(APIObject):
     """Represents a Discord Followed Channel object
 

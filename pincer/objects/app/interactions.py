@@ -32,7 +32,7 @@ if TYPE_CHECKING:
     from ...utils import APINullable
 
 
-@dataclass
+@dataclass(repr=False)
 class ResolvedData(APIObject):
     """Represents a Discord Resolved Data structure
 
@@ -57,7 +57,7 @@ class ResolvedData(APIObject):
     messages: APINullable[Dict[Snowflake, UserMessage]] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class InteractionData(APIObject):
     """Represents a Discord Interaction Data structure
 
@@ -95,7 +95,7 @@ class InteractionData(APIObject):
     target_id: APINullable[Snowflake] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class Interaction(APIObject):
     """Represents a Discord Interaction object
 

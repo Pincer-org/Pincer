@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class MessageDeleteEvent(APIObject):
     """Sent when a message is deleted.
 
@@ -36,7 +36,7 @@ class MessageDeleteEvent(APIObject):
     guild_id: APINullable[Snowflake] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class MessageDeleteBulkEvent(APIObject):
     """Sent when multiple messages are deleted at once.
 
@@ -55,7 +55,7 @@ class MessageDeleteBulkEvent(APIObject):
     guild_id: APINullable[Snowflake] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class MessageReactionAddEvent(APIObject):
     """Sent when a user adds a reaction to a message.
 
@@ -83,7 +83,7 @@ class MessageReactionAddEvent(APIObject):
     member: APINullable[GuildMember] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class MessageReactionRemoveEvent(APIObject):
     """Sent when a user removes a reaction from a message.
 
@@ -108,7 +108,7 @@ class MessageReactionRemoveEvent(APIObject):
     guild_id: APINullable[Snowflake] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class MessageReactionRemoveAllEvent(APIObject):
     """Sent when a user explicitly removes all reactions from a message.
 
@@ -126,7 +126,7 @@ class MessageReactionRemoveAllEvent(APIObject):
     guild_id: APINullable[Snowflake] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class MessageReactionRemoveEmojiEvent(APIObject):
     """Sent when a bot removes all instances of a given
     emoji from the reactions of a message.

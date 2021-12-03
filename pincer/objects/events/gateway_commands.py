@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class Identify(APIObject):
     """Used to trigger the initial handshake with the gateway.
 
@@ -51,7 +51,7 @@ class Identify(APIObject):
     presence: APINullable[Any] = MISSING  # FIXME
 
 
-@dataclass
+@dataclass(repr=False)
 class Resume(APIObject):
     """Used to replay missed events when a disconnected client resumes.
 
@@ -69,7 +69,7 @@ class Resume(APIObject):
     seq: int
 
 
-@dataclass
+@dataclass(repr=False)
 class RequestGuildMembers(APIObject):
     """Used to request all members for a guild or a list of guilds.
 
@@ -103,7 +103,7 @@ class RequestGuildMembers(APIObject):
     nonce: APINullable[str] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class UpdateVoiceState(APIObject):
     """Sent when a client wants to join, move,
     or disconnect from a voice channel.
@@ -151,7 +151,7 @@ class StatusType(Enum):
     offline = auto()
 
 
-@dataclass
+@dataclass(repr=False)
 class UpdatePresence(APIObject):
     """Sent by the client to indicate a presence or status update.
 
