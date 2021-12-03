@@ -43,7 +43,7 @@ Here's a simple ping command.
         return "pong"
 
 
-If you need access to more information, you can pass in the :data:`ctx` object.
+If you need access to more information, you can pass in the :class:`ctx <~pincer.objects.message.context.MessageContext>` object.
 
 .. note::
     ``ctx`` and ``self`` should be those exact names or the correct value will not be passed in.
