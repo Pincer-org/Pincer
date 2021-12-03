@@ -34,7 +34,7 @@ To register your command a guild do:
         ...
 
 Sending messages to the user is extremely easy. What you want to return is inferred by the object's return type. A :class:`str` can be returned to send a text message.
-Heres a simple ping command.
+Here's a simple ping command.
 
 .. code-block:: python
 
