@@ -65,6 +65,7 @@ Pincer provides an API for all three interaction command types. The only thing t
 .. code-block:: python
 
     from pincer.commands import command, user_command, message_command
+    from pincer.objects import MessageContext, UserMessage, User
     ...
 
     @command
@@ -72,11 +73,13 @@ Pincer provides an API for all three interaction command types. The only thing t
     async def ping(self, ctx: MessageContext, arg1: str, arg2: str):
         return "pong"
 
-    #
-    async def user_ping(self, ctx: MessageContext, arg1: str, arg2: str):
+    # Must have a user parameter. User can be a GuildMember.
+    # (All User methods are available to guild Member)
+    async def user_ping(self, ctx: MessageContext, user: User):
         return "pong"
 
-    async def message_ping(self, ctx: MessageContext, arg1: str, arg2: str):
+    # Must have a message parameter
+    async def message_ping(self, ctx: MessageContext, message: UserMessage):
         return "pong"
 
 Interaction Timeout
