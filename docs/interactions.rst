@@ -14,7 +14,7 @@ Pincer makes it extemely easy to create an interaction. All you need to do is cr
   class Bot(Client):
     @command
     async def some_command(self):
-      pass
+      ...
 
   bot = Bot("TOKEN")
   bot.run()
@@ -31,7 +31,7 @@ To register your command a guild do:
 
     @command(guild=SOME_NUMBER)
     async def some_command(self):
-        pass
+        ...
 
 Sending messages to the user is extemely easy. What you want to return is inferred by the object's return type. A :class:`str` can be returned to send a text message.
 Heres a simple ping command.
@@ -264,11 +264,11 @@ The :class:`~pincer.objects.message.context.MessageContext` object provides meth
 
     @command
     async def some_command(self, ctx: MessageContext):
-        ctx.send(Message("Hello word!")) # Sends hello world as the response to the interaction
+        ctx.send("Hello word!") # Sends hello world as the response to the interaction
         return # No response will be sent now that the interaction has been completed
 
     @command
     async def some_other_command(self, ctx: MessageContext):
         channel = await self.get_channel(ctx.channel_id)
-        channel.send(Message("Hello word!")) # Sends a message in the channel
+        channel.send("Hello word!") # Sends a message in the channel
         return "Hello world 2" # This is sent because the interaction was not "used up"
