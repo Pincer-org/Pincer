@@ -60,7 +60,7 @@ If you need access to more information, you can pass in the :data:`ctx` object.
 
 Application Command Types
 -------------------------
-Pincer provides an API for all three interaction command types. The only thing that varies is the function signiture.
+Pincer provides an API for all three interaction command types. The only thing that varies is the function signature.
 
 .. code-block:: python
 
