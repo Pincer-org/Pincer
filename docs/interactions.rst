@@ -73,12 +73,13 @@ Pincer provides an API for all three interaction command types. The only thing t
     async def ping(self, ctx: MessageContext, arg1: str, arg2: str):
         return "pong"
 
-    # Must have a user parameter. User can be a GuildMember.
-    # (All User methods are available to guild Member)
+    # Must have a parameter for users. User can be a GuildMember. All User
+    # methods are available to GuildMember because GuildMember inherits from
+    # User.
     async def user_ping(self, ctx: MessageContext, user: User):
         return "pong"
 
-    # Must have a message parameter
+    # Must have a parameter for messages.
     async def message_ping(self, ctx: MessageContext, message: UserMessage):
         return "pong"
 
