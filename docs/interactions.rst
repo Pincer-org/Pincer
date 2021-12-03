@@ -22,7 +22,7 @@ Pincer makes it extremely easy to create an interaction. All you need to do is c
 This registers a command called "some_command". It's pretty useless right now, so let's take a closer look at what else you can do.
 
 .. note::
-    If you aren't seeing your command register, its likely because it takes up to one hour for a global slash command.
+    If you're not seeing your command register, it's likely because it takes up to one hour for a global slash command to do so.
     Specify the guild in the command decorator to have application commands register instantly.
 
 To register your command a guild do:
