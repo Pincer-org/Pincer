@@ -177,7 +177,7 @@ These are the available modifiers:
 
 Return Types
 ------------
-:class:`str` isn't the only thing you can return. For a more complex message you can return a :class:`~pincer.objects.message.message.Message` object.
+:class:`str` isn't the only thing you can return. For a more complex message, you can return a :class:`~pincer.objects.message.message.Message` object.
 The message object allows you to return embeds and attachments. :class:`~pincer.objects.app.interaction_flags.InteractionFlags` are only available in the response
 if you return a :class:`~pincer.objects.message.message.Message` object.
 
