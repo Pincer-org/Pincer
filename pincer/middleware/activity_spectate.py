@@ -15,7 +15,7 @@ from ..utils.types import Coro
 async def activity_spectate_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_activity_spectate`` event.
+    Middleware for the ``on_activity_spectate`` event.
 
     Parameters
     ----------

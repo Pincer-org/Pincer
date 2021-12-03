@@ -12,7 +12,7 @@ from ..utils.types import Coro
 async def message_delete_bulk_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_message_delete_bulk``,
+    Middleware for the ``on_message_delete_bulk`` event.
 
     Parameters
     ----------

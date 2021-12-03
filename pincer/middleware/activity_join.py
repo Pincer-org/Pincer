@@ -15,7 +15,7 @@ from ..utils.types import Coro
 async def activity_join_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_activity_join`` event.
+    Middleware for the ``on_activity_join`` event.
 
     Parameters
     ----------

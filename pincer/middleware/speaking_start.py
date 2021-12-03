@@ -12,7 +12,7 @@ from ..utils.types import Coro
 async def speaking_start_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_speaking_start`` event.
+    Middleware for the ``on_speaking_start`` event.
 
     Parameters
     ----------

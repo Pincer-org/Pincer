@@ -14,7 +14,7 @@ from ..utils.conversion import construct_client_dict
 async def thread_members_update_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_thread_members_update`` event.
+    Middleware for the ``on_thread_members_update`` event.
 
     Parameters
     ----------

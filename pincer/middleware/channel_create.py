@@ -20,7 +20,7 @@ def channel_create_middleware(
 ) -> Tuple[str, Channel]:
     """|coro|
 
-    Middleware for ``on_channel_creation`` event.
+    Middleware for the ``on_channel_creation`` event.
 
     Parameters
     ----------
