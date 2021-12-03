@@ -1,6 +1,25 @@
 /*noinspection CssUnknownTarget*/
 @import '../alabaster.css';
 
+@keyframes spinFade {
+    0% {
+        opacity: 0;
+        transform: rotateZ(-360deg);
+    }
+}
+
+@keyframes Giggle {
+    0% {
+        transform: rotateZ(0deg);
+    }
+    50% {
+        transform: rotateZ(5deg);
+    }
+    100% {
+        transform: rotateZ(0deg);
+    }
+}
+
 :root {
     --grey-1: #B0B6BD;
     --grey-2: #A0A6AE;
@@ -121,4 +140,12 @@ main .py-attribute-table-column > ul {
 }
 .admonition {
     background-color: var(--blue-6);
+}
+
+.sidebar-logo-container {
+    animation: spinFade 1s cubic-bezier(.35,-0.21,.04,1.52);
+}
+
+.sidebar-logo:hover {
+    animation: Giggle 1s cubic-bezier(.35,-0.21,.04,1.52) infinite;
 }

@@ -79,3 +79,9 @@ class Intents(IntEnum):
             res |= intent
 
         return res
+
+    def __repr__(self):
+        return f"Intents({self.name})"
+
+    def __str__(self) -> str:
+        return self.name.lower().replace("_", " ")

@@ -9,7 +9,7 @@ from ...utils.api_object import APIObject
 from ...utils.snowflake import Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class NotificationCreateEvent(APIObject):
     """
     Represents a notification

@@ -68,7 +68,7 @@ def _check_if_valid_url(url: str):
         )
 
 
-@dataclass
+@dataclass(repr=False)
 class EmbedAuthor:
     """Representation of the Embed Author class
 
@@ -95,7 +95,7 @@ class EmbedAuthor:
         _check_if_valid_url(self.url)
 
 
-@dataclass
+@dataclass(repr=False)
 class EmbedImage:
     """Representation of the Embed Image class
 
@@ -120,7 +120,7 @@ class EmbedImage:
         _check_if_valid_url(self.url)
 
 
-@dataclass
+@dataclass(repr=False)
 class EmbedProvider:
     """Representation of the Provider class
 
@@ -135,7 +135,7 @@ class EmbedProvider:
     url: APINullable[str] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class EmbedThumbnail:
     """Representation of the Embed Thumbnail class
 
@@ -160,7 +160,7 @@ class EmbedThumbnail:
         _check_if_valid_url(self.url)
 
 
-@dataclass
+@dataclass(repr=False)
 class EmbedVideo:
     """Representation of the Embed Video class
 
@@ -181,7 +181,7 @@ class EmbedVideo:
     width: APINullable[int] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class EmbedFooter:
     """Representation of the Embed Footer class
 
@@ -212,7 +212,7 @@ class EmbedFooter:
             )
 
 
-@dataclass
+@dataclass(repr=False)
 class EmbedField:
     """Representation of the Embed Field class
 
@@ -254,7 +254,7 @@ class EmbedField:
 # https://discord.com/developers/docs/resources/channel#embed-limits
 # Currently ignored since I don't think it would make sense to put
 # This with the Embed class
-@dataclass
+@dataclass(repr=False)
 class Embed(APIObject):
     """Representation of the discord Embed class
 

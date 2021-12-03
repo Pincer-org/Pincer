@@ -1,7 +1,7 @@
 .. currentmodule:: pincer.objects
 
-Pincer Objects User Section
-===========================
+Pincer Objects User
+===================
 
 Connection
 ----------

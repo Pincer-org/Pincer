@@ -27,7 +27,7 @@ class PrivacyLevel(IntEnum):
     GUILD_ONLY = 2
 
 
-@dataclass
+@dataclass(repr=False)
 class StageInstance(APIObject):
     """Represents a Stage Instance object
 

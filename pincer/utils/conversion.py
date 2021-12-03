@@ -26,7 +26,7 @@ def construct_client_dict(client: Client, data: Dict) -> Dict:
     -------
 
     """
-    return {**data, "_client": client, "_http": client.http}
+    return {**data, "_client": client}
 
 
 def convert(

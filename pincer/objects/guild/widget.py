@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class GuildWidget(APIObject):
     """Represents a Discord Guild Widget object
 
