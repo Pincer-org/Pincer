@@ -24,11 +24,7 @@ from .exceptions import (
     DispatchError, DisallowedIntentsError, InvalidTokenError, HeartbeatError,
     UnavailableGuildError, HTTPError, NotModifiedError, BadRequestError,
     UnauthorizedError, ForbiddenError, NotFoundError, MethodNotAllowedError,
-<<<<<<< HEAD
-    RateLimitError, GatewayError, ServerError, EmbedOverflow
-=======
-    RateLimitError, GatewayError, ServerError, ImageEncodingError
->>>>>>> upstream/main
+    RateLimitError, GatewayError, ServerError, EmbedOverflow, ImageEncodingError
 )
 from .objects import Intents
 
