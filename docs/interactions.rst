@@ -29,7 +29,7 @@ To register your command a guild do:
 
 .. code-block:: python
 
-    @command(guild=SOME_NUMBER)
+    @command(guild=MY_GUILD_ID)
     async def some_command(self):
         ...
 
