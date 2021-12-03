@@ -25,7 +25,7 @@ This registers a command called "some_command". It's pretty useless right now, s
     If you're not seeing your command register, it's likely because it takes up to one hour for a global slash command to do so.
     Specify the guild in the command decorator to have application commands register instantly.
 
-To register your command a guild do:
+To register your command to a guild do:
 
 .. code-block:: python
 
