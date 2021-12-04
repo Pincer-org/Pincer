@@ -91,8 +91,8 @@ Interactions time out after 3 seconds. To extend the timeout to 15 minutes you c
 Arguments
 ---------
 
-Arguments are more variables in the command. Notice how `word` is typehinted as string.
-Pincer uses type hints to infer the argument type that you want.
+Every parameter besides ``ctx`` and ``self`` is inferred to be a slash command argument.
+Notice how `word` is typehinted as string. Pincer uses type hints to infer the argument type that you want.
 
 .. code-block:: python
 
@@ -135,7 +135,8 @@ type.
     from pincer.objects import MessageContext
 
     @command
-    async def say(self,
+    async def say(
+        self,
         ctx: MessageContext,
         word: CommandArg[
           str,
@@ -148,7 +149,16 @@ type.
         # Returns the name of the user that initiated the interaction
         return word
 
-Arguments will be an optional argument in Discord if they are an optional argument in Python.
+Arguments will be an optional slash command argument if they have a default value in Python.
+
+.. code-block:: python
+
+    @command
+    async def say(
+        self,
+        word: str = "apple"  # Word is not optional
+    ):
+        return word
 
 These are the available modifiers:
 
