@@ -233,8 +233,8 @@ Additionally, Pillow Images, Files, and Embeds can be returned directly without 
       title="Pincer",
       description=(
         "🚀 An asynchronous python API wrapper meant to replace"
-        " discord.py\n> Snappy discord api wrapper written "
-        "with aiohttp & websockets"
+        " discord.py\n> Snappy discord api wrapper written"
+        " with aiohttp & websockets"
       )
     )
 
