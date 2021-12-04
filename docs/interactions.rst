@@ -169,7 +169,7 @@ These are the available modifiers:
      - A group of channel types that a user can pick from.
      - :class:`~pincer.objects.guild.channel.Channel`
    * - :class:`~pincer.objects.arg_types.MaxValue`
-     - The max value for a number.
+     - The maximum value for a number.
      - :class:`int`, :class:`float`
    * - :class:`~pincer.objects.arg_types.MinValue`
      - The minimum value for a number.
