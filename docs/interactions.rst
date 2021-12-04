@@ -149,7 +149,7 @@ type.
         # Returns the name of the user that initiated the interaction
         return word
 
-Arguments will be an optional slash command argument if they have a default value in Python.
+Parameters will be an optional slash command arguments if they have a default value in Python.
 
 .. code-block:: python
 
