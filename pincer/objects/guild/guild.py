@@ -1181,7 +1181,8 @@ class Guild(APIObject):
             headers=remove_none({"X-Audit-Log-Reason": reason})
         )
         return WelcomeScreen.from_dict(
-            construct_client_dict(self._client, data))
+            construct_client_dict(self._client, data)
+        )
 
     async def modify_current_user_voice_state(
             self,
