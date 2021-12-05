@@ -64,6 +64,7 @@
 
    installing
    quickstart
+   interactions
    tutorial/index
    api/index
 

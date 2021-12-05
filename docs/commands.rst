@@ -2,7 +2,7 @@
 .. currentmodule:: pincer.commands
 
 Pincer Commands Module
-==================
+======================
 
 Commands
 --------
