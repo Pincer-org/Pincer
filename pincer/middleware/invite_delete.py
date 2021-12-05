@@ -12,7 +12,7 @@ from ..utils.types import Coro
 async def invite_delete_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_invite_delete``,
+    Middleware for the ``on_invite_delete`` event.
 
     Parameters
     ----------

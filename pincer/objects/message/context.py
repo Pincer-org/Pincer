@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class MessageContext:
     """Represents the context of a message interaction.
 

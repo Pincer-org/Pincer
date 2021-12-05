@@ -23,7 +23,7 @@ if TYPE_CHECKING:
     from .presence import PresenceUpdateEvent
 
 
-@dataclass
+@dataclass(repr=False)
 class GuildBanAddEvent(APIObject):
     """Sent when a user is banned from a guild.
 
@@ -39,7 +39,7 @@ class GuildBanAddEvent(APIObject):
     user: User
 
 
-@dataclass
+@dataclass(repr=False)
 class GuildBanRemoveEvent(APIObject):
     """Sent when a user is unbanned from a guild.
 
@@ -55,7 +55,7 @@ class GuildBanRemoveEvent(APIObject):
     user: User
 
 
-@dataclass
+@dataclass(repr=False)
 class GuildEmojisUpdateEvent(APIObject):
     """Sent when a guild's emojis have been updated.
 
@@ -71,7 +71,7 @@ class GuildEmojisUpdateEvent(APIObject):
     emojis: List[Emoji]
 
 
-@dataclass
+@dataclass(repr=False)
 class GuildStickersUpdateEvent(APIObject):
     """Sent when a guild's stickers have been updated.
 
@@ -87,7 +87,7 @@ class GuildStickersUpdateEvent(APIObject):
     stickers: List[Sticker]
 
 
-@dataclass
+@dataclass(repr=False)
 class GuildIntegrationsUpdateEvent(APIObject):
     """Sent when a guild integration is updated.
 
@@ -100,7 +100,7 @@ class GuildIntegrationsUpdateEvent(APIObject):
     guild_id: Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class GuildMemberAddEvent(GuildMember):
     """
     Sent when a user joins a guild.
@@ -117,7 +117,7 @@ class GuildMemberAddEvent(GuildMember):
     guild_id: Snowflake = 0
 
 
-@dataclass
+@dataclass(repr=False)
 class GuildMemberRemoveEvent(APIObject):
     """Sent when a user is removed from a guild (leave/kick/ban).
 
@@ -138,7 +138,7 @@ class GuildMemberRemoveEvent(APIObject):
         )
 
 
-@dataclass
+@dataclass(repr=False)
 class GuildMemberUpdateEvent(APIObject):
     """Sent when a guild member is updated.
     This will also fire when the user object
@@ -184,7 +184,7 @@ class GuildMemberUpdateEvent(APIObject):
         )
 
 
-@dataclass
+@dataclass(repr=False)
 class GuildMembersChunkEvent(APIObject):
     """Sent in response to Guild Request Members.
     You can use the ``chunk_index`` and ``chunk_count``
@@ -227,7 +227,7 @@ class GuildMembersChunkEvent(APIObject):
         ]
 
 
-@dataclass
+@dataclass(repr=False)
 class GuildRoleCreateEvent(APIObject):
     """Sent when a guild role is created.
 
@@ -243,7 +243,7 @@ class GuildRoleCreateEvent(APIObject):
     role: Role
 
 
-@dataclass
+@dataclass(repr=False)
 class GuildRoleUpdateEvent(APIObject):
     """Sent when a guild role is updated.
 
@@ -259,7 +259,7 @@ class GuildRoleUpdateEvent(APIObject):
     role: Role
 
 
-@dataclass
+@dataclass(repr=False)
 class GuildRoleDeleteEvent(APIObject):
     """Sent when a guild role is deleted.
 
@@ -275,7 +275,7 @@ class GuildRoleDeleteEvent(APIObject):
     role_id: Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class GuildStatusEvent(APIObject):
     """
     Sent when a subscribed server's state changes

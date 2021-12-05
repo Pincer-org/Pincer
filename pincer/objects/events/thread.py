@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class ThreadListSyncEvent(APIObject):
     """Sent when the current user gains access to a channel.
 
@@ -45,7 +45,7 @@ class ThreadListSyncEvent(APIObject):
     channel_ids: APINullable[List[Snowflake]] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class ThreadMembersUpdateEvent(APIObject):
     """Sent when anyone is added to or removed from a thread.
     If the current user does not have the `GUILD_MEMBERS`

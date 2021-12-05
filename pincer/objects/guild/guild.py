@@ -7,18 +7,21 @@ from dataclasses import dataclass, field
 from enum import IntEnum
 from typing import AsyncGenerator, overload, TYPE_CHECKING, Generator
 
+from .invite import Invite
+from .channel import Channel
+from ..message.emoji import Emoji
+from ..message.file import File
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict, remove_none
 from ...utils.types import MISSING
+
 
 if TYPE_CHECKING:
     from typing import Any, Dict, List, Optional, Union
 
     from .audit_log import AuditLog
     from .ban import Ban
-    from .channel import Channel
-    from .invite import Invite
     from .member import GuildMember
     from .features import GuildFeature
     from .role import Role
@@ -26,6 +29,7 @@ if TYPE_CHECKING:
     from .template import GuildTemplate
     from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
     from .widget import GuildWidget
+    from .webhook import Webhook
     from ..user.user import User
     from ..user.integration import Integration
     from ..voice.region import VoiceRegion
@@ -168,7 +172,8 @@ class SystemChannelFlags(IntEnum):
     SUPPRESS_JOIN_NOTIFICATION_REPLIES = 1 << 3
 
 
-@dataclass
+
+@dataclass(repr=False)
 class GuildPreview(APIObject):
     """Represents a guild preview.
     Attributes
@@ -208,7 +213,7 @@ class GuildPreview(APIObject):
     description: APINullable[str] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class Guild(APIObject):
     """Represents a Discord guild/server in which your client resides.
     Attributes
@@ -336,21 +341,23 @@ class Guild(APIObject):
     """
 
     # noqa: E501
-    afk_timeout: int
-    default_message_notifications: DefaultMessageNotificationLevel
-    emojis: List[Emoji]
-    explicit_content_filter: ExplicitContentFilterLevel
     features: List[GuildFeature]
     id: Snowflake
-    mfa_level: MFALevel
     name: str
     nsfw_level: GuildNSFWLevel
-    owner_id: Snowflake
-    preferred_locale: str
-    premium_tier: PremiumTier
-    roles: List[Role]
-    system_channel_flags: SystemChannelFlags
     verification_level: VerificationLevel
+
+    # Guild invites missing
+    system_channel_flags: APINullable[SystemChannelFlags] = MISSING
+    explicit_content_filter: APINullable[ExplicitContentFilterLevel] = MISSING
+    premium_tier: APINullable[PremiumTier] = MISSING
+    default_message_notifications: APINullable[DefaultMessageNotificationLevel] = MISSING
+    mfa_level: APINullable[MFALevel] = MISSING
+    owner_id: APINullable[Snowflake] = MISSING
+    afk_timeout: APINullable[int] = MISSING
+    emojis: APINullable[List[Emoji]] = MISSING
+    preferred_locale: APINullable[str] = MISSING
+    roles: APINullable[List[Role]] = MISSING
 
     guild_scheduled_events: APINullable[List] = MISSING
     lazy: APINullable[bool] = MISSING
@@ -419,7 +426,7 @@ class Guild(APIObject):
         channel_data = await client.http.get(f"/guilds/{_id}/channels")
 
         data["channels"]: List[Channel] = [
-            Channel.from_dict({**i, "_client": client, "_http": client.http})
+            Channel.from_dict(construct_client_dict(client, i))
             for i in (channel_data or [])
         ]
 
@@ -1298,12 +1305,12 @@ class Guild(APIObject):
         )
 
     async def create_emoji(
-            self,
-            *,
-            name: str,
-            image: str,
-            roles: List[Snowflake],
-            reason: Optional[str] = None
+        self,
+        *,
+        name: str,
+        image: File,
+        roles: List[Snowflake] = [],
+        reason: Optional[str] = None
     ) -> Emoji:
         """|coro|
         Creates a new emoji for the guild.
@@ -1316,10 +1323,10 @@ class Guild(APIObject):
         ----------
         name : :class:`str`
             Name of the emoji
-        image : :class:`str`
-            The 128x128 emoji image data
+        image : :class:`~pincer.objects.message.file.File`
+            The File for the 128x128 emoji image data
         roles : List[:class:`~pincer.utils.snowflake.Snowflake`]
-            Roles allowed to use this emoji
+            Roles allowed to use this emoji |default| :data:`[]`
         reason : Optional[:class:`str`]
             The reason for creating the emoji |default| :data:`None`
 
@@ -1332,7 +1339,7 @@ class Guild(APIObject):
             f"guilds/{self.id}/emojis",
             data={
                 "name": name,
-                "image": image,
+                "image": image.uri,
                 "roles": roles
             },
             headers=remove_none({"X-Audit-Log-Reason": reason})
@@ -1538,7 +1545,6 @@ class Guild(APIObject):
             construct_client_dict(self._client, data)
         )
 
-
     @classmethod
     async def sticker_packs(cls) -> Generator[StickerPack, None, None]:
         """|coro|
@@ -1638,6 +1644,22 @@ class Guild(APIObject):
         """
         await self._http.delete(f"guilds/{self.id}/stickers/{_id}")
 
+    async def get_webhooks(self) -> AsyncGenerator[Webhook, None]:
+        """|coro|
+        Returns an async generator of the guild webhooks.
+
+        Yields
+        -------
+        AsyncGenerator[:class:`~pincer.objects.guild.webhook.Webhook`, None]
+            The guild webhook object.
+        """
+        data = await self._http.get(f"guilds/{self.id}/webhooks")
+        for webhook_data in data:
+            yield Webhook.from_dict(
+                construct_client_dict(self._client, webhook_data)
+            )
+
+
     @classmethod
     def from_dict(cls, data) -> Guild:
         """
@@ -1663,7 +1685,7 @@ class Guild(APIObject):
         return super().from_dict(data)
 
 
-@dataclass
+@dataclass(repr=False)
 class UnavailableGuild(APIObject):
     id: Snowflake
     unavailable: bool = True

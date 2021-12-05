@@ -16,9 +16,9 @@ if TYPE_CHECKING:
     from ...utils.types import APINullable
 
 
-@dataclass
+@dataclass(repr=False)
 class SelectOption(APIObject):
-    """Represents a Discord Select Option object
+    """Represents a Discord Select Option
 
     Attributes
     ----------
@@ -40,9 +40,9 @@ class SelectOption(APIObject):
     default: APINullable[bool] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class SelectMenu(APIObject):
-    """Represents a Discord Select Menu object
+    """Represents a Discord Select Menu
 
     Attributes
     ----------

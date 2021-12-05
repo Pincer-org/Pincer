@@ -4,12 +4,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from json import dumps
 from typing import TYPE_CHECKING
 
-from aiohttp import FormData
-
-from ..message.file import File
+from ..message.file import File, create_form
 from ...exceptions import CommandReturnIsEmpty
 
 if TYPE_CHECKING:
@@ -31,7 +28,7 @@ except (ModuleNotFoundError, ImportError):
     PILLOW_IMPORT = False
 
 
-@dataclass
+@dataclass(repr=False)
 class Message:
     """A discord message that will be send to discord
 
@@ -169,11 +166,7 @@ class Message:
         if not self.attachments:
             return "application/json", json_payload
 
-        form = FormData()
-        form.add_field("payload_json", dumps(json_payload))
+        return create_form(json_payload, self.attachments)
 
-        for file in self.attachments:
-            form.add_field("file", file.content, filename=file.filename)
-
-        payload = form()
-        return payload.headers["Content-Type"], payload
+    def __str__(self):
+        return self.content

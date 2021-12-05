@@ -23,7 +23,7 @@ async def voice_state_update_middleware(
     payload: GatewayDispatch
 ) -> Tuple[str, List[VoiceState]]:
     """|coro|
-    Middleware for ``on_voice_state_update`` event.
+    Middleware for the ``on_voice_state_update`` event.
 
     Parameters
     ----------

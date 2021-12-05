@@ -1,7 +1,7 @@
 .. currentmodule:: pincer.objects
 
-Pincer Objects Events Section
-=============================
+Pincer Objects Events
+=====================
 
 Channel
 -------

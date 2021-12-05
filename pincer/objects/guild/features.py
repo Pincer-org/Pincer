@@ -75,3 +75,4 @@ class GuildFeature(Enum):
     THREE_DAY_THREAD_ARCHIVE = auto()
     SEVEN_DAY_THREAD_ARCHIVE = auto()
     PRIVATE_THREADS = auto()
+    NEW_THREAD_PERMISSIONS = auto()

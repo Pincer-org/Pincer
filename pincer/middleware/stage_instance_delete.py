@@ -11,7 +11,7 @@ from ..utils.types import Coro
 def stage_instance_delete_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_stage_instance_delete`` event.
+    Middleware for the ``on_stage_instance_delete`` event.
 
     Parameters
     ----------

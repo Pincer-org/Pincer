@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class TypingStartEvent(APIObject):
     """Sent when a user starts typing in a channel.
 

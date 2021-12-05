@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from ..user.user import User
 from ...utils.api_object import APIObject
+from ...utils.conversion import construct_client_dict
 from ...utils.snowflake import Snowflake
 from ...utils.timestamp import Timestamp
 from ...utils.types import MISSING
@@ -19,7 +20,7 @@ if TYPE_CHECKING:
     from ...utils.types import APINullable
 
 
-@dataclass
+@dataclass(repr=False)
 class BaseMember(APIObject):
     """Represents the base of a guild member.
 
@@ -44,7 +45,7 @@ class BaseMember(APIObject):
     hoisted_role: APINullable[Snowflake] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class PartialGuildMember(APIObject):
     """Represents a partial guild member.
     This is a reference to a member from a guild which does not contain
@@ -75,7 +76,7 @@ class PartialGuildMember(APIObject):
     member: Optional[BaseMember]
 
 
-@dataclass
+@dataclass(repr=False)
 class GuildMember(BaseMember, User, APIObject):
     """Represents a member which resides in a guild/server.
 
@@ -134,7 +135,7 @@ class GuildMember(BaseMember, User, APIObject):
             cls,
             client: Client,
             guild_id: int,
-            _id: int
+            user_id: int
     ) -> GuildMember:
-        data = await client.http.get(f"guilds/{guild_id}/members/{_id}")
-        return cls.from_dict({**data, "_client": client, "_http": client.http})
+        data = await client.http.get(f"guilds/{guild_id}/members/{user_id}")
+        return cls.from_dict(construct_client_dict(client, data))

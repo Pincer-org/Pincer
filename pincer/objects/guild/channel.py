@@ -16,11 +16,12 @@ from ...utils.convert_message import convert_message
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from typing import Dict, List, Optional, Union
+    from typing import AsyncGenerator, Dict, List, Optional, Union
 
     from .member import GuildMember
     from .overwrite import Overwrite
     from .thread import ThreadMetadata
+    from .webhook import Webhook
     from ..message.message import Message
     from ..message.embed import Embed
     from ..user.user import User
@@ -74,7 +75,7 @@ class ChannelType(IntEnum):
     GUILD_STAGE_VOICE = 13
 
 
-@dataclass
+@dataclass(repr=False)
 class Channel(APIObject):  # noqa E501
     """Represents a Discord Channel Mention object
 
@@ -215,15 +216,21 @@ class Channel(APIObject):  # noqa E501
 
     @overload
     async def edit(
-            self, *, name: str = None,
-            type: ChannelType = None,
-            position: int = None, topic: str = None, nsfw: bool = None,
-            rate_limit_per_user: int = None, bitrate: int = None,
-            user_limit: int = None,
-            permissions_overwrites: List[Overwrite] = None,
-            parent_id: Snowflake = None, rtc_region: str = None,
-            video_quality_mod: int = None,
-            default_auto_archive_duration: int = None
+        self,
+        *,
+        name: str = None,
+        type: ChannelType = None,
+        position: int = None,
+        topic: str = None,
+        nsfw: bool = None,
+        rate_limit_per_user: int = None,
+        bitrate: int = None,
+        user_limit: int = None,
+        permissions_overwrites: List[Overwrite] = None,
+        parent_id: Snowflake = None,
+        rtc_region: str = None,
+        video_quality_mod: int = None,
+        default_auto_archive_duration: int = None
     ) -> Channel:
         ...
 
@@ -344,6 +351,24 @@ class Channel(APIObject):  # noqa E501
         self.__post_sent(msg)
         return msg
 
+    async def get_webhooks(self) -> AsyncGenerator[Webhook, None]:
+        """|coro|
+        Get all webhooks in the channel.
+        Requires the ``MANAGE_WEBHOOKS`` permission.
+
+        Yields
+        -------
+        AsyncGenerator[:class:`~.pincer.objects.guild.webhook.Webhook`, None]
+        """
+        data = await self._http.get(f"channels/{self.id}/webhooks")
+        for webhook_data in data:
+            yield Webhook.from_dict(
+                construct_client_dict(
+                    self._client,
+                    webhook_data
+                )
+            )
+
     def __str__(self):
         """return the discord tag when object gets used as a string."""
         return self.name or str(self.id)
@@ -463,7 +488,7 @@ class NewsChannel(Channel):
         return await super().edit(**kwargs)
 
 
-@dataclass
+@dataclass(repr=False)
 class ChannelMention(APIObject):
     """Represents a Discord Channel Mention object
 

@@ -822,7 +822,7 @@ class ChatCommandHandler(metaclass=Singleton):
                     def get_option(
                         args: Tuple[int, Any]
                     ) -> Optional[Dict[str, Any]]:
-                        index, api_option = args
+                        index, _ = args
 
                         if opt := get_index(local.options, index):
                             return opt.to_dict()

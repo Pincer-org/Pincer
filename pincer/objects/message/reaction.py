@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from .emoji import Emoji
 
 
-@dataclass
+@dataclass(repr=False)
 class Reaction(APIObject):
     """Represents a Discord Reaction object
 
