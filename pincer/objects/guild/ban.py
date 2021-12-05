@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from ..user.user import User
 
 
-@dataclass
+@dataclass(repr=False)
 class Ban(APIObject):
     """Representation of the Discord Ban object
 

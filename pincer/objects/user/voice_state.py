@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from ...utils.timestamp import Timestamp
 
 
-@dataclass
+@dataclass(repr=False)
 class VoiceState(APIObject):
     """Used to represent a user's voice connection status
 

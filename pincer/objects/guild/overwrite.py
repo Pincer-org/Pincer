@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class Overwrite(APIObject):
     """Represents a Discord Overwrite object
 

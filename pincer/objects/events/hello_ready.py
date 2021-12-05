@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from ..app.application import Application
 
 
-@dataclass
+@dataclass(repr=False)
 class HelloEvent(APIObject):
     """Sent on connection to the websocket.
     Defines the heartbeat interval that the client should heartbeat to.
@@ -29,7 +29,7 @@ class HelloEvent(APIObject):
     heartbeat_interval: int
 
 
-@dataclass
+@dataclass(repr=False)
 class ReadyEvent(APIObject):
     """Dispatched when a client has completed the initial
     handshake with the gateway (for new sessions).

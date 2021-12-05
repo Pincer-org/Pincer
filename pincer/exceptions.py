@@ -163,6 +163,10 @@ class InvalidUrlError(PincerError, ValueError):
     """Exception raised when an invalid url has been provided."""
 
 
+class ImageEncodingError(PincerError):
+    """Exception raised when an image cannot be encoded for Discord"""
+
+
 class EmbedFieldError(PincerError, ValueError):
     """Exception that is raised when an embed field is too large."""
 
@@ -183,6 +187,10 @@ class EmbedFieldError(PincerError, ValueError):
             f"{_type} can have a maximum length of {max_size}."
             f" (Current size: {cur_size})"
         )
+
+
+class EmbedOverflow(PincerError):
+    """Exception that is raised when too many embeds are passed in."""
 
 
 class TaskError(PincerError):

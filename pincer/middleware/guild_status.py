@@ -12,7 +12,7 @@ from ..utils.types import Coro
 async def guild_status_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_guild_status`` event.
+    Middleware for the ``on_guild_status`` event.
 
     Parameters
     ----------

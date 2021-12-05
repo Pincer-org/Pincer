@@ -14,7 +14,7 @@ from ..utils.conversion import construct_client_dict
 async def guild_member_remove_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_guild_member_remove`` event.
+    Middleware for the ``on_guild_member_remove`` event.
 
     Parameters
     ----------

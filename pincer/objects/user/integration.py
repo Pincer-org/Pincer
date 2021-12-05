@@ -31,7 +31,7 @@ class IntegrationExpireBehavior(IntEnum):
     KICK = 1
 
 
-@dataclass
+@dataclass(repr=False)
 class IntegrationAccount(APIObject):
     """Represents a Discord Integration Account object
 
@@ -46,7 +46,7 @@ class IntegrationAccount(APIObject):
     name: str
 
 
-@dataclass
+@dataclass(repr=False)
 class IntegrationApplication(APIObject):
     """Represents a Discord Integration Application object
 
@@ -73,7 +73,7 @@ class IntegrationApplication(APIObject):
     bot: APINullable[User] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class Integration(APIObject):
     """Represents a Discord Integration object
 

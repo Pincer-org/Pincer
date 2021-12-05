@@ -12,7 +12,7 @@ from ..utils.types import Coro
 async def voice_state_delete_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_voice_state_delete`` event.
+    Middleware for the ``on_voice_state_delete`` event.
 
     Parameters
     ----------

@@ -12,7 +12,7 @@ from ..utils.conversion import construct_client_dict
 async def guild_update_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_guild_update`` event.
+    Middleware for the ``on_guild_update`` event.
 
     Parameters
     ----------

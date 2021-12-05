@@ -43,7 +43,7 @@ class ActivityType(IntEnum):
     COMPETING = 5
 
 
-@dataclass
+@dataclass(repr=False)
 class ActivityTimestamp(APIObject):
     """Represents the timestamp of an activity.
 
@@ -58,7 +58,7 @@ class ActivityTimestamp(APIObject):
     end: APINullable[int] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class ActivityEmoji(APIObject):
     """Represents an emoji in an activity.
 
@@ -76,7 +76,7 @@ class ActivityEmoji(APIObject):
     animated: APINullable[bool] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class ActivityParty(APIObject):
     """Represents a party in an activity.
 
@@ -91,7 +91,7 @@ class ActivityParty(APIObject):
     size: APINullable[Tuple[int, int]] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class ActivityAssets(APIObject):
     """Represents an asset of an activity.
 
@@ -114,7 +114,7 @@ class ActivityAssets(APIObject):
     small_text: APINullable[str] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class ActivitySecrets(APIObject):
     """Represents a secret of an activity.
 
@@ -141,7 +141,7 @@ class ActivityFlags(IntEnum):
     PLAY = 1 << 5
 
 
-@dataclass
+@dataclass(repr=False)
 class ActivityButton(APIObject):
     """When received over the gateway, the buttons field is an array
     of strings, which are the button labels. Bots cannot access
@@ -159,7 +159,7 @@ class ActivityButton(APIObject):
     url: str
 
 
-@dataclass
+@dataclass(repr=False)
 class Activity(APIObject):
     """Bots are only able to send ``name``, ``type``, and optionally ``url``.
 
@@ -217,7 +217,7 @@ class Activity(APIObject):
     buttons: APINullable[List[ActivityButton]] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class ClientStatus(APIObject):
     """Active sessions are indicated with an "online",
     "idle", or "dnd" string per platform.
@@ -241,7 +241,7 @@ class ClientStatus(APIObject):
     web: APINullable[str] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class PresenceUpdateEvent(APIObject):
     """This event is sent when a user's presence or info,
     such as name or avatar, is updated.

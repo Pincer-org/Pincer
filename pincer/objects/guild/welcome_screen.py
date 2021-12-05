@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
+@dataclass(repr=False)
 class WelcomeScreenChannel(APIObject):
     """Represents a welcome screen channel. This is a channel which gets
     shown on the welcome screen.
@@ -38,7 +38,7 @@ class WelcomeScreenChannel(APIObject):
     emoji_name: Optional[str] = None
 
 
-@dataclass
+@dataclass(repr=False)
 class WelcomeScreen(APIObject):
     """Representation of a Discord guild/server welcome screen.
 

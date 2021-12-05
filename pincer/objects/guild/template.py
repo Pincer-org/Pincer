@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from ...utils.timestamp import Timestamp
 
 
-@dataclass
+@dataclass(repr=False)
 class GuildTemplate(APIObject):
     """Represents a code that when used,
     creates a guild based on a snapshot of an existing guild.

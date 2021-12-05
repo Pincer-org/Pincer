@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 async def guild_create_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_guild_create``,
+    Middleware for the ``on_guild_create``,
         generate the guild class that was created
 
     Parameters

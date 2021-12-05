@@ -163,7 +163,7 @@ class AuditLogEvent(IntEnum):
     THREAD_DELETE = 112
 
 
-@dataclass
+@dataclass(repr=False)
 class AuditLogChange(APIObject):
     """Representation of Discord Audit Log Change object
 
@@ -181,7 +181,7 @@ class AuditLogChange(APIObject):
     key: str
 
 
-@dataclass
+@dataclass(repr=False)
 class AuditEntryInfo(APIObject):
     """Represents Discord Optional Audit Entry Info
 
@@ -214,7 +214,7 @@ class AuditEntryInfo(APIObject):
     role_name: str
 
 
-@dataclass
+@dataclass(repr=False)
 class AuditLogEntry(APIObject):
     """Represents a Discord Audit Log Entry object.
 
@@ -246,7 +246,7 @@ class AuditLogEntry(APIObject):
     reason: APINullable[str] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class AuditLog(APIObject):
     """Represents a Discord Audit Log object.
 

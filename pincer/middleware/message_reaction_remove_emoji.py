@@ -14,7 +14,7 @@ async def message_reaction_remove_emoji_middleware(
 ):
     """|coro|
 
-    Middleware for ``on_message_reaction_remove_emoji`` event.
+    Middleware for the ``on_message_reaction_remove_emoji`` event.
 
     Parameters
     ----------

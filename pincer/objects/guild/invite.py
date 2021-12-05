@@ -36,7 +36,7 @@ class InviteTargetType(IntEnum):
     EMBEDDED_APPLICATION = 2
 
 
-@dataclass
+@dataclass(repr=False)
 class InviteStageInstance(APIObject):
     """Represents an invite for a Discord stages channel.
 
@@ -57,7 +57,7 @@ class InviteStageInstance(APIObject):
     topic: str
 
 
-@dataclass
+@dataclass(repr=False)
 class InviteMetadata(APIObject):
     """Extra information about an invite, will extend the invite object.
 
@@ -81,7 +81,7 @@ class InviteMetadata(APIObject):
     created_at: Timestamp
 
 
-@dataclass
+@dataclass(repr=False)
 class Invite(APIObject):
     """Represents a Discord invite.
 
@@ -129,6 +129,9 @@ class Invite(APIObject):
     target_type: APINullable[InviteTargetType] = MISSING
     target_user: APINullable[User] = MISSING
     target_application: APINullable[Application] = MISSING
+
+    def __repr__(self) -> str:
+        return f"Invite(code={self.code}, channel={self.channel})"
 
     def __str__(self) -> str:
         return self.link

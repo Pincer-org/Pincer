@@ -12,7 +12,7 @@ from ..utils.types import Coro
 async def invite_create_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_invite_create``,
+    Middleware for the ``on_invite_create`` event.
 
     Parameters
     ----------
