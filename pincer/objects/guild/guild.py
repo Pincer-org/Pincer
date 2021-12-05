@@ -968,7 +968,8 @@ class Guild(APIObject):
         data = await self._http.get(f"guilds/{self.id}/regions")
         for voice_region_data in data:
             yield VoiceRegion.from_dict(
-                construct_client_dict(self._client, voice_region_data))
+                construct_client_dict(self._client, voice_region_data)
+            )
 
     async def get_invites(self) -> AsyncGenerator[Invite, None]:
         """|coro|
@@ -983,7 +984,8 @@ class Guild(APIObject):
         data = await self._http.get(f"guilds/{self.id}/invites")
         for invite_data in data:
             yield Invite.from_dict(
-                construct_client_dict(self._client, invite_data))
+                construct_client_dict(self._client, invite_data)
+            )
 
     async def get_integrations(self) -> AsyncGenerator[Integration, None]:
         """|coro|
@@ -998,7 +1000,8 @@ class Guild(APIObject):
         data = await self._http.get(f"guilds/{self.id}/integrations")
         for integration_data in data:
             yield Integration.from_dict(
-                construct_client_dict(self._client, integration_data))
+                construct_client_dict(self._client, integration_data)
+            )
 
     async def delete_integration(
             self,
@@ -1087,8 +1090,10 @@ class Guild(APIObject):
         data = await self._http.get(f"guilds/{self.id}/vanity-url")
         return Invite.from_dict(construct_client_dict(self._client, data))
 
-    async def get_widget_image(self, style: Optional[
-        str] = "shield") -> str:  # TODO Replace str with ImageURL object
+    async def get_widget_image(
+        self,
+        style: Optional[str] = "shield"
+    ) -> str:  # TODO Replace str with ImageURL object
         """|coro|
         Returns a PNG image widget for the guild.
         Requires no permissions or authentication.
@@ -1134,7 +1139,8 @@ class Guild(APIObject):
         """
         data = await self._http.get(f"guilds/{self.id}/welcome-screen")
         return WelcomeScreen.from_dict(
-            construct_client_dict(self._client, data))
+            construct_client_dict(self._client, data)
+        )
 
     async def modify_welcome_screen(
             self,
