@@ -621,7 +621,9 @@ class Guild(APIObject):
             f"guilds/{self.id}/members?{limit=!s}&{after=!s}"
         )
         
-        return (GuildMember.from_dict(construct_client_dict(self._client, data)) for member in members)
+        for member in member:
+            yield GuildMember.from_dict(construct_client_dict(self._client, data))
+        
 
     async def search_guild_members(
         self, 
@@ -648,7 +650,8 @@ class Guild(APIObject):
             f"&{limit}" if limit else ""
         )
 
-        return (GuildMember.from_dict(member) for member in data)
+        for member in data:
+            yield GuildMember.from_dict(construct_client_dict(self._client, member))
 
     @overload
     async def add_guild_member(
@@ -701,7 +704,7 @@ class Guild(APIObject):
             headers=remove_none({"X-Audit-Log-Reason":reason))
         )
 
-        return GuildMember.from_dict(data) if data else None
+        return GuildMember.from_dict(construct_client_dict(self._client, data)) if data else None
 
     async def modify_current_member(
         self, 
