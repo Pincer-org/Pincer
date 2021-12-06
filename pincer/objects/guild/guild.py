@@ -641,7 +641,7 @@ class Guild(APIObject):
             max number of members to return (1-1000) |default| :data:`1`
         Returns
         -------
-        List[:class:`~pincer.objects.guild.member.GuildMember`]
+        AsyncGenerator[:class:`~pincer.objects.guild.member.GuildMember`, :data:`None`]
             list of guild member objects
         """
 
