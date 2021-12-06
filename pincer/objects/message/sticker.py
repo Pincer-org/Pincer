@@ -28,6 +28,7 @@ class StickerType(IntEnum):
     GUILD:
         Sticker is a custom sticker from a discord server.
     """
+
     STANDARD = 1
     GUILD = 2
 
@@ -44,6 +45,7 @@ class StickerFormatType(IntEnum):
     LOTTIE:
         Sticker is animated with with LOTTIE format. (vector based)
     """
+
     PNG = 1
     APNG = 2
     LOTTIE = 3
@@ -113,13 +115,12 @@ class Sticker(APIObject):
         sticker = await cls._http.get(f"stickers/{_id}")
         return cls.from_dict(sticker)
 
-
     async def modify(
-            self,
-            name: Optional[str] = None,
-            description: Optional[str] = None,
-            tags: Optional[str] = None,
-            reason: Optional[str] = None
+        self,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        tags: Optional[str] = None,
+        reason: Optional[str] = None,
     ) -> Sticker:
         """|coro|
         Modify the given sticker.
@@ -146,12 +147,10 @@ class Sticker(APIObject):
             data=remove_none(
                 {"name": name, "description": description, "tags": tags}
             ),
-            headers=remove_none({"X-Audit-Log-Reason": reason})
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
         )
 
         return Sticker.from_dict(sticker)
-
-
 
 
 @dataclass(repr=False)
