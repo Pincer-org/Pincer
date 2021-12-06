@@ -794,7 +794,7 @@ class Guild(APIObject):
         """
         await self._http.delete(
             f"guilds/{self.id}/members/{user_id}",
-            headers=remove_none({"X-Audit-Log-Reason":reason))
+            headers=remove_none({"X-Audit-Log-Reason":reason})
         )
 
     async def ban(
