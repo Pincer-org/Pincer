@@ -1639,7 +1639,7 @@ class Guild(APIObject):
         # return Sticker.from_dict(sticker)
 
 
-    async def delete_sticker(self, _id: Snowflake) -> None:
+    async def delete_sticker(self, _id: Snowflake):
         """|coro|
         Delete the given sticker.
         Requires the ``MANAGE_EMOJIS_AND_STICKERS`` permission.
