@@ -1502,19 +1502,6 @@ class Guild(APIObject):
             construct_client_dict(self._client, data)
         )
 
-    @classmethod
-    async def sticker_packs(cls) -> AsyncIterator[StickerPack]:
-        """|coro|
-        Yields sticker packs available to Nitro subscribers.
-
-        Yields
-        ------
-        :class:`~pincer.objects.message.sticker.StickerPack`
-            a sticker pack
-        """
-        packs = await cls._http.get("sticker-packs")
-        for pack in packs:
-            yield StickerPack.from_dict(pack)
 
     async def list_stickers(self) -> AsyncIterator[Sticker]:
         """|coro|
