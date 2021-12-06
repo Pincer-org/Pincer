@@ -1580,7 +1580,7 @@ class Guild(APIObject):
             for sticker in await self._http.get(f"guild/{self.id}/stickers")
         )
 
-    async def get_sticker(self, _id: Snowflake):
+    async def get_sticker(self, _id: Snowflake) -> Sticker:
         """|coro|
         Returns a sticker object for the current guild and sticker IDs.
         Includes the ``user`` field if the bot has the ``MANAGE_EMOJIS_AND_STICKERS`` permission.
