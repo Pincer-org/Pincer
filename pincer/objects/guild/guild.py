@@ -553,7 +553,7 @@ class Guild(APIObject):
         data = await self._http.post(
             f"guilds/{self.id}/channels",
             data=kwargs,
-            headers=remove_none({"X-Audit-Log-Reason":reason))
+            headers=remove_none({"X-Audit-Log-Reason":reason})
         )
         return Channel.from_dict(construct_client_dict(self._client, data))
 
