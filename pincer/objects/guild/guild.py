@@ -3,9 +3,10 @@
 
 from __future__ import annotations
 
+from collections import AsyncIterator
 from dataclasses import dataclass, field
 from enum import IntEnum
-from typing import AsyncGenerator, overload, TYPE_CHECKING, Generator
+from typing import AsyncGenerator, overload, TYPE_CHECKING
 
 from .invite import Invite
 from .channel import Channel
@@ -1502,9 +1503,9 @@ class Guild(APIObject):
         )
 
     @classmethod
-    async def sticker_packs(cls) -> Generator[StickerPack, None, None]:
+    async def sticker_packs(cls) -> AsyncIterator[StickerPack]:
         """|coro|
-        Returns the list of sticker packs available to Nitro subscribers.
+        Yields sticker packs available to Nitro subscribers.
 
         Yields
         ------
@@ -1512,11 +1513,12 @@ class Guild(APIObject):
             a sticker pack
         """
         packs = await cls._http.get("sticker-packs")
-        return (StickerPack.from_dict(pack) for pack in packs)
+        for pack in packs:
+            yield StickerPack.from_dict(pack)
 
-    async def list_stickers(self) -> Generator[Sticker, None, None]:
+    async def list_stickers(self) -> AsyncIterator[Sticker]:
         """|coro|
-        Returns an array of sticker objects for the current guild.
+        Yields sticker objects for the current guild.
         Includes ``user`` fields if the bot has the ``MANAGE_EMOJIS_AND_STICKERS`` permission.
 
         Yields
@@ -1524,10 +1526,9 @@ class Guild(APIObject):
         :class:`~pincer.objects.message.sticker.Sticker`
             a sticker for the current guild
         """
-        return (
-            Sticker.from_dict(sticker)
-            for sticker in await self._http.get(f"guild/{self.id}/stickers")
-        )
+
+        for sticker in await self._http.get(f"guild/{self.id}/stickers"):
+            yield Sticker.from_dict(sticker)
 
     async def get_sticker(self, _id: Snowflake) -> Sticker:
         """|coro|
