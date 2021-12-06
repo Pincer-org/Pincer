@@ -415,7 +415,7 @@ class Guild(APIObject):
         ----------
         client : :class:`~pincer.Client`
             Client object to use the http gateway from.
-        _id : :class:`pincer.utils.snowflake.Snowflake`
+        _id : :class:`~pincer.utils.snowflake.Snowflake`
             Guild ID.
         Returns
         -------
