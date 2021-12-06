@@ -579,7 +579,7 @@ class Guild(APIObject):
         await self._http.patch(
             f"guilds/{self.id}/channels",
             data=channel,
-            headers=remove_none({"X-Audit-Log-Reason":reason))
+            headers=remove_none({"X-Audit-Log-Reason":reason})
         )
 
     async def list_active_threads(self) -> Tuple[
