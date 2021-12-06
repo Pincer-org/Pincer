@@ -629,7 +629,7 @@ class Guild(APIObject):
         self, 
         query: str,
         limit: Optional[int] = None
-    ) -> List[GuildMember]:
+    ) -> AsyncGenerator[GuildMember, None]:
         """|coro|
         Returns a list of guild member objects whose username or nickname starts with a provided string.
 
