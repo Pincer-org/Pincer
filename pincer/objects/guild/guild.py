@@ -728,7 +728,7 @@ class Guild(APIObject):
         data = self._http.patch(
             f"guilds/{self.id}/members/@me", 
             {"nick": nick}, 
-            headers=remove_none({"X-Audit-Log-Reason":reason))
+            headers=remove_none({"X-Audit-Log-Reason":reason})
         )
         return GuildMember.from_dict(construct_client_dict(self._client, data))
 
