@@ -144,7 +144,7 @@ class Sticker(APIObject):
         sticker = self._http.patch(
             f"guilds/{self.guild_id}/stickers/{self.id}",
             data=remove_none(
-                dict(name=name, description=description, tags=tags)
+                {"name": name, "description": description, "tags": tags}
             ),
             headers=remove_none({"X-Audit-Log-Reason": reason})
         )
