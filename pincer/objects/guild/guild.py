@@ -498,8 +498,9 @@ class Guild(APIObject):
       
     @overload
     async def create_channel(
-        self, 
-        name: str,               
+        self,
+        *,
+        name: str,
         type: Optional[ChannelType] = None,
         topic: Optional[str] = None,
         bitrate: Optional[int] = None,
