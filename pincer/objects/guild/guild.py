@@ -173,7 +173,6 @@ class SystemChannelFlags(IntEnum):
     SUPPRESS_JOIN_NOTIFICATION_REPLIES = 1 << 3
 
 
-
 @dataclass(repr=False)
 class GuildPreview(APIObject):
     """Represents a guild preview.
