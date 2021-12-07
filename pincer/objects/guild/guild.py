@@ -623,7 +623,7 @@ class Guild(APIObject):
             f"guilds/{self.id}/members?{limit=}&{after=}"
         )
         
-        for member in member:
+        for member in members:
             yield GuildMember.from_dict(construct_client_dict(self._client, data))
         
 
@@ -649,7 +649,7 @@ class Guild(APIObject):
 
         data = await self._http.get(
             f"guilds/{id}/members/search?{query=!s}"
-            f"&{limit}" if limit else ""
+            (f"&{limit}" if limit else "")
         )
 
         for member in data:
