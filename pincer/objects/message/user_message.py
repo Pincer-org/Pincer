@@ -74,10 +74,9 @@ class AllowedMentions(APIObject):
 
     def to_dict(self):
         def get_str_id(obj: Union[Snowflake, User, Role]) -> str:
-            if hasattr(obj, "id"):
-                obj = obj.id
-
-            return str(obj)
+            if isinstance(obj, Snowflake):
+                return str(obj)
+            return obj.id
 
         return {
             "parse": self.parse,
