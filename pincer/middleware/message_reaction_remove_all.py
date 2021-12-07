@@ -14,7 +14,7 @@ async def message_reaction_remove_all_middleware(
 ):
     """|coro|
 
-    Middleware for ``on_message_reaction_remove_all`` event.
+    Middleware for the ``on_message_reaction_remove_all`` event.
 
     Parameters
     ----------

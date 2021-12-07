@@ -14,7 +14,7 @@ from ..utils.conversion import construct_client_dict
 async def webhooks_update_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_webhooks_update`` event.
+    Middleware for the ``on_webhooks_update`` event.
 
     Parameters
     ----------

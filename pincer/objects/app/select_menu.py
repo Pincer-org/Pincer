@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 @dataclass(repr=False)
 class SelectOption(APIObject):
-    """Represents a Discord Select Option object
+    """Represents a Discord Select Option
 
     Attributes
     ----------
@@ -42,7 +42,7 @@ class SelectOption(APIObject):
 
 @dataclass(repr=False)
 class SelectMenu(APIObject):
-    """Represents a Discord Select Menu object
+    """Represents a Discord Select Menu
 
     Attributes
     ----------

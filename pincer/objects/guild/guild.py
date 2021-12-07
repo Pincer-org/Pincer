@@ -9,10 +9,13 @@ from typing import AsyncGenerator, overload, TYPE_CHECKING
 
 from .invite import Invite
 from .channel import Channel
+from ..message.emoji import Emoji
+from ..message.file import File
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict, remove_none
 from ...utils.types import MISSING
+
 
 if TYPE_CHECKING:
     from typing import Any, Dict, List, Optional, Union
@@ -26,11 +29,11 @@ if TYPE_CHECKING:
     from .template import GuildTemplate
     from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
     from .widget import GuildWidget
+    from .webhook import Webhook
     from ..user.user import User
     from ..user.integration import Integration
     from ..voice.region import VoiceRegion
     from ..events.presence import PresenceUpdateEvent
-    from ..message.emoji import Emoji
     from ..message.sticker import Sticker
     from ..user.voice_state import VoiceState
     from ...client import Client
@@ -166,7 +169,6 @@ class SystemChannelFlags(IntEnum):
     SUPPRESS_PREMIUM_SUBSCRIPTIONS = 1 << 1
     SUPPRESS_GUILD_REMINDER_NOTIFICATIONS = 1 << 2
     SUPPRESS_JOIN_NOTIFICATION_REPLIES = 1 << 3
-
 
 
 @dataclass(repr=False)
@@ -1298,8 +1300,8 @@ class Guild(APIObject):
         self,
         *,
         name: str,
-        image: str,
-        roles: List[Snowflake],
+        image: File,
+        roles: List[Snowflake] = [],
         reason: Optional[str] = None
     ) -> Emoji:
         """|coro|
@@ -1313,10 +1315,10 @@ class Guild(APIObject):
         ----------
         name : :class:`str`
             Name of the emoji
-        image : :class:`str`
-            The 128x128 emoji image data
+        image : :class:`~pincer.objects.message.file.File`
+            The File for the 128x128 emoji image data
         roles : List[:class:`~pincer.utils.snowflake.Snowflake`]
-            Roles allowed to use this emoji
+            Roles allowed to use this emoji |default| :data:`[]`
         reason : Optional[:class:`str`]
             The reason for creating the emoji |default| :data:`None`
 
@@ -1329,7 +1331,7 @@ class Guild(APIObject):
             f"guilds/{self.id}/emojis",
             data={
                 "name": name,
-                "image": image,
+                "image": image.uri,
                 "roles": roles
             },
             headers=remove_none({"X-Audit-Log-Reason": reason})
@@ -1534,6 +1536,21 @@ class Guild(APIObject):
         return GuildTemplate.from_dict(
             construct_client_dict(self._client, data)
         )
+
+    async def get_webhooks(self) -> AsyncGenerator[Webhook, None]:
+        """|coro|
+        Returns an async generator of the guild webhooks.
+
+        Yields
+        -------
+        AsyncGenerator[:class:`~pincer.objects.guild.webhook.Webhook`, None]
+            The guild webhook object.
+        """
+        data = await self._http.get(f"guilds/{self.id}/webhooks")
+        for webhook_data in data:
+            yield Webhook.from_dict(
+                construct_client_dict(self._client, webhook_data)
+            )
 
     @classmethod
     def from_dict(cls, data) -> Guild:

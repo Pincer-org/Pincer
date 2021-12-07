@@ -20,7 +20,7 @@ async def on_message_delete_middleware(
     payload: GatewayDispatch
 ) -> Tuple[str, MessageDeleteEvent]:
     """|coro|
-    Middleware for ``on_message_delete`` event.
+    Middleware for the ``on_message_delete`` event.
 
     Parameters
     ----------

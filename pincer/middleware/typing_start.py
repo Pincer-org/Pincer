@@ -12,7 +12,7 @@ from ..utils.types import Coro
 async def typing_start_middleware(self, payload: GatewayDispatch):
     """|coro|
 
-    Middleware for ``on_typing_start`` event.
+    Middleware for the ``on_typing_start`` event.
 
     Parameters
     ----------

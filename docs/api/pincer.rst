@@ -56,6 +56,8 @@ Exceptions
 
 .. autoexception:: CommandReturnIsEmpty()
 
+.. autoexception:: ImageEncodingError()
+
 .. autoexception:: InvalidCommandGuild()
 
 .. autoexception:: InvalidCommandName()
@@ -133,6 +135,7 @@ Exception Hierarchy
                 - :exc:`CommandReturnIsEmpty`
                 - :exc:`InvalidCommandGuild`
                 - :exc:`InvalidCommandName`
+            - :exc:`ImageEncodingError`
             - :exc:`InvalidEventName`
             - :exc:`InvalidUrlError`
             - :exc:`EmbedFieldError`

@@ -9,6 +9,6 @@ from .arg_types import (
 
 __all__ = (
     "ChannelTypes", "ChatCommandHandler", "Choice", "Choices",
-    "CommandArg", "Description", "MaxValue", "MinValue", "command",
-    "message_command", "user_command", "Modifier"
+    "CommandArg", "Description", "MaxValue", "MinValue", "Modifier", "command",
+    "message_command", "user_command"
 )

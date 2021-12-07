@@ -37,6 +37,7 @@ if TYPE_CHECKING:
     from .utils.snowflake import Snowflake
     from .core.dispatch import GatewayDispatch
     from .objects.app.throttling import ThrottleInterface
+    from .objects.guild import Webhook
 
 _log = logging.getLogger(__package__)
 
@@ -77,17 +78,17 @@ def event_middleware(call: str, *, override: bool = False):
 
     :Implementation example:
 
-    .. code-block:: pycon
+    .. code-block:: python3
 
-        >>> @event_middleware("ready", override=True)
-        >>> async def custom_ready(_, payload: GatewayDispatch):
-        >>>     return "on_ready", [
-        >>>         User.from_dict(payload.data.get("user"))
-        >>>     ]
+         @event_middleware("ready", override=True)
+         async def custom_ready(_, payload: GatewayDispatch):
+             return "on_ready", [
+                 User.from_dict(payload.data.get("user"))
+             ]
 
-        >>> @Client.event
-        >>> async def on_ready(bot: User):
-        >>>     print(f"Signed in as {bot}")
+         @Client.event
+         async def on_ready(bot: User):
+             print(f"Signed in as {bot}")
 
     Parameters
     ----------
@@ -221,32 +222,32 @@ class Client(Dispatcher):
 
         :Example usage:
 
-        .. code-block:: pycon
+        .. code-block:: python3
 
-            >>> # Function based
-            >>> from pincer import Client
-            >>>
-            >>> client = Client("token")
-            >>>
-            >>> @client.event
-            >>> async def on_ready():
-            ...     print(f"Signed in as {client.bot}")
-            >>>
-            >>> if __name__ == "__main__":
-            ...     client.run()
+             # Function based
+             from pincer import Client
 
-        .. code-block :: pycon
+             client = Client("token")
 
-            >>> # Class based
-            >>> from pincer import Client
-            >>>
-            >>> class MyClient(Client):
-            ...     @Client.event
-            ...     async def on_ready(self):
-            ...         print(f"Signed in as {self.bot}")
-            >>>
-            >>> if __name__ == "__main__":
-            ...     MyClient("token").run()
+             @client.event
+             async def on_ready():
+                 print(f"Signed in as {client.bot}")
+
+             if __name__ == "__main__":
+                 client.run()
+
+        .. code-block :: python3
+
+             # Class based
+             from pincer import Client
+
+             class MyClient(Client):
+                 @Client.event
+                 async def on_ready(self):
+                     print(f"Signed in as {self.bot}")
+
+             if __name__ == "__main__":
+                 MyClient("token").run()
 
         Raises
         ------
@@ -301,27 +302,27 @@ class Client(Dispatcher):
 
         run.py
 
-        .. code-block:: pycon
+        .. code-block:: python3
 
-            >>> from pincer import Client
-            >>>
-            >>> class MyClient(Client):
-            ...     def __init__(self, *args, **kwargs):
-            ...         self.load_cog("cogs.say")
-            ...         super().__init__(*args, **kwargs)
+             from pincer import Client
+
+             class MyClient(Client):
+                 def __init__(self, *args, **kwargs):
+                     self.load_cog("cogs.say")
+                     super().__init__(*args, **kwargs)
 
         cogs/say.py
 
-        .. code-block:: pycon
+        .. code-block:: python3
 
-            >>> from pincer import command
-            >>>
-            >>> class SayCommand:
-            ...     @command()
-            ...     async def say(self, message: str) -> str:
-            ...         return message
-            >>>
-            >>> setup = SayCommand
+             from pincer import command
+
+             class SayCommand:
+                 @command()
+                 async def say(self, message: str) -> str:
+                     return message
+
+             setup = SayCommand
 
         Parameters
         ----------
@@ -385,7 +386,7 @@ class Client(Dispatcher):
     async def unload_cog(self, path: str):
         """|coro|
 
-        Unload an already loaded cog! This removes all of its commands!
+        Unloads a currently loaded Cog
 
         Parameters
         ----------
@@ -575,7 +576,7 @@ class Client(Dispatcher):
     async def payload_event_handler(self, _, payload: GatewayDispatch):
         """|coro|
 
-        Special event which activates on_payload event!
+        Special event which activates the on_payload event.
 
         Parameters
         ----------
@@ -833,5 +834,27 @@ class Client(Dispatcher):
         """
         return await Channel.from_id(self, _id)
 
+    async def get_webhook(
+        self,
+        id: Snowflake,
+        token: Optional[str] = None
+    ) -> Webhook:
+        """|coro|
+        Fetch a Webhook from its identifier.
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The id of the webhook which should be
+            fetched from the Discord gateway.
+        token: Optional[:class:`str`]
+            The webhook token.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.webhook.Webhook`
+            A Webhook object.
+        """
+        return await Webhook.from_id(self, id, token)
 
 Bot = Client

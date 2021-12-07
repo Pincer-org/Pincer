@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 _log = logging.getLogger(__name__)
 
 
-@dataclass(repr=False)
+@dataclass
 class Bucket:
     """Represents a rate limit bucket
 
