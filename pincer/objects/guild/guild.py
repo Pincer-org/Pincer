@@ -538,7 +538,7 @@ class Guild(APIObject):
             headers["X-Audit-Log-Reason"] = reason
 
         await self._http.delete(
-            f"/guilds/{self.id}/members/{member_id}", header=headers
+            f"/guilds/{self.id}/members/{member_id}", headers=headers
         )
 
     async def get_roles(self) -> AsyncGenerator[Role, None]:
