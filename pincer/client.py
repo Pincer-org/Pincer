@@ -8,8 +8,9 @@ from asyncio import iscoroutinefunction, run, ensure_future
 from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
-from typing import Any, Dict, List, Optional, Tuple, Union, overload, \
-    AsyncIterator
+from typing import (
+    Any, Dict, List, Optional, Tuple, Union, overload, AsyncIterator
+)
 from typing import TYPE_CHECKING
 
 from . import __package__
@@ -858,7 +859,7 @@ class Client(Dispatcher):
         """
         return await Webhook.from_id(self, id, token)
 
-    async def sticker_packs(self) -> AsyncIterator[StickerPack]:
+    async def sticker_packs(self) -> AsyncGenerator[StickerPack, None]:
         """|coro|
         Yields sticker packs available to Nitro subscribers.
 
