@@ -703,7 +703,7 @@ class Guild(APIObject):
         data = await self._http.put(
             f"guilds/{self.id}/members/{user_id}", 
             data=kwargs,
-            headers=remove_none({"X-Audit-Log-Reason":reason))
+            headers=remove_none({"X-Audit-Log-Reason":reason})
         )
 
         return GuildMember.from_dict(construct_client_dict(self._client, data)) if data else None
