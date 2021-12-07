@@ -308,7 +308,7 @@ class Channel(APIObject):  # noqa E501
             The message.
         """
 
-        if getattr(message, "delete_after", None):
+        if message.delete_after is not None:
             await sleep(message.delete_after)
             await self.delete()
 
