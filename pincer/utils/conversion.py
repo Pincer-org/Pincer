@@ -13,7 +13,9 @@ if TYPE_CHECKING:
     from typing import Any, Callable, Dict, List, Optional, Set, Union
 
 
-def construct_client_dict(client: Client, data: Dict) -> Dict:
+def construct_client_dict(
+    client: Client, data: Dict[str, Any]
+) -> Dict[str, Any]:
     # TODO: fix docs
     """
 
@@ -62,7 +64,9 @@ def convert(
     return MISSING if value is MISSING else handle_factory()
 
 
-def remove_none(obj: Union[List, Dict, Set]) -> Union[List, Dict, Set]:
+def remove_none(
+    obj: Union[List[Any], Dict[Any, Any], Set[Any]]
+) -> Union[List[Any], Dict[Any, Any], Set[Any]]:
     """
     Removes all ``None`` values from a list, dict or set.
 
