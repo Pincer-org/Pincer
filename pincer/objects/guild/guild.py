@@ -649,7 +649,7 @@ class Guild(APIObject):
 
         data = await self._http.get(
             f"guilds/{id}/members/search?{query=!s}"
-            (f"&{limit}" if limit else "")
+            + (f"&{limit}" if limit else "")
         )
 
         for member in data:
