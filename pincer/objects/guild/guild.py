@@ -1506,7 +1506,8 @@ class Guild(APIObject):
     async def list_stickers(self) -> AsyncIterator[Sticker]:
         """|coro|
         Yields sticker objects for the current guild.
-        Includes ``user`` fields if the bot has the ``MANAGE_EMOJIS_AND_STICKERS`` permission.
+        Includes ``user`` fields if the bot has the 
+        ``MANAGE_EMOJIS_AND_STICKERS`` permission.
 
         Yields
         ------
@@ -1520,7 +1521,8 @@ class Guild(APIObject):
     async def get_sticker(self, _id: Snowflake) -> Sticker:
         """|coro|
         Returns a sticker object for the current guild and sticker IDs.
-        Includes the ``user`` field if the bot has the ``MANAGE_EMOJIS_AND_STICKERS`` permission.
+        Includes the ``user`` field if the bot has the 
+        ``MANAGE_EMOJIS_AND_STICKERS`` permission.
 
         Parameters
         ----------
