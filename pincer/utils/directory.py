@@ -8,11 +8,12 @@ from os import getcwd, chdir as os_chdir
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Generator, Any
+    from pathlib import Path
+    from typing import Generator, Any, Union
 
 
 @contextmanager
-def chdir(path: str) -> Generator[str, Any, None]:
+def chdir(path: Union[str, Path]) -> Generator[str, Any, None]:
     """Change the cwd to the given path as a context manager.
 
     Parameters
