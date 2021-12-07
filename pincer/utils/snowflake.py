@@ -49,7 +49,7 @@ class Snowflake(int):
         return cls.from_string(string)
 
     @classmethod
-    def from_string(cls, string: str):
+    def from_string(cls, string: str) -> Snowflake:
         """Initialize a new Snowflake from a string.
 
         Parameters
