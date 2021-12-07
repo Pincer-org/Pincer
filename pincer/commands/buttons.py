@@ -3,7 +3,7 @@
 
 from typing import Callable, Dict
 
-from pincer.utils.types import Singleton
+from ..utils.types import Singleton
 
 
 def hash_button_id(_id):

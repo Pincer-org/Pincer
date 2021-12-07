@@ -81,12 +81,10 @@ class InteractionData(APIObject):
         The values the user selected
     target_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Id of the user or message targeted by a user or message command
-    """
-    # noqa: E501
-    id: Snowflake
-    name: str
-    type: int
-
+    """  # noqa: E501
+    id: APINullable[Snowflake] = MISSING
+    name: APINullable[str] = MISSING
+    type: APINullable[int] = MISSING
     resolved: APINullable[ResolvedData] = MISSING
     options: APINullable[List[AppCommandInteractionDataOption]] = MISSING
     custom_id: APINullable[str] = MISSING
