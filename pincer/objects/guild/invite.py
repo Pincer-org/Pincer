@@ -137,5 +137,5 @@ class Invite(APIObject):
         return self.link
 
     @property
-    def link(self):
+    def link(self) -> str:
         return f"https://discord.gg/{self.code}"
