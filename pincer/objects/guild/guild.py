@@ -491,7 +491,7 @@ class Guild(APIObject):
         data = await self._http.patch(
             f"guilds/{self.id}/members/{_id}",
             data=kwargs,
-            headers=remove_none({"X-Audit-Log-Reason":reason})
+            headers=remove_none({"X-Audit-Log-Reason": reason})
         )
         return GuildMember.from_dict(construct_client_dict(self._client, data))
 
@@ -555,7 +555,7 @@ class Guild(APIObject):
         data = await self._http.post(
             f"guilds/{self.id}/channels",
             data=kwargs,
-            headers=remove_none({"X-Audit-Log-Reason":reason})
+            headers=remove_none({"X-Audit-Log-Reason": reason})
         )
         return Channel.from_dict(construct_client_dict(self._client, data))
 
@@ -703,7 +703,7 @@ class Guild(APIObject):
         data = await self._http.put(
             f"guilds/{self.id}/members/{user_id}", 
             data=kwargs,
-            headers=remove_none({"X-Audit-Log-Reason":reason})
+            headers=remove_none({"X-Audit-Log-Reason": reason})
         )
 
         return GuildMember.from_dict(construct_client_dict(self._client, data)) if data else None
@@ -754,7 +754,7 @@ class Guild(APIObject):
         """
         data = await self._http.put(
             f"guilds/{self.id}/{user_id}/roles/{role_id}",
-            headers=remove_none({"X-Audit-Log-Reason":reason})
+            headers=remove_none({"X-Audit-Log-Reason": reason})
         )
 
     async def remove_guild_member_role(
@@ -776,7 +776,7 @@ class Guild(APIObject):
         """
         await self._http.delete(
             f"guilds/{self.id}/{user_id}/roles/{role_id}",
-            headers=remove_none({"X-Audit-Log-Reason":reason})
+            headers=remove_none({"X-Audit-Log-Reason": reason})
         )
 
     async def remove_guild_member(
@@ -796,7 +796,7 @@ class Guild(APIObject):
         """
         await self._http.delete(
             f"guilds/{self.id}/members/{user_id}",
-            headers=remove_none({"X-Audit-Log-Reason":reason})
+            headers=remove_none({"X-Audit-Log-Reason": reason})
         )
 
     async def ban(
