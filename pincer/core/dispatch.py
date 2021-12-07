@@ -64,10 +64,10 @@ class GatewayDispatch:
         :class:`~pincer.core.dispatch.GatewayDispatch`
             The new class.
         """
-        payload: Dict[str, Union[int, str, Dict[str, Any]]] = loads(payload)
+        loaded_payload: Dict[str, Union[int, str, Dict[str, Any]]] = loads(payload)
         return cls(
-            payload.get("op"),
-            payload.get("d"),
-            payload.get("s"),
-            payload.get("t")
+            loaded_payload.get("op"),
+            loaded_payload.get("d"),
+            loaded_payload.get("s"),
+            loaded_payload.get("t")
         )
