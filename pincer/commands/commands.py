@@ -126,6 +126,7 @@ def command(
                     flags=InteractionFlags.EPHEMERAL
                 )
 
+
     References from above:
         :class:`~client.Client`,
         :class:`~objects.message.message.Message`,
@@ -322,7 +323,7 @@ def user_command(
     """A decorator to create a user command registering and responding
     to the Discord API from a function.
 
-     .. code-block:: python3
+    .. code-block:: python3
 
          class Bot(Client):
              @user_command
@@ -340,46 +341,46 @@ def user_command(
                  return f"Hello {user.name}, this is a Guild."
 
 
-     References from above:
-         :class:`~client.Client`,
-         :class:`~objects.message.context.MessageContext`,
-         :class:`~objects.user.user.User`,
-         :class:`~objects.guild.member.GuildMember`,
+    References from above:
+        :class:`~client.Client`,
+        :class:`~objects.message.context.MessageContext`,
+        :class:`~objects.user.user.User`,
+        :class:`~objects.guild.member.GuildMember`,
 
 
-     Parameters
-     ----------
-     name : Optional[:class:`str`]
-         The name of the command |default| :data:`None`
-     enable_default : Optional[:class:`bool`]
-         Whether the command is enabled by default |default| :data:`True`
-     guild : Optional[Union[:class:`~pincer.utils.snowflake.Snowflake`, :class:`int`, :class:`str`]]
-         What guild to add it to (don't specify for global) |default| :data:`None`
-     cooldown : Optional[:class:`int`]
-         The amount of times in the cooldown_scale the command can be invoked
-         |default| ``0``
-     cooldown_scale : Optional[:class:`float`]
-         The 'checking time' of the cooldown |default| ``60``
-     cooldown_scope : :class:`~pincer.objects.app.throttle_scope.ThrottleScope`
-         What type of cooldown strategy to use |default| :attr:`ThrottleScope.USER`
+    Parameters
+    ----------
+    name : Optional[:class:`str`]
+        The name of the command |default| :data:`None`
+    enable_default : Optional[:class:`bool`]
+        Whether the command is enabled by default |default| :data:`True`
+    guild : Optional[Union[:class:`~pincer.utils.snowflake.Snowflake`, :class:`int`, :class:`str`]]
+        What guild to add it to (don't specify for global) |default| :data:`None`
+    cooldown : Optional[:class:`int`]
+        The amount of times in the cooldown_scale the command can be invoked
+        |default| ``0``
+    cooldown_scale : Optional[:class:`float`]
+        The 'checking time' of the cooldown |default| ``60``
+    cooldown_scope : :class:`~pincer.objects.app.throttle_scope.ThrottleScope`
+        What type of cooldown strategy to use |default| :attr:`ThrottleScope.USER`
 
-     Raises
-     ------
-     CommandIsNotCoroutine
-         If the command function is not a coro
-     InvalidCommandName
-         If the command name does not follow the regex ``^[\\w-]{1,32}$``
-     InvalidCommandGuild
-         If the guild id is invalid
-     CommandDescriptionTooLong
-         Descriptions max 100 characters
-         If the annotation on an argument is too long (also max 100)
-     CommandAlreadyRegistered
-         If the command already exists
-     InvalidArgumentAnnotation
-         Annotation amount is max 25,
-         Not a valid argument type,
-         Annotations must consist of name and value
+    Raises
+    ------
+    CommandIsNotCoroutine
+        If the command function is not a coro
+    InvalidCommandName
+        If the command name does not follow the regex ``^[\\w-]{1,32}$``
+    InvalidCommandGuild
+        If the guild id is invalid
+    CommandDescriptionTooLong
+        Descriptions max 100 characters
+        If the annotation on an argument is too long (also max 100)
+    CommandAlreadyRegistered
+        If the command already exists
+    InvalidArgumentAnnotation
+        Annotation amount is max 25,
+        Not a valid argument type,
+        Annotations must consist of name and value
     """
     # noqa: E501
     return register_command(
