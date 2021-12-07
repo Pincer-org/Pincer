@@ -977,7 +977,7 @@ class Guild(APIObject):
                 construct_client_dict(self._client, invite_data)
             )
 
-    async def get_integrations(self) -> AsyncGenerator[Integration, None]:
+    async def get_integrations(self) -> AsyncIterator[Integration]:
         """|coro|
         Returns an async generator of integrations for the guild.
         Requires the ``MANAGE_GUILD`` permission.
@@ -1381,7 +1381,7 @@ class Guild(APIObject):
             headers=remove_none({"X-Audit-Log-Reason": reason}),
         )
 
-    async def get_templates(self) -> AsyncGenerator[GuildTemplate, None]:
+    async def get_templates(self) -> AsyncIterator[GuildTemplate]:
         """|coro|
         Returns an async generator of the guild templates.
 
