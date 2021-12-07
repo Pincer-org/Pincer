@@ -10,6 +10,7 @@ from ...utils.api_object import APIObject
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
+    from typing import Optional
     from ...utils.color import Color
     from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
@@ -94,9 +95,11 @@ class Role(APIObject):
 
     # TODO: Implement Caching @Arthurdw
     @classmethod
-    async def from_id(cls, client, guild_id: int, role_id: int) -> Role:
+    async def from_id(cls, client, guild_id: int, role_id: int) -> Optional[Role]:
         roles: list = await client.http.get(f"/guilds/{guild_id}/roles")
 
         for role in roles:
             if int(role['id']) == role_id:
                 return cls.from_dict(role)
+
+        return None
