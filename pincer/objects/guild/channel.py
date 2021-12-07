@@ -299,7 +299,7 @@ class Channel(APIObject):  # noqa E501
             headers
         )
 
-    async def __post_send_handler(self, message: Message):
+    async def __post_send_handler(self, message: Union[UserMessage, Message]):
         """Process a message after it was sent.
 
         Parameters
@@ -307,6 +307,8 @@ class Channel(APIObject):  # noqa E501
         message :class:`~.pincer.objects.message.message.Message`
             The message.
         """
+        if isinstance(message, UserMessage):
+            return
 
         if message.delete_after is not None:
             await sleep(message.delete_after)
@@ -314,7 +316,7 @@ class Channel(APIObject):  # noqa E501
 
     def __post_sent(
             self,
-            message: Message
+            message: Union[UserMessage, Message]
     ):
         """Ensure the `__post_send_handler` method its future.
 
@@ -347,7 +349,7 @@ class Channel(APIObject):  # noqa E501
             data,
             content_type=content_type
         )
-        msg = UserMessage.from_dict(resp)
+        msg: UserMessage = UserMessage.from_dict(resp)
         self.__post_sent(msg)
         return msg
 
@@ -379,8 +381,12 @@ class TextChannel(Channel):
 
     @overload
     async def edit(
-            self, name: str = None, type: ChannelType = None,
-            position: int = None, topic: str = None, nsfw: bool = None,
+            self,
+            name: str = None,
+            type: ChannelType = None,
+            position: int = None,
+            topic: str = None,
+            nsfw: bool = None,
             rate_limit_per_user: int = None,
             permissions_overwrites: List[Overwrite] = None,
             parent_id: Snowflake = None,
