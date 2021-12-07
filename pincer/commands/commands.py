@@ -784,11 +784,12 @@ class ChatCommandHandler(metaclass=Singleton):
 
         def predicate(target: AppCommand) -> bool:
             for reg_cmd in registered_commands:
-                reg_cmd: AppCommand = reg_cmd
                 if target == reg_cmd:
                     return False
+
                 elif target.name == reg_cmd.name:
                     keep.append(target)
+
             return True
 
         to_remove = list(filter(predicate, self._api_commands))
