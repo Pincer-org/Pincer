@@ -222,7 +222,7 @@ class Timestamp:
         """
         return self.__epoch < other.__epoch
 
-    def __eq__(self, other: Timestamp) -> bool:
+    def __eq__(self, other: object) -> bool:
         # TODO: fix docs
         """
 
@@ -234,9 +234,12 @@ class Timestamp:
         -------
 
         """
+        if not isinstance(other, Timestamp):
+            return False
+
         return self.__epoch == other.__epoch
 
-    def __ne__(self, other: Timestamp) -> bool:
+    def __ne__(self, other: object) -> bool:
         # TODO: fix docs
         """
 
@@ -248,4 +251,7 @@ class Timestamp:
         -------
 
         """
+        if not isinstance(other, Timestamp):
+            return True
+
         return self.__epoch != other.__epoch
