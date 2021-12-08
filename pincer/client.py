@@ -951,7 +951,8 @@ class Client(Dispatcher):
             the id of the guild that the bot will leave
         """
         self.http.delete(f"users/@me/guilds/{_id}")
-        self._client.guilds.pop(_id) 
+        self._client.guilds.pop(_id, None)
+
     async def create_group_dm(
         self, access_tokens: List[str], nicks: Dict[Snowflake, str]
     ) -> GroupDMChannel:
@@ -993,7 +994,6 @@ class Client(Dispatcher):
         connections = self.http.get("users/@me/connections")
         for conn in connections:
             yield Connection.from_dict(conn)
-
 
 
 Bot = Client
