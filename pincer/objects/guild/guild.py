@@ -8,10 +8,12 @@ from dataclasses import dataclass, field
 from enum import IntEnum
 from typing import AsyncGenerator, overload, TYPE_CHECKING
 
+from aiohttp import FormData
+
 from .invite import Invite
 from .channel import Channel
 from ..message.emoji import Emoji
-from ..message.file import File
+from ..message.file import File, create_form
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict, remove_none
@@ -1502,7 +1504,6 @@ class Guild(APIObject):
             construct_client_dict(self._client, data)
         )
 
-
     async def list_stickers(self) -> AsyncIterator[Sticker]:
         """|coro|
         Yields sticker objects for the current guild.
@@ -1541,41 +1542,53 @@ class Guild(APIObject):
         self,
         name: str,
         tags: str,
-        file,
-        description: str = "",
+        description: str,
+        file: File,
         reason: Optional[str] = None,
     ) -> Sticker:
-        """NOT IMPLEMENTED: DOES NOT WORK"""
-        raise NotImplementedError
-        # TODO: Fix this once File is fixed
-        # """|coro|
-        # Create a new sticker for the guild.
-        # Requires the ``MANAGE_EMOJIS_AND_STICKERS permission``.
-        #
-        # Parameters
-        # ----------
-        # name : str
-        #     name of the sticker (2-30 characters)
-        # tags : str
-        #     autocomplete/suggestion tags for the sticker (max 200 characters)
-        # file :
-        #     the sticker file to upload, must be a PNG, APNG, or Lottie JSON file, max 500 KB
-        # description : Optional[:class:`str`]
-        #     description of the sticker (empty or 2-100 characters) |default| :data:`""`
-        # reason : Optional[:class:`str`] |default| :data:`None`
-        #     reason for creating the sticker
-        #
-        # Returns
-        # -------
-        # :class:`~pincer.objects.message.sticker.Sticker`
-        #     the newly created sticker
-        # """
-        # sticker = await self._http.post(
-        #     f"guilds/{self.id}/stickers",
-        #     headers=remove_none({"X-Audit-Log-Reason": reason})
-        # )
-        #
-        # return Sticker.from_dict(sticker)
+        """|coro|
+        Create a new sticker for the guild.
+        Requires the ``MANAGE_EMOJIS_AND_STICKERS permission``.
+
+        Parameters
+        ----------
+        name : str
+            name of the sticker (2-30 characters)
+        tags : str
+            autocomplete/suggestion tags for the sticker (max 200 characters)
+        file : :class:`~pincer.objects.message.file.File`
+            the sticker file to upload, must be a PNG, APNG, or Lottie JSON file, max 500 KB
+        description : str
+            description of the sticker (empty or 2-100 characters) |default| :data:`""`
+        reason : Optional[:class:`str`] |default| :data:`None`
+            reason for creating the sticker
+
+        Returns
+        -------
+        :class:`~pincer.objects.message.sticker.Sticker`
+            the newly created sticker
+        """  # noqa: E501
+
+        form = FormData()
+        form.add_field("name", name)
+        form.add_field("tags", tags)
+        form.add_field("description", description)
+        form.add_field(
+            "file",
+            file.content,
+            content_type=file.content_type
+        )
+
+        payload = form()
+
+        sticker = await self._http.post(
+            f"guilds/{self.id}/stickers",
+            data=payload,
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            content_type=payload.content_type
+        )
+
+        return Sticker.from_dict(sticker)
 
     async def delete_sticker(self, _id: Snowflake):
         """|coro|
