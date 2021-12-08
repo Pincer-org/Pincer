@@ -890,7 +890,9 @@ class Client(Dispatcher):
             if changed may cause the user's discriminator to be randomized.
             |default| :data:`None`
         avatar : Optional[:class:``]
-            if passed, modifies the user's avatar |default| :data:`None`
+            if passed, modifies the user's avatar
+            a data URI scheme of JPG, GIF or PNG
+            |default| :data:`None`
 
         Returns
         -------
