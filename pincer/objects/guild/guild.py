@@ -19,10 +19,11 @@ from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import Any, Dict, List, Optional, Tuple, Union, Generator
-    from .channel import PublicThread, PrivateThread, ChannelType
+    from collections.abc import AsyncIterator
 
     from .audit_log import AuditLog
     from .ban import Ban
+    from .channel import PublicThread, PrivateThread, ChannelType
     from .member import GuildMember
     from .features import GuildFeature
     from .overwrite import Overwrite
@@ -608,7 +609,7 @@ class Guild(APIObject):
 
         return threads, members
 
-    async def list_guild_members(self, limit: int = 1, after: int = 0):
+    async def list_guild_members(self, limit: int = 1, after: int = 0) -> AsyncIterator[GuildMember]:
         """|coro|
         Returns a list of guild member objects that are members of the guild.
 
@@ -618,6 +619,11 @@ class Guild(APIObject):
             max number of members to return (1-1000) |default| :data:`1`
         after : int
             the highest user id in the previous page |default| :data:`0`
+        
+        Yields
+        ------
+        :class:`~pincer.objects.guild.member.GuildMember`
+            the guild member object that is in the guild
         """
 
         members = await self._http.get(
@@ -634,7 +640,7 @@ class Guild(APIObject):
         self, 
         query: str,
         limit: Optional[int] = None
-    ) -> AsyncGenerator[GuildMember, None]:
+    ) -> AsyncIterator[GuildMember]:
         """|coro|
         Returns a list of guild member objects whose
         username or nickname starts with a provided string.
@@ -645,10 +651,11 @@ class Guild(APIObject):
             Query string to match username(s) and nickname(s) against.
         limit : Optional[int]
             max number of members to return (1-1000) |default| :data:`1`
-        Returns
+            
+        Yields
         -------
-        AsyncGenerator[:class:`~pincer.objects.guild.member.GuildMember`, :data:`None`]
-            list of guild member objects
+        :class:`~pincer.objects.guild.member.GuildMember`
+            guild member objects
         """
 
         data = await self._http.get(
