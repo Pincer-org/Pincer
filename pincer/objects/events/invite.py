@@ -33,7 +33,7 @@ class InviteCreateEvent(APIObject):
     max_uses: :class:`int`
         The maximum number of times the invite can be used
     temporary: :class:`bool`
-        Whether or not the invite is temporary (invited users will
+        Whether the invite is temporary (invited users will
         be kicked on disconnect unless they're assigned a role)
     guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The guild of the invite

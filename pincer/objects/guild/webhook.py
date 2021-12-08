@@ -35,12 +35,12 @@ class WebhookCompatibility(Enum):
 
 
 class WebhookType(IntEnum):
-    """Represents the type of a webhook.
+    """Represents the type of webhook.
 
     Attributes
     ----------
     INCOMING:
-        Incoming Webhooks can post messages to channels with a
+        Incoming Webhooks can post messages to channel with a
         generated token.
     CHANNEL_FOLLOWER:
         Channel Follower Webhooks are internal webhooks used with

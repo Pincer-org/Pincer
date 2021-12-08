@@ -27,7 +27,7 @@ class Connection(APIObject):
     name: :class:`str`
         The username of the connection account
     type: :class:`str`
-        The service of the connection (twitch, youtube)
+        The service of the connection (twitch, YouTube)
     verified: :class:`bool`
         Whether the connection is verified
     friend_sync: :class:`bool`

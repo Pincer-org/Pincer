@@ -66,7 +66,7 @@ class RateLimiter:
         endpoint : str
             The endpoint
         method : :class:`~pincer.core.http.HttpCallable`
-            The method used on the endpoint (Eg. ``Get``, ``Post``, ``Patch``)
+            The method used on the endpoint (E.g. ``Get``, ``Post``, ``Patch``)
         header : :class:`aiohttp.typedefs.CIMultiDictProxy`
             The headers from the response
         """
@@ -105,7 +105,7 @@ class RateLimiter:
         endpoint : str
             The endpoint
         method : :class:`~pincer.core.http.HttpCallable`
-            The method used on the endpoint (Eg. ``Get``, ``Post``, ``Patch``)
+            The method used on the endpoint (E.g. ``Get``, ``Post``, ``Patch``)
         """
         bucket_id = self.bucket_map.get((endpoint, method))
 

@@ -86,7 +86,7 @@ class HTTPMeta(type):
             if mapping.get("__annotations__") and \
                     (value := mapping["__annotations__"].get(key)):
                 # We want to keep the type annotations of the objects
-                # tho, so lets statically store them so we can read
+                # tho, so lets statically store them, so we can read
                 # them later.
                 HTTPMeta.__ori_annotations.update({key: value})
                 del mapping["__annotations__"][key]

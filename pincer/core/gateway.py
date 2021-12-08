@@ -268,7 +268,7 @@ class Dispatcher:
 
     def start_loop(self, *, loop: AbstractEventLoop = None):
         """Instantiate the dispatcher, this will create a connection to the
-        Discord websocket API on behalf of the client who's token has
+        Discord websocket API on behalf of the client whose token has
         been passed.
 
         Parameters

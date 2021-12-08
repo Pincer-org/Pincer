@@ -166,7 +166,7 @@ class UpdatePresence(APIObject):
         the user's new status
 
     afk:
-        whether or not the client is afk
+        whether the client is afk
     """
     activities: List[Activity]
     status: StatusType

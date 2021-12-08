@@ -20,7 +20,7 @@ class _Processable(ABC):
     @abstractmethod
     def process(self, event_name: str, event_value: Any):
         """
-        Method that is ran when an event is received from discord.
+        Method that is run when an event is received from discord.
 
         Parameters
         ----------
@@ -59,7 +59,7 @@ class _Processable(ABC):
 
 def _lowest_value(*args):
     """
-    Returns lowest value from list of numbers. ``None`` is not counted as a
+    Returns the lowest value from list of numbers. ``None`` is not counted as a
     value. ``None`` is returned if all arguments are ``None``.
     """
     args_without_none = [n for n in args if n is not None]

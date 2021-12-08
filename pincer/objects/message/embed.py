@@ -231,7 +231,7 @@ class EmbedField:
     value: :class:`str`
         The text in the field
     inline: APINullable[:class:`bool`]
-        Whether or not this field should display inline
+        Whether this field should display inline
 
     Raises
     ------
@@ -420,7 +420,7 @@ class Embed(APIObject):
             url: APINullable[str] = MISSING,
             proxy_url: APINullable[str] = MISSING,
             width: APINullable[int] = MISSING
-    ) -> Embed:  # ? its normally smaller in the corner?
+    ) -> Embed:  # ? it's normally smaller in the corner?
         """Sets the thumbnail of the embed.
         This image is bigger than the ``image`` property.
 
@@ -494,7 +494,7 @@ class Embed(APIObject):
         value: :class:`str`
             The text in the field
         inline: APINullable[:class:`bool`]
-            Whether or not this field should display inline
+            Whether this field should display inline
 
         Raises
         ------

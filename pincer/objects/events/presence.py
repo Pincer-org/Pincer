@@ -143,9 +143,9 @@ class ActivityFlags(IntEnum):
 
 @dataclass(repr=False)
 class ActivityButton(APIObject):
-    """When received over the gateway, the buttons field is an array
+    """When received over the gateway, the buttons' field is an array
     of strings, which are the button labels. Bots cannot access
-    a user's activity button URLs. When sending, the buttons field
+    a user's activity button URLs. When sending, the buttons' field
     must be an array of this object.
 
     Attributes
@@ -255,7 +255,7 @@ class PresenceUpdateEvent(APIObject):
     status: :class:`str`
         Either "idle", "dnd", "online", or "offline"
     activities: List[:class:`~pincer.objects.events.presence.Activity`]
-        User's current activities
+        User's current activities'
     client_status: :class:`~pincer.objects.events.presence.ClientStatus`
         User's platform-dependent status
     """
