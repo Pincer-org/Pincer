@@ -268,8 +268,9 @@ class Client(Dispatcher):
         InvalidEventName
             If the function name is not a valid event (on_x)
         """
-        if not iscoroutinefunction(coroutine) and not isasyncgenfunction(
-            coroutine
+        if (
+            not iscoroutinefunction(coroutine)
+            and not isasyncgenfunction(coroutine)
         ):
             raise TypeError(
                 "Any event which is registered must be a coroutine function"
