@@ -9,7 +9,7 @@ from typing import Protocol, TYPE_CHECKING
 
 from aiohttp import ClientSession, ClientResponse
 
-# Im open for ideas on how to get __version__ without doing this
+# I'm open for ideas on how to get __version__ without doing this
 import pincer
 from . import __package__
 from .ratelimiter import RateLimiter
@@ -120,7 +120,7 @@ class HTTPClient:
         Send an api request to the Discord REST API.
 
         method:
-            The method for the request. (eg GET or POST)
+            The method for the request. (e.g. GET or POST)
 
         endpoint:
             The endpoint to which the request will be sent.
@@ -338,12 +338,12 @@ class HTTPClient:
     async def options(self, route: str) -> Optional[Dict]:
         """|coro|
 
-        Sends a options request to a Discord REST endpoint.
+        Sends an options request to a Discord REST endpoint.
 
         Parameters
         ----------
         route : :class:`str`
-            The Discord REST endpoint to send a options request to.
+            The Discord REST endpoint to send an options request to.
 
         Returns
         -------

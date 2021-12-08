@@ -94,7 +94,7 @@ class Channel(APIObject):  # noqa E501
         automatically archive the thread after recent activity, can be set to:
         60, 1440, 4320, 10080
     guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
-        The id of the guild (may be missing for some channel objects received
+        The id of the guild (maybe missing for some channel objects received
         over gateway guild dispatches)
     icon: APINullable[Optional[:class:`str`]]
         Icon hash

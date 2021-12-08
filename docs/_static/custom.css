@@ -141,6 +141,9 @@ main .py-attribute-table-column > ul {
 .admonition {
     background-color: var(--blue-6);
 }
+body[data-theme="light"] .admonition.note .literal {
+ color: initial;
+}
 
 .sidebar-logo-container {
     animation: spinFade 1s cubic-bezier(.35,-0.21,.04,1.52);

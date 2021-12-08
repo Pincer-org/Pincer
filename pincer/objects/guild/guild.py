@@ -171,7 +171,6 @@ class SystemChannelFlags(IntEnum):
     SUPPRESS_JOIN_NOTIFICATION_REPLIES = 1 << 3
 
 
-
 @dataclass(repr=False)
 class GuildPreview(APIObject):
     """Represents a guild preview.
@@ -639,7 +638,7 @@ class Guild(APIObject):
         Yields
         -------
         AsyncGenerator[:class:`~pincer.objects.guild.role.Role`, :data:`None`]
-            An async generator of all of the guild's role objects.
+            An async generator of all the guild's role objects.
         """
         data = await self._http.patch(
             f"guilds/{self.id}/roles",

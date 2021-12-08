@@ -18,10 +18,8 @@ Make your changes to the file(s) you'd like to update to solve an issue
 or add a new feature. When writing docstrings, please use the 
 [numpydocs](https://numpydoc.readthedocs.io/en/latest/format.html) style guide.
 
-We recommend you using [Gitmoji](https://gitmoji.dev/) for your commits as it 
+When contributing, make sure to use [Gitmoji](https://gitmoji.dev/) for your commits as it 
 helps to organize them by categories.
-If you don't want to use it, we will squash your commits for a cleaner 
-history.
 
 ## Open a pull request
 

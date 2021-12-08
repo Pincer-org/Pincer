@@ -79,7 +79,7 @@ class MessageContext:
         Parameters
         ----------
         message :class:`~pincer.utils.convert_message.MessageConvertable`
-            The message to sent.
+            The message to send.
         """
         return await self.interaction.followup(message)
 

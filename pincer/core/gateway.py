@@ -81,7 +81,7 @@ class Dispatcher:
                 with the Discord API.
             payload : :class:`~pincer.core.dispatch.GatewayDispatch`
                 The received payload from Discord.
-            """ # noqa: E501
+            """  # noqa: E501
             _log.debug("Sending authentication/identification message.")
 
             await socket.send(self.__hello_socket)
@@ -145,12 +145,16 @@ class Dispatcher:
         This method gets invoked for every message that is received from
         Discord.
 
-        :param socket:
-            The current socket, which can be used to interact with
-            the Discord API.
-        :param payload:
+        Parameters
+        ----------
+        socket : :class:`~ws:websockets.legacy.client.WebSocketClientProtocol`
+            The current socket, which can be used to interact
+            with the Discord API.
+
+        payload : :class:`~pincer.core.dispatch.GatewayDispatch`
             The received payload from Discord.
-        :param loop:
+
+        loop : :class:`~asyncio.AbstractEventLoop`
             The current async loop on which the future is bound.
         """
         _log.debug(
@@ -186,7 +190,9 @@ class Dispatcher:
         The main event loop.
         This handles all interactions with the Websocket API.
 
-        :param loop:
+        Parameters
+        ----------
+        loop : :class:`~asyncio.AbstractEventLoop`
             The loop in which the dispatcher is running.
         """
         _log.debug(
@@ -262,7 +268,7 @@ class Dispatcher:
 
     def start_loop(self, *, loop: AbstractEventLoop = None):
         """Instantiate the dispatcher, this will create a connection to the
-        Discord websocket API on behalf of the client who's token has
+        Discord websocket API on behalf of the client whose token has
         been passed.
 
         Parameters
