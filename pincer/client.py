@@ -929,7 +929,6 @@ class Client(Dispatcher):
         ------
         :class:`~pincer.objects.guild.guild.Guild`
             A Partial Guild that the user is in
-
         """
         guilds = await self.http.get(
             "users/@me/guilds?"
