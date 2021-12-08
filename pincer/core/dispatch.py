@@ -75,7 +75,7 @@ class GatewayDispatch:
         """
         loaded_payload: Payload = loads(payload)
         return cls(
-            loaded_payload.get("op"),
+            loaded_payload["op"],
             loaded_payload.get("d"),
             loaded_payload.get("s"),
             loaded_payload.get("t")

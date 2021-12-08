@@ -511,9 +511,9 @@ class Embed(APIObject):
     def add_fields(
             self,
             field_list: Union[Dict[Any, Any], Iterable[Iterable[Any, Any]]],
-            checks: Optional[Callable[[Any], Any]] = bool,
-            map_title: Optional[Callable[[Any], str]] = str,
-            map_values: Optional[Callable[[Any], str]] = str,
+            checks: Callable[[Any], Any] = bool,
+            map_title: Callable[[Any], str] = str,
+            map_values: Callable[[Any], str] = str,
             inline: bool = True
     ) -> Embed:
         """Add multiple fields from a list,

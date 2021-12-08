@@ -16,6 +16,10 @@ if TYPE_CHECKING:
 
 
 class _Processable(ABC):
+    event_name: str
+    check: Optional[CheckFunction]
+    timeout: Optional[float]
+    event: Event
 
     @abstractmethod
     def process(self, event_name: str, event_value: Any):

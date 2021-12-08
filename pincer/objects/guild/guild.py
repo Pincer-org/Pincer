@@ -360,7 +360,7 @@ class Guild(APIObject):
     guild_scheduled_events: APINullable[List[Any]] = MISSING
     lazy: APINullable[bool] = MISSING
     premium_progress_bar_enabled: APINullable[bool] = MISSING
-    guild_hashes: APINullable[Dict[Any]] = MISSING
+    guild_hashes: APINullable[Dict[Any, Any]] = MISSING
     afk_channel_id: APINullable[Snowflake] = MISSING
     application_id: APINullable[Snowflake] = MISSING
     embedded_activities: APINullable[List[Any]] = MISSING
@@ -374,7 +374,7 @@ class Guild(APIObject):
     system_channel_id: APINullable[Snowflake] = MISSING
     vanity_url_code: APINullable[str] = MISSING
 
-    application_command_counts: APINullable[Dict[Any]] = MISSING
+    application_command_counts: APINullable[Dict[Any, Any]] = MISSING
     application_command_count: APINullable[int] = MISSING
     approximate_member_count: APINullable[int] = MISSING
     approximate_presence_count: APINullable[int] = MISSING
@@ -423,7 +423,7 @@ class Guild(APIObject):
         data = await client.http.get(f"/guilds/{_id}")
         channel_data = await client.http.get(f"/guilds/{_id}/channels")
 
-        data["channels"]: List[Channel] = [
+        data["channels"] = [
             Channel.from_dict(construct_client_dict(client, i))
             for i in (channel_data or [])
         ]
@@ -1082,7 +1082,9 @@ class Guild(APIObject):
         data = await self._http.get(f"guilds/{self.id}/vanity-url")
         return Invite.from_dict(construct_client_dict(self._client, data))
 
-    async def get_widget_image(self, style: Optional[str] = "shield") -> str:  # TODO Replace str with ImageURL object
+    async def get_widget_image(
+        self, style: Optional[str] = "shield"
+    ) -> JsonDict:  # TODO Replace str with ImageURL object
         """|coro|
         Returns a PNG image widget for the guild.
         Requires no permissions or authentication.
