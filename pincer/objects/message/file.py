@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING
 from aiohttp import FormData, Payload
 
 from ...exceptions import ImageEncodingError
+from ...utils.types import JsonDict
 
 if TYPE_CHECKING:
     from typing import Any, Dict, List, Optional, Tuple
@@ -32,7 +33,7 @@ except (ModuleNotFoundError, ImportError):
 
 
 def create_form(
-    json_payload: Dict[Any], files: List[File]
+    json_payload: JsonDict, files: List[File]
 ) -> Tuple[str, Payload]:
     """
     Creates a aiohttp payload from an array of File objects.

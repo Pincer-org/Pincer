@@ -14,12 +14,11 @@ from typing import (
 )
 
 from .conversion import convert
+from .types import MissingType, MISSING, TypeCache, JsonDict
 from ..exceptions import InvalidArgumentAnnotation
 
 if TYPE_CHECKING:
-    from .types import MissingType, MISSING, TypeCache, JsonDict
     from ..client import Client
-    from ..core.http import HTTPClient
 
 T = TypeVar("T")
 

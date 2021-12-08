@@ -14,9 +14,10 @@ from ..message.file import File
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict, remove_none
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from ...utils.types import MISSING, JsonDict
+    from ...utils.types import JsonDict
     from typing import Any, Dict, List, Optional, Union
 
     from .audit_log import AuditLog

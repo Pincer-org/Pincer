@@ -104,7 +104,7 @@ class _Event(_Processable):
         """Waits until ``self.event`` is set."""
         await self.event.wait()
 
-    def process(self, event_name: str, event_value: Any) -> bool:
+    def process(self, event_name: str, event_value: Any):
         # TODO: fix docs
         """
 

@@ -41,7 +41,7 @@ CheckFunction = Optional[Callable[[Any], bool]]
 class Singleton(type):
     # Thanks to this stackoverflow answer (method 3):
     # https://stackoverflow.com/q/6760685/12668716
-    _instances = {}
+    _instances: Dict[Any, Any] = {}
 
     def __call__(cls, *args, **kwargs):
         if cls not in cls._instances:
@@ -53,7 +53,7 @@ class Singleton(type):
 
 
 class TypeCache(metaclass=Singleton):
-    cache = {}
+    cache: Dict[Any, Any] = {}
 
     def __init__(self):
         # Register all known types to the cache. This gets used later

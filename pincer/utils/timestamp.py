@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Optional, TypeVar, Union
+from typing import Optional, TypeVar, Union, Any
 
 DISCORD_EPOCH = 1420070400
 TS = TypeVar("TS", str, datetime, float, int)
@@ -121,7 +121,7 @@ class Timestamp:
 
         return datetime.now()
 
-    def __getattr__(self, key: str) -> int:
+    def __getattr__(self, key: str) -> Any:
         # TODO: fix docs
         """
 
