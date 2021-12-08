@@ -7,8 +7,17 @@ from __future__ import annotations
 from json import dumps, loads
 from typing import TYPE_CHECKING
 
+
 if TYPE_CHECKING:
-    from typing import Any, Dict, Optional, Union
+    from pincer.utils.types import JsonDict
+    from typing import Any, Dict, Optional, Union, TypedDict
+
+
+class Payload(TypedDict):
+    op: int
+    d: Optional[Union[int, JsonDict]]
+    s: Optional[int]
+    t: Optional[str]
 
 
 class GatewayDispatch:
@@ -64,7 +73,7 @@ class GatewayDispatch:
         :class:`~pincer.core.dispatch.GatewayDispatch`
             The new class.
         """
-        loaded_payload: Dict[str, Union[int, str, Dict[str, Any]]] = loads(payload)
+        loaded_payload: Payload = loads(payload)
         return cls(
             loaded_payload.get("op"),
             loaded_payload.get("d"),
