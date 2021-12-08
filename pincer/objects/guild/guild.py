@@ -7,8 +7,8 @@ from dataclasses import dataclass, field
 from enum import IntEnum
 from typing import AsyncGenerator, overload, TYPE_CHECKING
 
-from .invite import Invite
 from .channel import Channel
+from .invite import Invite
 from ..message.emoji import Emoji
 from ..message.file import File
 from ...exceptions import UnavailableGuildError
@@ -37,7 +37,7 @@ if TYPE_CHECKING:
     from ..user.voice_state import VoiceState
     from ...client import Client
     from ...utils.timestamp import Timestamp
-    from ...utils.types import APINullable, JSONSerializable
+    from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
 
 

@@ -23,7 +23,6 @@ MISSING = MissingType()
 
 T = TypeVar("T")
 
-JSONSerializable = TypeVar("JSONSerializable", str, int, float, list, dict, bool, None)
 JsonVal = Optional[Union[str, int, float, bool, Dict[str, Any], List[Any]]]
 JsonDict = Dict[str, JsonVal]
 
