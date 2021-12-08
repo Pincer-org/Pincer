@@ -195,3 +195,10 @@ class ClientCommandStructure:
     cooldown: int
     cooldown_scale: float
     cooldown_scope: ThrottleScope
+
+
+__all__ = (
+    "AppCommandType", "AppCommandOptionType", "AppCommandInteractionDataOption",
+    "AppCommandOptionChoice", "AppCommandOption", "AppCommand",
+    "ClientCommandStructure"
+)
