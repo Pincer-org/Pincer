@@ -13,7 +13,7 @@ from aiohttp import FormData
 from .invite import Invite
 from .channel import Channel
 from ..message.emoji import Emoji
-from ..message.file import File, create_form
+from ..message.file import File
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict, remove_none
