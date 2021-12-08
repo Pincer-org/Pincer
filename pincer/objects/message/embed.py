@@ -23,11 +23,15 @@ def _field_size(_field: str) -> int:
     The Discord API removes white space
         when counting the length of a field.
 
-    :param _field:
-        The field.
+    Parameters
+    ----------
+    _field: str
+        The field to check the length of.
 
-    :return:
-        Length of the string without white space.
+    Returns
+    -------
+    int
+        The length of the field without white space.
     """
     return 0 if _field == MISSING else len(_field.strip())
 
@@ -37,10 +41,14 @@ def _is_valid_url(url: str) -> bool:
     Checks whether the url is a proper and valid url.
     (matches for http and attachment protocol.
 
-    :param url:
+    Parameters
+    ----------
+    url: str
         The url which must be checked.
 
-    :return:
+    Returns
+    -------
+    bool
         Whether the provided url is valid.
     """
     stmt = (

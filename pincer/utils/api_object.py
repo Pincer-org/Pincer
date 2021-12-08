@@ -32,8 +32,15 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
     all values that are None
     Modification of _asdict_inner from dataclasses
 
-    :param obj:
-        Dataclass obj
+    Parameters
+    ----------
+
+    obj: Generic[T]
+        The object to convert
+
+    Returns
+    -------
+        A dict without None values
     """
 
     if _is_dataclass_instance(obj):
@@ -116,7 +123,7 @@ class APIObject(metaclass=HTTPMeta):
         Returns
         -------
         Tuple[:class:`type`]
-            A collection of type annotation(s). Will most of the times
+            A collection of type annotation(s). Will most of the time
             consist of 1 item.
 
         Raises
