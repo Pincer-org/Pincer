@@ -2,12 +2,12 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 from inspect import signature, isclass
-from typing import Callable
+from typing import Callable, Any
 
 from .insertion import should_pass_cls
 
 
-def get_signature_and_params(func: Callable):
+def get_signature_and_params(func: Callable[[Any], Any]):
     """Get the parameters and signature from a coroutine.
 
     func: Callable

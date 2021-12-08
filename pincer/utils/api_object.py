@@ -25,7 +25,7 @@ T = TypeVar("T")
 _log = logging.getLogger(__package__)
 
 
-def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
+def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple[Any], Dict[Any, Any], T]:
     """
     Returns a dict from a dataclass that ignores
     all values that are None
@@ -141,7 +141,7 @@ class APIObject(metaclass=HTTPMeta):
 
         return arg_type,
 
-    def __attr_convert(self, attr_value: Dict, attr_type: T) -> T:
+    def __attr_convert(self, attr_value: Dict[Any], attr_type: T) -> T:
         """Convert an attribute to the requested attribute type using
         the factory or the __init__.
 

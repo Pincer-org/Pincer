@@ -357,13 +357,13 @@ class Guild(APIObject):
     preferred_locale: APINullable[str] = MISSING
     roles: APINullable[List[Role]] = MISSING
 
-    guild_scheduled_events: APINullable[List] = MISSING
+    guild_scheduled_events: APINullable[List[Any]] = MISSING
     lazy: APINullable[bool] = MISSING
     premium_progress_bar_enabled: APINullable[bool] = MISSING
-    guild_hashes: APINullable[Dict] = MISSING
+    guild_hashes: APINullable[Dict[Any]] = MISSING
     afk_channel_id: APINullable[Snowflake] = MISSING
     application_id: APINullable[Snowflake] = MISSING
-    embedded_activities: APINullable[List] = MISSING
+    embedded_activities: APINullable[List[Any]] = MISSING
     banner: APINullable[str] = MISSING
     description: APINullable[str] = MISSING
     discovery_splash: APINullable[str] = MISSING
@@ -374,7 +374,7 @@ class Guild(APIObject):
     system_channel_id: APINullable[Snowflake] = MISSING
     vanity_url_code: APINullable[str] = MISSING
 
-    application_command_counts: APINullable[Dict] = MISSING
+    application_command_counts: APINullable[Dict[Any]] = MISSING
     application_command_count: APINullable[int] = MISSING
     approximate_member_count: APINullable[int] = MISSING
     approximate_presence_count: APINullable[int] = MISSING

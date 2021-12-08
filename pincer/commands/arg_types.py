@@ -8,7 +8,7 @@ from ..objects.app.command import AppCommandOptionChoice
 
 
 class _CommandTypeMeta(type):
-    def __getitem__(cls, args: Union[Tuple, Any]):
+    def __getitem__(cls, args: Union[Tuple[Any], Any]):
         if not isinstance(args, tuple):
             args = (args,)
 

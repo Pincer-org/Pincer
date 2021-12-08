@@ -58,7 +58,7 @@ class RateLimiter:
         self,
         endpoint: str,
         method: HttpCallable,
-        header: Dict
+        header: Dict[str, str]
     ):
         """
         Parameters

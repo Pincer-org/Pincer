@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from ..message.file import File, create_form
 from ...exceptions import CommandReturnIsEmpty
+from ...utils.types import JsonDict
 
 if TYPE_CHECKING:
     from typing import Dict, Union, List, Optional, Tuple
@@ -134,7 +135,7 @@ class Message:
 
     def serialize(
         self, message_type: Optional[CallbackType] = None
-    ) -> Tuple[str, Union[Payload, Dict]]:
+    ) -> Tuple[str, Union[Payload, JsonDict]]:
         """
         Parameters
         ----------
