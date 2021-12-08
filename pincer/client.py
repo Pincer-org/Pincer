@@ -497,7 +497,7 @@ class Client(Dispatcher):
             raise RuntimeError(f"Middleware `{key}` has not been registered.")
 
         if next_call.startswith("on_"):
-            return (next_call, ret_object)
+            return next_call, ret_object
 
         return await self.handle_middleware(
             payload, next_call, *arguments, **params
@@ -856,5 +856,6 @@ class Client(Dispatcher):
             A Webhook object.
         """
         return await Webhook.from_id(self, id, token)
+
 
 Bot = Client
