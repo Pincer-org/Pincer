@@ -451,6 +451,8 @@ class VoiceChannel(Channel):
         """
         return await super().edit(**kwargs)
 
+class GroupDMChannel(Channel):
+    """A subclass of ``Channel`` for Group DMs"""
 
 class CategoryChannel(Channel):
     """A subclass of ``Channel`` for categories channels
@@ -513,6 +515,7 @@ class ChannelMention(APIObject):
 _channel_type_map: Dict[ChannelType, Channel] = {
     ChannelType.GUILD_TEXT: TextChannel,
     ChannelType.GUILD_VOICE: VoiceChannel,
+    ChannelType.GROUP_DM: GroupDMChannel,
     ChannelType.GUILD_CATEGORY: CategoryChannel,
     ChannelType.GUILD_NEWS: NewsChannel
 }
