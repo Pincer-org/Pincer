@@ -43,7 +43,7 @@ class StickerFormatType(IntEnum):
     APNG:
         Sticker is animated with APNG format.
     LOTTIE:
-        Sticker is animated with with LOTTIE format. (vector based)
+        Sticker is animated with LOTTIE format. (vector based)
     """
 
     PNG = 1

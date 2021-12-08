@@ -440,13 +440,13 @@ class Interaction(APIObject):
     async def followup(self, message: MessageConvertable) -> UserMessage:
         """|coro|
 
-        Create a follow up message for the interaction.
+        Create a follow-up message for the interaction.
         This allows you to respond with multiple messages.
 
         Parameters
         ----------
         message :class:`~pincer.utils.convert_message.MessageConvertable`
-            The message to sent.
+            The message to send.
 
         Returns
         -------

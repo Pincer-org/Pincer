@@ -12,7 +12,7 @@ class Snowflake(int):
     except in some unique scenarios in which child objects
     share their parent's ID.
 
-    Because Snowflake IDs are up to 64 bits in size (e.g. a uint64),
+    Because Snowflake IDs are up to 64 bits in size (e.g. an uint64),
     they are always returned as strings in the HTTP API
     to prevent integer overflows in some languages.
     """
