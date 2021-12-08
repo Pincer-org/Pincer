@@ -41,7 +41,6 @@ class MessageContext:
     """
     # noqa: E501
     author: Union[GuildMember, User]
-    command: ClientCommandStructure
     interaction: Interaction
 
     guild_id: Optional[Snowflake] = None

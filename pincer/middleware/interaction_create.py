@@ -7,6 +7,9 @@ import logging
 from inspect import isasyncgenfunction, _empty
 from typing import Dict, Any
 from typing import TYPE_CHECKING
+from pincer.commands.buttons import ButtonHandler, hash_button_id
+
+from pincer.objects.app.interaction_base import InteractionType
 
 
 from ..commands import ChatCommandHandler
@@ -22,6 +25,17 @@ if TYPE_CHECKING:
 
 
 _log = logging.getLogger(__name__)
+
+
+def get_call(interaction: Interaction):
+    if interaction.type == InteractionType.APPLICATION_COMMAND:
+        command = ChatCommandHandler.register.get(interaction.data.name)
+        if command is None:
+            return None
+        return command.call
+
+    elif interaction.type == InteractionType.MESSAGE_COMPONENT:
+        return ButtonHandler.register.get(interaction.data.custom_id)
 
 
 async def interaction_response_handler(
@@ -87,7 +101,7 @@ async def interaction_handler(
     command : :class:`~pincer.utils.types.Coro`
         The coroutine which will be seen as a command.
     """
-    self.throttler.handle(context)
+    # self.throttler.handle(command)
 
     sig, _ = get_signature_and_params(command)
 
@@ -151,16 +165,15 @@ async def interaction_create_middleware(
     interaction: Interaction = Interaction.from_dict(
         construct_client_dict(self, payload.data)
     )
-    print(interaction.type)
 
-    command = ChatCommandHandler.register.get(interaction.data.name)
+    call = get_call(interaction)
 
-    if command:
-        context = interaction.convert_to_message_context(command)
+    context = interaction.get_message_context()
 
+    if call:
         try:
             await interaction_handler(self, interaction, context,
-                                      command.call)
+                                      call)
         except Exception as e:
             if coro := get_index(self.get_event_coro("on_command_error"), 0):
                 params = get_signature_and_params(coro)[1]

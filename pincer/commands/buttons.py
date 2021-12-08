@@ -13,7 +13,7 @@ def hash_button_id(_id):
 # I'm ignoring the name collision so `button(id="str")` is valid code
 def button(func=None, id=None, hash_id=True):
 
-    def wrap(id):
+    def wrap(func, id=None):
         id = hash_button_id(id)
         ButtonHandler().register_id(id, func)
         return func
@@ -21,16 +21,12 @@ def button(func=None, id=None, hash_id=True):
     if func is None:
         return wrap
 
-    return wrap(id)
+    return wrap(func, id)
 
 
 class ButtonHandler(metaclass=Singleton):
 
-    def __init__(self) -> None:
-        self.buttons: Dict[str, Callable] = {}
+    register: Dict[str, Callable] = {}
 
     def register_id(self, _id: str, func: Callable):
-        self.buttons[_id] = func
-
-    def __getitem__(self, _id):
-        return self.buttons[_id]
+        self.register[_id] = func

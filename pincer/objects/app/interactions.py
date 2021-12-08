@@ -203,10 +203,9 @@ class Interaction(APIObject):
 
         return None
 
-    def convert_to_message_context(self, command):
+    def get_message_context(self):
         return MessageContext(
             self.member or self.user,
-            command,
             self,
             self.guild_id,
             self.channel_id
