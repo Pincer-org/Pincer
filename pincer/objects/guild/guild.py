@@ -528,8 +528,10 @@ class Guild(APIObject):
         user_limit : Optional[:class:`int`]
             the user limit of the voice channel (voice only)
         rate_limit_per_user : Optional[:class:`int`]
-            amount of seconds a user has to wait before sending another message (0-21600)
-            bots, as well as users with the permission manage_messages or manage_channel, are unaffected
+            amount of seconds a user has to wait
+            before sending another message (0-21600)
+            bots, as well as users with the permission
+            manage_messages or manage_channel, are unaffected
         position : Optional[:class:`int`]
             sorting position of the channel
         permission_overwrites : Optional[List[:class:`~pincer.objects.guild.overwrite.Overwrite`]]
@@ -722,7 +724,9 @@ class Guild(APIObject):
             headers=remove_none({"X-Audit-Log-Reason": reason})
         )
 
-        return GuildMember.from_dict(construct_client_dict(self._client, data)) if data else None
+        return GuildMember.from_dict(
+            construct_client_dict(self._client, data)
+        ) if data else None
 
     async def modify_current_member(
         self, 
