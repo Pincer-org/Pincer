@@ -587,7 +587,8 @@ class Guild(APIObject):
     async def list_active_threads(self) -> Tuple[
         Generator[Union[PublicThread, PrivateThread]], Generator[GuildMember]]:
         """|coro|
-        Returns all active threads in the guild, including public and private threads.
+        Returns all active threads in the guild,
+        including public and private threads.
         
         Returns
         -------
@@ -597,11 +598,11 @@ class Guild(APIObject):
         data = await self._http.get(f"guilds/{self.id}/threads/active")
 
         threads = (
-            Channel.from_dict(construct_client_dict(self._client, data))
+            Channel.from_dict(construct_client_dict(self._client, channel))
             for channel in data["threads"]
         )
         members = (
-            GuildMember.from_dict(construct_client_dict(self._client, data))
+            GuildMember.from_dict(construct_client_dict(self._client, member))
             for member in data["members"]
         )
 
@@ -624,7 +625,9 @@ class Guild(APIObject):
         )
         
         for member in members:
-            yield GuildMember.from_dict(construct_client_dict(self._client, data))
+            yield GuildMember.from_dict(
+                construct_client_dict(self._client, member)
+            )
         
 
     async def search_guild_members(
@@ -633,7 +636,8 @@ class Guild(APIObject):
         limit: Optional[int] = None
     ) -> AsyncGenerator[GuildMember, None]:
         """|coro|
-        Returns a list of guild member objects whose username or nickname starts with a provided string.
+        Returns a list of guild member objects whose
+        username or nickname starts with a provided string.
 
         Parameters
         ----------
@@ -667,7 +671,8 @@ class Guild(APIObject):
         reason: Optional[str] = None,
     ) -> Optional[GuildMember]:
         """|coro|
-        Adds a user to the guild, provided you have a valid oauth2 access token for the user with the guilds.join scope.
+        Adds a user to the guild, provided you have a
+        valid oauth2 access token for the user with the guilds.join scope.
 
         Parameters
         ----------
@@ -760,7 +765,8 @@ class Guild(APIObject):
     async def remove_guild_member_role(
         self, 
         user_id: int,
-        role_id: int
+        role_id: int,
+        reason: Optional[str] = None
     ) -> None:
         """|coro|
         Removes a role from a guild member.
