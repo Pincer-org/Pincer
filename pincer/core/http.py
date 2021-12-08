@@ -21,6 +21,7 @@ from ..exceptions import (
 )
 
 if TYPE_CHECKING:
+    from ..utils.types import JsonDict
     from typing import Any, Dict, Optional, Union
 
     from aiohttp.client import _RequestContextManager
@@ -38,7 +39,7 @@ class HttpCallable(Protocol):
     def __call__(
             self, url: StrOrURL, *,
             allow_redirects: bool = True,
-            method: Optional[Union[Dict, str, Payload]] = None,
+            method: Optional[Union[JsonDict, str, Payload]] = None,
             **kwargs: Any
     ) -> _RequestContextManager:
         ...
@@ -112,10 +113,10 @@ class HTTPClient:
             method: HttpCallable,
             endpoint: str, *,
             content_type: str = "application/json",
-            data: Optional[Union[Dict, str, Payload]] = None,
+            data: Optional[Union[JsonDict, str, Payload]] = None,
             headers: Optional[Dict[str, Any]] = None,
             __ttl: int = None
-    ) -> Optional[Dict]:
+    ) -> Optional[JsonDict]:
         """
         Send an api request to the Discord REST API.
 
@@ -181,7 +182,7 @@ class HTTPClient:
             content_type: str,
             data: Optional[str],
             __ttl: int,
-    ) -> Optional[Dict]:
+    ) -> Optional[JsonDict]:
         """
         Handle responses from the discord API.
 
@@ -276,8 +277,8 @@ class HTTPClient:
     async def delete(
             self,
             route: str,
-            headers: Optional[Dict[str, Any]] = None
-    ) -> Optional[Dict]:
+            headers: Optional[JsonDict] = None
+    ) -> Optional[JsonDict]:
         """|coro|
 
         Sends a delete request to a Discord REST endpoint.
@@ -301,7 +302,7 @@ class HTTPClient:
             headers=headers
         )
 
-    async def get(self, route: str) -> Optional[Dict]:
+    async def get(self, route: str) -> Optional[JsonDict]:
         """|coro|
 
         Sends a get request to a Discord REST endpoint.
@@ -318,7 +319,7 @@ class HTTPClient:
         """
         return await self.__send(self.__session.get, route)
 
-    async def head(self, route: str) -> Optional[Dict]:
+    async def head(self, route: str) -> Optional[JsonDict]:
         """|coro|
 
         Sends a head request to a Discord REST endpoint.
@@ -335,7 +336,7 @@ class HTTPClient:
         """
         return await self.__send(self.__session.head, route)
 
-    async def options(self, route: str) -> Optional[Dict]:
+    async def options(self, route: str) -> Optional[JsonDict]:
         """|coro|
 
         Sends a options request to a Discord REST endpoint.
@@ -355,10 +356,10 @@ class HTTPClient:
     async def patch(
             self,
             route: str,
-            data: Optional[Dict] = None,
+            data: Optional[JsonDict] = None,
             content_type: str = "application/json",
-            headers: Optional[Dict[str, Any]] = None
-    ) -> Optional[Dict]:
+            headers: Optional[Dict[str, JsonDict]] = None
+    ) -> Optional[JsonDict]:
         """|coro|
 
         Sends a patch request to a Discord REST endpoint.
@@ -391,10 +392,10 @@ class HTTPClient:
     async def post(
             self,
             route: str,
-            data: Optional[Dict] = None,
+            data: Optional[JsonDict] = None,
             content_type: str = "application/json",
-            headers: Optional[Dict[str, Any]] = None
-    ) -> Optional[Dict]:
+            headers: Optional[Dict[str, JsonDict]] = None
+    ) -> Optional[JsonDict]:
         """|coro|
 
         Sends a post request to a Discord REST endpoint
@@ -426,10 +427,10 @@ class HTTPClient:
     async def put(
             self,
             route: str,
-            data: Optional[Dict] = None,
+            data: Optional[JsonDict] = None,
             content_type: str = "application/json",
-            headers: Optional[Dict[str, Any]] = None
-    ) -> Optional[Dict]:
+            headers: Optional[JsonDict] = None
+    ) -> Optional[JsonDict]:
         """|coro|
 
         Sends a put request to a Discord REST endpoint

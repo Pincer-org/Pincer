@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from sys import modules
 from typing import (
-    TYPE_CHECKING, TypeVar, Callable, Coroutine, Any, Union, Optional
+    TypeVar, Callable, Coroutine, Any, Union, Optional, Dict, List
 )
 
 
@@ -24,7 +24,8 @@ MISSING = MissingType()
 T = TypeVar("T")
 
 JSONSerializable = TypeVar("JSONSerializable", str, int, float, list, dict, bool, None)
-
+JsonVal = Optional[Union[str, int, float, bool, Dict[str, Any], List[Any]]]
+JsonDict = Dict[str, JsonVal]
 
 # Represents a value which is optionally returned from the API
 APINullable = Union[T, MissingType]

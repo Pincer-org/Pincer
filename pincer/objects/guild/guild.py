@@ -14,10 +14,9 @@ from ..message.file import File
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict, remove_none
-from ...utils.types import MISSING
-
 
 if TYPE_CHECKING:
+    from ...utils.types import MISSING, JsonDict
     from typing import Any, Dict, List, Optional, Union
 
     from .audit_log import AuditLog
@@ -1061,7 +1060,7 @@ class Guild(APIObject):
         )
         return GuildWidget.from_dict(construct_client_dict(self._client, data))
 
-    async def get_widget(self) -> Dict[str, JSONSerializable]:
+    async def get_widget(self) -> JsonDict:
         """|coro|
         Returns the widget for the guild
         """

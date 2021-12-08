@@ -14,10 +14,10 @@ from typing import (
 )
 
 from .conversion import convert
-from .types import MissingType, MISSING, TypeCache
 from ..exceptions import InvalidArgumentAnnotation
 
 if TYPE_CHECKING:
+    from .types import MissingType, MISSING, TypeCache, JsonDict
     from ..client import Client
     from ..core.http import HTTPClient
 
@@ -271,6 +271,6 @@ class APIObject(metaclass=HTTPMeta):
             )
         )))
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> JsonDict:
         """Transform the current object to a dictionary representation."""
         return _asdict_ignore_none(self)
