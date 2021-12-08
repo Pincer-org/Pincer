@@ -859,7 +859,7 @@ class Client(Dispatcher):
         """
         return await Webhook.from_id(self, id, token)
 
-    async def sticker_packs(self) -> AsyncGenerator[StickerPack, None]:
+    async def sticker_packs(self) -> AsyncIterator[StickerPack]:
         """|coro|
         Yields sticker packs available to Nitro subscribers.
 
