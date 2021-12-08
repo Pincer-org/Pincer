@@ -609,7 +609,11 @@ class Guild(APIObject):
 
         return threads, members
 
-    async def list_guild_members(self, limit: int = 1, after: int = 0) -> AsyncIterator[GuildMember]:
+    async def list_guild_members(
+        self,
+        limit: int = 1,
+        after: int = 0
+    ) -> AsyncIterator[GuildMember]:
         """|coro|
         Returns a list of guild member objects that are members of the guild.
 
