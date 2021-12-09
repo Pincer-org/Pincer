@@ -32,4 +32,3 @@ class ChannelPinsUpdateEvent(APIObject):
 
     guild_id: APINullable[Snowflake] = MISSING
     last_pin_timestamp: APINullable[Timestamp] = MISSING
-

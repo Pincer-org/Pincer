@@ -25,11 +25,13 @@ async def guild_role_create_middleware(self, payload: GatewayDispatch):
         ``on_guild_role_create`` and a ``GuildRoleCreateEvent``
     """  # noqa: E501
 
+    event = GuildRoleCreateEvent.from_dict(construct_client_dict(self, payload.data))
+
+    self.guilds[event.guild_id].roles.append(event.role)
+
     return (
         "on_guild_role_create",
-        GuildRoleCreateEvent.from_dict(
-            construct_client_dict(self, payload.data)
-        )
+        event
     )
 
 

@@ -25,13 +25,7 @@ async def channel_update_middleware(self, payload: GatewayDispatch):
     """
 
     channel = Channel.from_dict(construct_client_dict(self, payload.data))
-
-    if channel.guild_id in self.guilds.keys():
-        guild = self.guilds[channel.guild_id]
-        old = filter(lambda c: c.id == channel.id, guild.channels)
-        if old:
-            guild.channels.remove(old)
-        guild.channels.append(channel)
+    self.channels[channel.id] = channel
 
     return "on_channel_update", channel
 
