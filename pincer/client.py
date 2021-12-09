@@ -875,7 +875,10 @@ class Client(Dispatcher):
         :class:`~pincer.objects.user.user.User`
         """
         return User.from_dict(
-            construct_client_dict(self, self.http.get("users/@me"))
+            construct_client_dict(
+                self, 
+                await self.http.get("users/@me")
+            )
         )
 
     async def modify_current_user(
@@ -949,7 +952,7 @@ class Client(Dispatcher):
         _id : :class:`~pincer.utils.snowflake.Snowflake`
             the id of the guild that the bot will leave
         """
-        self.http.delete(f"users/@me/guilds/{_id}")
+        await self.http.delete(f"users/@me/guilds/{_id}")
         self._client.guilds.pop(_id, None)
 
     async def create_group_dm(
@@ -973,7 +976,7 @@ class Client(Dispatcher):
         :class:`~pincer.objects.guild.channel.GroupDMChannel`
             group DM channel created
         """
-        channel = self.http.post(
+        channel = await self.http.post(
             "users/@me/channels",
             {"access_tokens": access_tokens, "nicks": nicks},
         )
@@ -990,7 +993,7 @@ class Client(Dispatcher):
         :class:`~pincer.objects.user.connection.Connections`
             the connection objects
         """
-        connections = self.http.get("users/@me/connections")
+        connections = await self.http.get("users/@me/connections")
         for conn in connections:
             yield Connection.from_dict(conn)
 
