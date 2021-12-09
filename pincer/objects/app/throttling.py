@@ -39,7 +39,7 @@ class DefaultThrottleHandler(ThrottleInterface, ABC):
 
     @staticmethod
     def get_key_from_scope(ctx: MessageContext) -> Optional[int]:
-        """Retrieve the the appropriate key from the context through the
+        """Retrieve the appropriate key from the context through the
         throttle scope.
 
         Parameters
