@@ -25,11 +25,15 @@ async def guild_stickers_update_middleware(self, payload: GatewayDispatch):
         ``on_guild_sticker_update`` and a ``GuildStickersUpdateEvent``
     """  # noqa: E501
 
+    event = GuildStickersUpdateEvent.from_dict(
+        construct_client_dict(self, payload.data)
+    )
+
+    self.guilds[event.guild_id].stickers = event.stickers
+
     return (
         "on_guild_stickers_update",
-        GuildStickersUpdateEvent.from_dict(
-            construct_client_dict(self, payload.data)
-        )
+        event
     )
 
 

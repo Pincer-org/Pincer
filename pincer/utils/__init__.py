@@ -5,6 +5,7 @@ from .api_object import APIObject, HTTPMeta
 from .color import Color
 from .conversion import convert
 from .event_mgr import EventMgr
+from .replace import replace
 from .directory import chdir
 from .extraction import get_index
 from .insertion import should_pass_cls, should_pass_ctx
@@ -23,5 +24,5 @@ __all__ = (
     "EventMgr", "HTTPMeta", "MISSING", "MissingType", "Snowflake", "Task",
     "TaskScheduler", "Timestamp", "chdir", "choice_value_types", "convert",
     "get_index", "get_params", "get_signature_and_params", "should_pass_cls",
-    "should_pass_ctx"
+    "should_pass_ctx", "replace"
 )
