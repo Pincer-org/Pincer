@@ -19,7 +19,6 @@ from ..exceptions import InvalidArgumentAnnotation
 
 if TYPE_CHECKING:
     from ..client import Client
-    from ..core.http import HTTPClient
 
 T = TypeVar("T")
 
@@ -32,8 +31,15 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
     all values that are None
     Modification of _asdict_inner from dataclasses
 
-    :param obj:
-        Dataclass obj
+    Parameters
+    ----------
+
+    obj: Generic[T]
+        The object to convert
+
+    Returns
+    -------
+        A dict without None values
     """
 
     if _is_dataclass_instance(obj):
@@ -66,6 +72,18 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
         return copy.deepcopy(obj)
 
 
+def get_guild(self):
+    "Return a guild"
+    return self._client.guilds[self.guild_id]
+
+
+def get_channel(self):
+    "Return a channel"
+    return next(
+        filter(lambda c: c.id == self.channel_id, self.guild.channels)
+    )
+
+
 class HTTPMeta(type):
     __meta_items: List[str] = ["_client", "_http"]
     __ori_annotations: Dict[str, type] = {}
@@ -79,7 +97,7 @@ class HTTPMeta(type):
             if mapping.get("__annotations__") and \
                     (value := mapping["__annotations__"].get(key)):
                 # We want to keep the type annotations of the objects
-                # tho, so lets statically store them so we can read
+                # tho, so lets statically store them, so we can read
                 # them later.
                 HTTPMeta.__ori_annotations.update({key: value})
                 del mapping["__annotations__"][key]
@@ -116,7 +134,7 @@ class APIObject(metaclass=HTTPMeta):
         Returns
         -------
         Tuple[:class:`type`]
-            A collection of type annotation(s). Will most of the times
+            A collection of type annotation(s). Will most of the time
             consist of 1 item.
 
         Raises
