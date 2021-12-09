@@ -55,7 +55,7 @@ def sort__all__(content: str) -> str:
 
 
 def main():
-    for directory, _sub_folders, files in os.walk('pincer'):
+    for directory, _sub_folders, files in os.walk('src/pincer'):
         if '__' in directory:
             continue
 
