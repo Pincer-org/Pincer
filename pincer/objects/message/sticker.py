@@ -142,7 +142,7 @@ class Sticker(APIObject):
         :class:`~pincer.objects.message.sticker.Sticker`
             the modified sticker
         """
-        sticker = self._http.patch(
+        sticker = await self._http.patch(
             f"guilds/{self.guild_id}/stickers/{self.id}",
             data=remove_none(
                 {"name": name, "description": description, "tags": tags}
