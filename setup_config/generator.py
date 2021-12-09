@@ -9,7 +9,7 @@ from pincer import __version__
 def get_packages():
     return '\n\t'.join(
         item[0].replace("./", "").replace("\\", ".").replace("/", ".")
-        for item in list(walk('src')) if "__pycache__" not in item[0]
+        for item in list(walk('src/pincer')) if "__pycache__" not in item[0]
     )
 
 
