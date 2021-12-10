@@ -666,7 +666,7 @@ class Guild(APIObject):
 
         data = await self._http.get(
             f"guilds/{id}/members/search?{query=!s}"
-            + (f"&{limit}" if limit else "")
+            + (f"&{limit=}" if limit else "")
         )
 
         for member in data:
@@ -782,7 +782,7 @@ class Guild(APIObject):
         user_id: int,
         role_id: int,
         reason: Optional[str] = None
-    ) -> None:
+    ):
         """|coro|
         Removes a role from a guild member.
 
@@ -804,7 +804,7 @@ class Guild(APIObject):
         self,
         user_id: int,
         reason: Optional[str] = None
-    ) -> None:
+    ):
         """|coro|
         Remove a member from a guild.
 
