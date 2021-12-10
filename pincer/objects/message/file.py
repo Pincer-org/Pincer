@@ -100,7 +100,7 @@ class File:
     filename: Optional[str] = None
 
     @classmethod
-    def from_file(cls, filepath: str, filename: str = None) -> File:
+    def from_file(cls, filepath: str, filename: Optional[str] = None) -> File:
         """Make a ``File`` object from a file stored locally.
 
         Parameters

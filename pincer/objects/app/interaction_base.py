@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
@@ -86,4 +86,4 @@ class MessageInteraction(APIObject):
     name: str
     user: User
 
-    member: APINullable[Dict] = MISSING
+    member: APINullable[Dict[Any]] = MISSING

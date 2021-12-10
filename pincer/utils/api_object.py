@@ -141,7 +141,7 @@ class APIObject(metaclass=HTTPMeta):
 
         return arg_type,
 
-    def __attr_convert(self, attr_value: Dict[Any], attr_type: T) -> T:
+    def __attr_convert(self, attr_value: Dict[Any, Any], attr_type: T) -> T:
         """Convert an attribute to the requested attribute type using
         the factory or the __init__.
 
