@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.guild.channel import Channel
-from ..utils import construct_client_dict, replace
+from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from typing import Tuple

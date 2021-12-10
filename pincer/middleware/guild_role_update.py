@@ -26,10 +26,14 @@ async def guild_role_update_middleware(self, payload: GatewayDispatch):
     """
 
     event = GuildRoleUpdateEvent.from_dict(construct_client_dict(self, payload.data))
-    self.guilds[event.guild_id].roles = [
-        role if role.id != event.role.id else event.role
-        for role in self.guilds[event.guild_id].roles
-    ]
+
+    guild = self.guilds.get(event.guild_id)
+
+    if guild:
+        guild.roles = [
+            role if role.id != event.role.id else event.role
+            for role in guild.roles
+        ]
 
     return (
         "on_guild_role_update",

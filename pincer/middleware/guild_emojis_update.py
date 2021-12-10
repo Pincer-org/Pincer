@@ -29,7 +29,9 @@ async def guild_emojis_update_middleware(self, payload: GatewayDispatch):
         construct_client_dict(self, payload.data)
     )
 
-    self.guild[event.guild_id] = event.emojis
+    guild = self.guild.get(event.guild_id)
+    if guild:
+        guild.emojis = event.emojis
 
     return (
         "on_guild_emojis_update",

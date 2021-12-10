@@ -31,7 +31,7 @@ async def guild_delete_middleware(self, payload: GatewayDispatch):
     self.guilds.pop(guild.id, None)
 
     for channel in self.guild.channels:
-        self.channels.pop(channel.id)
+        self.channels.pop(channel.id, None)
 
     return "on_guild_delete", guild
 

@@ -5,7 +5,7 @@
 
 from ..core.dispatch import GatewayDispatch
 from ..objects import Channel
-from ..utils.conversion import construct_client_dict
+from ..utils import construct_client_dict, replace
 
 
 async def channel_update_middleware(self, payload: GatewayDispatch):
@@ -25,7 +25,16 @@ async def channel_update_middleware(self, payload: GatewayDispatch):
     """
 
     channel = Channel.from_dict(construct_client_dict(self, payload.data))
-    self.channels[channel.id] = channel
+
+    guild = self.guilds.get(channel.guild_id)
+
+    if guild:
+        guild.channels = replace(
+            lambda _channel: _channel.id == channel.id,
+            self.guilds[channel.guild_id].channels,
+            channel
+        )
+        self.channels[channel.id] = channel
 
     return "on_channel_update", channel
 

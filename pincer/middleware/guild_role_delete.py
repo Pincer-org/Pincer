@@ -27,9 +27,12 @@ async def guild_role_delete_middleware(self, payload: GatewayDispatch):
 
     event = GuildRoleDeleteEvent.from_dict(construct_client_dict(self, payload.data))
 
-    self.guilds[event.guild_id].roles = list(filter(
-        lambda role: role.id != event.role_id, self.guilds[event.guild_id].roles
-    ))
+    guild = self.guilds.get(event.guild_id)
+
+    if guild:
+        guild.roles = list(filter(
+            lambda role: role.id != event.role_id, self.guilds[event.guild_id].roles
+        ))
 
     return (
         "on_guild_role_delete",

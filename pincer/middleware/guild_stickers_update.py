@@ -29,7 +29,10 @@ async def guild_stickers_update_middleware(self, payload: GatewayDispatch):
         construct_client_dict(self, payload.data)
     )
 
-    self.guilds[event.guild_id].stickers = event.stickers
+    guild = self.guilds.get(event.guild_id)
+
+    if guild:
+        guild.stickers = event.stickers
 
     return (
         "on_guild_stickers_update",
