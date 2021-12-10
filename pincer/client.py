@@ -566,7 +566,7 @@ class Client(Dispatcher):
         ----------
         _ :
             Socket param, but this isn't required for this handler. So
-            its just a filler parameter, doesn't matter what is passed.
+            it's just a filler parameter, doesn't matter what is passed.
         payload : :class:`~pincer.core.dispatch.GatewayDispatch`
             The payload sent from the Discord gateway, this contains the
             required data for the client to know what event it is and
@@ -583,7 +583,7 @@ class Client(Dispatcher):
         ----------
         _ :
             Socket param, but this isn't required for this handler. So
-            its just a filler parameter, doesn't matter what is passed.
+            it's just a filler parameter, doesn't matter what is passed.
         payload : :class:`~pincer.core.dispatch.GatewayDispatch`
             The payload sent from the Discord gateway, this contains the
             required data for the client to know what event it is and
@@ -857,5 +857,6 @@ class Client(Dispatcher):
             A Webhook object.
         """
         return await Webhook.from_id(self, id, token)
+
 
 Bot = Client
