@@ -145,9 +145,12 @@ class AppCommand(APIObject):
         if self.options is MISSING and self.type is AppCommandType.MESSAGE:
             self.options = []
 
-    def __eq__(self, other: Union[AppCommand, ClientCommandStructure]):
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, ClientCommandStructure):
             other = other.app
+
+        if not isinstance(other, AppCommand):
+            return False
 
         return all(
             self.__getattribute__(prop) == other.__getattribute__(prop)
