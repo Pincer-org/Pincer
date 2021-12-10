@@ -534,3 +534,8 @@ class Interaction(APIObject):
         await self._http.delete(
             f"webhooks/{self._client.bot.id}/{self.token}/messages/{message_id}",
         )
+
+
+__all__ = (
+    "InteractionFlags",
+)
