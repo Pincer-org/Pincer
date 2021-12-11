@@ -3,9 +3,12 @@
 
 from __future__ import annotations
 
+from collections import AsyncIterator
 from dataclasses import dataclass, field
 from enum import IntEnum
 from typing import AsyncGenerator, overload, TYPE_CHECKING
+
+from aiohttp import FormData
 
 from .invite import Invite
 from .channel import Channel
@@ -37,7 +40,8 @@ if TYPE_CHECKING:
     from ..user.integration import Integration
     from ..voice.region import VoiceRegion
     from ..events.presence import PresenceUpdateEvent
-    from ..message.sticker import Sticker
+    from ..message.emoji import Emoji
+    from ..message.sticker import Sticker, StickerPack
     from ..user.voice_state import VoiceState
     from ...client import Client
     from ...utils.timestamp import Timestamp
@@ -352,7 +356,9 @@ class Guild(APIObject):
     system_channel_flags: APINullable[SystemChannelFlags] = MISSING
     explicit_content_filter: APINullable[ExplicitContentFilterLevel] = MISSING
     premium_tier: APINullable[PremiumTier] = MISSING
-    default_message_notifications: APINullable[DefaultMessageNotificationLevel] = MISSING
+    default_message_notifications: APINullable[
+        DefaultMessageNotificationLevel
+    ] = MISSING
     mfa_level: APINullable[MFALevel] = MISSING
     owner_id: APINullable[Snowflake] = MISSING
     afk_timeout: APINullable[int] = MISSING
@@ -824,7 +830,7 @@ class Guild(APIObject):
         self,
         member_id: int,
         reason: str = None,
-        delete_message_days: int = None
+        delete_message_days: int = None,
     ):
         """
         Parameters
@@ -847,9 +853,7 @@ class Guild(APIObject):
             data["delete_message_days"] = delete_message_days
 
         await self._http.put(
-            f"/guilds/{self.id}/bans/{member_id}",
-            data=data,
-            headers=headers
+            f"/guilds/{self.id}/bans/{member_id}", data=data, headers=headers
         )
 
     async def kick(self, member_id: int, reason: Optional[str] = None):
@@ -869,8 +873,7 @@ class Guild(APIObject):
             headers["X-Audit-Log-Reason"] = reason
 
         await self._http.delete(
-            f"/guilds/{self.id}/members/{member_id}",
-            header=headers
+            f"/guilds/{self.id}/members/{member_id}", headers=headers
         )
 
     async def get_roles(self) -> AsyncGenerator[Role, None]:
@@ -934,18 +937,14 @@ class Guild(APIObject):
         """
         ...
 
-    async def create_role(
-        self,
-        reason: Optional[str] = None,
-        **kwargs
-    ) -> Role:
+    async def create_role(self, reason: Optional[str] = None, **kwargs) -> Role:
         return Role.from_dict(
             construct_client_dict(
                 self._client,
                 await self._http.post(
                     f"guilds/{self.id}/roles",
                     data=kwargs,
-                    headers=remove_none({"X-Audit-Log-Reason": reason})
+                    headers=remove_none({"X-Audit-Log-Reason": reason}),
                 ),
             )
         )
@@ -954,7 +953,7 @@ class Guild(APIObject):
         self,
         id: Snowflake,
         reason: Optional[str] = None,
-        position: Optional[int] = None
+        position: Optional[int] = None,
     ) -> AsyncGenerator[Role, None]:
         """|coro|
         Edits the position of a role.
@@ -976,7 +975,7 @@ class Guild(APIObject):
         data = await self._http.patch(
             f"guilds/{self.id}/roles",
             data={"id": id, "position": position},
-            headers=remove_none({"X-Audit-Log-Reason": reason})
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
         )
         for role_data in data:
             yield Role.from_dict(construct_client_dict(self._client, role_data))
@@ -1032,10 +1031,7 @@ class Guild(APIObject):
         ...
 
     async def edit_role(
-        self,
-        id: Snowflake,
-        reason: Optional[str] = None,
-        **kwargs
+        self, id: Snowflake, reason: Optional[str] = None, **kwargs
     ) -> Role:
         return Role.from_dict(
             construct_client_dict(
@@ -1043,7 +1039,7 @@ class Guild(APIObject):
                 await self._http.patch(
                     f"guilds/{self.id}/roles/{id}",
                     data=kwargs,
-                    headers=remove_none({"X-Audit-Log-Reason": reason})
+                    headers=remove_none({"X-Audit-Log-Reason": reason}),
                 ),
             )
         )
@@ -1062,7 +1058,7 @@ class Guild(APIObject):
         """
         await self._http.delete(
             f"guilds/{self.id}/roles/{id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason})
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
         )
 
     async def get_bans(self) -> AsyncGenerator[Ban, None]:
@@ -1112,7 +1108,7 @@ class Guild(APIObject):
         """
         await self._http.delete(
             f"guilds/{self.id}/bans/{id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason})
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
         )
 
     @overload
@@ -1222,9 +1218,7 @@ class Guild(APIObject):
         await self._http.delete(f"guilds/{self.id}")
 
     async def prune_count(
-        self,
-        days: Optional[int] = 7,
-        include_roles: Optional[str] = None
+        self, days: Optional[int] = 7, include_roles: Optional[str] = None
     ) -> int:
         """|coro|
         Returns the number of members that
@@ -1253,7 +1247,7 @@ class Guild(APIObject):
         days: Optional[int] = 7,
         compute_prune_days: Optional[bool] = True,
         include_roles: Optional[List[Snowflake]] = None,
-        reason: Optional[str] = None
+        reason: Optional[str] = None,
     ) -> int:
         """|coro|
         Prunes members from the guild. Requires the ``KICK_MEMBERS`` permission.
@@ -1282,9 +1276,9 @@ class Guild(APIObject):
             data={
                 "days": days,
                 "compute_prune_days": compute_prune_days,
-                "include_roles": include_roles
+                "include_roles": include_roles,
             },
-            headers=remove_none({"X-Audit-Log-Reason": reason})
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
         )["pruned"]
 
     async def get_voice_regions(self) -> AsyncGenerator[VoiceRegion, None]:
@@ -1298,7 +1292,9 @@ class Guild(APIObject):
         """
         data = await self._http.get(f"guilds/{self.id}/regions")
         for voice_region_data in data:
-            yield VoiceRegion.from_dict(construct_client_dict(self._client, voice_region_data))
+            yield VoiceRegion.from_dict(
+                construct_client_dict(self._client, voice_region_data)
+            )
 
     async def get_invites(self) -> AsyncGenerator[Invite, None]:
         """|coro|
@@ -1312,9 +1308,11 @@ class Guild(APIObject):
         """
         data = await self._http.get(f"guilds/{self.id}/invites")
         for invite_data in data:
-            yield Invite.from_dict(construct_client_dict(self._client, invite_data))
+            yield Invite.from_dict(
+                construct_client_dict(self._client, invite_data)
+            )
 
-    async def get_integrations(self) -> AsyncGenerator[Integration, None]:
+    async def get_integrations(self) -> AsyncIterator[Integration]:
         """|coro|
         Returns an async generator of integrations for the guild.
         Requires the ``MANAGE_GUILD`` permission.
@@ -1326,12 +1324,12 @@ class Guild(APIObject):
         """
         data = await self._http.get(f"guilds/{self.id}/integrations")
         for integration_data in data:
-            yield Integration.from_dict(construct_client_dict(self._client, integration_data))
+            yield Integration.from_dict(
+                construct_client_dict(self._client, integration_data)
+            )
 
     async def delete_integration(
-        self,
-        integration: Integration,
-        reason: Optional[str] = None
+        self, integration: Integration, reason: Optional[str] = None
     ):
         """|coro|
         Deletes an integration.
@@ -1346,7 +1344,7 @@ class Guild(APIObject):
         """
         await self._http.delete(
             f"guilds/{self.id}/integrations/{integration.id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason})
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
         )
 
     async def get_widget_settings(self) -> GuildWidget:
@@ -1361,15 +1359,12 @@ class Guild(APIObject):
         """
         return GuildWidget.from_dict(
             construct_client_dict(
-                self._client,
-                await self._http.get(f"guilds/{self.id}/widget")
+                self._client, await self._http.get(f"guilds/{self.id}/widget")
             )
         )
 
     async def modify_widget(
-        self,
-        reason: Optional[str] = None,
-        **kwargs
+        self, reason: Optional[str] = None, **kwargs
     ) -> GuildWidget:
         """|coro|
         Modifies the guild widget for the guild.
@@ -1390,7 +1385,7 @@ class Guild(APIObject):
         data = await self._http.patch(
             f"guilds/{self.id}/widget",
             data=kwargs,
-            headers=remove_none({"X-Audit-Log-Reason": reason})
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
         )
         return GuildWidget.from_dict(construct_client_dict(self._client, data))
 
@@ -1415,7 +1410,9 @@ class Guild(APIObject):
         data = await self._http.get(f"guilds/{self.id}/vanity-url")
         return Invite.from_dict(construct_client_dict(self._client, data))
 
-    async def get_widget_image(self, style: Optional[str] = "shield") -> str:  # TODO Replace str with ImageURL object
+    async def get_widget_image(
+        self, style: Optional[str] = "shield"
+    ) -> str:  # TODO Replace str with ImageURL object
         """|coro|
         Returns a PNG image widget for the guild.
         Requires no permissions or authentication.
@@ -1460,14 +1457,16 @@ class Guild(APIObject):
             The welcome screen for the guild.
         """
         data = await self._http.get(f"guilds/{self.id}/welcome-screen")
-        return WelcomeScreen.from_dict(construct_client_dict(self._client, data))
+        return WelcomeScreen.from_dict(
+            construct_client_dict(self._client, data)
+        )
 
     async def modify_welcome_screen(
         self,
         enabled: Optional[bool] = None,
         welcome_channels: Optional[List[WelcomeScreenChannel]] = None,
         description: Optional[str] = None,
-        reason: Optional[str] = None
+        reason: Optional[str] = None,
     ) -> WelcomeScreen:
         """|coro|
         Modifies the guild's Welcome Screen.
@@ -1496,17 +1495,19 @@ class Guild(APIObject):
             data={
                 "enabled": enabled,
                 "welcome_channels": welcome_channels,
-                "description": description
+                "description": description,
             },
-            headers=remove_none({"X-Audit-Log-Reason": reason})
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
         )
-        return WelcomeScreen.from_dict(construct_client_dict(self._client, data))
+        return WelcomeScreen.from_dict(
+            construct_client_dict(self._client, data)
+        )
 
     async def modify_current_user_voice_state(
         self,
         channel_id: Snowflake,
         suppress: Optional[bool] = None,
-        request_to_speak_timestamp: Optional[Timestamp] = None
+        request_to_speak_timestamp: Optional[Timestamp] = None,
     ):
         """|coro|
         Updates the current user's voice state.
@@ -1535,15 +1536,12 @@ class Guild(APIObject):
             data={
                 "channel_id": channel_id,
                 "suppress": suppress,
-                "request_to_speak_timestamp": request_to_speak_timestamp
-            }
+                "request_to_speak_timestamp": request_to_speak_timestamp,
+            },
         )
 
     async def modify_user_voice_state(
-        self,
-        user: User,
-        channel_id: Snowflake,
-        suppress: Optional[bool] = None
+        self, user: User, channel_id: Snowflake, suppress: Optional[bool] = None
     ):
         """|coro|
         Updates another user's voice state.
@@ -1570,10 +1568,7 @@ class Guild(APIObject):
         """
         await self._http.patch(
             f"guilds/{self.id}/voice-states/{user.id}",
-            data={
-                "channel_id": channel_id,
-                "suppress": suppress
-            }
+            data={"channel_id": channel_id, "suppress": suppress},
         )
 
     async def get_audit_log(self) -> AuditLog:
@@ -1589,7 +1584,7 @@ class Guild(APIObject):
         return AuditLog.from_dict(
             construct_client_dict(
                 self._client,
-                await self._http.get(f"guilds/{self.id}/audit-logs")
+                await self._http.get(f"guilds/{self.id}/audit-logs"),
             )
         )
 
@@ -1625,7 +1620,7 @@ class Guild(APIObject):
         return Emoji.from_dict(
             construct_client_dict(
                 self._client,
-                await self._http.get(f"guilds/{self.id}/emojis/{id}")
+                await self._http.get(f"guilds/{self.id}/emojis/{id}"),
             )
         )
 
@@ -1635,7 +1630,7 @@ class Guild(APIObject):
         name: str,
         image: File,
         roles: List[Snowflake] = [],
-        reason: Optional[str] = None
+        reason: Optional[str] = None,
     ) -> Emoji:
         """|coro|
         Creates a new emoji for the guild.
@@ -1662,16 +1657,10 @@ class Guild(APIObject):
         """
         data = await self._http.post(
             f"guilds/{self.id}/emojis",
-            data={
-                "name": name,
-                "image": image.uri,
-                "roles": roles
-            },
-            headers=remove_none({"X-Audit-Log-Reason": reason})
+            data={"name": name, "image": image.uri, "roles": roles},
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
         )
-        return Emoji.from_dict(
-            construct_client_dict(self._client, data)
-        )
+        return Emoji.from_dict(construct_client_dict(self._client, data))
 
     async def edit_emoji(
         self,
@@ -1679,7 +1668,7 @@ class Guild(APIObject):
         *,
         name: Optional[str] = None,
         roles: Optional[List[Snowflake]] = None,
-        reason: Optional[str] = None
+        reason: Optional[str] = None,
     ) -> Emoji:
         """|coro|
         Modifies the given emoji.
@@ -1703,21 +1692,13 @@ class Guild(APIObject):
         """
         data = await self._http.patch(
             f"guilds/{self.id}/emojis/{id}",
-            data={
-                "name": name,
-                "roles": roles
-            },
-            headers=remove_none({"X-Audit-Log-Reason": reason})
+            data={"name": name, "roles": roles},
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
         )
-        return Emoji.from_dict(
-            construct_client_dict(self._client, data)
-        )
+        return Emoji.from_dict(construct_client_dict(self._client, data))
 
     async def delete_emoji(
-        self,
-        id: Snowflake,
-        *,
-        reason: Optional[str] = None
+        self, id: Snowflake, *, reason: Optional[str] = None
     ):
         """|coro|
         Deletes the given emoji.
@@ -1732,10 +1713,10 @@ class Guild(APIObject):
         """
         await self._http.delete(
             f"guilds/{self.id}/emojis/{id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason})
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
         )
 
-    async def get_templates(self) -> AsyncGenerator[GuildTemplate, None]:
+    async def get_templates(self) -> AsyncIterator[GuildTemplate]:
         """|coro|
         Returns an async generator of the guild templates.
 
@@ -1751,9 +1732,7 @@ class Guild(APIObject):
             )
 
     async def create_template(
-        self,
-        name: str,
-        description: Optional[str] = None
+        self, name: str, description: Optional[str] = None
     ) -> GuildTemplate:
         """|coro|
         Creates a new template for the guild.
@@ -1773,19 +1752,13 @@ class Guild(APIObject):
         """
         data = await self._http.post(
             f"guilds/{self.id}/templates",
-            data={
-                "name": name,
-                "description": description
-            }
+            data={"name": name, "description": description},
         )
         return GuildTemplate.from_dict(
             construct_client_dict(self._client, data)
         )
 
-    async def sync_template(
-        self,
-        template: GuildTemplate
-    ) -> GuildTemplate:
+    async def sync_template(self, template: GuildTemplate) -> GuildTemplate:
         """|coro|
         Syncs the given template.
         Requires the ``MANAGE_GUILD`` permission.
@@ -1812,7 +1785,7 @@ class Guild(APIObject):
         template: GuildTemplate,
         *,
         name: Optional[str] = None,
-        description: Optional[str] = None
+        description: Optional[str] = None,
     ) -> GuildTemplate:
         """|coro|
         Modifies the template's metadata.
@@ -1836,19 +1809,13 @@ class Guild(APIObject):
         """
         data = await self._http.patch(
             f"guilds/{self.id}/templates/{template.code}",
-            data={
-                "name": name,
-                "description": description
-            }
+            data={"name": name, "description": description},
         )
         return GuildTemplate.from_dict(
             construct_client_dict(self._client, data)
         )
 
-    async def delete_template(
-        self,
-        template: GuildTemplate
-    ) -> GuildTemplate:
+    async def delete_template(self, template: GuildTemplate) -> GuildTemplate:
         """|coro|
         Deletes the given template.
         Requires the ``MANAGE_GUILD`` permission.
@@ -1857,7 +1824,7 @@ class Guild(APIObject):
         ----------
         template : :class:`~pincer.objects.guild.template.GuildTemplate`
             The template to delete
-        
+
         Returns
         -------
         :class:`~pincer.objects.guild.template.GuildTemplate`
@@ -1869,6 +1836,104 @@ class Guild(APIObject):
         return GuildTemplate.from_dict(
             construct_client_dict(self._client, data)
         )
+
+    async def list_stickers(self) -> AsyncIterator[Sticker]:
+        """|coro|
+        Yields sticker objects for the current guild.
+        Includes ``user`` fields if the bot has the 
+        ``MANAGE_EMOJIS_AND_STICKERS`` permission.
+
+        Yields
+        ------
+        :class:`~pincer.objects.message.sticker.Sticker`
+            a sticker for the current guild
+        """
+
+        for sticker in await self._http.get(f"guild/{self.id}/stickers"):
+            yield Sticker.from_dict(sticker)
+
+    async def get_sticker(self, _id: Snowflake) -> Sticker:
+        """|coro|
+        Returns a sticker object for the current guild and sticker IDs.
+        Includes the ``user`` field if the bot has the 
+        ``MANAGE_EMOJIS_AND_STICKERS`` permission.
+
+        Parameters
+        ----------
+        _id : int
+            id of the sticker
+
+        Returns
+        -------
+        :class:`~pincer.objects.message.sticker.Sticker`
+            the sticker requested
+        """
+        sticker = await self._http.get(f"guilds/{self.id}/stickers/{_id}")
+        return Sticker.from_dict(sticker)
+
+    async def create_sticker(
+        self,
+        name: str,
+        tags: str,
+        description: str,
+        file: File,
+        reason: Optional[str] = None,
+    ) -> Sticker:
+        """|coro|
+        Create a new sticker for the guild.
+        Requires the ``MANAGE_EMOJIS_AND_STICKERS permission``.
+
+        Parameters
+        ----------
+        name : str
+            name of the sticker (2-30 characters)
+        tags : str
+            autocomplete/suggestion tags for the sticker (max 200 characters)
+        file : :class:`~pincer.objects.message.file.File`
+            the sticker file to upload, must be a PNG, APNG, or Lottie JSON file, max 500 KB
+        description : str
+            description of the sticker (empty or 2-100 characters) |default| :data:`""`
+        reason : Optional[:class:`str`] |default| :data:`None`
+            reason for creating the sticker
+
+        Returns
+        -------
+        :class:`~pincer.objects.message.sticker.Sticker`
+            the newly created sticker
+        """  # noqa: E501
+
+        form = FormData()
+        form.add_field("name", name)
+        form.add_field("tags", tags)
+        form.add_field("description", description)
+        form.add_field(
+            "file",
+            file.content,
+            content_type=file.content_type
+        )
+
+        payload = form()
+
+        sticker = await self._http.post(
+            f"guilds/{self.id}/stickers",
+            data=payload,
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            content_type=payload.content_type
+        )
+
+        return Sticker.from_dict(sticker)
+
+    async def delete_sticker(self, _id: Snowflake):
+        """|coro|
+        Delete the given sticker.
+        Requires the ``MANAGE_EMOJIS_AND_STICKERS`` permission.
+
+        Parameters
+        ----------
+        _id: Snowflake
+            id of the sticker
+        """
+        await self._http.delete(f"guilds/{self.id}/stickers/{_id}")
 
     async def get_webhooks(self) -> AsyncGenerator[Webhook, None]:
         """|coro|
@@ -1897,6 +1962,7 @@ class Guild(APIObject):
         :class:`~pincer.objects.guild.guild.Guild`
             The new guild object.
         Raises
+        ------
         :class:`~pincer.exceptions.UnavailableGuildError`
             The guild is unavailable due to a discord outage.
         """
