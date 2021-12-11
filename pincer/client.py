@@ -190,7 +190,8 @@ class Client(Dispatcher):
         self.throttler = throttler
         self.event_mgr = EventMgr()
 
-        # The guild and channel value is only registered if the GUILD intent.
+        # The guild and channel value is only registered if the Client has the GUILDS
+        # intent.
         self.guilds: Dict[Snowflake, Optional[Guild]] = {}
         self.channels: Dict[Snowflake, Optional[Channel]] = {}
 
