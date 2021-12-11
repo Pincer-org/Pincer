@@ -8,7 +8,7 @@ from asyncio import iscoroutinefunction, run, ensure_future
 from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
-from typing import Any, Dict, List, Optional, Tuple, Union, overload
+from typing import Any, Dict, Iterable, List, Optional, Tuple, Union, overload
 from typing import TYPE_CHECKING
 
 from . import __package__
@@ -153,8 +153,8 @@ class Client(Dispatcher):
     received : Optional[:class:`str`]
         The default message which will be sent when no response is given.
         |default| :data:`None`
-    intents : Optional[:class:`~objects.app.intents.Intents`]
-        The discord intents to use |default| :data:`None`
+    intents : Optional[Union[Iterable[:class:`~objects.app.intents.Intents`], :class:`~objects.app.intents.Intents`]]
+        The discord intents to use |default| :data:`Intents.all()`
     throttler : Optional[:class:`~objects.app.throttling.ThrottleInterface`]
         The cooldown handler for your client,
         defaults to :class:`~.objects.app.throttling.DefaultThrottleHandler`
@@ -162,16 +162,20 @@ class Client(Dispatcher):
         Custom throttlers must derive from
         :class:`~pincer.objects.app.throttling.ThrottleInterface`.
         |default| :class:`~pincer.objects.app.throttling.DefaultThrottleHandler`
-    """
+    """  # noqa: E501
 
     def __init__(
             self,
             token: str, *,
             received: str = None,
-            intents: Intents = None,
+            intents: Union[Iterable, Intents] = None,
             throttler: ThrottleInterface = DefaultThrottleHandler,
             reconnect: bool = True,
     ):
+
+        if isinstance(intents, Iterable):
+            intents = sum(intents)
+
         super().__init__(
             token,
             handlers={
@@ -180,7 +184,7 @@ class Client(Dispatcher):
                 # Use this event handler for opcode 0.
                 0: self.event_handler
             },
-            intents=intents or Intents.NONE,
+            intents=intents or Intents.all(),
             reconnect=reconnect,
         )
 
