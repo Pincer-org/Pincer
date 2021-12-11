@@ -18,12 +18,15 @@ from ...utils.types import MISSING
 
 
 if TYPE_CHECKING:
-    from typing import Any, Dict, List, Optional, Union
+    from typing import Any, Dict, List, Optional, Tuple, Union, Generator
+    from collections.abc import AsyncIterator
 
     from .audit_log import AuditLog
     from .ban import Ban
+    from .channel import PublicThread, PrivateThread, ChannelType
     from .member import GuildMember
     from .features import GuildFeature
+    from .overwrite import Overwrite
     from .role import Role
     from .stage import StageInstance
     from .template import GuildTemplate
@@ -411,13 +414,13 @@ class Guild(APIObject):
         """
         Parameters
         ----------
-        client : `~pincer.Client`
+        client : :class:`~pincer.Client`
             Client object to use the http gateway from.
-        _id : :class: `pincer.utils.snowflake.Snowflake`
+        _id : :class:`~pincer.utils.snowflake.Snowflake`
             Guild ID.
         Returns
         -------
-        :class: `~pincer.objects.guild.guild.Guild`
+        :class:`~pincer.objects.guild.guild.Guild`
             The new guild object.
         """
         data = await client.http.get(f"/guilds/{_id}")
@@ -456,6 +459,7 @@ class Guild(APIObject):
         mute: Optional[bool] = None,
         deaf: Optional[bool] = None,
         channel_id: Optional[Snowflake] = None,
+        reason: Optional[str] = None
     ) -> GuildMember:
         """|coro|
         Modifies a member in the guild from its identifier and based on the
@@ -474,6 +478,9 @@ class Guild(APIObject):
             Whether the member is deafened |default| :data:`None`
         channel_id : Optional[:class:`~pincer.utils.snowflake.Snowflake]
             Voice channel id to move to |default| :data:`None`
+        reason : Optional[:class:`str`]
+            audit log reason |default| :data:`None`
+            
         Returns
         -------
         :class:`~pincer.objects.guild.member.GuildMember`
@@ -481,11 +488,337 @@ class Guild(APIObject):
         """
         ...
 
-    async def modify_member(self, _id: int, **kwargs) -> GuildMember:
+    async def modify_member(self, _id: int, reason=None, **kwargs) -> GuildMember:
         data = await self._http.patch(
-            f"guilds/{self.id}/members/{_id}", data=kwargs
+            f"guilds/{self.id}/members/{_id}",
+            data=kwargs,
+            headers=remove_none({"X-Audit-Log-Reason": reason})
         )
         return GuildMember.from_dict(construct_client_dict(self._client, data))
+
+      
+    @overload
+    async def create_channel(
+        self,
+        *,
+        name: str,
+        type: Optional[ChannelType] = None,
+        topic: Optional[str] = None,
+        bitrate: Optional[int] = None,
+        user_limit: Optional[int] = None,
+        rate_limit_per_user: Optional[int] = None,
+        position: Optional[int] = None,
+        permission_overwrites: Optional[List[Overwrite]] = None,
+        parent_id: Optional[Snowflake] = None,
+        nsfw: Optional[bool] = None
+    ) -> Channel:
+        """|coro|
+        Create a new channel object for the guild.
+
+        Parameters
+        ----------
+        name : str
+            channel name (1-100 characters)
+        type : Optional[:class:int`]
+            the type of channel
+        topic : Optional[:class:str`]
+            channel topic (0-1024 characters)
+        bitrate : Optional[:class:`int`]
+            the bitrate (in bits) of the voice channel (voice only)
+        user_limit : Optional[:class:`int`]
+            the user limit of the voice channel (voice only)
+        rate_limit_per_user : Optional[:class:`int`]
+            amount of seconds a user has to wait
+            before sending another message (0-21600)
+            bots, as well as users with the permission
+            manage_messages or manage_channel, are unaffected
+        position : Optional[:class:`int`]
+            sorting position of the channel
+        permission_overwrites : Optional[List[:class:`~pincer.objects.guild.overwrite.Overwrite`]]
+            the channel's permission overwrites
+        parent_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            id of the parent category for a channel
+        nsfw : Optional[:class:`bool`]
+            whether the channel is nsfw
+        reason : Optional[:class:`str`]
+            audit log reason |default| :data:`None`
+        Returns
+        -------
+        :class:`~pincer.objects.guild.channel.Channel`
+            The new channel object.
+        """
+        ...
+
+    async def create_channel(
+        self,
+        *,
+        reason: Optional[str] = None,
+        **kwargs
+    ):
+        data = await self._http.post(
+            f"guilds/{self.id}/channels",
+            data=kwargs,
+            headers=remove_none({"X-Audit-Log-Reason": reason})
+        )
+        return Channel.from_dict(construct_client_dict(self._client, data))
+
+    async def modify_channel_positions(
+        self, 
+        reason: Optional[str] = None,
+        *channel: Dict[str, Optional[Union[int, bool, Snowflake]]]
+    ):
+        """|coro|
+        Create a new channel object for the guild.
+
+        Parameters
+        ----------
+        reason : Optional[:class:`str`]
+            audit log reason |default| :data:`None`
+        \\*channel : Dict[str, Optional[Union[int, bool, :class:`~pincer.utils.snowflake.Snowflake`]
+            Keys:
+                - id : :class:`~pincer.utils.snowflake.Snowflake`
+                - position : Optional[:class:`int`]
+                - lock_permissions : Optional[:class:`bool`]
+                - parent_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+        """
+        await self._http.patch(
+            f"guilds/{self.id}/channels",
+            data=channel,
+            headers=remove_none({"X-Audit-Log-Reason":reason})
+        )
+
+    async def list_active_threads(self) -> Tuple[
+        Generator[Union[PublicThread, PrivateThread]], Generator[GuildMember]]:
+        """|coro|
+        Returns all active threads in the guild,
+        including public and private threads.
+        
+        Returns
+        -------
+        Generator[Union[:class:`~pincer.objects.guild.channel.PublicThread`, :class:`~pincer.objects.guild.channel.PrivateThread`]], Generator[:class:`~pincer.objects.guild.member.GuildMember`]]
+            The new member object.
+        """
+        data = await self._http.get(f"guilds/{self.id}/threads/active")
+
+        threads = (
+            Channel.from_dict(construct_client_dict(self._client, channel))
+            for channel in data["threads"]
+        )
+        members = (
+            GuildMember.from_dict(construct_client_dict(self._client, member))
+            for member in data["members"]
+        )
+
+        return threads, members
+
+    async def list_guild_members(
+        self,
+        limit: int = 1,
+        after: int = 0
+    ) -> AsyncIterator[GuildMember]:
+        """|coro|
+        Returns a list of guild member objects that are members of the guild.
+
+        Parameters
+        ----------
+        limit : int
+            max number of members to return (1-1000) |default| :data:`1`
+        after : int
+            the highest user id in the previous page |default| :data:`0`
+        
+        Yields
+        ------
+        :class:`~pincer.objects.guild.member.GuildMember`
+            the guild member object that is in the guild
+        """
+
+        members = await self._http.get(
+            f"guilds/{self.id}/members?{limit=}&{after=}"
+        )
+        
+        for member in members:
+            yield GuildMember.from_dict(
+                construct_client_dict(self._client, member)
+            )
+        
+
+    async def search_guild_members(
+        self, 
+        query: str,
+        limit: Optional[int] = None
+    ) -> AsyncIterator[GuildMember]:
+        """|coro|
+        Returns a list of guild member objects whose
+        username or nickname starts with a provided string.
+
+        Parameters
+        ----------
+        query : str
+            Query string to match username(s) and nickname(s) against.
+        limit : Optional[int]
+            max number of members to return (1-1000) |default| :data:`1`
+            
+        Yields
+        -------
+        :class:`~pincer.objects.guild.member.GuildMember`
+            guild member objects
+        """
+
+        data = await self._http.get(
+            f"guilds/{id}/members/search?{query=!s}"
+            + (f"&{limit=}" if limit else "")
+        )
+
+        for member in data:
+            yield GuildMember.from_dict(construct_client_dict(self._client, member))
+
+    @overload
+    async def add_guild_member(
+        self, *,
+        user_id: Snowflake,
+        access_token: str,
+        nick: Optional[str] = None,
+        roles: Optional[List[Snowflake]] = None,
+        mute: Optional[bool] = None,
+        deaf: Optional[bool] = None,
+        reason: Optional[str] = None,
+    ) -> Optional[GuildMember]:
+        """|coro|
+        Adds a user to the guild, provided you have a
+        valid oauth2 access token for the user with the guilds.join scope.
+
+        Parameters
+        ----------
+        user_id : str
+            id of the user to be added
+        access_token : str
+            an oauth2 access token granted with the guilds.join to 
+            the bot's application for the user you want to add to the guild
+        nick : Optional[str]
+        	value to set users nickname to
+        roles : Optional[List[:class:`~pincer.utils.snowflake.Snowflake`]]
+        	array of role ids the member is assigned
+        mute : Optional[bool]
+        	whether the user is muted in voice channels
+        deaf : Optional[bool]
+        	whether the user is deafened in voice channels
+        reason : Optional[:class:`str`]
+            audit log reason |default| :data:`None`
+        Returns
+        -------
+        :class:`~pincer.objects.guild.member.GuildMember`
+            If the user is not in the guild
+        None
+            If the user is in the guild
+        """
+
+    async def add_guild_member(
+        self,
+        user_id, 
+        reason=None, 
+        **kwargs
+    ):
+        data = await self._http.put(
+            f"guilds/{self.id}/members/{user_id}", 
+            data=kwargs,
+            headers=remove_none({"X-Audit-Log-Reason": reason})
+        )
+
+        return GuildMember.from_dict(
+            construct_client_dict(self._client, data)
+        ) if data else None
+
+    async def modify_current_member(
+        self, 
+        nick: str, 
+        reason: Optional[str] = None
+    ) -> GuildMember:
+        """|coro|
+        Modifies the current member in a guild.
+
+        Parameters
+        ----------
+        nick : str
+            value to set users nickname to
+        reason : Optional[:class:`str`]
+            audit log reason |default| :data:`None`
+        Returns
+        -------
+        class:`~pincer.objects.guild.member.GuildMember
+            current guild member
+        """
+        data = self._http.patch(
+            f"guilds/{self.id}/members/@me", 
+            {"nick": nick}, 
+            headers=remove_none({"X-Audit-Log-Reason":reason})
+        )
+        return GuildMember.from_dict(construct_client_dict(self._client, data))
+
+    async def add_guild_member_role(
+        self,
+        user_id: int,
+        role_id: int,
+        reason: Optional[str] = None
+    ) -> None:
+        """|coro|
+        Adds a role to a guild member.
+
+        Parameters
+        ----------
+        user_id : int
+            id of the user to give a role to
+        role_id : int
+            id of a role
+        reason : Optional[:class:`str`]
+            audit log reason |default| :data:`None`
+        """
+        data = await self._http.put(
+            f"guilds/{self.id}/{user_id}/roles/{role_id}",
+            headers=remove_none({"X-Audit-Log-Reason": reason})
+        )
+
+    async def remove_guild_member_role(
+        self, 
+        user_id: int,
+        role_id: int,
+        reason: Optional[str] = None
+    ):
+        """|coro|
+        Removes a role from a guild member.
+
+        Parameters
+        ----------
+        user_id : int
+            id of the user to remove a role from
+        role_id : int
+            id of a role
+        reason : Optional[:class:`str`]
+            audit log reason |default| :data:`None`
+        """
+        await self._http.delete(
+            f"guilds/{self.id}/{user_id}/roles/{role_id}",
+            headers=remove_none({"X-Audit-Log-Reason": reason})
+        )
+
+    async def remove_guild_member(
+        self,
+        user_id: int,
+        reason: Optional[str] = None
+    ):
+        """|coro|
+        Remove a member from a guild.
+
+        Parameters
+        ----------
+        user_id : int
+            id of the user to remove from the guild
+        reason : Optional[:class:`str`]
+            audit log reason |default| :data:`None`
+        """
+        await self._http.delete(
+            f"guilds/{self.id}/members/{user_id}",
+            headers=remove_none({"X-Audit-Log-Reason": reason})
+        )
 
     async def ban(
         self,
