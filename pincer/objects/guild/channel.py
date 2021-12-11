@@ -170,7 +170,8 @@ class Channel(APIObject):  # noqa E501
     parent_id: APINullable[Optional[Snowflake]] = MISSING
     permissions: APINullable[str] = MISSING
     permission_overwrites: APINullable[List[Overwrite]] = MISSING
-    position: APINullable[int] = MISSING
+    # Position is always 0 when not sent
+    position: APINullable[int] = 0
     rate_limit_per_user: APINullable[int] = MISSING
     recipients: APINullable[List[User]] = MISSING
     rtc_region: APINullable[Optional[str]] = MISSING

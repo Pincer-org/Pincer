@@ -18,6 +18,8 @@ from .types import MissingType, MISSING, TypeCache
 from ..exceptions import InvalidArgumentAnnotation
 
 if TYPE_CHECKING:
+    from ..objects.guild.channel import Channel
+    from ..objects.guild.guild import Guild
     from ..client import Client
 
 T = TypeVar("T")
@@ -72,16 +74,30 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
         return copy.deepcopy(obj)
 
 
-def get_guild(self):
-    "Return a guild"
-    return self._client.guilds[self.guild_id]
+def get_guild(obj) -> Guild:
+    """Return a guild from an APIObject
+    Parameters
+    ----------
+    obj : :class:`~pincer.utils.api_object.APIObject`
+
+    Returns
+    -------
+    :class:`~pincer.objects.guild.guild.Guild`
+    """
+    return obj._client.guilds[obj.guild_id]
 
 
-def get_channel(self):
-    "Return a channel"
-    return next(
-        filter(lambda c: c.id == self.channel_id, self.guild.channels)
-    )
+def get_channel(obj) -> Channel:
+    """Return a channel from an APIObject
+    Parameters
+    ----------
+    obj : :class:`~pincer.utils.api_object.APIObject`
+
+    Returns
+    -------
+    :class:`~pincer.objects.guild.channel.Channel`
+    """
+    return obj._client.channels[obj.channel_id]
 
 
 class HTTPMeta(type):
