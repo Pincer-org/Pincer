@@ -2,10 +2,9 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 """sent when a guild is updated"""
-from typing import List
 
 from ..core.dispatch import GatewayDispatch
-from ..objects import Guild, Channel
+from ..objects import Guild
 from ..utils.conversion import construct_client_dict
 
 

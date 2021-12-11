@@ -6,7 +6,6 @@ sent when the client receives a notification
 (mention or new message in eligible channels)
 """
 
-from pincer.utils.snowflake import Snowflake
 from ..core.dispatch import GatewayDispatch
 from ..objects.events.notification import NotificationCreateEvent
 from ..utils.conversion import construct_client_dict

@@ -2,7 +2,6 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 """sent when anyone is added to or removed from a thread"""
-from typing import List
 
 from ..core.dispatch import GatewayDispatch
 from ..objects.events.thread import ThreadMembersUpdateEvent

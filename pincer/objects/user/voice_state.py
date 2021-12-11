@@ -10,8 +10,6 @@ from ...utils.api_object import APIObject, ChannelProperty, GuildProperty
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from typing import Optional
-
     from ..guild.member import GuildMember
     from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
@@ -24,7 +22,7 @@ class VoiceState(APIObject, ChannelProperty, GuildProperty):
 
     Attributes
     ----------
-    channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+    channel_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The channel id this user is connected to
     user_id: :class:`~pincer.utils.snowflake.Snowflake`
         The user id this voice state is for

@@ -7,10 +7,7 @@ from __future__ import annotations
 
 from typing import List
 
-from pincer.utils.types import MISSING
-
 from ..core.dispatch import GatewayDispatch
-from ..objects import Channel, ThreadMember
 from ..objects.events.thread import ThreadListSyncEvent
 from ..utils.conversion import construct_client_dict
 
