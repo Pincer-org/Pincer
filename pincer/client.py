@@ -8,7 +8,9 @@ from asyncio import iscoroutinefunction, run, ensure_future
 from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
-from typing import Any, Dict, List, Optional, Tuple, Union, overload
+from typing import (
+    Any, Dict, List, Optional, Tuple, Union, overload, AsyncIterator
+)
 from typing import TYPE_CHECKING
 
 from . import __package__
@@ -33,6 +35,7 @@ from .objects import (
     Intents,
     GuildTemplate,
     Connection,
+    StickerPack
 )
 from .objects.guild.channel import GroupDMChannel
 from .utils.conversion import construct_client_dict, remove_none
@@ -861,6 +864,7 @@ class Client(Dispatcher):
         """
         return await Webhook.from_id(self, id, token)
 
+
     async def get_current_user(self) -> User:
         """|coro|
         The user object of the requester's account.
@@ -996,6 +1000,19 @@ class Client(Dispatcher):
         connections = await self.http.get("users/@me/connections")
         for conn in connections:
             yield Connection.from_dict(conn)
+
+    async def sticker_packs(self) -> AsyncIterator[StickerPack]:
+        """|coro|
+        Yields sticker packs available to Nitro subscribers.
+
+        Yields
+        ------
+        :class:`~pincer.objects.message.sticker.StickerPack`
+            a sticker pack
+        """
+        packs = await self.http.get("sticker-packs")
+        for pack in packs:
+            yield StickerPack.from_dict(pack)
 
 
 Bot = Client
