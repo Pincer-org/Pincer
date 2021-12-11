@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, ChannelProperty, GuildProperty
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(repr=False)
-class VoiceState(APIObject):
+class VoiceState(APIObject, ChannelProperty, GuildProperty):
     """Used to represent a user's voice connection status
 
     Attributes

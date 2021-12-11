@@ -6,7 +6,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
+from pincer.objects.guild.channel import Channel
+
+from ...utils.api_object import APIObject, ChannelProperty
 from ...utils.types import APINullable, MISSING
 
 if TYPE_CHECKING:
@@ -18,7 +20,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(repr=False)
-class MessageDeleteEvent(APIObject):
+class MessageDeleteEvent(APIObject, ChannelProperty):
     """Sent when a message is deleted.
 
     Attributes
@@ -37,7 +39,7 @@ class MessageDeleteEvent(APIObject):
 
 
 @dataclass(repr=False)
-class MessageDeleteBulkEvent(APIObject):
+class MessageDeleteBulkEvent(APIObject, ChannelProperty):
     """Sent when multiple messages are deleted at once.
 
     Attributes
@@ -56,7 +58,7 @@ class MessageDeleteBulkEvent(APIObject):
 
 
 @dataclass(repr=False)
-class MessageReactionAddEvent(APIObject):
+class MessageReactionAddEvent(APIObject, ChannelProperty):
     """Sent when a user adds a reaction to a message.
 
     Attributes
@@ -84,7 +86,7 @@ class MessageReactionAddEvent(APIObject):
 
 
 @dataclass(repr=False)
-class MessageReactionRemoveEvent(APIObject):
+class MessageReactionRemoveEvent(APIObject, ChannelProperty):
     """Sent when a user removes a reaction from a message.
 
     Attributes
@@ -109,7 +111,7 @@ class MessageReactionRemoveEvent(APIObject):
 
 
 @dataclass(repr=False)
-class MessageReactionRemoveAllEvent(APIObject):
+class MessageReactionRemoveAllEvent(APIObject, ChannelProperty):
     """Sent when a user explicitly removes all reactions from a message.
 
     Attributes
@@ -127,7 +129,7 @@ class MessageReactionRemoveAllEvent(APIObject):
 
 
 @dataclass(repr=False)
-class MessageReactionRemoveEmojiEvent(APIObject):
+class MessageReactionRemoveEmojiEvent(APIObject, ChannelProperty):
     """Sent when a bot removes all instances of a given
     emoji from the reactions of a message.
 

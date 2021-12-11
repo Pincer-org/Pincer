@@ -6,6 +6,7 @@ sent when the client receives a notification
 (mention or new message in eligible channels)
 """
 
+from pincer.utils.snowflake import Snowflake
 from ..core.dispatch import GatewayDispatch
 from ..objects.events.notification import NotificationCreateEvent
 from ..utils.conversion import construct_client_dict
@@ -27,7 +28,7 @@ async def notification_create_middleware(self, payload: GatewayDispatch):
     Tuple[:class:`str`, :class:`~pincer.objects.events.notification.NotificationCreateEvent`]
         ``on_notification_create`` and a ``NotificationCreateEvent``
     """  # noqa: E501
-    channel_id: int = payload.data.get("channel_id")
+    channel_id = payload.data.get("channel_id")
     payload.data["message"]["channel_id"] = channel_id
     return (
         "on_notification_create",
