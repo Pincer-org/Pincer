@@ -19,7 +19,7 @@ from ..guild.member import GuildMember
 from ..guild.role import Role
 from ..user.user import User
 from ..._config import GatewayConfig
-from ...utils.api_object import APIObject, get_guild, get_channel
+from ...utils.api_object import APIObject, GuildProperty, ChannelProperty
 from ...utils.conversion import construct_client_dict
 from ...utils.snowflake import Snowflake
 from ...utils.types import MISSING
@@ -245,7 +245,7 @@ class MessageActivity(APIObject):
 
 
 @dataclass(repr=False)
-class UserMessage(APIObject):
+class UserMessage(APIObject, GuildProperty, ChannelProperty):
     """Represents a message sent in a channel within Discord.
 
     Attributes
@@ -352,14 +352,6 @@ class UserMessage(APIObject):
 
     def __str__(self):
         return self.content
-
-    @property
-    def guild(self):
-        return get_guild(self)
-
-    @property
-    def channel(self):
-        return get_channel(self)
 
     async def get_most_recent(self):
         """|coro|

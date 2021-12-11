@@ -74,32 +74,6 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
         return copy.deepcopy(obj)
 
 
-def get_guild(obj) -> Guild:
-    """Return a guild from an APIObject
-    Parameters
-    ----------
-    obj : :class:`~pincer.utils.api_object.APIObject`
-
-    Returns
-    -------
-    :class:`~pincer.objects.guild.guild.Guild`
-    """
-    return obj._client.guilds[obj.guild_id]
-
-
-def get_channel(obj) -> Channel:
-    """Return a channel from an APIObject
-    Parameters
-    ----------
-    obj : :class:`~pincer.utils.api_object.APIObject`
-
-    Returns
-    -------
-    :class:`~pincer.objects.guild.channel.Channel`
-    """
-    return obj._client.channels[obj.channel_id]
-
-
 class HTTPMeta(type):
     __meta_items: List[str] = ["_client", "_http"]
     __ori_annotations: Dict[str, type] = {}
@@ -308,3 +282,35 @@ class APIObject(metaclass=HTTPMeta):
     def to_dict(self) -> Dict:
         """Transform the current object to a dictionary representation."""
         return _asdict_ignore_none(self)
+
+
+class GuildProperty:
+
+    @property
+    def guild(obj) -> Guild:
+        """Return a guild from an APIObject
+        Parameters
+        ----------
+        obj : :class:`~pincer.utils.api_object.APIObject`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.guild.Guild`
+        """
+        return obj._client.guilds[obj.guild_id]
+
+
+class ChannelProperty:
+
+    @property
+    def channel(obj) -> Channel:
+        """Return a channel from an APIObject
+        Parameters
+        ----------
+        obj : :class:`~pincer.utils.api_object.APIObject`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.channel.Channel`
+        """
+        return obj._client.channels[obj.channel_id]
