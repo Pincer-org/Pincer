@@ -5,9 +5,7 @@
 from typing import List
 
 from ..core.dispatch import GatewayDispatch
-from ..objects import ThreadMember
 from ..objects.events.thread import ThreadMembersUpdateEvent
-from ..utils import Timestamp
 from ..utils.conversion import construct_client_dict
 
 
@@ -27,26 +25,9 @@ async def thread_members_update_middleware(self, payload: GatewayDispatch):
     Tuple[:class:`str`, :class:`~pincer.objects.events.thread.ThreadMembersUpdateEvent`]
         ``on_thread_members_update`` and an ``ThreadMembersUpdateEvent``
     """  # noqa: E501
-
-    added_members: List[ThreadMember] = [
-        ThreadMember.from_dict(construct_client_dict(
-            self,
-            {
-                "join_timestamp": Timestamp(added_member.pop("join_timestamp")),
-                **added_member
-            }
-        ))
-        for added_member in payload.data.pop("added_members")
-    ]
-
     return (
         "on_thread_members_update",
-        ThreadMembersUpdateEvent.from_dict(
-            {
-                "added_members": added_members,
-                **payload.data
-            }
-        )
+        ThreadMembersUpdateEvent.from_dict(construct_client_dict(self, payload.data))
     )
 
 

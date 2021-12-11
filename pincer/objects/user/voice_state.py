@@ -53,7 +53,6 @@ class VoiceState(APIObject):
     """
     # noqa: E501
 
-    channel_id: Optional[Snowflake]
     user_id: Snowflake
     session_id: str
     deaf: bool
@@ -62,8 +61,9 @@ class VoiceState(APIObject):
     self_mute: bool
     self_video: bool
     suppress: bool
-    request_to_speak_timestamp: Optional[Timestamp]
 
+    channel_id: APINullable[Snowflake] = MISSING
+    request_to_speak_timestamp: APINullable[Timestamp] = MISSING
     guild_id: APINullable[Snowflake] = MISSING
     member: APINullable[GuildMember] = MISSING
     self_stream: APINullable[bool] = MISSING
