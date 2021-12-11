@@ -208,6 +208,17 @@ class Client(Dispatcher):
             ChatCommandHandler.register.values()
         ))
 
+    @property
+    def guild_ids(self) -> List[Snowflake]:
+        """
+        Returns a list of Guilds that the client is a part of
+
+        Returns
+        -------
+        :class:`pincer.utils.snowflake.Snowflake`
+        """
+        return self.guilds.keys()
+
     @staticmethod
     def event(coroutine: Coro):
         """A decorator to register a Discord gateway event listener.
