@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from ..guild.guild import Guild
 from ..guild.member import GuildMember
 from ..user import User
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, GuildProperty
 from ...utils.conversion import construct_client_dict
 from ...utils.types import MISSING, APINullable
 
@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(repr=False)
-class GuildBanAddEvent(APIObject):
+class GuildBanAddEvent(APIObject, GuildProperty):
     """Sent when a user is banned from a guild.
 
     Attributes
@@ -40,7 +40,7 @@ class GuildBanAddEvent(APIObject):
 
 
 @dataclass(repr=False)
-class GuildBanRemoveEvent(APIObject):
+class GuildBanRemoveEvent(APIObject, GuildProperty):
     """Sent when a user is unbanned from a guild.
 
     Attributes
@@ -56,7 +56,7 @@ class GuildBanRemoveEvent(APIObject):
 
 
 @dataclass(repr=False)
-class GuildEmojisUpdateEvent(APIObject):
+class GuildEmojisUpdateEvent(APIObject, GuildProperty):
     """Sent when a guild's emojis have been updated.
 
     Attributes
@@ -72,7 +72,7 @@ class GuildEmojisUpdateEvent(APIObject):
 
 
 @dataclass(repr=False)
-class GuildStickersUpdateEvent(APIObject):
+class GuildStickersUpdateEvent(APIObject, GuildProperty):
     """Sent when a guild's stickers have been updated.
 
     Attributes
@@ -88,7 +88,7 @@ class GuildStickersUpdateEvent(APIObject):
 
 
 @dataclass(repr=False)
-class GuildIntegrationsUpdateEvent(APIObject):
+class GuildIntegrationsUpdateEvent(APIObject, GuildProperty):
     """Sent when a guild integration is updated.
 
     Attributes
@@ -101,7 +101,7 @@ class GuildIntegrationsUpdateEvent(APIObject):
 
 
 @dataclass(repr=False)
-class GuildMemberAddEvent(GuildMember):
+class GuildMemberAddEvent(GuildMember, GuildProperty):
     """
     Sent when a user joins a guild.
 
@@ -118,7 +118,7 @@ class GuildMemberAddEvent(GuildMember):
 
 
 @dataclass(repr=False)
-class GuildMemberRemoveEvent(APIObject):
+class GuildMemberRemoveEvent(APIObject, GuildProperty):
     """Sent when a user is removed from a guild (leave/kick/ban).
 
     Attributes
@@ -139,7 +139,7 @@ class GuildMemberRemoveEvent(APIObject):
 
 
 @dataclass(repr=False)
-class GuildMemberUpdateEvent(APIObject):
+class GuildMemberUpdateEvent(APIObject, GuildProperty):
     """Sent when a guild member is updated.
     This will also fire when the user object
     of a guild member changes.
@@ -185,7 +185,7 @@ class GuildMemberUpdateEvent(APIObject):
 
 
 @dataclass(repr=False)
-class GuildMembersChunkEvent(APIObject):
+class GuildMembersChunkEvent(APIObject, GuildProperty):
     """Sent in response to Guild Request Members.
     You can use the ``chunk_index`` and ``chunk_count``
     to calculate how many chunks are left for your request.
@@ -228,7 +228,7 @@ class GuildMembersChunkEvent(APIObject):
 
 
 @dataclass(repr=False)
-class GuildRoleCreateEvent(APIObject):
+class GuildRoleCreateEvent(APIObject, GuildProperty):
     """Sent when a guild role is created.
 
     Attributes
@@ -244,7 +244,7 @@ class GuildRoleCreateEvent(APIObject):
 
 
 @dataclass(repr=False)
-class GuildRoleUpdateEvent(APIObject):
+class GuildRoleUpdateEvent(APIObject, GuildProperty):
     """Sent when a guild role is updated.
 
     Attributes
@@ -260,7 +260,7 @@ class GuildRoleUpdateEvent(APIObject):
 
 
 @dataclass(repr=False)
-class GuildRoleDeleteEvent(APIObject):
+class GuildRoleDeleteEvent(APIObject, GuildProperty):
     """Sent when a guild role is deleted.
 
     Attributes

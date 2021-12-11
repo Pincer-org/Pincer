@@ -6,9 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from pincer.objects.guild.channel import Channel
-
-from ...utils.api_object import APIObject, ChannelProperty
+from ...utils.api_object import APIObject, ChannelProperty, GuildProperty
 from ...utils.types import APINullable, MISSING
 
 if TYPE_CHECKING:
@@ -20,7 +18,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(repr=False)
-class MessageDeleteEvent(APIObject, ChannelProperty):
+class MessageDeleteEvent(APIObject, ChannelProperty, GuildProperty):
     """Sent when a message is deleted.
 
     Attributes
@@ -39,7 +37,7 @@ class MessageDeleteEvent(APIObject, ChannelProperty):
 
 
 @dataclass(repr=False)
-class MessageDeleteBulkEvent(APIObject, ChannelProperty):
+class MessageDeleteBulkEvent(APIObject, ChannelProperty, GuildProperty):
     """Sent when multiple messages are deleted at once.
 
     Attributes
@@ -58,7 +56,7 @@ class MessageDeleteBulkEvent(APIObject, ChannelProperty):
 
 
 @dataclass(repr=False)
-class MessageReactionAddEvent(APIObject, ChannelProperty):
+class MessageReactionAddEvent(APIObject, ChannelProperty, GuildProperty):
     """Sent when a user adds a reaction to a message.
 
     Attributes
@@ -86,7 +84,7 @@ class MessageReactionAddEvent(APIObject, ChannelProperty):
 
 
 @dataclass(repr=False)
-class MessageReactionRemoveEvent(APIObject, ChannelProperty):
+class MessageReactionRemoveEvent(APIObject, ChannelProperty, GuildProperty):
     """Sent when a user removes a reaction from a message.
 
     Attributes
@@ -111,7 +109,7 @@ class MessageReactionRemoveEvent(APIObject, ChannelProperty):
 
 
 @dataclass(repr=False)
-class MessageReactionRemoveAllEvent(APIObject, ChannelProperty):
+class MessageReactionRemoveAllEvent(APIObject, ChannelProperty, GuildProperty):
     """Sent when a user explicitly removes all reactions from a message.
 
     Attributes
@@ -129,7 +127,7 @@ class MessageReactionRemoveAllEvent(APIObject, ChannelProperty):
 
 
 @dataclass(repr=False)
-class MessageReactionRemoveEmojiEvent(APIObject, ChannelProperty):
+class MessageReactionRemoveEmojiEvent(APIObject, ChannelProperty, GuildProperty):
     """Sent when a bot removes all instances of a given
     emoji from the reactions of a message.
 
