@@ -26,7 +26,7 @@ async def voice_state_delete_middleware(self, payload: GatewayDispatch):
     """
     return (
         "on_voice_state_delete",
-        VoiceState.from_dict(construct_client_dict(self, payload.data))
+        VoiceState.from_dict(construct_client_dict(self, payload.data)),
     )
 
 

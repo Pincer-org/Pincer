@@ -26,7 +26,9 @@ async def thread_members_update_middleware(self, payload: GatewayDispatch):
     """  # noqa: E501
     return (
         "on_thread_members_update",
-        ThreadMembersUpdateEvent.from_dict(construct_client_dict(self, payload.data))
+        ThreadMembersUpdateEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        ),
     )
 
 

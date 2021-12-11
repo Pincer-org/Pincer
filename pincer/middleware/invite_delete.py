@@ -26,7 +26,7 @@ async def invite_delete_middleware(self, payload: GatewayDispatch):
     """
     return (
         "on_invite_delete",
-        InviteDeleteEvent.from_dict(construct_client_dict(self, payload.data))
+        InviteDeleteEvent.from_dict(construct_client_dict(self, payload.data)),
     )
 
 

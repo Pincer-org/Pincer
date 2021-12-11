@@ -24,7 +24,9 @@ async def thread_create_middleware(self, payload: GatewayDispatch):
         ``on_thread_create`` and an ``Channel``
     """
 
-    channel: Channel = Channel.from_dict(construct_client_dict(self, payload.data))
+    channel: Channel = Channel.from_dict(
+        construct_client_dict(self, payload.data)
+    )
 
     if self.guilds[channel.guild_id].threads:
         self.guilds[channel.guild_id].threads.append(channel)

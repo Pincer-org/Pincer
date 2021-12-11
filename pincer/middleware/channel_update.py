@@ -32,7 +32,7 @@ async def channel_update_middleware(self, payload: GatewayDispatch):
         guild.channels = replace(
             lambda _channel: _channel.id == channel.id,
             self.guilds[channel.guild_id].channels,
-            channel
+            channel,
         )
         self.channels[channel.id] = channel
 

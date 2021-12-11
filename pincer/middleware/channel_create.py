@@ -15,8 +15,7 @@ if TYPE_CHECKING:
 
 
 async def channel_create_middleware(
-        self,
-        payload: GatewayDispatch
+    self, payload: GatewayDispatch
 ) -> Tuple[str, Channel]:
     """|coro|
 
@@ -33,7 +32,9 @@ async def channel_create_middleware(
         ``on_channel_creation`` and a channel.
     """
 
-    channel: Channel = Channel.from_dict(construct_client_dict(self, payload.data))
+    channel: Channel = Channel.from_dict(
+        construct_client_dict(self, payload.data)
+    )
     self.guilds[channel.guild_id].channels.append(channel)
 
     self.channels[channel.id] = channel

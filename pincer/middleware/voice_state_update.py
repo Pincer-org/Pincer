@@ -19,8 +19,7 @@ if TYPE_CHECKING:
 
 
 async def voice_state_update_middleware(
-    self,
-    payload: GatewayDispatch
+    self, payload: GatewayDispatch
 ) -> Tuple[str, List[VoiceState]]:
     """|coro|
     Middleware for the ``on_voice_state_update`` event.
@@ -36,7 +35,9 @@ async def voice_state_update_middleware(
         ``on_voice_state_update`` and a ``VoiceState``
     """  # noqa: E501
 
-    voice_state = VoiceState.from_dict(construct_client_dict(self, payload.data))
+    voice_state = VoiceState.from_dict(
+        construct_client_dict(self, payload.data)
+    )
 
     guild = self.guilds.get(voice_state.guild_id)
 

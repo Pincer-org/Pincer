@@ -31,8 +31,7 @@ def get_middleware() -> Dict[str, Coro]:
 
             try:
                 middleware_list[event] = getattr(
-                    import_module(f".{event}", package=__name__),
-                    "export"
+                    import_module(f".{event}", package=__name__), "export"
                 )()
             except AttributeError:
                 _log.warning(

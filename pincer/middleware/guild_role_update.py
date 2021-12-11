@@ -25,7 +25,9 @@ async def guild_role_update_middleware(self, payload: GatewayDispatch):
         ``on_guild_role_update`` and a ``GuildRoleUpdateEvent``
     """
 
-    event = GuildRoleUpdateEvent.from_dict(construct_client_dict(self, payload.data))
+    event = GuildRoleUpdateEvent.from_dict(
+        construct_client_dict(self, payload.data)
+    )
 
     guild = self.guilds.get(event.guild_id)
 
@@ -35,10 +37,7 @@ async def guild_role_update_middleware(self, payload: GatewayDispatch):
             for role in guild.roles
         ]
 
-    return (
-        "on_guild_role_update",
-        event
-    )
+    return ("on_guild_role_update", event)
 
 
 def export() -> Coro:

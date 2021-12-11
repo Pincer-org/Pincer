@@ -30,7 +30,9 @@ async def guild_member_add_middleware(self, payload: GatewayDispatch):
 
     return (
         "on_guild_member_add",
-        GuildMemberAddEvent.from_dict(construct_client_dict(self, payload.data))
+        GuildMemberAddEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        ),
     )
 
 

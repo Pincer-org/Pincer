@@ -26,7 +26,7 @@ async def guild_status_middleware(self, payload: GatewayDispatch):
     """
     return (
         "on_guild_status",
-        GuildStatusEvent.from_dict(construct_client_dict(self, payload.data))
+        GuildStatusEvent.from_dict(construct_client_dict(self, payload.data)),
     )
 
 

@@ -28,7 +28,9 @@ async def channel_delete_middleware(self, payload: GatewayDispatch):
 
     guild = self.guilds.get(channel.guild_id)
     if guild:
-        guild.channels = list(filter(lambda c: c.id != channel.id, guild.channels))
+        guild.channels = list(
+            filter(lambda c: c.id != channel.id, guild.channels)
+        )
 
     self.channels.pop(channel.id, None)
 

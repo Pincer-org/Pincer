@@ -33,10 +33,7 @@ async def guild_emojis_update_middleware(self, payload: GatewayDispatch):
     if guild:
         guild.emojis = event.emojis
 
-    return (
-        "on_guild_emojis_update",
-        event
-    )
+    return ("on_guild_emojis_update", event)
 
 
 def export() -> Coro:

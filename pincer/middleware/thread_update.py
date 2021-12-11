@@ -33,7 +33,7 @@ async def thread_update_middleware(self, payload: GatewayDispatch):
         guild.threads = replace(
             lambda _channel: _channel.id == channel.id,
             self.guilds[channel.guild_id].threads,
-            channel
+            channel,
         )
         self.channels[channel.id] = channel
 

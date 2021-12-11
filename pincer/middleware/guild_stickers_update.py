@@ -34,10 +34,7 @@ async def guild_stickers_update_middleware(self, payload: GatewayDispatch):
     if guild:
         guild.stickers = event.stickers
 
-    return (
-        "on_guild_stickers_update",
-        event
-    )
+    return ("on_guild_stickers_update", event)
 
 
 def export() -> Coro:

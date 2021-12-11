@@ -32,7 +32,7 @@ async def guild_member_chunk_middleware(self, payload: GatewayDispatch):
         "on_guild_member_chunk",
         GuildMembersChunkEvent.from_dict(
             construct_client_dict(self, payload.data)
-        )
+        ),
     )
 
 

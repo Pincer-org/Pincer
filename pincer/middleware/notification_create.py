@@ -33,7 +33,7 @@ async def notification_create_middleware(self, payload: GatewayDispatch):
         "on_notification_create",
         NotificationCreateEvent.from_dict(
             construct_client_dict(self, payload.data)
-        )
+        ),
     )
 
 

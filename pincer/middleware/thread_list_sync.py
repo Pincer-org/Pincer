@@ -28,7 +28,9 @@ async def thread_list_sync(self, payload: GatewayDispatch):
         ``on_thread_list_sync`` and an ``ThreadListSyncEvent``
     """  # noqa: E501
 
-    event = ThreadListSyncEvent.from_dict(construct_client_dict(self, payload.data))
+    event = ThreadListSyncEvent.from_dict(
+        construct_client_dict(self, payload.data)
+    )
 
     guild = self.guilds.get(event.guild_id)
     if guild:
