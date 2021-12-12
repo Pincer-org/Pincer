@@ -6,7 +6,7 @@ from __future__ import annotations
 from asyncio import sleep, ensure_future
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import overload, TYPE_CHECKING
+from typing import overload, TYPE_CHECKING, Type
 
 from ..message.user_message import UserMessage
 from ..._config import GatewayConfig
@@ -531,7 +531,7 @@ class ChannelMention(APIObject):
 
 
 # noinspection PyTypeChecker
-_channel_type_map: Dict[ChannelType, Channel] = {
+_channel_type_map: Dict[ChannelType, Type[Channel]] = {
     ChannelType.GUILD_TEXT: TextChannel,
     ChannelType.GUILD_VOICE: VoiceChannel,
     ChannelType.GUILD_CATEGORY: CategoryChannel,
