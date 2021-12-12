@@ -23,8 +23,6 @@ from ..exceptions import (
 if TYPE_CHECKING:
     from ..utils.types import JsonDict
     from typing import Any, Dict, Optional, Union
-
-    from aiohttp.client import _RequestContextManager
     from aiohttp.payload import Payload
     from aiohttp.typedefs import StrOrURL
 
@@ -41,7 +39,7 @@ class HttpCallable(Protocol):
             allow_redirects: bool = True,
             method: Optional[Union[JsonDict, str, Payload]] = None,
             **kwargs: Any
-    ) -> _RequestContextManager:
+    ) -> ClientResponse:
         ...
 
 

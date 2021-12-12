@@ -537,5 +537,5 @@ class Interaction(APIObject):
 
 
 __all__ = (
-    "InteractionFlags",
+    "InteractionFlags", "ResolvedData", "InteractionData", "Interaction"
 )

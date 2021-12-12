@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import copy
 import logging
-from dataclasses import dataclass, fields, _is_dataclass_instance
+from dataclasses import dataclass, fields, is_dataclass
 from enum import Enum, EnumMeta
 from inspect import getfullargspec
 from typing import (
@@ -42,7 +42,7 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple[Any], Dict[Any, Any], T]
         A dict without None values
     """
 
-    if _is_dataclass_instance(obj):
+    if is_dataclass(obj) and not isinstance(obj, type):
         result = []
         for f in fields(obj):
             value = _asdict_ignore_none(getattr(obj, f.name))
