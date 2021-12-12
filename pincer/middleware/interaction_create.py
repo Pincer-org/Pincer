@@ -167,7 +167,7 @@ async def interaction_create_middleware(
                         context,
                         interaction,
                         # Always take the error parameter its name.
-                        {params[(len(params) - 1) or 0]: e},
+                        {params[-1]: e},
                     )
                 else:
                     raise e
