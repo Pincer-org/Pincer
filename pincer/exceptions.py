@@ -10,14 +10,14 @@ class PincerError(Exception):
 class InvalidPayload(PincerError):
     """Exception which gets thrown if an invalid payload has been received.
     This means that the data of the payload did not match the expected
-    format and/or didn't contain the the expected values.
+    format and/or didn't contain the expected values.
     """
 
 
 class UnhandledException(PincerError):
     """Exception which gets thrown if an exception wasn't handled.
 
-    Please create an issue on our github
+    Please create an issue on our GitHub
     if this exception gets thrown.
     """
 
@@ -68,7 +68,7 @@ class NoCogManagerReturnFound(CogError):
 
 
 class CommandError(PincerError):
-    """Base class for exceptions which are related to commands."""
+    """Base class for exceptions which are related to command."""
 
 
 class CommandCooldownError(CommandError):
@@ -155,7 +155,7 @@ class InvalidCommandName(CommandError):
 class InvalidEventName(PincerError):
     """Exception raised when the event name is not a valid event.
     This can be because the event name did not begin with an ``on_`` or
-    because its not a valid event in the library.
+    because it's not a valid event in the library.
     """
 
 
@@ -194,7 +194,7 @@ class EmbedOverflow(PincerError):
 
 
 class TaskError(PincerError):
-    """Base class for exceptions that are related to tasks.
+    """Base class for exceptions that are related to task.
 
     Attributes
     ----------

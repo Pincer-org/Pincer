@@ -28,9 +28,9 @@ class InviteTargetType(IntEnum):
     Attributes
     ----------
     STREAM:
-        A normal Discord invite, eg for a channel or guild.
+        A normal Discord invite, e.g. for a channel or guild.
     EMBEDDED_APPLICATION:
-        An embedded application invite, eg poker-night etc.
+        An embedded application invite, e.g. poker-night etc.
     """
     STREAM = 1
     EMBEDDED_APPLICATION = 2

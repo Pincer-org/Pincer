@@ -94,7 +94,7 @@ class Channel(APIObject):  # noqa E501
         automatically archive the thread after recent activity, can be set to:
         60, 1440, 4320, 10080
     guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
-        The id of the guild (may be missing for some channel objects received
+        The id of the guild (maybe missing for some channel objects received
         over gateway guild dispatches)
     icon: APINullable[Optional[:class:`str`]]
         Icon hash
@@ -501,6 +501,14 @@ class NewsChannel(Channel):
         return await super().edit(**kwargs)
 
 
+class PublicThread(Channel):
+    """A subclass of ``Channel`` for public threads with all the same attributes."""
+
+    
+class PrivateThread(Channel):
+    """A subclass of ``Channel`` for private threads with all the same attributes."""
+
+
 @dataclass(repr=False)
 class ChannelMention(APIObject):
     """Represents a Discord Channel Mention object
@@ -527,5 +535,7 @@ _channel_type_map: Dict[ChannelType, Channel] = {
     ChannelType.GUILD_TEXT: TextChannel,
     ChannelType.GUILD_VOICE: VoiceChannel,
     ChannelType.GUILD_CATEGORY: CategoryChannel,
-    ChannelType.GUILD_NEWS: NewsChannel
+    ChannelType.GUILD_NEWS: NewsChannel,
+    ChannelType.GUILD_PUBLIC_THREAD: PublicThread,
+    ChannelType.GUILD_PRIVATE_THREAD: PrivateThread
 }

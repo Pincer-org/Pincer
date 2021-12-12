@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
 
 class CallbackType(IntEnum):
-    """The types of response a client can give to a interaction.
+    """The types of response a client can give to an interaction.
 
     Attributes
     ----------

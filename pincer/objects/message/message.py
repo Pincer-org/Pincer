@@ -31,7 +31,7 @@ except (ModuleNotFoundError, ImportError):
 
 @dataclass(repr=False)
 class Message:
-    """A discord message that will be send to discord
+    """A discord message that will be sent to discord
 
     Attributes
     ----------

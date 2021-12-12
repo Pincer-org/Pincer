@@ -31,8 +31,15 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple[Any], Dict[Any, Any], T]
     all values that are None
     Modification of _asdict_inner from dataclasses
 
-    :param obj:
-        Dataclass obj
+    Parameters
+    ----------
+
+    obj: Generic[T]
+        The object to convert
+
+    Returns
+    -------
+        A dict without None values
     """
 
     if _is_dataclass_instance(obj):
@@ -78,7 +85,7 @@ class HTTPMeta(type):
             if mapping.get("__annotations__") and \
                     (value := mapping["__annotations__"].get(key)):
                 # We want to keep the type annotations of the objects
-                # tho, so lets statically store them so we can read
+                # tho, so lets statically store them, so we can read
                 # them later.
                 HTTPMeta.__ori_annotations.update({key: value})
                 del mapping["__annotations__"][key]
@@ -115,7 +122,7 @@ class APIObject(metaclass=HTTPMeta):
         Returns
         -------
         Tuple[:class:`type`]
-            A collection of type annotation(s). Will most of the times
+            A collection of type annotation(s). Will most of the time
             consist of 1 item.
 
         Raises

@@ -42,13 +42,13 @@ class Intents(IntEnum):
     GUILD_MESSAGE_REACTIONS:
         Reactions to messages intent.
     GUILD_MESSAGE_TYPING:
-        Typing to messages intent.
+        Typing to message intent.
     DIRECT_MESSAGES:
         DM messages intent.
     DIRECT_MESSAGE_REACTIONS:
         DM reaction to messages intent.
     DIRECT_MESSAGE_TYPING:
-        DM typing to messages intent.
+        DM typing to message intent.
     """
     NONE = 0
     GUILDS = 1 << 0
