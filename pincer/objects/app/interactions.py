@@ -494,7 +494,7 @@ class Interaction(APIObject):
             data,
             content_type=content_type
         )
-        msg = UserMessage.from_dict(resp)
+        msg: UserMessage = UserMessage.from_dict(resp)
         self.__post_followup_sent(msg, message)
         return msg
 
