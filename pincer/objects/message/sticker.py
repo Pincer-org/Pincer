@@ -8,6 +8,7 @@ from enum import IntEnum
 from typing import TYPE_CHECKING
 
 from ...utils.api_object import APIObject
+from ...utils.conversion import remove_none
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
@@ -27,6 +28,7 @@ class StickerType(IntEnum):
     GUILD:
         Sticker is a custom sticker from a discord server.
     """
+
     STANDARD = 1
     GUILD = 2
 
@@ -43,6 +45,7 @@ class StickerFormatType(IntEnum):
     LOTTIE:
         Sticker is animated with LOTTIE format. (vector based)
     """
+
     PNG = 1
     APNG = 2
     LOTTIE = 3
@@ -93,6 +96,61 @@ class Sticker(APIObject):
     pack_id: APINullable[Snowflake] = MISSING
     sort_value: APINullable[int] = MISSING
     user: APINullable[User] = MISSING
+
+    @classmethod
+    async def from_id(cls, _id: Snowflake) -> Sticker:
+        """|coro|
+        Returns a sticker object for the given sticker ID.
+
+        Parameters
+        ----------
+        _id : Snowflake
+            id of the sticker
+
+        Returns
+        -------
+        :class:`~pincer.objects.message.sticker.Sticker`
+            sticker object of the given ID
+        """
+        sticker = await cls._http.get(f"stickers/{_id}")
+        return cls.from_dict(sticker)
+
+    async def modify(
+        self,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        tags: Optional[str] = None,
+        reason: Optional[str] = None,
+    ) -> Sticker:
+        """|coro|
+        Modify the given sticker.
+        Requires the ``MANAGE_EMOJIS_AND_STICKERS permission.``
+
+        Parameters
+        ----------
+        name : Optional[:class:`str`] |default| :data:`None`
+            name of the sticker (2-30 characters)
+        description : Optional[:class:`str`] |default| :data:`None`
+            description of the sticker (2-100 characters)
+        tags : Optional[:class:`str`] |default| :data:`None`
+            autocomplete/suggestion tags for the sticker (max 200 characters)
+        reason : Optional[:class:`str`]
+            reason for modifying the sticker
+
+        Returns
+        -------
+        :class:`~pincer.objects.message.sticker.Sticker`
+            the modified sticker
+        """
+        sticker = await self._http.patch(
+            f"guilds/{self.guild_id}/stickers/{self.id}",
+            data=remove_none(
+                {"name": name, "description": description, "tags": tags}
+            ),
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
+        )
+
+        return Sticker.from_dict(sticker)
 
 
 @dataclass(repr=False)

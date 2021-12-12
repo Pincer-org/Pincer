@@ -8,9 +8,10 @@ from asyncio import iscoroutinefunction, run, ensure_future
 from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
-from typing import Any, Dict, Iterable, List, Optional, Tuple, Union, overload
-from typing import TYPE_CHECKING
-
+from typing import (
+    Any, Dict, Iterable, List, Optional, Tuple, Union, overload, 
+    AsyncIterator, TYPE_CHECKING
+)
 from . import __package__
 from .commands import ChatCommandHandler
 from .core import HTTPClient
@@ -22,7 +23,7 @@ from .exceptions import (
 from .middleware import middleware
 from .objects import (
     Role, Channel, DefaultThrottleHandler, User, Guild, Intents,
-    GuildTemplate
+    GuildTemplate, StickerPack
 )
 from .utils.conversion import construct_client_dict
 from .utils.event_mgr import EventMgr
@@ -873,6 +874,19 @@ class Client(Dispatcher):
             A Webhook object.
         """
         return await Webhook.from_id(self, id, token)
+
+    async def sticker_packs(self) -> AsyncIterator[StickerPack]:
+        """|coro|
+        Yields sticker packs available to Nitro subscribers.
+
+        Yields
+        ------
+        :class:`~pincer.objects.message.sticker.StickerPack`
+            a sticker pack
+        """
+        packs = await self.http.get("sticker-packs")
+        for pack in packs:
+            yield StickerPack.from_dict(pack)
 
 
 Bot = Client
