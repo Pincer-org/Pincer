@@ -1,10 +1,11 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from typing import Any, List, Tuple, Union, T
-
+from typing import Any, List, Tuple, Union, TypeVar, Type
 from ..utils.types import MISSING
 from ..objects.app.command import AppCommandOptionChoice
+
+T = TypeVar("T")
 
 
 class _CommandTypeMeta(type):
@@ -43,7 +44,7 @@ class CommandArg(metaclass=_CommandTypeMeta):
         self.command_type = command_type
         self.modifiers = args
 
-    def get_arg(self, arg_type: T) -> T:
+    def get_arg(self, arg_type: Type[T]) -> T:
         for arg in self.modifiers:
             if isinstance(arg, arg_type):
                 return arg.get_payload()
