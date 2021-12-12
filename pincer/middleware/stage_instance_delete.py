@@ -28,9 +28,9 @@ async def stage_instance_delete_middleware(self, payload: GatewayDispatch):
 
     guild = self.guilds.get(stage.guild_id)
     if guild:
-        guild.stage_instances = list(
-            filter(lambda _stage: _stage.id != stage.id, guild.stage_instances)
-        )
+        guild.stage_instances = [
+            _stage for _stage in guild.stage_instances if _stage.id != stage.id
+        ]
 
     return "on_stage_instance_delete", stage
 
