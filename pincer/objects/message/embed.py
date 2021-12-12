@@ -518,7 +518,7 @@ class Embed(APIObject):
 
     def add_fields(
             self,
-            field_list: Union[Dict[Any, Any], Iterable[Iterable[Any, Any]]],
+            field_list: Union[Dict[Any, Any], Iterable[Iterable[Any]]],
             checks: Callable[[Any], Any] = bool,
             map_title: Callable[[Any], str] = str,
             map_values: Callable[[Any], str] = str,
@@ -529,7 +529,7 @@ class Embed(APIObject):
 
         Parameters
         ----------
-        field_list: Union[Dict[Any, Any], Iterable[Iterable[Any, Any]]]
+        field_list: Union[Dict[Any, Any], Iterable[Iterable[Any]]]
             A iterable or generator of the fields to add.
             If the field_list type is a dictionary, will take items.
         checks: Optional[Callable[[Any], Any]]

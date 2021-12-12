@@ -43,7 +43,7 @@ if TYPE_CHECKING:
     from ..user.voice_state import VoiceState
     from ...client import Client
     from ...utils.timestamp import Timestamp
-    from ...utils.types import APINullable, JSONSerializable
+    from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
 
 
@@ -1387,7 +1387,7 @@ class Guild(APIObject):
         )
         return GuildWidget.from_dict(construct_client_dict(self._client, data))
 
-    async def get_widget(self) -> Dict[str, JSONSerializable]:
+    async def get_widget(self) -> JsonDict:
         """|coro|
         Returns the widget for the guild
         """

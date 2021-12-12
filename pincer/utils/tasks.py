@@ -175,12 +175,15 @@ class Task:
             )
 
     @property
-    def cancelled(self):
+    def cancelled(self) -> bool:
         """:class:`bool`: Check if the task has been cancelled or not."""
-        return self.running and self._handle.cancelled()
+        if self._handle is None:
+            return False
+
+        return self._handle.cancelled()
 
     @property
-    def running(self):
+    def running(self) -> bool:
         """:class:`bool`: Check if the task is running."""
         return self._handle is not None
 

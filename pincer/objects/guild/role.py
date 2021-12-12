@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List, Any
 
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
@@ -96,7 +96,7 @@ class Role(APIObject):
     # TODO: Implement Caching @Arthurdw
     @classmethod
     async def from_id(cls, client, guild_id: int, role_id: int) -> Optional[Role]:
-        roles: list = await client.http.get(f"/guilds/{guild_id}/roles")
+        roles: List[Any] = await client.http.get(f"/guilds/{guild_id}/roles")
 
         for role in roles:
             if int(role['id']) == role_id:
