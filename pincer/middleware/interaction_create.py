@@ -7,14 +7,11 @@ import logging
 from inspect import isasyncgenfunction, _empty
 from typing import Dict, Any
 from typing import TYPE_CHECKING
-from pincer.commands.buttons import ButtonHandler, hash_button_id
-
-from pincer.objects.app.interaction_base import InteractionType
 
 
-from ..commands import ChatCommandHandler
+from ..commands import ButtonHandler, ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
-from ..objects import Interaction, MessageContext, AppCommandType
+from ..objects import Interaction, MessageContext, AppCommandType, InteractionType
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 from ..utils import get_index
 from ..utils.conversion import construct_client_dict
@@ -130,6 +127,9 @@ async def interaction_handler(
     elif interaction.data.type == AppCommandType.MESSAGE:
         # Add Message to args
         args.append(next(iter(interaction.data.resolved.messages.values())))
+
+    if interaction.data.values:
+        args.append(interaction.data.values)
 
     kwargs = {**defaults, **params}
 

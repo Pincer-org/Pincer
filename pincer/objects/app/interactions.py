@@ -89,7 +89,7 @@ class InteractionData(APIObject):
     options: APINullable[List[AppCommandInteractionDataOption]] = MISSING
     custom_id: APINullable[str] = MISSING
     component_type: APINullable[int] = MISSING
-    values: APINullable[SelectOption] = MISSING
+    values: APINullable[List[str]] = MISSING
     target_id: APINullable[Snowflake] = MISSING
 
 
