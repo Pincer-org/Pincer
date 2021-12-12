@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from ...utils.api_object import ChannelProperty, GuildProperty
+
 if TYPE_CHECKING:
 
     from typing import Optional, Union
@@ -18,7 +20,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(repr=False)
-class MessageContext:
+class MessageContext(GuildProperty, ChannelProperty):
     """Represents the context of a message interaction.
 
     Attributes

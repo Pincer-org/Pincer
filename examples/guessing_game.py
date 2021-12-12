@@ -13,7 +13,6 @@ class Bot(Client):
             f" Pick a number between 0 and {biggest_number}."
         )
 
-        channel = await self.get_channel(ctx.channel_id)
         number = random.randint(0, biggest_number)
 
         try:
@@ -24,7 +23,7 @@ class Bot(Client):
                     continue
 
                 if not next_message.content.isdigit():
-                    await channel.send(
+                    await ctx.channel.send(
                         f"{next_message.content} is not a number. Try again!"
                     )
                     continue
@@ -32,16 +31,16 @@ class Bot(Client):
                 guessed_number = int(next_message.content)
 
                 if guessed_number > number:
-                    await channel.send("Number is too high!")
+                    await ctx.channel.send("Number is too high!")
                 elif guessed_number < number:
-                    await channel.send("Number is too low!")
+                    await ctx.channel.send("Number is too low!")
                 else:
                     await next_message.react("🚀")
-                    await channel.send("Number is correct!")
+                    await ctx.channel.send("Number is correct!")
                     break
 
         except TimeoutError:
-            await channel.send("You took too long! The game timed out.")
+            await ctx.channel.send("You took too long! The game timed out.")
 
 
 if __name__ == "__main__":
