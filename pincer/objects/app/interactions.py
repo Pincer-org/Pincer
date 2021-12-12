@@ -231,13 +231,20 @@ class Interaction(APIObject):
         )
         return UserMessage.from_dict(resp)
 
-    async def ack(self, flags: Optional[InteractionFlags] = None):
+    async def _base_ack(
+        self,
+        flags: Optional[InteractionFlags],
+        callback_type: CallbackType
+    ):
         """|coro|
 
         Acknowledge an interaction, any flags here are applied to the reply.
 
         Parameters
         ----------
+        message_type : :class:`~pincer.objects.app.interaction_base.CallbackType`
+            The type of the message. Should be ``DEFERRED_MESSAGE`` or
+            ``DEFERRED_UPDATE_MESSAGE``.
         flags: :class:`~pincer.objects.app.interaction_flags.InteractionFlags`
             The flags which must be applied to the reply.
 
@@ -257,12 +264,18 @@ class Interaction(APIObject):
         await self._http.post(
             f"interactions/{self.id}/{self.token}/callback",
             {
-                "type": CallbackType.DEFERRED_MESSAGE,
+                "type": callback_type,
                 "data": {
                     "flags": flags
                 }
             }
         )
+
+    async def ack(self, flags: Optional[InteractionFlags] = None):
+        return await self._base_ack(flags, CallbackType.DEFERRED_MESSAGE)
+
+    async def deferred_update_ack(self, flags: Optional[InteractionFlags] = None):
+        return await self._base_ack(flags, CallbackType.DEFERRED_UPDATE_MESSAGE)
 
     async def __post_send_handler(self, message: Message):
         """Process the interaction after it was sent.
@@ -288,7 +301,12 @@ class Interaction(APIObject):
         self.has_replied = True
         ensure_future(self.__post_send_handler(message))
 
-    async def reply(self, message: MessageConvertable):
+    async def _base_reply(
+        self,
+        message: MessageConvertable,
+        message_type: CallbackType,
+        allow_empty: bool
+    ):
         """|coro|
 
         Initial reply, only works if no ACK has been sent yet.
@@ -297,6 +315,9 @@ class Interaction(APIObject):
         ----------
         message :class:`~pincer.utils.convert_message.MessageConvertable`
             The response message!
+        message_type : :class:`~pincer.objects.app.interaction_base.CallbackType`
+            The type of the message. Should be ``MESSAGE`` or
+            ``UPDATE_MESSAGE``.
 
         Raises
         ------
@@ -322,7 +343,8 @@ class Interaction(APIObject):
 
         message = convert_message(self._client, message)
         content_type, data = message.serialize(
-            message_type=CallbackType.MESSAGE
+            message_type=message_type,
+            allow_empty=allow_empty
         )
 
         try:
@@ -339,6 +361,19 @@ class Interaction(APIObject):
             )
 
         self.__post_sent(message)
+
+    async def reply(self, message: MessageConvertable) -> UserMessage:
+        """|coro|
+        Sends a reply to a interaction.
+        """
+        return await self._base_reply(message, CallbackType.MESSAGE, False)
+
+    async def update(self, message: MessageConvertable) -> UserMessage:
+        """|coro|
+        Edits the reply to an interaction. Only works with Message Component
+        Interactions.
+        """
+        return await self._base_reply(message, CallbackType.UPDATE_MESSAGE, True)
 
     async def edit(self, message: MessageConvertable) -> UserMessage:
         """|coro|
