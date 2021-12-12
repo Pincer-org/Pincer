@@ -220,7 +220,7 @@ class Client(Dispatcher):
 
         Returns
         -------
-        :class:`pincer.utils.snowflake.Snowflake`
+        List[:class:`pincer.utils.snowflake.Snowflake`]
         """
         return self.guilds.keys()
 
