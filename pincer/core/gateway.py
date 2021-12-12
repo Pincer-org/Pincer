@@ -11,9 +11,8 @@ from typing import Dict, Callable, Awaitable, Optional
 from typing import TYPE_CHECKING
 
 import zlib
-from websockets import connect
 from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
-from websockets.legacy.client import WebSocketClientProtocol
+from websockets.legacy.client import WebSocketClientProtocol, connect
 
 from . import __package__
 from .._config import GatewayConfig
