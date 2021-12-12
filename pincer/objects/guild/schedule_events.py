@@ -6,6 +6,7 @@ from ..guild.stage import PrivacyLevel
 from ..user import User
 from ...utils.api_object import APIObject, MISSING
 from ...utils.snowflake import Snowflake
+from ...utils.timestamp import Timestamp
 from ...utils.types import APINullable
 
 
@@ -88,14 +89,14 @@ class ScheduledEvent(APIObject):
     id: Snowflake
     name: str
     guild_id: Snowflake
-    scheduled_start_time: str
+    scheduled_start_time: Timestamp
     privacy_level = PrivacyLevel
     status: EventStatus
     entity_type: GuildScheduledEventEntityType
 
     channel_id: APINullable[Snowflake] = MISSING
     creator_id: APINullable[Snowflake] = MISSING
-    scheduled_end_time: Optional[str] = None
+    scheduled_end_time: Optional[Timestamp] = None
 
     description: APINullable[str] = MISSING
     entity_id: APINullable[Snowflake] = MISSING
