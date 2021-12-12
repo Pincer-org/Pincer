@@ -32,12 +32,10 @@ async def guild_role_delete_middleware(self, payload: GatewayDispatch):
     guild = self.guilds.get(event.guild_id)
 
     if guild:
-        guild.roles = list(
-            filter(
-                lambda role: role.id != event.role_id,
-                self.guilds[event.guild_id].roles,
-            )
-        )
+        guild.roles = [
+            role for role in self.guilds[event.guild_id].roles
+            if role.id != event.role_id
+        ]
 
     return ("on_guild_role_delete", event)
 
