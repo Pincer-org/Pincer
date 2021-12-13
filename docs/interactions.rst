@@ -276,7 +276,7 @@ The :class:`~pincer.objects.message.context.MessageContext` object provides meth
 
     @command
     async def some_command(self, ctx: MessageContext):
-        ctx.send("Hello world!") # Sends hello world as the response to the interaction
+        await ctx.send("Hello world!") # Sends hello world as the response to the interaction
         return # No response will be sent now that the interaction has been completed
 
     @command
