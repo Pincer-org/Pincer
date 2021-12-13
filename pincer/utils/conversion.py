@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 def construct_client_dict(
-    client: Client, data: Optional[int, Union[List[Any], Dict[str, Any]]]
+    client: Client, data: Optional[Union[int, List[Any], Dict[str, Any]]]
 ) -> Dict[str, Any]:
     # TODO: fix docs
     """
