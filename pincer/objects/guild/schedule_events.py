@@ -64,11 +64,11 @@ class ScheduledEvent(APIObject):
         The guild id which the scheduled event belongs to
     scheduled_start_time: str
         The scheduled start time of the event.
-    privacy_level: :class:`PrivacyLevel`
+    privacy_level: :class:`~pincer.guild.stage.PrivacyLevel`
         The privacy level of the scheduled event.
-    status: :class:`EventStatus`
+    status: :class:`~pincer.guild.schedule_events.EventStatus`
         The status of the scheduled event.
-    entity_type: :class:`GuildScheduledEventEntityType`
+    entity_type: :class:`~pincer.guild.schedule_events.GuildScheduledEventEntityType`
         The type of the scheduled event
     channel_id: :class:`int`
         The channel id in which the scheduled event will be hosted,
@@ -83,7 +83,7 @@ class ScheduledEvent(APIObject):
         The id of an entity associated with a guild scheduled event
     entity_metadata: :class:`str`
         Additional metadata for the guild scheduled event
-    creator: :class:`User`
+    creator: :class:`~pincer.objects.user.user.User`
         The user who created the scheduled event
     user_count: :class:`int`
         The number of users who have joined the scheduled event
