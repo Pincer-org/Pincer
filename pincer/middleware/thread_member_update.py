@@ -5,7 +5,6 @@
 
 from ..core.dispatch import GatewayDispatch
 from ..objects import ThreadMember
-from ..utils import Timestamp
 from ..utils.conversion import construct_client_dict
 
 
