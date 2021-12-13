@@ -41,7 +41,7 @@ Coro = Callable[..., Coroutine[Any, Any, Any]]
 
 choice_value_types = Union[str, int, float]
 
-CheckFunction = Optional[Callable[[Any], bool]]
+CheckFunction = Optional[Callable[..., bool]]
 
 
 class Singleton(type):
