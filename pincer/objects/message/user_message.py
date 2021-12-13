@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum, IntEnum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, DefaultDict
 from collections import defaultdict
 
 from .attachment import Attachment
@@ -50,7 +50,7 @@ class AllowedMentionTypes(str, Enum):
     EVERYONE = "everyone"
 
 
-@dataclass
+@dataclass(repr=False)
 class AllowedMentions(APIObject):
     """Represents the entities the client can mention
 
@@ -230,7 +230,7 @@ class MessageType(IntEnum):
     CONTEXT_MENU_COMMAND = 23
 
 
-@dataclass
+@dataclass(repr=False)
 class MessageActivity(APIObject):
     """Represents a Discord Message Activity object
 
@@ -245,7 +245,7 @@ class MessageActivity(APIObject):
     party_id: APINullable[str] = MISSING
 
 
-@dataclass
+@dataclass(repr=False)
 class UserMessage(APIObject):
     """Represents a message sent in a channel within Discord.
 
