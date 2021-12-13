@@ -11,7 +11,7 @@ from aiohttp import FormData
 
 from .channel import Channel
 from .invite import Invite
-from .schedule_events import ScheduledEvent
+from .scheduled_events import ScheduledEvent
 from ..message.file import File
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
