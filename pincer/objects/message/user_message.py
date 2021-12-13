@@ -6,6 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum, IntEnum
 from typing import TYPE_CHECKING
+from collections import defaultdict
 
 from .attachment import Attachment
 from .component import MessageComponent
@@ -49,7 +50,7 @@ class AllowedMentionTypes(str, Enum):
     EVERYONE = "everyone"
 
 
-@dataclass(repr=False)
+@dataclass
 class AllowedMentions(APIObject):
     """Represents the entities the client can mention
 
@@ -229,7 +230,7 @@ class MessageType(IntEnum):
     CONTEXT_MENU_COMMAND = 23
 
 
-@dataclass(repr=False)
+@dataclass
 class MessageActivity(APIObject):
     """Represents a Discord Message Activity object
 
@@ -244,7 +245,7 @@ class MessageActivity(APIObject):
     party_id: APINullable[str] = MISSING
 
 
-@dataclass(repr=False)
+@dataclass
 class UserMessage(APIObject):
     """Represents a message sent in a channel within Discord.
 
@@ -511,20 +512,15 @@ class UserMessage(APIObject):
             the components to include with the message
         """
 
-        data = {}
+        data: DefaultDict[str, JsonVal] = defaultdict(list)
 
         def set_if_not_none(value: Any, name: str):
             if isinstance(value, list):
-                data[name] = []
                 for item in value:
                     return set_if_not_none(item, name)
 
             if isinstance(value, APIObject):
-                d = value.to_dict()
-                if name in data:
-                    data[name].append(d)
-                else:
-                    data[name] = d
+                data[name].append(value.to_dict())
 
             elif value is not None:
                 data[name] = value
