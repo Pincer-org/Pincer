@@ -37,7 +37,7 @@ APINullable = Union[T, MissingType]
 
 
 #: Represents a coroutine.
-Coro = Callable[[Any, Any], Coroutine[Any, Any, Any]]
+Coro = Callable[..., Coroutine[Any, Any, Any]]
 
 choice_value_types = Union[str, int, float]
 
