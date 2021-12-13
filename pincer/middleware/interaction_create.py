@@ -19,24 +19,29 @@ from ..utils.signature import get_signature_and_params
 
 if TYPE_CHECKING:
     from typing import List, Tuple
+    from ..client import Client
 
 
 _log = logging.getLogger(__name__)
 
 
-def get_call(interaction: Interaction):
+def get_call(self: Client, interaction: Interaction):
     if interaction.type == InteractionType.APPLICATION_COMMAND:
         command = ChatCommandHandler.register.get(interaction.data.name)
         if command is None:
             return None
+        # Only application commands can be throttled
+        self.throttler.handle(command)
         return command.call
-
     elif interaction.type == InteractionType.MESSAGE_COMPONENT:
         return ButtonHandler.register.get(interaction.data.custom_id)
+    elif interaction.type == InteractionType.AUTOCOMPLETE:
+        raise NotImplementedError(
+            "handling for autocomplete is not implemented"
+        )
 
 
 async def interaction_response_handler(
-        self,
         command: Coro,
         context: MessageContext,
         interaction: Interaction,
@@ -80,7 +85,6 @@ async def interaction_response_handler(
 
 
 async def interaction_handler(
-        self,
         interaction: Interaction,
         context: MessageContext,
         command: Coro
@@ -98,8 +102,6 @@ async def interaction_handler(
     command : :class:`~pincer.utils.types.Coro`
         The coroutine which will be seen as a command.
     """
-    # self.throttler.handle(command)
-
     sig, _ = get_signature_and_params(command)
 
     defaults = {key: value.default for key,
@@ -134,12 +136,12 @@ async def interaction_handler(
     kwargs = {**defaults, **params}
 
     await interaction_response_handler(
-        self, command, context, interaction, args, kwargs
+        command, context, interaction, args, kwargs
     )
 
 
 async def interaction_create_middleware(
-    self,
+    self: Client,
     payload: GatewayDispatch
 ) -> Tuple[str, Interaction]:
     """Middleware for ``on_interaction``, which handles command
@@ -166,14 +168,13 @@ async def interaction_create_middleware(
         construct_client_dict(self, payload.data)
     )
 
-    call = get_call(interaction)
+    call = get_call(self, interaction)
 
     context = interaction.get_message_context()
 
     if call:
         try:
-            await interaction_handler(self, interaction, context,
-                                      call)
+            await interaction_handler(interaction, context, call)
         except Exception as e:
             if coro := get_index(self.get_event_coro("on_command_error"), 0):
                 params = get_signature_and_params(coro)[1]
@@ -181,12 +182,11 @@ async def interaction_create_middleware(
                 # Check if a context or error var has been passed.
                 if 0 < len(params) < 3:
                     await interaction_response_handler(
-                        self,
                         coro,
                         context,
                         interaction,
                         # Always take the error parameter its name.
-                        {params[(len(params) - 1) or 0]: e}
+                        {params[-1]: e}
                     )
                 else:
                     raise e

@@ -54,8 +54,7 @@ class DefaultThrottleHandler(ThrottleInterface, ABC):
         Optional[:class:`int`]
             The throttlescope enum
         """
-        scope = DefaultThrottleHandler.__throttle_scopes[
-            command.cooldown_scope]
+        scope = DefaultThrottleHandler.__throttle_scopes[command.cooldown_scope]
 
         if not scope:
             return None
