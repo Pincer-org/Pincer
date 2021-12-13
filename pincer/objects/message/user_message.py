@@ -23,7 +23,7 @@ from ..._config import GatewayConfig
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict
 from ...utils.snowflake import Snowflake
-from ...utils.types import MISSING
+from ...utils.types import MISSING, JSONSerializable
 
 if TYPE_CHECKING:
     from typing import Any, List, Optional, Union, Generator
@@ -512,7 +512,7 @@ class UserMessage(APIObject):
             the components to include with the message
         """
 
-        data: DefaultDict[str, JsonVal] = defaultdict(list)
+        data: DefaultDict[str, JSONSerializable] = defaultdict(list)
 
         def set_if_not_none(value: Any, name: str):
             if isinstance(value, list):
