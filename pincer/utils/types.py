@@ -14,6 +14,12 @@ class MissingType:
     def __repr__(self):
         return "<MISSING>"
 
+    def __getitem__(self, item):
+        return self
+
+    def __getattr__(self, item):
+        return self
+
     def __bool__(self) -> bool:
         return False
 
@@ -31,7 +37,7 @@ APINullable = Union[T, MissingType]
 
 
 #: Represents a coroutine.
-Coro = Callable[[Any, ...], Coroutine[Any, Any, Any]]
+Coro = Callable[[Any, Any], Coroutine[Any, Any, Any]]
 
 choice_value_types = Union[str, int, float]
 
