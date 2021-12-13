@@ -9,12 +9,12 @@ from typing import TYPE_CHECKING, TypedDict
 
 if TYPE_CHECKING:
     from pincer.utils.types import JsonDict
-    from typing import Any, Dict, Optional, Union
+    from typing import Dict, Optional, Union
 
 
 class Payload(TypedDict):
     op: int
-    d: Optional[Union[int, JsonDict]]
+    d: JsonDict
     s: Optional[int]
     t: Optional[str]
 
@@ -38,12 +38,12 @@ class GatewayDispatch:
     def __init__(
             self,
             op: int,
-            data: Optional[Union[int, Dict[str, Any]]],
+            data: Optional[JsonDict],
             seq: Optional[int] = None,
             name: Optional[str] = None
     ):
         self.op: int = op
-        self.data: Optional[Union[int, Dict[str, Any]]] = data
+        self.data: JsonDict = data or {}
         self.seq: Optional[int] = seq
         self.event_name: Optional[str] = name
 
