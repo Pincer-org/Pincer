@@ -18,6 +18,8 @@ class EventStatus(IntEnum):
     ----------
     SCHEDULED: int
         The event is scheduled.
+    ACTIVE: int
+        The event is active.
     CANCELLED: int
         The event is cancelled.
     COMPLETED: int
