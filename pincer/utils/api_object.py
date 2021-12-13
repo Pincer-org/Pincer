@@ -13,7 +13,8 @@ from typing import (
     List, get_type_hints, get_origin, get_args
 )
 
-from .conversion import convert
+from pincer.utils.conversion import construct_client_dict
+
 from .types import MissingType, MISSING, TypeCache
 from ..exceptions import InvalidArgumentAnnotation
 
@@ -172,12 +173,16 @@ class APIObject(metaclass=HTTPMeta):
         if getattr(attr_type, "__factory__", None):
             factory = attr_type.__factory__
 
-        return convert(
-            attr_value,
-            factory,
-            attr_type,
-            self._client
-        )
+        if attr_value is MISSING:
+            return MISSING
+
+        if attr_type is not None and isinstance(attr_value, attr_type):
+            return attr_value
+
+        if isinstance(attr_value, dict):
+            return factory(construct_client_dict(self._client, attr_value))
+
+        return factory(attr_value)
 
     def __post_init__(self):
         self._http = getattr(self._client, "http", None)
@@ -287,23 +292,23 @@ class APIObject(metaclass=HTTPMeta):
 class GuildProperty:
 
     @property
-    def guild(obj) -> Guild:
+    def guild(self) -> Guild:
         """Return a guild from an APIObject
         Parameters
         ----------
-        obj : :class:`~pincer.utils.api_object.APIObject`
+        self : :class:`~pincer.utils.api_object.APIObject`
 
         Returns
         -------
         :class:`~pincer.objects.guild.guild.Guild`
         """
-        return obj._client.guilds[obj.guild_id]
+        return self._client.guilds[self.guild_id]
 
 
 class ChannelProperty:
 
     @property
-    def channel(obj) -> Channel:
+    def channel(self) -> Channel:
         """Return a channel from an APIObject
         Parameters
         ----------
@@ -313,4 +318,4 @@ class ChannelProperty:
         -------
         :class:`~pincer.objects.guild.channel.Channel`
         """
-        return obj._client.channels[obj.channel_id]
+        return self._client.channels[self.channel_id]

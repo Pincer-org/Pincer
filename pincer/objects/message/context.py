@@ -5,8 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import ChannelProperty, GuildProperty
-
 if TYPE_CHECKING:
 
     from typing import Optional, Union
@@ -15,12 +13,13 @@ if TYPE_CHECKING:
     from ..app.interaction_flags import InteractionFlags
     from ..guild.member import GuildMember
     from ..user.user import User
+    from ...client import Client
     from ...utils.convert_message import MessageConvertable
     from ...utils.snowflake import Snowflake
 
 
 @dataclass(repr=False)
-class MessageContext(GuildProperty, ChannelProperty):
+class MessageContext:
     """Represents the context of a message interaction.
 
     Attributes
@@ -40,14 +39,25 @@ class MessageContext(GuildProperty, ChannelProperty):
     channel_id: Optional[:class:`~pincer.utils.snowflake.Snowflake`]
         The ID of the channel the interaction was invoked in.
         Can be None if it wasn't invoked in a channel.
-    """
-    # noqa: E501
+    """  # noqa: E501
+    _client: Client
+
     author: Union[GuildMember, User]
     command: ClientCommandStructure
     interaction: Interaction
 
     guild_id: Optional[Snowflake] = None
     channel_id: Optional[Snowflake] = None
+
+    # Properties do not use ChannelProperty and GuildProperty because MessageContext is
+    # not an APIObject.
+    @property
+    def channel(self):
+        return self._client.channels[self.channel_id]
+
+    @property
+    def guild(self):
+        return self._client.guilds[self.channel_id]
 
     async def ack(self, flags: InteractionFlags = None):
         """|coro|

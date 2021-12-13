@@ -16,7 +16,7 @@ class Bot(Client):
         number = random.randint(0, biggest_number)
 
         try:
-            async for next_message, in self.loop_for(
+            async for next_message in self.loop_for(
                 "on_message", loop_timeout=60
             ):
                 if next_message.author.bot:

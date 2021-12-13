@@ -209,6 +209,7 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
 
     def convert_to_message_context(self, command):
         return MessageContext(
+            self._client,
             self.member or self.user,
             command,
             self,
