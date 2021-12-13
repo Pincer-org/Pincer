@@ -16,12 +16,9 @@ from ...exceptions import ImageEncodingError
 from ...utils.types import JsonDict
 
 if TYPE_CHECKING:
-    from typing import Any, Dict, List, Optional, Tuple
-
-    IMAGE_TYPE = Any
+    from typing import Any, List, Optional, Tuple
 
 PILLOW_IMPORT = True
-
 
 try:
     from PIL.Image import Image

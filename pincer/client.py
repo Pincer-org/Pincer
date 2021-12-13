@@ -731,7 +731,7 @@ class Client(Dispatcher):
     def loop_for(
             self,
             event_name: str,
-            check: CheckFunction = None,
+            check: Optional[CheckFunction] = None,
             iteration_timeout: Optional[float] = None,
             loop_timeout: Optional[float] = None
     ):
