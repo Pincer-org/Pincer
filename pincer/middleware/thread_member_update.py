@@ -27,7 +27,7 @@ async def thread_member_update_middleware(self, payload: GatewayDispatch):
 
     return (
         "on_thread_member_update",
-        ThreadMember.from_dict(construct_client_dict(payload.data)),
+        ThreadMember.from_dict(construct_client_dict(self, payload.data)),
     )
 
 
