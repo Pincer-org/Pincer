@@ -5,12 +5,12 @@
 from __future__ import annotations
 
 import logging
+import zlib
 from asyncio import AbstractEventLoop, ensure_future, get_event_loop
 from platform import system
 from typing import Dict, Callable, Awaitable, Optional
 from typing import TYPE_CHECKING
 
-import zlib
 from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
 from websockets.legacy.client import WebSocketClientProtocol, connect
 

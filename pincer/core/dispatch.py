@@ -7,7 +7,6 @@ from __future__ import annotations
 from json import dumps, loads
 from typing import TYPE_CHECKING, TypedDict
 
-
 if TYPE_CHECKING:
     from pincer.utils.types import JsonDict
     from typing import Any, Dict, Optional, Union

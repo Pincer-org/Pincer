@@ -20,7 +20,6 @@ from ..commands.arg_types import (
     MaxValue,
     MinValue,
 )
-from ..utils.snowflake import Snowflake
 from ..exceptions import (
     CommandIsNotCoroutine,
     CommandAlreadyRegistered,
@@ -49,6 +48,7 @@ from ..objects.app import (
 )
 from ..utils import get_index, should_pass_ctx
 from ..utils.signature import get_signature_and_params
+from ..utils.snowflake import Snowflake
 from ..utils.types import MISSING
 from ..utils.types import Singleton
 

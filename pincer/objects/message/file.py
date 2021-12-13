@@ -3,8 +3,8 @@
 
 from __future__ import annotations
 
-from base64 import b64encode
 import os
+from base64 import b64encode
 from dataclasses import dataclass
 from io import BytesIO
 from json import dumps
@@ -16,7 +16,7 @@ from ...exceptions import ImageEncodingError
 from ...utils.types import JsonDict
 
 if TYPE_CHECKING:
-    from typing import Any, List, Optional, Tuple
+    from typing import List, Optional, Tuple
 
 PILLOW_IMPORT = True
 

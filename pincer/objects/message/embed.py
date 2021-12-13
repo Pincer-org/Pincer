@@ -13,7 +13,7 @@ from ...utils.api_object import APIObject
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from typing import Any, Callable, Dict, Iterable, Union, Optional
+    from typing import Any, Callable, Dict, Iterable, Union
 
     from ...utils.types import APINullable
 

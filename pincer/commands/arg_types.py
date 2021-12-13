@@ -2,8 +2,9 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 from typing import Any, List, Tuple, Union, TypeVar, Type
-from ..utils.types import MISSING
+
 from ..objects.app.command import AppCommandOptionChoice
+from ..utils.types import MISSING
 
 T = TypeVar("T")
 

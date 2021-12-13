@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import List, Tuple
+    from typing import Tuple
 
     from ..core.dispatch import GatewayDispatch
 

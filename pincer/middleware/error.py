@@ -14,7 +14,7 @@ from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
-    from typing import List, Tuple
+    from typing import Tuple
     from ..core.dispatch import GatewayDispatch
 
 
