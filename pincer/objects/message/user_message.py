@@ -13,7 +13,7 @@ from .embed import Embed
 from .reaction import Reaction
 from .reference import MessageReference
 from .sticker import StickerItem
-from ..app.application import Application
+
 from ..app.interaction_base import MessageInteraction
 from ..guild.member import GuildMember
 from ..guild.role import Role
@@ -26,7 +26,7 @@ from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import Any, List, Optional, Union, Generator
-
+    from ..app.application import Application
     from ..guild.channel import Channel, ChannelMention
     from ...utils.types import APINullable
     from ...utils.timestamp import Timestamp
