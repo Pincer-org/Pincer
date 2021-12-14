@@ -11,6 +11,7 @@ from ..core.dispatch import GatewayDispatch
 from ..objects import Channel, ThreadMember
 from ..objects.events.thread import ThreadListSyncEvent
 from ..utils.conversion import construct_client_dict
+from ..utils.types import JsonDict
 
 
 async def thread_list_sync(self, payload: GatewayDispatch):
@@ -29,14 +30,18 @@ async def thread_list_sync(self, payload: GatewayDispatch):
         ``on_thread_list_sync`` and an ``ThreadListSyncEvent``
     """  # noqa: E501
 
+    data: JsonDict = payload.data
+    payload_members: List[JsonDict] = payload.data.pop("members")
+    payload_threads: List[JsonDict] = payload.data.pop("threads")
+
     threads: List[Channel] = [
         Channel.from_dict(construct_client_dict(self, thread))
-        for thread in payload.data.pop("threads")
+        for thread in payload_threads
     ]
 
     members: List[ThreadMember] = [
         ThreadMember.from_dict(construct_client_dict(self, member))
-        for member in payload.data.pop("members")
+        for member in payload_members
     ]
 
     return (

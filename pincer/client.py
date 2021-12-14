@@ -31,7 +31,7 @@ from .utils.event_mgr import EventMgr
 from .utils.extraction import get_index
 from .utils.insertion import should_pass_cls
 from .utils.signature import get_params
-from .utils.types import CheckFunction
+from .utils.types import CheckFunction, JsonDict
 from .utils.types import Coro
 
 if TYPE_CHECKING:
@@ -874,7 +874,7 @@ class Client(Dispatcher):
         :class:`~pincer.objects.message.sticker.StickerPack`
             a sticker pack
         """
-        packs = await self.http.get("sticker-packs")
+        packs: List[JsonDict] = await self.http.get("sticker-packs")
         for pack in packs:
             yield StickerPack.from_dict(pack)
 

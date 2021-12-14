@@ -2,6 +2,7 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 """sent when the thread member object for the current user is updated"""
+from typing import Union
 
 from ..core.dispatch import GatewayDispatch
 from ..objects import ThreadMember
@@ -24,13 +25,14 @@ async def thread_member_update_middleware(self, payload: GatewayDispatch):
     Tuple[:class:`str`, :class:`~pincer.objects.guild.thread.ThreadMember`]
         ``on_thread_member_update`` and an ``ThreadMember``
     """
+    join_timestamp: Union[str, float, int] = payload.data.get("join_timestamp")
 
     return (
         "on_thread_member_update",
         ThreadMember.from_dict(construct_client_dict(
             self,
             {
-                "join_timestamp": Timestamp(payload.data.pop("join_timestamp")),
+                "join_timestamp": Timestamp(join_timestamp),
                 **payload.data
             }
         ))

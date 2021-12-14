@@ -7,6 +7,7 @@ from typing import List
 from ..core.dispatch import GatewayDispatch
 from ..objects import Guild, Channel
 from ..utils.conversion import construct_client_dict
+from ..utils.types import JsonDict
 
 
 async def guild_update_middleware(self, payload: GatewayDispatch):
@@ -25,7 +26,7 @@ async def guild_update_middleware(self, payload: GatewayDispatch):
         ``on_guild_Update`` and an ``Guild``
     """
 
-    channel_list = payload.data.pop("channels", [])
+    channel_list: List[JsonDict] = payload.data.pop("channels", [])
 
     channels: List[Channel] = [
         Channel.from_dict(construct_client_dict(self, channel))
