@@ -482,7 +482,10 @@ class Client(Dispatcher):
             Middleware has not been registered
         """
         ware: MiddlewareType = _events.get(key)
-        next_call, arguments, params = ware, [], {}
+
+        next_call = ware
+        arguments: List[Any] = []
+        params: Dict[str, Any] = {}
 
         if iscoroutinefunction(ware):
             extractable = await ware(self, payload, *args, **kwargs)
@@ -573,6 +576,9 @@ class Client(Dispatcher):
             required data for the client to know what event it is and
             what specifically happened.
         """
+        if payload.event_name is None:
+            return
+
         await self.process_event(payload.event_name.lower(), payload)
 
     async def payload_event_handler(self, _, payload: GatewayDispatch):

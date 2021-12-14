@@ -26,7 +26,7 @@ async def guild_delete_middleware(self, payload: GatewayDispatch):
     # TODO: Fix docs on line 23 (three lines above)
     # http://docs.pincer.dev/pincer.middleware#pincer.middleware.guild_delete.guild_delete_middleware
 
-    guild = UnavailableGuild.from_dict(
+    guild: UnavailableGuild = UnavailableGuild.from_dict(
         construct_client_dict(self, payload.data)
     )
 

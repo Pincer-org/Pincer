@@ -24,7 +24,7 @@ async def channel_delete_middleware(self, payload: GatewayDispatch):
         ``on_channel_delete`` and a ``Channel``
     """
 
-    channel = Channel.from_dict(construct_client_dict(self, payload.data))
+    channel: Channel = Channel.from_dict(construct_client_dict(self, payload.data))
 
     if channel.guild_id in self.guilds:
         guild = self.guilds[channel.guild_id]

@@ -604,11 +604,11 @@ class Guild(APIObject):
         """
         data = await self._http.get(f"guilds/{self.id}/threads/active")
 
-        threads = (
+        threads: Generator[List[Union[PublicThread, PrivateThread]]] = (
             Channel.from_dict(construct_client_dict(self._client, channel))
             for channel in data["threads"]
         )
-        members = (
+        members: Generator[GuildMember] = (
             GuildMember.from_dict(construct_client_dict(self._client, member))
             for member in data["members"]
         )
