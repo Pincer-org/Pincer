@@ -20,9 +20,10 @@ from .types import (
 
 
 __all__ = (
-    "APINullable", "APIObject", "CheckFunction", "Color", "Coro",
-    "EventMgr", "HTTPMeta", "MISSING", "MissingType", "Snowflake", "Task",
-    "TaskScheduler", "Timestamp", "chdir", "choice_value_types",
-    "get_index", "get_params", "get_signature_and_params", "should_pass_cls",
-    "should_pass_ctx", "replace", "construct_client_dict", "ChannelProperty", "GuildProperty"
+    "APINullable", "APIObject", "ChannelProperty", "CheckFunction",
+    "Color", "Coro", "EventMgr", "GuildProperty", "HTTPMeta", "MISSING",
+    "MissingType", "Snowflake", "Task", "TaskScheduler", "Timestamp", "chdir",
+    "choice_value_types", "construct_client_dict", "get_index", "get_params",
+    "get_signature_and_params", "replace", "should_pass_cls",
+    "should_pass_ctx"
 )
