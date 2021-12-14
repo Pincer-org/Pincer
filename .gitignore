@@ -1,6 +1,7 @@
 # IDE Configuration files
 .idea
 .vscode
+.vs
 
 # Python Environment
 *.py[dcw]
