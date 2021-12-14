@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, GuildProperty
 from ...utils.types import MISSING, APINullable
 
 if TYPE_CHECKING:
@@ -242,7 +242,7 @@ class ClientStatus(APIObject):
 
 
 @dataclass(repr=False)
-class PresenceUpdateEvent(APIObject):
+class PresenceUpdateEvent(APIObject, GuildProperty):
     """This event is sent when a user's presence or info,
     such as name or avatar, is updated.
 

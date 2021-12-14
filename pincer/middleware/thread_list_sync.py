@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import List
 
 from ..core.dispatch import GatewayDispatch
-from ..objects import Channel, ThreadMember
 from ..objects.events.thread import ThreadListSyncEvent
 from ..utils.conversion import construct_client_dict
 
@@ -29,22 +28,15 @@ async def thread_list_sync(self, payload: GatewayDispatch):
         ``on_thread_list_sync`` and an ``ThreadListSyncEvent``
     """  # noqa: E501
 
-    threads: List[Channel] = [
-        Channel.from_dict(construct_client_dict(self, thread))
-        for thread in payload.data.pop("threads")
-    ]
-
-    members: List[ThreadMember] = [
-        ThreadMember.from_dict(construct_client_dict(self, member))
-        for member in payload.data.pop("members")
-    ]
-
-    return (
-        "on_thread_list_sync",
-        ThreadListSyncEvent.from_dict(
-            {"threads": threads, "members": members, **payload.data}
-        )
+    event = ThreadListSyncEvent.from_dict(
+        construct_client_dict(self, payload.data)
     )
+
+    guild = self.guilds.get(event.guild_id)
+    if guild:
+        guild.threads = event.threads
+
+    return "on_thread_list_sync", event
 
 
 def export():

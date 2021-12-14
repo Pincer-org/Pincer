@@ -28,7 +28,7 @@ async def integration_update_middleware(self, payload: GatewayDispatch):
         "on_integration_update",
         IntegrationUpdateEvent.from_dict(
             construct_client_dict(self, payload.data)
-        )
+        ),
     )
 
 

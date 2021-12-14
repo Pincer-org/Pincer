@@ -25,7 +25,7 @@ async def guild_member_remove_middleware(self, payload: GatewayDispatch):
     -------
     Tuple[:class:`str`, :class:`~pincer.objects.events.guild.GuildMemberRemoveEvent`]
         ``on_guild_member_remove`` and a ``GuildMemberRemoveEvent``
-    """  # noqa: E501
+    """
 
     return (
         "on_guild_member_remove",

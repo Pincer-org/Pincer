@@ -6,14 +6,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, ChannelProperty
 
 if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
 @dataclass(repr=False)
-class FollowedChannel(APIObject):
+class FollowedChannel(APIObject, ChannelProperty):
     """Represents a Discord Followed Channel object
 
     Attributes

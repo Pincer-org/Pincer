@@ -26,7 +26,7 @@ async def presence_update_middleware(self, payload: GatewayDispatch):
     """  # noqa: E501
     return (
         "on_presence_update",
-        PresenceUpdateEvent.from_dict(construct_client_dict(self, payload.data))
+        PresenceUpdateEvent.from_dict(construct_client_dict(self, payload.data)),
     )
 
 

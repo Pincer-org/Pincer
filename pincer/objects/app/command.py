@@ -9,7 +9,7 @@ from typing import List, Union, TYPE_CHECKING
 
 from .command_types import AppCommandOptionType, AppCommandType
 from ...objects.guild.channel import ChannelType
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, GuildProperty
 from ...utils.snowflake import Snowflake
 from ...utils.types import Coro, choice_value_types
 from ...utils.types import MISSING
@@ -93,7 +93,7 @@ class AppCommandOption(APIObject):
 
 
 @dataclass(repr=False)
-class AppCommand(APIObject):
+class AppCommand(APIObject, GuildProperty):
     """Represents a Discord Application Command object
 
     Attributes

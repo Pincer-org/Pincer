@@ -16,8 +16,7 @@ if TYPE_CHECKING:
 
 
 async def message_create_middleware(
-    self,
-    payload: GatewayDispatch
+    self, payload: GatewayDispatch
 ) -> Tuple[str, UserMessage]:  # noqa: E501
     """|coro|
 
@@ -35,7 +34,7 @@ async def message_create_middleware(
     """  # noqa: E501
     return (
         "on_message",
-        UserMessage.from_dict(construct_client_dict(self, payload.data))
+        UserMessage.from_dict(construct_client_dict(self, payload.data)),
     )
 
 

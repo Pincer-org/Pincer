@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, GuildProperty
 from ...utils.types import MISSING, APINullable
 
 if TYPE_CHECKING:
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(repr=False)
-class IntegrationDeleteEvent(APIObject):
+class IntegrationDeleteEvent(APIObject, GuildProperty):
     """Sent when an integration is deleted.
 
     Attributes
@@ -32,7 +32,7 @@ class IntegrationDeleteEvent(APIObject):
 
 
 @dataclass(repr=False)
-class IntegrationCreateEvent(APIObject):
+class IntegrationCreateEvent(APIObject, GuildProperty):
     """
     Sent when an integration is created.
 
@@ -53,7 +53,7 @@ class IntegrationCreateEvent(APIObject):
 
 
 @dataclass(repr=False)
-class IntegrationUpdateEvent(APIObject):
+class IntegrationUpdateEvent(APIObject, GuildProperty):
     """
     Sent when an integration is updated.
 

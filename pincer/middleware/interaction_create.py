@@ -25,12 +25,12 @@ _log = logging.getLogger(__name__)
 
 
 async def interaction_response_handler(
-        self,
-        command: Coro,
-        context: MessageContext,
-        interaction: Interaction,
-        args: List[Any],
-        kwargs: Dict[str, Any]
+    self,
+    command: Coro,
+    context: MessageContext,
+    interaction: Interaction,
+    args: List[Any],
+    kwargs: Dict[str, Any],
 ):
     """|coro|
 
@@ -69,10 +69,7 @@ async def interaction_response_handler(
 
 
 async def interaction_handler(
-        self,
-        interaction: Interaction,
-        context: MessageContext,
-        command: Coro
+    self, interaction: Interaction, context: MessageContext, command: Coro
 ):
     """|coro|
 
@@ -91,14 +88,15 @@ async def interaction_handler(
 
     sig, _ = get_signature_and_params(command)
 
-    defaults = {key: value.default for key,
-                value in sig.items() if value.default is not _empty}
+    defaults = {
+        key: value.default
+        for key, value in sig.items()
+        if value.default is not _empty
+    }
     params = {}
 
     if interaction.data.options is not MISSING:
-        params = {
-            opt.name: opt.value for opt in interaction.data.options
-        }
+        params = {opt.name: opt.value for opt in interaction.data.options}
 
     args = []
 
@@ -125,8 +123,7 @@ async def interaction_handler(
 
 
 async def interaction_create_middleware(
-    self,
-    payload: GatewayDispatch
+    self, payload: GatewayDispatch
 ) -> Tuple[str, Interaction]:
     """Middleware for ``on_interaction``, which handles command
     execution.
@@ -157,8 +154,7 @@ async def interaction_create_middleware(
         context = interaction.convert_to_message_context(command)
 
         try:
-            await interaction_handler(self, interaction, context,
-                                      command.call)
+            await interaction_handler(self, interaction, context, command.call)
         except Exception as e:
             if coro := get_index(self.get_event_coro("on_command_error"), 0):
                 params = get_signature_and_params(coro)[1]
@@ -171,7 +167,7 @@ async def interaction_create_middleware(
                         context,
                         interaction,
                         # Always take the error parameter its name.
-                        {params[(len(params) - 1) or 0]: e}
+                        {params[-1]: e},
                     )
                 else:
                     raise e

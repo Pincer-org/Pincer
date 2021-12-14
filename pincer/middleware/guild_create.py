@@ -33,6 +33,9 @@ async def guild_create_middleware(self, payload: GatewayDispatch):
     """
     guild = Guild.from_dict(construct_client_dict(self, payload.data))
     self.guilds[guild.id] = guild
+    for channel in guild.channels:
+        self.channels[channel.id] = channel
+
     return "on_guild_create", guild
 
 

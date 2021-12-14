@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, GuildProperty
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(repr=False)
-class Application(APIObject):
+class Application(APIObject, GuildProperty):
     """Represents a Discord application. (e.g. Bot, OAuth)
 
     Attributes

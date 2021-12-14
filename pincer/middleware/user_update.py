@@ -26,7 +26,7 @@ async def user_update_middleware(self, payload: GatewayDispatch):
     """
     return (
         "on_user_update",
-        User.from_dict(construct_client_dict(self, payload.data))
+        User.from_dict(construct_client_dict(self, payload.data)),
     )
 
 

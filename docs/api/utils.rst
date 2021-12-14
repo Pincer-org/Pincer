@@ -13,6 +13,15 @@ APIObject
 
 .. autoclass:: APIObject()
 
+APIObject Properties
+~~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: ChannelProperty()
+
+.. autoclass:: GuildProperty()
+
+
+
 Directory
 ---------
 

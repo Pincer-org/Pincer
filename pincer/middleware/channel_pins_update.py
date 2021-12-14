@@ -23,10 +23,12 @@ async def channel_pins_update_middleware(self, payload: GatewayDispatch):
         ``on_channel_pins_update`` and a ``Channel``
     """
 
-    return (
-        "on_channel_pins_update",
-        ChannelPinsUpdateEvent.from_dict(payload.data)
-    )
+    event = ChannelPinsUpdateEvent.from_dict(payload.data)
+    self.channels[
+        event.channel_id
+    ].last_pin_timestamp = event.last_pin_timestamp
+
+    return ("on_channel_pins_update", event)
 
 
 def export():

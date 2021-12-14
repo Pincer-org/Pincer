@@ -9,8 +9,7 @@ from ..utils.conversion import construct_client_dict
 
 
 async def message_reaction_remove_all_middleware(
-    self,
-    payload: GatewayDispatch
+    self, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -32,7 +31,7 @@ async def message_reaction_remove_all_middleware(
         "on_message_reaction_remove_all",
         MessageReactionRemoveAllEvent.from_dict(
             construct_client_dict(self, payload.data)
-        )
+        ),
     )
 
 

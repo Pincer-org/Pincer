@@ -26,7 +26,7 @@ async def typing_start_middleware(self, payload: GatewayDispatch):
     """  # noqa: E501
     return (
         "on_typing_start",
-        TypingStartEvent.from_dict(construct_client_dict(self, payload.data))
+        TypingStartEvent.from_dict(construct_client_dict(self, payload.data)),
     )
 
 
