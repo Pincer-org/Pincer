@@ -10,7 +10,6 @@ from typing import AsyncGenerator, overload, TYPE_CHECKING
 from aiohttp import FormData
 
 from .channel import Channel
-from .invite import Invite
 from .scheduled_events import ScheduledEvent
 from ..message.file import File
 from ...exceptions import UnavailableGuildError
@@ -27,6 +26,7 @@ if TYPE_CHECKING:
     from .channel import PublicThread, PrivateThread, ChannelType
     from .member import GuildMember
     from .features import GuildFeature
+    from .invite import Invite
     from .overwrite import Overwrite
     from .role import Role
     from .stage import StageInstance
