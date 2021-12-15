@@ -44,7 +44,8 @@ extensions = [
     'exception_hierarchy',
     'attributetable',
     'silence',
-    'sphinxcontrib_trio'
+    'sphinxcontrib_trio',
+    'sphinxcontrib.mermaid',
 ]
 
 add_module_names = False
@@ -54,6 +55,8 @@ autodoc_typehints = 'none'
 autodoc_member_order = 'alphabetical'
 
 set_type_checking_flag = True
+
+mermaid_output_format = 'raw'
 
 resource_links = {
     'discord': 'https://discord.gg/et54DgVjMX',
