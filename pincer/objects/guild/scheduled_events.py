@@ -1,13 +1,14 @@
 from dataclasses import dataclass
 from enum import IntEnum, Enum
-from typing import Optional
-
-from ..guild.stage import PrivacyLevel
-from ..user import User
+from typing import Optional, TYPE_CHECKING
 from ...utils.api_object import APIObject, MISSING
-from ...utils.snowflake import Snowflake
-from ...utils.timestamp import Timestamp
-from ...utils.types import APINullable
+
+if TYPE_CHECKING:
+    from ..guild.stage import PrivacyLevel
+    from ..user import User
+    from ...utils.snowflake import Snowflake
+    from ...utils.timestamp import Timestamp
+    from ...utils.types import APINullable
 
 
 class EventStatus(IntEnum):
