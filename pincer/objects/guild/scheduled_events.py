@@ -31,7 +31,7 @@ class EventStatus(IntEnum):
     CANCELLED = 4
 
 
-class GuildScheduledEventEntityType(Enum):
+class GuildScheduledEventEntityType(IntEnum):
     """
     The type of entity that is scheduled.
 
