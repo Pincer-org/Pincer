@@ -7,6 +7,8 @@ from asyncio import sleep, ensure_future
 from dataclasses import dataclass
 from typing import Any, Dict, TYPE_CHECKING, Union, Optional, List
 
+from pincer.utils.api_object import ChannelProperty, GuildProperty
+
 from .command_types import AppCommandOptionType
 from .interaction_base import InteractionType, CallbackType
 from .mentionable import Mentionable
@@ -96,7 +98,7 @@ class InteractionData(APIObject):
 
 
 @dataclass(repr=False)
-class Interaction(APIObject):
+class Interaction(APIObject, ChannelProperty, GuildProperty):
     """Represents a Discord Interaction object
 
     Attributes
@@ -207,6 +209,7 @@ class Interaction(APIObject):
 
     def convert_to_message_context(self, command):
         return MessageContext(
+            self._client,
             self.member or self.user,
             command,
             self,

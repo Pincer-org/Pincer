@@ -26,11 +26,13 @@ async def guild_member_add_middleware(self, payload: GatewayDispatch):
     -------
     Tuple[:class:`str`, :class:`~pincer.objects.events.guild.GuildMemberAddEvent`]
         ``on_guild_member_add`` and a ``GuildMemberAddEvent``
-    """  # noqa: E501
+    """
 
     return (
         "on_guild_member_add",
-        GuildMemberAddEvent.from_dict(construct_client_dict(self, payload.data))
+        GuildMemberAddEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        ),
     )
 
 

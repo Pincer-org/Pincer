@@ -20,10 +20,7 @@ if TYPE_CHECKING:
     from ..core.dispatch import GatewayDispatch
 
 
-async def on_ready_middleware(
-    self,
-    payload: GatewayDispatch
-) -> Tuple[str]:
+async def on_ready_middleware(self, payload: GatewayDispatch) -> Tuple[str]:
     """|coro|
 
     Middleware for the ``on_ready`` event.
@@ -51,7 +48,7 @@ async def on_ready_middleware(
     self.guilds = dict(map(lambda i: (i["id"], None), guilds))
 
     await ChatCommandHandler(self).initialize()
-    return "on_ready",
+    return ("on_ready",)
 
 
 def export() -> Coro:

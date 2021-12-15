@@ -19,8 +19,7 @@ if TYPE_CHECKING:
 
 
 def error_middleware(
-    self,
-    payload: GatewayDispatch
+    self, payload: GatewayDispatch
 ) -> Tuple[str, DiscordError]:
     """|coro|
 
@@ -40,7 +39,7 @@ def error_middleware(
 
     return (
         "on_error",
-        DiscordError.from_dict(construct_client_dict(self, payload.data))
+        DiscordError.from_dict(construct_client_dict(self, payload.data)),
     )
 
 

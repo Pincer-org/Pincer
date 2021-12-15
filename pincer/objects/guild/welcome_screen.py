@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, ChannelProperty
 
 if TYPE_CHECKING:
     from typing import Optional, List
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(repr=False)
-class WelcomeScreenChannel(APIObject):
+class WelcomeScreenChannel(APIObject, ChannelProperty):
     """Represents a welcome screen channel. This is a channel which gets
     shown on the welcome screen.
 

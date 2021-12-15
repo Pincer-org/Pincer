@@ -25,12 +25,16 @@ async def guild_stickers_update_middleware(self, payload: GatewayDispatch):
         ``on_guild_sticker_update`` and a ``GuildStickersUpdateEvent``
     """  # noqa: E501
 
-    return (
-        "on_guild_stickers_update",
-        GuildStickersUpdateEvent.from_dict(
-            construct_client_dict(self, payload.data)
-        )
+    event = GuildStickersUpdateEvent.from_dict(
+        construct_client_dict(self, payload.data)
     )
+
+    guild = self.guilds.get(event.guild_id)
+
+    if guild:
+        guild.stickers = event.stickers
+
+    return ("on_guild_stickers_update", event)
 
 
 def export() -> Coro:

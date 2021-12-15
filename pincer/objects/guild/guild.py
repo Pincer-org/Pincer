@@ -20,8 +20,8 @@ from ...utils.types import MISSING
 if TYPE_CHECKING:
     from ...utils.types import JsonDict
     from typing import Any, Dict, List, Optional, Tuple, Union, Generator
-    from collections.abc import AsyncIterator
 
+    from collections.abc import AsyncIterator
     from .audit_log import AuditLog
     from .ban import Ban
     from .channel import PublicThread, PrivateThread, ChannelType

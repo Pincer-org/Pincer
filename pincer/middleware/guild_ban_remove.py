@@ -27,7 +27,9 @@ async def guild_ban_remove_middleware(self, payload: GatewayDispatch):
 
     return (
         "on_guild_ban_remove",
-        GuildBanRemoveEvent.from_dict(construct_client_dict(self, payload.data))
+        GuildBanRemoveEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        ),
     )
 
 

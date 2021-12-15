@@ -26,7 +26,7 @@ async def speaking_start_middleware(self, payload: GatewayDispatch):
     """
     return (
         "on_speaking_start",
-        SpeakingStartEvent.from_dict(construct_client_dict(self, payload.data))
+        SpeakingStartEvent.from_dict(construct_client_dict(self, payload.data)),
     )
 
 

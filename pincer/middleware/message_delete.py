@@ -16,8 +16,7 @@ if TYPE_CHECKING:
 
 
 async def on_message_delete_middleware(
-    self,
-    payload: GatewayDispatch
+    self, payload: GatewayDispatch
 ) -> Tuple[str, MessageDeleteEvent]:
     """|coro|
     Middleware for the ``on_message_delete`` event.
@@ -35,7 +34,7 @@ async def on_message_delete_middleware(
 
     return (
         "on_message_delete",
-        MessageDeleteEvent.from_dict(construct_client_dict(self, payload.data))
+        MessageDeleteEvent.from_dict(construct_client_dict(self, payload.data)),
     )
 
 

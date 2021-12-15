@@ -5,7 +5,7 @@
 
 from ..core.dispatch import GatewayDispatch
 from ..objects import Channel
-from ..utils.conversion import construct_client_dict
+from ..utils import construct_client_dict, replace
 
 
 async def thread_update_middleware(self, payload: GatewayDispatch):
@@ -25,10 +25,19 @@ async def thread_update_middleware(self, payload: GatewayDispatch):
         ``on_thread_update`` and an ``Channel``
     """
 
-    return (
-        "on_thread_update",
-        Channel.from_dict(construct_client_dict(self, payload.data))
-    )
+    channel = Channel.from_dict(construct_client_dict(self, payload.data))
+
+    guild = self.guilds.get(channel.guild_id)
+
+    if guild:
+        guild.threads = replace(
+            lambda _channel: _channel.id == channel.id,
+            self.guilds[channel.guild_id].threads,
+            channel,
+        )
+        self.channels[channel.id] = channel
+
+    return "on_thread_update", channel
 
 
 def export():
