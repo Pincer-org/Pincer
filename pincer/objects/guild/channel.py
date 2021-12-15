@@ -10,7 +10,7 @@ from typing import overload, TYPE_CHECKING
 
 from ..message.user_message import UserMessage
 from ..._config import GatewayConfig
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, GuildProperty
 from ...utils.conversion import construct_client_dict
 from ...utils.convert_message import convert_message
 from ...utils.types import MISSING
@@ -76,7 +76,7 @@ class ChannelType(IntEnum):
 
 
 @dataclass(repr=False)
-class Channel(APIObject):  # noqa E501
+class Channel(APIObject, GuildProperty):  # noqa E501
     """Represents a Discord Channel Mention object
 
     Attributes
@@ -170,7 +170,8 @@ class Channel(APIObject):  # noqa E501
     parent_id: APINullable[Optional[Snowflake]] = MISSING
     permissions: APINullable[str] = MISSING
     permission_overwrites: APINullable[List[Overwrite]] = MISSING
-    position: APINullable[int] = MISSING
+    # Position is always 0 when not sent
+    position: APINullable[int] = 0
     rate_limit_per_user: APINullable[int] = MISSING
     recipients: APINullable[List[User]] = MISSING
     rtc_region: APINullable[Optional[str]] = MISSING
@@ -488,6 +489,14 @@ class NewsChannel(Channel):
         return await super().edit(**kwargs)
 
 
+class PublicThread(Channel):
+    """A subclass of ``Channel`` for public threads with all the same attributes."""
+
+    
+class PrivateThread(Channel):
+    """A subclass of ``Channel`` for private threads with all the same attributes."""
+
+
 @dataclass(repr=False)
 class ChannelMention(APIObject):
     """Represents a Discord Channel Mention object
@@ -514,5 +523,7 @@ _channel_type_map: Dict[ChannelType, Channel] = {
     ChannelType.GUILD_TEXT: TextChannel,
     ChannelType.GUILD_VOICE: VoiceChannel,
     ChannelType.GUILD_CATEGORY: CategoryChannel,
-    ChannelType.GUILD_NEWS: NewsChannel
+    ChannelType.GUILD_NEWS: NewsChannel,
+    ChannelType.GUILD_PUBLIC_THREAD: PublicThread,
+    ChannelType.GUILD_PRIVATE_THREAD: PrivateThread
 }

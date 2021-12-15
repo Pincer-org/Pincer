@@ -29,7 +29,7 @@ async def guild_integrations_update_middleware(self, payload: GatewayDispatch):
         "on_guild_integrations_update",
         GuildIntegrationsUpdateEvent.from_dict(
             construct_client_dict(self, payload.data)
-        )
+        ),
     )
 
 

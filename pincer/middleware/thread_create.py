@@ -4,11 +4,11 @@
 """sent when a thread is created/joined on the client."""
 
 from ..core.dispatch import GatewayDispatch
-from ..objects import Channel
 from ..utils.conversion import construct_client_dict
+from ..objects import Channel
 
 
-def thread_create_middleware(self, payload: GatewayDispatch):
+async def thread_create_middleware(self, payload: GatewayDispatch):
     """|coro|
 
     Middleware for the ``on_thread_create`` event.
@@ -24,10 +24,18 @@ def thread_create_middleware(self, payload: GatewayDispatch):
         ``on_thread_create`` and an ``Channel``
     """
 
-    return (
-        "on_thread_create",
-        Channel.from_dict(construct_client_dict(self, payload.data))
+    channel: Channel = Channel.from_dict(
+        construct_client_dict(self, payload.data)
     )
+
+    if self.guilds[channel.guild_id].threads:
+        self.guilds[channel.guild_id].threads.append(channel)
+    else:
+        self.guilds[channel.guild_id].threads = [channel]
+
+    self.channels[channel.id] = channel
+
+    return "on_thread_create", channel
 
 
 def export():

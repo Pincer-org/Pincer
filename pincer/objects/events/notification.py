@@ -5,12 +5,12 @@
 from dataclasses import dataclass
 
 from ...objects.message import UserMessage
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, ChannelProperty
 from ...utils.snowflake import Snowflake
 
 
 @dataclass(repr=False)
-class NotificationCreateEvent(APIObject):
+class NotificationCreateEvent(APIObject, ChannelProperty):
     """
     Represents a notification
 

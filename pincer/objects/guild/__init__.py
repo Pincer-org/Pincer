@@ -7,7 +7,7 @@ from .audit_log import (
 from .ban import Ban
 from .channel import (
     ChannelType, Channel, TextChannel, VoiceChannel, CategoryChannel,
-    NewsChannel, ChannelMention
+    NewsChannel, ChannelMention, PrivateThread, PublicThread
 )
 from .features import GuildFeature
 from .followed_channel import FollowedChannel

@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, GuildProperty
 from ...utils.types import APINullable, MISSING
 
 if TYPE_CHECKING:
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(repr=False)
-class ThreadListSyncEvent(APIObject):
+class ThreadListSyncEvent(APIObject, GuildProperty):
     """Sent when the current user gains access to a channel.
 
     Attributes
@@ -46,7 +46,7 @@ class ThreadListSyncEvent(APIObject):
 
 
 @dataclass(repr=False)
-class ThreadMembersUpdateEvent(APIObject):
+class ThreadMembersUpdateEvent(APIObject, GuildProperty):
     """Sent when anyone is added to or removed from a thread.
     If the current user does not have the `GUILD_MEMBERS`
     Gateway Intent, then this event will only be sent if
