@@ -92,7 +92,7 @@ class ScheduledEvent(APIObject):
     name: str
     guild_id: Snowflake
     scheduled_start_time: Timestamp
-    privacy_level = PrivacyLevel
+    privacy_level: PrivacyLevel
     status: EventStatus
     entity_type: GuildScheduledEventEntityType
 
