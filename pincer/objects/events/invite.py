@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, ChannelProperty, GuildProperty
 from ...utils.types import APINullable, MISSING
 
 if TYPE_CHECKING:
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(repr=False)
-class InviteCreateEvent(APIObject):
+class InviteCreateEvent(APIObject, ChannelProperty, GuildProperty):
     """Sent when a new invite to a channel is created.
 
     Attributes
@@ -63,7 +63,7 @@ class InviteCreateEvent(APIObject):
 
 
 @dataclass(repr=False)
-class InviteDeleteEvent(APIObject):
+class InviteDeleteEvent(APIObject, ChannelProperty, GuildProperty):
     """Sent when an invite is deleted.
 
     Attributes

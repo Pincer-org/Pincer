@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, ChannelProperty, GuildProperty
 from ...utils.types import MISSING, APINullable
 
 if TYPE_CHECKING:
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(repr=False)
-class ChannelPinsUpdateEvent(APIObject):
+class ChannelPinsUpdateEvent(APIObject, ChannelProperty, GuildProperty):
     """Sent when a message is pinned or unpinned in a text channel.
     This is not sent when a pinned message is deleted.
 
@@ -32,4 +32,3 @@ class ChannelPinsUpdateEvent(APIObject):
 
     guild_id: APINullable[Snowflake] = MISSING
     last_pin_timestamp: APINullable[Timestamp] = MISSING
-

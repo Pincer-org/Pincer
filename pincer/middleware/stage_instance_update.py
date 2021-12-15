@@ -5,10 +5,10 @@
 from ..core.dispatch import GatewayDispatch
 from ..objects import StageInstance
 from ..utils.conversion import construct_client_dict
-from ..utils.types import Coro
+from ..utils import Coro, replace
 
 
-def stage_instance_update_middleware(self, payload: GatewayDispatch):
+async def stage_instance_update_middleware(self, payload: GatewayDispatch):
     """|coro|
 
     Middleware for the ``on_stage_instance_update`` event.
@@ -24,10 +24,15 @@ def stage_instance_update_middleware(self, payload: GatewayDispatch):
         ``on_stage_instance_update`` and a ``StageInstance``
     """
 
-    return (
-        "on_stage_instance_update",
-        StageInstance.from_dict(construct_client_dict(self, payload.data))
-    )
+    stage = StageInstance.from_dict(construct_client_dict(self, payload.data))
+
+    guild = self.guilds.get(stage.guild_id)
+    if guild:
+        guild.stage_instances = replace(
+            lambda _stage: _stage.id == stage.id, guild.stage_instances, stage
+        )
+
+    return "on_stage_instance_update", stage
 
 
 def export() -> Coro:

@@ -9,10 +9,9 @@ from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
 from typing import (
-    Any, Dict, List, Optional, Tuple, Union, overload, AsyncIterator
+    Any, Dict, Iterable, List, Optional, Tuple, Union, overload, 
+    AsyncIterator, TYPE_CHECKING
 )
-from typing import TYPE_CHECKING
-
 from . import __package__
 from .commands import ChatCommandHandler
 from .core import HTTPClient
@@ -168,8 +167,8 @@ class Client(Dispatcher):
     received : Optional[:class:`str`]
         The default message which will be sent when no response is given.
         |default| :data:`None`
-    intents : Optional[:class:`~objects.app.intents.Intents`]
-        The discord intents to use |default| :data:`None`
+    intents : Optional[Union[Iterable[:class:`~objects.app.intents.Intents`], :class:`~objects.app.intents.Intents`]]
+        The discord intents to use |default| :data:`Intents.all()`
     throttler : Optional[:class:`~objects.app.throttling.ThrottleInterface`]
         The cooldown handler for your client,
         defaults to :class:`~.objects.app.throttling.DefaultThrottleHandler`
@@ -177,7 +176,7 @@ class Client(Dispatcher):
         Custom throttlers must derive from
         :class:`~pincer.objects.app.throttling.ThrottleInterface`.
         |default| :class:`~pincer.objects.app.throttling.DefaultThrottleHandler`
-    """
+    """  # noqa: E501
 
     def __init__(
         self,
@@ -188,6 +187,10 @@ class Client(Dispatcher):
         throttler: ThrottleInterface = DefaultThrottleHandler,
         reconnect: bool = True,
     ):
+
+        if isinstance(intents, Iterable):
+            intents = sum(intents)
+
         super().__init__(
             token,
             handlers={
@@ -196,7 +199,7 @@ class Client(Dispatcher):
                 # Use this event handler for opcode 0.
                 0: self.event_handler,
             },
-            intents=intents or Intents.NONE,
+            intents=intents or Intents.all(),
             reconnect=reconnect,
         )
 
@@ -205,10 +208,12 @@ class Client(Dispatcher):
         self.http = HTTPClient(token)
         self.throttler = throttler
         self.event_mgr = EventMgr()
-        # TODO: Document guild prop
-        # The guild value is only registered if the GUILD_MEMBERS
-        # intent is enabled.
+
+        # The guild and channel value is only registered if the Client has the GUILDS
+        # intent.
         self.guilds: Dict[Snowflake, Optional[Guild]] = {}
+        self.channels: Dict[Snowflake, Optional[Channel]] = {}
+
         ChatCommandHandler.managers[self.__module__] = self
 
     @property
@@ -221,6 +226,17 @@ class Client(Dispatcher):
         return list(
             map(lambda cmd: cmd.app.name, ChatCommandHandler.register.values())
         )
+
+    @property
+    def guild_ids(self) -> List[Snowflake]:
+        """
+        Returns a list of Guilds that the client is a part of
+
+        Returns
+        -------
+        List[:class:`pincer.utils.snowflake.Snowflake`]
+        """
+        return self.guilds.keys()
 
     @staticmethod
     def event(coroutine: Coro):
@@ -517,7 +533,7 @@ class Client(Dispatcher):
             raise RuntimeError(f"Middleware `{key}` has not been registered.")
 
         if next_call.startswith("on_"):
-            return next_call, ret_object
+            return (next_call, ret_object)
 
         return await self.handle_middleware(
             payload, next_call, *arguments, **params

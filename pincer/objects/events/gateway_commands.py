@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from enum import auto, Enum
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, GuildProperty
 from ...utils.types import APINullable, MISSING
 
 if TYPE_CHECKING:
@@ -70,7 +70,7 @@ class Resume(APIObject):
 
 
 @dataclass(repr=False)
-class RequestGuildMembers(APIObject):
+class RequestGuildMembers(APIObject, GuildProperty):
     """Used to request all members for a guild or a list of guilds.
 
     guild_id:
@@ -104,7 +104,7 @@ class RequestGuildMembers(APIObject):
 
 
 @dataclass(repr=False)
-class UpdateVoiceState(APIObject):
+class UpdateVoiceState(APIObject, GuildProperty):
     """Sent when a client wants to join, move,
     or disconnect from a voice channel.
 

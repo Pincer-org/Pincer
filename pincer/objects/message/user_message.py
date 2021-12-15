@@ -5,7 +5,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum, IntEnum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, DefaultDict
+from collections import defaultdict
 
 from .attachment import Attachment
 from .component import MessageComponent
@@ -19,10 +20,10 @@ from ..guild.member import GuildMember
 from ..guild.role import Role
 from ..user.user import User
 from ..._config import GatewayConfig
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, GuildProperty, ChannelProperty
 from ...utils.conversion import construct_client_dict
 from ...utils.snowflake import Snowflake
-from ...utils.types import MISSING
+from ...utils.types import MISSING, JSONSerializable
 
 if TYPE_CHECKING:
     from typing import Any, List, Optional, Union, Generator
@@ -245,7 +246,7 @@ class MessageActivity(APIObject):
 
 
 @dataclass(repr=False)
-class UserMessage(APIObject):
+class UserMessage(APIObject, GuildProperty, ChannelProperty):
     """Represents a message sent in a channel within Discord.
 
     Attributes
@@ -511,11 +512,16 @@ class UserMessage(APIObject):
             the components to include with the message
         """
 
-        data = {}
+        data: DefaultDict[str, JSONSerializable] = defaultdict(list)
 
         def set_if_not_none(value: Any, name: str):
+            if isinstance(value, list):
+                for item in value:
+                    return set_if_not_none(item, name)
+
             if isinstance(value, APIObject):
-                data[name] = value.to_dict()
+                data[name].append(value.to_dict())
+
             elif value is not None:
                 data[name] = value
 

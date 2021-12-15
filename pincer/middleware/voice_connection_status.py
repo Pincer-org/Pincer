@@ -28,7 +28,7 @@ async def voice_connection_status_middleware(self, payload: GatewayDispatch):
         "on_voice_connection_status",
         VoiceConnectionStatusEvent.from_dict(
             construct_client_dict(self, payload.data)
-        )
+        ),
     )
 
 
