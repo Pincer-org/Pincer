@@ -13,9 +13,9 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Install dependencies (dev)
-        run: pip install -r packages/dev.txt
+        run: pip install -r dev-requirements.txt
       - name: Install dependencies (img)
-        run: pip install -r packages/img.txt
+        run: pip install .[img]
       - name: Run tests and collect coverage
         run: |
           pytest --cov=./tests
