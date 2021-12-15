@@ -7,6 +7,13 @@ Copyright Pincer 2021
 Full MIT License can be found in `LICENSE` at the project root.
 """
 
+__package__ = "pincer"
+__title__ = "Pincer library"
+__description__ = "Discord API wrapper rebuild from scratch."
+__author__ = "Sigmanificient, Arthurdw"
+__email__ = "contact@pincer.dev"
+__license__ = "MIT"
+
 from typing import NamedTuple, Literal, Optional
 
 from ._config import GatewayConfig
@@ -28,19 +35,10 @@ from .exceptions import (
 )
 from .objects import Intents
 
-__package__ = "pincer"
-__title__ = "Pincer library"
-__description__ = "Discord API wrapper rebuild from scratch."
-__author__ = "Sigmanificient, Arthurdw"
-__email__ = "contact@pincer.dev"
-__license__ = "MIT"
-
 ReleaseType = Optional[Literal["alpha", "beta", "candidate", "final", "dev"]]
 
 
 class VersionInfo(NamedTuple):
-    """A Class representing the version of the Pincer library."""
-
     major: int
     minor: int
     micro: int
