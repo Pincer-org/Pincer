@@ -1,11 +1,15 @@
+# Copyright Pincer 2021-Present
+# Full MIT License can be found in `LICENSE` at the project root.
+
 from dataclasses import dataclass
-from enum import IntEnum, Enum
+from enum import IntEnum
 from typing import Optional, TYPE_CHECKING
+
 from ...utils.api_object import APIObject, MISSING
 
 if TYPE_CHECKING:
     from ..guild.stage import PrivacyLevel
-    from ..user import User
+    from ..user.user import User
     from ...utils.snowflake import Snowflake
     from ...utils.timestamp import Timestamp
     from ...utils.types import APINullable

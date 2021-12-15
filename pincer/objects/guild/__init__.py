@@ -22,6 +22,7 @@ from .invite import (
 from .member import GuildMember, PartialGuildMember, BaseMember
 from .overwrite import Overwrite
 from .role import RoleTags, Role
+from .scheduled_events import GuildScheduledEventEntityType, EventStatus, ScheduledEvent
 from .stage import PrivacyLevel, StageInstance
 from .template import GuildTemplate
 from .thread import ThreadMetadata, ThreadMember
@@ -41,5 +42,6 @@ __all__ = (
     "PrivacyLevel", "Role", "RoleTags", "StageInstance", "SystemChannelFlags",
     "TextChannel", "ThreadMember", "ThreadMetadata", "UnavailableGuild",
     "VerificationLevel", "VoiceChannel", "Webhook", "WebhookType",
-    "WelcomeScreen", "WelcomeScreenChannel"
+    "WelcomeScreen", "WelcomeScreenChannel", "GuildScheduledEventEntityType",
+    "EventStatus", "ScheduledEvent"
 )
