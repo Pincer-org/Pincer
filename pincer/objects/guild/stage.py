@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, ChannelProperty, GuildProperty
 
 if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
@@ -28,7 +28,7 @@ class PrivacyLevel(IntEnum):
 
 
 @dataclass(repr=False)
-class StageInstance(APIObject):
+class StageInstance(APIObject, ChannelProperty, GuildProperty):
     """Represents a Stage Instance object
 
     Attributes

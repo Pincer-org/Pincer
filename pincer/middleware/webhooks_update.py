@@ -28,7 +28,7 @@ async def webhooks_update_middleware(self, payload: GatewayDispatch):
     """  # noqa: E501
     return (
         "on_webhooks_update",
-        WebhooksUpdateEvent.from_dict(construct_client_dict(self, payload.data))
+        WebhooksUpdateEvent.from_dict(construct_client_dict(self, payload.data)),
     )
 
 

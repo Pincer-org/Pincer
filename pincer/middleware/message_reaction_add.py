@@ -37,9 +37,10 @@ async def message_reaction_add_middleware(self, payload: GatewayDispatch):
                     "emoji": Emoji.from_dict(
                         construct_client_dict(self, payload.data.pop("emoji"))
                     ),
-                    **payload.data
-                }
-            ))
+                    **payload.data,
+                },
+            )
+        ),
     )
 
 

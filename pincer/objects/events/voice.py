@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, GuildProperty
 
 if TYPE_CHECKING:
     from typing import Optional, List
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(repr=False)
-class VoiceServerUpdateEvent(APIObject):
+class VoiceServerUpdateEvent(APIObject, GuildProperty):
     """Sent when a guild's voice server is updated.
     This is sent when initially connecting to voice,
     and when the current voice instance fails over to a new server.
@@ -37,7 +37,7 @@ class VoiceServerUpdateEvent(APIObject):
 
 
 @dataclass(repr=False)
-class VoiceChannelSelectEvent(APIObject):
+class VoiceChannelSelectEvent(APIObject, GuildProperty):
     """
     Sent when the client joins a voice channel
 

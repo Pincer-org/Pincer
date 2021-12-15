@@ -2,10 +2,9 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 """sent when a guild is updated"""
-from typing import List
 
 from ..core.dispatch import GatewayDispatch
-from ..objects import Guild, Channel
+from ..objects import Guild
 from ..utils.conversion import construct_client_dict
 
 
@@ -25,18 +24,11 @@ async def guild_update_middleware(self, payload: GatewayDispatch):
         ``on_guild_Update`` and an ``Guild``
     """
 
-    channel_list = payload.data.pop("channels", [])
-
-    channels: List[Channel] = [
-        Channel.from_dict(construct_client_dict(self, channel))
-        for channel in channel_list
-    ]
-
-    guild = Guild.from_dict(construct_client_dict(
-        self,
-        {"channels": channels, **payload.data}
-    ))
+    guild = Guild.from_dict(construct_client_dict(self, payload.data))
     self.guild[guild.id] = guild
+
+    for channel in guild.channels:
+        self.channels[channel.id] = channel
 
     return "on_guild_update", guild
 

@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-from collections import AsyncIterator
 from dataclasses import dataclass, field
 from enum import IntEnum
 from typing import AsyncGenerator, overload, TYPE_CHECKING
@@ -22,8 +21,8 @@ from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import Any, Dict, List, Optional, Tuple, Union, Generator
-    from collections.abc import AsyncIterator
 
+    from collections.abc import AsyncIterator
     from .audit_log import AuditLog
     from .ban import Ban
     from .channel import PublicThread, PrivateThread, ChannelType
