@@ -36,3 +36,6 @@ MANIFEST
 
 # tweet_generator example
 examples/tweet_generator/*.ttf
+
+# sphinxcontrib-mermaid output file
+out.svg
