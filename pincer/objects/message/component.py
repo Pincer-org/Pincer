@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 
-from ...commands.buttons import hash_button_id
+from ...commands.components import hash_component_id
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
 
@@ -72,5 +72,5 @@ class MessageComponent(APIObject):
 
     def __post_init__(self):
         if self.custom_id:
-            self.custom_id = hash_button_id(self.custom_id)
+            self.custom_id = hash_component_id(self.custom_id)
         return super().__post_init__()

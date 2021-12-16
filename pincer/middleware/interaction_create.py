@@ -9,7 +9,7 @@ from typing import Dict, Any
 from typing import TYPE_CHECKING
 
 
-from ..commands import ButtonHandler, ChatCommandHandler
+from ..commands import ComponentHandler, ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
 from ..objects import Interaction, MessageContext, AppCommandType, InteractionType
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
@@ -34,7 +34,7 @@ def get_call(self: Client, interaction: Interaction):
         self.throttler.handle(command)
         return command.call
     elif interaction.type == InteractionType.MESSAGE_COMPONENT:
-        return ButtonHandler.register.get(interaction.data.custom_id)
+        return ComponentHandler.register.get(interaction.data.custom_id)
     elif interaction.type == InteractionType.AUTOCOMPLETE:
         raise NotImplementedError(
             "handling for autocomplete is not implemented"

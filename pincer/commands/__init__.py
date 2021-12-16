@@ -5,11 +5,11 @@ from .arg_types import (
     CommandArg, Description, Choice, Choices, ChannelTypes, MaxValue, MinValue,
     Modifier
 )
-from .buttons import ButtonHandler
+from .components import ComponentHandler
 from .commands import command, user_command, message_command, ChatCommandHandler
 
 __all__ = (
     "ChannelTypes", "ChatCommandHandler", "Choice", "Choices",
     "CommandArg", "Description", "MaxValue", "MinValue", "Modifier", "command",
-    "message_command", "user_command", "ButtonHandler"
+    "message_command", "user_command", "ComponentHandler"
 )

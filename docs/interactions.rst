@@ -284,3 +284,8 @@ The :class:`~pincer.objects.message.context.MessageContext` object provides meth
         channel = await self.get_channel(ctx.channel_id)
         channel.send("Hello world!") # Sends a message in the channel
         return "Hello world 2" # This is sent because the interaction was not "used up"
+
+Message Components
+------------------
+Pincer supports buttons and select menus.
+
