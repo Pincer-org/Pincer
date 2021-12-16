@@ -271,6 +271,22 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         channel_cls = _channel_type_map.get(data["type"], Channel)
         return channel_cls.from_dict(data)
 
+    async def edit_permissions(
+            self,
+            reason: Optional[str] = None,
+            overwrite: Overwrite = None
+    ):
+        """
+        Edit the channel permission overwrites for a user or role in a channel.
+
+        Parameters
+        ----------
+        reason Optional[:class:`str`]
+            The reason of the channel delete.
+        overwrite: :class:`~pincer.objects.guild.overwrite.Overwrite`
+            The overwrite object.
+        """
+
     async def delete(
             self,
             reason: Optional[str] = None,
@@ -492,7 +508,7 @@ class NewsChannel(Channel):
 class PublicThread(Channel):
     """A subclass of ``Channel`` for public threads with all the same attributes."""
 
-    
+
 class PrivateThread(Channel):
     """A subclass of ``Channel`` for private threads with all the same attributes."""
 
