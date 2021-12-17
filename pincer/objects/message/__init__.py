@@ -3,7 +3,7 @@
 
 from .attachment import Attachment
 from .button import ButtonStyle, Button
-from .component import MessageComponent
+from .component import MessageComponent, ComponentType
 from .context import MessageContext
 from .embed import (
     Embed, EmbedField, EmbedImage, EmbedAuthor, EmbedProvider, EmbedThumbnail,
@@ -29,5 +29,5 @@ __all__ = (
     "File", "Message", "MessageActivity", "MessageActivityType",
     "MessageComponent", "MessageContext", "MessageFlags", "MessageReference",
     "MessageType", "Reaction", "Sticker", "StickerFormatType", "StickerItem",
-    "StickerPack", "StickerType", "UserMessage"
+    "StickerPack", "StickerType", "UserMessage", "ComponentType"
 )

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import IntEnum
 from typing import TYPE_CHECKING
 
 
@@ -18,6 +19,24 @@ if TYPE_CHECKING:
     from ..message.button import ButtonStyle
     from ..message.emoji import Emoji
     from ...utils.types import APINullable
+
+
+class ComponentType(IntEnum):
+    """
+    Represents a message component type
+
+    Attributes
+    ----------
+    ACTION_ROW : int
+        A row of buttons or select menus
+    BUTTON : int
+        A button that a user can click. Must be inside an action row.
+    SELECT_MENU : int
+        A select menu. Must be inside an action row.
+    """
+    ACTION_ROW = 1
+    BUTTON = 2
+    SELECT_MENU = 3
 
 
 @dataclass(repr=False)

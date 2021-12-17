@@ -289,3 +289,6 @@ Message Components
 ------------------
 Pincer supports buttons and select menus.
 
+.. code-block:: python
+
+  pass

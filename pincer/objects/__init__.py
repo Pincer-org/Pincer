@@ -78,7 +78,7 @@ from .guild.welcome_screen import WelcomeScreenChannel, WelcomeScreen
 from .guild.widget import GuildWidget
 from .message.attachment import Attachment
 from .message.button import ButtonStyle, Button
-from .message.component import MessageComponent
+from .message.component import MessageComponent, ComponentType
 from .message.context import MessageContext
 from .message.embed import (
     Embed, EmbedField, EmbedImage, EmbedAuthor, EmbedProvider, EmbedThumbnail,
@@ -148,5 +148,5 @@ __all__ = (
     "User", "UserMessage", "VerificationLevel", "VisibilityType",
     "VoiceChannel", "VoiceRegion", "VoiceServerUpdateEvent", "VoiceState",
     "Webhook", "WebhookType", "WebhooksUpdateEvent", "WelcomeScreen",
-    "WelcomeScreenChannel"
+    "WelcomeScreenChannel", "ComponentType"
 )
