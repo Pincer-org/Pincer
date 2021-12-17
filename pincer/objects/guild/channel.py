@@ -438,8 +438,12 @@ class TextChannel(Channel):
 
     @overload
     async def edit(
-        self, name: str = None, type: ChannelType = None,
-        position: int = None, topic: str = None, nsfw: bool = None,
+        self,
+        name: str = None,
+        type: ChannelType = None,
+        position: int = None,
+        topic: str = None,
+        nsfw: bool = None,
         rate_limit_per_user: int = None,
         permissions_overwrites: List[Overwrite] = None,
         parent_id: Snowflake = None,
@@ -488,10 +492,14 @@ class VoiceChannel(Channel):
 
     @overload
     async def edit(
-        self, name: str = None, position: int = None, bitrate: int = None,
+        self,
+        name: str = None,
+        position: int = None,
+        bitrate: int = None,
         user_limit: int = None,
         permissions_overwrites: List[Overwrite] = None,
-        rtc_region: str = None, video_quality_mod: int = None
+        rtc_region: str = None,
+        video_quality_mod: int = None
     ) -> VoiceChannel:
         ...
 
@@ -523,8 +531,12 @@ class NewsChannel(Channel):
 
     @overload
     async def edit(
-        self, name: str = None, type: ChannelType = None,
-        position: int = None, topic: str = None, nsfw: bool = None,
+        self,
+        name: str = None,
+        type: ChannelType = None,
+        position: int = None,
+        topic: str = None,
+        nsfw: bool = None,
         permissions_overwrites: List[Overwrite] = None,
         parent_id: Snowflake = None,
         default_auto_archive_duration: int = None
