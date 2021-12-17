@@ -286,6 +286,16 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         overwrite: :class:`~pincer.objects.guild.overwrite.Overwrite`
             The overwrite object.
         """
+        headers = {}
+
+        if reason is not None:
+            headers["X-Audit-Log-Reason"] = str(reason)
+
+        await self._http.put(
+            f"channels/{self.id}/permissions/{overwrite.id}",
+            headers=headers
+        )
+
 
     async def delete(
             self,
