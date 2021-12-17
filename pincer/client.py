@@ -327,15 +327,12 @@ class Client(Dispatcher):
         calls = _events.get(name.strip().lower())
 
         return (
-            []
-            if not calls
-            else list(
-                filter(
-                    lambda call: iscoroutinefunction(call)
-                    or isasyncgenfunction(call),
-                    calls,
-                )
-            )
+            [] if not calls
+            else [
+                call for call in calls
+                if iscoroutinefunction(call)
+                or isasyncgenfunction(call)
+            ]
         )
 
     def load_cog(self, path: str, package: Optional[str] = None):
