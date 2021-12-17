@@ -287,8 +287,6 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
         Parameters
         ----------
-        reason: Optional[:class:`str`]
-            The reason of the channel delete.
         overwrite: :class:`~pincer.objects.guild.overwrite.Overwrite`
             The overwrite object.
         allow: :class:`str`
@@ -297,6 +295,8 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             The bitwise value of all denied permissions.
         type: :class:`int`
             0 for a role or 1 for a member.
+        reason: Optional[:class:`str`]
+            The reason of the channel delete.
         """
         await self._http.put(
             f"channels/{self.id}/permissions/{overwrite.id}",
@@ -306,6 +306,32 @@ class Channel(APIObject, GuildProperty):  # noqa E501
                 "deny": deny,
                 "type": type
             }
+        )
+
+    async def bulk_delete_messages(
+        self,
+        messages: List[Snowflake],
+        reason: Optional[str] = None
+    ):
+        """Delete multiple messages in a single request.
+        This endpoint can only be used on guild channels and require
+        the ``MANAGE_MESSAGES`` permission.
+
+        This endpoint will not delete messages older than 2 weeks, and will
+        fail with a 400 BAD REQUEST if any message provided is older than that
+        or if any duplicate message IDs are provided.
+
+        Parameters
+        ----------
+        messages: List[:class:`Snowflake`]
+            The list of message IDs to delete (2-100).
+        reason: Optional[:class:`str`]
+            The reason of the channel delete.
+        """
+        await self._http.post(
+            f"channels/{self.id}/messages/bulk_delete",
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            data={"messages": messages}
         )
 
     async def delete(
