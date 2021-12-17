@@ -26,7 +26,7 @@ async def guild_member_update_middleware(self, payload: GatewayDispatch):
     -------
     Tuple[:class:`str`, :class:`~pincer.objects.events.guild.GuildMemberUpdateEvent`]
         ``on_guild_member_update`` and a ``GuildMemberUpdateEvent``
-    """  # noqa: E501
+    """
 
     return (
         "on_guild_member_update",

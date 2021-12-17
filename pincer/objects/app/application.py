@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, GuildProperty
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
@@ -18,8 +18,8 @@ if TYPE_CHECKING:
 
 
 @dataclass(repr=False)
-class Application(APIObject):
-    """Represents a Discord application. (eg Bot, OAuth)
+class Application(APIObject, GuildProperty):
+    """Represents a Discord application. (e.g. Bot, OAuth)
 
     Attributes
     ----------
@@ -47,7 +47,7 @@ class Application(APIObject):
     cover_image: APINullable[:class:`str`]
         the application's default rich presence invite cover image hash
     flags: APINullable[:class:`int`]
-        the application's public flags
+        the application's public flags'
     guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         if this application is a game sold on Discord, this field will be the
         guild to which it has been linked

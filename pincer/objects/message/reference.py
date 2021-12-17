@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, ChannelProperty, GuildProperty
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(repr=False)
-class MessageReference(APIObject):
+class MessageReference(APIObject, ChannelProperty, GuildProperty):
     """Represents a Discord Message Reference object
 
     Attributes

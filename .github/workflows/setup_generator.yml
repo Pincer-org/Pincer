@@ -16,14 +16,17 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-          python-version: '3.x'
+          python-version: '3.8'
           architecture: 'x64'
 
       - name: install requirements
         run: pip install -r requirements.txt
 
+      - name: install pincer
+        run: pip install -e .
+
       - name: generate setup.cfg
-        run: python -m setup_config.generator
+        run: python -u setup_config/generator.py
 
       - name: setup git
         run: |

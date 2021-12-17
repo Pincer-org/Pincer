@@ -8,7 +8,7 @@ from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 
-def stage_instance_create_middleware(self, payload: GatewayDispatch):
+async def stage_instance_create_middleware(self, payload: GatewayDispatch):
     """|coro|
 
     Middleware for the ``on_stage_instance_create`` event.
@@ -24,10 +24,13 @@ def stage_instance_create_middleware(self, payload: GatewayDispatch):
         ``on_stage_instance_create`` and a ``StageInstance``
     """
 
-    return (
-        "on_stage_instance_create",
-        StageInstance.from_dict(construct_client_dict(self, payload.data))
-    )
+    stage = StageInstance.from_dict(construct_client_dict(self, payload.data))
+
+    guild = self.guilds.get(stage.guild_id)
+    if guild:
+        guild.stage_instances.append(stage)
+
+    return "on_stage_instance_create", stage
 
 
 def export() -> Coro:

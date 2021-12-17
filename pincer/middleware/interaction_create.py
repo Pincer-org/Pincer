@@ -42,11 +42,11 @@ def get_call(self: Client, interaction: Interaction):
 
 
 async def interaction_response_handler(
-        command: Coro,
-        context: MessageContext,
-        interaction: Interaction,
-        args: List[Any],
-        kwargs: Dict[str, Any]
+    command: Coro,
+    context: MessageContext,
+    interaction: Interaction,
+    args: List[Any],
+    kwargs: Dict[str, Any]
 ):
     """|coro|
 
@@ -85,9 +85,7 @@ async def interaction_response_handler(
 
 
 async def interaction_handler(
-        interaction: Interaction,
-        context: MessageContext,
-        command: Coro
+    interaction: Interaction, context: MessageContext, command: Coro
 ):
     """|coro|
 
@@ -104,14 +102,15 @@ async def interaction_handler(
     """
     sig, _ = get_signature_and_params(command)
 
-    defaults = {key: value.default for key,
-                value in sig.items() if value.default is not _empty}
+    defaults = {
+        key: value.default
+        for key, value in sig.items()
+        if value.default is not _empty
+    }
     params = {}
 
     if interaction.data.options is not MISSING:
-        params = {
-            opt.name: opt.value for opt in interaction.data.options
-        }
+        params = {opt.name: opt.value for opt in interaction.data.options}
 
     args = []
 
@@ -141,8 +140,7 @@ async def interaction_handler(
 
 
 async def interaction_create_middleware(
-    self: Client,
-    payload: GatewayDispatch
+    self, payload: GatewayDispatch
 ) -> Tuple[str, Interaction]:
     """Middleware for ``on_interaction``, which handles command
     execution.
@@ -186,7 +184,7 @@ async def interaction_create_middleware(
                         context,
                         interaction,
                         # Always take the error parameter its name.
-                        {params[-1]: e}
+                        {params[-1]: e},
                     )
                 else:
                     raise e

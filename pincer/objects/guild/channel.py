@@ -10,8 +10,8 @@ from typing import overload, TYPE_CHECKING
 
 from ..message.user_message import UserMessage
 from ..._config import GatewayConfig
-from ...utils.api_object import APIObject
-from ...utils.conversion import construct_client_dict
+from ...utils.api_object import APIObject, GuildProperty
+from ...utils.conversion import construct_client_dict, remove_none
 from ...utils.convert_message import convert_message
 from ...utils.types import MISSING
 
@@ -76,7 +76,7 @@ class ChannelType(IntEnum):
 
 
 @dataclass(repr=False)
-class Channel(APIObject):  # noqa E501
+class Channel(APIObject, GuildProperty):  # noqa E501
     """Represents a Discord Channel Mention object
 
     Attributes
@@ -94,7 +94,7 @@ class Channel(APIObject):  # noqa E501
         automatically archive the thread after recent activity, can be set to:
         60, 1440, 4320, 10080
     guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
-        The id of the guild (may be missing for some channel objects received
+        The id of the guild (maybe missing for some channel objects received
         over gateway guild dispatches)
     icon: APINullable[Optional[:class:`str`]]
         Icon hash
@@ -170,7 +170,8 @@ class Channel(APIObject):  # noqa E501
     parent_id: APINullable[Optional[Snowflake]] = MISSING
     permissions: APINullable[str] = MISSING
     permission_overwrites: APINullable[List[Overwrite]] = MISSING
-    position: APINullable[int] = MISSING
+    # Position is always 0 when not sent
+    position: APINullable[int] = 0
     rate_limit_per_user: APINullable[int] = MISSING
     recipients: APINullable[List[User]] = MISSING
     rtc_region: APINullable[Optional[str]] = MISSING
@@ -235,9 +236,9 @@ class Channel(APIObject):  # noqa E501
         ...
 
     async def edit(
-            self,
-            reason: Optional[str] = None,
-            **kwargs
+        self,
+        reason: Optional[str] = None,
+        **kwargs
     ):
         """Edit a channel with the given keyword arguments.
 
@@ -270,11 +271,74 @@ class Channel(APIObject):  # noqa E501
         channel_cls = _channel_type_map.get(data["type"], Channel)
         return channel_cls.from_dict(data)
 
+    async def edit_permissions(
+        self,
+        overwrite: Overwrite,
+        allow: str,
+        deny: str,
+        type: int,
+        reason: Optional[str] = None
+    ):
+        """
+        Edit the channel permission overwrites for a user or role in a channel.
+        Only usable for guild channels. Requires the ``MANAGE_ROLES`` permission.
+        Only permissions your bot has in the guild or channel can be
+        allowed/denied (unless your bot has a ``MANAGE_ROLES`` overwrite in the channel).
+
+        Parameters
+        ----------
+        overwrite: :class:`~pincer.objects.guild.overwrite.Overwrite`
+            The overwrite object.
+        allow: :class:`str`
+            The bitwise value of all allowed permissions.
+        deny: :class:`str`
+            The bitwise value of all denied permissions.
+        type: :class:`int`
+            0 for a role or 1 for a member.
+        reason: Optional[:class:`str`]
+            The reason of the channel delete.
+        """
+        await self._http.put(
+            f"channels/{self.id}/permissions/{overwrite.id}",
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            data={
+                "allow": allow,
+                "deny": deny,
+                "type": type
+            }
+        )
+
+    async def bulk_delete_messages(
+        self,
+        messages: List[Snowflake],
+        reason: Optional[str] = None
+    ):
+        """Delete multiple messages in a single request.
+        This endpoint can only be used on guild channels and requires
+        the ``MANAGE_MESSAGES`` permission.
+
+        This endpoint will not delete messages older than 2 weeks, and will
+        fail with a 400 BAD REQUEST if any message provided is older than that
+        or if any duplicate message IDs are provided.
+
+        Parameters
+        ----------
+        messages: List[:class:`Snowflake`]
+            The list of message IDs to delete (2-100).
+        reason: Optional[:class:`str`]
+            The reason of the channel delete.
+        """
+        await self._http.post(
+            f"channels/{self.id}/messages/bulk_delete",
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            data={"messages": messages}
+        )
+
     async def delete(
-            self,
-            reason: Optional[str] = None,
-            /,
-            channel_id: Optional[Snowflake] = None
+        self,
+        reason: Optional[str] = None,
+        /,
+        channel_id: Optional[Snowflake] = None
     ):
         """|coro|
 
@@ -289,14 +353,9 @@ class Channel(APIObject):  # noqa E501
         """
         channel_id = channel_id or self.id
 
-        headers = {}
-
-        if reason is not None:
-            headers["X-Audit-Log-Reason"] = str(reason)
-
         await self._http.delete(
             f"channels/{channel_id}",
-            headers
+            headers=remove_none({"X-Audit-Log-Reason": reason})
         )
 
     async def __post_send_handler(self, message: Message):
@@ -313,8 +372,8 @@ class Channel(APIObject):  # noqa E501
             await self.delete()
 
     def __post_sent(
-            self,
-            message: Message
+        self,
+        message: Message
     ):
         """Ensure the `__post_send_handler` method its future.
 
@@ -379,12 +438,16 @@ class TextChannel(Channel):
 
     @overload
     async def edit(
-            self, name: str = None, type: ChannelType = None,
-            position: int = None, topic: str = None, nsfw: bool = None,
-            rate_limit_per_user: int = None,
-            permissions_overwrites: List[Overwrite] = None,
-            parent_id: Snowflake = None,
-            default_auto_archive_duration: int = None
+        self,
+        name: str = None,
+        type: ChannelType = None,
+        position: int = None,
+        topic: str = None,
+        nsfw: bool = None,
+        rate_limit_per_user: int = None,
+        permissions_overwrites: List[Overwrite] = None,
+        parent_id: Snowflake = None,
+        default_auto_archive_duration: int = None
     ) -> Union[TextChannel, NewsChannel]:
         ...
 
@@ -429,10 +492,14 @@ class VoiceChannel(Channel):
 
     @overload
     async def edit(
-            self, name: str = None, position: int = None, bitrate: int = None,
-            user_limit: int = None,
-            permissions_overwrites: List[Overwrite] = None,
-            rtc_region: str = None, video_quality_mod: int = None
+        self,
+        name: str = None,
+        position: int = None,
+        bitrate: int = None,
+        user_limit: int = None,
+        permissions_overwrites: List[Overwrite] = None,
+        rtc_region: str = None,
+        video_quality_mod: int = None
     ) -> VoiceChannel:
         ...
 
@@ -464,11 +531,15 @@ class NewsChannel(Channel):
 
     @overload
     async def edit(
-            self, name: str = None, type: ChannelType = None,
-            position: int = None, topic: str = None, nsfw: bool = None,
-            permissions_overwrites: List[Overwrite] = None,
-            parent_id: Snowflake = None,
-            default_auto_archive_duration: int = None
+        self,
+        name: str = None,
+        type: ChannelType = None,
+        position: int = None,
+        topic: str = None,
+        nsfw: bool = None,
+        permissions_overwrites: List[Overwrite] = None,
+        parent_id: Snowflake = None,
+        default_auto_archive_duration: int = None
     ) -> Union[TextChannel, NewsChannel]:
         ...
 
@@ -486,6 +557,14 @@ class NewsChannel(Channel):
             The updated channel object.
         """
         return await super().edit(**kwargs)
+
+
+class PublicThread(Channel):
+    """A subclass of ``Channel`` for public threads with all the same attributes."""
+
+
+class PrivateThread(Channel):
+    """A subclass of ``Channel`` for private threads with all the same attributes."""
 
 
 @dataclass(repr=False)
@@ -514,5 +593,7 @@ _channel_type_map: Dict[ChannelType, Channel] = {
     ChannelType.GUILD_TEXT: TextChannel,
     ChannelType.GUILD_VOICE: VoiceChannel,
     ChannelType.GUILD_CATEGORY: CategoryChannel,
-    ChannelType.GUILD_NEWS: NewsChannel
+    ChannelType.GUILD_NEWS: NewsChannel,
+    ChannelType.GUILD_PUBLIC_THREAD: PublicThread,
+    ChannelType.GUILD_PRIVATE_THREAD: PrivateThread
 }

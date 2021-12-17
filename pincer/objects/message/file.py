@@ -35,7 +35,7 @@ def create_form(
     json_payload: Dict[Any], files: List[File]
 ) -> Tuple[str, Payload]:
     """
-    Creates a aiohttp payload from an array of File objects.
+    Creates an aiohttp payload from an array of File objects.
 
     json_payload : Dict[Any]
         The json part of the request
@@ -45,7 +45,7 @@ def create_form(
     Returns
     -------
     Tuple[str, :class:`aiohttp.Payload`]
-        The content type and the payload to be send in an HTTP request.
+        The content type and the payload to be sent in an HTTP request.
     """
     form = FormData()
     form.add_field("payload_json", dumps(json_payload))
@@ -83,7 +83,7 @@ def _get_file_extension(filename: str) -> Optional[str]:
 
 @dataclass
 class File:
-    """A file that is prepared by the user to be send to the discord
+    """A file that is prepared by the user to be sent to the discord
     API.
 
     Attributes
@@ -91,7 +91,7 @@ class File:
     content: :class:`bytes`
         File bytes.
     filename: :class:`str`
-        The name of the file when its uploaded to discord.
+        The name of the file when it's uploaded to discord.
     """
 
     content: bytes
@@ -201,3 +201,7 @@ class File:
         encoded_bytes = b64encode(self.content).decode('ascii')
 
         return f"data:image/{self.image_format};base64,{encoded_bytes}"
+
+    @property
+    def content_type(self):
+        return f"image/{self.image_format}"

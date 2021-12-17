@@ -13,13 +13,15 @@ from typing import (
     List, get_type_hints, get_origin, get_args
 )
 
-from .conversion import convert
+from pincer.utils.conversion import construct_client_dict
+
 from .types import MissingType, MISSING, TypeCache
 from ..exceptions import InvalidArgumentAnnotation
 
 if TYPE_CHECKING:
+    from ..objects.guild.channel import Channel
+    from ..objects.guild.guild import Guild
     from ..client import Client
-    from ..core.http import HTTPClient
 
 T = TypeVar("T")
 
@@ -32,8 +34,15 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
     all values that are None
     Modification of _asdict_inner from dataclasses
 
-    :param obj:
-        Dataclass obj
+    Parameters
+    ----------
+
+    obj: Generic[T]
+        The object to convert
+
+    Returns
+    -------
+        A dict without None values
     """
 
     if _is_dataclass_instance(obj):
@@ -79,7 +88,7 @@ class HTTPMeta(type):
             if mapping.get("__annotations__") and \
                     (value := mapping["__annotations__"].get(key)):
                 # We want to keep the type annotations of the objects
-                # tho, so lets statically store them so we can read
+                # tho, so lets statically store them, so we can read
                 # them later.
                 HTTPMeta.__ori_annotations.update({key: value})
                 del mapping["__annotations__"][key]
@@ -116,7 +125,7 @@ class APIObject(metaclass=HTTPMeta):
         Returns
         -------
         Tuple[:class:`type`]
-            A collection of type annotation(s). Will most of the times
+            A collection of type annotation(s). Will most of the time
             consist of 1 item.
 
         Raises
@@ -164,12 +173,16 @@ class APIObject(metaclass=HTTPMeta):
         if getattr(attr_type, "__factory__", None):
             factory = attr_type.__factory__
 
-        return convert(
-            attr_value,
-            factory,
-            attr_type,
-            self._client
-        )
+        if attr_value is MISSING:
+            return MISSING
+
+        if attr_type is not None and isinstance(attr_value, attr_type):
+            return attr_value
+
+        if isinstance(attr_value, dict):
+            return factory(construct_client_dict(self._client, attr_value))
+
+        return factory(attr_value)
 
     def __post_init__(self):
         self._http = getattr(self._client, "http", None)
@@ -274,3 +287,35 @@ class APIObject(metaclass=HTTPMeta):
     def to_dict(self) -> Dict:
         """Transform the current object to a dictionary representation."""
         return _asdict_ignore_none(self)
+
+
+class GuildProperty:
+
+    @property
+    def guild(self) -> Guild:
+        """Return a guild from an APIObject
+        Parameters
+        ----------
+        self : :class:`~pincer.utils.api_object.APIObject`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.guild.Guild`
+        """
+        return self._client.guilds[self.guild_id]
+
+
+class ChannelProperty:
+
+    @property
+    def channel(self) -> Channel:
+        """Return a channel from an APIObject
+        Parameters
+        ----------
+        obj : :class:`~pincer.utils.api_object.APIObject`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.channel.Channel`
+        """
+        return self._client.channels[self.channel_id]

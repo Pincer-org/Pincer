@@ -25,12 +25,15 @@ async def guild_emojis_update_middleware(self, payload: GatewayDispatch):
         ``on_guild_emoji_update`` and a ``GuildEmojisUpdateEvent``
     """  # noqa: E501
 
-    return (
-        "on_guild_emojis_update",
-        GuildEmojisUpdateEvent.from_dict(
-            construct_client_dict(self, payload.data)
-        )
+    event = GuildEmojisUpdateEvent.from_dict(
+        construct_client_dict(self, payload.data)
     )
+
+    guild = self.guild.get(event.guild_id)
+    if guild:
+        guild.emojis = event.emojis
+
+    return ("on_guild_emojis_update", event)
 
 
 def export() -> Coro:

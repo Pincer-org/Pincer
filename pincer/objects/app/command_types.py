@@ -15,11 +15,11 @@ class AppCommandType(IntEnum):
         types /
 
     USER:
-        A UI-based command that shows up when you right click or tap on
+        A UI-based command that shows up when you right-click or tap on
         a user
 
     MESSAGE:
-        A UI-based command that shows up when you right click or tap on
+        A UI-based command that shows up when you right-click or tap on
         a message
     """
     CHAT_INPUT = 1

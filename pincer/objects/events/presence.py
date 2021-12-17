@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, GuildProperty
 from ...utils.types import MISSING, APINullable
 
 if TYPE_CHECKING:
@@ -143,9 +143,9 @@ class ActivityFlags(IntEnum):
 
 @dataclass(repr=False)
 class ActivityButton(APIObject):
-    """When received over the gateway, the buttons field is an array
+    """When received over the gateway, the buttons' field is an array
     of strings, which are the button labels. Bots cannot access
-    a user's activity button URLs. When sending, the buttons field
+    a user's activity button URLs. When sending, the buttons' field
     must be an array of this object.
 
     Attributes
@@ -242,7 +242,7 @@ class ClientStatus(APIObject):
 
 
 @dataclass(repr=False)
-class PresenceUpdateEvent(APIObject):
+class PresenceUpdateEvent(APIObject, GuildProperty):
     """This event is sent when a user's presence or info,
     such as name or avatar, is updated.
 
@@ -255,7 +255,7 @@ class PresenceUpdateEvent(APIObject):
     status: :class:`str`
         Either "idle", "dnd", "online", or "offline"
     activities: List[:class:`~pincer.objects.events.presence.Activity`]
-        User's current activities
+        User's current activities'
     client_status: :class:`~pincer.objects.events.presence.ClientStatus`
         User's platform-dependent status
     """

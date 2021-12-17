@@ -53,7 +53,7 @@ class PremiumTypes(IntEnum):
 
 
 class VisibilityType(IntEnum):
-    """The type of a connection visibility.
+    """The type of connection visibility.
 
     Attributes
     ----------

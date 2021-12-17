@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, ChannelProperty, GuildProperty
 from ...utils.types import APINullable, MISSING
 
 if TYPE_CHECKING:
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(repr=False)
-class InviteCreateEvent(APIObject):
+class InviteCreateEvent(APIObject, ChannelProperty, GuildProperty):
     """Sent when a new invite to a channel is created.
 
     Attributes
@@ -33,7 +33,7 @@ class InviteCreateEvent(APIObject):
     max_uses: :class:`int`
         The maximum number of times the invite can be used
     temporary: :class:`bool`
-        Whether or not the invite is temporary (invited users will
+        Whether the invite is temporary (invited users will
         be kicked on disconnect unless they're assigned a role)
     guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The guild of the invite
@@ -63,7 +63,7 @@ class InviteCreateEvent(APIObject):
 
 
 @dataclass(repr=False)
-class InviteDeleteEvent(APIObject):
+class InviteDeleteEvent(APIObject, ChannelProperty, GuildProperty):
     """Sent when an invite is deleted.
 
     Attributes

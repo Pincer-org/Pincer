@@ -84,7 +84,7 @@ class Integration(APIObject):
     name: :class:`str`
         Integration name
     type: :class:`str`
-        Integration type (twitch, youtube, or discord)$
+        Integration type (twitch, YouTube, or discord)$
     enabled: :class:`bool`
         Is this integration enabled
     account: :class:`~pincer.objects.user.integration.IntegrationAccount`

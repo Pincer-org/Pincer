@@ -1,3 +1,4 @@
 furo
-sphinxcontrib-trio
 sphinx-design
+sphinxcontrib-trio
+sphinxcontrib-mermaid

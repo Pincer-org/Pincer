@@ -7,6 +7,8 @@ from asyncio import sleep, ensure_future
 from dataclasses import dataclass
 from typing import Any, Dict, TYPE_CHECKING, Union, Optional, List
 
+from pincer.utils.api_object import ChannelProperty, GuildProperty
+
 from .command_types import AppCommandOptionType
 from .interaction_base import InteractionType, CallbackType
 from .mentionable import Mentionable
@@ -94,7 +96,7 @@ class InteractionData(APIObject):
 
 
 @dataclass(repr=False)
-class Interaction(APIObject):
+class Interaction(APIObject, ChannelProperty, GuildProperty):
     """Represents a Discord Interaction object
 
     Attributes
@@ -205,6 +207,7 @@ class Interaction(APIObject):
 
     def get_message_context(self):
         return MessageContext(
+            self._client,
             self.member or self.user,
             self,
             self.guild_id,
@@ -472,13 +475,13 @@ class Interaction(APIObject):
     async def followup(self, message: MessageConvertable) -> UserMessage:
         """|coro|
 
-        Create a follow up message for the interaction.
+        Create a follow-up message for the interaction.
         This allows you to respond with multiple messages.
 
         Parameters
         ----------
         message :class:`~pincer.utils.convert_message.MessageConvertable`
-            The message to sent.
+            The message to send.
 
         Returns
         -------

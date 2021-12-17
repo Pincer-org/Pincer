@@ -335,7 +335,7 @@ def user_command(
              ):
                  if not member:
                      # member is missing if this is a DM
-                     # This bot doesn't like being DMed so it won't respond
+                     # This bot doesn't like being DMed, so it won't respond
                      return
 
                  return f"Hello {user.name}, this is a Guild."
@@ -705,7 +705,7 @@ class ChatCommandHandler(metaclass=Singleton):
         Parameters
         ----------
         to_update : Dict[:class:`~objects.app.command.AppCommand`, Dict[:class:`str`, Any]]
-            Dictionary of commands to changes where changes is a dictionary too
+            Dictionary of commands to change where changes are a dictionary too
         """
         # noqa: E501
         await gather(

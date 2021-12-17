@@ -1,5 +1,5 @@
 [flake8]
-max-line-length = 80
+max-line-length = 88
 ignore =
     D203,
     # H101: Use TODO(NAME)

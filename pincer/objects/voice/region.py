@@ -26,7 +26,7 @@ class VoiceRegion(APIObject):
         (avoid switching to these)
     custom: :class:`bool`
         Whether this is a custom voice region
-        (used for events/etc)
+        (used for events/etc.)
     """
     id: str
     name: str
