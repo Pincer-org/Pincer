@@ -34,7 +34,7 @@ from .objects import (
     Intents,
     GuildTemplate,
     Connection,
-    StickerPack
+    StickerPack, File
 )
 from .objects.guild.channel import GroupDMChannel
 from .utils.conversion import construct_client_dict, remove_none
@@ -902,7 +902,7 @@ class Client(Dispatcher):
         )
 
     async def modify_current_user(
-        self, username: Optional[str] = None, avatar: Optional = None
+        self, username: Optional[str] = None, avatar: Optional[File] = None
     ) -> User:
         """|coro|
         Modify the requester's user account settings
@@ -913,7 +913,7 @@ class Client(Dispatcher):
             user's username,
             if changed may cause the user's discriminator to be randomized.
             |default| :data:`None`
-        avatar : Optional[:class:``]
+        avatar : Optional[:class:`File`]
             if passed, modifies the user's avatar
             a data URI scheme of JPG, GIF or PNG
             |default| :data:`None`
@@ -923,6 +923,8 @@ class Client(Dispatcher):
         :class:`~pincer.objects.user.user.User`
             Current modified user
         """
+
+        avatar = avatar.uri if avatar else avatar
 
         user = await self.http.patch(
             "users/@me", remove_none({"username": username, "avatar": avatar})
