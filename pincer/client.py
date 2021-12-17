@@ -43,7 +43,7 @@ from .objects import (
     StickerPack,
     UserMessage
 )
-from .utils.conversion import construct_client_dict
+from .utils.conversion import construct_client_dict, remove_none
 from .utils.event_mgr import EventMgr
 from .utils.extraction import get_index
 from .utils.insertion import should_pass_cls
@@ -477,7 +477,7 @@ class Client(Dispatcher):
             if should_pass_cls(call):
                 call_args = (
                     ChatCommandHandler.managers[call.__module__],
-                    *(arg for arg in args if arg is not None),
+                    *remove_none(args),
                 )
 
             ensure_future(call(*call_args, **kwargs))
