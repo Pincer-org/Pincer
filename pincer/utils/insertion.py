@@ -26,10 +26,6 @@ def should_pass_cls(call: Union[Coro, Callable[..., Any]]) -> bool:
     args = getfullargspec(call).args
     return len(args) >= 1 and args[0] in ["self", "cls"]
 
-
-context_types = [Signature.empty, MessageContext]
-
-
 def should_pass_ctx(sig: Mapping[str, Parameter], params: List[str]) -> bool:
     # TODO: fix docs
     """
@@ -51,4 +47,7 @@ def should_pass_ctx(sig: Mapping[str, Parameter], params: List[str]) -> bool:
         TypeCache()
         annotation = eval(annotation, TypeCache.cache, globals())
 
-    return annotation in context_types
+    return (
+        annotation == MessageContext
+        or params[0] == "ctx"
+    )

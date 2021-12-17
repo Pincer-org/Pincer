@@ -4,10 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
-from pincer.commands.components import hash_component_id
-
-from pincer.objects.message.component import MessageComponent
+from typing import TYPE_CHECKING, Optional
 
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
@@ -68,7 +65,7 @@ class SelectMenu(APIObject):
         |default| False
     """
     custom_id: str
-    options: List[SelectOption]
+    options: Optional[List[SelectOption]] = None
 
     placeholder: APINullable[str] = MISSING
     min_values: APINullable[int] = 1
@@ -79,5 +76,13 @@ class SelectMenu(APIObject):
 
     def __post_init__(self):
         self.type = 3
-        if self.custom_id:
-            self.custom_id = hash_component_id(self.custom_id)
+
+    def with_options(self, *options: SelectOption) -> SelectMenu:
+        """
+        Sets the `options` parameter to \\*options and returns self.
+
+        \\*options : SelectOption
+            List of options to set
+        """
+        self.options = options
+        return self

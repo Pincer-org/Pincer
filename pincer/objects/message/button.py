@@ -7,9 +7,6 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import TYPE_CHECKING, Dict
 
-from pincer.commands.components import hash_component_id
-
-from .component import MessageComponent
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
 
@@ -72,8 +69,8 @@ class Button(APIObject):
         Whether the button is disabled (default `False`)
     """
     custom_id: APINullable[str]
-    style: ButtonStyle
     label: APINullable[str]
+    style: ButtonStyle
 
     emoji: APINullable[Emoji] = MISSING
     url: APINullable[str] = MISSING
@@ -83,5 +80,3 @@ class Button(APIObject):
 
     def __post_init__(self):
         self.type = 2
-        if self.custom_id:
-            self.custom_id = hash_component_id(self.custom_id)
