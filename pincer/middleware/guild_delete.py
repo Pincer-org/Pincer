@@ -23,15 +23,15 @@ async def guild_delete_middleware(self, payload: GatewayDispatch):
     Tuple[:class:`str`, :class:`~pincer.objects.guild.guild.UnavailableGuild`]
         ``on_guild_delete`` and an ``UnavailableGuild``
     """
-    # TODO: Fix docs on line 23 (three lines above)
-    # http://docs.pincer.dev/pincer.middleware#pincer.middleware.guild_delete.guild_delete_middleware
 
     guild = UnavailableGuild.from_dict(
         construct_client_dict(self, payload.data)
     )
 
-    if guild.id in self.guilds.key():
-        self.guilds.pop(guild.id)
+    self.guilds.pop(guild.id, None)
+
+    for channel in self.guild.channels:
+        self.channels.pop(channel.id, None)
 
     return "on_guild_delete", guild
 

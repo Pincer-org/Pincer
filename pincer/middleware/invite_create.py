@@ -26,7 +26,7 @@ async def invite_create_middleware(self, payload: GatewayDispatch):
     """  # noqa: E501
     return (
         "on_invite_create",
-        InviteCreateEvent.from_dict(construct_client_dict(self, payload.data))
+        InviteCreateEvent.from_dict(construct_client_dict(self, payload.data)),
     )
 
 

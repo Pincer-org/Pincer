@@ -28,7 +28,7 @@ async def message_delete_bulk_middleware(self, payload: GatewayDispatch):
         "on_message_delete_bulk",
         MessageDeleteBulkEvent.from_dict(
             construct_client_dict(self, payload.data)
-        )
+        ),
     )
 
 

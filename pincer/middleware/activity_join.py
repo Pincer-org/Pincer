@@ -29,7 +29,7 @@ async def activity_join_middleware(self, payload: GatewayDispatch):
     """  # noqa: E501
     return (
         "on_activity_join",
-        ActivityJoinEvent.from_dict(construct_client_dict(self, payload.data))
+        ActivityJoinEvent.from_dict(construct_client_dict(self, payload.data)),
     )
 
 

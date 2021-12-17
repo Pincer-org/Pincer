@@ -28,7 +28,7 @@ async def voice_channel_select_middleware(self, payload: GatewayDispatch):
         "on_voice_channel_select",
         VoiceChannelSelectEvent.from_dict(
             construct_client_dict(self, payload.data)
-        )
+        ),
     )
 
 

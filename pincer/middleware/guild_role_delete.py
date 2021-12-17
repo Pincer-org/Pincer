@@ -25,12 +25,19 @@ async def guild_role_delete_middleware(self, payload: GatewayDispatch):
         ``on_guild_role_delete`` and a ``GuildRoleDeleteEvent``
     """  # noqa: E501
 
-    return (
-        "on_guild_role_delete",
-        GuildRoleDeleteEvent.from_dict(
-            construct_client_dict(self, payload.data)
-        ),
+    event = GuildRoleDeleteEvent.from_dict(
+        construct_client_dict(self, payload.data)
     )
+
+    guild = self.guilds.get(event.guild_id)
+
+    if guild:
+        guild.roles = [
+            role for role in self.guilds[event.guild_id].roles
+            if role.id != event.role_id
+        ]
+
+    return ("on_guild_role_delete", event)
 
 
 def export() -> Coro:

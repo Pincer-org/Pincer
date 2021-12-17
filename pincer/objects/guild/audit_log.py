@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
+from ...utils.api_object import APIObject, ChannelProperty
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
@@ -182,7 +182,7 @@ class AuditLogChange(APIObject):
 
 
 @dataclass(repr=False)
-class AuditEntryInfo(APIObject):
+class AuditEntryInfo(APIObject, ChannelProperty):
     """Represents Discord Optional Audit Entry Info
 
     Attributes
