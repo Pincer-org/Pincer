@@ -314,7 +314,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         reason: Optional[str] = None
     ):
         """Delete multiple messages in a single request.
-        This endpoint can only be used on guild channels and require
+        This endpoint can only be used on guild channels and requires
         the ``MANAGE_MESSAGES`` permission.
 
         This endpoint will not delete messages older than 2 weeks, and will
