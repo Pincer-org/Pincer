@@ -1627,7 +1627,7 @@ class Guild(APIObject):
         *,
         name: str,
         image: File,
-        roles: List[Snowflake] = [],
+        roles: Optional[List[Snowflake]] = None,
         reason: Optional[str] = None,
     ) -> Emoji:
         """|coro|
@@ -1643,7 +1643,7 @@ class Guild(APIObject):
             Name of the emoji
         image : :class:`~pincer.objects.message.file.File`
             The File for the 128x128 emoji image data
-        roles : List[:class:`~pincer.utils.snowflake.Snowflake`]
+        roles : Optional[List[:class:`~pincer.utils.snowflake.Snowflake`]]
             Roles allowed to use this emoji |default| :data:`[]`
         reason : Optional[:class:`str`]
             The reason for creating the emoji |default| :data:`None`
@@ -1653,6 +1653,8 @@ class Guild(APIObject):
         :class:`~pincer.objects.guild.emoji.Emoji`
             The newly created emoji object.
         """
+        roles = [] if roles is None else roles
+        
         data = await self._http.post(
             f"guilds/{self.id}/emojis",
             data={"name": name, "image": image.uri, "roles": roles},
