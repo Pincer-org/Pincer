@@ -40,7 +40,8 @@ from .objects import (
     Guild,
     Intents,
     GuildTemplate,
-    StickerPack, UserMessage,
+    StickerPack,
+    UserMessage
 )
 from .utils.conversion import construct_client_dict
 from .utils.event_mgr import EventMgr
