@@ -9,15 +9,12 @@ from typing import AsyncGenerator, overload, TYPE_CHECKING
 
 from aiohttp import FormData
 
-from .invite import Invite
 from .channel import Channel
-from ..message.emoji import Emoji
 from ..message.file import File
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
 from ...utils.conversion import construct_client_dict, remove_none
 from ...utils.types import MISSING
-
 
 if TYPE_CHECKING:
     from typing import Any, Dict, List, Optional, Tuple, Union, Generator
@@ -28,8 +25,10 @@ if TYPE_CHECKING:
     from .channel import PublicThread, PrivateThread, ChannelType
     from .member import GuildMember
     from .features import GuildFeature
+    from .invite import Invite
     from .overwrite import Overwrite
     from .role import Role
+    from .scheduled_events import ScheduledEvent
     from .stage import StageInstance
     from .template import GuildTemplate
     from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
@@ -40,7 +39,7 @@ if TYPE_CHECKING:
     from ..voice.region import VoiceRegion
     from ..events.presence import PresenceUpdateEvent
     from ..message.emoji import Emoji
-    from ..message.sticker import Sticker, StickerPack
+    from ..message.sticker import Sticker
     from ..user.voice_state import VoiceState
     from ...client import Client
     from ...utils.timestamp import Timestamp
@@ -365,7 +364,7 @@ class Guild(APIObject):
     preferred_locale: APINullable[str] = MISSING
     roles: APINullable[List[Role]] = MISSING
 
-    guild_scheduled_events: APINullable[List] = MISSING
+    guild_scheduled_events: APINullable[List[ScheduledEvent]] = MISSING
     lazy: APINullable[bool] = MISSING
     premium_progress_bar_enabled: APINullable[bool] = MISSING
     guild_hashes: APINullable[Dict] = MISSING
