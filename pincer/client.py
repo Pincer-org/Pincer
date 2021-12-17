@@ -226,9 +226,9 @@ class Client(Dispatcher):
         Get a list of chat command calls which have been registered in
         the :class:`~pincer.commands.ChatCommandHandler`\\.
         """
-        return list(
-            map(lambda cmd: cmd.app.name, ChatCommandHandler.register.values())
-        )
+        return [
+            cmd.app.name for cmd in ChatCommandHandler.register.values()
+        ]
 
     @property
     def guild_ids(self) -> List[Snowflake]:
