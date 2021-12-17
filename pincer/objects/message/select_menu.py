@@ -5,6 +5,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
+from pincer.commands.components import hash_component_id
+
+from pincer.objects.message.component import MessageComponent
 
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
@@ -12,7 +15,7 @@ from ...utils.types import MISSING
 if TYPE_CHECKING:
     from typing import List
 
-    from ..message.emoji import Emoji
+    from .emoji import Emoji
     from ...utils.types import APINullable
 
 
@@ -46,8 +49,6 @@ class SelectMenu(APIObject):
 
     Attributes
     ----------
-    type: :class:`int`
-        ``3`` for a select menu
     custom_id: :class:`str`
         A developer-defined identifier for the button,
         max 100 characters
@@ -63,10 +64,9 @@ class SelectMenu(APIObject):
         The maximum number of items that can be chosen; max 25
         |default| ``1``
     disabled: APINullable[:class:`bool`]
-        Disable the select
+        Disable the selects
         |default| False
     """
-    type: int
     custom_id: str
     options: List[SelectOption]
 
@@ -74,3 +74,10 @@ class SelectMenu(APIObject):
     min_values: APINullable[int] = 1
     max_values: APINullable[int] = 1
     disabled: APINullable[bool] = False
+
+    type: int = 3
+
+    def __post_init__(self):
+        self.type = 3
+        if self.custom_id:
+            self.custom_id = hash_component_id(self.custom_id)

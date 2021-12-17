@@ -7,8 +7,10 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import TYPE_CHECKING, Dict
 
+from pincer.commands.components import hash_component_id
+
+from .component import MessageComponent
 from ...utils.api_object import APIObject
-from ...utils.conversion import remove_none
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
@@ -69,20 +71,17 @@ class Button(APIObject):
     disabled: APINullable[:class:`bool`]
         Whether the button is disabled (default `False`)
     """
+    custom_id: APINullable[str]
     style: ButtonStyle
+    label: APINullable[str]
 
-    label: APINullable[str] = MISSING
     emoji: APINullable[Emoji] = MISSING
-    custom_id: APINullable[str] = MISSING
     url: APINullable[str] = MISSING
     disabled: APINullable[bool] = False
 
-    def to_dict(self) -> Dict:
-        return remove_none({
-            "type": 2,
-            "style": self.style,
-            "label": self.emoji,
-            "custom_id": self.custom_id,
-            "url": self.url,
-            "disabled": self.disabled
-        })
+    type: int = 2
+
+    def __post_init__(self):
+        self.type = 2
+        if self.custom_id:
+            self.custom_id = hash_component_id(self.custom_id)

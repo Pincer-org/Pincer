@@ -12,7 +12,7 @@ from pincer.utils.api_object import ChannelProperty, GuildProperty
 from .command_types import AppCommandOptionType
 from .interaction_base import InteractionType, CallbackType
 from .mentionable import Mentionable
-from ..app.select_menu import SelectOption
+from ..message.select_menu import SelectOption
 from ..guild.member import GuildMember
 from ..message.context import MessageContext
 from ..message.message import Message

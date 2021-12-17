@@ -16,7 +16,7 @@ from .app.interactions import (
     ResolvedData, InteractionData, Interaction
 )
 from .app.mentionable import Mentionable
-from .app.select_menu import SelectOption, SelectMenu
+from .message.select_menu import SelectOption, SelectMenu
 from .app.session_start_limit import SessionStartLimit
 from .app.throttle_scope import ThrottleScope
 from .app.throttling import ThrottleInterface, DefaultThrottleHandler
@@ -76,6 +76,7 @@ from .guild.thread import ThreadMetadata, ThreadMember
 from .guild.webhook import WebhookType, Webhook
 from .guild.welcome_screen import WelcomeScreenChannel, WelcomeScreen
 from .guild.widget import GuildWidget
+from .message.action_row import ActionRow
 from .message.attachment import Attachment
 from .message.button import ButtonStyle, Button
 from .message.component import MessageComponent, ComponentType
@@ -89,6 +90,7 @@ from .message.file import File
 from .message.message import Message
 from .message.reaction import Reaction
 from .message.reference import MessageReference
+from .message.select_menu import SelectMenu
 from .message.sticker import (
     StickerType, StickerFormatType, Sticker, StickerItem, StickerPack
 )
@@ -148,5 +150,5 @@ __all__ = (
     "User", "UserMessage", "VerificationLevel", "VisibilityType",
     "VoiceChannel", "VoiceRegion", "VoiceServerUpdateEvent", "VoiceState",
     "Webhook", "WebhookType", "WebhooksUpdateEvent", "WelcomeScreen",
-    "WelcomeScreenChannel", "ComponentType"
+    "WelcomeScreenChannel", "ComponentType", "ActionRow", "SelectMenu"
 )

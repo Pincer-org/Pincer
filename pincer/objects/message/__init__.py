@@ -1,6 +1,7 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
+from .action_row import ActionRow
 from .attachment import Attachment
 from .button import ButtonStyle, Button
 from .component import MessageComponent, ComponentType
@@ -14,6 +15,7 @@ from .file import File
 from .message import Message
 from .reaction import Reaction
 from .reference import MessageReference
+from .select_menu import SelectMenu
 from .sticker import (
     StickerType, StickerFormatType, Sticker, StickerItem, StickerPack
 )
@@ -29,5 +31,6 @@ __all__ = (
     "File", "Message", "MessageActivity", "MessageActivityType",
     "MessageComponent", "MessageContext", "MessageFlags", "MessageReference",
     "MessageType", "Reaction", "Sticker", "StickerFormatType", "StickerItem",
-    "StickerPack", "StickerType", "UserMessage", "ComponentType"
+    "StickerPack", "StickerType", "UserMessage", "ComponentType", "ActionRow",
+    "SelectMenu"
 )

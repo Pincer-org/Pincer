@@ -37,6 +37,18 @@ MessageComponent
 
 .. autoclass:: MessageComponent()
 
+.. attributetable:: ActionRow
+
+.. autoclass:: ActionRow()
+
+.. attributetable:: Button
+
+.. autoclass:: Button()
+
+.. attributetable:: SelectMenu
+
+.. autoclass:: SelectMenu()
+
 Context
 -------
 
