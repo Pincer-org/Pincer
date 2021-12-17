@@ -9,7 +9,14 @@ from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
 from typing import (
-    Any, Dict, List, Optional, Tuple, Union, overload, AsyncIterator
+    Any,
+    Dict,
+    List,
+    Optional,
+    Tuple,
+    Union,
+    overload,
+    AsyncIterator,
 )
 from typing import TYPE_CHECKING
 
@@ -18,13 +25,23 @@ from .commands import ChatCommandHandler
 from .core import HTTPClient
 from .core.gateway import Dispatcher
 from .exceptions import (
-    InvalidEventName, TooManySetupArguments, NoValidSetupMethod,
-    NoCogManagerReturnFound, CogAlreadyExists, CogNotFound
+    InvalidEventName,
+    TooManySetupArguments,
+    NoValidSetupMethod,
+    NoCogManagerReturnFound,
+    CogAlreadyExists,
+    CogNotFound,
 )
 from .middleware import middleware
 from .objects import (
-    Role, Channel, DefaultThrottleHandler, User, Guild, Intents,
-    GuildTemplate, StickerPack
+    Role,
+    Channel,
+    DefaultThrottleHandler,
+    User,
+    Guild,
+    Intents,
+    GuildTemplate,
+    StickerPack, UserMessage,
 )
 from .utils.conversion import construct_client_dict
 from .utils.event_mgr import EventMgr
@@ -105,7 +122,8 @@ def event_middleware(call: str, *, override: bool = False):
         if override:
             _log.warning(
                 "Middleware overriding has been enabled for `%s`."
-                " This might cause unexpected behavior.", call
+                " This might cause unexpected behavior.",
+                call,
             )
 
         if not override and callable(_events.get(call)):
@@ -118,9 +136,7 @@ def event_middleware(call: str, *, override: bool = False):
             _log.debug("`%s` middleware has been invoked", call)
 
             return await (
-                func(cls, payload)
-                if should_pass_cls(func)
-                else func(payload)
+                func(cls, payload) if should_pass_cls(func) else func(payload)
             )
 
         _events[call] = wrapper
@@ -167,12 +183,13 @@ class Client(Dispatcher):
     """
 
     def __init__(
-            self,
-            token: str, *,
-            received: str = None,
-            intents: Intents = None,
-            throttler: ThrottleInterface = DefaultThrottleHandler,
-            reconnect: bool = True,
+        self,
+        token: str,
+        *,
+        received: str = None,
+        intents: Intents = None,
+        throttler: ThrottleInterface = DefaultThrottleHandler,
+        reconnect: bool = True,
     ):
         super().__init__(
             token,
@@ -180,7 +197,7 @@ class Client(Dispatcher):
                 # Gets triggered on all events
                 -1: self.payload_event_handler,
                 # Use this event handler for opcode 0.
-                0: self.event_handler
+                0: self.event_handler,
             },
             intents=intents or Intents.NONE,
             reconnect=reconnect,
@@ -204,10 +221,9 @@ class Client(Dispatcher):
         Get a list of chat command calls which have been registered in
         the :class:`~pincer.commands.ChatCommandHandler`\\.
         """
-        return list(map(
-            lambda cmd: cmd.app.name,
-            ChatCommandHandler.register.values()
-        ))
+        return list(
+            map(lambda cmd: cmd.app.name, ChatCommandHandler.register.values())
+        )
 
     @staticmethod
     def event(coroutine: Coro):
@@ -258,8 +274,9 @@ class Client(Dispatcher):
         InvalidEventName
             If the function name is not a valid event (on_x)
         """
-        if not iscoroutinefunction(coroutine) \
-                and not isasyncgenfunction(coroutine):
+        if not iscoroutinefunction(coroutine) and not isasyncgenfunction(
+            coroutine
+        ):
             raise TypeError(
                 "Any event which is registered must be a coroutine function"
             )
@@ -291,10 +308,17 @@ class Client(Dispatcher):
         """
         calls = _events.get(name.strip().lower())
 
-        return [] if not calls else list(filter(
-            lambda call: iscoroutinefunction(call) or isasyncgenfunction(call),
-            calls
-        ))
+        return (
+            []
+            if not calls
+            else list(
+                filter(
+                    lambda call: iscoroutinefunction(call)
+                    or isasyncgenfunction(call),
+                    calls,
+                )
+            )
+        )
 
     def load_cog(self, path: str, package: Optional[str] = None):
         """Load a cog from a string path, setup method in COG may
@@ -435,7 +459,7 @@ class Client(Dispatcher):
             if should_pass_cls(call):
                 call_args = (
                     ChatCommandHandler.managers[call.__module__],
-                    *(arg for arg in args if arg is not None)
+                    *(arg for arg in args if arg is not None),
                 )
 
             ensure_future(call(*call_args, **kwargs))
@@ -446,15 +470,11 @@ class Client(Dispatcher):
 
     def __del__(self):
         """Ensure close of the http client."""
-        if hasattr(self, 'http'):
+        if hasattr(self, "http"):
             run(self.http.close())
 
     async def handle_middleware(
-            self,
-            payload: GatewayDispatch,
-            key: str,
-            *args,
-            **kwargs
+        self, payload: GatewayDispatch, key: str, *args, **kwargs
     ) -> Tuple[Optional[Coro], List[Any], Dict[str, Any]]:
         """|coro|
 
@@ -506,11 +526,7 @@ class Client(Dispatcher):
         )
 
     async def execute_error(
-            self,
-            error: Exception,
-            name: str = "on_error",
-            *args,
-            **kwargs
+        self, error: Exception, name: str = "on_error", *args, **kwargs
     ):
         """|coro|
 
@@ -607,7 +623,7 @@ class Client(Dispatcher):
         afk_channel_id: Optional[Snowflake] = None,
         afk_timeout: Optional[int] = None,
         system_channel_id: Optional[Snowflake] = None,
-        system_channel_flags: Optional[int] = None
+        system_channel_flags: Optional[int] = None,
     ) -> Guild:
         """Creates a guild.
 
@@ -648,7 +664,7 @@ class Client(Dispatcher):
 
     async def create_guild(self, name: str, **kwargs) -> Guild:
         g = await self.http.post("guilds", data={"name": name, **kwargs})
-        return await self.get_guild(g['id'])
+        return await self.get_guild(g["id"])
 
     async def get_guild_template(self, code: str) -> GuildTemplate:
         """|coro|
@@ -666,16 +682,12 @@ class Client(Dispatcher):
         """
         return GuildTemplate.from_dict(
             construct_client_dict(
-                self,
-                await self.http.get(f"guilds/templates/{code}")
+                self, await self.http.get(f"guilds/templates/{code}")
             )
         )
 
     async def create_guild_from_template(
-        self,
-        template: GuildTemplate,
-        name: str,
-        icon: Optional[str] = None
+        self, template: GuildTemplate, name: str, icon: Optional[str] = None
     ) -> Guild:
         """|coro|
         Creates a guild from a template.
@@ -699,16 +711,16 @@ class Client(Dispatcher):
                 self,
                 await self.http.post(
                     f"guilds/templates/{template.code}",
-                    data={"name": name, "icon": icon}
-                )
+                    data={"name": name, "icon": icon},
+                ),
             )
         )
 
     async def wait_for(
-            self,
-            event_name: str,
-            check: CheckFunction = None,
-            timeout: Optional[float] = None
+        self,
+        event_name: str,
+        check: CheckFunction = None,
+        timeout: Optional[float] = None,
     ):
         """
         Parameters
@@ -729,11 +741,11 @@ class Client(Dispatcher):
         return await self.event_mgr.wait_for(event_name, check, timeout)
 
     def loop_for(
-            self,
-            event_name: str,
-            check: CheckFunction = None,
-            iteration_timeout: Optional[float] = None,
-            loop_timeout: Optional[float] = None
+        self,
+        event_name: str,
+        check: CheckFunction = None,
+        iteration_timeout: Optional[float] = None,
+        loop_timeout: Optional[float] = None,
     ):
         """
         Parameters
@@ -755,10 +767,7 @@ class Client(Dispatcher):
             What the Discord API returns for this event.
         """
         return self.event_mgr.loop_for(
-            event_name,
-            check,
-            iteration_timeout,
-            loop_timeout
+            event_name, check, iteration_timeout, loop_timeout
         )
 
     async def get_guild(self, guild_id: int) -> Guild:
@@ -836,10 +845,27 @@ class Client(Dispatcher):
         """
         return await Channel.from_id(self, _id)
 
+    async def get_message(self, _id: Snowflake, channel_id: Snowflake) -> UserMessage:
+        """|coro|
+        Creates a UserMessage object
+
+        Parameters
+        ----------
+        _id: :class:`~pincer.utils.snowflake.Snowflake`
+            ID of the message that is wanted.
+        channel_id : int
+            ID of the channel the message is in.
+
+        Returns
+        -------
+        :class:`~pincer.objects.message.user_message.UserMessage`
+            The message object.
+        """
+
+        return await UserMessage.from_id(self, _id, channel_id)
+
     async def get_webhook(
-        self,
-        id: Snowflake,
-        token: Optional[str] = None
+        self, id: Snowflake, token: Optional[str] = None
     ) -> Webhook:
         """|coro|
         Fetch a Webhook from its identifier.
