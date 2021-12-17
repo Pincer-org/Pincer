@@ -5,9 +5,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict
 
 from ...utils.api_object import APIObject
+from ...utils.conversion import remove_none
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
@@ -54,8 +55,6 @@ class Button(APIObject):
 
     Attributes
     ----------
-    type: :class:`int`
-        `2` for a button
     style: :class:`~pincer.objects.message.button.ButtonStyle`
         one of button styles
     label: APINullable[:class:`str`]
@@ -70,7 +69,6 @@ class Button(APIObject):
     disabled: APINullable[:class:`bool`]
         Whether the button is disabled (default `False`)
     """
-    type: int
     style: ButtonStyle
 
     label: APINullable[str] = MISSING
@@ -78,3 +76,13 @@ class Button(APIObject):
     custom_id: APINullable[str] = MISSING
     url: APINullable[str] = MISSING
     disabled: APINullable[bool] = False
+
+    def to_dict(self) -> Dict:
+        return remove_none({
+            "type": 2,
+            "style": self.style,
+            "label": self.emoji,
+            "custom_id": self.custom_id,
+            "url": self.url,
+            "disabled": self.disabled
+        })
