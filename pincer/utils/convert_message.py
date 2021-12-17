@@ -24,10 +24,7 @@ if TYPE_CHECKING:
 MessageConvertable = Union[Embed, Message, str]
 
 
-def convert_message(
-        client: Client,
-        message: MessageConvertable
-) -> Message:
+def convert_message(client: Client, message: MessageConvertable) -> Message:
     # TODO: fix docs
     """
     Converts a message to a Message object.
@@ -46,8 +43,11 @@ def convert_message(
     elif PILLOW_IMPORT and isinstance(message, (File, Image)):
         message = Message(attachments=[message])
     elif not isinstance(message, Message):
-        message = Message(message) if message else Message(
-            client.received_message,
-            flags=InteractionFlags.EPHEMERAL
+        message = (
+            Message(message)
+            if message
+            else Message(
+                client.received_message, flags=InteractionFlags.EPHEMERAL
+            )
         )
     return message
