@@ -772,10 +772,10 @@ class ChatCommandHandler(metaclass=Singleton):
         Therefore, we don't need to use a seperate loop for updating and adding
         commands.
         """
-        local_registered_commands = list(map(
+        local_registered_commands = map(
             lambda registered_cmd: registered_cmd.app,
             ChatCommandHandler.register.values(),
-        ))
+        )
 
         def should_be_updated_or_uploaded(target):
             for command in self._api_commands:
@@ -783,9 +783,9 @@ class ChatCommandHandler(metaclass=Singleton):
                     return False
             return True
 
-        changed_commands = list(filter(
+        changed_commands = filter(
             should_be_updated_or_uploaded, local_registered_commands
-        ))
+        )
 
         for command in changed_commands:
             await self.add_command(command)
