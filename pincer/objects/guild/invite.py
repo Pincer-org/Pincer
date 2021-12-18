@@ -58,30 +58,6 @@ class InviteStageInstance(APIObject):
 
 
 @dataclass(repr=False)
-class InviteMetadata(APIObject):
-    """Extra information about an invite, will extend the invite object.
-
-    Attributes
-    ----------
-    uses: :class:`int`
-        number of times this invite has been used
-    max_uses: :class:`int`
-        Max number of times this invite can be used
-    max_age: :class:`int`
-        Duration (in seconds) after which the invite expires
-    temporary:  :class:`bool`
-        Whether this invite only grants temporary membership
-    created_at: :class:`~pincer.utils.timestamp.Timestamp`
-        When this invite was created
-    """
-    uses: int
-    max_uses: int
-    max_age: int
-    temporary: bool
-    created_at: Timestamp
-
-
-@dataclass(repr=False)
 class Invite(APIObject):
     """Represents a Discord invite.
 
@@ -114,6 +90,16 @@ class Invite(APIObject):
     target_application: :class:`~pincer.objects.app.application.Application`
         The embedded application to open for this voice channel embedded
         application invite
+    uses: APINullable[:class:`int`]
+        number of times this invite has been used
+    max_uses: APINullable[:class:`int`]
+        Max number of times this invite can be used
+    max_age: APINullable[:class:`int`]
+        Duration (in seconds) after which the invite expires
+    temporary:  APINullable[:class:`bool`]
+        Whether this invite only grants temporary membership
+    created_at: APINullable[:class:`~pincer.utils.timestamp.Timestamp`]
+        When this invite was created
     """
     # noqa: E501
 
@@ -129,6 +115,11 @@ class Invite(APIObject):
     target_type: APINullable[InviteTargetType] = MISSING
     target_user: APINullable[User] = MISSING
     target_application: APINullable[Application] = MISSING
+    uses: APINullable[int] = MISSING
+    max_uses: APINullable[int] = MISSING
+    max_age: APINullable[int] = MISSING
+    temporary: APINullable[bool] = MISSING
+    created_at: APINullable[Timestamp] = MISSING
 
     def __repr__(self) -> str:
         return f"Invite(code={self.code}, channel={self.channel})"
