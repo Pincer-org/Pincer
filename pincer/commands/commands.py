@@ -739,8 +739,17 @@ class ChatCommandHandler(metaclass=Singleton):
     async def __add_commands(self):
         """|coro|
 
-        Add all new commands which have been registered by the decorator
-        to Discord
+        Add all new commands which have been registered by the decorator to Discord.
+
+        .. code-block::
+
+            Because commands have unique names within a type and scope, we treat POST
+            requests for new commands as upserts. That means making a new command with
+            an already-used name for your application will update the existing command.
+            https://discord.com/developers/docs/interactions/application-commands#updating-and-deleting-a-command
+
+        Therefore, we don't need to use a seperate loop for updating and adding
+        commands.
         """
         local_registered_commands = list(map(
             lambda registered_cmd: registered_cmd.app,
