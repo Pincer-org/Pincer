@@ -20,6 +20,9 @@ class MissingType:
     def __eq__(self, __o: object) -> bool:
         return __o is MISSING
 
+    def __hash__(self) -> int:
+        return 0
+
 
 MISSING = MissingType()
 

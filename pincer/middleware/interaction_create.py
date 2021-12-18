@@ -8,6 +8,8 @@ from inspect import isasyncgenfunction, _empty
 from typing import Dict, Any
 from typing import TYPE_CHECKING
 
+from pincer.commands.commands import hash_app_command_params
+
 
 from ..commands import ChatCommandHandler
 from ..core.dispatch import GatewayDispatch
@@ -148,7 +150,19 @@ async def interaction_create_middleware(
     interaction: Interaction = Interaction.from_dict(
         construct_client_dict(self, payload.data)
     )
-    command = ChatCommandHandler.register.get(interaction.data.name)
+
+    try:
+        command = ChatCommandHandler.register[hash_app_command_params(
+            interaction.data.name,
+            interaction.guild_id,
+            interaction.data.type
+        )]
+    except KeyError:
+        command = ChatCommandHandler.register[hash_app_command_params(
+            interaction.data.name,
+            0,
+            interaction.data.type
+        )]
 
     if command:
         context = interaction.convert_to_message_context(command)

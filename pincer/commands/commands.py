@@ -6,10 +6,9 @@ from __future__ import annotations
 import logging
 import re
 from asyncio import iscoroutinefunction, gather
-from copy import deepcopy
 from functools import partial
 from inspect import Signature, isasyncgenfunction, _empty
-from typing import TYPE_CHECKING, Union, Tuple, List
+from typing import TYPE_CHECKING, Union, List
 
 from . import __package__
 from ..commands.arg_types import (
@@ -60,7 +59,6 @@ COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
 _log = logging.getLogger(__package__)
 
 _options_type_link = {
-    # TODO: Implement other types:
     Signature.empty: AppCommandOptionType.STRING,
     str: AppCommandOptionType.STRING,
     int: AppCommandOptionType.INTEGER,
@@ -296,6 +294,11 @@ def command(
             )
         )
 
+    # Discord API returns MISSING for options when there are 0. Options is set MISSING
+    # so equality checks later work properly.
+    if options == []:
+        options = MISSING
+
     return register_command(
         func=func,
         app_command_type=AppCommandType.CHAT_INPUT,
@@ -529,13 +532,21 @@ def register_command(
             "the 100 character limit."
         )
 
-    if reg := ChatCommandHandler.register.get(cmd):
+    if reg := ChatCommandHandler.register.get(
+        hash_app_command_params(
+            cmd,
+            guild,
+            app_command_type
+        )
+    ):
         raise CommandAlreadyRegistered(
             f"Command `{cmd}` (`{func.__name__}`) has already been "
             f"registered by `{reg.call.__name__}`."
         )
 
-    ChatCommandHandler.register[cmd] = ClientCommandStructure(
+    ChatCommandHandler.register[
+        hash_app_command_params(cmd, guild_id, app_command_type)
+    ] = ClientCommandStructure(
         call=func,
         cooldown=cooldown,
         cooldown_scale=cooldown_scale,
@@ -547,7 +558,7 @@ def register_command(
             default_permission=enable_default,
             options=command_options,
             guild_id=guild_id,
-        ),
+        )
     )
 
     _log.info(f"Registered command `{cmd}` to `{func.__name__}` locally.")
@@ -639,7 +650,14 @@ class ChatCommandHandler(metaclass=Singleton):
             |default| :data:`False`
         """
         # TODO: Update if discord adds bulk delete commands
-        _log.info("Removing command `%s` from Discord", cmd.name)
+        if cmd.guild_id:
+            _log.info(
+                "Removing command `%s` with guild id %d from Discord",
+                cmd.name,
+                cmd.guild_id
+            )
+        else:
+            _log.info("Removing global command `%s` from Discord", cmd.name)
 
         remove_endpoint = self.__delete_guild if cmd.guild_id else self.__delete
 
@@ -647,8 +665,8 @@ class ChatCommandHandler(metaclass=Singleton):
             self.__prefix + remove_endpoint.format(command=cmd)
         )
 
-        if ChatCommandHandler.register.get(cmd.name):
-            del ChatCommandHandler.register[cmd.name]
+        if ChatCommandHandler.register.get(hash_app_command(cmd)):
+            del ChatCommandHandler.register[hash_app_command(cmd)]
 
     async def add_command(self, cmd: AppCommand):
         """|coro|
@@ -671,7 +689,7 @@ class ChatCommandHandler(metaclass=Singleton):
             self.__prefix + add_endpoint, data=cmd.to_dict()
         )
 
-        ChatCommandHandler.register[cmd.name].app.id = Snowflake(res["id"])
+        ChatCommandHandler.register[hash_app_command(cmd)].app.id = Snowflake(res["id"])
 
     async def add_commands(self, commands: List[AppCommand]):
         """|coro|
@@ -698,7 +716,7 @@ class ChatCommandHandler(metaclass=Singleton):
             return
 
         for api_cmd in self._api_commands:
-            cmd = ChatCommandHandler.register.get(api_cmd.name)
+            cmd = ChatCommandHandler.register.get(hash_app_command(api_cmd))
             if cmd and cmd.app == api_cmd:
                 cmd.app = api_cmd
 
@@ -715,15 +733,18 @@ class ChatCommandHandler(metaclass=Singleton):
 
         def should_be_removed(target: AppCommand) -> bool:
             for reg_cmd in local_registered_commands:
+                # Commands have endpoints based on their `name` amd `guild_id`. Other
+                # parameters can be updated instead of deleting and re-registering the
+                # command.
                 if (
-                    target.type == reg_cmd.type
-                    and target.name == reg_cmd.name
+                    target.name == reg_cmd.name
                     and target.guild_id == reg_cmd.guild_id
                 ):
                     return False
             return True
 
-        to_remove = filter(should_be_removed, self._api_commands)
+        # NOTE: Cannot be generator since it can't be consumed due to lines 743-745
+        to_remove = list(filter(should_be_removed, self._api_commands))
 
         await gather(
             *map(
@@ -775,5 +796,17 @@ class ChatCommandHandler(metaclass=Singleton):
         Call methods of this class to refresh all app commands
         """
         await self.__collect_existing_commands()
-        await self.__add_commands()
         await self.__remove_unused_commands()
+        await self.__add_commands()
+
+
+def hash_app_command(command: AppCommand) -> int:
+    return hash_app_command_params(command.name, command.guild_id, command.type)
+
+
+def hash_app_command_params(
+    name: str,
+    guild_id: Snowflake,
+    app_command_type: AppCommandType
+) -> int:
+    return hash((name, guild_id, app_command_type))
