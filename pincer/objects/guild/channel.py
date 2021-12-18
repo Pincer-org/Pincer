@@ -6,7 +6,7 @@ from __future__ import annotations
 from asyncio import sleep, ensure_future
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import overload, TYPE_CHECKING
+from typing import AsyncIterator, overload, TYPE_CHECKING
 
 from .invite import Invite, InviteTargetType
 from ..message.user_message import UserMessage
@@ -429,15 +429,15 @@ class Channel(APIObject, GuildProperty):  # noqa E501
                 )
             )
 
-    async def get_invites(self) -> AsyncGenerator[Invite, None]:
+    async def get_invites(self) -> AsyncIterator[Invite]:
         """
         Fetches all the invite objects for the channel. Only usable for
         guild channels. Requires the ``MANAGE_CHANNELS`` permission.
 
         Returns
         -------
-        List[:class:`~.pincer.objects.guild.invite.Invite`]
-            The list of invites.
+        AsyncIterator[:class:`~pincer.objects.guild.invite.Invite`]
+            Invites iterator.
         """
         data = await self._http.get(f"channels/{self.id}/invites")
         for invite in data:
@@ -463,27 +463,34 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         max_age: Optional[:class:`int`]
             Duration of invite in seconds before expiry, or 0 for never. between
             0 and 604800 (7 days).
+            |default| :data:`86400`
         max_uses: Optional[:class:`int`]
             Maxinum number of uses. ``0`` for unlimited. Values between 0 and 100.
+            |default| :data:`0`
         temporary: Optional[:class:`bool`]
             Whether the invite only grants temporary membership.
+            |default| :data:`False`
         unique: Optional[:class:`bool`]
             If ``True``, don't try to reuse a similar invite (useful for
             creating many unique one time use invites).
+            |default| :data:`False`
         target_type: Optional[:class:`~.pincer.objects.guild.invite.InviteTargetType`]
             The type of target for the invite.
+            |default| :data:`None`
         target_user_id: Optional[:class:`~.pincer.utils.Snowflake`]
             The id of the user whose stream to display for this invite. Required
             if ``target_type`` is ``STREAM``, the user must be streaming in the
             channel.
+            |default| :data:`None`
         target_application_id: Optional[:class:`~.pincer.utils.Snowflake`]
             The id of the embedded application to open for this invite. Required
             if ``target_type`` is ``EMBEDDED_APPLICATION``, the application must
             have the ``EMBEDDED`` flag.
+            |default| :data:`None`
 
         Returns
         -------
-        :class:`~.pincer.objects.guild.invite.Invite`
+        :class:`~pincer.objects.guild.invite.Invite`
             The invite object.
         """
         return Invite.from_dict(construct_client_dict(self._client,
