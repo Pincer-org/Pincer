@@ -777,14 +777,14 @@ class ChatCommandHandler(metaclass=Singleton):
             ChatCommandHandler.register.values(),
         ))
 
-        def needs_to_be_updated(target):
+        def should_be_updated_or_uploaded(target):
             for command in self._api_commands:
                 if target == command:
                     return False
             return True
 
         changed_commands = list(filter(
-            needs_to_be_updated, local_registered_commands
+            should_be_updated_or_uploaded, local_registered_commands
         ))
 
         for command in changed_commands:
