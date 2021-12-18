@@ -164,7 +164,7 @@ async def interaction_create_middleware(
             interaction.data.type
         )]
 
-        context = interaction.convert_to_message_context(command)
+    context = interaction.convert_to_message_context(command)
 
     try:
         await interaction_handler(self, interaction, context, command.call)
