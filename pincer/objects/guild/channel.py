@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import overload, TYPE_CHECKING
 
+from .invite import Invite, InviteTargetType
 from ..message.user_message import UserMessage
 from ..._config import GatewayConfig
 from ...utils.api_object import APIObject, GuildProperty
@@ -427,6 +428,78 @@ class Channel(APIObject, GuildProperty):  # noqa E501
                     webhook_data
                 )
             )
+
+    async def get_invites(self) -> AsyncGenerator[Invite, None]:
+        """
+        Fetches all the invite objects for the channel. Only usable for
+        guild channels. Requires the ``MANAGE_CHANNELS`` permission.
+
+        Returns
+        -------
+        List[:class:`~.pincer.objects.guild.invite.Invite`]
+            The list of invites.
+        """
+        data = await self._http.get(f"channels/{self.id}/invites")
+        for invite in data:
+            yield Invite.from_dict(construct_client_dict(self._client, invite))
+
+
+    async def create_invite(
+        self,
+        max_age: int = 86400,
+        max_uses: int = 0,
+        temporary: bool = False,
+        unique: bool = False,
+        target_type: InviteTargetType = None,
+        target_user_id: Snowflake = None,
+        target_application_id: Snowflake = None
+    ):
+        """
+        Create a new invite object for the channel. Only usable for guild
+        channels. Requires the ``CREATE_INSTANT_INVITE`` permission.
+
+        Parameters
+        ----------
+        max_age: Optional[:class:`int`]
+            Duration of invite in seconds before expiry, or 0 for never. between
+            0 and 604800 (7 days).
+        max_uses: Optional[:class:`int`]
+            Maxinum number of uses. ``0`` for unlimited. Values between 0 and 100.
+        temporary: Optional[:class:`bool`]
+            Whether the invite only grants temporary membership.
+        unique: Optional[:class:`bool`]
+            If ``True``, don't try to reuse a similar invite (useful for
+            creating many unique one time use invites).
+        target_type: Optional[:class:`~.pincer.objects.guild.invite.InviteTargetType`]
+            The type of target for the invite.
+        target_user_id: Optional[:class:`~.pincer.utils.Snowflake`]
+            The id of the user whose stream to display for this invite. Required
+            if ``target_type`` is ``STREAM``, the user must be streaming in the
+            channel.
+        target_application_id: Optional[:class:`~.pincer.utils.Snowflake`]
+            The id of the embedded application to open for this invite. Required
+            if ``target_type`` is ``EMBEDDED_APPLICATION``, the application must
+            have the ``EMBEDDED`` flag.
+
+        Returns
+        -------
+        :class:`~.pincer.objects.guild.invite.Invite`
+            The invite object.
+        """
+        return Invite.from_dict(construct_client_dict(self._client,
+            await self._http.post(
+                f"/channels/{self.id}/invites",
+                {
+                    "max_age": max_age,
+                    "max_uses": max_uses,
+                    "temporary": temporary,
+                    "unique": unique,
+                    "target_type": target_type,
+                    "target_user_id": target_user_id,
+                    "target_application_id": target_application_id
+                }
+            )
+        ))
 
     def __str__(self):
         """return the discord tag when object gets used as a string."""
