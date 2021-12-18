@@ -3,15 +3,14 @@
 
 from __future__ import annotations
 
+from contextlib import suppress
 import logging
 from inspect import isasyncgenfunction, _empty
 from typing import Dict, Any
 from typing import TYPE_CHECKING
 
-from pincer.commands.commands import hash_app_command_params
-
-
-from ..commands import ChatCommandHandler
+from ..commands import ChatCommandHandler, hash_app_command_params
+from ..exceptions import InteractionDoesNotExist
 from ..core.dispatch import GatewayDispatch
 from ..objects import Interaction, MessageContext, AppCommandType
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
@@ -124,6 +123,41 @@ async def interaction_handler(
     )
 
 
+def get_command_from_registry(interaction: Interaction):
+    """
+    Search for a command in ChatCommandHandler.register and return it if it exists
+
+    Paramters
+    ---------
+    interaction : :class:`~pincer.objects.app.interactions.Interaction`
+        The interaction to get the command from
+
+    Raises
+    ------
+    :class:`~pincer.exceptions.InteractionDoesNotExist`
+        The command is not registered
+    """
+
+    with suppress(KeyError):
+        return ChatCommandHandler.register[hash_app_command_params(
+            interaction.data.name,
+            MISSING,
+            interaction.data.type
+        )]
+
+    with suppress(KeyError):
+        return ChatCommandHandler.register[hash_app_command_params(
+            interaction.data.name,
+            interaction.guild_id,
+            interaction.data.type
+        )]
+
+    raise InteractionDoesNotExist(
+        f"No command is registered for {interaction.data.name} with type"
+        f"{interaction.data.type}"
+    )
+
+
 async def interaction_create_middleware(
     self, payload: GatewayDispatch
 ) -> Tuple[str, Interaction]:
@@ -151,19 +185,7 @@ async def interaction_create_middleware(
         construct_client_dict(self, payload.data)
     )
 
-    try:
-        command = ChatCommandHandler.register[hash_app_command_params(
-            interaction.data.name,
-            interaction.guild_id,
-            interaction.data.type
-        )]
-    except KeyError:
-        command = ChatCommandHandler.register[hash_app_command_params(
-            interaction.data.name,
-            MISSING,
-            interaction.data.type
-        )]
-
+    command = get_command_from_registry(interaction)
     context = interaction.convert_to_message_context(command)
 
     try:
