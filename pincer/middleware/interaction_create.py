@@ -160,33 +160,32 @@ async def interaction_create_middleware(
     except KeyError:
         command = ChatCommandHandler.register[hash_app_command_params(
             interaction.data.name,
-            0,
+            MISSING,
             interaction.data.type
         )]
 
-    if command:
         context = interaction.convert_to_message_context(command)
 
-        try:
-            await interaction_handler(self, interaction, context, command.call)
-        except Exception as e:
-            if coro := get_index(self.get_event_coro("on_command_error"), 0):
-                params = get_signature_and_params(coro)[1]
+    try:
+        await interaction_handler(self, interaction, context, command.call)
+    except Exception as e:
+        if coro := get_index(self.get_event_coro("on_command_error"), 0):
+            params = get_signature_and_params(coro)[1]
 
-                # Check if a context or error var has been passed.
-                if 0 < len(params) < 3:
-                    await interaction_response_handler(
-                        self,
-                        coro,
-                        context,
-                        interaction,
-                        # Always take the error parameter its name.
-                        {params[-1]: e},
-                    )
-                else:
-                    raise e
+            # Check if a context or error var has been passed.
+            if 0 < len(params) < 3:
+                await interaction_response_handler(
+                    self,
+                    coro,
+                    context,
+                    interaction,
+                    # Always take the error parameter its name.
+                    {params[-1]: e},
+                )
             else:
                 raise e
+        else:
+            raise e
 
     return "on_interaction_create", interaction
 
