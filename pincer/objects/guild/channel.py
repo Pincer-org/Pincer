@@ -371,7 +371,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
         Parameters
         ----------
-        messages: List[:class:`Snowflake`]
+        messages: List[:class:`~.pincer.utils.Snowflake`]
             The list of message IDs to delete (2-100).
         reason: Optional[:class:`str`]
             The reason of the channel delete.
