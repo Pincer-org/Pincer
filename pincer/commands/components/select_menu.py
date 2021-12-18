@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Callable, Optional
 
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
@@ -74,9 +74,13 @@ class SelectMenu(APIObject):
     disabled: APINullable[bool] = False
 
     type: int = 3
+    _func: Callable = None
 
     def __post_init__(self):
         self.type = 3
+
+    def __call__(self, *args, **kwargs):
+        return self._func(*args, **kwargs)
 
     def with_options(self, *options: SelectOption) -> SelectMenu:
         """

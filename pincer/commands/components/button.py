@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
@@ -77,6 +77,10 @@ class Button(APIObject):
     disabled: APINullable[bool] = False
 
     type: int = 2
+    _func: Callable = None
 
     def __post_init__(self):
         self.type = 2
+
+    def __call__(self, *args, **kwargs):
+        return self._func(*args, **kwargs)

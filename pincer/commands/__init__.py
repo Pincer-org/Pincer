@@ -6,8 +6,8 @@ from .arg_types import (
     Modifier
 )
 from .components import (
-    ActionRow, Button, ButtonStyle, ComponentHandler, SelectMenu, component, button,
-    select_menu
+    ActionRow, Button, ButtonStyle, ComponentHandler, SelectMenu, SelectOption,
+    component, button, select_menu
 )
 from .commands import command, user_command, message_command, ChatCommandHandler
 
@@ -15,5 +15,5 @@ __all__ = (
     "ChannelTypes", "ChatCommandHandler", "Choice", "Choices",
     "CommandArg", "Description", "MaxValue", "MinValue", "Modifier", "command",
     "message_command", "user_command", "ComponentHandler", "component", "button",
-    "ActionRow", "Button", "ButtonStyle", "SelectMenu", "select_menu"
+    "ActionRow", "Button", "ButtonStyle", "SelectMenu", "select_menu", "SelectOption"
 )

@@ -27,9 +27,9 @@ def button(
     url: str = None,
     disabled: bool = None,
     custom_id: str = None
-):
+) -> Button:
 
-    def wrap(custom_id, func):
+    def wrap(custom_id, func) -> Button:
 
         if custom_id is None:
             custom_id = func.__name__
@@ -45,7 +45,8 @@ def button(
                     "label": label,
                     "disabled": disabled,
                     "emoji": emoji,
-                    "url": url
+                    "url": url,
+                    "_func": func
                 }
             )
         )
@@ -59,15 +60,16 @@ def button(
 
 
 def select_menu(
+    func=None,
     options: List[SelectOption] = None,
     placeholder: str = None,
     min_values: int = None,
     max_values: int = None,
     disabled: bool = None,
     custom_id: str = None
-):
+) -> SelectMenu:
 
-    def wrap(custom_id, func):
+    def wrap(custom_id, func) -> SelectMenu:
 
         if custom_id is None:
             custom_id = func.__name__
@@ -83,14 +85,15 @@ def select_menu(
                     "placeholder": placeholder,
                     "min_values": min_values,
                     "max_values": max_values,
-                    "disabled": disabled
+                    "disabled": disabled,
+                    "_func": func
                 }
             )
         )
 
-        menu.func = func
-        menu.__call__ = partial(func)
-
         return menu
 
-    return partial(wrap, custom_id)
+    if func is None:
+        return partial(wrap, custom_id)
+
+    return wrap(custom_id, func)

@@ -53,7 +53,7 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
             if isinstance(value, Enum):
                 result.append((f.name, value.value))
             # This if statement was added to the function
-            elif not isinstance(value, MissingType):
+            elif not isinstance(value, MissingType) and not f.name.startswith("_"):
                 result.append((f.name, value))
 
         return dict(result)
@@ -285,7 +285,10 @@ class APIObject(metaclass=HTTPMeta):
         )))
 
     def to_dict(self) -> Dict:
-        """Transform the current object to a dictionary representation."""
+        """
+        Transform the current object to a dictionary representation. Parameters that
+        start with an underscore are not serialized.
+        """
         return _asdict_ignore_none(self)
 
 
