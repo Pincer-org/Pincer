@@ -17,6 +17,9 @@ class MissingType:
     def __bool__(self) -> bool:
         return False
 
+    def __eq__(self, __o: object) -> bool:
+        return __o is MISSING
+
 
 MISSING = MissingType()
 

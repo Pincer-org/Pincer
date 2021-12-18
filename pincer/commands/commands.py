@@ -550,7 +550,7 @@ def register_command(
         ),
     )
 
-    _log.info(f"Registered command `{cmd}` to `{func.__name__}`.")
+    _log.info(f"Registered command `{cmd}` to `{func.__name__}` locally.")
     return func
 
 
@@ -624,7 +624,7 @@ class ChatCommandHandler(metaclass=Singleton):
             )
         )
 
-    async def remove_command(self, cmd: AppCommand, keep=False):
+    async def remove_command(self, cmd: AppCommand):
         """|coro|
 
         Remove a specific command
@@ -639,83 +639,16 @@ class ChatCommandHandler(metaclass=Singleton):
             |default| :data:`False`
         """
         # TODO: Update if discord adds bulk delete commands
+        _log.info("Removing command `%s` from Discord", cmd.name)
+
         remove_endpoint = self.__delete_guild if cmd.guild_id else self.__delete
 
         await self.client.http.delete(
             self.__prefix + remove_endpoint.format(command=cmd)
         )
 
-        if not keep and ChatCommandHandler.register.get(cmd.name):
+        if ChatCommandHandler.register.get(cmd.name):
             del ChatCommandHandler.register[cmd.name]
-
-    async def remove_commands(
-        self, commands: List[AppCommand], /, keep: List[AppCommand] = None
-    ):
-        """|coro|
-
-        Remove a list of commands
-
-        Parameters
-        ----------
-        commands : List[:class:`~pincer.objects.app.command.AppCommand`]
-            List of commands to delete
-        keep: List[:class:`~pincer.objects.app.command.AppCommand`]
-            List of commands that should not be removed from the
-            ChatCommandHandler.
-            |default| :data:`None`
-        """
-        await gather(
-            *list(
-                map(
-                    lambda cmd: self.remove_command(cmd, cmd in (keep or [])),
-                    commands,
-                )
-            )
-        )
-
-    async def update_command(self, cmd: AppCommand, changes: Dict[str, Any]):
-        """|coro|
-
-        Update a command with changes
-
-        Parameters
-        ----------
-        cmd : :class:`~objects.app.command.AppCommand`
-            What command to update
-        changes : Dict[:class:`str`, Any]
-            Dictionary of changes
-        """
-        # TODO: Update if discord adds bulk update commands
-        update_endpoint = self.__update_guild if cmd.guild_id else self.__update
-
-        await self.client.http.patch(
-            self.__prefix + update_endpoint.format(command=cmd), data=changes
-        )
-
-        for key, value in changes.items():
-            setattr(ChatCommandHandler.register[cmd.name], key, value)
-
-    async def update_commands(
-        self, to_update: Dict[AppCommand, Dict[str, Any]]
-    ):
-        """|coro|
-
-        Update a list of app commands with changes
-
-        Parameters
-        ----------
-        to_update : Dict[:class:`~objects.app.command.AppCommand`, Dict[:class:`str`, Any]]
-            Dictionary of commands to change where changes are a dictionary too
-        """
-        # noqa: E501
-        await gather(
-            *list(
-                map(
-                    lambda cmd: self.update_command(cmd[0], cmd[1]),
-                    to_update.items(),
-                )
-            )
-        )
 
     async def add_command(self, cmd: AppCommand):
         """|coro|
@@ -727,6 +660,8 @@ class ChatCommandHandler(metaclass=Singleton):
         cmd : :class:`~pincer.objects.app.command.AppCommand`
             Command to add
         """
+        _log.info("Updated or registered command `%s` to Discord", cmd.name)
+
         add_endpoint = self.__add
 
         if cmd.guild_id:
@@ -748,19 +683,18 @@ class ChatCommandHandler(metaclass=Singleton):
         commands : List[:class:`~pincer.objects.app.command.AppCommand`]
             List of command objects to add
         """
-        await gather(*list(map(lambda cmd: self.add_command(cmd), commands)))
+        await gather(*map(lambda cmd: self.add_command(cmd), commands))
 
-    async def __init_existing_commands(self):
+    async def __collect_existing_commands(self):
         """|coro|
 
-        Initiate existing commands
+        Get AppCommand objects for all commands registered to discord.
         """
         try:
             self._api_commands = await self.get_commands()
 
         except ForbiddenError:
             logging.error("Cannot retrieve slash commands, skipping...")
-
             return
 
         for api_cmd in self._api_commands:
@@ -774,108 +708,33 @@ class ChatCommandHandler(metaclass=Singleton):
         Remove commands that are registered by discord but not in use
         by the current client
         """
-        registered_commands = list(
-            map(
-                lambda registered_cmd: registered_cmd.app,
-                ChatCommandHandler.register.values(),
-            )
-        )
-        keep = []
+        local_registered_commands = list(map(
+            lambda registered_cmd: registered_cmd.app,
+            ChatCommandHandler.register.values(),
+        ))
 
-        def predicate(target: AppCommand) -> bool:
-            for reg_cmd in registered_commands:
-                reg_cmd: AppCommand = reg_cmd
-                if target == reg_cmd:
+        def should_be_removed(target: AppCommand) -> bool:
+            for reg_cmd in local_registered_commands:
+                if (
+                    target.type == reg_cmd.type
+                    and target.name == reg_cmd.name
+                    and target.guild_id == reg_cmd.guild_id
+                ):
                     return False
-                elif target.name == reg_cmd.name:
-                    keep.append(target)
             return True
 
-        to_remove = list(filter(predicate, self._api_commands))
+        to_remove = filter(should_be_removed, self._api_commands)
 
-        await self.remove_commands(to_remove, keep=keep)
+        await gather(
+            *map(
+                lambda cmd: self.remove_command(cmd),
+                to_remove,
+            )
+        )
 
         self._api_commands = list(
             filter(lambda cmd: cmd not in to_remove, self._api_commands)
         )
-
-    async def __update_existing_commands(self):
-        """|coro|
-
-        Update all commands where its structure doesn't match the
-        structure that discord has registered.
-        """
-        to_update: Dict[AppCommand, Dict[str, Any]] = {}
-
-        def get_changes(api: AppCommand, local: AppCommand) -> Dict[str, Any]:
-            update: Dict[str, Any] = {}
-
-            if api.description != local.description:
-                update["description"] = local.description
-
-            if api.default_permission != local.default_permission:
-                update["default_permission"] = local.default_permission
-
-            options: List[Dict[str, Any]] = []
-            if api.options is not MISSING:
-                if len(api.options) == len(local.options):
-
-                    def get_option(
-                        args: Tuple[int, Any]
-                    ) -> Optional[Dict[str, Any]]:
-                        index, _ = args
-
-                        if opt := get_index(local.options, index):
-                            return opt.to_dict()
-
-                    options = list(
-                        filter(
-                            lambda opt: opt is not None,
-                            map(get_option, enumerate(api.options)),
-                        )
-                    )
-                else:
-                    options = local.options
-
-            if (
-                api.options is not MISSING
-                and list(map(AppCommandOption.from_dict, options))
-                != api.options
-            ):
-                update["options"] = options
-
-            return update
-
-        for idx, api_cmd in enumerate(self._api_commands):
-            for loc_cmd in ChatCommandHandler.register.values():
-                if api_cmd.name != loc_cmd.app.name:
-                    continue
-
-                changes = get_changes(api_cmd, loc_cmd.app)
-
-                if not changes:
-                    continue
-
-                api_update = []
-                if changes.get("options"):
-                    for option in changes["options"]:
-                        api_update.append(
-                            option.to_dict()
-                            if isinstance(option, AppCommandOption)
-                            else option
-                        )
-
-                to_update[api_cmd] = {"options": api_update}
-
-                for key, change in changes.items():
-                    if key == "options":
-                        self._api_commands[idx].options = list(
-                            map(AppCommandOption.from_dict, change)
-                        )
-                    else:
-                        setattr(self._api_commands[idx], key, change)
-
-        await self.update_commands(to_update)
 
     async def __add_commands(self):
         """|coro|
@@ -883,21 +742,29 @@ class ChatCommandHandler(metaclass=Singleton):
         Add all new commands which have been registered by the decorator
         to Discord
         """
-        to_add = deepcopy(ChatCommandHandler.register)
-        for reg_cmd in self._api_commands:
-            try:
-                del to_add[reg_cmd.name]
-            except IndexError:
-                pass
+        local_registered_commands = list(map(
+            lambda registered_cmd: registered_cmd.app,
+            ChatCommandHandler.register.values(),
+        ))
 
-        await self.add_commands(list(map(lambda cmd: cmd.app, to_add.values())))
+        def needs_to_be_updated(target):
+            for command in self._api_commands:
+                if target == command:
+                    return False
+            return True
+
+        changed_commands = list(filter(
+            needs_to_be_updated, local_registered_commands
+        ))
+
+        for command in changed_commands:
+            await self.add_command(command)
 
     async def initialize(self):
         """|coro|
 
         Call methods of this class to refresh all app commands
         """
-        await self.__init_existing_commands()
-        await self.__remove_unused_commands()
-        await self.__update_existing_commands()
+        await self.__collect_existing_commands()
         await self.__add_commands()
+        await self.__remove_unused_commands()
