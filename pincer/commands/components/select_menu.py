@@ -7,14 +7,14 @@ from copy import deepcopy
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Optional
 
-from ..utils.api_object import APIObject
-from ..utils.types import MISSING
+from ...utils.api_object import APIObject
+from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import List
 
-    from ..objects.message.emoji import Emoji
-    from ..utils.types import APINullable
+    from ...objects.message.emoji import Emoji
+    from ...utils.types import APINullable
 
 
 @dataclass(repr=False)

@@ -2,11 +2,11 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 from functools import partial
-from typing import Callable, Dict, List
+from typing import List
 
-from ..objects.message.emoji import Emoji
-from ..utils.conversion import remove_none
-from ..utils.types import MISSING, Singleton
+from .component_handler import ComponentHandler
+from ...objects.message.emoji import Emoji
+from ...utils.conversion import remove_none
 
 from .button import Button, ButtonStyle
 from .select_menu import SelectMenu, SelectOption
@@ -94,18 +94,3 @@ def select_menu(
         return menu
 
     return partial(wrap, custom_id)
-
-
-class ComponentHandler(metaclass=Singleton):
-    """Handles registered components
-
-    Attributes
-    ----------
-    register : Dict[:class:`str`, :class:`Callable`]
-        Dictionary of registered buttons.
-    """
-
-    register: Dict[str, Callable] = {}
-
-    def register_id(self, _id: str, func: Callable):
-        self.register[_id] = func
