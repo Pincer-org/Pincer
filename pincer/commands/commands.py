@@ -703,7 +703,7 @@ class ChatCommandHandler(metaclass=Singleton):
         """
         await gather(*map(lambda cmd: self.add_command(cmd), commands))
 
-    async def __collect_existing_commands(self):
+    async def __get_existing_commands(self):
         """|coro|
 
         Get AppCommand objects for all commands registered to discord.
@@ -769,7 +769,7 @@ class ChatCommandHandler(metaclass=Singleton):
             an already-used name for your application will update the existing command.
             https://discord.com/developers/docs/interactions/application-commands#updating-and-deleting-a-command
 
-        Therefore, we don't need to use a seperate loop for updating and adding
+        Therefore, we don't need to use a separate loop for updating and adding
         commands.
         """
         local_registered_commands = map(
@@ -795,7 +795,7 @@ class ChatCommandHandler(metaclass=Singleton):
 
         Call methods of this class to refresh all app commands
         """
-        await self.__collect_existing_commands()
+        await self.__get_existing_commands()
         await self.__remove_unused_commands()
         await self.__add_commands()
 
