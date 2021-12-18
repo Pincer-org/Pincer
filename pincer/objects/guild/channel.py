@@ -309,6 +309,53 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             }
         )
 
+    async def delete_permission(
+        self,
+        overwrite: Overwrite,
+        reason: Optional[str] = None
+    ):
+        """
+        Delete a channel permission overwrite for a user or role in a channel.
+        Only usable for guild channels. Requires the ``MANAGE_ROLES`` permission.
+
+        Parameters
+        ----------
+        overwrite: :class:`~pincer.objects.guild.overwrite.Overwrite`
+            The overwrite object.
+        reason: Optional[:class:`str`]
+            The reason of the channel delete.
+        """
+        await self._http.delete(
+            f"/channels/{self.id}/permissions/{overwrite.id}",
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
+        )
+
+    async def follow_news_channel(
+        self,
+        webhook_channel_id: Snowflake
+    ):
+        """
+        Follow a News Channel to send messages to a target channel.
+        Requires the ``MANAGE_WEBHOOKS`` permission in the target channel.
+        Returns a followed channel object.
+
+        Parameters
+        ----------
+        webhook_channel_id: :class:`int`
+            The ID of the channel to follow.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.channel.NewsChannel`
+            The followed channel object.
+        """
+        return NewsChannel.from_dict(construct_client_dict(self,
+            self._http.post(
+                f"/channels/{self.id}/followers",
+                data={"webhook_channel_id": webhook_channel_id}
+            )
+        ))
+
     async def bulk_delete_messages(
         self,
         messages: List[Snowflake],
@@ -452,7 +499,8 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         unique: bool = False,
         target_type: InviteTargetType = None,
         target_user_id: Snowflake = None,
-        target_application_id: Snowflake = None
+        target_application_id: Snowflake = None,
+        reason: Optional[str] = None
     ):
         """
         Create a new invite object for the channel. Only usable for guild
@@ -487,6 +535,9 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             if ``target_type`` is ``EMBEDDED_APPLICATION``, the application must
             have the ``EMBEDDED`` flag.
             |default| :data:`None`
+        reason: Optional[:class:`str`]
+            The reason of the invite creation.
+            |default| :data:`None`
 
         Returns
         -------
@@ -496,7 +547,8 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         return Invite.from_dict(construct_client_dict(self._client,
             await self._http.post(
                 f"/channels/{self.id}/invites",
-                {
+                headers=remove_none({"X-Audit-Log-Reason": reason}),
+                data={
                     "max_age": max_age,
                     "max_uses": max_uses,
                     "temporary": temporary,
