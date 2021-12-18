@@ -65,7 +65,7 @@ from .guild.guild import (
     Guild
 )
 from .guild.invite import (
-    InviteTargetType, InviteStageInstance, InviteMetadata, Invite
+    InviteTargetType, InviteStageInstance, Invite
 )
 from .guild.member import GuildMember, PartialGuildMember, BaseMember
 from .guild.overwrite import Overwrite
@@ -129,20 +129,19 @@ __all__ = (
     "IntegrationAccount", "IntegrationApplication", "IntegrationDeleteEvent",
     "IntegrationExpireBehavior", "Intents", "Interaction", "InteractionData",
     "InteractionFlags", "InteractionType", "Invite", "InviteCreateEvent",
-    "InviteDeleteEvent", "InviteMetadata", "InviteStageInstance",
-    "InviteTargetType", "MFALevel", "Mentionable", "Message",
-    "MessageActivity", "MessageActivityType", "MessageComponent",
-    "MessageContext", "MessageDeleteBulkEvent", "MessageDeleteEvent",
-    "MessageFlags", "MessageInteraction", "MessageReactionAddEvent",
-    "MessageReactionRemoveAllEvent", "MessageReactionRemoveEmojiEvent",
-    "MessageReactionRemoveEvent", "MessageReference", "MessageType",
-    "NewsChannel", "Overwrite", "PartialGuildMember", "PremiumTier",
-    "PremiumTypes", "PresenceUpdateEvent", "PrivacyLevel", "Reaction",
-    "ReadyEvent", "RequestGuildMembers", "ResolvedData", "Resume", "Role",
-    "RoleTags", "SelectMenu", "SelectOption", "SessionStartLimit",
-    "StageInstance", "StatusType", "Sticker", "StickerFormatType",
-    "StickerItem", "StickerPack", "StickerType", "SystemChannelFlags",
-    "TextChannel", "ThreadListSyncEvent", "ThreadMember",
+    "InviteDeleteEvent", "InviteStageInstance", "InviteTargetType", "MFALevel",
+    "Mentionable", "Message", "MessageActivity", "MessageActivityType",
+    "MessageComponent", "MessageContext", "MessageDeleteBulkEvent",
+    "MessageDeleteEvent", "MessageFlags", "MessageInteraction",
+    "MessageReactionAddEvent", "MessageReactionRemoveAllEvent",
+    "MessageReactionRemoveEmojiEvent", "MessageReactionRemoveEvent",
+    "MessageReference", "MessageType", "NewsChannel", "Overwrite",
+    "PartialGuildMember", "PremiumTier", "PremiumTypes", "PresenceUpdateEvent",
+    "PrivacyLevel", "Reaction", "ReadyEvent", "RequestGuildMembers",
+    "ResolvedData", "Resume", "Role", "RoleTags", "SelectMenu", "SelectOption",
+    "SessionStartLimit", "StageInstance", "StatusType", "Sticker",
+    "StickerFormatType", "StickerItem", "StickerPack", "StickerType",
+    "SystemChannelFlags", "TextChannel", "ThreadListSyncEvent", "ThreadMember",
     "ThreadMembersUpdateEvent", "ThreadMetadata", "ThrottleInterface",
     "ThrottleScope", "TypingStartEvent", "UpdatePresence", "UpdateVoiceState",
     "User", "UserMessage", "VerificationLevel", "VisibilityType",
