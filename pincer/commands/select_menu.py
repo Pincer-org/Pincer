@@ -3,17 +3,18 @@
 
 from __future__ import annotations
 
+from copy import deepcopy
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Optional
 
-from ...utils.api_object import APIObject
-from ...utils.types import MISSING
+from ..utils.api_object import APIObject
+from ..utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import List
 
-    from .emoji import Emoji
-    from ...utils.types import APINullable
+    from ..objects.message.emoji import Emoji
+    from ..utils.types import APINullable
 
 
 @dataclass(repr=False)
@@ -79,10 +80,24 @@ class SelectMenu(APIObject):
 
     def with_options(self, *options: SelectOption) -> SelectMenu:
         """
-        Sets the `options` parameter to \\*options and returns self.
+        Sets the `options` parameter to \\*options and returns a new
+        :class:`pincer.objects.message.select_menu.SelectMenu`.
 
         \\*options : SelectOption
             List of options to set
         """
-        self.options = options
-        return self
+        copy = deepcopy(self)
+        copy.options = options
+        return copy
+
+    def with_appended_options(self, *options: SelectOption) -> SelectMenu:
+        """
+        Append \\*options to the `options` parameter and returns a new
+        :class:`pincer.objects.message.select_menu.SelectMenu`.
+
+        \\*options : SelectOption
+            List of options to append
+        """
+        copy = deepcopy(self)
+        copy.options += options
+        return copy

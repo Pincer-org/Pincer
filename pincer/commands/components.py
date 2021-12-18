@@ -8,8 +8,8 @@ from ..objects.message.emoji import Emoji
 from ..utils.conversion import remove_none
 from ..utils.types import MISSING, Singleton
 
-from ..objects.message.button import Button, ButtonStyle
-from ..objects.message.select_menu import SelectMenu, SelectOption
+from .button import Button, ButtonStyle
+from .select_menu import SelectMenu, SelectOption
 
 
 def component(custom_id):
@@ -36,7 +36,7 @@ def button(
 
         ComponentHandler().register_id(custom_id, func)
 
-        return Button(
+        button = Button(
             # Hack to not override defaults in button class
             **remove_none(
                 {
@@ -45,10 +45,15 @@ def button(
                     "label": label,
                     "disabled": disabled,
                     "emoji": emoji,
-                    "url": url,
+                    "url": url
                 }
             )
         )
+
+        button.func = func
+        button.__call__ = partial(func)
+
+        return button
 
     return partial(wrap, custom_id)
 
@@ -69,7 +74,7 @@ def select_menu(
 
         ComponentHandler().register_id(custom_id, func)
 
-        return SelectMenu(
+        menu = SelectMenu(
             # Hack to not override defaults in button class
             **remove_none(
                 {
@@ -82,6 +87,11 @@ def select_menu(
                 }
             )
         )
+
+        menu.func = func
+        menu.__call__ = partial(func)
+
+        return menu
 
     return partial(wrap, custom_id)
 

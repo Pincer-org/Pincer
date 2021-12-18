@@ -13,8 +13,8 @@ from ...utils.types import MISSING
 if TYPE_CHECKING:
     from typing import List
 
-    from .select_menu import SelectOption
-    from ..message.button import ButtonStyle
+    from ...commands.select_menu import SelectOption
+    from ...commands.button import ButtonStyle
     from ..message.emoji import Emoji
     from ...utils.types import APINullable
 

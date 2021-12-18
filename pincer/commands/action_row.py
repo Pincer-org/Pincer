@@ -5,10 +5,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..message.component import MessageComponent
+from ..objects.message.component import MessageComponent
 
-from ...utils.api_object import APIObject
-import json
+from ..utils.api_object import APIObject
 if TYPE_CHECKING:
     from typing import Dict
 

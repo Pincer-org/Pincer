@@ -5,14 +5,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING
 
-from ...utils.api_object import APIObject
-from ...utils.types import MISSING
+from ..utils.api_object import APIObject
+from ..utils.types import MISSING
 
 if TYPE_CHECKING:
-    from ...utils.types import APINullable
-    from ..message.emoji import Emoji
+    from ..utils.types import APINullable
+    from ..objects.message.emoji import Emoji
 
 
 class ButtonStyle(IntEnum):
