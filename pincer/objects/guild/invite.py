@@ -59,7 +59,7 @@ class InviteStageInstance(APIObject):
 
 @dataclass(repr=False)
 class Invite(APIObject):
-    """Represents a Discord invite.
+    """Represents a Discord invite. Can also include information from InviteMetadata.
 
     Attributes
     ----------
