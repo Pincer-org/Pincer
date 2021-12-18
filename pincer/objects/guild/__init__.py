@@ -17,7 +17,7 @@ from .guild import (
     Guild, UnavailableGuild
 )
 from .invite import (
-    InviteTargetType, InviteStageInstance, InviteMetadata, Invite
+    InviteTargetType, InviteStageInstance, Invite
 )
 from .member import GuildMember, PartialGuildMember, BaseMember
 from .overwrite import Overwrite
@@ -38,10 +38,10 @@ __all__ = (
     "EventStatus", "ExplicitContentFilterLevel", "FollowedChannel", "Guild",
     "GuildFeature", "GuildMember", "GuildNSFWLevel",
     "GuildScheduledEventEntityType", "GuildTemplate", "GuildWidget", "Invite",
-    "InviteMetadata", "InviteStageInstance", "InviteTargetType", "MFALevel",
-    "NewsChannel", "Overwrite", "PartialGuildMember", "PremiumTier",
-    "PrivacyLevel", "Role", "RoleTags", "ScheduledEvent", "StageInstance",
-    "SystemChannelFlags", "TextChannel", "ThreadMember", "ThreadMetadata",
-    "UnavailableGuild", "VerificationLevel", "VoiceChannel", "Webhook",
-    "WebhookType", "WelcomeScreen", "WelcomeScreenChannel"
+    "InviteStageInstance", "InviteTargetType", "MFALevel", "NewsChannel",
+    "Overwrite", "PartialGuildMember", "PremiumTier", "PrivacyLevel", "Role",
+    "RoleTags", "ScheduledEvent", "StageInstance", "SystemChannelFlags",
+    "TextChannel", "ThreadMember", "ThreadMetadata", "UnavailableGuild",
+    "VerificationLevel", "VoiceChannel", "Webhook", "WebhookType",
+    "WelcomeScreen", "WelcomeScreenChannel"
 )
