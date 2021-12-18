@@ -3,9 +3,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Tuple, List
 from typing import Union
 
+from ..objects import MessageComponent, AllowedMentions
 from ..objects.app.interaction_flags import InteractionFlags
 from ..objects.message.embed import Embed
 from ..objects.message.file import File
@@ -21,24 +22,31 @@ except (ModuleNotFoundError, ImportError):
 if TYPE_CHECKING:
     from pincer import Client
 
-MessageConvertable = Union[Embed, Message, str]
+MessageConvertable = Union[Embed, Message, str, Tuple, List]
 
 
 def convert_message(client: Client, message: MessageConvertable) -> Message:
-    # TODO: fix docs
     """
     Converts a message to a Message object.
 
     Parameters
     ----------
-    client
-    message
+    client : :class:`~pincer.client.Client`
+        The Client object for the bot
+    message : MessageConvertable
+        A value to be converted to a message
 
     Returns
     -------
-
+    :class:`~pincer.objects.message.message.Message`
+        The message object to be sent
     """
-    if isinstance(message, Embed):
+    if message and isinstance(message, (tuple, list)):
+        kwargs = {"attachments": [], "embeds": [], "components": []}
+        for item in message:
+            list_to_message_dict(item, kwargs)
+        message = Message(**kwargs)
+    elif isinstance(message, Embed):
         message = Message(embeds=[message])
     elif PILLOW_IMPORT and isinstance(message, (File, Image)):
         message = Message(attachments=[message])
@@ -51,3 +59,14 @@ def convert_message(client: Client, message: MessageConvertable) -> Message:
             )
         )
     return message
+
+
+def list_to_message_dict(item, kwargs):
+    if isinstance(item, Embed):
+        kwargs["embeds"].append(item)
+    elif PILLOW_IMPORT and isinstance(item, File):
+        kwargs["attachments"].append(item)
+    elif isinstance(item, MessageComponent):
+        kwargs["components"].append(item)
+    elif isinstance(item, str):
+        kwargs["content"] = ""
