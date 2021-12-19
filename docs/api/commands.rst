@@ -28,11 +28,29 @@ Command Types
 .. autoclass:: MinValue()
 .. autoclass:: ChannelTypes()
 
-
-
 ChatCommandHandler
-~~~~~~~~~~~~~~~~~~
+------------------
 
 .. attributetable:: ChatCommandHandler
 
 .. autoclass:: ChatCommandHandler()
+
+
+Message Components
+~~~~~~~~~~~~~~~~~~
+.. currentmodule:: pincer.commands.components
+
+.. autoclass:: ActionRow()
+.. autoclass:: Button()
+.. autoclass:: LinkButton()
+.. autoclass:: ButtonStyle()
+.. autoclass:: SelectMenu()
+.. autoclass:: SelectOption()
+.. autoclass:: _Component()
+
+.. autofunction:: button
+    :decorator:
+.. autofunction:: select_menu
+    :decorator:
+.. autofunction:: component
+    :decorator:

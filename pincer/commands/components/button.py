@@ -54,8 +54,9 @@ class Button(_Component):
 
     Attributes
     ----------
-    style: :class:`~pincer.objects.message.button.ButtonStyle`
-        one of button styles
+    style: :class:`~pincer.commands.components.button.ButtonStyle`
+        One of button styles. Use :class:`~pincer.commands.components.button.LinkButton`
+        if you need the ``LINK`` style.
     label: APINullable[:class:`str`]
         text that appears on the button, max 80 characters
     emoji: APINullable[:class:`~pincer.objects.message.emoji.Emoji`]
@@ -63,8 +64,6 @@ class Button(_Component):
     custom_id: APINullable[:class:`str`]
         A developer-defined identifier for the button,
         max 100 characters
-    url: APINullable[:class:`str`]
-        A url for link-style buttons
     disabled: APINullable[:class:`bool`]
         Whether the button is disabled (default `False`)
     """
@@ -87,6 +86,23 @@ class Button(_Component):
 
 @dataclass(repr=False)
 class LinkButton(_Component):
+    """
+    Represents Button message component with a link.
+
+    Attributes
+    ----------
+    label: APINullable[:class:`str`]
+        text that appears on the button, max 80 characters
+    emoji: APINullable[:class:`~pincer.objects.message.emoji.Emoji`]
+        ``name``, ``id``, and ``animated``
+    custom_id: APINullable[:class:`str`]
+        A developer-defined identifier for the button,
+        max 100 characters
+    url: APINullable[:class:`str`]
+        A url for link-style buttons
+    disabled: APINullable[:class:`bool`]
+        Whether the button is disabled (default `False`)
+    """
 
     label: str
     url: str

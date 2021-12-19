@@ -285,11 +285,11 @@ The :class:`~pincer.objects.message.context.MessageContext` object provides meth
         return "Hello world 2" # This is sent because the interaction was not "used up"
 
 Message Components
-~~~~~~~~~~~~~~~~~~
+------------------
 Pincer supports buttons and select menus.
 
 Sending a Button
-----------------
+~~~~~~~~~~~~~~~~
 Buttons in Pincer are created with the `@button` decorator. This decorator creates an
 async function that works the same way as the `@command` decorator. `self` and `ctx` are
 optional.
@@ -361,7 +361,7 @@ Link buttons can be send with the :class:`~pincer.commands.components.button.Lin
     )
 
 Select Menus
-------------
+~~~~~~~~~~~~
 Select menus support work similarly to Buttons. Select menus support all available methods on
 :class:`ctx <~pincer.objects.message.context.MessageContext`.
 
@@ -372,7 +372,7 @@ Select menus support work similarly to Buttons. Select menus support all availab
   class Bot(Client):
 
     @command
-    async def send_a_button(self):
+    async def send_a_select_menu(self):
       return Message(
         content="Choose an option",
         components=[

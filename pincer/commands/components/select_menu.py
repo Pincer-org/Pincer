@@ -57,7 +57,7 @@ class SelectMenu(_Component):
     custom_id: :class:`str`
         A developer-defined identifier for the button,
         max 100 characters
-    options: List[:class:`~pincer.objects.app.select_menu.SelectOption`]
+    options: List[:class:`~pincer.commands.components.select_menu.SelectOption`]
         The choices in the select, max ``25``
     placeholder: APINullable[:class:`str`]
         Custom placeholder text if nothing is selected,
@@ -92,7 +92,7 @@ class SelectMenu(_Component):
     def with_options(self, *options: SelectOption) -> SelectMenu:
         """
         Sets the `options` parameter to \\*options and returns a new
-        :class:`pincer.objects.message.select_menu.SelectMenu`.
+        :class:`~pincer.commands.components.select_menu.SelectMenu`.
 
         \\*options : SelectOption
             List of options to set
@@ -104,7 +104,7 @@ class SelectMenu(_Component):
     def with_appended_options(self, *options: SelectOption) -> SelectMenu:
         """
         Append \\*options to the `options` parameter and returns a new
-        :class:`pincer.objects.message.select_menu.SelectMenu`.
+        :class:`~pincer.commands.components.select_menu.SelectMenu`.
 
         \\*options : SelectOption
             List of options to append

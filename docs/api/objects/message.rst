@@ -13,42 +13,6 @@ Attachment
 
 .. autoclass:: Attachment()
 
-ButtonStyle
-~~~~~~~~~~~
-
-.. attributetable:: ButtonStyle
-
-.. autoclass:: ButtonStyle()
-
-Button
-~~~~~~
-
-.. attributetable:: Button
-
-.. autoclass:: Button()
-
-Component
----------
-
-MessageComponent
-~~~~~~~~~~~~~~~~
-
-.. attributetable:: MessageComponent
-
-.. autoclass:: MessageComponent()
-
-.. attributetable:: ActionRow
-
-.. autoclass:: ActionRow()
-
-.. attributetable:: Button
-
-.. autoclass:: Button()
-
-.. attributetable:: SelectMenu
-
-.. autoclass:: SelectMenu()
-
 Context
 -------
 

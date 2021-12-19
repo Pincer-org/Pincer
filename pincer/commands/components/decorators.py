@@ -14,6 +14,16 @@ from ...utils.conversion import remove_none
 
 
 def component(custom_id):
+    """
+    Generic handler for Message Components. Can be used with manually constructed
+    :class:`~pincer.commands.components.button.Button` and
+    :class:`~pincer.commands.components.select_menu.SelectMenu` objects.
+
+    Parameters
+    ---------
+    custom_id : str
+        The ID of the message component to handle.
+    """
     def wrap(custom_id, func):
         ComponentHandler().register_id(_id=custom_id, func=func)
         return func
@@ -29,6 +39,33 @@ def button(
     disabled: bool = None,
     custom_id: str = None
 ) -> Button:
+    """
+    Turn a function into handler for a :class:`~pincer.commands.components.button.Button`.
+    See :class:`~pincer.commands.components.button.Button` for information on parameters.
+
+    The function will still be callable.
+
+    .. code-block:: python
+
+        from pincer.commands import ActionRow, Button
+
+        class Bot(Client):
+
+            @command
+            async def send_a_button(self):
+                return Message(
+                    content="Click a button",
+                    components=[
+                        ActionRow(
+                            self.button_one
+                        )
+                    ]
+                )
+
+            @button(label="Click me!", style=ButtonStyle.PRIMARY)
+            async def button_one():
+                return "Button one pressed"
+    """  # noqa: E501
 
     def wrap(custom_id, func) -> Button:
 
@@ -72,6 +109,37 @@ def select_menu(
     disabled: bool = None,
     custom_id: str = None
 ) -> SelectMenu:
+    """
+    Turn a function into handler for a :class:`~pincer.commands.components.select_menu.SelectMenu`.
+    See :class:`~pincer.commands.components.select_menu.SelectMenu` for information on paramters.
+
+    The function will still be callable.
+
+    .. code-block:: python
+
+        from pincer.commands import button, ActionRow, ButtonStyle
+
+        class Bot(Client):
+
+            @command
+            async def send_a_select_menu(self):
+                return Message(
+                    content="Choose an option",
+                    components=[
+                        ActionRow(
+                            self.select_menu
+                        )
+                    ]
+                )
+
+            @select_menu(options=[
+                SelectOption(label="Option 1"),
+                SelectOption(label="Option 2", value="value different than label")
+            ])
+            async def select_menu(values: List[str]):
+                return f"{values[0]} selected"
+
+    """  # noqa: E501
 
     def wrap(custom_id, func) -> SelectMenu:
 
