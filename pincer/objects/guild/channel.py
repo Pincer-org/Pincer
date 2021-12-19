@@ -614,7 +614,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             0 and 604800 (7 days).
             |default| :data:`86400`
         max_uses: Optional[:class:`int`]
-            Maxinum number of uses. ``0`` for unlimited. Values between 0 and 100.
+            Maximum number of uses. ``0`` for unlimited. Values between 0 and 100.
             |default| :data:`0`
         temporary: Optional[:class:`bool`]
             Whether the invite only grants temporary membership.
