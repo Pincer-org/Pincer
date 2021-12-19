@@ -127,7 +127,7 @@ def get_command_from_registry(interaction: Interaction):
     """
     Search for a command in ChatCommandHandler.register and return it if it exists
 
-    Paramters
+    Parameters
     ---------
     interaction : :class:`~pincer.objects.app.interactions.Interaction`
         The interaction to get the command from
