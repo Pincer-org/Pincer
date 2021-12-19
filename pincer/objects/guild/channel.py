@@ -341,7 +341,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
         Parameters
         ----------
-        webhook_channel_id: :class:`int`
+        webhook_channel_id: :class:`Snowflake`
             The ID of the channel to follow.
 
         Returns
