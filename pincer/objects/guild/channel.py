@@ -326,7 +326,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             The reason of the channel delete.
         """
         await self._http.delete(
-            f"/channels/{self.id}/permissions/{overwrite.id}",
+            f"channels/{self.id}/permissions/{overwrite.id}",
             headers=remove_none({"X-Audit-Log-Reason": reason}),
         )
 
@@ -353,7 +353,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             construct_client_dict(
                 self._client,
                 self._http.post(
-                    f"/channels/{self.id}/followers",
+                    f"channels/{self.id}/followers",
                     data={"webhook_channel_id": webhook_channel_id}
                 )
             )
@@ -367,7 +367,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         seconds, this endpoint may be called to let the user know that the bot
         is processing their message.
         """
-        await self._http.post(f"/channels/{self.id}/typing")
+        await self._http.post(f"channels/{self.id}/typing")
 
     async def get_pinned_messages(self) -> AsyncIterator[UserMessage]:
         """
@@ -379,7 +379,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         :class:`AsyncIterator[:class:`~pincer.objects.guild.message.UserMessage`]`
             An iterator of pinned messages.
         """
-        data = await self._http.get(f"/channels/{self.id}/pins")
+        data = await self._http.get(f"channels/{self.id}/pins")
         for message in data:
             yield UserMessage.from_dict(
                 construct_client_dict(
@@ -398,7 +398,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         The maximum number of pinned messages is ``50``.
         """
         await self._http.put(
-            f"/channels/{self.id}/pins/{message.id}",
+            f"channels/{self.id}/pins/{message.id}",
             headers=remove_none({"X-Audit-Log-Reason": reason}),
         )
 
@@ -411,7 +411,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         Unpin a message in a channel. Requires the ``MANAGE_MESSAGES`` permission.
         """
         await self._http.delete(
-            f"/channels/{self.id}/pins/{message.id}",
+            f"channels/{self.id}/pins/{message.id}",
             headers=remove_none({"X-Audit-Log-Reason": reason}),
         )
 
@@ -435,7 +435,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             The nickname of the user being added.
         """
         await self._http.put(
-            f"/channels/{self.id}/recipients/{user.id}",
+            f"channels/{self.id}/recipients/{user.id}",
             data={
                 "access_token": access_token,
                 "nick": nick
@@ -455,7 +455,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             The user to remove.
         """
         await self._http.delete(
-            f"/channels/{self.id}/recipients/{user.id}"
+            f"channels/{self.id}/recipients/{user.id}"
         )
 
     async def bulk_delete_messages(
@@ -648,7 +648,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         return Invite.from_dict(construct_client_dict(self._client,
             await self._http.post(
-                f"/channels/{self.id}/invites",
+                f"channels/{self.id}/invites",
                 headers=remove_none({"X-Audit-Log-Reason": reason}),
                 data={
                     "max_age": max_age,
@@ -716,7 +716,7 @@ class TextChannel(Channel):
         """
         return UserMessage.from_dict(
             await self._http.get(
-                f"/channels/{self.id}/messages/{message_id}"
+                f"channels/{self.id}/messages/{message_id}"
             )
         )
 
