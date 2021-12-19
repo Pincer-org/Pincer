@@ -333,7 +333,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
     async def follow_news_channel(
         self,
         webhook_channel_id: Snowflake
-    ):
+    ) -> NewsChannel:
         """
         Follow a News Channel to send messages to a target channel.
         Requires the ``MANAGE_WEBHOOKS`` permission in the target channel.
@@ -349,12 +349,114 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         :class:`~pincer.objects.guild.channel.NewsChannel`
             The followed channel object.
         """
-        return NewsChannel.from_dict(construct_client_dict(self,
-            self._http.post(
-                f"/channels/{self.id}/followers",
-                data={"webhook_channel_id": webhook_channel_id}
+        return NewsChannel.from_dict(
+            construct_client_dict(
+                self._client,
+                self._http.post(
+                    f"/channels/{self.id}/followers",
+                    data={"webhook_channel_id": webhook_channel_id}
+                )
             )
-        ))
+        )
+
+    async def trigger_typing_indicator(self):
+        """
+        Post a typing indicator for the specified channel.
+        Generally bots should **not** implement this route. However, if a bot is
+        responding to a command and expects the computation to take a few
+        seconds, this endpoint may be called to let the user know that the bot
+        is processing their message.
+        """
+        await self._http.post(f"/channels/{self.id}/typing")
+
+    async def get_pinned_messages(self) -> AsyncIterator[UserMessage]:
+        """
+        Fetches all pinned messages in the channel. Returns an iterator of
+        pinned messages.
+
+        Returns
+        -------
+        :class:`AsyncIterator[:class:`~pincer.objects.guild.message.UserMessage`]`
+            An iterator of pinned messages.
+        """
+        data = await self._http.get(f"/channels/{self.id}/pins")
+        for message in data:
+            yield UserMessage.from_dict(
+                construct_client_dict(
+                    self._client,
+                    message
+                )
+            )
+
+    async def pin_message(
+        self,
+        message: UserMessage,
+        reason: Optional[str] = None
+    ):
+        """
+        Pin a message in a channel. Requires the ``MANAGE_MESSAGES`` permission.
+        The maximum number of pinned messages is ``50``.
+        """
+        await self._http.put(
+            f"/channels/{self.id}/pins/{message.id}",
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
+        )
+
+    async def unpin_message(
+        self,
+        message: UserMessage,
+        reason: Optional[str] = None
+    ):
+        """
+        Unpin a message in a channel. Requires the ``MANAGE_MESSAGES`` permission.
+        """
+        await self._http.delete(
+            f"/channels/{self.id}/pins/{message.id}",
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
+        )
+
+    async def group_dm_add_recipient(
+        self,
+        user: User,
+        access_token: Optional[str] = None,
+        nick: Optional[str] = None
+    ):
+        """
+        Adds a recipient to a Group DM using their access token.
+
+        Parameters
+        ----------
+        user: :class:`~pincer.objects.user.User`
+            The user to add.
+        access_token: Optional[:class:`str`]
+            The access token of the user that has granted your app the
+            ``gdm.join`` scope.
+        nick: Optional[:class:`str`]
+            The nickname of the user being added.
+        """
+        await self._http.put(
+            f"/channels/{self.id}/recipients/{user.id}",
+            data={
+                "access_token": access_token,
+                "nick": nick
+            }
+        )
+
+    async def group_dm_remove_recipient(
+        self,
+        user: User
+    ):
+        """
+        Removes a recipient from a Group DM.
+
+        Parameters
+        ----------
+        user: :class:`~pincer.objects.user.User`
+            The user to remove.
+        """
+        await self._http.delete(
+            f"/channels/{self.id}/recipients/{user.id}"
+        )
 
     async def bulk_delete_messages(
         self,
