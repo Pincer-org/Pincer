@@ -673,8 +673,7 @@ class ChatCommandHandler(metaclass=Singleton):
             self.__prefix + remove_endpoint.format(command=cmd)
         )
 
-        if ChatCommandHandler.register.get(hash_app_command(cmd)):
-            del ChatCommandHandler.register[hash_app_command(cmd)]
+        ChatCommandHandler.register.pop(hash_app_command(cmd), None)
 
     async def add_command(self, cmd: AppCommand):
         """|coro|
