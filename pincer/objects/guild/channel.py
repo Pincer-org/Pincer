@@ -592,7 +592,6 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         for invite in data:
             yield Invite.from_dict(construct_client_dict(self._client, invite))
 
-
     async def create_invite(
         self,
         max_age: int = 86400,
