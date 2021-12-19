@@ -2,14 +2,15 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 from functools import partial
+from inspect import iscoroutinefunction
 from typing import List
-
-from .component_handler import ComponentHandler
-from ...objects.message.emoji import Emoji
-from ...utils.conversion import remove_none
 
 from .button import Button, ButtonStyle
 from .select_menu import SelectMenu, SelectOption
+from .component_handler import ComponentHandler
+from ...exceptions import CommandIsNotCoroutine
+from ...objects.message.emoji import Emoji
+from ...utils.conversion import remove_none
 
 
 def component(custom_id):
@@ -30,6 +31,9 @@ def button(
 ) -> Button:
 
     def wrap(custom_id, func) -> Button:
+
+        if not iscoroutinefunction(func):
+            raise CommandIsNotCoroutine(f"`{func.__name__}` must be a coroutine.")
 
         if custom_id is None:
             custom_id = func.__name__
@@ -70,6 +74,9 @@ def select_menu(
 ) -> SelectMenu:
 
     def wrap(custom_id, func) -> SelectMenu:
+
+        if not iscoroutinefunction(func):
+            raise CommandIsNotCoroutine(f"`{func.__name__}` must be a coroutine.")
 
         if custom_id is None:
             custom_id = func.__name__

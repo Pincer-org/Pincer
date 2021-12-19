@@ -43,7 +43,7 @@ Here's a simple ping command.
         return "pong"
 
 
-If you need access to more information, you can pass in the :class:`ctx <~pincer.objects.message.context.MessageContext>` object.
+If you need access to more information, you can pass in the :class:`ctx <~pincer.objects.message.context.MessageContext` object.
 
 .. note::
     ``ctx`` and ``self`` should be those exact names or the correct value will not be passed in.
@@ -118,13 +118,13 @@ The list of possible type hints is as follows:
      - Boolean
    * - :class:`float`
      - Number
-   * - :class:`pincer.objects.User`
+   * - :class:`~pincer.objects.User`
      - User
-   * - :class:`pincer.objects.Channel`
+   * - :class:`~pincer.objects.Channel`
      - Channel
-   * - :class:`pincer.objects.Role`
+   * - :class:`~pincer.objects.Role`
      - Role
-   * - :class:`pincer.objects.Mentionable`
+   * - :class:`~pincer.objects.Mentionable`
      - Mentionable
 
 You might want to specify more information for your arguments. If you want a description for your command, you will have to use the
@@ -285,9 +285,128 @@ The :class:`~pincer.objects.message.context.MessageContext` object provides meth
         return "Hello world 2" # This is sent because the interaction was not "used up"
 
 Message Components
-------------------
+~~~~~~~~~~~~~~~~~~
 Pincer supports buttons and select menus.
+
+Sending a Button
+----------------
+Buttons in Pincer are created with the `@button` decorator. This decorator creates an
+async function that works the same way as the `@command` decorator. `self` and `ctx` are
+optional.
+
+.. note::
+  All message components need to be inside an :class:`~pincer.commands.components.action_row.ActionRow`.
 
 .. code-block:: python
 
-  pass
+  from pincer.commands import button, ActionRow, ButtonStyle
+
+  class Bot(Client):
+
+    @command
+    async def send_a_button(self):
+      return Message(
+        content="Click a button",
+        components=[
+          ActionRow(
+            self.button_one, self.button_two
+          )
+        ]
+      )
+
+    @button(label="Click me!", style=ButtonStyle.PRIMARY)
+    async def button_one():
+      return "Button one pressed"
+
+    @button(label="Also click me!", style=ButtonStyle.DANGER)
+    async def button_two(ctx: MessageContext):
+      return "Button two pressed"
+
+
+When responding to a component interaction you have access to the `update` and `defer_update_ack`
+methods from MessageContext. `update` edits a message. `defer_update_ack` allows you to update a
+message more than 3 seconds after the interaction is started.
+
+.. code-block:: python
+
+  import asyncio
+  ...
+
+  @button(label="Click me!", style=ButtonStyle.PRIMARY)
+  async def button_one():
+    await ctx.update("You pressed button one")
+    return "You pressed button one" # Noting will be returned because the reaction was already used up
+
+  @button(label="Also click me!", style=ButtonStyle.DANGER)
+  async def button_two(ctx: MessageContext):
+    await ctx.defer_update_ack()
+    await asyncio.sleep(10)
+    await ctx.update("Button two was pressed 10 seconds ago")
+
+Link buttons can be send with the :class:`~pincer.commands.components.button.LinkButton` class.
+
+.. code-block:: python
+
+  from pincer.commands import LinkButton
+
+  @command
+  async def send_a_button(self):
+    return Message(
+      content="Click a button",
+      components=[
+        ActionRow(
+          LinkButton(label="Check out Pincer!", url="https://pincer.dev/")
+        )
+      ]
+    )
+
+Select Menus
+------------
+Select menus support work similarly to Buttons. Select menus support all available methods on
+:class:`ctx <~pincer.objects.message.context.MessageContext`.
+
+.. code-block:: python
+
+  from pincer.commands import button, ActionRow, ButtonStyle
+
+  class Bot(Client):
+
+    @command
+    async def send_a_button(self):
+      return Message(
+        content="Choose an option",
+        components=[
+          ActionRow(
+            self.select_menu
+          )
+        ]
+      )
+
+    @select_menu(options=[
+        SelectOption(label="Option 1"),
+        SelectOption(label="Option 2", value="value different than label")
+    ])
+    async def select_menu(values: List[str]):
+      return f"{values[0]} selected"
+
+You can also dynamically set the selectable options.
+
+.. code-block:: python
+
+    @command
+    async def send_a_button(self):
+      return Message(
+        content="Choose an option",
+        components=[
+          ActionRow(
+            self.select_menu.with_options(
+                SelectOption(label="Option 1"),
+                SelectOption(label="Option 2")
+            )
+          )
+        ]
+      )
+
+    @select_menu
+    async def select_menu(values: List[str]):
+      return f"{values[0]} selected"

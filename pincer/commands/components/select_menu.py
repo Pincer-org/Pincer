@@ -3,10 +3,11 @@
 
 from __future__ import annotations
 
-from copy import deepcopy
+from copy import copy
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Callable, Optional
 
+from ._component import _Component
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
 
@@ -35,14 +36,20 @@ class SelectOption(APIObject):
         Will render this option as selected by default
     """
     label: str
-    value: str
+    value: APINullable[str] = MISSING
     description: APINullable[str] = MISSING
     emoji: APINullable[Emoji] = MISSING
     default: APINullable[bool] = MISSING
 
+    def __post_init__(self):
+        super().__post_init__()
+
+        if self.value is MISSING:
+            self.value = self.label
+
 
 @dataclass(repr=False)
-class SelectMenu(APIObject):
+class SelectMenu(_Component):
     """Represents a Discord Select Menu
 
     Attributes
@@ -90,9 +97,9 @@ class SelectMenu(APIObject):
         \\*options : SelectOption
             List of options to set
         """
-        copy = deepcopy(self)
-        copy.options = options
-        return copy
+        copied_obj = copy(self)
+        copied_obj.options = options
+        return copied_obj
 
     def with_appended_options(self, *options: SelectOption) -> SelectMenu:
         """
@@ -102,6 +109,6 @@ class SelectMenu(APIObject):
         \\*options : SelectOption
             List of options to append
         """
-        copy = deepcopy(self)
-        copy.options += options
-        return copy
+        copied_obj = copy(self)
+        copied_obj.options += options
+        return copied_obj

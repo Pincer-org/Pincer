@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import TYPE_CHECKING, Callable
 
-from ...utils.api_object import APIObject
+from ._component import _Component
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
@@ -45,7 +45,7 @@ class ButtonStyle(IntEnum):
 
 
 @dataclass(repr=False)
-class Button(APIObject):
+class Button(_Component):
     """Represents a Discord Button object.
     Buttons are interactive components that render on messages.
 
@@ -73,7 +73,6 @@ class Button(APIObject):
     style: ButtonStyle
 
     emoji: APINullable[Emoji] = MISSING
-    url: APINullable[str] = MISSING
     disabled: APINullable[bool] = False
 
     type: int = 2
@@ -84,3 +83,16 @@ class Button(APIObject):
 
     def __call__(self, *args, **kwargs):
         return self._func(*args, **kwargs)
+
+
+@dataclass(repr=False)
+class LinkButton(_Component):
+
+    label: str
+    url: str
+
+    emoji: APINullable[Emoji] = MISSING
+    disabled: APINullable[bool] = False
+
+    type: int = 2
+    style: ButtonStyle = ButtonStyle.LINK

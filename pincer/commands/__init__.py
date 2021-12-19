@@ -11,7 +11,7 @@ from .arg_types import (
 )
 from .components import (
     ActionRow, Button, ButtonStyle, ComponentHandler, SelectMenu, SelectOption,
-    component, button, select_menu
+    component, button, select_menu, LinkButton
 )
 
 __all__ = (
@@ -19,5 +19,6 @@ __all__ = (
     "CommandArg", "Description", "MaxValue", "MinValue", "Modifier", "command",
     "message_command", "user_command", "ComponentHandler", "component", "button",
     "ActionRow", "Button", "ButtonStyle", "SelectMenu", "select_menu", "SelectOption",
-    "message_command", "user_command", "hash_app_command", "hash_app_command_params"
+    "message_command", "user_command", "hash_app_command", "hash_app_command_params",
+    "LinkButton"
 )

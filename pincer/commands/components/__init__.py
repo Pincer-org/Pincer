@@ -2,12 +2,12 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 from .action_row import ActionRow
-from .button import Button, ButtonStyle
+from .button import Button, ButtonStyle, LinkButton
 from .component_handler import ComponentHandler
 from .decorators import component, button, select_menu
 from .select_menu import SelectMenu, SelectOption
 
 __all__ = (
     "ActionRow", "Button", "ButtonStyle", "ComponentHandler", "component", "button",
-    "select_menu", "SelectMenu", "SelectOption"
+    "select_menu", "SelectMenu", "SelectOption", "LinkButton"
 )

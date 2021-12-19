@@ -274,9 +274,26 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
         )
 
     async def ack(self, flags: Optional[InteractionFlags] = None):
+        """|coro|
+
+        Acknowledge an interaction, any flags here are applied to the reply.
+
+        Parameters
+        ----------
+        flags :class:`~pincer.objects.app.interaction_flags.InteractionFlags`
+            The flags which must be applied to the reply. |default| :data:`None`
+        """
         return await self._base_ack(flags, CallbackType.DEFERRED_MESSAGE)
 
     async def deferred_update_ack(self, flags: Optional[InteractionFlags] = None):
+        """|coro|
+        Same as ack but for updating a message.
+
+        Parameters
+        ----------
+        flags :class:`~pincer.objects.app.interaction_flags.InteractionFlags`
+            The flags which must be applied to the reply. |default| :data:`None`
+        """
         return await self._base_ack(flags, CallbackType.DEFERRED_UPDATE_MESSAGE)
 
     async def __post_send_handler(self, message: Message):
