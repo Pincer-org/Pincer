@@ -3,13 +3,14 @@
 
 from __future__ import annotations
 
+from contextlib import suppress
 import logging
 from inspect import isasyncgenfunction, _empty
 from typing import Dict, Any
 from typing import TYPE_CHECKING
 
-
-from ..commands import ComponentHandler, ChatCommandHandler
+from ..commands import ChatCommandHandler, ComponentHandler, hash_app_command_params
+from ..exceptions import InteractionDoesNotExist
 from ..core.dispatch import GatewayDispatch
 from ..objects import Interaction, MessageContext, AppCommandType, InteractionType
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
@@ -25,9 +26,44 @@ if TYPE_CHECKING:
 _log = logging.getLogger(__name__)
 
 
+def get_command_from_registry(interaction: Interaction):
+    """
+    Search for a command in ChatCommandHandler.register and return it if it exists
+
+    Parameters
+    ---------
+    interaction : :class:`~pincer.objects.app.interactions.Interaction`
+        The interaction to get the command from
+
+    Raises
+    ------
+    :class:`~pincer.exceptions.InteractionDoesNotExist`
+        The command is not registered
+    """
+
+    with suppress(KeyError):
+        return ChatCommandHandler.register[hash_app_command_params(
+            interaction.data.name,
+            MISSING,
+            interaction.data.type
+        )]
+
+    with suppress(KeyError):
+        return ChatCommandHandler.register[hash_app_command_params(
+            interaction.data.name,
+            interaction.guild_id,
+            interaction.data.type
+        )]
+
+    raise InteractionDoesNotExist(
+        f"No command is registered for {interaction.data.name} with type"
+        f"{interaction.data.type}"
+    )
+
+
 def get_call(self: Client, interaction: Interaction):
     if interaction.type == InteractionType.APPLICATION_COMMAND:
-        command = ChatCommandHandler.register.get(interaction.data.name)
+        command = get_command_from_registry(interaction)
         if command is None:
             return None
         # Only application commands can be throttled
@@ -167,29 +203,29 @@ async def interaction_create_middleware(
     )
 
     call = get_call(self, interaction)
+    command = get_command_from_registry(interaction)
+    context = interaction.convert_to_message_context(command)
 
-    context = interaction.get_message_context()
+    try:
+        await interaction_handler(self, interaction, context, call)
+    except Exception as e:
+        if coro := get_index(self.get_event_coro("on_command_error"), 0):
+            params = get_signature_and_params(coro)[1]
 
-    if call:
-        try:
-            await interaction_handler(interaction, context, call)
-        except Exception as e:
-            if coro := get_index(self.get_event_coro("on_command_error"), 0):
-                params = get_signature_and_params(coro)[1]
-
-                # Check if a context or error var has been passed.
-                if 0 < len(params) < 3:
-                    await interaction_response_handler(
-                        coro,
-                        context,
-                        interaction,
-                        # Always take the error parameter its name.
-                        {params[-1]: e},
-                    )
-                else:
-                    raise e
+            # Check if a context or error var has been passed.
+            if 0 < len(params) < 3:
+                await interaction_response_handler(
+                    self,
+                    coro,
+                    context,
+                    interaction,
+                    # Always take the error parameter its name.
+                    {params[-1]: e},
+                )
             else:
                 raise e
+        else:
+            raise e
 
     return "on_interaction_create", interaction
 

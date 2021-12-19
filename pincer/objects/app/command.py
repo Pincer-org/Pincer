@@ -134,11 +134,6 @@ class AppCommand(APIObject, GuildProperty):
     default_member_permissions: APINullable[None] = None
     dm_permission: APINullable[None] = None
 
-    _eq_props = [
-        "type", "name", "description", "guild_id", "default_permission",
-        "options"
-    ]
-
     def __post_init__(self):
         super().__post_init__()
 
@@ -149,13 +144,28 @@ class AppCommand(APIObject, GuildProperty):
         if isinstance(other, ClientCommandStructure):
             other = other.app
 
-        return all(
+        # `description` and `options` are tested for equality with a custom check
+        eq_props = (
+            "type", "name", "guild_id", "default_permission", "options"
+        )
+
+        eq = (
             self.__getattribute__(prop) == other.__getattribute__(prop)
-            for prop in self._eq_props
+            for prop in eq_props
+        )
+
+        return all(
+            (
+                *eq,
+                self.description == other.description
+                # If this command has a MISSING description, Discord would return
+                # registered the command with the description ''
+                or self.description is MISSING and not other.description
+            )
         )
 
     def __hash__(self):
-        return hash((self.id, self.name, self.description, self.guild_id))
+        return hash((self.id, self.name, self.guild_id, self.type))
 
     def add_option(self, option: AppCommandOption):
         """Add a new option field to the current application command.
