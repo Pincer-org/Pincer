@@ -54,7 +54,8 @@ from ..utils.types import Singleton
 if TYPE_CHECKING:
     from typing import Any, Optional, Dict
 
-COMMAND_NAME_REGEX = re.compile(r"^[\w-]{1,32}$")
+REGULAR_COMMAND_NAME_REGEX = re.compile(r"[\w\- ]{1,32}$")
+CHAT_INPUT_COMMAND_NAME_REGEX = re.compile(r"^[a-z0-9_-]{1,32}$")
 
 _log = logging.getLogger(__package__)
 
@@ -175,8 +176,7 @@ def command(
         Annotation amount is max 25,
         Not a valid argument type,
         Annotations must consist of name and value
-    """
-    # noqa: E501
+    """  # noqa: E501
     if func is None:
         return partial(
             command,
@@ -187,6 +187,15 @@ def command(
             cooldown=cooldown,
             cooldown_scale=cooldown_scale,
             cooldown_scope=cooldown_scope,
+        )
+
+    cmd = name or func.__name__
+
+    if not re.match(CHAT_INPUT_COMMAND_NAME_REGEX, cmd):
+        raise InvalidCommandName(
+            f"Command `{cmd}` doesn't follow the name requirements."
+            " Ensure to match the following regex:"
+            f" {CHAT_INPUT_COMMAND_NAME_REGEX.pattern}"
         )
 
     options: List[AppCommandOption] = []
@@ -384,8 +393,7 @@ def user_command(
         Annotation amount is max 25,
         Not a valid argument type,
         Annotations must consist of name and value
-    """
-    # noqa: E501
+    """  # noqa: E501
     return register_command(
         func=func,
         app_command_type=AppCommandType.USER,
@@ -503,19 +511,19 @@ def register_command(
             cooldown_scope=cooldown_scope,
         )
 
+    cmd = name or func.__name__
+
+    if not re.match(REGULAR_COMMAND_NAME_REGEX, cmd):
+        raise InvalidCommandName(
+            f"Command `{cmd}` doesn't follow the name requirements."
+            " Ensure to match the following regex:"
+            f" {REGULAR_COMMAND_NAME_REGEX.pattern}"
+        )
+
     if not iscoroutinefunction(func) and not isasyncgenfunction(func):
         raise CommandIsNotCoroutine(
             f"Command with call `{func.__name__}` is not a coroutine, "
             "which is required for commands."
-        )
-
-    cmd = name or func.__name__
-
-    if not re.match(COMMAND_NAME_REGEX, cmd):
-        raise InvalidCommandName(
-            f"Command `{cmd}` doesn't follow the name requirements."
-            " Ensure to match the following regex:"
-            f" {COMMAND_NAME_REGEX.pattern}"
         )
 
     try:
