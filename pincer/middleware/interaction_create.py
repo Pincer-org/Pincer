@@ -203,11 +203,10 @@ async def interaction_create_middleware(
     )
 
     call = get_call(self, interaction)
-    command = get_command_from_registry(interaction)
-    context = interaction.convert_to_message_context(command)
+    context = interaction.get_message_context()
 
     try:
-        await interaction_handler(self, interaction, context, call)
+        await interaction_handler(interaction, context, call)
     except Exception as e:
         if coro := get_index(self.get_event_coro("on_command_error"), 0):
             params = get_signature_and_params(coro)[1]
@@ -215,7 +214,6 @@ async def interaction_create_middleware(
             # Check if a context or error var has been passed.
             if 0 < len(params) < 3:
                 await interaction_response_handler(
-                    self,
                     coro,
                     context,
                     interaction,
