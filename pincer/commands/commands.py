@@ -68,7 +68,7 @@ _options_type_link = {
     User: AppCommandOptionType.USER,
     Channel: AppCommandOptionType.CHANNEL,
     Role: AppCommandOptionType.ROLE,
-    Mentionable: AppCommandOptionType.MENTIONABLE
+    Mentionable: AppCommandOptionType.MENTIONABLE,
 }
 
 if TYPE_CHECKING:
@@ -541,11 +541,7 @@ def register_command(
         )
 
     if reg := ChatCommandHandler.register.get(
-        hash_app_command_params(
-            cmd,
-            guild,
-            app_command_type
-        )
+        hash_app_command_params(cmd, guild, app_command_type)
     ):
         raise CommandAlreadyRegistered(
             f"Command `{cmd}` (`{func.__name__}`) has already been "
@@ -566,7 +562,7 @@ def register_command(
             default_permission=enable_default,
             options=command_options,
             guild_id=guild_id,
-        )
+        ),
     )
 
     _log.info(f"Registered command `{cmd}` to `{func.__name__}` locally.")
@@ -662,7 +658,7 @@ class ChatCommandHandler(metaclass=Singleton):
             _log.info(
                 "Removing command `%s` with guild id %d from Discord",
                 cmd.name,
-                cmd.guild_id
+                cmd.guild_id,
             )
         else:
             _log.info("Removing global command `%s` from Discord", cmd.name)
@@ -697,7 +693,9 @@ class ChatCommandHandler(metaclass=Singleton):
             self.__prefix + add_endpoint, data=cmd.to_dict()
         )
 
-        ChatCommandHandler.register[hash_app_command(cmd)].app.id = Snowflake(res["id"])
+        ChatCommandHandler.register[hash_app_command(cmd)].app.id = Snowflake(
+            res["id"]
+        )
 
     async def add_commands(self, commands: List[AppCommand]):
         """|coro|
@@ -734,10 +732,12 @@ class ChatCommandHandler(metaclass=Singleton):
         Remove commands that are registered by discord but not in use
         by the current client
         """
-        local_registered_commands = list(map(
-            lambda registered_cmd: registered_cmd.app,
-            ChatCommandHandler.register.values(),
-        ))
+        local_registered_commands = list(
+            map(
+                lambda registered_cmd: registered_cmd.app,
+                ChatCommandHandler.register.values(),
+            )
+        )
 
         def should_be_removed(target: AppCommand) -> bool:
             for reg_cmd in local_registered_commands:
@@ -813,8 +813,6 @@ def hash_app_command(command: AppCommand) -> int:
 
 
 def hash_app_command_params(
-    name: str,
-    guild_id: Snowflake,
-    app_command_type: AppCommandType
+    name: str, guild_id: Snowflake, app_command_type: AppCommandType
 ) -> int:
     return hash((name, guild_id, app_command_type))
