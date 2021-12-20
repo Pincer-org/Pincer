@@ -648,10 +648,6 @@ class ChatCommandHandler(metaclass=Singleton):
         ----------
         cmd : :class:`~pincer.objects.app.command.AppCommand`
             What command to delete
-        keep : bool
-            Whether the command should be removed from the ChatCommandHandler.
-            Set to :data:`True` to keep the command.
-            |default| :data:`False`
         """
         # TODO: Update if discord adds bulk delete commands
         if cmd.guild_id:
