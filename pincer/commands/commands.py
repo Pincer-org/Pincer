@@ -771,7 +771,7 @@ class ChatCommandHandler(metaclass=Singleton):
             Because commands have unique names within a type and scope, we treat POST
             requests for new commands as upserts. That means making a new command with
             an already-used name for your application will update the existing command.
-            `<https://discord.com/developers/docs/interactions/application-commands#updating-and-deleting-a-command>`_
+            `<https://discord.dev/interactions/application-commands#updating-and-deleting-a-command>`_
 
         Therefore, we don't need to use a separate loop for updating and adding
         commands.
