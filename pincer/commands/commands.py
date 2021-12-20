@@ -305,7 +305,7 @@ def command(
 
     # Discord API returns MISSING for options when there are 0. Options is set MISSING
     # so equality checks later work properly.
-    if options == []:
+    if not options:
         options = MISSING
 
     return register_command(
