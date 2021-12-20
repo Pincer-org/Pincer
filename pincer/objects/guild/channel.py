@@ -6,12 +6,13 @@ from __future__ import annotations
 from asyncio import sleep, ensure_future
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import overload, TYPE_CHECKING
+from typing import AsyncIterator, overload, TYPE_CHECKING
 
+from .invite import Invite, InviteTargetType
 from ..message.user_message import UserMessage
 from ..._config import GatewayConfig
 from ...utils.api_object import APIObject, GuildProperty
-from ...utils.conversion import construct_client_dict
+from ...utils.conversion import construct_client_dict, remove_none
 from ...utils.convert_message import convert_message
 from ...utils.types import MISSING
 
@@ -236,9 +237,9 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         ...
 
     async def edit(
-            self,
-            reason: Optional[str] = None,
-            **kwargs
+        self,
+        reason: Optional[str] = None,
+        **kwargs
     ):
         """Edit a channel with the given keyword arguments.
 
@@ -271,11 +272,223 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         channel_cls = _channel_type_map.get(data["type"], Channel)
         return channel_cls.from_dict(data)
 
+    async def edit_permissions(
+        self,
+        overwrite: Overwrite,
+        allow: str,
+        deny: str,
+        type: int,
+        reason: Optional[str] = None
+    ):
+        """
+        Edit the channel permission overwrites for a user or role in a channel.
+        Only usable for guild channels. Requires the ``MANAGE_ROLES`` permission.
+        Only permissions your bot has in the guild or channel can be
+        allowed/denied (unless your bot has a ``MANAGE_ROLES`` overwrite in the channel).
+
+        Parameters
+        ----------
+        overwrite: :class:`~pincer.objects.guild.overwrite.Overwrite`
+            The overwrite object.
+        allow: :class:`str`
+            The bitwise value of all allowed permissions.
+        deny: :class:`str`
+            The bitwise value of all denied permissions.
+        type: :class:`int`
+            0 for a role or 1 for a member.
+        reason: Optional[:class:`str`]
+            The reason of the channel delete.
+        """
+        await self._http.put(
+            f"channels/{self.id}/permissions/{overwrite.id}",
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            data={
+                "allow": allow,
+                "deny": deny,
+                "type": type
+            }
+        )
+
+    async def delete_permission(
+        self,
+        overwrite: Overwrite,
+        reason: Optional[str] = None
+    ):
+        """
+        Delete a channel permission overwrite for a user or role in a channel.
+        Only usable for guild channels. Requires the ``MANAGE_ROLES`` permission.
+
+        Parameters
+        ----------
+        overwrite: :class:`~pincer.objects.guild.overwrite.Overwrite`
+            The overwrite object.
+        reason: Optional[:class:`str`]
+            The reason of the channel delete.
+        """
+        await self._http.delete(
+            f"channels/{self.id}/permissions/{overwrite.id}",
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
+        )
+
+    async def follow_news_channel(
+        self,
+        webhook_channel_id: Snowflake
+    ) -> NewsChannel:
+        """
+        Follow a News Channel to send messages to a target channel.
+        Requires the ``MANAGE_WEBHOOKS`` permission in the target channel.
+        Returns a followed channel object.
+
+        Parameters
+        ----------
+        webhook_channel_id: :class:`Snowflake`
+            The ID of the channel to follow.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.channel.NewsChannel`
+            The followed channel object.
+        """
+        return NewsChannel.from_dict(
+            construct_client_dict(
+                self._client,
+                self._http.post(
+                    f"channels/{self.id}/followers",
+                    data={"webhook_channel_id": webhook_channel_id}
+                )
+            )
+        )
+
+    async def trigger_typing_indicator(self):
+        """
+        Post a typing indicator for the specified channel.
+        Generally bots should **not** implement this route. However, if a bot is
+        responding to a command and expects the computation to take a few
+        seconds, this endpoint may be called to let the user know that the bot
+        is processing their message.
+        """
+        await self._http.post(f"channels/{self.id}/typing")
+
+    async def get_pinned_messages(self) -> AsyncIterator[UserMessage]:
+        """
+        Fetches all pinned messages in the channel. Returns an iterator of
+        pinned messages.
+
+        Returns
+        -------
+        :class:`AsyncIterator[:class:`~pincer.objects.guild.message.UserMessage`]`
+            An iterator of pinned messages.
+        """
+        data = await self._http.get(f"channels/{self.id}/pins")
+        for message in data:
+            yield UserMessage.from_dict(
+                construct_client_dict(
+                    self._client,
+                    message
+                )
+            )
+
+    async def pin_message(
+        self,
+        message: UserMessage,
+        reason: Optional[str] = None
+    ):
+        """
+        Pin a message in a channel. Requires the ``MANAGE_MESSAGES`` permission.
+        The maximum number of pinned messages is ``50``.
+        """
+        await self._http.put(
+            f"channels/{self.id}/pins/{message.id}",
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
+        )
+
+    async def unpin_message(
+        self,
+        message: UserMessage,
+        reason: Optional[str] = None
+    ):
+        """
+        Unpin a message in a channel. Requires the ``MANAGE_MESSAGES`` permission.
+        """
+        await self._http.delete(
+            f"channels/{self.id}/pins/{message.id}",
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
+        )
+
+    async def group_dm_add_recipient(
+        self,
+        user: User,
+        access_token: Optional[str] = None,
+        nick: Optional[str] = None
+    ):
+        """
+        Adds a recipient to a Group DM using their access token.
+
+        Parameters
+        ----------
+        user: :class:`~pincer.objects.user.User`
+            The user to add.
+        access_token: Optional[:class:`str`]
+            The access token of the user that has granted your app the
+            ``gdm.join`` scope.
+        nick: Optional[:class:`str`]
+            The nickname of the user being added.
+        """
+        await self._http.put(
+            f"channels/{self.id}/recipients/{user.id}",
+            data={
+                "access_token": access_token,
+                "nick": nick
+            }
+        )
+
+    async def group_dm_remove_recipient(
+        self,
+        user: User
+    ):
+        """
+        Removes a recipient from a Group DM.
+
+        Parameters
+        ----------
+        user: :class:`~pincer.objects.user.User`
+            The user to remove.
+        """
+        await self._http.delete(
+            f"channels/{self.id}/recipients/{user.id}"
+        )
+
+    async def bulk_delete_messages(
+        self,
+        messages: List[Snowflake],
+        reason: Optional[str] = None
+    ):
+        """Delete multiple messages in a single request.
+        This endpoint can only be used on guild channels and requires
+        the ``MANAGE_MESSAGES`` permission.
+
+        This endpoint will not delete messages older than 2 weeks, and will
+        fail with a 400 BAD REQUEST if any message provided is older than that
+        or if any duplicate message IDs are provided.
+
+        Parameters
+        ----------
+        messages: List[:class:`~.pincer.utils.Snowflake`]
+            The list of message IDs to delete (2-100).
+        reason: Optional[:class:`str`]
+            The reason of the channel delete.
+        """
+        await self._http.post(
+            f"channels/{self.id}/messages/bulk_delete",
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            data={"messages": messages}
+        )
+
     async def delete(
-            self,
-            reason: Optional[str] = None,
-            /,
-            channel_id: Optional[Snowflake] = None
+        self,
+        reason: Optional[str] = None,
+        /,
+        channel_id: Optional[Snowflake] = None
     ):
         """|coro|
 
@@ -290,14 +503,9 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         channel_id = channel_id or self.id
 
-        headers = {}
-
-        if reason is not None:
-            headers["X-Audit-Log-Reason"] = str(reason)
-
         await self._http.delete(
             f"channels/{channel_id}",
-            headers
+            headers=remove_none({"X-Audit-Log-Reason": reason})
         )
 
     async def __post_send_handler(self, message: Message):
@@ -314,8 +522,8 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             await self.delete()
 
     def __post_sent(
-            self,
-            message: Message
+        self,
+        message: Message
     ):
         """Ensure the `__post_send_handler` method its future.
 
@@ -370,6 +578,89 @@ class Channel(APIObject, GuildProperty):  # noqa E501
                 )
             )
 
+    async def get_invites(self) -> AsyncIterator[Invite]:
+        """
+        Fetches all the invite objects for the channel. Only usable for
+        guild channels. Requires the ``MANAGE_CHANNELS`` permission.
+
+        Returns
+        -------
+        AsyncIterator[:class:`~pincer.objects.guild.invite.Invite`]
+            Invites iterator.
+        """
+        data = await self._http.get(f"channels/{self.id}/invites")
+        for invite in data:
+            yield Invite.from_dict(construct_client_dict(self._client, invite))
+
+    async def create_invite(
+        self,
+        max_age: int = 86400,
+        max_uses: int = 0,
+        temporary: bool = False,
+        unique: bool = False,
+        target_type: InviteTargetType = None,
+        target_user_id: Snowflake = None,
+        target_application_id: Snowflake = None,
+        reason: Optional[str] = None
+    ):
+        """
+        Create a new invite object for the channel. Only usable for guild
+        channels. Requires the ``CREATE_INSTANT_INVITE`` permission.
+
+        Parameters
+        ----------
+        max_age: Optional[:class:`int`]
+            Duration of invite in seconds before expiry, or 0 for never. between
+            0 and 604800 (7 days).
+            |default| :data:`86400`
+        max_uses: Optional[:class:`int`]
+            Maximum number of uses. ``0`` for unlimited. Values between 0 and 100.
+            |default| :data:`0`
+        temporary: Optional[:class:`bool`]
+            Whether the invite only grants temporary membership.
+            |default| :data:`False`
+        unique: Optional[:class:`bool`]
+            If ``True``, don't try to reuse a similar invite (useful for
+            creating many unique one time use invites).
+            |default| :data:`False`
+        target_type: Optional[:class:`~.pincer.objects.guild.invite.InviteTargetType`]
+            The type of target for the invite.
+            |default| :data:`None`
+        target_user_id: Optional[:class:`~.pincer.utils.Snowflake`]
+            The id of the user whose stream to display for this invite. Required
+            if ``target_type`` is ``STREAM``, the user must be streaming in the
+            channel.
+            |default| :data:`None`
+        target_application_id: Optional[:class:`~.pincer.utils.Snowflake`]
+            The id of the embedded application to open for this invite. Required
+            if ``target_type`` is ``EMBEDDED_APPLICATION``, the application must
+            have the ``EMBEDDED`` flag.
+            |default| :data:`None`
+        reason: Optional[:class:`str`]
+            The reason of the invite creation.
+            |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.invite.Invite`
+            The invite object.
+        """
+        return Invite.from_dict(construct_client_dict(self._client,
+            await self._http.post(
+                f"channels/{self.id}/invites",
+                headers=remove_none({"X-Audit-Log-Reason": reason}),
+                data={
+                    "max_age": max_age,
+                    "max_uses": max_uses,
+                    "temporary": temporary,
+                    "unique": unique,
+                    "target_type": target_type,
+                    "target_user_id": target_user_id,
+                    "target_application_id": target_application_id
+                }
+            )
+        ))
+
     def __str__(self):
         """return the discord tag when object gets used as a string."""
         return self.name or str(self.id)
@@ -380,12 +671,16 @@ class TextChannel(Channel):
 
     @overload
     async def edit(
-            self, name: str = None, type: ChannelType = None,
-            position: int = None, topic: str = None, nsfw: bool = None,
-            rate_limit_per_user: int = None,
-            permissions_overwrites: List[Overwrite] = None,
-            parent_id: Snowflake = None,
-            default_auto_archive_duration: int = None
+        self,
+        name: str = None,
+        type: ChannelType = None,
+        position: int = None,
+        topic: str = None,
+        nsfw: bool = None,
+        rate_limit_per_user: int = None,
+        permissions_overwrites: List[Overwrite] = None,
+        parent_id: Snowflake = None,
+        default_auto_archive_duration: int = None
     ) -> Union[TextChannel, NewsChannel]:
         ...
 
@@ -420,7 +715,7 @@ class TextChannel(Channel):
         """
         return UserMessage.from_dict(
             await self._http.get(
-                f"/channels/{self.id}/messages/{message_id}"
+                f"channels/{self.id}/messages/{message_id}"
             )
         )
 
@@ -430,10 +725,14 @@ class VoiceChannel(Channel):
 
     @overload
     async def edit(
-            self, name: str = None, position: int = None, bitrate: int = None,
-            user_limit: int = None,
-            permissions_overwrites: List[Overwrite] = None,
-            rtc_region: str = None, video_quality_mod: int = None
+        self,
+        name: str = None,
+        position: int = None,
+        bitrate: int = None,
+        user_limit: int = None,
+        permissions_overwrites: List[Overwrite] = None,
+        rtc_region: str = None,
+        video_quality_mod: int = None
     ) -> VoiceChannel:
         ...
 
@@ -452,6 +751,8 @@ class VoiceChannel(Channel):
         """
         return await super().edit(**kwargs)
 
+class GroupDMChannel(Channel):
+    """A subclass of ``Channel`` for Group DMs"""
 
 class CategoryChannel(Channel):
     """A subclass of ``Channel`` for categories channels
@@ -465,11 +766,15 @@ class NewsChannel(Channel):
 
     @overload
     async def edit(
-            self, name: str = None, type: ChannelType = None,
-            position: int = None, topic: str = None, nsfw: bool = None,
-            permissions_overwrites: List[Overwrite] = None,
-            parent_id: Snowflake = None,
-            default_auto_archive_duration: int = None
+        self,
+        name: str = None,
+        type: ChannelType = None,
+        position: int = None,
+        topic: str = None,
+        nsfw: bool = None,
+        permissions_overwrites: List[Overwrite] = None,
+        parent_id: Snowflake = None,
+        default_auto_archive_duration: int = None
     ) -> Union[TextChannel, NewsChannel]:
         ...
 
@@ -492,7 +797,7 @@ class NewsChannel(Channel):
 class PublicThread(Channel):
     """A subclass of ``Channel`` for public threads with all the same attributes."""
 
-    
+
 class PrivateThread(Channel):
     """A subclass of ``Channel`` for private threads with all the same attributes."""
 
@@ -522,6 +827,7 @@ class ChannelMention(APIObject):
 _channel_type_map: Dict[ChannelType, Channel] = {
     ChannelType.GUILD_TEXT: TextChannel,
     ChannelType.GUILD_VOICE: VoiceChannel,
+    ChannelType.GROUP_DM: GroupDMChannel,
     ChannelType.GUILD_CATEGORY: CategoryChannel,
     ChannelType.GUILD_NEWS: NewsChannel,
     ChannelType.GUILD_PUBLIC_THREAD: PublicThread,

@@ -41,8 +41,11 @@ from .objects import (
     Intents,
     GuildTemplate,
     StickerPack,
-    UserMessage
+    UserMessage,
+    Connection,
+    File
 )
+from .objects.guild.channel import GroupDMChannel
 from .utils.conversion import construct_client_dict, remove_none
 from .utils.event_mgr import EventMgr
 from .utils.extraction import get_index
@@ -57,6 +60,8 @@ if TYPE_CHECKING:
     from .core.dispatch import GatewayDispatch
     from .objects.app.throttling import ThrottleInterface
     from .objects.guild import Webhook
+
+    from collections.abc import AsyncIterator
 
 _log = logging.getLogger(__package__)
 
@@ -231,6 +236,7 @@ class Client(Dispatcher):
             cmd.app.name for cmd in ChatCommandHandler.register.values()
         ]
 
+
     @property
     def guild_ids(self) -> List[Snowflake]:
         """
@@ -334,6 +340,7 @@ class Client(Dispatcher):
                 or isasyncgenfunction(call)
             ]
         )
+
 
     def load_cog(self, path: str, package: Optional[str] = None):
         """Load a cog from a string path, setup method in COG may
@@ -899,6 +906,145 @@ class Client(Dispatcher):
             A Webhook object.
         """
         return await Webhook.from_id(self, id, token)
+
+
+    async def get_current_user(self) -> User:
+        """|coro|
+        The user object of the requester's account.
+
+        For OAuth2, this requires the ``identify`` scope,
+        which will return the object *without* an email,
+        and optionally the ``email`` scope,
+        which returns the object *with* an email.
+
+        Returns
+        -------
+        :class:`~pincer.objects.user.user.User`
+        """
+        return User.from_dict(
+            construct_client_dict(
+                self, 
+                await self.http.get("users/@me")
+            )
+        )
+
+    async def modify_current_user(
+        self, username: Optional[str] = None, avatar: Optional[File] = None
+    ) -> User:
+        """|coro|
+        Modify the requester's user account settings
+
+        Parameters
+        ----------
+        username : Optional[:class:`str`]
+            user's username,
+            if changed may cause the user's discriminator to be randomized.
+            |default| :data:`None`
+        avatar : Optional[:class:`File`]
+            if passed, modifies the user's avatar
+            a data URI scheme of JPG, GIF or PNG
+            |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.user.user.User`
+            Current modified user
+        """
+
+        avatar = avatar.uri if avatar else avatar
+
+        user = await self.http.patch(
+            "users/@me", remove_none({"username": username, "avatar": avatar})
+        )
+        return User.from_dict(construct_client_dict(self, user))
+
+    async def get_current_user_guilds(
+        self,
+        before: Optional[Snowflake] = None,
+        after: Optional[Snowflake] = None,
+        limit: Optional[int] = None,
+    ) -> AsyncIterator[Guild]:
+        """|coro|
+        Returns a list of partial guild objects the current user is a member of.
+        Requires the ``guilds`` OAuth2 scope.
+
+        Parameters
+        ----------
+        before : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            get guilds before this guild ID
+        after : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            get guilds after this guild ID
+        limit : Optional[:class:`int`]
+                max number of guilds to return (1-200) |default| :data:`200`
+
+        Yields
+        ------
+        :class:`~pincer.objects.guild.guild.Guild`
+            A Partial Guild that the user is in
+        """
+        guilds = await self.http.get(
+            "users/@me/guilds?"
+            + (f"{before=}&" if before else "")
+            + (f"{after=}&" if after else "")
+            + (f"{limit=}&" if limit else "")
+        )
+
+        for guild in guilds:
+            yield Guild.from_dict(construct_client_dict(self, guild))
+
+    async def leave_guild(self, _id: Snowflake):
+        """|coro|
+        Leave a guild.
+
+        Parameters
+        ----------
+        _id : :class:`~pincer.utils.snowflake.Snowflake`
+            the id of the guild that the bot will leave
+        """
+        await self.http.delete(f"users/@me/guilds/{_id}")
+        self._client.guilds.pop(_id, None)
+
+    async def create_group_dm(
+        self, access_tokens: List[str], nicks: Dict[Snowflake, str]
+    ) -> GroupDMChannel:
+        """|coro|
+        Create a new group DM channel with multiple users.
+        DMs created with this endpoint will not be shown in the Discord client
+
+        Parameters
+        ----------
+        access_tokens : List[:class:`str`]
+            access tokens of users that have
+            granted your app the ``gdm.join`` scope
+
+        nicks : Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`str`]
+            a dictionary of user ids to their respective nicknames
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.channel.GroupDMChannel`
+            group DM channel created
+        """
+        channel = await self.http.post(
+            "users/@me/channels",
+            {"access_tokens": access_tokens, "nicks": nicks},
+        )
+
+        return GroupDMChannel.from_dict(construct_client_dict(self, channel))
+
+    async def get_connections(self) -> AsyncIterator[Connection]:
+        """|coro|
+        Returns a list of connection objects.
+        Requires the ``connections`` OAuth2 scope.
+
+        Yields
+        -------
+        :class:`~pincer.objects.user.connection.Connections`
+            the connection objects
+        """
+        connections = await self.http.get("users/@me/connections")
+        for conn in connections:
+            yield Connection.from_dict(conn)
 
     async def sticker_packs(self) -> AsyncIterator[StickerPack]:
         """|coro|
