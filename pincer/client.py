@@ -6,6 +6,7 @@ from __future__ import annotations
 import logging
 from asyncio import iscoroutinefunction, run, ensure_future, create_task, get_event_loop
 from collections import defaultdict
+from functools import partial
 from importlib import import_module
 from inspect import isasyncgenfunction
 from typing import (
@@ -510,25 +511,25 @@ class Client:
 
         dispatch = Dispatcher(
             self.token,
-            handlers={
-                # Gets triggered on all events
-                -1: self.payload_event_handler,
-                # Use this event handler for opcode 0.
-                0: self.event_handler
-            },
             intents=self.intents,
-            reconnect=self.reconnect,
             url=self.gateway.url,
             shard=shard,
             num_shards=num_shards
         )
+
+        dispatch.append_handlers({
+            # Gets triggered on all events
+            -1: self.payload_event_handler,
+            # Use this event handler for opcode 0.
+            0: partial(self.event_handler, dispatch)
+        })
 
         create_task(dispatch.start_loop())
 
     def __del__(self):
         """Ensure close of the http client."""
         if hasattr(self, 'http'):
-            run(self.http.close())
+            create_task(self.http.close())
 
     async def handle_middleware(
             self,
@@ -648,9 +649,8 @@ class Client:
 
     async def event_handler(
         self,
-        _,
-        payload: GatewayDispatch,
-        dispatch: Dispatcher
+        dispatch: Dispatcher,
+        payload: GatewayDispatch
     ):
         """|coro|
 
