@@ -4,18 +4,18 @@
 from __future__ import annotations
 
 import logging
-from asyncio import iscoroutinefunction, run, ensure_future
+from asyncio import iscoroutinefunction, run, ensure_future, create_task, get_event_loop
 from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
 from typing import (
-    Any, Dict, Iterable, List, Optional, Tuple, Union, overload, 
+    Any, Dict, Iterable, List, Optional, Tuple, Union, overload,
     AsyncIterator, TYPE_CHECKING
 )
 from . import __package__
 from .commands import ChatCommandHandler
 from .core import HTTPClient
-from .core.gateway import Dispatcher
+from .core.gateway import Gateway, Dispatcher
 from .exceptions import (
     InvalidEventName, TooManySetupArguments, NoValidSetupMethod,
     NoCogManagerReturnFound, CogAlreadyExists, CogNotFound
@@ -28,7 +28,7 @@ from .objects import (
 from .utils.conversion import construct_client_dict
 from .utils.event_mgr import EventMgr
 from .utils.extraction import get_index
-from .utils.insertion import should_pass_cls
+from .utils.insertion import should_pass_cls, should_pass_dispatcher
 from .utils.signature import get_params
 from .utils.types import CheckFunction
 from .utils.types import Coro
@@ -132,7 +132,7 @@ for event, middleware_ in middleware.items():
     event_middleware(event)(middleware_)
 
 
-class Client(Dispatcher):
+class Client:
     """The client is the main instance which is between the programmer
     and the discord API.
 
@@ -177,23 +177,26 @@ class Client(Dispatcher):
         if isinstance(intents, Iterable):
             intents = sum(intents)
 
-        super().__init__(
-            token,
-            handlers={
-                # Gets triggered on all events
-                -1: self.payload_event_handler,
-                # Use this event handler for opcode 0.
-                0: self.event_handler
-            },
-            intents=intents or Intents.all(),
-            reconnect=reconnect,
-        )
+        if intents is None:
+            intents = Intents.all()
+
+        self.intents = intents
+        self.reconnect = reconnect
+        self.token = token
 
         self.bot: Optional[User] = None
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
         self.throttler = throttler
         self.event_mgr = EventMgr()
+
+        async def get_gateway():
+            return Gateway.from_dict(
+                await self.http.get("gateway/bot")
+            )
+
+        loop = get_event_loop()
+        self.gateway: Optional[Gateway] = loop.run_until_complete(get_gateway())
 
         # The guild and channel value is only registered if the Client has the GUILDS
         # intent.
@@ -431,7 +434,7 @@ class Client(Dispatcher):
         await ChatCommandHandler(self).remove_commands(to_remove)
 
     @staticmethod
-    def execute_event(calls: List[Coro], *args, **kwargs):
+    def execute_event(calls: List[Coro], dispatcher: Dispatcher, *args, **kwargs):
         """Invokes an event.
 
         Parameters
@@ -454,11 +457,73 @@ class Client(Dispatcher):
                     *(arg for arg in args if arg is not None)
                 )
 
+            if should_pass_dispatcher(call):
+                call_args = (*call_args, dispatcher)
+
             ensure_future(call(*call_args, **kwargs))
 
     def run(self):
         """Start the event listener."""
-        self.start_loop()
+
+        loop = get_event_loop()
+        ensure_future(self.start_shard(0, 1), loop=loop)
+        loop.run_forever()
+
+    def run_autosharded(self):
+        num_shards = self.gateway.shards
+        return self.run_shards(range(0, num_shards), num_shards)
+
+    def run_shards(self, shards: Iterable, num_shards: int):
+        loop = get_event_loop()
+
+        for shard in shards:
+            ensure_future(self.start_shard(shard, num_shards), loop=loop)
+
+        loop.run_forever()
+
+    # async def _run_shards_inner(self, shards: Iterable, num_shards: int):
+
+    #     def yeild_shard_groups(max_shards, con):
+
+    #         start_shard = 0
+
+    #         while start_shard < max_shards:
+    #             yield range(
+    #                 start_shard,
+    #                 min(start_shard + con, max_shards)
+    #             )
+
+    #             start_shard = min(start_shard + con, max_shards)
+
+    #     for shard in yeild_shard_groups(
+    #         num_shards,
+    #         self.gateway.session_start_limit.max_concurrency
+    #     ):
+    #         await self.start_shard(shard, num_shards)
+
+    async def start_shard(
+        self,
+        shard: int,
+        num_shards: int
+    ):
+        """Start the event listener."""
+
+        dispatch = Dispatcher(
+            self.token,
+            handlers={
+                # Gets triggered on all events
+                -1: self.payload_event_handler,
+                # Use this event handler for opcode 0.
+                0: self.event_handler
+            },
+            intents=self.intents,
+            reconnect=self.reconnect,
+            url=self.gateway.url,
+            shard=shard,
+            num_shards=num_shards
+        )
+
+        create_task(dispatch.start_loop())
 
     def __del__(self):
         """Ensure close of the http client."""
@@ -469,6 +534,7 @@ class Client(Dispatcher):
             self,
             payload: GatewayDispatch,
             key: str,
+            dispatch: Dispatcher,
             *args,
             **kwargs
     ) -> Tuple[Optional[Coro], List[Any], Dict[str, Any]]:
@@ -518,12 +584,13 @@ class Client(Dispatcher):
             return (next_call, ret_object)
 
         return await self.handle_middleware(
-            payload, next_call, *arguments, **params
+            payload, next_call, dispatch, *arguments, **params
         )
 
     async def execute_error(
             self,
             error: Exception,
+            dispatcher: Dispatcher,
             name: str = "on_error",
             *args,
             **kwargs
@@ -545,11 +612,16 @@ class Client(Dispatcher):
             if ``call := self.get_event_coro(name)`` is :data:`False`
         """
         if calls := self.get_event_coro(name):
-            self.execute_event(calls, error, *args, **kwargs)
+            self.execute_event(calls, dispatcher, error, *args, **kwargs)
         else:
             raise error
 
-    async def process_event(self, name: str, payload: GatewayDispatch):
+    async def process_event(
+        self,
+        name: str,
+        payload: GatewayDispatch,
+        dispatch: Dispatcher
+    ):
         """|coro|
 
         Processes and invokes an event and its middleware
@@ -565,16 +637,21 @@ class Client(Dispatcher):
             what specifically happened.
         """
         try:
-            key, args = await self.handle_middleware(payload, name)
+            key, args = await self.handle_middleware(payload, name, dispatch)
             self.event_mgr.process_events(key, args)
 
             if calls := self.get_event_coro(key):
-                self.execute_event(calls, args)
+                self.execute_event(calls, dispatch, args)
 
         except Exception as e:
-            await self.execute_error(e)
+            await self.execute_error(e, dispatch)
 
-    async def event_handler(self, _, payload: GatewayDispatch):
+    async def event_handler(
+        self,
+        _,
+        payload: GatewayDispatch,
+        dispatch: Dispatcher
+    ):
         """|coro|
 
         Handles all payload events with opcode 0.
@@ -589,9 +666,14 @@ class Client(Dispatcher):
             required data for the client to know what event it is and
             what specifically happened.
         """
-        await self.process_event(payload.event_name.lower(), payload)
+        await self.process_event(payload.event_name.lower(), payload, dispatch)
 
-    async def payload_event_handler(self, _, payload: GatewayDispatch):
+    async def payload_event_handler(
+        self,
+        _,
+        payload: GatewayDispatch,
+        dispatch: Dispatcher
+    ):
         """|coro|
 
         Special event which activates the on_payload event.
@@ -606,7 +688,7 @@ class Client(Dispatcher):
             required data for the client to know what event it is and
             what specifically happened.
         """
-        await self.process_event("payload", payload)
+        await self.process_event("payload", payload, dispatch)
 
     @overload
     async def create_guild(

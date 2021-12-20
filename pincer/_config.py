@@ -10,13 +10,12 @@ class GatewayConfig:
     """This file is to make maintaining the library and its gateway
     configuration easier.
     """
-    socket_base_url: str = "wss://gateway.discord.gg/"
     version: int = 9
     encoding: str = "json"
     compression: Optional[str] = "zlib-stream"
 
     @classmethod
-    def uri(cls) -> str:
+    def make_uri(cls, uri) -> str:
         """
         Returns
         -------
@@ -24,7 +23,7 @@ class GatewayConfig:
             The GatewayConfig's uri.
         """
         return (
-            f"{cls.socket_base_url}"
+            f"{uri}"
             f"?v={cls.version}"
             f"&encoding={cls.encoding}"
         ) + f"&compress={cls.compression}" * cls.compressed()

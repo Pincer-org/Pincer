@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import logging
-from asyncio import sleep
+from asyncio import sleep, Task, create_task
 from typing import TYPE_CHECKING
 
 from websockets.exceptions import ConnectionClosedOK
@@ -18,6 +18,7 @@ if TYPE_CHECKING:
 
     from websockets.legacy.client import WebSocketClientProtocol
 
+    from .gateway import Dispatcher
 
 _log = logging.getLogger(__package__)
 
@@ -28,11 +29,16 @@ class Heartbeat:
     This is what lets the server and client know that they are still
     both online and properly connected.
     """
-    __heartbeat: float = 0
-    __sequence: Optional[int] = None
 
-    @classmethod
-    async def __send(cls, socket: WebSocketClientProtocol):
+    def __init__(self, dispatch: Dispatcher) -> None:
+        self.dispatcher = dispatch
+
+        self.heartbeat: float = 0
+        self.sequence: Optional[int] = None
+        self.has_recieved_ack: bool = False
+        self.heartbeat_wait_task: Optional[Task] = None
+
+    async def __send(self, socket: WebSocketClientProtocol):
         """|Coro|
         Sends a heartbeat to the API gateway.
 
@@ -41,19 +47,23 @@ class Heartbeat:
         socket : :class:`~ws:websockets.legacy.client.WebSocketClientProtocol`
             The socket to send the heartbeat to.
         """
-        _log.debug("Sending heartbeat (seq: %s)", str(cls.__sequence))
+        _log.debug(
+            "%s Sending heartbeat (seq: %s)",
+            self.dispatcher.shard_key,
+            str(self.sequence)
+        )
         try:
-            await socket.send(str(GatewayDispatch(1, cls.__sequence)))
+            await socket.send(str(GatewayDispatch(1, self.sequence)))
         except ConnectionClosedOK:
             _log.error(
-                "Sending heartbeat failed. Ignoring failure... "
+                "%s Sending heartbeat failed. Ignoring failure... "
                 "Client should automatically resolve this issue. "
                 "If a crash occurs please create an issue on our github! "
-                "(https://github.com/Pincer-org/Pincer)"
+                "(https://github.com/Pincer-org/Pincer)",
+                self.dispatcher.shard_key
             )
 
-    @classmethod
-    def get(cls) -> float:
+    def get(self) -> float:
         """Get the current heartbeat.
 
         Returns
@@ -62,13 +72,13 @@ class Heartbeat:
             The current heartbeat of the client.
             |default| ``0`` (client has not initialized the heartbeat yet.)
         """
-        return cls.__heartbeat
+        return self.heartbeat
 
-    @classmethod
     async def handle_hello(
-            cls,
+            self,
             socket: WebSocketClientProtocol,
-            payload: GatewayDispatch
+            payload: GatewayDispatch,
+            dispatcher: Dispatcher
     ):
         """|coro|
 
@@ -87,13 +97,16 @@ class Heartbeat:
         :class:`~pincer.exceptions.HeartbeatError`
             No ``heartbeat_interval`` is present.
         """
-        _log.debug("Handling initial discord hello websocket message.")
-        cls.__heartbeat = payload.data.get("heartbeat_interval")
+        _log.debug(
+            "%s Handling initial discord hello websocket message.",
+            self.dispatcher.shard_key
+        )
+        self.heartbeat = payload.data.get("heartbeat_interval")
 
-        if not cls.__heartbeat:
+        if not self.heartbeat:
             _log.error(
-                "No `heartbeat_interval` is present. Has the API changed? "
-                "(payload: %s)", payload
+                "%s No `heartbeat_interval` is present. Has the API changed? "
+                "(payload: %s)", self.dispatcher.shard_key, payload
             )
 
             raise HeartbeatError(
@@ -102,22 +115,23 @@ class Heartbeat:
                 "Check logging for more information."
             )
 
-        cls.__heartbeat /= 1000
+        self.heartbeat /= 1000
 
         _log.debug(
-            "Maintaining a connection with heartbeat: %s", cls.__heartbeat
+            "%s Maintaining a connection with heartbeat: %s",
+            self.dispatcher.shard_key,
+            self.heartbeat
         )
 
-        if Heartbeat.__sequence:
+        if self.sequence:
             await socket.send(
-                str(GatewayDispatch(6, cls.__sequence, seq=cls.__sequence))
+                str(GatewayDispatch(6, self.sequence, seq=self.sequence))
             )
 
         else:
-            await cls.__send(socket)
+            await self.__send(socket)
 
-    @classmethod
-    async def handle_heartbeat(cls, socket: WebSocketClientProtocol, _):
+    async def handle_heartbeat(self, socket: WebSocketClientProtocol, _, dispatch: Dispatcher):
         """|coro|
 
         Handles a heartbeat, which means that it rests
@@ -130,12 +144,30 @@ class Heartbeat:
         _ :
             Filling param for auto event handling.
         """
-        _log.debug("Resting heart for %is", cls.__heartbeat)
-        await sleep(cls.__heartbeat)
-        await cls.__send(socket)
+        _log.debug("%s Resting heart for %is", dispatch.shard_key, self.heartbeat)
 
-    @classmethod
-    def update_sequence(cls, seq: int):
+        self.heartbeat_wait_task = create_task(sleep(self.heartbeat))
+        await self.heartbeat_wait_task
+        self.heartbeat_wait_task = None
+
+        await self.__send(socket)
+
+    async def handle_heartbeat_req(
+        self,
+        _,
+        payload: GatewayDispatch,
+        dispatch: Dispatcher
+    ):
+        """|coro|
+        Sends a heartbeat without waiting for the next interval
+        """
+
+        _log.debug("%s Heartbeat requested by discord", dispatch.shard_key)
+
+        if self.heartbeat_wait_task:
+            self.heartbeat_wait_task.cancel()
+
+    def update_sequence(self, seq: int):
         """
         Update the heartbeat sequence.
 
@@ -144,5 +176,5 @@ class Heartbeat:
         seq : :class:`int`
             The new heartbeat sequence to be updated with.
         """
-        _log.debug("Updating heartbeat sequence...")
-        cls.__sequence = seq
+        _log.debug("%s Updating heartbeat sequence...", self.dispatcher.shard_key)
+        self.sequence = seq
