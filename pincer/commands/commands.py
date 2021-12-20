@@ -727,12 +727,10 @@ class ChatCommandHandler(metaclass=Singleton):
         Remove commands that are registered by discord but not in use
         by the current client
         """
-        local_registered_commands = list(
-            map(
-                lambda registered_cmd: registered_cmd.app,
-                ChatCommandHandler.register.values(),
-            )
-        )
+        local_registered_commands = [
+            registered_cmd.app for registered_cmd
+            in ChatCommandHandler.register.values()
+        ]
 
         def should_be_removed(target: AppCommand) -> bool:
             for reg_cmd in local_registered_commands:
@@ -775,10 +773,10 @@ class ChatCommandHandler(metaclass=Singleton):
         Therefore, we don't need to use a separate loop for updating and adding
         commands.
         """
-        local_registered_commands = map(
-            lambda registered_cmd: registered_cmd.app,
-            ChatCommandHandler.register.values(),
-        )
+        local_registered_commands = [
+            registered_cmd.app for registered_cmd
+            in ChatCommandHandler.register.values()
+        ]
 
         def should_be_updated_or_uploaded(target):
             for command in self._api_commands:
