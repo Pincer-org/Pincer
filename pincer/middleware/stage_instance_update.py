@@ -2,13 +2,26 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 """Sent when a stage instance is updated."""
-from ..core.dispatch import GatewayDispatch
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from ..objects import StageInstance
 from ..utils.conversion import construct_client_dict
 from ..utils import Coro, replace
 
+if TYPE_CHECKING:
+    from ..client import Client
+    from ..core.gateway import Dispatcher
+    from ..core.dispatch import GatewayDispatch
 
-async def stage_instance_update_middleware(self, payload: GatewayDispatch):
+
+async def stage_instance_update_middleware(
+    self: Client,
+    gateway: Dispatcher,
+    payload: GatewayDispatch
+):
     """|coro|
 
     Middleware for the ``on_stage_instance_update`` event.

@@ -10,7 +10,6 @@ from typing import TYPE_CHECKING
 
 
 from ..commands import ChatCommandHandler
-from ..core.dispatch import GatewayDispatch
 from ..objects import Interaction, MessageContext, AppCommandType
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 from ..utils import get_index
@@ -19,13 +18,15 @@ from ..utils.signature import get_signature_and_params
 
 if TYPE_CHECKING:
     from typing import List, Tuple
-
+    from ..client import Client
+    from ..core.gateway import Dispatcher
+    from ..core.dispatch import GatewayDispatch
 
 _log = logging.getLogger(__name__)
 
 
 async def interaction_response_handler(
-    self,
+    self: Client,
     command: Coro,
     context: MessageContext,
     interaction: Interaction,
@@ -69,7 +70,7 @@ async def interaction_response_handler(
 
 
 async def interaction_handler(
-    self, interaction: Interaction, context: MessageContext, command: Coro
+    self: Client, interaction: Interaction, context: MessageContext, command: Coro
 ):
     """|coro|
 
@@ -123,7 +124,7 @@ async def interaction_handler(
 
 
 async def interaction_create_middleware(
-    self, payload: GatewayDispatch
+    self: Client, gateway: Dispatcher, payload: GatewayDispatch
 ) -> Tuple[str, Interaction]:
     """Middleware for ``on_interaction``, which handles command
     execution.

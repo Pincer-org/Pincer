@@ -6,13 +6,26 @@ Sent in response to Guild Request Members. You can use the ``chunk_index``
 and ``chunk_count`` to calculate how many chunks are left for your request.
 """
 
-from ..core.dispatch import GatewayDispatch
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from ..objects.events.guild import GuildMembersChunkEvent
 from ..utils import Coro
 from ..utils.conversion import construct_client_dict
 
 
-async def guild_member_chunk_middleware(self, payload: GatewayDispatch):
+if TYPE_CHECKING:
+    from ..client import Client
+    from ..core.gateway import Dispatcher
+    from ..core.dispatch import GatewayDispatch
+
+
+async def guild_member_chunk_middleware(
+    self: Client,
+    gateway: Dispatcher,
+    payload: GatewayDispatch
+):
     """|coro|
 
     Middleware for the ``on_guild_member_chunk`` event.

@@ -5,9 +5,11 @@
 from __future__ import annotations
 
 from asyncio import AbstractEventLoop, create_task, get_event_loop
+from asyncio.tasks import ensure_future, sleep
 from dataclasses import dataclass
 import logging
 from platform import system
+from random import random
 from typing import Any, Dict, Callable, Awaitable, Optional, Tuple
 from typing import TYPE_CHECKING
 from zlib import decompressobj
@@ -96,7 +98,8 @@ class Dispatcher:
             4014: DisallowedIntentsError()
         }
 
-        self.__heartbeat_interval = None
+        self.__heartbeat_interval: Optional[int] = None
+        self.__session_id: Optional[str] = None
 
     def __del__(self):
         create_task(self.socket.close())
@@ -130,12 +133,16 @@ class Dispatcher:
     async def handle_data(self, data: Dict[Any]):
         payload = GatewayDispatch.from_string(data)
 
+        _log.debug(
+            "%s GatewayDispatch with opcode %s recieved", self.shard_key, payload.op
+        )
+
         handler = self.__dispatch_handlers.get(payload.op)
 
         if handler is None:
             raise Exception
 
-        await handler(payload)
+        ensure_future(handler(payload))
 
     @property
     def __hello_socket(self) -> str:
@@ -155,21 +162,34 @@ class Dispatcher:
             )
         )
 
-    async def send(self, payload: str):
-        await self.socket.send_str(payload)
-
     async def handle_heartbeat_req(self, payload: GatewayDispatch):
-        pass
+        self.__wait_for_heartbeat.cancel()
 
     async def handle_reconnect(self, payload: GatewayDispatch):
         pass
 
     async def handle_invalid_session(self, payload: GatewayDispatch):
-        pass
+        raise Exception("Invalid session")
 
     async def identify_and_handle_hello(self, payload: GatewayDispatch):
-        self.__heartbeat_interval = payload.data["heartbeat_interval"]
         await self.send(self.__hello_socket)
+        self.__heartbeat_interval = payload.data["heartbeat_interval"]
+        await self.send_heartbeat()
 
     async def handle_heartbeat(self, payload: GatewayDispatch):
-        pass
+        await self.send_heartbeat()
+
+    async def send(self, payload: str):
+        await self.socket.send_str(payload)
+
+    async def send_heartbeat(self):
+
+        delay = self.__heartbeat_interval * random()
+        _log.debug("%s sending heartbeat in %sms", self.shard_key, delay)
+
+        self.__wait_for_heartbeat = create_task(sleep(delay / 1000))
+        await self.__wait_for_heartbeat
+
+        await self.send(str(GatewayDispatch(1)))
+
+        _log.debug("%s sent heartbeat", self.shard_key)

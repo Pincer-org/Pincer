@@ -15,11 +15,15 @@ from ..utils.types import Coro
 
 if TYPE_CHECKING:
     from typing import List, Tuple
+    from ..client import Client
+    from ..core.gateway import Dispatcher
     from ..core.dispatch import GatewayDispatch
 
 
 def error_middleware(
-    self, payload: GatewayDispatch
+    self: Client,
+    gateway: Dispatcher,
+    payload: GatewayDispatch
 ) -> Tuple[str, DiscordError]:
     """|coro|
 

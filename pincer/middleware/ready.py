@@ -17,10 +17,16 @@ from ..utils.conversion import construct_client_dict
 if TYPE_CHECKING:
     from typing import Tuple
     from ..utils.types import Coro
+    from ..client import Client
+    from ..core.gateway import Dispatcher
     from ..core.dispatch import GatewayDispatch
 
 
-async def on_ready_middleware(self, payload: GatewayDispatch) -> Tuple[str]:
+async def on_ready_middleware(
+    self: Client,
+    gateway: Dispatcher,
+    payload: GatewayDispatch
+) -> Tuple[str]:
     """|coro|
 
     Middleware for the ``on_ready`` event.

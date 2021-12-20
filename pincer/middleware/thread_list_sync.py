@@ -7,12 +7,22 @@ from __future__ import annotations
 
 from typing import List
 
-from ..core.dispatch import GatewayDispatch
+from typing import TYPE_CHECKING
+
 from ..objects.events.thread import ThreadListSyncEvent
 from ..utils.conversion import construct_client_dict
 
+if TYPE_CHECKING:
+    from ..client import Client
+    from ..core.gateway import Dispatcher
+    from ..core.dispatch import GatewayDispatch
 
-async def thread_list_sync(self, payload: GatewayDispatch):
+
+async def thread_list_sync(
+    self: Client,
+    dispatcher: Dispatcher,
+    payload: GatewayDispatch
+):
     """|coro|
 
     Middleware for the ``on_thread_list_sync`` event.

@@ -6,13 +6,25 @@ Sent when the user clicks a Rich Presence join invite in chat
 to join a game.
 """
 
-from ..core.dispatch import GatewayDispatch
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from ..objects.events.activity import ActivityJoinEvent
 from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
+if TYPE_CHECKING:
+    from ..client import Client
+    from ..core.gateway import Dispatcher
+    from ..core.dispatch import GatewayDispatch
 
-async def activity_join_middleware(self, payload: GatewayDispatch):
+
+async def activity_join_middleware(
+    self: Client,
+    gateway: Dispatcher,
+    payload: GatewayDispatch
+):
     """|coro|
 
     Middleware for the ``on_activity_join`` event.

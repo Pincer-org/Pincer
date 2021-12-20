@@ -12,11 +12,13 @@ from ..utils.conversion import construct_client_dict
 if TYPE_CHECKING:
     from typing import List, Tuple
 
+    from ..client import Client
+    from ..core.gateway import Dispatcher
     from ..core.dispatch import GatewayDispatch
 
 
 async def on_message_delete_middleware(
-    self, payload: GatewayDispatch
+    self: Client, gateway: Dispatcher, payload: GatewayDispatch
 ) -> Tuple[str, MessageDeleteEvent]:
     """|coro|
     Middleware for the ``on_message_delete`` event.

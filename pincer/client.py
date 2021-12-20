@@ -114,14 +114,10 @@ def event_middleware(call: str, *, override: bool = False):
                 "already been registered"
             )
 
-        async def wrapper(cls, payload: GatewayDispatch):
+        async def wrapper(cls, gateway: Dispatcher, payload: GatewayDispatch):
             _log.debug("`%s` middleware has been invoked", call)
 
-            return await (
-                func(cls, payload)
-                if should_pass_cls(func)
-                else func(payload)
-            )
+            return await func(cls, gateway, payload)
 
         _events[call] = wrapper
         return wrapper
@@ -568,7 +564,7 @@ class Client:
         next_call, arguments, params = ware, [], {}
 
         if iscoroutinefunction(ware):
-            extractable = await ware(self, payload, *args, **kwargs)
+            extractable = await ware(self, dispatch, payload, *args, **kwargs)
 
             if not isinstance(extractable, tuple):
                 raise RuntimeError(

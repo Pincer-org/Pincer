@@ -3,13 +3,25 @@
 
 """sent when an invite was created"""
 
-from ..core.dispatch import GatewayDispatch
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from ..objects.events.invite import InviteCreateEvent
 from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
+if TYPE_CHECKING:
+    from ..client import Client
+    from ..core.gateway import Dispatcher
+    from ..core.dispatch import GatewayDispatch
 
-async def invite_create_middleware(self, payload: GatewayDispatch):
+
+async def invite_create_middleware(
+    self: Client,
+    gateway: Dispatcher,
+    payload: GatewayDispatch
+):
     """|coro|
 
     Middleware for the ``on_invite_create`` event.

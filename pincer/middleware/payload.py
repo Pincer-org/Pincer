@@ -8,10 +8,14 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import List, Tuple
 
+    from ..client import Client
+    from ..core.gateway import Dispatcher
     from ..core.dispatch import GatewayDispatch
 
 
 async def payload_middleware(
+    self: Client,
+    gateway: Dispatcher,
     payload: GatewayDispatch,
 ) -> Tuple[str, GatewayDispatch]:
     """Invoked when anything is received from gateway.

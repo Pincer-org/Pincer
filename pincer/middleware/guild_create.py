@@ -11,10 +11,16 @@ from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from typing import List, Tuple
+    from ..client import Client
+    from ..core.gateway import Dispatcher
     from ..core.dispatch import GatewayDispatch
 
 
-async def guild_create_middleware(self, payload: GatewayDispatch):
+async def guild_create_middleware(
+    self: Client,
+    gateway: Dispatcher,
+    payload: GatewayDispatch
+):
     """|coro|
 
     Middleware for the ``on_guild_create``,

@@ -1,16 +1,27 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-"""sent when a bot removes all instances of a given emoji from the reactions of a message"""
+"""
+sent when a bot removes all instances of a given emoji from the reactions of a message
+"""
 
-from ..core.dispatch import GatewayDispatch
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from ..objects import Emoji
 from ..objects.events.message import MessageReactionRemoveEmojiEvent
 from ..utils.conversion import construct_client_dict
 
 
+if TYPE_CHECKING:
+    from ..client import Client
+    from ..core.gateway import Dispatcher
+    from ..core.dispatch import GatewayDispatch
+
+
 async def message_reaction_remove_emoji_middleware(
-    self, payload: GatewayDispatch
+    self: Client, gateway: Dispatcher, payload: GatewayDispatch
 ):
     """|coro|
 

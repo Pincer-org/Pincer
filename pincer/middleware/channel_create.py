@@ -12,10 +12,14 @@ from ..utils.conversion import construct_client_dict
 if TYPE_CHECKING:
     from typing import Tuple
     from ..core.dispatch import GatewayDispatch
+    from ..client import Client
+    from ..core.gateway import Dispatcher
 
 
 async def channel_create_middleware(
-    self, payload: GatewayDispatch
+    self: Client,
+    gateway: Dispatcher,
+    payload: GatewayDispatch
 ) -> Tuple[str, Channel]:
     """|coro|
 
