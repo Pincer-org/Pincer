@@ -519,7 +519,7 @@ class Client:
 
         dispatch.append_handlers({
             # Gets triggered on all events
-            -1: self.payload_event_handler,
+            -1: partial(self.payload_event_handler, dispatch),
             # Use this event handler for opcode 0.
             0: partial(self.event_handler, dispatch)
         })
@@ -670,9 +670,8 @@ class Client:
 
     async def payload_event_handler(
         self,
-        _,
-        payload: GatewayDispatch,
-        dispatch: Dispatcher
+        dispatch: Dispatcher,
+        payload: GatewayDispatch
     ):
         """|coro|
 
