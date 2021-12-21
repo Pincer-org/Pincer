@@ -45,7 +45,7 @@ def remove_none(obj: Union[List, Dict, Set, Tuple]) -> Union[List, Dict, Set, Tu
     """
     if isinstance(obj, list):
         return [i for i in obj if i is not None]
-    elif isinstance(obj, list):
+    elif isinstance(obj, tuple):
         return tuple(i for i in obj if i is not None)
     elif isinstance(obj, set):
         return obj - {None}
