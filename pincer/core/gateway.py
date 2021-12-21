@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from asyncio import AbstractEventLoop, create_task, get_event_loop
-from asyncio.tasks import ensure_future, sleep
+from asyncio.tasks import Task, ensure_future, sleep
 from dataclasses import dataclass
 import logging
 from platform import system
@@ -14,7 +14,7 @@ from typing import Any, Dict, Callable, Awaitable, Optional, Tuple
 from typing import TYPE_CHECKING
 from zlib import decompressobj
 
-from aiohttp import ClientSession, WSMsgType
+from aiohttp import ClientSession, WSMsgType, ClientConnectorError
 
 from . import __package__
 from ..utils.api_object import APIObject
@@ -98,8 +98,28 @@ class Dispatcher:
             4014: DisallowedIntentsError()
         }
 
+        # ClientSession to be used for this Dispatcher
+        self.__session = ClientSession()
+
+        # The gateway can be disconnected from Discord. This variable stores if the
+        # gateway should send a hello or reconnect.
+        self.__should_reconnect: bool = False
+
+        # How long the client should wait between each Heartbeat.
         self.__heartbeat_interval: Optional[int] = None
-        self.__session_id: Optional[str] = None
+
+        # The squence number for the last recieved payload. This is used reconnecting.
+        self.__last_sequence_number: Optional[int] = None
+
+        # Tracks whether the gateway has recieved an ack (opcode 11) since the last
+        # heartbeat.
+        #   True: An ack has been recieved
+        #   False: No ack has been recieved. Attempt to reconnect with gateway,
+        self.__has_recieved_ack: bool = True
+
+        # Session ID recieved from `on_ready` event. It is set in the `on_ready`
+        # middleware. This is used reconnecting.
+        self.session_id: Optional[str] = None
 
     def __del__(self):
         create_task(self.socket.close())
@@ -113,8 +133,20 @@ class Dispatcher:
         been passed.
         """
 
-        self.__session = ClientSession()
-        self.socket = await self.__session.ws_connect(GatewayConfig.make_uri(self.url))
+        while True:
+            try:
+                self.socket = await self.__session.ws_connect(
+                    GatewayConfig.make_uri(self.url)
+                )
+                break
+            except ClientConnectorError:
+                _log.warning(
+                    "%s Could not open websocket with Discord."
+                    "Retrying in 15 seconds...",
+                    self.shard_key
+                )
+                await sleep(15)
+
         await self.event_loop()
 
     async def event_loop(self):
@@ -122,7 +154,6 @@ class Dispatcher:
             if msg.type == WSMsgType.TEXT:
                 await self.handle_data(msg.data)
             elif msg.type == WSMsgType.BINARY:
-
                 # Method used to decompress payload copied from docs
                 # https://discord.com/developers/docs/topics/gateway#transport-compression-transport-compression-example
                 if len(msg.data) < 4 or msg.data[-4:] != ZLIB_SUFFIX:
@@ -137,6 +168,7 @@ class Dispatcher:
             "%s GatewayDispatch with opcode %s recieved", self.shard_key, payload.op
         )
 
+        self.__last_sequence_number = payload.seq
         handler = self.__dispatch_handlers.get(payload.op)
 
         if handler is None:
@@ -144,9 +176,31 @@ class Dispatcher:
 
         ensure_future(handler(payload))
 
-    @property
-    def __hello_socket(self) -> str:
-        return str(
+    async def handle_heartbeat_req(self, payload: GatewayDispatch):
+        self.__wait_for_heartbeat.cancel()
+
+    async def handle_reconnect(self, payload: GatewayDispatch):
+        _log.debug(
+            "%s Requested to reconnect to Discord. Closing session and attemping to"
+            "resume...",
+            self.shard_key
+        )
+
+        await self.socket.close(1000)
+        self.__should_reconnect = True
+        await self.start_loop()
+
+    async def handle_invalid_session(self, payload: GatewayDispatch):
+        print(payload)
+        raise Exception("Invalid session")
+
+    async def identify_and_handle_hello(self, payload: GatewayDispatch):
+
+        if self.__should_reconnect:
+            await self.resume()
+            return
+
+        await self.send(str(
             GatewayDispatch(
                 2, {
                     "token": self.token,
@@ -160,36 +214,48 @@ class Dispatcher:
                     "shard": self.shard_key
                 }
             )
-        )
-
-    async def handle_heartbeat_req(self, payload: GatewayDispatch):
-        self.__wait_for_heartbeat.cancel()
-
-    async def handle_reconnect(self, payload: GatewayDispatch):
-        pass
-
-    async def handle_invalid_session(self, payload: GatewayDispatch):
-        raise Exception("Invalid session")
-
-    async def identify_and_handle_hello(self, payload: GatewayDispatch):
-        await self.send(self.__hello_socket)
+        ))
         self.__heartbeat_interval = payload.data["heartbeat_interval"]
-        await self.send_heartbeat()
+        await self.heartbeat_manager()
 
     async def handle_heartbeat(self, payload: GatewayDispatch):
-        await self.send_heartbeat()
+        self.__has_recieved_ack = True
 
     async def send(self, payload: str):
         await self.socket.send_str(payload)
 
-    async def send_heartbeat(self):
+    async def heartbeat_manager(self):
+        while True:
+            delay = self.__heartbeat_interval * random()
+            _log.debug("%s sending heartbeat in %sms", self.shard_key, delay)
 
-        delay = self.__heartbeat_interval * random()
-        _log.debug("%s sending heartbeat in %sms", self.shard_key, delay)
+            self.__wait_for_heartbeat = create_task(sleep(delay / 1000))
+            await self.__wait_for_heartbeat
 
-        self.__wait_for_heartbeat = create_task(sleep(delay / 1000))
-        await self.__wait_for_heartbeat
+            if not self.__has_recieved_ack:
+                await self.socket.close(code=1001)
+                self.__should_reconnect = True
+                await self.start_loop()
+                return
 
-        await self.send(str(GatewayDispatch(1)))
+            self.__has_recieved_ack = False
+            await self.send(str(GatewayDispatch(1, data=self.__last_sequence_number)))
 
-        _log.debug("%s sent heartbeat", self.shard_key)
+            _log.debug("%s sent heartbeat", self.shard_key)
+
+    async def resume(self):
+        _log.debug(
+            "%s Disconnected from discord. Attempting to reconnect \U0001f480",
+            self.shard_key
+        )
+
+        res = str(GatewayDispatch(
+            6,
+            {
+                "token": self.token,
+                "session_id": self.session_id,
+                "seq": self.__last_sequence_number
+            }
+        ))
+
+        await self.send(res)

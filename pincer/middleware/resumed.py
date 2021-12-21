@@ -8,11 +8,7 @@ contains server information
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-
-from ..commands import ChatCommandHandler
-from ..exceptions import InvalidPayload
-from ..objects.user.user import User
-from ..utils.conversion import construct_client_dict
+import logging
 
 if TYPE_CHECKING:
     from typing import Tuple
@@ -21,15 +17,17 @@ if TYPE_CHECKING:
     from ..core.gateway import Dispatcher
     from ..core.dispatch import GatewayDispatch
 
+_log = logging.getLogger(__package__)
 
-async def on_ready_middleware(
+
+async def on_resumed(
     self: Client,
     gateway: Dispatcher,
     payload: GatewayDispatch
 ) -> Tuple[str]:
     """|coro|
 
-    Middleware for the ``on_ready`` event.
+    Middleware for the ``on_resumed`` event.
 
     Parameters
     ----------
@@ -42,23 +40,13 @@ async def on_ready_middleware(
         ``on_ready``
     """
 
-    gateway.session_id = payload.data.get("session_id")
+    _log.debug(
+        "%s Sucessfully reconnected to Discord gateway",
+        gateway.shard_key
+    )
 
-    user = payload.data.get("user")
-    guilds = payload.data.get("guilds")
-
-    if not user or guilds is None:
-        raise InvalidPayload(
-            "A `user` and `guilds` key/value pair is expected on the "
-            "`ready` payload event."
-        )
-
-    self.bot = User.from_dict(construct_client_dict(self, user))
-    self.guilds = dict(map(lambda i: (i["id"], None), guilds))
-
-    await ChatCommandHandler(self).initialize()
-    return ("on_ready",)
+    return ("on_resumed",)
 
 
 def export() -> Coro:
-    return on_ready_middleware
+    return on_resumed

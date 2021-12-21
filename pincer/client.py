@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import logging
-from asyncio import iscoroutinefunction, run, ensure_future, create_task, get_event_loop
+from asyncio import iscoroutinefunction, ensure_future, create_task, get_event_loop
 from collections import defaultdict
 from functools import partial
 from importlib import import_module
