@@ -9,8 +9,15 @@ from collections import defaultdict
 from importlib import import_module
 from inspect import isasyncgenfunction
 from typing import (
-    Any, Dict, Iterable, List, Optional, Tuple, Union, overload, 
-    AsyncIterator, TYPE_CHECKING
+    Any,
+    Dict,
+    List,
+    Optional,
+    Tuple,
+    Union,
+    overload,
+    AsyncIterator,
+    TYPE_CHECKING
 )
 from . import __package__
 from .commands import ChatCommandHandler
@@ -33,8 +40,10 @@ from .objects import (
     Guild,
     Intents,
     GuildTemplate,
+    StickerPack,
+    UserMessage,
     Connection,
-    StickerPack, File
+    File
 )
 from .objects.guild.channel import GroupDMChannel
 from .utils.conversion import construct_client_dict, remove_none
@@ -223,9 +232,10 @@ class Client(Dispatcher):
         Get a list of chat command calls which have been registered in
         the :class:`~pincer.commands.ChatCommandHandler`\\.
         """
-        return list(
-            map(lambda cmd: cmd.app.name, ChatCommandHandler.register.values())
-        )
+        return [
+            cmd.app.name for cmd in ChatCommandHandler.register.values()
+        ]
+
 
     @property
     def guild_ids(self) -> List[Snowflake]:
@@ -323,16 +333,14 @@ class Client(Dispatcher):
         calls = _events.get(name.strip().lower())
 
         return (
-            []
-            if not calls
-            else list(
-                filter(
-                    lambda call: iscoroutinefunction(call)
-                    or isasyncgenfunction(call),
-                    calls,
-                )
-            )
+            [] if not calls
+            else [
+                call for call in calls
+                if iscoroutinefunction(call)
+                or isasyncgenfunction(call)
+            ]
         )
+
 
     def load_cog(self, path: str, package: Optional[str] = None):
         """Load a cog from a string path, setup method in COG may
@@ -473,7 +481,7 @@ class Client(Dispatcher):
             if should_pass_cls(call):
                 call_args = (
                     ChatCommandHandler.managers[call.__module__],
-                    *(arg for arg in args if arg is not None),
+                    *remove_none(args),
                 )
 
             ensure_future(call(*call_args, **kwargs))
@@ -858,6 +866,25 @@ class Client(Dispatcher):
             A Channel object.
         """
         return await Channel.from_id(self, _id)
+
+    async def get_message(self, _id: Snowflake, channel_id: Snowflake) -> UserMessage:
+        """|coro|
+        Creates a UserMessage object
+
+        Parameters
+        ----------
+        _id: :class:`~pincer.utils.snowflake.Snowflake`
+            ID of the message that is wanted.
+        channel_id : int
+            ID of the channel the message is in.
+
+        Returns
+        -------
+        :class:`~pincer.objects.message.user_message.UserMessage`
+            The message object.
+        """
+
+        return await UserMessage.from_id(self, _id, channel_id)
 
     async def get_webhook(
         self, id: Snowflake, token: Optional[str] = None
