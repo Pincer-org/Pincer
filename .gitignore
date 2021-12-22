@@ -11,6 +11,9 @@ virtualenv
 pyvenv
 Pipfile.lock
 
+# Stubgen
+out
+
 # Docs
 docs/_build
 

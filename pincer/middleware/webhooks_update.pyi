@@ -1,0 +1,6 @@
+from ..core.dispatch import GatewayDispatch as GatewayDispatch
+from ..objects.events.webhook import WebhooksUpdateEvent as WebhooksUpdateEvent
+from ..utils.conversion import construct_client_dict as construct_client_dict
+
+async def webhooks_update_middleware(self, payload: GatewayDispatch): ...
+def export(): ...

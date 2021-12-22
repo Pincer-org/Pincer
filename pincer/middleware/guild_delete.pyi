@@ -1,0 +1,6 @@
+from ..core.dispatch import GatewayDispatch as GatewayDispatch
+from ..objects.guild import UnavailableGuild as UnavailableGuild
+from ..utils.conversion import construct_client_dict as construct_client_dict
+
+async def guild_delete_middleware(self, payload: GatewayDispatch): ...
+def export(): ...

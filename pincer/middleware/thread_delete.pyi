@@ -1,0 +1,6 @@
+from ..core.dispatch import GatewayDispatch as GatewayDispatch
+from ..objects import Channel as Channel
+from ..utils.conversion import construct_client_dict as construct_client_dict
+
+async def thread_delete_middleware(self, payload: GatewayDispatch): ...
+def export(): ...

@@ -1,0 +1,6 @@
+from ..core.dispatch import GatewayDispatch as GatewayDispatch
+from ..objects import Channel as Channel
+from ..utils import construct_client_dict as construct_client_dict, replace as replace
+
+async def channel_update_middleware(self, payload: GatewayDispatch): ...
+def export(): ...

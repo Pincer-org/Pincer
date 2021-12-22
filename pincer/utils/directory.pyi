@@ -1,0 +1,3 @@
+from typing import Any, Generator
+
+def chdir(path: str) -> Generator[str, Any, None]: ...

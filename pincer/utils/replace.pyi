@@ -1,0 +1,3 @@
+from typing import Any, Callable, Iterable, List, T
+
+def replace(func: Callable[[Any], bool], iter: Iterable[T], new_item: T) -> List[T]: ...

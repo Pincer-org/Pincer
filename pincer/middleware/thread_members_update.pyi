@@ -1,0 +1,6 @@
+from ..core.dispatch import GatewayDispatch as GatewayDispatch
+from ..objects.events.thread import ThreadMembersUpdateEvent as ThreadMembersUpdateEvent
+from ..utils.conversion import construct_client_dict as construct_client_dict
+
+async def thread_members_update_middleware(self, payload: GatewayDispatch): ...
+def export(): ...
