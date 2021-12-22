@@ -240,6 +240,8 @@ class Dispatcher:
 
     async def heartbeat_manager(self):
 
+        _log.debug("%s Starting heartbeat manager...", self.shard_key)
+
         jitter = random()
 
         while True:

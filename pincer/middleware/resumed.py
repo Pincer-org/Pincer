@@ -6,6 +6,7 @@ non-subscription event sent immediately after connecting,
 contains server information
 """
 from __future__ import annotations
+from asyncio.tasks import ensure_future
 
 from typing import TYPE_CHECKING
 import logging
@@ -44,6 +45,7 @@ async def on_resumed(
         "%s Sucessfully reconnected to Discord gateway",
         gateway.shard_key
     )
+    ensure_future(gateway.heartbeat_manager())
 
     return ("on_resumed",)
 
