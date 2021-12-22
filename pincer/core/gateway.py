@@ -186,13 +186,17 @@ class Dispatcher:
             self.shard_key
         )
 
-        await self.socket.close(1000)
+        await self.socket.close(code=1000)
         self.__should_reconnect = True
         await self.start_loop()
 
     async def handle_invalid_session(self, payload: GatewayDispatch):
-        print(payload)
-        raise Exception("Invalid session")
+        """
+        Attempt to relog on invalid connection
+        """
+        _log.debug("%s Invalid session, attempting to relog...", self.shard_key)
+        self.__should_reconnect = False
+        await self.start_loop()
 
     async def identify_and_handle_hello(self, payload: GatewayDispatch):
 
@@ -216,23 +220,43 @@ class Dispatcher:
             )
         ))
         self.__heartbeat_interval = payload.data["heartbeat_interval"]
+
         await self.heartbeat_manager()
 
     async def handle_heartbeat(self, payload: GatewayDispatch):
         self.__has_recieved_ack = True
 
     async def send(self, payload: str):
+        _log.debug("%s Sending payload", self.shard_key)
+
+        if self.socket.closed:
+            _log.debug("%s Socket is closing. Payload not sent.", self.shard_key)
+            return
+
         await self.socket.send_str(payload)
 
     async def heartbeat_manager(self):
-        while True:
-            delay = self.__heartbeat_interval * random()
-            _log.debug("%s sending heartbeat in %sms", self.shard_key, delay)
 
-            self.__wait_for_heartbeat = create_task(sleep(delay / 1000))
+        jitter = random()
+
+        while True:
+            duration = self.__heartbeat_interval * jitter
+
+            _log.debug("%s sending heartbeat in %sms", self.shard_key, duration)
+
+            self.__wait_for_heartbeat = create_task(
+                sleep(duration / 1000)
+            )
+
+            jitter = 1
+
             await self.__wait_for_heartbeat
 
             if not self.__has_recieved_ack:
+                _log.log(
+                    "%s ack not recieved. Closing socket with close code 1001",
+                    self.shard_key
+                )
                 await self.socket.close(code=1001)
                 self.__should_reconnect = True
                 await self.start_loop()
