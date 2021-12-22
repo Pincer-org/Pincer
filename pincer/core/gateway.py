@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from asyncio import AbstractEventLoop, create_task, get_event_loop
 from asyncio.tasks import Task, ensure_future, sleep
-from dataclasses import dataclass
+from dataclasses import MISSING, dataclass
 import logging
 from platform import system
 from random import random
@@ -168,7 +168,10 @@ class Dispatcher:
             "%s GatewayDispatch with opcode %s recieved", self.shard_key, payload.op
         )
 
-        self.__last_sequence_number = payload.seq
+        if payload.seq is not None:
+            self.__last_sequence_number = payload.seq
+            _log.debug("%s Set squence number to %s", self.shard_key, payload.seq)
+
         handler = self.__dispatch_handlers.get(payload.op)
 
         if handler is None:
