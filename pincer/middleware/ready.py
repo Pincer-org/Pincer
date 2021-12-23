@@ -42,7 +42,7 @@ async def on_ready_middleware(
         ``on_ready``
     """
 
-    gateway.session_id = payload.data.get("session_id")
+    gateway.set_session_id(payload.data.get("session_id"))
 
     user = payload.data.get("user")
     guilds = payload.data.get("guilds")

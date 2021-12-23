@@ -6,7 +6,8 @@ from __future__ import annotations
 
 from asyncio import AbstractEventLoop, create_task, get_event_loop
 from asyncio.tasks import Task, ensure_future, sleep
-from dataclasses import MISSING, dataclass
+from dataclasses import dataclass
+from datetime import datetime
 import logging
 from platform import system
 from random import random
@@ -27,6 +28,7 @@ from ..exceptions import (
 
 if TYPE_CHECKING:
     from ..objects.app.intents import Intents
+    Handler = Callable[[GatewayDispatch], None]
 
 ZLIB_SUFFIX = b'\x00\x00\xff\xff'
 inflator = decompressobj()
@@ -105,11 +107,18 @@ class Dispatcher:
         # gateway should send a hello or reconnect.
         self.__should_reconnect: bool = False
 
+        # The squence number for the last recieved payload. This is used reconnecting.
+        self.__sequence_number: int = 0
+
+        """Code for handling heartbeat"""
+        # The heartbeat task
+        self.__heartbeat_task: Optional[Task] = None
+
+        # Keeps the Client waiting until the next heartbeat
+        self.__wait_for_heartbeat: Optional[Task] = None
+
         # How long the client should wait between each Heartbeat.
         self.__heartbeat_interval: Optional[int] = None
-
-        # The squence number for the last recieved payload. This is used reconnecting.
-        self.__last_sequence_number: Optional[int] = None
 
         # Tracks whether the gateway has recieved an ack (opcode 11) since the last
         # heartbeat.
@@ -119,7 +128,7 @@ class Dispatcher:
 
         # Session ID recieved from `on_ready` event. It is set in the `on_ready`
         # middleware. This is used reconnecting.
-        self.session_id: Optional[str] = None
+        self.__session_id: Optional[str] = None
 
     def __del__(self):
         create_task(self.socket.close())
@@ -132,7 +141,6 @@ class Dispatcher:
         Discord websocket API on behalf of the client whose token has
         been passed.
         """
-
         while True:
             try:
                 self.socket = await self.__session.ws_connect(
@@ -147,6 +155,7 @@ class Dispatcher:
                 )
                 await sleep(15)
 
+        _log.debug("%s Starting envent loop...", self.shard_key)
         await self.event_loop()
 
     async def event_loop(self):
@@ -165,11 +174,14 @@ class Dispatcher:
         payload = GatewayDispatch.from_string(data)
 
         _log.debug(
-            "%s GatewayDispatch with opcode %s recieved", self.shard_key, payload.op
+            "%s %s GatewayDispatch with opcode %s recieved",
+            self.shard_key,
+            datetime.now(),
+            payload.op
         )
 
-        if payload.seq is not None:
-            self.__last_sequence_number = payload.seq
+        if payload.seq is not None and payload.seq >= self.__sequence_number:
+            self.__sequence_number = payload.seq
             _log.debug("%s Set squence number to %s", self.shard_key, payload.seq)
 
         handler = self.__dispatch_handlers.get(payload.op)
@@ -180,7 +192,7 @@ class Dispatcher:
         ensure_future(handler(payload))
 
     async def handle_heartbeat_req(self, payload: GatewayDispatch):
-        self.__wait_for_heartbeat.cancel()
+        self.send_next_heartbeat()
 
     async def handle_reconnect(self, payload: GatewayDispatch):
         _log.debug(
@@ -224,53 +236,33 @@ class Dispatcher:
         ))
         self.__heartbeat_interval = payload.data["heartbeat_interval"]
 
-        await self.heartbeat_manager()
+        self.start_heartbeat()
 
     async def handle_heartbeat(self, payload: GatewayDispatch):
         self.__has_recieved_ack = True
 
     async def send(self, payload: str):
-        _log.debug("%s Sending payload", self.shard_key)
+        safe_payload = payload.replace(self.token, "%s..." % self.token[:10])
+
+        if self.__session_id:
+            safe_payload = safe_payload.replace(
+                self.__session_id, "%s..." % self.__session_id[:4]
+            )
+
+        _log.debug(
+            "%s Sending payload: %s",
+            self.shard_key,
+            safe_payload
+        )
 
         if self.socket.closed:
-            _log.debug("%s Socket is closing. Payload not sent.", self.shard_key)
+            _log.debug(
+                "%s Socket is closing. Payload not sent.",
+                self.shard_key
+            )
             return
 
         await self.socket.send_str(payload)
-
-    async def heartbeat_manager(self):
-
-        _log.debug("%s Starting heartbeat manager...", self.shard_key)
-
-        jitter = random()
-
-        while True:
-            duration = self.__heartbeat_interval * jitter
-
-            _log.debug("%s sending heartbeat in %sms", self.shard_key, duration)
-
-            self.__wait_for_heartbeat = create_task(
-                sleep(duration / 1000)
-            )
-
-            jitter = 1
-
-            await self.__wait_for_heartbeat
-
-            if not self.__has_recieved_ack:
-                _log.log(
-                    "%s ack not recieved. Closing socket with close code 1001",
-                    self.shard_key
-                )
-                await self.socket.close(code=1001)
-                self.__should_reconnect = True
-                await self.start_loop()
-                return
-
-            self.__has_recieved_ack = False
-            await self.send(str(GatewayDispatch(1, data=self.__last_sequence_number)))
-
-            _log.debug("%s sent heartbeat", self.shard_key)
 
     async def resume(self):
         _log.debug(
@@ -283,8 +275,65 @@ class Dispatcher:
             {
                 "token": self.token,
                 "session_id": self.session_id,
-                "seq": self.__last_sequence_number
+                "seq": self.__sequence_number
             }
         ))
 
         await self.send(res)
+
+    def set_session_id(self, _id: str):
+        self.__session_id = _id
+
+    """Code for handling Heartbeat"""
+
+    def start_heartbeat(self):
+        if not self.__heartbeat_task or self.__heartbeat_task.cancelled():
+            self.__heartbeat_task = ensure_future(self.__heartbeat_loop())
+
+    def stop_heartbeat(self):
+        self.__heartbeat_task.cancel()
+
+    def send_next_heartbeat(self):
+        self.__wait_for_heartbeat.cancel()
+
+    async def __heartbeat_loop(self):
+
+        _log.debug("%s Starting heartbeat loop...", self.shard_key)
+        # When waiting for first heartbeat, there hasn't been an ack recieved yet.
+        # Set to true so the ack recieved check doesn't fail.
+        self.__has_recieved_ack = True
+
+        jitter = random()
+
+        while True:
+            duration = self.__heartbeat_interval * jitter
+
+            _log.debug(
+                "%s %s sending heartbeat in %sms",
+                self.shard_key, datetime.now(),
+                duration
+            )
+
+            self.__wait_for_heartbeat = create_task(
+                sleep(duration / 1000)
+            )
+
+            jitter = 1
+
+            await self.__wait_for_heartbeat
+
+            if not self.__has_recieved_ack:
+                _log.debug(
+                    "%s %s ack not recieved. Closing socket with close code 1001.",
+                    datetime.now(),
+                    self.shard_key
+                )
+                await self.socket.close(code=1001)
+                self.__should_reconnect = True
+                ensure_future(self.start_loop())
+                self.stop_heartbeat()
+                return
+
+            self.__has_recieved_ack = False
+            await self.send(str(GatewayDispatch(1, data=self.__sequence_number)))
+            _log.debug("%s sent heartbeat", self.shard_key)

@@ -42,10 +42,10 @@ async def on_resumed(
     """
 
     _log.debug(
-        "%s Sucessfully reconnected to Discord gateway",
+        "%s Sucessfully reconnected to Discord gateway. Restarting heartbeat.",
         gateway.shard_key
     )
-    ensure_future(gateway.heartbeat_manager())
+    gateway.start_heartbeat()
 
     return ("on_resumed",)
 
