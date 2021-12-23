@@ -343,7 +343,7 @@ message more than 3 seconds after the interaction is started.
     await asyncio.sleep(10)
     await ctx.update("Button two was pressed 10 seconds ago")
 
-Link buttons can be send with the :class:`~pincer.commands.components.button.LinkButton` class.
+Link buttons can be sent with the :class:`~pincer.commands.components.button.LinkButton` class.
 
 .. code-block:: python
 
