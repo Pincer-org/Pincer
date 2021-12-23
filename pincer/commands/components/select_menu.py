@@ -81,7 +81,7 @@ class SelectMenu(_Component):
     disabled: APINullable[bool] = False
 
     type: int = 3
-    _func: Callable = None
+    _func: Optional[Callable] = None
 
     def __post_init__(self):
         self.type = 3

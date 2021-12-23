@@ -24,7 +24,7 @@ class ThrottleInterface(ABC):
 
     @staticmethod
     @abstractmethod
-    def handle(ctx: MessageContext, **kwargs):
+    def handle(command: ClientCommandStructure, **kwargs):
         raise NotImplementedError
 
 
