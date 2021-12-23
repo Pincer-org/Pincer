@@ -335,7 +335,7 @@ message more than 3 seconds after the interaction is started.
   @button(label="Click me!", style=ButtonStyle.PRIMARY)
   async def button_one():
     await ctx.update("You pressed button one")
-    return "You pressed button one" # Noting will be returned because the reaction was already used up
+    return "You pressed button one" # Nothing will be returned because the reaction was already used up
 
   @button(label="Also click me!", style=ButtonStyle.DANGER)
   async def button_two(ctx: MessageContext):
