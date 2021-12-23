@@ -18,7 +18,6 @@ from typing import (
     Tuple,
     Union,
     overload,
-    AsyncIterator,
     TYPE_CHECKING
 )
 from . import __package__
@@ -491,17 +490,27 @@ class Client:
             ensure_future(call(*call_args, **kwargs))
 
     def run(self):
-        """Start the event listener."""
-
+        """Start the bot."""
         loop = get_event_loop()
         ensure_future(self.start_shard(0, 1), loop=loop)
         loop.run_forever()
 
     def run_autosharded(self):
+        """
+        Runs the bot with the amount of shards specified by the Discord gateway.
+        """
         num_shards = self.gateway.shards
         return self.run_shards(range(0, num_shards), num_shards)
 
     def run_shards(self, shards: Iterable, num_shards: int):
+        """
+        Runs shards that you specify.
+
+        shards: Iterable
+            The shards to run.
+        num_shards: int
+            The total amount of shards.
+        """
         loop = get_event_loop()
 
         for shard in shards:
@@ -509,32 +518,20 @@ class Client:
 
         loop.run_forever()
 
-    # async def _run_shards_inner(self, shards: Iterable, num_shards: int):
-
-    #     def yeild_shard_groups(max_shards, con):
-
-    #         start_shard = 0
-
-    #         while start_shard < max_shards:
-    #             yield range(
-    #                 start_shard,
-    #                 min(start_shard + con, max_shards)
-    #             )
-
-    #             start_shard = min(start_shard + con, max_shards)
-
-    #     for shard in yeild_shard_groups(
-    #         num_shards,
-    #         self.gateway.session_start_limit.max_concurrency
-    #     ):
-    #         await self.start_shard(shard, num_shards)
-
     async def start_shard(
         self,
         shard: int,
         num_shards: int
     ):
-        """Start the event listener."""
+        """Starts a shard
+        This should not be run most of the time. ``run_shards`` and ``run_autosharded``
+        will likely do what you want.
+
+        shard : int
+            The number of the shard to start.
+        num_shards : int
+            The total number of shards.
+        """
 
         dispatch = Dispatcher(
             self.token,
