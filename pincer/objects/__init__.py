@@ -64,7 +64,7 @@ from .guild.guild import (
     Guild
 )
 from .guild.invite import (
-    InviteTargetType, InviteStageInstance, InviteMetadata, Invite
+    InviteTargetType, InviteStageInstance, Invite
 )
 from .guild.member import GuildMember, PartialGuildMember, BaseMember
 from .guild.overwrite import Overwrite
@@ -137,7 +137,7 @@ __all__ = (
     "NewsChannel", "Overwrite", "PartialGuildMember", "PremiumTier",
     "PremiumTypes", "PresenceUpdateEvent", "PrivacyLevel", "Reaction",
     "ReadyEvent", "RequestGuildMembers", "ResolvedData", "Resume", "Role",
-    "RoleTags", "SessionStartLimit",
+    "RoleTags", "SessionStartLimit", "SelectMenu", "SelectOption",
     "StageInstance", "StatusType", "Sticker", "StickerFormatType",
     "StickerItem", "StickerPack", "StickerType", "SystemChannelFlags",
     "TextChannel", "ThreadListSyncEvent", "ThreadMember",
