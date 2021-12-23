@@ -43,7 +43,7 @@ Here's a simple ping command.
         return "pong"
 
 
-If you need access to more information, you can pass in the :class:`ctx <~pincer.objects.message.context.MessageContext` object.
+If you need access to more information, you can pass in the :class:`ctx <~pincer.objects.message.context.MessageContext>` object.
 
 .. note::
     ``ctx`` and ``self`` should be those exact names or the correct value will not be passed in.
@@ -290,8 +290,8 @@ Pincer supports buttons and select menus.
 
 Sending a Button
 ~~~~~~~~~~~~~~~~
-Buttons in Pincer are created with the `@button` decorator. This decorator creates an
-async function that works the same way as the `@command` decorator. `self` and `ctx` are
+Buttons in Pincer are created with the ``@button`` decorator. This decorator creates an
+async function that works the same way as the ``@command`` decorator. ``self`` and ``ctx`` are
 optional.
 
 .. note::
@@ -323,8 +323,8 @@ optional.
       return "Button two pressed"
 
 
-When responding to a component interaction you have access to the `update` and `defer_update_ack`
-methods from MessageContext. `update` edits a message. `defer_update_ack` allows you to update a
+When responding to a component interaction you have access to the ``update`` and ``defer_update_ack``
+methods from MessageContext. ``update`` edits a message. ``defer_update_ack`` allows you to update a
 message more than 3 seconds after the interaction is started.
 
 .. code-block:: python
@@ -362,8 +362,8 @@ Link buttons can be send with the :class:`~pincer.commands.components.button.Lin
 
 Select Menus
 ~~~~~~~~~~~~
-Select menus support work similarly to Buttons. Select menus support all available methods on
-:class:`ctx <~pincer.objects.message.context.MessageContext`.
+Select menus work similarly to Buttons. Select menus support all available methods on
+:class:`ctx <~pincer.objects.message.context.MessageContext>`.
 
 .. code-block:: python
 

@@ -91,7 +91,7 @@ class SelectMenu(_Component):
 
     def with_options(self, *options: SelectOption) -> SelectMenu:
         """
-        Sets the `options` parameter to \\*options and returns a new
+        Sets the ``options`` parameter to \\*options and returns a new
         :class:`~pincer.commands.components.select_menu.SelectMenu`.
 
         \\*options : SelectOption
@@ -103,7 +103,7 @@ class SelectMenu(_Component):
 
     def with_appended_options(self, *options: SelectOption) -> SelectMenu:
         """
-        Append \\*options to the `options` parameter and returns a new
+        Append \\*options to the ``options`` parameter and returns a new
         :class:`~pincer.commands.components.select_menu.SelectMenu`.
 
         \\*options : SelectOption
