@@ -552,7 +552,7 @@ class Client:
 
     def __del__(self):
         """Ensure close of the http client."""
-        if hasattr(self, 'http'):
+        if hasattr(self, "http"):
             create_task(self.http.close())
 
     async def handle_middleware(
