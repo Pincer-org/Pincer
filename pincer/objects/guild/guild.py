@@ -464,7 +464,7 @@ class Guild(APIObject):
         deaf: Optional[bool] = None,
         channel_id: Optional[Snowflake] = None,
         reason: Optional[str] = None,
-        communication_disabled_until: Optional[Timestamp] = None,
+        communication_disabled_until: Optional[Timestamp] = MISSING,
     ) -> GuildMember:
         """|coro|
         Modifies a member in the guild from its identifier and based on the
