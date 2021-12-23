@@ -10,20 +10,16 @@ from functools import partial
 from importlib import import_module
 from inspect import isasyncgenfunction
 from typing import (
-<<<<<<< HEAD
-    Any, Dict, Iterable, List, Optional, Tuple, Union, overload,
-    AsyncIterator, TYPE_CHECKING
-=======
     Any,
     Dict,
     List,
     Optional,
+    Iterable,
     Tuple,
     Union,
     overload,
     AsyncIterator,
     TYPE_CHECKING
->>>>>>> upstream/main
 )
 from . import __package__
 from .commands import ChatCommandHandler
@@ -146,13 +142,7 @@ def event_middleware(call: str, *, override: bool = False):
         async def wrapper(cls, gateway: Dispatcher, payload: GatewayDispatch):
             _log.debug("`%s` middleware has been invoked", call)
 
-<<<<<<< HEAD
             return await func(cls, gateway, payload)
-=======
-            return await (
-                func(cls, payload) if should_pass_cls(func) else func(payload)
-            )
->>>>>>> upstream/main
 
         _events[call] = wrapper
         return wrapper
@@ -210,26 +200,12 @@ class Client:
         if isinstance(intents, Iterable):
             intents = sum(intents)
 
-<<<<<<< HEAD
         if intents is None:
             intents = Intents.all()
 
         self.intents = intents
         self.reconnect = reconnect
         self.token = token
-=======
-        super().__init__(
-            token,
-            handlers={
-                # Gets triggered on all events
-                -1: self.payload_event_handler,
-                # Use this event handler for opcode 0.
-                0: self.event_handler,
-            },
-            intents=intents or Intents.all(),
-            reconnect=reconnect,
-        )
->>>>>>> upstream/main
 
         self.bot: Optional[User] = None
         self.received_message = received or "Command arrived successfully!"
@@ -262,7 +238,6 @@ class Client:
         return [
             cmd.app.name for cmd in ChatCommandHandler.register.values()
         ]
-
 
     @property
     def guild_ids(self) -> List[Snowflake]:
@@ -367,7 +342,6 @@ class Client:
                 or isasyncgenfunction(call)
             ]
         )
-
 
     def load_cog(self, path: str, package: Optional[str] = None):
         """Load a cog from a string path, setup method in COG may
@@ -581,7 +555,6 @@ class Client:
 
     def __del__(self):
         """Ensure close of the http client."""
-<<<<<<< HEAD
         if hasattr(self, 'http'):
             create_task(self.http.close())
 
@@ -592,13 +565,6 @@ class Client:
             dispatch: Dispatcher,
             *args,
             **kwargs
-=======
-        if hasattr(self, "http"):
-            run(self.http.close())
-
-    async def handle_middleware(
-        self, payload: GatewayDispatch, key: str, *args, **kwargs
->>>>>>> upstream/main
     ) -> Tuple[Optional[Coro], List[Any], Dict[str, Any]]:
         """|coro|
 
@@ -1027,7 +993,6 @@ class Client:
         """
         return await Webhook.from_id(self, id, token)
 
-
     async def get_current_user(self) -> User:
         """|coro|
         The user object of the requester's account.
@@ -1043,7 +1008,7 @@ class Client:
         """
         return User.from_dict(
             construct_client_dict(
-                self, 
+                self,
                 await self.http.get("users/@me")
             )
         )
