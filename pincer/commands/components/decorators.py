@@ -111,7 +111,7 @@ def select_menu(
 ) -> SelectMenu:
     """
     Turn a function into handler for a :class:`~pincer.commands.components.select_menu.SelectMenu`.
-    See :class:`~pincer.commands.components.select_menu.SelectMenu` for information on paramters.
+    See :class:`~pincer.commands.components.select_menu.SelectMenu` for information on parameters.
 
     The function will still be callable.
 
