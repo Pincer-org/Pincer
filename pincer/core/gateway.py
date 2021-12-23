@@ -4,16 +4,14 @@
 
 from __future__ import annotations
 
-from asyncio import AbstractEventLoop, create_task, get_event_loop
-from asyncio.tasks import Task, ensure_future, sleep
+from asyncio import create_task, Task, ensure_future, sleep
 from dataclasses import dataclass
 from datetime import datetime
 import logging
 from platform import system
 from random import random
-from typing import Any, Dict, Callable, Awaitable, Optional, Tuple
-from typing import TYPE_CHECKING
-from zlib import decompressobj
+from typing import TYPE_CHECKING, Any, Dict, Callable, Optional
+from zlib import decompressobj, decompress
 
 from aiohttp import ClientSession, WSMsgType, ClientConnectorError
 
@@ -22,18 +20,31 @@ from ..utils.api_object import APIObject
 from .._config import GatewayConfig
 from ..core.dispatch import GatewayDispatch
 from ..exceptions import (
-    PincerError, InvalidTokenError, UnhandledException,
-    _InternalPerformReconnectError, DisallowedIntentsError
+    PincerError, InvalidTokenError, DisallowedIntentsError,
+    _InternalPerformReconnectError
 )
 
 if TYPE_CHECKING:
     from ..objects.app.intents import Intents
     Handler = Callable[[GatewayDispatch], None]
 
+_log = logging.getLogger(__package__)
+
 ZLIB_SUFFIX = b'\x00\x00\xff\xff'
 inflator = decompressobj()
 
-_log = logging.getLogger(__package__)
+
+def decompress_msg(msg: bytes) -> Optional[str]:
+    if len(msg) < 4 or msg[-4:] != ZLIB_SUFFIX:
+        return
+
+    if GatewayConfig.compression == "zlib-payload":
+        return inflator.decompress(msg)
+
+    if GatewayConfig.compression == "zlib-stream":
+        return decompress(msg)
+
+    return None
 
 
 @dataclass
@@ -163,12 +174,10 @@ class Dispatcher:
             if msg.type == WSMsgType.TEXT:
                 await self.handle_data(msg.data)
             elif msg.type == WSMsgType.BINARY:
-                # Method used to decompress payload copied from docs
-                # https://discord.com/developers/docs/topics/gateway#transport-compression-transport-compression-example
-                if len(msg.data) < 4 or msg.data[-4:] != ZLIB_SUFFIX:
-                    return
 
-                await self.handle_data(inflator.decompress(msg.data))
+                data = decompress_msg(msg.data)
+                if data:
+                    await self.handle_data(data)
 
     async def handle_data(self, data: Dict[Any]):
         payload = GatewayDispatch.from_string(data)
@@ -274,7 +283,7 @@ class Dispatcher:
             6,
             {
                 "token": self.token,
-                "session_id": self.session_id,
+                "session_id": self.__session_id,
                 "seq": self.__sequence_number
             }
         ))

@@ -12,8 +12,7 @@ class GatewayConfig:
     """
     version: int = 9
     encoding: str = "json"
-    compression: Optional[str] = "zlib-stream"
-    compression = None
+    compression: Optional[str] = "zlib-payload"
 
     @classmethod
     def make_uri(cls, uri) -> str:
