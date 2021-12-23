@@ -335,7 +335,7 @@ message more than 3 seconds after the interaction is started.
   @button(label="Click me!", style=ButtonStyle.PRIMARY)
   async def button_one():
     await ctx.update("You pressed button one")
-    return "You pressed button one" # Noting will be returned because the reaction was already used up
+    return "You pressed button one" # Nothing will be returned because the reaction was already used up
 
   @button(label="Also click me!", style=ButtonStyle.DANGER)
   async def button_two(ctx: MessageContext):
@@ -343,7 +343,7 @@ message more than 3 seconds after the interaction is started.
     await asyncio.sleep(10)
     await ctx.update("Button two was pressed 10 seconds ago")
 
-Link buttons can be send with the :class:`~pincer.commands.components.button.LinkButton` class.
+Link buttons can be sent with the :class:`~pincer.commands.components.button.LinkButton` class.
 
 .. code-block:: python
 
