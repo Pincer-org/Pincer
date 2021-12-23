@@ -463,7 +463,8 @@ class Guild(APIObject):
         mute: Optional[bool] = None,
         deaf: Optional[bool] = None,
         channel_id: Optional[Snowflake] = None,
-        reason: Optional[str] = None
+        reason: Optional[str] = None,
+        communication_disabled_until: Optional[Timestamp] = MISSING,
     ) -> GuildMember:
         """|coro|
         Modifies a member in the guild from its identifier and based on the
@@ -484,7 +485,10 @@ class Guild(APIObject):
             Voice channel id to move to |default| :data:`None`
         reason : Optional[:class:`str`]
             audit log reason |default| :data:`None`
-            
+        communication_disabled_until : Optional[Timestamp]
+            When the member can communicate again, requires ``MODERATE_MEMBERS``
+            permissions. Set to ``None`` to disable the timeout.
+
         Returns
         -------
         :class:`~pincer.objects.guild.member.GuildMember`
@@ -493,6 +497,8 @@ class Guild(APIObject):
         ...
 
     async def modify_member(self, _id: int, reason=None, **kwargs) -> GuildMember:
+        if kwargs.get("communication_disabled_until") is MISSING:
+            kwargs.pop("communication_disabled_until")
         data = await self._http.patch(
             f"guilds/{self.id}/members/{_id}",
             data=kwargs,
