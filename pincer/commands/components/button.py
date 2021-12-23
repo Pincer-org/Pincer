@@ -65,7 +65,7 @@ class Button(_Component):
         A developer-defined identifier for the button,
         max 100 characters
     disabled: APINullable[:class:`bool`]
-        Whether the button is disabled (default `False`)
+        Whether the button is disabled |default| :data:`False`
     """
     custom_id: APINullable[str]
     label: APINullable[str]
