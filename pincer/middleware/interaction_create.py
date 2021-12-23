@@ -73,7 +73,7 @@ def get_call(self: Client, interaction: Interaction):
         return ComponentHandler.register.get(interaction.data.custom_id)
     elif interaction.type == InteractionType.AUTOCOMPLETE:
         raise NotImplementedError(
-            "handling for autocomplete is not implemented"
+            "Handling for autocomplete is not implemented"
         )
 
 
