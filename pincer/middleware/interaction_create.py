@@ -3,13 +3,15 @@
 
 from __future__ import annotations
 
+from contextlib import suppress
 import logging
 from inspect import isasyncgenfunction, _empty
 from typing import Dict, Any
 from typing import TYPE_CHECKING
 
-
-from ..commands import ChatCommandHandler
+from ..commands import ChatCommandHandler, hash_app_command_params
+from ..exceptions import InteractionDoesNotExist
+from ..core.dispatch import GatewayDispatch
 from ..objects import Interaction, MessageContext, AppCommandType
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 from ..utils import get_index
@@ -123,6 +125,41 @@ async def interaction_handler(
     )
 
 
+def get_command_from_registry(interaction: Interaction):
+    """
+    Search for a command in ChatCommandHandler.register and return it if it exists
+
+    Parameters
+    ---------
+    interaction : :class:`~pincer.objects.app.interactions.Interaction`
+        The interaction to get the command from
+
+    Raises
+    ------
+    :class:`~pincer.exceptions.InteractionDoesNotExist`
+        The command is not registered
+    """
+
+    with suppress(KeyError):
+        return ChatCommandHandler.register[hash_app_command_params(
+            interaction.data.name,
+            MISSING,
+            interaction.data.type
+        )]
+
+    with suppress(KeyError):
+        return ChatCommandHandler.register[hash_app_command_params(
+            interaction.data.name,
+            interaction.guild_id,
+            interaction.data.type
+        )]
+
+    raise InteractionDoesNotExist(
+        f"No command is registered for {interaction.data.name} with type"
+        f"{interaction.data.type}"
+    )
+
+
 async def interaction_create_middleware(
     self: Client, gateway: Dispatcher, payload: GatewayDispatch
 ) -> Tuple[str, Interaction]:
@@ -149,31 +186,30 @@ async def interaction_create_middleware(
     interaction: Interaction = Interaction.from_dict(
         construct_client_dict(self, payload.data)
     )
-    command = ChatCommandHandler.register.get(interaction.data.name)
 
-    if command:
-        context = interaction.convert_to_message_context(command)
+    command = get_command_from_registry(interaction)
+    context = interaction.convert_to_message_context(command)
 
-        try:
-            await interaction_handler(self, interaction, context, command.call)
-        except Exception as e:
-            if coro := get_index(self.get_event_coro("on_command_error"), 0):
-                params = get_signature_and_params(coro)[1]
+    try:
+        await interaction_handler(self, interaction, context, command.call)
+    except Exception as e:
+        if coro := get_index(self.get_event_coro("on_command_error"), 0):
+            params = get_signature_and_params(coro)[1]
 
-                # Check if a context or error var has been passed.
-                if 0 < len(params) < 3:
-                    await interaction_response_handler(
-                        self,
-                        coro,
-                        context,
-                        interaction,
-                        # Always take the error parameter its name.
-                        {params[-1]: e},
-                    )
-                else:
-                    raise e
+            # Check if a context or error var has been passed.
+            if 0 < len(params) < 3:
+                await interaction_response_handler(
+                    self,
+                    coro,
+                    context,
+                    interaction,
+                    # Always take the error parameter its name.
+                    {params[-1]: e},
+                )
             else:
                 raise e
+        else:
+            raise e
 
     return "on_interaction_create", interaction
 
