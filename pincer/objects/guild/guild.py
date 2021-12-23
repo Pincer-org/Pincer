@@ -498,7 +498,7 @@ class Guild(APIObject):
 
     async def modify_member(self, _id: int, reason=None, **kwargs) -> GuildMember:
         if kwargs.get("communication_disabled_until") is MISSING:
-            kwargs.pop("communication_disabled_until", None)
+            kwargs.pop("communication_disabled_until")
         data = await self._http.patch(
             f"guilds/{self.id}/members/{_id}",
             data=kwargs,
