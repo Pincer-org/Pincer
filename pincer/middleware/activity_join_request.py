@@ -13,13 +13,13 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ..client import Client
-    from ..core.gateway import Dispatcher
-    from ..core.dispatch import GatewayDispatch
+    from ..core.gateway import Gateway
+    from ..core.gateway import GatewayDispatch
 
 
 async def activity_join_request_middleware(
     self: Client,
-    gateway: Dispatcher,
+    gateway: Gateway,
     payload: GatewayDispatch
 ):
     """|coro|

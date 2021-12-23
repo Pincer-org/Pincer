@@ -16,19 +16,19 @@ if TYPE_CHECKING:
     from typing import List, Tuple
 
     from ..client import Client
-    from ..core.gateway import Dispatcher
-    from ..core.dispatch import GatewayDispatch
+    from ..core.gateway import Gateway
+    from ..core.gateway import GatewayDispatch
 
 
 async def voice_state_update_middleware(
-    self: Client, gateway: Dispatcher, payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ) -> Tuple[str, List[VoiceState]]:
     """|coro|
     Middleware for the ``on_voice_state_update`` event.
 
     Parameters
     ----------
-    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
+    payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the voice state update event.
 
     Returns

@@ -9,13 +9,13 @@ if TYPE_CHECKING:
     from typing import List, Tuple
 
     from ..client import Client
-    from ..core.gateway import Dispatcher
-    from ..core.dispatch import GatewayDispatch
+    from ..core.gateway import Gateway
+    from ..core.gateway import GatewayDispatch
 
 
 async def payload_middleware(
     self: Client,
-    gateway: Dispatcher,
+    gateway: Gateway,
     payload: GatewayDispatch,
 ) -> Tuple[str, GatewayDispatch]:
     """Invoked when anything is received from gateway.
@@ -23,13 +23,13 @@ async def payload_middleware(
 
     Parameters
     ----------
-    payload : :class:`pincer.core.dispatch.GatewayDispatch`
+    payload : :class:`pincer.core.gateway.GatewayDispatch`
         The data received from the ready event.
 
 
     Returns
     -------
-    Tuple[:class:`str`, :class:`~pincer.core.dispatch.GatewayDispatch`]
+    Tuple[:class:`str`, :class:`~pincer.core.gateway.GatewayDispatch`]
         ``on_payload`` and a ``payload``
     """
     return "on_payload", payload

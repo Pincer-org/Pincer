@@ -23,7 +23,7 @@ from typing import (
 from . import __package__
 from .commands import ChatCommandHandler
 from .core import HTTPClient
-from .core.gateway import Gateway, Dispatcher
+from .core.gateway import GatewayInfo, Gateway
 from .exceptions import (
     InvalidEventName,
     TooManySetupArguments,
@@ -50,7 +50,7 @@ from .objects.guild.channel import GroupDMChannel
 from .utils.conversion import construct_client_dict, remove_none
 from .utils.event_mgr import EventMgr
 from .utils.extraction import get_index
-from .utils.insertion import should_pass_cls, should_pass_dispatcher
+from .utils.insertion import should_pass_cls, should_pass_gateway
 from .utils.signature import get_params
 from .utils.types import CheckFunction
 from .utils.types import Coro
@@ -138,7 +138,7 @@ def event_middleware(call: str, *, override: bool = False):
                 "already been registered"
             )
 
-        async def wrapper(cls, gateway: Dispatcher, payload: GatewayDispatch):
+        async def wrapper(cls, gateway: Gateway, payload: GatewayDispatch):
             _log.debug("`%s` middleware has been invoked", call)
 
             return await func(cls, gateway, payload)
@@ -213,12 +213,12 @@ class Client:
         self.event_mgr = EventMgr()
 
         async def get_gateway():
-            return Gateway.from_dict(
+            return GatewayInfo.from_dict(
                 await self.http.get("gateway/bot")
             )
 
         loop = get_event_loop()
-        self.gateway: Optional[Gateway] = loop.run_until_complete(get_gateway())
+        self.gateway: GatewayInfo = loop.run_until_complete(get_gateway())
 
         # The guild and channel value is only registered if the Client has the GUILDS
         # intent.
@@ -461,7 +461,7 @@ class Client:
         await ChatCommandHandler(self).remove_commands(to_remove)
 
     @staticmethod
-    def execute_event(calls: List[Coro], dispatcher: Dispatcher, *args, **kwargs):
+    def execute_event(calls: List[Coro], gateway: Gateway, *args, **kwargs):
         """Invokes an event.
 
         Parameters
@@ -484,8 +484,8 @@ class Client:
                     *remove_none(args),
                 )
 
-            if should_pass_dispatcher(call):
-                call_args = (*call_args, dispatcher)
+            if should_pass_gateway(call):
+                call_args = (call_args[0], gateway, *call_args[1:])
 
             ensure_future(call(*call_args, **kwargs))
 
@@ -533,7 +533,7 @@ class Client:
             The total number of shards.
         """
 
-        dispatch = Dispatcher(
+        gateway = Gateway(
             self.token,
             intents=self.intents,
             url=self.gateway.url,
@@ -541,14 +541,14 @@ class Client:
             num_shards=num_shards
         )
 
-        dispatch.append_handlers({
+        gateway.append_handlers({
             # Gets triggered on all events
-            -1: partial(self.payload_event_handler, dispatch),
+            -1: partial(self.payload_event_handler, gateway),
             # Use this event handler for opcode 0.
-            0: partial(self.event_handler, dispatch)
+            0: partial(self.event_handler, gateway)
         })
 
-        create_task(dispatch.start_loop())
+        create_task(gateway.start_loop())
 
     def __del__(self):
         """Ensure close of the http client."""
@@ -559,7 +559,7 @@ class Client:
             self,
             payload: GatewayDispatch,
             key: str,
-            dispatch: Dispatcher,
+            gateway: Gateway,
             *args,
             **kwargs
     ) -> Tuple[Optional[Coro], List[Any], Dict[str, Any]]:
@@ -592,7 +592,7 @@ class Client:
         next_call, arguments, params = ware, [], {}
 
         if iscoroutinefunction(ware):
-            extractable = await ware(self, dispatch, payload, *args, **kwargs)
+            extractable = await ware(self, gateway, payload, *args, **kwargs)
 
             if not isinstance(extractable, tuple):
                 raise RuntimeError(
@@ -609,13 +609,13 @@ class Client:
             return (next_call, ret_object)
 
         return await self.handle_middleware(
-            payload, next_call, dispatch, *arguments, **params
+            payload, next_call, gateway, *arguments, **params
         )
 
     async def execute_error(
             self,
             error: Exception,
-            dispatcher: Dispatcher,
+            gateway: Gateway,
             name: str = "on_error",
             *args,
             **kwargs
@@ -637,7 +637,7 @@ class Client:
             if ``call := self.get_event_coro(name)`` is :data:`False`
         """
         if calls := self.get_event_coro(name):
-            self.execute_event(calls, dispatcher, error, *args, **kwargs)
+            self.execute_event(calls, gateway, error, *args, **kwargs)
         else:
             raise error
 
@@ -645,7 +645,7 @@ class Client:
         self,
         name: str,
         payload: GatewayDispatch,
-        dispatch: Dispatcher
+        gateway: Gateway
     ):
         """|coro|
 
@@ -662,18 +662,18 @@ class Client:
             what specifically happened.
         """
         try:
-            key, args = await self.handle_middleware(payload, name, dispatch)
+            key, args = await self.handle_middleware(payload, name, gateway)
             self.event_mgr.process_events(key, args)
 
             if calls := self.get_event_coro(key):
-                self.execute_event(calls, dispatch, args)
+                self.execute_event(calls, gateway, args)
 
         except Exception as e:
-            await self.execute_error(e, dispatch)
+            await self.execute_error(e, gateway)
 
     async def event_handler(
         self,
-        dispatch: Dispatcher,
+        gateway: Gateway,
         payload: GatewayDispatch
     ):
         """|coro|
@@ -690,11 +690,11 @@ class Client:
             required data for the client to know what event it is and
             what specifically happened.
         """
-        await self.process_event(payload.event_name.lower(), payload, dispatch)
+        await self.process_event(payload.event_name.lower(), payload, gateway)
 
     async def payload_event_handler(
         self,
-        dispatch: Dispatcher,
+        gateway: Gateway,
         payload: GatewayDispatch
     ):
         """|coro|
@@ -711,7 +711,7 @@ class Client:
             required data for the client to know what event it is and
             what specifically happened.
         """
-        await self.process_event("payload", payload, dispatch)
+        await self.process_event("payload", payload, gateway)
 
     @overload
     async def create_guild(

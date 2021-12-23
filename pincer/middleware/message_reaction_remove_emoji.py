@@ -16,12 +16,12 @@ from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
-    from ..core.gateway import Dispatcher
-    from ..core.dispatch import GatewayDispatch
+    from ..core.gateway import Gateway
+    from ..core.gateway import GatewayDispatch
 
 
 async def message_reaction_remove_emoji_middleware(
-    self: Client, gateway: Dispatcher, payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -29,7 +29,7 @@ async def message_reaction_remove_emoji_middleware(
 
     Parameters
     ----------
-    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
+    payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the message reaction remove emoji event.
 
 

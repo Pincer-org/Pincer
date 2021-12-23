@@ -15,15 +15,15 @@ if TYPE_CHECKING:
     from typing import Tuple
     from ..utils.types import Coro
     from ..client import Client
-    from ..core.gateway import Dispatcher
-    from ..core.dispatch import GatewayDispatch
+    from ..core.gateway import Gateway
+    from ..core.gateway import GatewayDispatch
 
 _log = logging.getLogger(__package__)
 
 
 async def on_resumed(
     self: Client,
-    gateway: Dispatcher,
+    gateway: Gateway,
     payload: GatewayDispatch
 ) -> Tuple[str]:
     """|coro|
@@ -32,7 +32,7 @@ async def on_resumed(
 
     Parameters
     ----------
-    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
+    payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the stage instance create event
 
     Returns

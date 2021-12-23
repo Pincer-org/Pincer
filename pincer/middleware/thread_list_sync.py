@@ -14,13 +14,13 @@ from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
-    from ..core.gateway import Dispatcher
-    from ..core.dispatch import GatewayDispatch
+    from ..core.gateway import Gateway
+    from ..core.gateway import GatewayDispatch
 
 
 async def thread_list_sync(
     self: Client,
-    dispatcher: Dispatcher,
+    gatewayer: Gateway,
     payload: GatewayDispatch
 ):
     """|coro|
@@ -29,7 +29,7 @@ async def thread_list_sync(
 
     Parameters
     ----------
-    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
+    payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the thread list sync event.
 
     Returns

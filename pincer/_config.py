@@ -10,6 +10,7 @@ class GatewayConfig:
     """This file is to make maintaining the library and its gateway
     configuration easier.
     """
+    MAX_RETRIES: int = 5
     version: int = 9
     encoding: str = "json"
     compression: Optional[str] = "zlib-payload"

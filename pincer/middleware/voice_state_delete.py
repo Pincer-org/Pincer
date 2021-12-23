@@ -14,13 +14,13 @@ from ..utils.types import Coro
 
 if TYPE_CHECKING:
     from ..client import Client
-    from ..core.gateway import Dispatcher
-    from ..core.dispatch import GatewayDispatch
+    from ..core.gateway import Gateway
+    from ..core.gateway import GatewayDispatch
 
 
 async def voice_state_delete_middleware(
     self: Client,
-    gateway: Dispatcher,
+    gateway: Gateway,
     payload: GatewayDispatch
 ):
     """|coro|
@@ -29,7 +29,7 @@ async def voice_state_delete_middleware(
 
     Parameters
     ----------
-    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
+    payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the voice state delete event.
 
     Returns

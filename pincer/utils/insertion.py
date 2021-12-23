@@ -27,7 +27,7 @@ def should_pass_cls(call: Union[Coro, Callable[..., Any]]) -> bool:
     return len(args) >= 1 and args[0] in ["self", "cls"]
 
 
-def should_pass_dispatcher(call: Union[Coro, Callable[..., Any]]) -> bool:
+def should_pass_gateway(call: Union[Coro, Callable[..., Any]]) -> bool:
     # TODO: fix docs
     """
     Checks whether a callable requires a dispatcher as last parameter.
@@ -43,7 +43,7 @@ def should_pass_dispatcher(call: Union[Coro, Callable[..., Any]]) -> bool:
         Whether the callable requires a dispatcher as first parameter.
     """
     args = getfullargspec(call).args
-    return len(args) >= 1 and args[-1] in ["dispatch", "dispatcher", "gateway"]
+    return len(args) >= 1 and args[1] in ["gateway", "shard"]
 
 
 context_types = [Signature.empty, MessageContext]

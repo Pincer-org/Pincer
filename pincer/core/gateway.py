@@ -7,6 +7,7 @@ from __future__ import annotations
 from asyncio import create_task, Task, ensure_future, sleep
 from dataclasses import dataclass
 from datetime import datetime
+from itertools import repeat, count, chain
 import logging
 from platform import system
 from random import random
@@ -21,7 +22,7 @@ from .._config import GatewayConfig
 from ..core.dispatch import GatewayDispatch
 from ..exceptions import (
     PincerError, InvalidTokenError, DisallowedIntentsError,
-    _InternalPerformReconnectError
+    _InternalPerformReconnectError, ConnectionError
 )
 
 if TYPE_CHECKING:
@@ -48,7 +49,7 @@ def decompress_msg(msg: bytes) -> Optional[str]:
 
 
 @dataclass
-class Gateway(APIObject):
+class GatewayInfo(APIObject):
     url: str
     shards: int
     session_start_limit: SessionStartLimit
@@ -62,11 +63,11 @@ class SessionStartLimit(APIObject):
     max_concurrency: int
 
 
-class Dispatcher:
-    """The Dispatcher handles all interactions with the Discord Websocket API.
+class Gateway:
+    """The Gateway handles all interactions with the Discord Websocket API.
     This also contains the main event loop, and handles the heartbeat.
 
-    Running the dispatcher will create a connection with the
+    Running the Gateway will create a connection with the
     Discord Websocket API on behalf of the provided token.
 
     This token must be a bot token.
@@ -152,13 +153,16 @@ class Dispatcher:
         Discord websocket API on behalf of the client whose token has
         been passed.
         """
-        while True:
+        for i in count():
             try:
                 self.socket = await self.__session.ws_connect(
                     GatewayConfig.make_uri(self.url)
                 )
                 break
-            except ClientConnectorError:
+            except ClientConnectorError as e:
+                if i > GatewayConfig.MAX_RETRIES:
+                    raise ConnectionError from e
+
                 _log.warning(
                     "%s Could not open websocket with Discord."
                     "Retrying in 15 seconds...",
@@ -174,7 +178,6 @@ class Dispatcher:
             if msg.type == WSMsgType.TEXT:
                 await self.handle_data(msg.data)
             elif msg.type == WSMsgType.BINARY:
-
                 data = decompress_msg(msg.data)
                 if data:
                     await self.handle_data(data)
@@ -274,10 +277,7 @@ class Dispatcher:
         await self.socket.send_str(payload)
 
     async def resume(self):
-        _log.debug(
-            "%s Disconnected from discord. Attempting to reconnect \U0001f480",
-            self.shard_key
-        )
+        _log.debug("%s Resuming connection with Discord", self.shard_key)
 
         res = str(GatewayDispatch(
             6,
@@ -306,15 +306,13 @@ class Dispatcher:
         self.__wait_for_heartbeat.cancel()
 
     async def __heartbeat_loop(self):
-
         _log.debug("%s Starting heartbeat loop...", self.shard_key)
+
         # When waiting for first heartbeat, there hasn't been an ack recieved yet.
-        # Set to true so the ack recieved check doesn't fail.
+        # Set to true so the ack recieved check doesn't incorrectly fail.
         self.__has_recieved_ack = True
 
-        jitter = random()
-
-        while True:
+        for jitter in chain((random(),), repeat(1)):
             duration = self.__heartbeat_interval * jitter
 
             _log.debug(
@@ -323,17 +321,17 @@ class Dispatcher:
                 duration
             )
 
+            # Task is needed so waiting can be cancelled by op code 1
             self.__wait_for_heartbeat = create_task(
                 sleep(duration / 1000)
             )
-
-            jitter = 1
 
             await self.__wait_for_heartbeat
 
             if not self.__has_recieved_ack:
                 _log.debug(
-                    "%s %s ack not recieved. Closing socket with close code 1001.",
+                    "%s %s ack not recieved. Attempting to reconnect."
+                    "Closing socket with close code 1001. \U0001f480",
                     datetime.now(),
                     self.shard_key
                 )

@@ -13,12 +13,12 @@ if TYPE_CHECKING:
     from typing import List, Tuple
 
     from ..client import Client
-    from ..core.gateway import Dispatcher
-    from ..core.dispatch import GatewayDispatch
+    from ..core.gateway import Gateway
+    from ..core.gateway import GatewayDispatch
 
 
 async def message_create_middleware(
-    self: Client, gateway: Dispatcher, payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ) -> Tuple[str, UserMessage]:  # noqa: E501
     """|coro|
 
@@ -26,7 +26,7 @@ async def message_create_middleware(
 
     Parameters
     ----------
-    payload : :class:`pincer.core.dispatch.GatewayDispatch`
+    payload : :class:`pincer.core.gateway.GatewayDispatch`
         The data received from the message creation event.
 
     Returns
