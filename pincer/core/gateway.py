@@ -21,8 +21,7 @@ from ..utils.api_object import APIObject
 from .._config import GatewayConfig
 from ..core.dispatch import GatewayDispatch
 from ..exceptions import (
-    PincerError, InvalidTokenError, DisallowedIntentsError,
-    _InternalPerformReconnectError, ConnectionError
+    InvalidTokenError, ConnectionError, GatewayError, UnhandledException
 )
 
 if TYPE_CHECKING:
@@ -103,13 +102,23 @@ class Gateway:
             11: self.handle_heartbeat
         }
 
-        self.__dispatch_errors: Dict[int, PincerError] = {
-            1006: _InternalPerformReconnectError(),
-            4000: _InternalPerformReconnectError(),
-            4004: InvalidTokenError(),
-            4007: _InternalPerformReconnectError(),
-            4009: _InternalPerformReconnectError(),
-            4014: DisallowedIntentsError()
+        # 4000 and 4009 are not included. The client will reconnect when recieving
+        # either.
+        self.__close_codes: Dict[int, GatewayError] = {
+            4001: GatewayError("Invalid opcode was sent"),
+            4002: GatewayError("Invalid payload was sent."),
+            4003: GatewayError("Payload was sent prior to identifying"),
+            4004: GatewayError("Token is not valid"),
+            4005: GatewayError(
+                "Authentication was sent after client already authenticated"
+            ),
+            4007: GatewayError("Invalid sequence sent when starting new session"),
+            4008: GatewayError("Client was rate limited"),
+            4010: GatewayError("Invalid shard"),
+            4011: GatewayError("Sharding required"),
+            4012: GatewayError("Invalid API version"),
+            4013: GatewayError("Invalid intents"),
+            4014: GatewayError("Disallowed intents")
         }
 
         # ClientSession to be used for this Dispatcher
@@ -181,6 +190,19 @@ class Gateway:
                 data = decompress_msg(msg.data)
                 if data:
                     await self.handle_data(data)
+            elif msg.type == WSMsgType.ERROR:
+                raise GatewayError from self.socket.exception()
+
+        err = self.__close_codes.get(self.socket.close_code)
+
+        if err:
+            raise err
+
+        _log.debug(
+            "Disconnected from Gateway due without any errors. Reconnecting."
+        )
+        self.__should_reconnect = True
+        self.start_loop()
 
     async def handle_data(self, data: Dict[Any]):
         payload = GatewayDispatch.from_string(data)
@@ -199,7 +221,7 @@ class Gateway:
         handler = self.__dispatch_handlers.get(payload.op)
 
         if handler is None:
-            raise Exception
+            raise UnhandledException(f"Opcode {payload.op} does not have a handler")
 
         ensure_future(handler(payload))
 
