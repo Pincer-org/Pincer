@@ -61,7 +61,7 @@ class Message:
 
     content: str = ''
     attachments: Optional[List[File]] = None
-    tts: Optional[bool] = False
+    tts: Optional[bool] = None
     embeds: Optional[List[Embed]] = None
     allowed_mentions: Optional[AllowedMentions] = None
     components: Optional[List[MessageComponent]] = None
@@ -118,17 +118,19 @@ class Message:
             "content": self.content,
             "tts": self.tts,
             "flags": self.flags,
-            "embeds": [embed.to_dict() for embed in (self.embeds or [])],
+            "embeds": [
+                embed.to_dict() for embed in self.embeds
+            ] if self.embeds is not None else None,
             "allowed_mentions": allowed_mentions,
             "components": [
-                components.to_dict() for components in (self.components or [])
-            ]
+                components.to_dict() for components in self.components
+            ] if self.components is not None else None
         }
 
         # IDE does not recognise return type of filter properly.
         # noinspection PyTypeChecker
         return dict(filter(
-            lambda kv: kv[1],
+            lambda kv: kv[1] is not None,
             resp.items()
         ))
 
