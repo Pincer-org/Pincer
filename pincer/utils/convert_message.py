@@ -69,4 +69,4 @@ def list_to_message_dict(item, kwargs):
     elif isinstance(item, MessageComponent):
         kwargs["components"].append(item)
     elif isinstance(item, str):
-        kwargs["content"] = ""
+        kwargs["content"] = item
