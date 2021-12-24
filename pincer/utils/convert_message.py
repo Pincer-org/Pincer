@@ -11,7 +11,6 @@ from ..objects.message.component import MessageComponent
 from ..objects.message.embed import Embed
 from ..objects.message.file import File
 from ..objects.message.message import Message
-from ..objects.message.user_message import AllowedMentions
 
 PILLOW_IMPORT = True
 
