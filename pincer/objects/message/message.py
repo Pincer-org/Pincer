@@ -59,7 +59,7 @@ class Message:
     """
     # noqa: E501
 
-    content: str = ''
+    content: Optional[str] = None
     attachments: Optional[List[File]] = None
     tts: Optional[bool] = None
     embeds: Optional[List[Embed]] = None
@@ -100,7 +100,7 @@ class Message:
         """:class:`bool`: If the message is empty."""
 
         return (
-            len(self.content) < 1
+            (not self.content or not self.content.strip())
             and not self.embeds
             and not self.attachments
         )
