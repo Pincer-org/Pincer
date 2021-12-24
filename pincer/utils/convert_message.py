@@ -6,11 +6,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Tuple, List
 from typing import Union
 
-from ..objects import MessageComponent, AllowedMentions
 from ..objects.app.interaction_flags import InteractionFlags
+from ..objects.message.components import MessageComponent
 from ..objects.message.embed import Embed
 from ..objects.message.file import File
 from ..objects.message.message import Message
+from ..objects.message.user_message import AllowedMentions
 
 PILLOW_IMPORT = True
 
