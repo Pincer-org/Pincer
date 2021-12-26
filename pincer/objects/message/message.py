@@ -56,10 +56,9 @@ class Message:
         The interaction flags for the message.
     type: Optional[:class:`~pincer.objects.app.interaction_base.CallbackType`]
         The type of the callback.
-    """
-    # noqa: E501
+    """  # noqa: E501
 
-    content: str = ''
+    content: Optional[str] = None
     attachments: Optional[List[File]] = None
     tts: Optional[bool] = False
     embeds: Optional[List[Embed]] = None
@@ -133,7 +132,7 @@ class Message:
         ))
 
     def serialize(
-        self, message_type: Optional[CallbackType] = None
+        self, message_type: Optional[CallbackType] = None, allow_empty: bool = False
     ) -> Tuple[str, Union[Payload, Dict]]:
         """
         Parameters
@@ -151,7 +150,7 @@ class Message:
         :class:`pincer.exceptions.CommandReturnIsEmpty`
             Command does not have content, an embed, or attachment.
         """
-        if self.isempty:
+        if not allow_empty and self.isempty:
             raise CommandReturnIsEmpty("Cannot return empty message.")
 
         json_payload = self.to_dict()

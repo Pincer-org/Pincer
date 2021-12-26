@@ -43,7 +43,6 @@ class MessageContext:
     _client: Client
 
     author: Union[GuildMember, User]
-    command: ClientCommandStructure
     interaction: Interaction
 
     guild_id: Optional[Snowflake] = None
@@ -67,9 +66,21 @@ class MessageContext:
         Parameters
         ----------
         flags :class:`~pincer.objects.app.interaction_flags.InteractionFlags`
-            The flags which must be applied to the reply.
+            The flags which must be applied to the reply. |default| :data:`None`
         """
         await self.interaction.ack(flags)
+
+    async def deferred_update_ack(self, flags: InteractionFlags = None):
+        """|coro|
+
+        Alias for :func:`~pincer.objects.app.interactions.Interaction.deferred_update_ack`.
+
+        Parameters
+        ----------
+        flags :class:`~pincer.objects.app.interaction_flags.InteractionFlags`
+            The flags which must be applied to the reply. |default| :data:`None`
+        """  # noqa: E501
+        await self.interaction.deferred_update_ack(flags)
 
     async def reply(self, message: MessageConvertable):
         """|coro|
@@ -82,6 +93,18 @@ class MessageContext:
             The response message!
         """
         await self.interaction.reply(message)
+
+    async def update(self, message: MessageConvertable):
+        """|coro|
+
+        Alias for :func:`~pincer.objects.app.interactions.Interaction.update`.
+
+        Parameters
+        ----------
+        message :class:`~pincer.utils.convert_message.MessageConvertable`
+            The parts of the message to edit.
+        """
+        await self.interaction.update(message)
 
     async def followup(self, message: MessageConvertable) -> UserMessage:
         """|coro|
