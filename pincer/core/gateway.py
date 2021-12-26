@@ -161,13 +161,13 @@ class Gateway:
         self.__session = ClientSession()
 
     def append_handlers(self, handlers: Dict[int, Handler]):
-        """The Client that uses the handler can append thier own methods. The gateway
+        """The Client that uses the handler can append their own methods. The gateway
         will run those methods when the specified opcode is received.
         """
         self.__dispatch_handlers = handlers | self.__dispatch_handlers
 
     def set_session_id(self, _id: str):
-        """Session id is private for consitency"""
+        """Session id is private for consistency"""
         self.__session_id = _id
 
     def decompress_msg(self, msg: bytes) -> Optional[str]:
@@ -224,7 +224,7 @@ class Gateway:
             elif msg.type == WSMsgType.ERROR:
                 raise GatewayError from self.__socket.exception()
 
-        # The loop is broken when the gateway stops recieving messages.
+        # The loop is broken when the gateway stops receiving messages.
         # The "error" op codes are in `self.__close_codes`. The rest of the
         # close codes are unknown issues (such as a unintended disconnect) so the
         # client should reconnect to the gateway.
@@ -310,7 +310,7 @@ class Gateway:
         instead of the opcode 2 hello payload. A new session is only started after a
         reconnect if pcode 9 is received.
 
-        Sucessful reconnects are handled in the `resumed` middleware.
+        Successful reconnects are handled in the `resumed` middleware.
         """
         if self.__should_reconnect:
             _log.debug("%s Resuming connection with Discord", self.shard_key)
@@ -342,14 +342,14 @@ class Gateway:
         ))
         self.__heartbeat_interval = payload.data["heartbeat_interval"]
 
-        # This process should already be forked to the background so ther is no need to
+        # This process should already be forked to the background so there is no need to
         # `ensure_future()` here.
         self.start_heartbeat()
 
     async def handle_heartbeat(self, payload: GatewayDispatch):
         """
         Opcode 11 - Heatbeat
-        Track that the heartbeat has been recieved using shared state (Rustaceans would
+        Track that the heartbeat has been received using shared state (Rustaceans would
         be very mad)
         """
         self.__has_received_ack = True
