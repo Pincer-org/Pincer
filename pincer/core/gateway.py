@@ -102,7 +102,7 @@ class Gateway:
             11: self.handle_heartbeat
         }
 
-        # 4000 and 4009 are not included. The client will reconnect when recieving
+        # 4000 and 4009 are not included. The client will reconnect when receiving
         # either.
         self.__close_codes: Dict[int, GatewayError] = {
             4001: GatewayError("Invalid opcode was sent"),
@@ -132,7 +132,7 @@ class Gateway:
         # gateway should send a hello or reconnect.
         self.__should_reconnect: bool = False
 
-        # The squence number for the last recieved payload. This is used reconnecting.
+        # The sequence number for the last received payload. This is used reconnecting.
         self.__sequence_number: int = 0
 
         """Code for handling heartbeat"""
@@ -145,13 +145,13 @@ class Gateway:
         # How long the client should wait between each Heartbeat.
         self.__heartbeat_interval: Optional[int] = None
 
-        # Tracks whether the gateway has recieved an ack (opcode 11) since the last
+        # Tracks whether the gateway has received an ack (opcode 11) since the last
         # heartbeat.
-        #   True: An ack has been recieved
-        #   False: No ack has been recieved. Attempt to reconnect with gateway,
-        self.__has_recieved_ack: bool = True
+        #   True: An ack has been received
+        #   False: No ack has been received. Attempt to reconnect with gateway,
+        self.__has_received_ack: bool = True
 
-        # Session ID recieved from `on_ready` event. It is set in the `on_ready`
+        # Session ID received from `on_ready` event. It is set in the `on_ready`
         # middleware. This is used reconnecting.
         self.__session_id: Optional[str] = None
 
@@ -223,7 +223,7 @@ class Gateway:
         payload = GatewayDispatch.from_string(data)
 
         _log.debug(
-            "%s %s GatewayDispatch with opcode %s recieved",
+            "%s %s GatewayDispatch with opcode %s received",
             self.shard_key,
             datetime.now(),
             payload.op
@@ -231,7 +231,7 @@ class Gateway:
 
         if payload.seq is not None and payload.seq >= self.__sequence_number:
             self.__sequence_number = payload.seq
-            _log.debug("%s Set squence number to %s", self.shard_key, payload.seq)
+            _log.debug("%s Set sequence number to %s", self.shard_key, payload.seq)
 
         handler = self.__dispatch_handlers.get(payload.op)
 
@@ -245,7 +245,7 @@ class Gateway:
 
     async def handle_reconnect(self, payload: GatewayDispatch):
         _log.debug(
-            "%s Requested to reconnect to Discord. Closing session and attemping to"
+            "%s Requested to reconnect to Discord. Closing session and attempting to"
             "resume...",
             self.shard_key
         )
@@ -288,7 +288,7 @@ class Gateway:
         self.start_heartbeat()
 
     async def handle_heartbeat(self, payload: GatewayDispatch):
-        self.__has_recieved_ack = True
+        self.__has_received_ack = True
 
     async def send(self, payload: str):
         safe_payload = payload.replace(self.token, "%s..." % self.token[:10])
@@ -345,9 +345,9 @@ class Gateway:
     async def __heartbeat_loop(self):
         _log.debug("%s Starting heartbeat loop...", self.shard_key)
 
-        # When waiting for first heartbeat, there hasn't been an ack recieved yet.
-        # Set to true so the ack recieved check doesn't incorrectly fail.
-        self.__has_recieved_ack = True
+        # When waiting for first heartbeat, there hasn't been an ack received yet.
+        # Set to true so the ack received check doesn't incorrectly fail.
+        self.__has_received_ack = True
 
         for jitter in chain((random(),), repeat(1)):
             duration = self.__heartbeat_interval * jitter
@@ -365,9 +365,9 @@ class Gateway:
 
             await self.__wait_for_heartbeat
 
-            if not self.__has_recieved_ack:
+            if not self.__has_received_ack:
                 _log.debug(
-                    "%s %s ack not recieved. Attempting to reconnect."
+                    "%s %s ack not received. Attempting to reconnect."
                     "Closing socket with close code 1001. \U0001f480",
                     datetime.now(),
                     self.shard_key
@@ -378,6 +378,6 @@ class Gateway:
                 self.stop_heartbeat()
                 return
 
-            self.__has_recieved_ack = False
+            self.__has_received_ack = False
             await self.send(str(GatewayDispatch(1, data=self.__sequence_number)))
             _log.debug("%s sent heartbeat", self.shard_key)
