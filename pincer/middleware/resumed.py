@@ -6,7 +6,6 @@ non-subscription event sent immediately after connecting,
 contains server information
 """
 from __future__ import annotations
-from asyncio.tasks import ensure_future
 
 from typing import TYPE_CHECKING
 import logging

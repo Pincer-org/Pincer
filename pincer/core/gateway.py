@@ -12,7 +12,7 @@ import logging
 from platform import system
 from random import random
 from typing import TYPE_CHECKING, Any, Dict, Callable, Optional
-from zlib import decompressobj, decompress
+from zlib import decompressobj
 
 from aiohttp import (
     ClientSession, WSMsgType, ClientConnectorError, ClientWebSocketResponse
@@ -37,18 +37,20 @@ inflator = decompressobj()
 
 
 @dataclass
-class GatewayInfo(APIObject):
-    url: str
-    shards: int
-    session_start_limit: SessionStartLimit
-
-
-@dataclass
 class SessionStartLimit(APIObject):
+    """Session start limit info returned from the `gateway/bot` endpoint"""
     total: int
     remaining: int
     reset_after: int
     max_concurrency: int
+
+
+@dataclass
+class GatewayInfo(APIObject):
+    """Gateway info returned from the `gateway/bot` endpoint"""
+    url: str
+    shards: int
+    session_start_limit: SessionStartLimit
 
 
 class Gateway:
