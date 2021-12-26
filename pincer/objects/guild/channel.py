@@ -6,7 +6,9 @@ from __future__ import annotations
 from asyncio import sleep, ensure_future
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import AsyncIterator, overload, TYPE_CHECKING
+from typing import Any, AsyncIterator, overload, TYPE_CHECKING
+
+from pincer.objects.guild.thread import ThreadMember
 
 from .invite import Invite, InviteTargetType
 from ..message.user_message import UserMessage
@@ -772,8 +774,79 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         ))
 
     async def join_thread(self):
-        """Adds the current user to a thread. Also requires the thread is not archived."""
+        """
+        Adds the current user to a thread.
+        Also requires the thread to not be archived.
+        """
         await self._http.put(f"channels/{self.id}/thread-members/@me")
+
+    async def add_thread_member(self, user: User):
+        """
+        Adds another member to a thread.
+        Requires the ability to send messages in the thread.
+        Also requires the thread to not be archived.
+
+        Parameters
+        ----------
+        user: :class:`~.pincer.objects.user.User`
+            The user to add to the thread.
+        """
+        await self._http.put(f"channels/{self.id}/thread-members/{user.id}")
+
+    async def leave_thread(self):
+        """
+        Removes the current user from a thread.
+        Also requires the thread to not be archived.
+        """
+        await self._http.delete(f"channels/{self.id}/thread-members/@me")
+
+    async def remove_thread_member(self, user: User):
+        """
+        Removes another member from a thread. Requires the ``MANAGE_THREADS``
+        permission, or the creator of the thread if it is a
+        ``GUILD_PRIVATE_THREAD``. Also requires the thread to not be archived.
+
+        Parameters
+        ----------
+        user: :class:`~.pincer.objects.user.User`
+            The user to remove from the thread.
+        """
+        await self._http.delete(f"channels/{self.id}/thread-members/{user.id}")
+
+    async def get_thread_member(self, user: User) -> ThreadMember:
+        """
+        Returns a thread member object for the specified user if they are a
+        member of the thread.
+
+        Parameters
+        ----------
+        user: :class:`~.pincer.objects.user.User`
+            The user to get the thread member for.
+
+        Returns
+        -------
+        :class:`~.pincer.objects.channel.ThreadMember`
+            The thread member object.
+        """
+        return ThreadMember.from_dict(construct_client_dict(self._client,
+            await self._http.get(f"channels/{self.id}/thread-members/{user.id}")
+        ))
+
+    async def list_thread_members(self) -> AsyncIterator[ThreadMember]:
+        """
+        Fetches all the thread members for the thread. Returns an iterator of
+        ThreadMember objects.
+
+        Returns
+        -------
+        AsyncIterator[:class:`~.pincer.objects.channel.ThreadMember`]
+            An iterator of thread members.
+        """
+        data = await self._http.get(f"channels/{self.id}/thread-members")
+        for member in data:
+            yield ThreadMember.from_dict(
+                construct_client_dict(self._client, member)
+            )
 
     def __str__(self):
         """return the discord tag when object gets used as a string."""
