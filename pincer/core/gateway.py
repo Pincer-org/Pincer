@@ -14,7 +14,7 @@ from random import random
 from typing import TYPE_CHECKING, Any, Dict, Callable, Optional
 from zlib import decompressobj, decompress
 
-from aiohttp import ClientSession, WSMsgType, ClientConnectorError
+from aiohttp import ClientSession, WSMsgType, ClientConnectorError, ClientWebSocketResponse
 
 from . import __package__
 from ..utils.api_object import APIObject
@@ -122,7 +122,11 @@ class Gateway:
         }
 
         # ClientSession to be used for this Dispatcher
-        self.__session = ClientSession()
+        self.__session: Optional[ClientSession] = None
+
+        # This type `_WSRequestContextManager` isn't exposed by aiohttp.
+        # `ClientWebSocketResponse` is a parent class.
+        self.__socket: Optional[ClientWebSocketResponse] = None
 
         # The gateway can be disconnected from Discord. This variable stores if the
         # gateway should send a hello or reconnect.
@@ -152,7 +156,17 @@ class Gateway:
         self.__session_id: Optional[str] = None
 
     def __del__(self):
-        create_task(self.socket.close())
+        if self.__socket:
+            create_task(self.__socket.close())
+        if self.__session:
+            create_task(self.__session.close())
+
+    async def init_session(self):
+        """
+        Crates the ClientSession. ALWAYS run this function right after initializing
+        a Gateway.
+        """
+        self.__session = ClientSession()
 
     def append_handlers(self, handlers: Dict[int, Handler]):
         self.__dispatch_handlers = handlers | self.__dispatch_handlers
@@ -164,7 +178,7 @@ class Gateway:
         """
         for i in count():
             try:
-                self.socket = await self.__session.ws_connect(
+                self.__socket = await self.__session.ws_connect(
                     GatewayConfig.make_uri(self.url)
                 )
                 break
@@ -183,7 +197,7 @@ class Gateway:
         await self.event_loop()
 
     async def event_loop(self):
-        async for msg in self.socket:
+        async for msg in self.__socket:
             if msg.type == WSMsgType.TEXT:
                 await self.handle_data(msg.data)
             elif msg.type == WSMsgType.BINARY:
@@ -191,15 +205,16 @@ class Gateway:
                 if data:
                     await self.handle_data(data)
             elif msg.type == WSMsgType.ERROR:
-                raise GatewayError from self.socket.exception()
+                raise GatewayError from self.__socket.exception()
 
-        err = self.__close_codes.get(self.socket.close_code)
+        err = self.__close_codes.get(self.__socket.close_code)
 
         if err:
             raise err
 
         _log.debug(
-            "Disconnected from Gateway due without any errors. Reconnecting."
+            "%s Disconnected from Gateway due without any errors. Reconnecting.",
+            self.shard_key
         )
         self.__should_reconnect = True
         self.start_loop()
@@ -235,7 +250,7 @@ class Gateway:
             self.shard_key
         )
 
-        await self.socket.close(code=1000)
+        await self.__socket.close(code=1000)
         self.__should_reconnect = True
         await self.start_loop()
 
@@ -289,14 +304,14 @@ class Gateway:
             safe_payload
         )
 
-        if self.socket.closed:
+        if self.__socket.closed:
             _log.debug(
                 "%s Socket is closing. Payload not sent.",
                 self.shard_key
             )
             return
 
-        await self.socket.send_str(payload)
+        await self.__socket.send_str(payload)
 
     async def resume(self):
         _log.debug("%s Resuming connection with Discord", self.shard_key)
@@ -357,7 +372,7 @@ class Gateway:
                     datetime.now(),
                     self.shard_key
                 )
-                await self.socket.close(code=1001)
+                await self.__socket.close(code=1001)
                 self.__should_reconnect = True
                 ensure_future(self.start_loop())
                 self.stop_heartbeat()

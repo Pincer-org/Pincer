@@ -540,6 +540,7 @@ class Client:
             shard=shard,
             num_shards=num_shards
         )
+        await gateway.init_session()
 
         gateway.append_handlers({
             # Gets triggered on all events
