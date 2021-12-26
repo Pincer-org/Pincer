@@ -661,6 +661,120 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             )
         ))
 
+    async def start_thread_with_message(
+        self,
+        message: UserMessage,
+        name: str = None,
+        auto_archive_duration: int = None,
+        rate_limit_per_user: int = None,
+        reason: Optional[str] = None
+    ) -> Channel:
+        """
+        Creates a new thread from an existing message. Returns a Channel on
+        success.
+
+        When called on a ``GUILD_TEXT`` channel, creates a ``GUILD_PUBLIC_THREAD``.
+        When called on a ``GUILD_NEWS`` channel, creates a ``GUILD_NEWS_THREAD``.
+
+        The id of the created thread will be the same as the id of the message,
+        and as such a message can only have a single thread created from it.
+
+        Parameters
+        ----------
+        message: :class:`~.pincer.objects.message.user_message.UserMessage`
+            The message to create the thread from.
+        name: Optional[:class:`str`]
+            The name of the thread. 1-100 characters.
+        auto_archive_duration: Optional[:class:`int`]
+            The duration in minutes to automatically archive the thread after
+            recent activity, can be set to: ``60``, ``1440``, ``4320``, ``10080``.
+        rate_limit_per_user: Optional[:class:`int`]
+            Amount of seconds a user has to wait before sending another message
+            (0-21600)
+        reason: Optional[:class:`str`]
+            The reason of the thread creation.
+
+        The 3 day and 7 day archive durations require the server to be boosted.
+        The guild features will indicate if a server is able to use those settings.
+
+        Returns
+        -------
+        :class:`~.pincer.objects.channel.Channel`
+            The created thread.
+        """
+        return Channel.from_dict(construct_client_dict(self._client,
+            await self._http.post(
+                f"channels/{self.id}/messages/{message.id}/threads",
+                headers=remove_none({"X-Audit-Log-Reason": reason}),
+                data={
+                    "name": name,
+                    "auto_archive_duration": auto_archive_duration,
+                    "rate_limit_per_user": rate_limit_per_user
+                }
+            )
+        ))
+
+    async def start_thread(
+        self,
+        name: str = None,
+        auto_archive_duration: int = None,
+        type_: ChannelType = None,
+        invitable: bool = None,
+        rate_limit_per_user: int = None,
+        reason: Optional[str] = None
+    ):
+        """
+        Creates a new thread that is not connected to an existing message.
+        The created thread defaults to a ``GUILD_PRIVATE_THREAD``*.
+        Returns a Channel on success.
+
+        Parameters
+        ----------
+        name: Optional[:class:`str`]
+            The name of the thread. 1-100 characters.
+        auto_archive_duration**: Optional[:class:`int`]
+            The duration in minutes to automatically archive the thread after
+            recent activity, can be set to: ``60``, ``1440``, ``4320``, ``10080``.
+        type_: Optional[:class:`~.pincer.objects.channel.ChannelType`]
+            The type of thread to create.
+        invitable: Optional[:class:`bool`]
+            Whether non-moderators can add other non-moderators to a thread;
+            only available when creating a private thread.
+        rate_limit_per_user: Optional[:class:`int`]
+            Amount of seconds a user has to wait before sending another message.
+            (0-21600)
+        reason: Optional[:class:`str`]
+            The reason of the thread creation.
+
+        \\*: Creating a private thread requires the server to be boosted.
+        The guild features will indicate if that is possible for the guild.
+
+        \\*\\*: The 3 day and 7 day archive durations require the server to be boosted.
+        The guild features will indicate if that is possible for the guild.
+
+        Returns
+        -------
+        :class:`~.pincer.objects.channel.Channel`
+            The created thread.
+        """
+        return Channel.from_dict(construct_client_dict(self._client,
+            await self._http.post(
+                f"channels/{self.id}/threads",
+                headers=remove_none({"X-Audit-Log-Reason": reason}),
+                data={
+                    "name": name,
+                    "auto_archive_duration": auto_archive_duration,
+                    "type": type_,
+                    "invitable": invitable,
+                    "rate_limit_per_user": rate_limit_per_user
+                }
+            )
+        ))
+
+    async def join_thread(self):
+        """Adds the current user to a thread. Also requires the thread is not archived."""
+        await self._http.put(f"channels/{self.id}/thread-members/@me")
+
     def __str__(self):
         """return the discord tag when object gets used as a string."""
         return self.name or str(self.id)
