@@ -36,19 +36,6 @@ ZLIB_SUFFIX = b'\x00\x00\xff\xff'
 inflator = decompressobj()
 
 
-def decompress_msg(msg: bytes) -> Optional[str]:
-    if len(msg) < 4 or msg[-4:] != ZLIB_SUFFIX:
-        return
-
-    if GatewayConfig.compression == "zlib-payload":
-        return inflator.decompress(msg)
-
-    if GatewayConfig.compression == "zlib-stream":
-        return decompress(msg)
-
-    return None
-
-
 @dataclass
 class GatewayInfo(APIObject):
     url: str
@@ -130,6 +117,9 @@ class Gateway:
         # `ClientWebSocketResponse` is a parent class.
         self.__socket: Optional[ClientWebSocketResponse] = None
 
+        # Buffer used to store information in transport conpression.
+        self.__buffer = bytearray()
+
         # The gateway can be disconnected from Discord. This variable stores if the
         # gateway should send a hello or reconnect.
         self.__should_reconnect: bool = False
@@ -180,6 +170,22 @@ class Gateway:
         """Session id is private for consitency"""
         self.__session_id = _id
 
+    def decompress_msg(self, msg: bytes) -> Optional[str]:
+        if GatewayConfig.compression == "zlib-payload":
+            return inflator.decompress(msg)
+
+        if GatewayConfig.compression == "zlib-stream":
+            self.__buffer.extend(msg)
+
+            if len(self.__buffer) < 4 or self.__buffer[-4:] != ZLIB_SUFFIX:
+                return None
+
+            msg = inflator.decompress(msg)
+            self.__buffer = bytearray()
+            return msg
+
+        return None
+
     async def start_loop(self):
         """Instantiate the dispatcher, this will create a connection to the
         Discord websocket API on behalf of the client whose token has
@@ -211,7 +217,8 @@ class Gateway:
             if msg.type == WSMsgType.TEXT:
                 await self.handle_data(msg.data)
             elif msg.type == WSMsgType.BINARY:
-                data = decompress_msg(msg.data)
+                # Message from transport compression that isn't complete returns None
+                data = self.decompress_msg(msg.data)
                 if data:
                     await self.handle_data(data)
             elif msg.type == WSMsgType.ERROR:
@@ -239,6 +246,11 @@ class Gateway:
         Handling the opcode is forked to the background so they aren't blocking.
         """
         payload = GatewayDispatch.from_string(data)
+
+        # Op code -1 is activated on all payloads
+        op_negative_one = self.__dispatch_handlers.get(-1)
+        if op_negative_one:
+            ensure_future(op_negative_one(payload))
 
         _log.debug(
             "%s %s GatewayDispatch with opcode %s received",
@@ -328,7 +340,6 @@ class Gateway:
                 }
             )
         ))
-
         self.__heartbeat_interval = payload.data["heartbeat_interval"]
 
         # This process should already be forked to the background so ther is no need to

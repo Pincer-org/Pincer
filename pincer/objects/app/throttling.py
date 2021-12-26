@@ -5,7 +5,9 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
+
 from .throttle_scope import ThrottleScope
+from ..app.command import ClientCommandStructure
 from ...exceptions import CommandCooldownError
 from ...utils.slidingwindow import SlidingWindow
 
@@ -22,7 +24,7 @@ class ThrottleInterface(ABC):
 
     @staticmethod
     @abstractmethod
-    def handle(ctx: MessageContext, **kwargs):
+    def handle(command: ClientCommandStructure, **kwargs):
         raise NotImplementedError
 
 
@@ -38,7 +40,7 @@ class DefaultThrottleHandler(ThrottleInterface, ABC):
     }
 
     @staticmethod
-    def get_key_from_scope(ctx: MessageContext) -> Optional[int]:
+    def get_key_from_scope(command: ClientCommandStructure) -> Optional[int]:
         """Retrieve the appropriate key from the context through the
         throttle scope.
 
@@ -52,13 +54,12 @@ class DefaultThrottleHandler(ThrottleInterface, ABC):
         Optional[:class:`int`]
             The throttlescope enum
         """
-        scope = DefaultThrottleHandler.__throttle_scopes[
-            ctx.command.cooldown_scope]
+        scope = DefaultThrottleHandler.__throttle_scopes[command.cooldown_scope]
 
         if not scope:
             return None
 
-        last_obj = ctx
+        last_obj = command
 
         for attr in scope.split("."):
             last_obj = getattr(last_obj, attr)
@@ -66,25 +67,25 @@ class DefaultThrottleHandler(ThrottleInterface, ABC):
         return last_obj
 
     @staticmethod
-    def init_throttler(ctx: MessageContext, throttle_key: Optional[int]):
-        DefaultThrottleHandler.throttle[ctx.command.call][throttle_key] \
-            = SlidingWindow(ctx.command.cooldown, ctx.command.cooldown_scale)
+    def init_throttler(command: ClientCommandStructure, throttle_key: Optional[int]):
+        DefaultThrottleHandler.throttle[command.call][throttle_key] \
+            = SlidingWindow(command.cooldown, command.cooldown_scale)
 
     @staticmethod
-    def handle(ctx: MessageContext, **kwargs):
-        if ctx.command.cooldown <= 0:
+    def handle(command: ClientCommandStructure, **kwargs):
+        if command.cooldown <= 0:
             return
 
-        throttle_key = DefaultThrottleHandler.get_key_from_scope(ctx)
-        group = DefaultThrottleHandler.throttle.get(ctx.command.call)
+        throttle_key = DefaultThrottleHandler.get_key_from_scope(command)
+        group = DefaultThrottleHandler.throttle.get(command.call)
         window_slider = group.get(throttle_key) if group is not None else None
 
         if window_slider:
             if not window_slider.allow():
                 raise CommandCooldownError(
-                    f"Cooldown for command {ctx.command.app.name} not met!",
-                    ctx
+                    f"Cooldown for command {command.app.name} not met!",
+                    command
                 )
         else:
-            DefaultThrottleHandler.init_throttler(ctx, throttle_key)
-            DefaultThrottleHandler.handle(ctx)
+            DefaultThrottleHandler.init_throttler(command, throttle_key)
+            DefaultThrottleHandler.handle(command)

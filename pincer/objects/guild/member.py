@@ -96,8 +96,15 @@ class GuildMember(BaseMember, User, APIObject):
         When the user started boosting the guild
     user: APINullable[:class:`~pincer.objects.user.user.User`]
         The user this guild member represents
-    Avatar: APINullable[:class:`str`]
+    avatar: APINullable[:class:`str`]
         The user's avatar.
+    communication_disabled_until: APINullable[Optional[:class:`~pincer.utils.timestamp.Timestamp`]]
+        The timestamp at which the user is no longer timed out.
+
+        .. note::
+
+            This may be in the past if the user has been timed out recently.
+
     """  # noqa: E501
 
     nick: APINullable[Optional[str]] = MISSING
@@ -107,6 +114,7 @@ class GuildMember(BaseMember, User, APIObject):
     premium_since: APINullable[Optional[Timestamp]] = MISSING
     user: APINullable[User] = MISSING
     avatar: APINullable[str] = MISSING
+    communication_disabled_until: APINullable[Optional[Timestamp]] = MISSING
 
     def __post_init__(self):
         super().__post_init__()

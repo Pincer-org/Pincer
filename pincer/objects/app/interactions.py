@@ -12,7 +12,6 @@ from pincer.utils.api_object import ChannelProperty, GuildProperty
 from .command_types import AppCommandOptionType
 from .interaction_base import InteractionType, CallbackType
 from .mentionable import Mentionable
-from ..app.select_menu import SelectOption
 from ..guild.member import GuildMember
 from ..message.context import MessageContext
 from ..message.message import Message
@@ -83,17 +82,15 @@ class InteractionData(APIObject):
         The values the user selected
     target_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Id of the user or message targeted by a user or message command
-    """
-    # noqa: E501
-    id: Snowflake
-    name: str
-    type: int
-
+    """  # noqa: E501
+    id: APINullable[Snowflake] = MISSING
+    name: APINullable[str] = MISSING
+    type: APINullable[int] = MISSING
     resolved: APINullable[ResolvedData] = MISSING
     options: APINullable[List[AppCommandInteractionDataOption]] = MISSING
     custom_id: APINullable[str] = MISSING
     component_type: APINullable[int] = MISSING
-    values: APINullable[SelectOption] = MISSING
+    values: APINullable[List[str]] = MISSING
     target_id: APINullable[Snowflake] = MISSING
 
 
@@ -207,11 +204,10 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
 
         return None
 
-    def convert_to_message_context(self, command):
+    def get_message_context(self):
         return MessageContext(
             self._client,
             self.member or self.user,
-            command,
             self,
             self.guild_id,
             self.channel_id
@@ -237,13 +233,20 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
         )
         return UserMessage.from_dict(resp)
 
-    async def ack(self, flags: Optional[InteractionFlags] = None):
+    async def _base_ack(
+        self,
+        flags: Optional[InteractionFlags],
+        callback_type: CallbackType
+    ):
         """|coro|
 
         Acknowledge an interaction, any flags here are applied to the reply.
 
         Parameters
         ----------
+        message_type : :class:`~pincer.objects.app.interaction_base.CallbackType`
+            The type of the message. Should be ``DEFERRED_MESSAGE`` or
+            ``DEFERRED_UPDATE_MESSAGE``.
         flags: :class:`~pincer.objects.app.interaction_flags.InteractionFlags`
             The flags which must be applied to the reply.
 
@@ -263,12 +266,35 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
         await self._http.post(
             f"interactions/{self.id}/{self.token}/callback",
             {
-                "type": CallbackType.DEFERRED_MESSAGE,
+                "type": callback_type,
                 "data": {
                     "flags": flags
                 }
             }
         )
+
+    async def ack(self, flags: Optional[InteractionFlags] = None):
+        """|coro|
+
+        Acknowledge an interaction, any flags here are applied to the reply.
+
+        Parameters
+        ----------
+        flags :class:`~pincer.objects.app.interaction_flags.InteractionFlags`
+            The flags which must be applied to the reply. |default| :data:`None`
+        """
+        return await self._base_ack(flags, CallbackType.DEFERRED_MESSAGE)
+
+    async def deferred_update_ack(self, flags: Optional[InteractionFlags] = None):
+        """|coro|
+        Same as ack but for updating a message.
+
+        Parameters
+        ----------
+        flags :class:`~pincer.objects.app.interaction_flags.InteractionFlags`
+            The flags which must be applied to the reply. |default| :data:`None`
+        """
+        return await self._base_ack(flags, CallbackType.DEFERRED_UPDATE_MESSAGE)
 
     async def __post_send_handler(self, message: Message):
         """Process the interaction after it was sent.
@@ -294,7 +320,12 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
         self.has_replied = True
         ensure_future(self.__post_send_handler(message))
 
-    async def reply(self, message: MessageConvertable):
+    async def _base_reply(
+        self,
+        message: MessageConvertable,
+        message_type: CallbackType,
+        allow_empty: bool
+    ):
         """|coro|
 
         Initial reply, only works if no ACK has been sent yet.
@@ -303,6 +334,9 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
         ----------
         message :class:`~pincer.utils.convert_message.MessageConvertable`
             The response message!
+        message_type : :class:`~pincer.objects.app.interaction_base.CallbackType`
+            The type of the message. Should be ``MESSAGE`` or
+            ``UPDATE_MESSAGE``.
 
         Raises
         ------
@@ -328,7 +362,8 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
 
         message = convert_message(self._client, message)
         content_type, data = message.serialize(
-            message_type=CallbackType.MESSAGE
+            message_type=message_type,
+            allow_empty=allow_empty
         )
 
         try:
@@ -345,6 +380,19 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
             )
 
         self.__post_sent(message)
+
+    async def reply(self, message: MessageConvertable) -> UserMessage:
+        """|coro|
+        Sends a reply to a interaction.
+        """
+        return await self._base_reply(message, CallbackType.MESSAGE, False)
+
+    async def update(self, message: MessageConvertable) -> UserMessage:
+        """|coro|
+        Edits the reply to an interaction. Only works with Message Component
+        Interactions.
+        """
+        return await self._base_reply(message, CallbackType.UPDATE_MESSAGE, True)
 
     async def edit(self, message: MessageConvertable) -> UserMessage:
         """|coro|

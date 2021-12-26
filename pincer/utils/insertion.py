@@ -70,4 +70,7 @@ def should_pass_ctx(sig: Mapping[str, Parameter], params: List[str]) -> bool:
         TypeCache()
         annotation = eval(annotation, TypeCache.cache, globals())
 
-    return annotation in context_types
+    return (
+        annotation == MessageContext
+        or params[0] == "ctx"
+    )

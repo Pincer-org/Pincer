@@ -13,7 +13,7 @@ class GatewayConfig:
     MAX_RETRIES: int = 5
     version: int = 9
     encoding: str = "json"
-    compression: Optional[str] = "zlib-payload"
+    compression: Optional[str] = "zlib-stream"
 
     @classmethod
     def make_uri(cls, uri) -> str:
