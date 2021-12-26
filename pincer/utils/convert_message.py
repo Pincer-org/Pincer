@@ -55,7 +55,8 @@ def convert_message(client: Client, message: MessageConvertable) -> Message:
             Message(message)
             if message
             else Message(
-                client.received_message, flags=InteractionFlags.EPHEMERAL
+                client.received_message,
+                flags=InteractionFlags.EPHEMERAL
             )
         )
     return message
