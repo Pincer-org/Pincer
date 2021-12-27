@@ -66,12 +66,12 @@ class Gateway:
     """
 
     def __init__(
-            self,
-            token: str, *,
-            intents: Intents,
-            url: str,
-            shard: int,
-            num_shards: int
+        self,
+        token: str, *,
+        intents: Intents,
+        url: str,
+        shard: int,
+        num_shards: int
     ) -> None:
         if len(token) != 59:
             raise InvalidTokenError(
