@@ -286,7 +286,7 @@ class Gateway:
         """
         _log.debug(
             "%s Requested to reconnect to Discord. Closing session and attempting to"
-            "resume...",
+            " resume...",
             self.shard_key
         )
 
