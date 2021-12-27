@@ -43,7 +43,7 @@ def should_pass_gateway(call: Union[Coro, Callable[..., Any]]) -> bool:
         Whether the callable requires a dispatcher as first parameter.
     """
     args = getfullargspec(call).args
-    return len(args) >= 1 and args[1] in ["gateway", "shard"]
+    return len(args) >= 1 and args[1] in ("gateway", "shard")
 
 
 context_types = [Signature.empty, MessageContext]
