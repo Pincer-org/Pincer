@@ -8,12 +8,12 @@ from typing import Optional
 @dataclass(repr=False)
 class GatewayConfig:
     """This file is to make maintaining the library and its gateway
-    configuration easier.
+    configuration easier. Leave compression blank for no compression.
     """
     MAX_RETRIES: int = 5
     version: int = 9
     encoding: str = "json"
-    compression: Optional[str] = "zlib-stream"
+    compression: str = "zlib-stream"
 
     @classmethod
     def make_uri(cls, uri) -> str:
