@@ -30,6 +30,8 @@ async def activity_join_request_middleware(
     ----------
     payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the activity join request event.
+    gateway : :class:`~pincer.core.gateway.Gateway`
+        The gateway for the current shard.
 
     Returns
     -------

@@ -30,6 +30,8 @@ async def user_update_middleware(
     ----------
     payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the user update event.
+    gateway : :class:`~pincer.core.gateway.Gateway`
+        The gateway for the current shard.
 
     Returns
     -------

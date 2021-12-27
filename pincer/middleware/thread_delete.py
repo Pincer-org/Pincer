@@ -29,6 +29,8 @@ async def thread_delete_middleware(
     ----------
     payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the thread delete event.
+    gateway : :class:`~pincer.core.gateway.Gateway`
+        The gateway for the current shard.
 
     Returns
     -------

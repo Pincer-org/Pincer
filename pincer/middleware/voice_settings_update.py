@@ -30,6 +30,8 @@ async def voice_settings_update_middleware(
     ----------
     payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the voice settings update event.
+    gateway : :class:`~pincer.core.gateway.Gateway`
+        The gateway for the current shard.
 
     Returns
     -------

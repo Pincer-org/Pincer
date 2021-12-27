@@ -30,6 +30,8 @@ async def guild_ban_remove_middleware(
     ----------
     payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the guild ban remove event.
+    gateway : :class:`~pincer.core.gateway.Gateway`
+        The gateway for the current shard.
 
     Returns
     -------
