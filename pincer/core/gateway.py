@@ -205,7 +205,7 @@ class Gateway:
 
                 _log.warning(
                     "%s Could not open websocket with Discord."
-                    "Retrying in 15 seconds...",
+                    " Retrying in 15 seconds...",
                     self.shard_key
                 )
                 await sleep(15)
@@ -286,7 +286,7 @@ class Gateway:
         """
         _log.debug(
             "%s Requested to reconnect to Discord. Closing session and attempting to"
-            "resume...",
+            " resume...",
             self.shard_key
         )
 
@@ -318,8 +318,7 @@ class Gateway:
             _log.debug("%s Resuming connection with Discord", self.shard_key)
 
             await self.send(str(GatewayDispatch(
-                6,
-                {
+                6, {
                     "token": self.token,
                     "session_id": self.__session_id,
                     "seq": self.__sequence_number
@@ -433,7 +432,7 @@ class Gateway:
                 # Close code is specified to be anything that is not 1000 in the docs.
                 _log.debug(
                     "%s %s ack not received. Attempting to reconnect."
-                    "Closing socket with close code 1001. \U0001f480",
+                    " Closing socket with close code 1001. \U0001f480",
                     datetime.now(),
                     self.shard_key
                 )

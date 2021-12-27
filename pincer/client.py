@@ -557,12 +557,12 @@ class Client:
             create_task(self.http.close())
 
     async def handle_middleware(
-            self,
-            payload: GatewayDispatch,
-            key: str,
-            gateway: Gateway,
-            *args,
-            **kwargs
+        self,
+        payload: GatewayDispatch,
+        key: str,
+        gateway: Gateway,
+        *args,
+        **kwargs
     ) -> Tuple[Optional[Coro], List[Any], Dict[str, Any]]:
         """|coro|
 
@@ -614,12 +614,12 @@ class Client:
         )
 
     async def execute_error(
-            self,
-            error: Exception,
-            gateway: Gateway,
-            name: str = "on_error",
-            *args,
-            **kwargs
+        self,
+        error: Exception,
+        gateway: Gateway,
+        name: str = "on_error",
+        *args,
+        **kwargs
     ):
         """|coro|
 
