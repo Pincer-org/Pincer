@@ -614,12 +614,12 @@ class Client:
         )
 
     async def execute_error(
-            self,
-            error: Exception,
-            gateway: Gateway,
-            name: str = "on_error",
-            *args,
-            **kwargs
+        self,
+        error: Exception,
+        gateway: Gateway,
+        name: str = "on_error",
+        *args,
+        **kwargs
     ):
         """|coro|
 
