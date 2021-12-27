@@ -34,7 +34,7 @@ def should_pass_gateway(call: Union[Coro, Callable[..., Any]]) -> bool:
 
     Parameters
     ----------
-    call: Union[Coro, Callable[..., Any]]
+    call: Union[:class:`~pincer.utils.types.Coro`, Callable[[...], Any]]
         The callable to check.
 
     Returns
