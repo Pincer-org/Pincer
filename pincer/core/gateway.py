@@ -23,7 +23,7 @@ from ..utils.api_object import APIObject
 from .._config import GatewayConfig
 from ..core.dispatch import GatewayDispatch
 from ..exceptions import (
-    InvalidTokenError, ConnectionError, GatewayError, UnhandledException
+    InvalidTokenError, GatewayConnectionError, GatewayError, UnhandledException
 )
 
 if TYPE_CHECKING:
@@ -193,15 +193,15 @@ class Gateway:
         Discord websocket API on behalf of the client whose token has
         been passed.
         """
-        for i in count():
+        for _try in count():
             try:
                 self.__socket = await self.__session.ws_connect(
                     GatewayConfig.make_uri(self.url)
                 )
                 break
             except ClientConnectorError as e:
-                if i > GatewayConfig.MAX_RETRIES:
-                    raise ConnectionError from e
+                if _try > GatewayConfig.MAX_RETRIES:
+                    raise GatewayConnectionError from e
 
                 _log.warning(
                     "%s Could not open websocket with Discord."

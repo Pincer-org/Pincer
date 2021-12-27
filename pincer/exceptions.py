@@ -268,7 +268,7 @@ class TimeoutError(PincerError):
     """
 
 
-class ConnectionError(PincerError):
+class GatewayConnectionError(PincerError):
     """Could not connect to Discord gateway"""
 
 
