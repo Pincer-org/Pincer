@@ -432,7 +432,7 @@ class Gateway:
                 # Close code is specified to be anything that is not 1000 in the docs.
                 _log.debug(
                     "%s %s ack not received. Attempting to reconnect."
-                    "Closing socket with close code 1001. \U0001f480",
+                    " Closing socket with close code 1001. \U0001f480",
                     datetime.now(),
                     self.shard_key
                 )
