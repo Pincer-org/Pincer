@@ -500,7 +500,7 @@ class Client:
         Runs the bot with the amount of shards specified by the Discord gateway.
         """
         num_shards = self.gateway.shards
-        return self.run_shards(range(0, num_shards), num_shards)
+        return self.run_shards(range(num_shards), num_shards)
 
     def run_shards(self, shards: Iterable, num_shards: int):
         """
