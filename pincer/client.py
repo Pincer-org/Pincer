@@ -557,12 +557,12 @@ class Client:
             create_task(self.http.close())
 
     async def handle_middleware(
-            self,
-            payload: GatewayDispatch,
-            key: str,
-            gateway: Gateway,
-            *args,
-            **kwargs
+        self,
+        payload: GatewayDispatch,
+        key: str,
+        gateway: Gateway,
+        *args,
+        **kwargs
     ) -> Tuple[Optional[Coro], List[Any], Dict[str, Any]]:
         """|coro|
 
