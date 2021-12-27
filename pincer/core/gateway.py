@@ -205,7 +205,7 @@ class Gateway:
 
                 _log.warning(
                     "%s Could not open websocket with Discord."
-                    "Retrying in 15 seconds...",
+                    " Retrying in 15 seconds...",
                     self.shard_key
                 )
                 await sleep(15)
