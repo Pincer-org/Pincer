@@ -318,8 +318,7 @@ class Gateway:
             _log.debug("%s Resuming connection with Discord", self.shard_key)
 
             await self.send(str(GatewayDispatch(
-                6,
-                {
+                6, {
                     "token": self.token,
                     "session_id": self.__session_id,
                     "seq": self.__sequence_number
