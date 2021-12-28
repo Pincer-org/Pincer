@@ -98,14 +98,14 @@ Pincer is designed to be used by inheriting the Client.
 
 ```py
 from time import perf_counter
-from pincer import Bot
+from pincer import Client
 
-class Client(Bot):
-    @client.event
+class Bot(Client):
+    @Client.event
     async def on_ready():
         print(f"Logged in as {client.bot} after {perf_counter()} seconds")
 
-client = Client("YOUR_TOKEN_HERE")
+client = Bot("YOUR_TOKEN_HERE")
 client.run()
 ```
 
