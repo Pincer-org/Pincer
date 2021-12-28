@@ -82,78 +82,59 @@ following:
 
 </details>
 
-## Current Features
-
-- Discord Gateway communication
-- logging
-- Http Client
-- Events
-- Event middleware
-- Commands
-- Command arguments *(for types: str, int, float, bool, User, Channel, Role)*
-- Command argument choices
-- Command argument descriptions
-- Command cool downs (Using WindowSliding technique)
-- Tasks
-- Cogs
-
 **Client base class example:**
 
 ```py
 from pincer.client import Bot
 
 # Note that both `Bot` and `Client` are valid!
-bot = Bot("...")
+bot = Bot("YOUR_TOKEN_HERE")
 bot.run()
 ```
 
 **An example on the `on_ready` event**
 
+Pincer is designed to be used by inheriting the Client.
+
 ```py
 from time import perf_counter
-from pincer.client import Client
+from pincer import Bot
 
-client = Client("...")
+class Client(Bot):
+    @client.event
+    async def on_ready():
+        print(f"Logged in as {client.bot} after {perf_counter()} seconds")
 
-
-@client.event
-async def on_ready():
-    print(f"Logged in as {client.bot} after {perf_counter()} seconds")
-
-
+client = Client("YOUR_TOKEN_HERE")
 client.run()
 ```
 
-### Inherited client
+### Interactions
 
-You have the possibility to use your own class to inherit from the Pincer bot
-base.
+Pincer is designed to make developing application commands intuitive and fast.
 
 ```py
 from pincer import Client
 from pincer.commands import command, CommandArg, Description
+from pincer.objects import UserMessage, User
 
 
 class Bot(Client):
-    def __init__(self) -> None:
-        super(Bot, self).__init__(token="...")
-
     @Client.event
     async def on_ready(self) -> None:
         ...
 
     @command(description="Say something as the bot!")
-    # Pincer uses type hints to specify the argument type
-    # str - String
-    # int - Integer
-    # bool - Boolean
-    # float - Number
-    # pincer.objects.User - User
-    # pincer.objects.Channel - Channel
-    # pincer.objects.Role - Role
-    # pincer.objects.Mentionable - Mentionable
     async def say(self, message: str):
         return message
+
+    @user_command
+    async def user_command(self, user: User):
+        return f"The user is {user}"
+
+    @message_command(name="Message command")
+    async def message_command(self, message: UserMessage):
+        return f"The message read \"{message.content}\""
 
     @command(description="Add two numbers!")
     async def add(
@@ -162,12 +143,17 @@ class Bot(Client):
             second: CommandArg[int, Description["The second number"]]
     ):
         return f"The addition of `{first}` and `{second}` is `{first + second}`"
+
+
 ```
 
 For more examples you can take a look at the examples folder or check out our
 bot:
 
 > <https://github.com/Pincer-org/Pincer-bot>
+
+You can also read the interactions guide for more information:
+> <https://docs.pincer.dev/en/latest/interactions.html>
 
 ### Advanced Usage
 
@@ -182,9 +168,6 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 ```
-
-**Note:** _A lot of printing can happen, including sensitive information, so
-make sure to be aware of what you're doing if you're enabling it!_
 
 #### Middleware
 
