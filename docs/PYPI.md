@@ -19,7 +19,7 @@
 # <img src="../assets/svg/pincer.svg" height="24px" alt="Pincer Logo"> Pincer
 The snappy asynchronous discord api wrapper API wrapper written with aiohttp & websockets.
 
-| :exclamation: | The package is currently within Pre-Alpha phase |
+| :exclamation: | The package is currently within alpha phase |
 | ------------- | :---------------------------------------------- |
 
 ## :pushpin: Links
