@@ -10,7 +10,7 @@ Pillow = "==8.4.0"
 
 [dev-packages]
 flake8 = "==4.0.1"
-tox = "==3.24.4"
+tox = "==3.24.5"
 pytest = "==6.2.5"
 pytest-asyncio = "==0.16.0"
 pytest-cov = "==3.0.0"
