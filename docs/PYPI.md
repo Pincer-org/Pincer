@@ -91,7 +91,7 @@ bot.run()
 
 **An example on the `on_ready` event**
 
-Pincer is designed to be used by inheriting the Client.
+Pincer makes developing application commands intuitive and fast.
 
 ```py
 from time import perf_counter
