@@ -111,7 +111,7 @@ client.run()
 
 ### Interactions
 
-Pincer is designed to make developing application commands intuitive and fast.
+Pincer makes developing application commands intuitive and fast.
 
 ```py
 from pincer import Client
@@ -147,8 +147,7 @@ class Bot(Client):
 
 ```
 
-For more examples you can take a look at the examples folder or check out our
-bot:
+For more examples you can take a look at the examples folder or check out our bot:
 
 > <https://github.com/Pincer-org/Pincer-bot>
 
@@ -171,15 +170,14 @@ logging.basicConfig(level=logging.DEBUG)
 
 #### Middleware
 
-_From version 0.4.0-dev, the middleware system has been introduced. This system
-gives you the full freedom to remove the already existing middleware which has
-been created by the developers and create custom events. Your custom middleware
-directly receives the payload from Discord. You can't really do anything wrong
-without accessing the `override` attribute, but if you access this attribute the
-Pincer team will not provide any support for weird behavior. So in short, only
-use this if you know what you're doing. An example of using this with a custom
-`on_ready` event can be found
-[in our docs](https://pincer.readthedocs.io/en/latest/pincer.html#pincer.client.middleware)
+The middleware system was introduced in version `0.4.0-dev`. This system gives you the
+freedom to create custom events and remove the already existing middleware created by
+the developers. Your custom middleware directly receives the payload from
+Discord. You can't do anything wrong without accessing the `override` attribute, but if
+you do access it, the Pincer team will not provide any support for weird behavior.
+So, in short, only use this if you know what you're doing. An example of using
+the middleware system with a custom `on_ready` event can be found
+[in our docs](https://pincer.readthedocs.io/en/latest/pincer.html#pincer.client.middleware).
 ._
 
 ## 🏷️ License
