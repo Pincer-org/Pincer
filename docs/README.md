@@ -17,9 +17,9 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 # <img src="../assets/svg/pincer.svg" height="24px" alt="Pincer Logo"> Pincer
-The snappy asynchronous discord api wrapper API wrapper written with aiohttp & websockets.
+The snappy asynchronous Discord API wrapper written with aiohttp.
 
-| :exclamation: | The package is currently within alpha phase |
+| :exclamation: | The package is currently within the Alpha phase |
 | ------------- | :---------------------------------------------- |
 
 ## :pushpin: Links
@@ -37,7 +37,7 @@ Use the following command to install Pincer into your Python environment:
 pip install pincer
 ```
 
-To install our version with Aiohttp Speedup do:
+To install our version with Aiohttp Speedup, use:
 
 ```sh
 pip install pincer[speed]
@@ -111,7 +111,7 @@ client.run()
 
 ### Interactions
 
-Pincer makes developing application commands intuitive and fast.
+Pincer is designed to make developing application commands intuitive and fast.
 
 ```py
 from pincer import Client
@@ -134,20 +134,21 @@ class Bot(Client):
 
     @message_command(name="Message command")
     async def message_command(self, message: UserMessage):
-        return f"The message read \"{message.content}\""
+        return f"The message read '{message.content}'"
 
     @command(description="Add two numbers!")
     async def add(
-            self,
-            first: CommandArg[int, Description["The first number"]],
-            second: CommandArg[int, Description["The second number"]]
+        self,
+        first: CommandArg[int, Description["The first number"]],
+        second: CommandArg[int, Description["The second number"]]
     ):
         return f"The addition of `{first}` and `{second}` is `{first + second}`"
 
 
 ```
 
-For more examples you can take a look at the examples folder or check out our bot:
+For more examples, you can take a look at the examples folder or check out our
+bot:
 
 > <https://github.com/Pincer-org/Pincer-bot>
 
@@ -170,7 +171,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 #### Middleware
 
-The middleware system was introduced in version `0.4.0-dev`. This system gives you the
+_The middleware system was introduced in version `0.4.0-dev`. This system gives you the
 freedom to create custom events and remove the already existing middleware created by
 the developers. Your custom middleware directly receives the payload from
 Discord. You can't do anything wrong without accessing the `override` attribute, but if
