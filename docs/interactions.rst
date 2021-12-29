@@ -202,7 +202,7 @@ if you return a :class:`~pincer.objects.message.message.Message` object.
   @command
   async def a_complex_message(self):
     return Message(
-      "This is the message's content"
+      "This is the message's content",
       embeds=[
         Embed(
           title="Pincer",
