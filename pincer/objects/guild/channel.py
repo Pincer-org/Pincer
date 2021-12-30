@@ -634,7 +634,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
     async def start_thread_with_message(
         self,
-        message: UserMessage,
+        message: Optional[UserMessage],
         name: Optional[str] = None,
         auto_archive_duration: Optional[int] = None,
         rate_limit_per_user: Optional[int] = None,
@@ -695,7 +695,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
     async def start_thread(
         self,
-        name: str = None,
+        name: Optional[str] = None,
         auto_archive_duration: Optional[int] = None,
         type_: Optional[ChannelType] = None,
         invitable: Optional[bool] = None,
@@ -899,7 +899,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         data = await self._http.get(
             f"channels/{self.id}/threads/archived/public",
-            data={"before": before, "limit": limit},
+            data=remove_none({"before": before, "limit": limit}),
         )
         return {
             "threads": (
@@ -988,7 +988,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         data = self._http.get(
             f"channels/{self.id}/users/@me/threads/archived/private",
-            data={"before": before, "limit": limit},
+            data=remove_none({"before": before, "limit": limit}),
         )
         return {
             "threads": (
