@@ -842,20 +842,15 @@ class Channel(APIObject, GuildProperty):  # noqa E501
                 construct_client_dict(self._client, member)
             )
 
-    async def list_active_threads(self) -> Dict[str, Any]:
+    async def list_active_threads(self) -> ThreadsResponse:
         """|coro|
         Returns all active threads in the channel, including public and
         private threads. Threads are ordered by their id, in descending order.
 
         Returns
         -------
-        Dict[:class:`str`, :class:`Any`]
-            Dictionary containing the response body:
-                - threads: Generator of the active threads.
-                - members: Generator for each thread member object for each
-                returned thread the current user has joined.
-                - has_more: Whether there are potentially additional threads
-                that could be returned on a subsequent call.
+        :class:`~pincer.objects.channel.ThreadsResponse`
+            The response object.
         """
         return ThreadsResponse.from_dict(
             construct_client_dict(
@@ -866,7 +861,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
     async def list_public_archived_threads(
         self, before: Optional[Timestamp] = None, limit: Optional[int] = None
-    ) -> Dict[str, Any]:
+    ) -> ThreadsResponse:
         """|coro|
         Returns archived threads in the channel that are public.
         When called on a ``GUILD_TEXT`` channel, returns threads of type
@@ -886,13 +881,8 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
         Returns
         -------
-        Dict[:class:`str`, :class:`Any`]
-            Dictionary containing the response body:
-                - threads: Generator of the public archived threads.
-                - members: Generator for each thread member object for each
-                returned thread the current user has joined.
-                - has_more: Whether there are potentially additional threads
-                that could be returned on a subsequent call.
+        :class:`~pincer.objects.channel.ThreadsResponse`
+            The response object.
         """
         data = await self._http.get(
             f"channels/{self.id}/threads/archived/public",
@@ -904,7 +894,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
     async def list_private_archived_threads(
         self, before: Optional[Timestamp] = None, limit: Optional[int] = None
-    ) -> Dict[str, Any]:
+    ) -> ThreadsResponse:
         """|coro|
         Returns archived threads in the channel that are of type
         ``GUILD_PRIVATE_THREAD``. Threads are ordered by ``archive_timestamp``,
@@ -922,13 +912,8 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
         Returns
         -------
-        Dict[:class:`str`, :class:`Any`]
-            Dictionary containing the response body:
-                - threads: Generator of the private archived threads.
-                - members: Generator for each thread member object for each
-                returned thread the current user has joined.
-                - has_more: Whether there are potentially additional threads
-                that could be returned on a subsequent call.
+        :class:`~pincer.objects.channel.ThreadsResponse`
+            The response object.
         """
         data = await self._http.get(
             f"channels/{self.id}/threads/archived/private",
@@ -940,7 +925,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
     async def list_joined_private_archived_threads(
         self, before: Optional[Timestamp] = None, limit: Optional[int] = None
-    ) -> Dict[str, Any]:
+    ) -> ThreadsResponse:
         """|coro|
         Returns archived threads in the channel that are of type
         ``GUILD_PRIVATE_THREAD``, and the user has joined. Threads are ordered
@@ -958,14 +943,8 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
         Returns
         -------
-        Dict[:class:`str`, :class:`Any`]
-            Dictionary containing the response body:
-                - threads: Generator of the private archived threads
-                the user has joined.
-                - members: Generator for each thread member object for each
-                returned thread the current user has joined.
-                - has_more: Whether there are potentially additional threads
-                that could be returned on a subsequent call.
+        :class:`~pincer.objects.channel.ThreadsResponse`
+            The response object.
         """
         data = self._http.get(
             f"channels/{self.id}/users/@me/threads/archived/private",
