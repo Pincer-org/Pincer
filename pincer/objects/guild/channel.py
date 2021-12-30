@@ -666,7 +666,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
     async def start_thread_with_message(
         self,
         message: UserMessage,
-        name: str = None,
+        name: str = Optional[None],
         auto_archive_duration: Optional[int] = None,
         rate_limit_per_user: Optional[int] = None,
         reason: Optional[str] = None
@@ -719,12 +719,12 @@ class Channel(APIObject, GuildProperty):  # noqa E501
     async def start_thread(
         self,
         name: str = None,
-        auto_archive_duration: int = None,
-        type_: ChannelType = None,
-        invitable: bool = None,
-        rate_limit_per_user: int = None,
+        auto_archive_duration: Optional[int] = None,
+        type_: Optional[ChannelType] = None,
+        invitable: Optional[bool] = None,
+        rate_limit_per_user: Optional[int] = None,
         reason: Optional[str] = None
-    ):
+    ) -> Channel:
         """
         Creates a new thread that is not connected to an existing message.
         The created thread defaults to a ``GUILD_PRIVATE_THREAD``*.
@@ -876,8 +876,8 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
     async def list_public_archived_threads(
         self,
-        before: Timestamp = None,
-        limit: int = None
+        before: Optional[Timestamp] = None,
+        limit: Optional[int] = None
     ) -> Dict[str, Any]:
         """
         Returns archived threads in the channel that are public.
@@ -904,7 +904,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
                 - has_more: Whether there are potentially additional threads
                 that could be returned on a subsequent call.
         """
-        data = self._http.get(
+        data = await self._http.get(
             f"channels/{self.id}/threads/archived/public",
             data={"before": before, "limit": limit}
         )
@@ -920,8 +920,8 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
     async def list_private_archived_threads(
         self,
-        before: Timestamp = None,
-        limit: int = None
+        before: Optional[Timestamp] = None,
+        limit: Optional[int] = None
     ) -> Dict[str, Any]:
         """
         Returns archived threads in the channel that are of type
@@ -946,7 +946,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
                 - has_more: Whether there are potentially additional threads
                 that could be returned on a subsequent call.
         """
-        data = self._http.get(
+        data = await self._http.get(
             f"channels/{self.id}/threads/archived/private",
             data=remove_none({"before": before, "limit": limit})
         )
@@ -962,8 +962,8 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
     async def list_joined_private_archived_threads(
         self,
-        before: Timestamp = None,
-        limit: int = None
+        before: Optional[Timestamp] = None,
+        limit: Optional[int] = None
     ) -> Dict[str, Any]:
         """
         Returns archived threads in the channel that are of type
