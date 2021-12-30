@@ -243,7 +243,8 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         ...
 
     async def edit(self, reason: Optional[str] = None, **kwargs):
-        """Edit a channel with the given keyword arguments.
+        """|coro|
+        Edit a channel with the given keyword arguments.
 
         Parameters
         ----------
@@ -281,7 +282,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         type: int,
         reason: Optional[str] = None,
     ):
-        """
+        """|coro|
         Edit the channel permission overwrites for a user or role in a channel.
         Only usable for guild channels. Requires the ``MANAGE_ROLES`` permission.
         Only permissions your bot has in the guild or channel can be
@@ -309,7 +310,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
     async def delete_permission(
         self, overwrite: Overwrite, reason: Optional[str] = None
     ):
-        """
+        """|coro|
         Delete a channel permission overwrite for a user or role in a channel.
         Only usable for guild channels. Requires the ``MANAGE_ROLES`` permission.
 
@@ -328,7 +329,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
     async def follow_news_channel(
         self, webhook_channel_id: Snowflake
     ) -> NewsChannel:
-        """
+        """|coro|
         Follow a News Channel to send messages to a target channel.
         Requires the ``MANAGE_WEBHOOKS`` permission in the target channel.
         Returns a followed channel object.
@@ -354,7 +355,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         )
 
     async def trigger_typing_indicator(self):
-        """
+        """|coro|
         Post a typing indicator for the specified channel.
         Generally bots should **not** implement this route. However, if a bot is
         responding to a command and expects the computation to take a few
@@ -364,7 +365,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         await self._http.post(f"channels/{self.id}/typing")
 
     async def get_pinned_messages(self) -> AsyncIterator[UserMessage]:
-        """
+        """|coro|
         Fetches all pinned messages in the channel. Returns an iterator of
         pinned messages.
 
@@ -382,7 +383,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
     async def pin_message(
         self, message: UserMessage, reason: Optional[str] = None
     ):
-        """
+        """|coro|
         Pin a message in a channel. Requires the ``MANAGE_MESSAGES`` permission.
         The maximum number of pinned messages is ``50``.
         """
@@ -394,7 +395,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
     async def unpin_message(
         self, message: UserMessage, reason: Optional[str] = None
     ):
-        """
+        """|coro|
         Unpin a message in a channel. Requires the ``MANAGE_MESSAGES`` permission.
         """
         await self._http.delete(
@@ -408,7 +409,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         access_token: Optional[str] = None,
         nick: Optional[str] = None,
     ):
-        """
+        """|coro|
         Adds a recipient to a Group DM using their access token.
 
         Parameters
@@ -427,7 +428,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         )
 
     async def group_dm_remove_recipient(self, user: User):
-        """
+        """|coro|
         Removes a recipient from a Group DM.
 
         Parameters
@@ -440,7 +441,8 @@ class Channel(APIObject, GuildProperty):  # noqa E501
     async def bulk_delete_messages(
         self, messages: List[Snowflake], reason: Optional[str] = None
     ):
-        """Delete multiple messages in a single request.
+        """|coro|
+        Delete multiple messages in a single request.
         This endpoint can only be used on guild channels and requires
         the ``MANAGE_MESSAGES`` permission.
 
@@ -997,7 +999,8 @@ class TextChannel(Channel):
         ...
 
     async def edit(self, **kwargs):
-        """Edit a text channel with the given keyword arguments.
+        """|coro|
+        Edit a text channel with the given keyword arguments.
 
         Parameters
         ----------
@@ -1047,7 +1050,8 @@ class VoiceChannel(Channel):
         ...
 
     async def edit(self, **kwargs):
-        """Edit a text channel with the given keyword arguments.
+        """|coro|
+        Edit a text channel with the given keyword arguments.
 
         Parameters
         ----------
@@ -1090,7 +1094,8 @@ class NewsChannel(Channel):
         ...
 
     async def edit(self, **kwargs):
-        """Edit a text channel with the given keyword arguments.
+        """|coro|
+        Edit a text channel with the given keyword arguments.
 
         Parameters
         ----------
@@ -1119,6 +1124,7 @@ class PrivateThread(Thread):
 
 @dataclass(repr=False)
 class ThreadsResponse(APIObject):
+    """A class representing a response from the API for a list of threads."""
     threads: AsyncIterator[Thread]
     members: AsyncIterator[ThreadMember]
     has_more: bool
