@@ -547,7 +547,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             )
 
     async def get_invites(self) -> AsyncIterator[Invite]:
-        """
+        """|coro|
         Fetches all the invite objects for the channel. Only usable for
         guild channels. Requires the ``MANAGE_CHANNELS`` permission.
 
@@ -571,7 +571,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         target_application_id: Snowflake = None,
         reason: Optional[str] = None,
     ):
-        """
+        """|coro|
         Create a new invite object for the channel. Only usable for guild
         channels. Requires the ``CREATE_INSTANT_INVITE`` permission.
 
@@ -640,7 +640,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         rate_limit_per_user: Optional[int] = None,
         reason: Optional[str] = None,
     ) -> Channel:
-        """
+        """|coro|
         Creates a new thread from an existing message. Returns a Channel on
         success.
 
@@ -654,16 +654,21 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         ----------
         message: :class:`~pincer.objects.message.user_message.UserMessage`
             The message to create the thread from.
+            |default| data:`None`
         name: Optional[:class:`str`]
             The name of the thread. 1-100 characters.
+            |default| data:`None`
         auto_archive_duration: Optional[:class:`int`]
             The duration in minutes to automatically archive the thread after
             recent activity, can be set to: ``60``, ``1440``, ``4320``, ``10080``.
+            |default| data:`None`
         rate_limit_per_user: Optional[:class:`int`]
-            Amount of seconds a user has to wait before sending another message
+            Amount of seconds a user has to wait before sending another message.
             (0-21600)
+            |default| data:`None`
         reason: Optional[:class:`str`]
             The reason of the thread creation.
+            |default| data:`None`
 
         The 3 day and 7 day archive durations require the server to be boosted.
         The guild features will indicate if a server is able to use those settings.
@@ -697,7 +702,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         rate_limit_per_user: Optional[int] = None,
         reason: Optional[str] = None,
     ) -> Channel:
-        """
+        """|coro|
         Creates a new thread that is not connected to an existing message.
         The created thread defaults to a ``GUILD_PRIVATE_THREAD``*.
         Returns a Channel on success.
@@ -706,19 +711,25 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         ----------
         name: Optional[:class:`str`]
             The name of the thread. 1-100 characters.
+            |default| :data:`None`
         auto_archive_duration**: Optional[:class:`int`]
             The duration in minutes to automatically archive the thread after
             recent activity, can be set to: ``60``, ``1440``, ``4320``, ``10080``.
+            |default| :data:`None`
         type_: Optional[:class:`~pincer.objects.channel.ChannelType`]
             The type of thread to create.
+            |default| :data:`None`
         invitable: Optional[:class:`bool`]
             Whether non-moderators can add other non-moderators to a thread;
             only available when creating a private thread.
+            |default| :data:`None`
         rate_limit_per_user: Optional[:class:`int`]
             Amount of seconds a user has to wait before sending another message.
             (0-21600)
+            |default| :data:`None`
         reason: Optional[:class:`str`]
             The reason of the thread creation.
+            |default| :data:`None`
 
         \\*: Creating a private thread requires the server to be boosted.
         The guild features will indicate if that is possible for the guild.
@@ -749,14 +760,14 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         )
 
     async def join_thread(self):
-        """
+        """|coro|
         Adds the current user to a thread.
         Also requires the thread to not be archived.
         """
         await self._http.put(f"channels/{self.id}/thread-members/@me")
 
     async def add_thread_member(self, user: User):
-        """
+        """|coro|
         Adds another member to a thread.
         Requires the ability to send messages in the thread.
         Also requires the thread to not be archived.
@@ -769,14 +780,14 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         await self._http.put(f"channels/{self.id}/thread-members/{user.id}")
 
     async def leave_thread(self):
-        """
+        """|coro|
         Removes the current user from a thread.
         Also requires the thread to not be archived.
         """
         await self._http.delete(f"channels/{self.id}/thread-members/@me")
 
     async def remove_thread_member(self, user: User):
-        """
+        """|coro|
         Removes another member from a thread. Requires the ``MANAGE_THREADS``
         permission, or the creator of the thread if it is a
         ``GUILD_PRIVATE_THREAD``. Also requires the thread to not be archived.
@@ -789,7 +800,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         await self._http.delete(f"channels/{self.id}/thread-members/{user.id}")
 
     async def get_thread_member(self, user: User) -> ThreadMember:
-        """
+        """|coro|
         Returns a thread member object for the specified user if they are a
         member of the thread.
 
@@ -813,7 +824,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         )
 
     async def list_thread_members(self) -> AsyncIterator[ThreadMember]:
-        """
+        """|coro|
         Fetches all the thread members for the thread. Returns an iterator of
         ThreadMember objects.
 
@@ -829,7 +840,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             )
 
     async def list_active_threads(self) -> Dict[str, Any]:
-        """
+        """|coro|
         Returns all active threads in the channel, including public and
         private threads. Threads are ordered by their id, in descending order.
 
@@ -859,7 +870,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
     async def list_public_archived_threads(
         self, before: Optional[Timestamp] = None, limit: Optional[int] = None
     ) -> Dict[str, Any]:
-        """
+        """|coro|
         Returns archived threads in the channel that are public.
         When called on a ``GUILD_TEXT`` channel, returns threads of type
         ``GUILD_PUBLIC_THREAD``. When called on a ``GUILD_NEWS`` channel returns
@@ -871,8 +882,10 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         ----------
         before: Optional[:class:`~pincer.objects.timestamp.Timestamp`]
             Returns threads before this timestamp.
+            |default| :data:`None`
         limit: Optional[:class:`int`]
             The maximum number of threads to return.
+            |default| :data:`None`
 
         Returns
         -------
@@ -903,7 +916,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
     async def list_private_archived_threads(
         self, before: Optional[Timestamp] = None, limit: Optional[int] = None
     ) -> Dict[str, Any]:
-        """
+        """|coro|
         Returns archived threads in the channel that are of type
         ``GUILD_PRIVATE_THREAD``. Threads are ordered by ``archive_timestamp``,
         in descending order. Requires both the ``READ_MESSAGE_HISTORY`` and
@@ -913,8 +926,10 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         ----------
         before: Optional[:class:`~pincer.objects.timestamp.Timestamp`]
             Returns threads before this timestamp.
+            |default| :data:`None`
         limit: Optional[:class:`int`]
             The maximum number of threads to return.
+            |default| :data:`None`
 
         Returns
         -------
@@ -945,7 +960,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
     async def list_joined_private_archived_threads(
         self, before: Optional[Timestamp] = None, limit: Optional[int] = None
     ) -> Dict[str, Any]:
-        """
+        """|coro|
         Returns archived threads in the channel that are of type
         ``GUILD_PRIVATE_THREAD``, and the user has joined. Threads are ordered
         by their id, in descending order. Requires the ``READ_MESSAGE_HISTORY``
@@ -955,8 +970,10 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         ----------
         before: Optional[:class:`~pincer.objects.timestamp.Timestamp`]
             Returns threads before this timestamp.
+            |default| :data:`None`
         limit: Optional[:class:`int`]
             The maximum number of threads to return.
+            |default| :data:`None`
 
         Returns
         -------
