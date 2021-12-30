@@ -667,8 +667,8 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         self,
         message: UserMessage,
         name: str = None,
-        auto_archive_duration: int = None,
-        rate_limit_per_user: int = None,
+        auto_archive_duration: Optional[int] = None,
+        rate_limit_per_user: Optional[int] = None,
         reason: Optional[str] = None
     ) -> Channel:
         """
@@ -948,7 +948,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         data = self._http.get(
             f"channels/{self.id}/threads/archived/private",
-            data={"before": before, "limit": limit}
+            data=remove_none({"before": before, "limit": limit})
         )
         return {
             "threads": (Channel.from_dict(construct_client_dict(
