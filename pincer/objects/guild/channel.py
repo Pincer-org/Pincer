@@ -8,8 +8,6 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Any, AsyncIterator, overload, TYPE_CHECKING
 
-from pincer.objects.guild.thread import ThreadMember
-
 from .invite import Invite, InviteTargetType
 from ..message.user_message import UserMessage
 from ..._config import GatewayConfig
@@ -17,6 +15,7 @@ from ...utils.api_object import APIObject, GuildProperty
 from ...utils.conversion import construct_client_dict, remove_none
 from ...utils.convert_message import convert_message
 from ...utils.types import MISSING
+from ...objects import ThreadMember
 
 if TYPE_CHECKING:
     from typing import AsyncGenerator, Dict, List, Optional, Union
