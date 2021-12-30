@@ -26,7 +26,7 @@ def should_pass_cls(call: Union[Coro, Callable[..., Any]]) -> bool:
     return len(args) >= 1 and args[0] in ["self", "cls"]
 
 
-def should_pass_gateway(call: Union[Coro, Callable[..., Any]]) -> bool:
+def should_pass_gateway(call: Union[Coro, Callable[[...], Any]]) -> bool:
     """
     Checks whether a callable requires a dispatcher as last parameter.
 
