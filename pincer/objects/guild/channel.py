@@ -742,7 +742,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
         Returns
         -------
-        :class:`~.pincer.objects.channel.Channel`
+        :class:`~pincer.objects.channel.Channel`
             The created thread.
         """
         return Channel.from_dict(
