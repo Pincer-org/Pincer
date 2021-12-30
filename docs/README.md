@@ -94,7 +94,7 @@ bot.run()
 
 **An example on the `on_ready` event**
 
-Pincer makes developing application commands intuitive and fast.
+Pincer bots are required to inherit from the Client.
 
 ```py
 from time import perf_counter
@@ -111,7 +111,7 @@ client.run()
 
 ### Interactions
 
-Pincer is designed to make developing application commands intuitive and fast.
+Pincer makes developing application commands intuitive and fast.
 
 ```py
 from pincer import Client

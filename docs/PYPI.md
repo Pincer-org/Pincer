@@ -16,9 +16,6 @@
 ![Discord](https://img.shields.io/discord/881531065859190804)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-# <img src="../assets/svg/pincer.svg" height="24px" alt="Pincer Logo"> Pincer
-The snappy asynchronous Discord API wrapper written with aiohttp.
-
 ## :pushpin: Links
 
 > <img src="../assets/svg/discord.svg" width="16px" alt="Discord Logo"> ｜Join the Discord server: https://discord.gg/pincer <br>
@@ -91,7 +88,7 @@ bot.run()
 
 **An example on the `on_ready` event**
 
-Pincer makes developing application commands intuitive and fast.
+Pincer bots are required to inherit from the Client.
 
 ```py
 from time import perf_counter
@@ -108,7 +105,7 @@ client.run()
 
 ### Interactions
 
-Pincer is designed to make developing application commands intuitive and fast.
+Pincer makes developing application commands intuitive and fast.
 
 ```py
 from pincer import Client
