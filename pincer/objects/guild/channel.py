@@ -73,11 +73,10 @@ class ChannelType(IntEnum):
 
     if GatewayConfig.version >= 9:
         GUILD_NEWS_THREAD = 10
-        GUILD_THREAD = 11
-        GUILD_PUBLIC_THREAD = 12
-        GUILD_PRIVATE_THREAD = 13
+        GUILD_PUBLIC_THREAD = 11
+        GUILD_PRIVATE_THREAD = 12
 
-    GUILD_STAGE_VOICE = 14
+    GUILD_STAGE_VOICE = 13
 
 
 @dataclass(repr=False)
