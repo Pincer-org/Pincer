@@ -89,6 +89,10 @@ Exceptions
 
 .. autoexception:: UnavailableGuildError()
 
+.. autoexception:: TimeoutError()
+
+.. autoexception:: GatewayConnectionError()
+
 .. autoexception:: HTTPError()
 
 .. autoexception:: NotModifiedError()
@@ -149,6 +153,8 @@ Exception Hierarchy
                 - :exc:`InvalidTokenError`
                 - :exc:`HeartbeatError`
             - :exc:`UnavailableGuildError`
+            - :exc:`TimeoutError`
+            - :exc:`GatewayConnectionError`
             - :exc:`HTTPError`
                 - :exc:`NotModifiedError`
                 - :exc:`BadRequestError`

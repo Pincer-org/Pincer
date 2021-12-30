@@ -3,21 +3,35 @@
 
 """sent when a user adds a reaction to a message"""
 
-from ..core.dispatch import GatewayDispatch
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from ..objects import GuildMember, Emoji
 from ..objects.events.message import MessageReactionAddEvent
 from ..utils.conversion import construct_client_dict
 
+if TYPE_CHECKING:
+    from ..client import Client
+    from ..core.gateway import Gateway
+    from ..core.gateway import GatewayDispatch
 
-async def message_reaction_add_middleware(self, payload: GatewayDispatch):
+
+async def message_reaction_add_middleware(
+    self: Client,
+    gateway: Gateway,
+    payload: GatewayDispatch
+):
     """|coro|
 
     Middleware for the ``on_message_reaction_add`` event.
 
     Parameters
     ----------
-    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
+    payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the message reaction add event.
+    gateway : :class:`~pincer.core.gateway.Gateway`
+        The gateway for the current shard.
 
     Returns
     -------

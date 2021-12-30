@@ -8,15 +8,15 @@ from typing import Optional
 @dataclass(repr=False)
 class GatewayConfig:
     """This file is to make maintaining the library and its gateway
-    configuration easier.
+    configuration easier. Leave compression blank for no compression.
     """
-    socket_base_url: str = "wss://gateway.discord.gg/"
+    MAX_RETRIES: int = 5
     version: int = 9
     encoding: str = "json"
-    compression: Optional[str] = "zlib-stream"
+    compression: str = "zlib-stream"
 
     @classmethod
-    def uri(cls) -> str:
+    def make_uri(cls, uri) -> str:
         """
         Returns
         -------
@@ -24,7 +24,7 @@ class GatewayConfig:
             The GatewayConfig's uri.
         """
         return (
-            f"{cls.socket_base_url}"
+            f"{uri}"
             f"?v={cls.version}"
             f"&encoding={cls.encoding}"
         ) + f"&compress={cls.compression}" * cls.compressed()

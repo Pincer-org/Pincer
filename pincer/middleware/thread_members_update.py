@@ -3,21 +3,34 @@
 
 """sent when anyone is added to or removed from a thread"""
 
-from ..core.dispatch import GatewayDispatch
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from ..objects.events.thread import ThreadMembersUpdateEvent
 from ..utils.conversion import construct_client_dict
 
+if TYPE_CHECKING:
+    from ..client import Client
+    from ..core.gateway import Gateway
+    from ..core.gateway import GatewayDispatch
 
-async def thread_members_update_middleware(self, payload: GatewayDispatch):
+
+async def thread_members_update_middleware(
+    self: Client,
+    gatewayer: Gateway,
+    payload: GatewayDispatch
+):
     """|coro|
 
     Middleware for the ``on_thread_members_update`` event.
 
     Parameters
     ----------
-    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
+    payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the thread members update event.
-
+    gateway : :class:`~pincer.core.gateway.Gateway`
+        The gateway for the current shard.
 
     Returns
     -------
