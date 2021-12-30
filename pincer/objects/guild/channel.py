@@ -1137,7 +1137,6 @@ _channel_type_map: Dict[ChannelType, Channel] = {
     ChannelType.GROUP_DM: GroupDMChannel,
     ChannelType.GUILD_CATEGORY: CategoryChannel,
     ChannelType.GUILD_NEWS: NewsChannel,
-    ChannelType.GUILD_THREAD: Thread,
     ChannelType.GUILD_PUBLIC_THREAD: PublicThread,
     ChannelType.GUILD_PRIVATE_THREAD: PrivateThread,
 }
