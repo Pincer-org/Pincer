@@ -15,7 +15,7 @@ from ...utils.api_object import APIObject, GuildProperty
 from ...utils.conversion import construct_client_dict, remove_none
 from ...utils.convert_message import convert_message
 from ...utils.types import MISSING
-from ...objects import ThreadMember
+
 
 if TYPE_CHECKING:
     from typing import AsyncGenerator, Dict, List, Optional, Union
@@ -28,6 +28,7 @@ if TYPE_CHECKING:
     from ..message.embed import Embed
     from ..user.user import User
     from ...client import Client
+    from ...objects import ThreadMember
     from ...utils.timestamp import Timestamp
     from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
