@@ -510,7 +510,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             headers=remove_none({"X-Audit-Log-Reason": reason})
         )
 
-    async def __post_send_handler(self, message: Message):
+    async def __post_send_handler(self, message: UserMessage):
         """Process a message after it was sent.
 
         Parameters
@@ -521,11 +521,11 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
         if getattr(message, "delete_after", None):
             await sleep(message.delete_after)
-            await self.delete()
+            await message.delete()
 
     def __post_sent(
         self,
-        message: Message
+        message: UserMessage
     ):
         """Ensure the `__post_send_handler` method its future.
 
