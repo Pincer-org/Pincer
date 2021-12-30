@@ -73,10 +73,11 @@ class ChannelType(IntEnum):
 
     if GatewayConfig.version >= 9:
         GUILD_NEWS_THREAD = 10
-        GUILD_PUBLIC_THREAD = 11
-        GUILD_PRIVATE_THREAD = 12
+        GUILD_THREAD = 11
+        GUILD_PUBLIC_THREAD = 12
+        GUILD_PRIVATE_THREAD = 13
 
-    GUILD_STAGE_VOICE = 13
+    GUILD_STAGE_VOICE = 14
 
 
 @dataclass(repr=False)
@@ -854,18 +855,12 @@ class Channel(APIObject, GuildProperty):  # noqa E501
                 - has_more: Whether there are potentially additional threads
                 that could be returned on a subsequent call.
         """
-        data = self._http.get(f"channels/{self.id}/threads/active")
-        return {
-            "threads": (
-                Channel.from_dict(construct_client_dict(self._client, t))
-                for t in data["threads"]
-            ),
-            "members": (
-                ThreadMember.from_dict(construct_client_dict(self._client, m))
-                for m in data["members"]
-            ),
-            "has_more": data["has_more"],
-        }
+        return ThreadsResponse.from_dict(
+            construct_client_dict(
+                self._client,
+                self._http.get(f"channels/{self.id}/threads/active"),
+            )
+        )
 
     async def list_public_archived_threads(
         self, before: Optional[Timestamp] = None, limit: Optional[int] = None
@@ -901,17 +896,9 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             f"channels/{self.id}/threads/archived/public",
             data=remove_none({"before": before, "limit": limit}),
         )
-        return {
-            "threads": (
-                Channel.from_dict(construct_client_dict(self._client, t))
-                for t in data["threads"]
-            ),
-            "members": (
-                ThreadMember.from_dict(construct_client_dict(self._client, m))
-                for m in data["members"]
-            ),
-            "has_more": data["has_more"],
-        }
+        return ThreadsResponse.from_dict(
+            construct_client_dict(self._client, data)
+        )
 
     async def list_private_archived_threads(
         self, before: Optional[Timestamp] = None, limit: Optional[int] = None
@@ -945,17 +932,9 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             f"channels/{self.id}/threads/archived/private",
             data=remove_none({"before": before, "limit": limit}),
         )
-        return {
-            "threads": (
-                Channel.from_dict(construct_client_dict(self._client, t))
-                for t in data["threads"]
-            ),
-            "members": (
-                ThreadMember.from_dict(construct_client_dict(self._client, m))
-                for m in data["members"]
-            ),
-            "has_more": data["has_more"],
-        }
+        return ThreadsResponse.from_dict(
+            construct_client_dict(self._client, data)
+        )
 
     async def list_joined_private_archived_threads(
         self, before: Optional[Timestamp] = None, limit: Optional[int] = None
@@ -990,17 +969,9 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             f"channels/{self.id}/users/@me/threads/archived/private",
             data=remove_none({"before": before, "limit": limit}),
         )
-        return {
-            "threads": (
-                Channel.from_dict(construct_client_dict(self._client, t))
-                for t in data["threads"]
-            ),
-            "members": (
-                ThreadMember.from_dict(construct_client_dict(self._client, m))
-                for m in data["members"]
-            ),
-            "has_more": data["has_more"],
-        }
+        return ThreadsResponse.from_dict(
+            construct_client_dict(self._client, data)
+        )
 
     def __str__(self):
         """return the discord tag when object gets used as a string."""
@@ -1100,8 +1071,6 @@ class CategoryChannel(Channel):
     with all the same attributes.
     """
 
-    pass
-
 
 class NewsChannel(Channel):
     """A subclass of ``Channel`` for news channels with all the same attributes."""
@@ -1136,12 +1105,23 @@ class NewsChannel(Channel):
         return await super().edit(**kwargs)
 
 
-class PublicThread(Channel):
-    """A subclass of ``Channel`` for public threads with all the same attributes."""
+class Thread(Channel):
+    """A subclass of ``Channel`` for threads with all the same attributes."""
 
 
-class PrivateThread(Channel):
-    """A subclass of ``Channel`` for private threads with all the same attributes."""
+class PublicThread(Thread):
+    """A subclass of ``Thread`` for public threads with all the same attributes."""
+
+
+class PrivateThread(Thread):
+    """A subclass of ``Thread`` for private threads with all the same attributes."""
+
+
+@dataclass(repr=False)
+class ThreadsResponse(APIObject):
+    threads: AsyncIterator[Thread]
+    members: AsyncIterator[ThreadMember]
+    has_more: bool
 
 
 @dataclass(repr=False)
@@ -1173,6 +1153,7 @@ _channel_type_map: Dict[ChannelType, Channel] = {
     ChannelType.GROUP_DM: GroupDMChannel,
     ChannelType.GUILD_CATEGORY: CategoryChannel,
     ChannelType.GUILD_NEWS: NewsChannel,
+    ChannelType.GUILD_THREAD: Thread,
     ChannelType.GUILD_PUBLIC_THREAD: PublicThread,
     ChannelType.GUILD_PRIVATE_THREAD: PrivateThread,
 }
