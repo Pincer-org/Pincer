@@ -63,8 +63,23 @@ class Gateway:
     This token must be a bot token.
     (Which can be found on
     `<https://discord.com/developers/applications/>`_)
-    """
 
+    Parameters
+    ----------
+    token : str.
+        The token for this bot
+    intents : :class:`~pincer.objects.app.intents.Intents`
+        The itents to use. More information can be found at
+        `<https://discord.com/developers/docs/topics/gateway#gateway-intents>`_.
+    url : str
+        The gateway url.
+    shard : int
+        The ID of the shard to run.
+    num_shards : int
+        Number used to route traffic to the current. This should usually be the total
+        number of shards that will be run. More information at
+        `<https://discord.com/developers/docs/topics/gateway#sharding>`_.
+    """
     def __init__(
         self,
         token: str, *,
