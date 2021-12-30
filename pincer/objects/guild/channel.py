@@ -848,6 +848,162 @@ class Channel(APIObject, GuildProperty):  # noqa E501
                 construct_client_dict(self._client, member)
             )
 
+    async def list_active_threads(self) -> dict[str, Any]:
+        """
+        Returns all active threads in the channel, including public and
+        private threads. Threads are ordered by their id, in descending order.
+
+        Returns
+        -------
+        dict[:class:`str`, :class:`Any`]
+            Dictionary containing the response body:
+                - threads: Generator of the active threads.
+                - members: Generator for each thread member object for each
+                returned thread the current user has joined.
+                - has_more: Whether there are potentially additional threads
+                that could be returned on a subsequent call.
+        """
+        data = self._http.get(f"channels/{self.id}/threads/active")
+        return {
+            "threads": (Channel.from_dict(construct_client_dict(
+                self._client, t
+            )) for t in data["threads"]),
+            "members": (ThreadMember.from_dict(construct_client_dict(
+                self._client, m
+            )) for m in data["members"]),
+            "has_more": data["has_more"]
+        }
+
+    async def list_public_archived_threads(
+        self,
+        before: Timestamp = None,
+        limit: int = None
+    ) -> dict[str, Any]:
+        """
+        Returns archived threads in the channel that are public.
+        When called on a ``GUILD_TEXT`` channel, returns threads of type
+        ``GUILD_PUBLIC_THREAD``. When called on a ``GUILD_NEWS`` channel returns
+        threads of type ``GUILD_NEWS_THREAD``. Threads are ordered by
+        ``archive_timestamp``, in descending order. Requires the
+        ``READ_MESSAGE_HISTORY`` permission.
+
+        Parameters
+        ----------
+        before: Optional[:class:`~.pincer.objects.timestamp.Timestamp`]
+            Returns threads before this timestamp.
+        limit: Optional[:class:`int`]
+            The maximum number of threads to return.
+
+        Returns
+        -------
+        dict[:class:`str`, :class:`Any`]
+            Dictionary containing the response body:
+                - threads: Generator of the public archived threads.
+                - members: Generator for each thread member object for each
+                returned thread the current user has joined.
+                - has_more: Whether there are potentially additional threads
+                that could be returned on a subsequent call.
+        """
+        data = self._http.get(
+            f"channels/{self.id}/threads/archived/public",
+            data={"before": before, "limit": limit}
+        )
+        return {
+            "threads": (Channel.from_dict(construct_client_dict(
+                self._client, t
+            )) for t in data["threads"]),
+            "members": (ThreadMember.from_dict(construct_client_dict(
+                self._client, m
+            )) for m in data["members"]),
+            "has_more": data["has_more"]
+        }
+
+    async def list_private_archived_threads(
+        self,
+        before: Timestamp = None,
+        limit: int = None
+    ) -> dict[str, Any]:
+        """
+        Returns archived threads in the channel that are of type
+        ``GUILD_PRIVATE_THREAD``. Threads are ordered by ``archive_timestamp``,
+        in descending order. Requires both the ``READ_MESSAGE_HISTORY`` and
+        ``MANAGE_THREADS`` permissions.
+
+        Parameters
+        ----------
+        before: Optional[:class:`~.pincer.objects.timestamp.Timestamp`]
+            Returns threads before this timestamp.
+        limit: Optional[:class:`int`]
+            The maximum number of threads to return.
+
+        Returns
+        -------
+        dict[:class:`str`, :class:`Any`]
+            Dictionary containing the response body:
+                - threads: Generator of the private archived threads.
+                - members: Generator for each thread member object for each
+                returned thread the current user has joined.
+                - has_more: Whether there are potentially additional threads
+                that could be returned on a subsequent call.
+        """
+        data = self._http.get(
+            f"channels/{self.id}/threads/archived/private",
+            data={"before": before, "limit": limit}
+        )
+        return {
+            "threads": (Channel.from_dict(construct_client_dict(
+                self._client, t
+            )) for t in data["threads"]),
+            "members": (ThreadMember.from_dict(construct_client_dict(
+                self._client, m
+            )) for m in data["members"]),
+            "has_more": data["has_more"]
+        }
+
+    async def list_joined_private_archived_threads(
+        self,
+        before: Timestamp = None,
+        limit: int = None
+    ) -> dict[str, Any]:
+        """
+        Returns archived threads in the channel that are of type
+        ``GUILD_PRIVATE_THREAD``, and the user has joined. Threads are ordered
+        by their id, in descending order. Requires the ``READ_MESSAGE_HISTORY``
+        permission.
+
+        Parameters
+        ----------
+        before: Optional[:class:`~.pincer.objects.timestamp.Timestamp`]
+            Returns threads before this timestamp.
+        limit: Optional[:class:`int`]
+            The maximum number of threads to return.
+
+        Returns
+        -------
+        dict[:class:`str`, :class:`Any`]
+            Dictionary containing the response body:
+                - threads: Generator of the private archived threads
+                the user has joined.
+                - members: Generator for each thread member object for each
+                returned thread the current user has joined.
+                - has_more: Whether there are potentially additional threads
+                that could be returned on a subsequent call.
+        """
+        data = self._http.get(
+            f"channels/{self.id}/users/@me/threads/archived/private",
+            data={"before": before, "limit": limit}
+        )
+        return {
+            "threads": (Channel.from_dict(construct_client_dict(
+                self._client, t
+            )) for t in data["threads"]),
+            "members": (ThreadMember.from_dict(construct_client_dict(
+                self._client, m
+            )) for m in data["members"]),
+            "has_more": data["has_more"]
+        }
+
+
     def __str__(self):
         """return the discord tag when object gets used as a string."""
         return self.name or str(self.id)
