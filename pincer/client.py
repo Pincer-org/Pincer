@@ -523,7 +523,8 @@ class Client:
         shard: int,
         num_shards: int
     ):
-        """Starts a shard
+        """|coro|
+        Starts a shard
         This should not be run most of the time. ``run_shards`` and ``run_autosharded``
         will likely do what you want.
 

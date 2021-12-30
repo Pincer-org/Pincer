@@ -171,7 +171,7 @@ class Gateway:
             create_task(self.__session.close())
 
     async def init_session(self):
-        """
+        """|coro|
         Crates the ClientSession. ALWAYS run this function right after initializing
         a Gateway.
         """
@@ -204,7 +204,8 @@ class Gateway:
         return None
 
     async def start_loop(self):
-        """Instantiate the dispatcher, this will create a connection to the
+        """|coro|
+        Instantiate the dispatcher, this will create a connection to the
         Discord websocket API on behalf of the client whose token has
         been passed.
         """
@@ -229,7 +230,9 @@ class Gateway:
         await self.event_loop()
 
     async def event_loop(self):
-        """Handles receiving messages and decompressing them if needed"""
+        """|coro|
+        Handles receiving messages and decompressing them if needed
+        """
         async for msg in self.__socket:
             if msg.type == WSMsgType.TEXT:
                 await self.handle_data(msg.data)
@@ -258,7 +261,8 @@ class Gateway:
         self.start_loop()
 
     async def handle_data(self, data: Dict[Any]):
-        """Method is run when a payload is received from the gateway.
+        """|coro|
+        Method is run when a payload is received from the gateway.
         The message is expected to already have been decompressed.
         Handling the opcode is forked to the background so they aren't blocking.
         """
@@ -290,13 +294,13 @@ class Gateway:
         ensure_future(handler(payload))
 
     async def handle_heartbeat_req(self, payload: GatewayDispatch):
-        """
+        """|coro|
         Opcode 1 - Instantly send a heartbeat.
         """
         self.send_next_heartbeat()
 
     async def handle_reconnect(self, payload: GatewayDispatch):
-        """
+        """|coro|
         Opcode 7 - Reconnect and resume immediately.
         """
         _log.debug(
@@ -310,7 +314,7 @@ class Gateway:
         await self.start_loop()
 
     async def handle_invalid_session(self, payload: GatewayDispatch):
-        """
+        """|coro|
         Opcode 9 - Invalid connection
         Attempt to relog. This is probably because the session was already invalidated
         when we tried to reconnect.
@@ -320,7 +324,7 @@ class Gateway:
         await self.start_loop()
 
     async def identify_and_handle_hello(self, payload: GatewayDispatch):
-        """
+        """|coro|
         Opcode 10 - Hello there general kenobi
         Runs when we connect to the gateway for the first time and every time after.
         If the client thinks it should reconnect, the opcode 6 resume payload is sent
@@ -363,7 +367,7 @@ class Gateway:
         self.start_heartbeat()
 
     async def handle_heartbeat(self, payload: GatewayDispatch):
-        """
+        """|coro|
         Opcode 11 - Heatbeat
         Track that the heartbeat has been received using shared state (Rustaceans would
         be very mad)
@@ -371,7 +375,7 @@ class Gateway:
         self.__has_received_ack = True
 
     async def send(self, payload: str):
-        """
+        """|coro|
         Send a string object to the payload. Most of this method is just logging,
         the last line is the only one that matters for functionality.
         """
@@ -415,7 +419,7 @@ class Gateway:
         self.__wait_for_heartbeat.cancel()
 
     async def __heartbeat_loop(self):
-        """
+        """|coro|
         The heartbeat is responsible for keeping the connection to Discord alive.
 
         Jitter is only random for the first heartbeat. It should be 1 every other
