@@ -1,48 +1,55 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-"""sent when properties about a user changes"""
-
+"""
+non-subscription event sent immediately after connecting,
+contains server information
+"""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-
-from ..objects.user import User
-from ..utils.conversion import construct_client_dict
-from ..utils.types import Coro
+import logging
 
 if TYPE_CHECKING:
+    from typing import Tuple
+    from ..utils.types import Coro
     from ..client import Client
     from ..core.gateway import Gateway
     from ..core.gateway import GatewayDispatch
 
+_log = logging.getLogger(__package__)
 
-async def user_update_middleware(
+
+async def on_resumed(
     self: Client,
     gateway: Gateway,
     payload: GatewayDispatch
-):
+) -> Tuple[str]:
     """|coro|
 
-    Middleware for the ``on_user_update`` event.
+    Middleware for the ``on_resumed`` event.
 
     Parameters
     ----------
     payload : :class:`~pincer.core.gateway.GatewayDispatch`
-        The data received from the user update event.
+        The data received from the stage instance create event
     gateway : :class:`~pincer.core.gateway.Gateway`
         The gateway for the current shard.
 
     Returns
     -------
-    Tuple[:class:`str`, :class:`~pincer.objects.user.user.User`]
-        ``on_user_update`` and a ``User``
+    Tuple[:class:`str`]
+        ``on_ready``
     """
-    return (
-        "on_user_update",
-        User.from_dict(construct_client_dict(self, payload.data)),
+
+    _log.debug(
+        "%s Successfully reconnected to Discord gateway. Restarting heartbeat.",
+        gateway.shard_key
     )
+    gateway.start_heartbeat()
+
+    return ("on_resumed",)
 
 
 def export() -> Coro:
-    return user_update_middleware
+    return on_resumed

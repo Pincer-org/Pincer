@@ -4,8 +4,9 @@
 from __future__ import annotations
 
 import logging
-from asyncio import iscoroutinefunction, run, ensure_future
+from asyncio import iscoroutinefunction, ensure_future, create_task, get_event_loop
 from collections import defaultdict
+from functools import partial
 from importlib import import_module
 from inspect import isasyncgenfunction
 from typing import (
@@ -13,16 +14,16 @@ from typing import (
     Dict,
     List,
     Optional,
+    Iterable,
     Tuple,
     Union,
     overload,
-    AsyncIterator,
     TYPE_CHECKING
 )
 from . import __package__
 from .commands import ChatCommandHandler
 from .core import HTTPClient
-from .core.gateway import Dispatcher
+from .core.gateway import GatewayInfo, Gateway
 from .exceptions import (
     InvalidEventName,
     TooManySetupArguments,
@@ -49,7 +50,7 @@ from .objects.guild.channel import GroupDMChannel
 from .utils.conversion import construct_client_dict, remove_none
 from .utils.event_mgr import EventMgr
 from .utils.extraction import get_index
-from .utils.insertion import should_pass_cls
+from .utils.insertion import should_pass_cls, should_pass_gateway
 from .utils.signature import get_params
 from .utils.types import CheckFunction
 from .utils.types import Coro
@@ -137,12 +138,10 @@ def event_middleware(call: str, *, override: bool = False):
                 "already been registered"
             )
 
-        async def wrapper(cls, payload: GatewayDispatch):
+        async def wrapper(cls, gateway: Gateway, payload: GatewayDispatch):
             _log.debug("`%s` middleware has been invoked", call)
 
-            return await (
-                func(cls, payload) if should_pass_cls(func) else func(payload)
-            )
+            return await func(cls, gateway, payload)
 
         _events[call] = wrapper
         return wrapper
@@ -154,7 +153,7 @@ for event, middleware_ in middleware.items():
     event_middleware(event)(middleware_)
 
 
-class Client(Dispatcher):
+class Client:
     """The client is the main instance which is between the programmer
     and the discord API.
 
@@ -200,23 +199,26 @@ class Client(Dispatcher):
         if isinstance(intents, Iterable):
             intents = sum(intents)
 
-        super().__init__(
-            token,
-            handlers={
-                # Gets triggered on all events
-                -1: self.payload_event_handler,
-                # Use this event handler for opcode 0.
-                0: self.event_handler,
-            },
-            intents=intents or Intents.all(),
-            reconnect=reconnect,
-        )
+        if intents is None:
+            intents = Intents.all()
+
+        self.intents = intents
+        self.reconnect = reconnect
+        self.token = token
 
         self.bot: Optional[User] = None
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
         self.throttler = throttler
         self.event_mgr = EventMgr()
+
+        async def get_gateway():
+            return GatewayInfo.from_dict(
+                await self.http.get("gateway/bot")
+            )
+
+        loop = get_event_loop()
+        self.gateway: GatewayInfo = loop.run_until_complete(get_gateway())
 
         # The guild and channel value is only registered if the Client has the GUILDS
         # intent.
@@ -235,7 +237,6 @@ class Client(Dispatcher):
         return [
             cmd.app.name for cmd in ChatCommandHandler.register.values()
         ]
-
 
     @property
     def guild_ids(self) -> List[Snowflake]:
@@ -340,7 +341,6 @@ class Client(Dispatcher):
                 or isasyncgenfunction(call)
             ]
         )
-
 
     def load_cog(self, path: str, package: Optional[str] = None):
         """Load a cog from a string path, setup method in COG may
@@ -461,7 +461,7 @@ class Client(Dispatcher):
         await ChatCommandHandler(self).remove_commands(to_remove)
 
     @staticmethod
-    def execute_event(calls: List[Coro], *args, **kwargs):
+    def execute_event(calls: List[Coro], gateway: Gateway, *args, **kwargs):
         """Invokes an event.
 
         Parameters
@@ -484,19 +484,86 @@ class Client(Dispatcher):
                     *remove_none(args),
                 )
 
+            if should_pass_gateway(call):
+                call_args = (call_args[0], gateway, *call_args[1:])
+
             ensure_future(call(*call_args, **kwargs))
 
     def run(self):
-        """Start the event listener."""
-        self.start_loop()
+        """Start the bot."""
+        loop = get_event_loop()
+        ensure_future(self.start_shard(0, 1), loop=loop)
+        loop.run_forever()
+
+    def run_autosharded(self):
+        """
+        Runs the bot with the amount of shards specified by the Discord gateway.
+        """
+        num_shards = self.gateway.shards
+        return self.run_shards(range(num_shards), num_shards)
+
+    def run_shards(self, shards: Iterable, num_shards: int):
+        """
+        Runs shards that you specify.
+
+        shards: Iterable
+            The shards to run.
+        num_shards: int
+            The total amount of shards.
+        """
+        loop = get_event_loop()
+
+        for shard in shards:
+            ensure_future(self.start_shard(shard, num_shards), loop=loop)
+
+        loop.run_forever()
+
+    async def start_shard(
+        self,
+        shard: int,
+        num_shards: int
+    ):
+        """|coro|
+        Starts a shard
+        This should not be run most of the time. ``run_shards`` and ``run_autosharded``
+        will likely do what you want.
+
+        shard : int
+            The number of the shard to start.
+        num_shards : int
+            The total number of shards.
+        """
+
+        gateway = Gateway(
+            self.token,
+            intents=self.intents,
+            url=self.gateway.url,
+            shard=shard,
+            num_shards=num_shards
+        )
+        await gateway.init_session()
+
+        gateway.append_handlers({
+            # Gets triggered on all events
+            -1: partial(self.payload_event_handler, gateway),
+            # Use this event handler for opcode 0.
+            0: partial(self.event_handler, gateway)
+        })
+
+        create_task(gateway.start_loop())
 
     def __del__(self):
         """Ensure close of the http client."""
         if hasattr(self, "http"):
-            run(self.http.close())
+            create_task(self.http.close())
 
     async def handle_middleware(
-        self, payload: GatewayDispatch, key: str, *args, **kwargs
+        self,
+        payload: GatewayDispatch,
+        key: str,
+        gateway: Gateway,
+        *args,
+        **kwargs
     ) -> Tuple[Optional[Coro], List[Any], Dict[str, Any]]:
         """|coro|
 
@@ -527,7 +594,7 @@ class Client(Dispatcher):
         next_call, arguments, params = ware, [], {}
 
         if iscoroutinefunction(ware):
-            extractable = await ware(self, payload, *args, **kwargs)
+            extractable = await ware(self, gateway, payload, *args, **kwargs)
 
             if not isinstance(extractable, tuple):
                 raise RuntimeError(
@@ -544,11 +611,16 @@ class Client(Dispatcher):
             return (next_call, ret_object)
 
         return await self.handle_middleware(
-            payload, next_call, *arguments, **params
+            payload, next_call, gateway, *arguments, **params
         )
 
     async def execute_error(
-        self, error: Exception, name: str = "on_error", *args, **kwargs
+        self,
+        error: Exception,
+        gateway: Gateway,
+        name: str = "on_error",
+        *args,
+        **kwargs
     ):
         """|coro|
 
@@ -567,11 +639,16 @@ class Client(Dispatcher):
             if ``call := self.get_event_coro(name)`` is :data:`False`
         """
         if calls := self.get_event_coro(name):
-            self.execute_event(calls, error, *args, **kwargs)
+            self.execute_event(calls, gateway, error, *args, **kwargs)
         else:
             raise error
 
-    async def process_event(self, name: str, payload: GatewayDispatch):
+    async def process_event(
+        self,
+        name: str,
+        payload: GatewayDispatch,
+        gateway: Gateway
+    ):
         """|coro|
 
         Processes and invokes an event and its middleware
@@ -587,16 +664,20 @@ class Client(Dispatcher):
             what specifically happened.
         """
         try:
-            key, args = await self.handle_middleware(payload, name)
+            key, args = await self.handle_middleware(payload, name, gateway)
             self.event_mgr.process_events(key, args)
 
             if calls := self.get_event_coro(key):
-                self.execute_event(calls, args)
+                self.execute_event(calls, gateway, args)
 
         except Exception as e:
-            await self.execute_error(e)
+            await self.execute_error(e, gateway)
 
-    async def event_handler(self, _, payload: GatewayDispatch):
+    async def event_handler(
+        self,
+        gateway: Gateway,
+        payload: GatewayDispatch
+    ):
         """|coro|
 
         Handles all payload events with opcode 0.
@@ -611,9 +692,13 @@ class Client(Dispatcher):
             required data for the client to know what event it is and
             what specifically happened.
         """
-        await self.process_event(payload.event_name.lower(), payload)
+        await self.process_event(payload.event_name.lower(), payload, gateway)
 
-    async def payload_event_handler(self, _, payload: GatewayDispatch):
+    async def payload_event_handler(
+        self,
+        gateway: Gateway,
+        payload: GatewayDispatch
+    ):
         """|coro|
 
         Special event which activates the on_payload event.
@@ -628,7 +713,7 @@ class Client(Dispatcher):
             required data for the client to know what event it is and
             what specifically happened.
         """
-        await self.process_event("payload", payload)
+        await self.process_event("payload", payload, gateway)
 
     @overload
     async def create_guild(
@@ -907,7 +992,6 @@ class Client(Dispatcher):
         """
         return await Webhook.from_id(self, id, token)
 
-
     async def get_current_user(self) -> User:
         """|coro|
         The user object of the requester's account.
@@ -923,7 +1007,7 @@ class Client(Dispatcher):
         """
         return User.from_dict(
             construct_client_dict(
-                self, 
+                self,
                 await self.http.get("users/@me")
             )
         )

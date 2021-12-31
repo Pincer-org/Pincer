@@ -18,6 +18,7 @@
 ![gitmoji](https://img.shields.io/badge/gitmoji-%20🚀%20💀-FFDD67.svg)
 
 # <img src="../assets/svg/pincer.svg" height="24px" alt="Pincer Logo"> Pincer
+
 The snappy asynchronous Discord API wrapper written with aiohttp.
 
 | :exclamation: | The package is currently within the Alpha phase |

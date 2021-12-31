@@ -6,21 +6,35 @@ sent when the client receives a notification
 (mention or new message in eligible channels)
 """
 
-from ..core.dispatch import GatewayDispatch
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from ..objects.events.notification import NotificationCreateEvent
 from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
+if TYPE_CHECKING:
+    from ..client import Client
+    from ..core.gateway import Gateway
+    from ..core.gateway import GatewayDispatch
 
-async def notification_create_middleware(self, payload: GatewayDispatch):
+
+async def notification_create_middleware(
+    self: Client,
+    gateway: Gateway,
+    payload: GatewayDispatch
+):
     """|coro|
 
     Middleware for the ``on_notification_create`` event.
 
     Parameters
     ----------
-    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
+    payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the notification create event.
+    gateway : :class:`~pincer.core.gateway.Gateway`
+        The gateway for the current shard.
 
     Returns
     -------

@@ -25,7 +25,7 @@ from .components import (
 )
 
 __all__ = (
-    "", "ActionRow", "Button", "ButtonStyle", "ChannelTypes",
+    "ActionRow", "Button", "ButtonStyle", "ChannelTypes",
     "ChatCommandHandler", "Choice", "Choices", "CommandArg",
     "ComponentHandler", "Description", "LinkButton", "MaxValue", "MinValue",
     "Modifier", "SelectMenu", "SelectOption", "button", "command", "component",
