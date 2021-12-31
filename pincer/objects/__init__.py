@@ -16,7 +16,6 @@ from .app.interactions import (
     ResolvedData, InteractionData, Interaction
 )
 from .app.mentionable import Mentionable
-from .app.select_menu import SelectOption, SelectMenu
 from .app.session_start_limit import SessionStartLimit
 from .app.throttle_scope import ThrottleScope
 from .app.throttling import ThrottleInterface, DefaultThrottleHandler
@@ -65,7 +64,7 @@ from .guild.guild import (
     Guild
 )
 from .guild.invite import (
-    InviteTargetType, InviteStageInstance, InviteMetadata, Invite
+    InviteTargetType, InviteStageInstance, Invite
 )
 from .guild.member import GuildMember, PartialGuildMember, BaseMember
 from .guild.overwrite import Overwrite
@@ -77,8 +76,7 @@ from .guild.webhook import WebhookType, Webhook
 from .guild.welcome_screen import WelcomeScreenChannel, WelcomeScreen
 from .guild.widget import GuildWidget
 from .message.attachment import Attachment
-from .message.button import ButtonStyle, Button
-from .message.component import MessageComponent
+from .message.component import MessageComponent, ComponentType
 from .message.context import MessageContext
 from .message.embed import (
     Embed, EmbedField, EmbedImage, EmbedAuthor, EmbedProvider, EmbedThumbnail,
@@ -106,16 +104,16 @@ from .user.voice_state import VoiceState
 from .voice.region import VoiceRegion
 
 __all__ = (
-    "Activity", "ActivityAssets", "ActivityButton", "ActivityEmoji",
-    "ActivityFlags", "ActivityParty", "ActivitySecrets", "ActivityTimestamp",
-    "ActivityType", "AllowedMentionTypes", "AllowedMentions", "AppCommand",
-    "AppCommandInteractionDataOption", "AppCommandOption",
-    "AppCommandOptionChoice", "AppCommandOptionType", "AppCommandType",
-    "Application", "Attachment", "AuditEntryInfo", "AuditLog",
-    "AuditLogChange", "AuditLogEntry", "AuditLogEvent", "Ban", "BaseMember",
-    "Button", "ButtonStyle", "CallbackType", "CategoryChannel", "Channel",
-    "ChannelMention", "ChannelPinsUpdateEvent", "ChannelType",
-    "ClientCommandStructure", "ClientStatus", "Connection",
+    "", "Activity", "ActivityAssets", "ActivityButton",
+    "ActivityEmoji", "ActivityFlags", "ActivityParty", "ActivitySecrets",
+    "ActivityTimestamp", "ActivityType", "AllowedMentionTypes",
+    "AllowedMentions", "AppCommand", "AppCommandInteractionDataOption",
+    "AppCommandOption", "AppCommandOptionChoice", "AppCommandOptionType",
+    "AppCommandType", "Application", "Attachment", "AuditEntryInfo",
+    "AuditLog", "AuditLogChange", "AuditLogEntry", "AuditLogEvent", "Ban",
+    "BaseMember", "Button", "ButtonStyle", "CallbackType", "CategoryChannel",
+    "Channel", "ChannelMention", "ChannelPinsUpdateEvent", "ChannelType",
+    "ClientCommandStructure", "ClientStatus", "ComponentType", "Connection",
     "DefaultMessageNotificationLevel", "DefaultThrottleHandler",
     "DiscordError", "Embed", "EmbedAuthor", "EmbedField", "EmbedFooter",
     "EmbedImage", "EmbedProvider", "EmbedThumbnail", "EmbedVideo", "Emoji",
@@ -129,17 +127,16 @@ __all__ = (
     "IntegrationAccount", "IntegrationApplication", "IntegrationDeleteEvent",
     "IntegrationExpireBehavior", "Intents", "Interaction", "InteractionData",
     "InteractionFlags", "InteractionType", "Invite", "InviteCreateEvent",
-    "InviteDeleteEvent", "InviteMetadata", "InviteStageInstance",
-    "InviteTargetType", "MFALevel", "Mentionable", "Message",
-    "MessageActivity", "MessageActivityType", "MessageComponent",
-    "MessageContext", "MessageDeleteBulkEvent", "MessageDeleteEvent",
-    "MessageFlags", "MessageInteraction", "MessageReactionAddEvent",
-    "MessageReactionRemoveAllEvent", "MessageReactionRemoveEmojiEvent",
-    "MessageReactionRemoveEvent", "MessageReference", "MessageType",
-    "NewsChannel", "Overwrite", "PartialGuildMember", "PremiumTier",
-    "PremiumTypes", "PresenceUpdateEvent", "PrivacyLevel", "Reaction",
-    "ReadyEvent", "RequestGuildMembers", "ResolvedData", "Resume", "Role",
-    "RoleTags", "SelectMenu", "SelectOption", "SessionStartLimit",
+    "InviteDeleteEvent", "InviteStageInstance", "InviteTargetType", "MFALevel",
+    "Mentionable", "Message", "MessageActivity", "MessageActivityType",
+    "MessageComponent", "MessageContext", "MessageDeleteBulkEvent",
+    "MessageDeleteEvent", "MessageFlags", "MessageInteraction",
+    "MessageReactionAddEvent", "MessageReactionRemoveAllEvent",
+    "MessageReactionRemoveEmojiEvent", "MessageReactionRemoveEvent",
+    "MessageReference", "MessageType", "NewsChannel", "Overwrite",
+    "PartialGuildMember", "PremiumTier", "PremiumTypes", "PresenceUpdateEvent",
+    "PrivacyLevel", "Reaction", "ReadyEvent", "RequestGuildMembers",
+    "ResolvedData", "Resume", "Role", "RoleTags", "SessionStartLimit",
     "StageInstance", "StatusType", "Sticker", "StickerFormatType",
     "StickerItem", "StickerPack", "StickerType", "SystemChannelFlags",
     "TextChannel", "ThreadListSyncEvent", "ThreadMember",

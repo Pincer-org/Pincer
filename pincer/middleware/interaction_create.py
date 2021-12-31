@@ -3,15 +3,15 @@
 
 from __future__ import annotations
 
+from contextlib import suppress
 import logging
 from inspect import isasyncgenfunction, _empty
 from typing import Dict, Any
 from typing import TYPE_CHECKING
 
-
-from ..commands import ChatCommandHandler
-from ..core.dispatch import GatewayDispatch
-from ..objects import Interaction, MessageContext, AppCommandType
+from ..commands import ChatCommandHandler, ComponentHandler, hash_app_command_params
+from ..exceptions import InteractionDoesNotExist
+from ..objects import Interaction, MessageContext, AppCommandType, InteractionType
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 from ..utils import get_index
 from ..utils.conversion import construct_client_dict
@@ -19,18 +19,70 @@ from ..utils.signature import get_signature_and_params
 
 if TYPE_CHECKING:
     from typing import List, Tuple
-
+    from ..client import Client
+    from ..core.gateway import Gateway
+    from ..core.gateway import GatewayDispatch
 
 _log = logging.getLogger(__name__)
 
 
+def get_command_from_registry(interaction: Interaction):
+    """
+    Search for a command in ChatCommandHandler.register and return it if it exists
+
+    Parameters
+    ---------
+    interaction : :class:`~pincer.objects.app.interactions.Interaction`
+        The interaction to get the command from
+
+    Raises
+    ------
+    :class:`~pincer.exceptions.InteractionDoesNotExist`
+        The command is not registered
+    """
+
+    with suppress(KeyError):
+        return ChatCommandHandler.register[hash_app_command_params(
+            interaction.data.name,
+            MISSING,
+            interaction.data.type
+        )]
+
+    with suppress(KeyError):
+        return ChatCommandHandler.register[hash_app_command_params(
+            interaction.data.name,
+            interaction.guild_id,
+            interaction.data.type
+        )]
+
+    raise InteractionDoesNotExist(
+        f"No command is registered for {interaction.data.name} with type"
+        f"{interaction.data.type}"
+    )
+
+
+def get_call(self: Client, interaction: Interaction):
+    if interaction.type == InteractionType.APPLICATION_COMMAND:
+        command = get_command_from_registry(interaction)
+        if command is None:
+            return None
+        # Only application commands can be throttled
+        self.throttler.handle(command)
+        return command.call
+    elif interaction.type == InteractionType.MESSAGE_COMPONENT:
+        return ComponentHandler.register.get(interaction.data.custom_id)
+    elif interaction.type == InteractionType.AUTOCOMPLETE:
+        raise NotImplementedError(
+            "Handling for autocomplete is not implemented"
+        )
+
+
 async def interaction_response_handler(
-    self,
     command: Coro,
     context: MessageContext,
     interaction: Interaction,
     args: List[Any],
-    kwargs: Dict[str, Any],
+    kwargs: Dict[str, Any]
 ):
     """|coro|
 
@@ -69,7 +121,7 @@ async def interaction_response_handler(
 
 
 async def interaction_handler(
-    self, interaction: Interaction, context: MessageContext, command: Coro
+    interaction: Interaction, context: MessageContext, command: Coro
 ):
     """|coro|
 
@@ -84,8 +136,6 @@ async def interaction_handler(
     command : :class:`~pincer.utils.types.Coro`
         The coroutine which will be seen as a command.
     """
-    self.throttler.handle(context)
-
     sig, _ = get_signature_and_params(command)
 
     defaults = {
@@ -115,24 +165,28 @@ async def interaction_handler(
         # Add Message to args
         args.append(next(iter(interaction.data.resolved.messages.values())))
 
+    if interaction.data.values:
+        args.append(interaction.data.values)
+
     kwargs = {**defaults, **params}
 
     await interaction_response_handler(
-        self, command, context, interaction, args, kwargs
+        command, context, interaction, args, kwargs
     )
 
 
 async def interaction_create_middleware(
-    self, payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ) -> Tuple[str, Interaction]:
     """Middleware for ``on_interaction``, which handles command
     execution.
 
     Parameters
     ----------
-    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
+    payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the interaction event.
-
+    gateway : :class:`~pincer.core.gateway.Gateway`
+        The gateway for the current shard.
 
     Raises
     ------
@@ -148,31 +202,29 @@ async def interaction_create_middleware(
     interaction: Interaction = Interaction.from_dict(
         construct_client_dict(self, payload.data)
     )
-    command = ChatCommandHandler.register.get(interaction.data.name)
 
-    if command:
-        context = interaction.convert_to_message_context(command)
+    call = get_call(self, interaction)
+    context = interaction.get_message_context()
 
-        try:
-            await interaction_handler(self, interaction, context, command.call)
-        except Exception as e:
-            if coro := get_index(self.get_event_coro("on_command_error"), 0):
-                params = get_signature_and_params(coro)[1]
+    try:
+        await interaction_handler(interaction, context, call)
+    except Exception as e:
+        if coro := get_index(self.get_event_coro("on_command_error"), 0):
+            params = get_signature_and_params(coro)[1]
 
-                # Check if a context or error var has been passed.
-                if 0 < len(params) < 3:
-                    await interaction_response_handler(
-                        self,
-                        coro,
-                        context,
-                        interaction,
-                        # Always take the error parameter its name.
-                        {params[-1]: e},
-                    )
-                else:
-                    raise e
+            # Check if a context or error var has been passed.
+            if 0 < len(params) < 3:
+                await interaction_response_handler(
+                    coro,
+                    context,
+                    interaction,
+                    # Always take the error parameter its name.
+                    {params[-1]: e},
+                )
             else:
                 raise e
+        else:
+            raise e
 
     return "on_interaction_create", interaction
 

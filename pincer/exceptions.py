@@ -268,6 +268,10 @@ class TimeoutError(PincerError):
     """
 
 
+class GatewayConnectionError(PincerError):
+    """Could not connect to Discord gateway"""
+
+
 # Discord HTTP Errors
 # `developers/docs/topics/opcodes-and-status-codes#http`
 

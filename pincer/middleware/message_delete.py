@@ -12,19 +12,23 @@ from ..utils.conversion import construct_client_dict
 if TYPE_CHECKING:
     from typing import List, Tuple
 
-    from ..core.dispatch import GatewayDispatch
+    from ..client import Client
+    from ..core.gateway import Gateway
+    from ..core.gateway import GatewayDispatch
 
 
 async def on_message_delete_middleware(
-    self, payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ) -> Tuple[str, MessageDeleteEvent]:
     """|coro|
     Middleware for the ``on_message_delete`` event.
 
     Parameters
     ----------
-    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
+    payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the message delete event
+    gateway : :class:`~pincer.core.gateway.Gateway`
+        The gateway for the current shard.
 
     Returns
     -------

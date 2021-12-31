@@ -28,6 +28,7 @@ from ...utils.types import MISSING, JSONSerializable
 if TYPE_CHECKING:
     from typing import Any, List, Optional, Union, Generator
 
+    from ... import Client
     from ..guild.channel import Channel, ChannelMention
     from ...utils.types import APINullable
     from ...utils.timestamp import Timestamp
@@ -45,6 +46,7 @@ class AllowedMentionTypes(str, Enum):
     EVERYONE:
         Controls @everyone and @here mentions
     """
+
     ROLES = "roles"
     USERS = "users"
     EVERYONE = "everyone"
@@ -66,6 +68,7 @@ class AllowedMentions(APIObject):
         If replies should mention the author.
         |default| :data:`True`
     """
+
     # noqa: E501
 
     parse: List[AllowedMentionTypes]
@@ -84,7 +87,7 @@ class AllowedMentions(APIObject):
             "parse": self.parse,
             "roles": list(map(get_str_id, self.roles)),
             "users": list(map(get_str_id, self.users)),
-            "replied_user": self.reply
+            "replied_user": self.reply,
         }
 
 
@@ -104,6 +107,7 @@ class MessageActivityType(IntEnum):
     JOIN_REQUEST:
         Request to join.
     """
+
     JOIN = 1
     SPECTATE = 2
     LISTEN = 3
@@ -138,6 +142,7 @@ class MessageFlags(IntEnum):
         This message is an Interaction
         Response and the bot is "thinking"
     """
+
     CROSSPOSTED = 1 << 0
     IS_CROSSPOST = 1 << 1
     SUPPRESS_EMBEDS = 1 << 2
@@ -198,6 +203,7 @@ class MessageType(IntEnum):
     GUILD_INVITE_REMINDER:
         ??
     """
+
     DEFAULT = 0
     RECIPIENT_ADD = 1
     RECIPIENT_REMOVE = 2
@@ -241,6 +247,7 @@ class MessageActivity(APIObject):
     party_id: APINullable[:class:`str`]
         party_id from a Rich Presence event
     """
+
     type: MessageActivityType
     party_id: APINullable[str] = MISSING
 
@@ -317,6 +324,7 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
     sticker_items: APINullable[List[:class:`~pincer.objects.message.sticker.StickerItem`]]
         Sent if the message contains stickers
     """
+
     # noqa: E501
 
     id: Snowflake
@@ -351,6 +359,33 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
     components: APINullable[List[MessageComponent]] = MISSING
     sticker_items: APINullable[List[StickerItem]] = MISSING
 
+    @classmethod
+    async def from_id(
+        cls, client: Client, _id: Snowflake, channel_id: Snowflake
+    ) -> UserMessage:
+        """|coro|
+
+        Creates a UserMessage object
+        It is recommended to use the ``get_message`` function from
+        :class:`~pincer.client.Client` most of the time.
+
+        Parameters
+        ----------
+        client : :class:`~pincer.client.Client`
+            Client object to use the HTTP class of.
+        _id: :class:`~pincer.utils.snowflake.Snowflake`
+            ID of the message that is wanted.
+        channel_id : int
+            ID of the channel the message is in.
+
+        Returns
+        -------
+        :class:`~pincer.objects.message.user_message.UserMessage`
+            The message object.
+        """
+        msg = await client.http.get(f"channels/{channel_id}/messages/{_id}")
+        return cls.from_dict(construct_client_dict(client, msg))
+
     def __str__(self):
         return self.content
 
@@ -367,7 +402,7 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
                 self._client,
                 await self._http.get(
                     f"/channels/{self.channel_id}/messages/{self.id}"
-                )
+                ),
             )
         )
 
@@ -483,7 +518,7 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
         flags: int = None,
         allowed_mentions: AllowedMentions = None,
         attachments: List[Attachment] = None,
-        components: List[MessageComponent] = None
+        components: List[MessageComponent] = None,
     ):
         """|coro|
 
@@ -533,8 +568,7 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
         set_if_not_none(components, "components")
 
         await self._http.patch(
-            f"/channels/{self.channel_id}/messages/{self.id}",
-            data=data
+            f"/channels/{self.channel_id}/messages/{self.id}", data=data
         )
 
     async def delete(self):

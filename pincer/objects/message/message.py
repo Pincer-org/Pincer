@@ -56,12 +56,11 @@ class Message:
         The interaction flags for the message.
     type: Optional[:class:`~pincer.objects.app.interaction_base.CallbackType`]
         The type of the callback.
-    """
-    # noqa: E501
+    """  # noqa: E501
 
-    content: str = ''
+    content: Optional[str] = None
     attachments: Optional[List[File]] = None
-    tts: Optional[bool] = False
+    tts: Optional[bool] = None
     embeds: Optional[List[Embed]] = None
     allowed_mentions: Optional[AllowedMentions] = None
     components: Optional[List[MessageComponent]] = None
@@ -100,7 +99,7 @@ class Message:
         """:class:`bool`: If the message is empty."""
 
         return (
-            len(self.content) < 1
+            (not self.content or not self.content.strip())
             and not self.embeds
             and not self.attachments
         )
@@ -118,22 +117,24 @@ class Message:
             "content": self.content,
             "tts": self.tts,
             "flags": self.flags,
-            "embeds": [embed.to_dict() for embed in (self.embeds or [])],
+            "embeds": [
+                embed.to_dict() for embed in self.embeds
+            ] if self.embeds is not None else None,
             "allowed_mentions": allowed_mentions,
             "components": [
-                components.to_dict() for components in (self.components or [])
-            ]
+                components.to_dict() for components in self.components
+            ] if self.components is not None else None
         }
 
         # IDE does not recognise return type of filter properly.
         # noinspection PyTypeChecker
         return dict(filter(
-            lambda kv: kv[1],
+            lambda kv: kv[1] is not None,
             resp.items()
         ))
 
     def serialize(
-        self, message_type: Optional[CallbackType] = None
+        self, message_type: Optional[CallbackType] = None, allow_empty: bool = False
     ) -> Tuple[str, Union[Payload, Dict]]:
         """
         Parameters
@@ -151,7 +152,7 @@ class Message:
         :class:`pincer.exceptions.CommandReturnIsEmpty`
             Command does not have content, an embed, or attachment.
         """
-        if self.isempty:
+        if not allow_empty and self.isempty:
             raise CommandReturnIsEmpty("Cannot return empty message.")
 
         json_payload = self.to_dict()

@@ -5,14 +5,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable, Optional
 
-from ...utils.api_object import APIObject
+from ._component import _Component
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from ...utils.types import APINullable
-    from ..message.emoji import Emoji
+    from ...objects.message.emoji import Emoji
 
 
 class ButtonStyle(IntEnum):
@@ -45,7 +45,7 @@ class ButtonStyle(IntEnum):
 
 
 @dataclass(repr=False)
-class Button(APIObject):
+class Button(_Component):
     """Represents a Discord Button object.
     Buttons are interactive components that render on messages.
 
@@ -54,10 +54,43 @@ class Button(APIObject):
 
     Attributes
     ----------
-    type: :class:`int`
-        `2` for a button
-    style: :class:`~pincer.objects.message.button.ButtonStyle`
-        one of button styles
+    style: :class:`~pincer.commands.components.button.ButtonStyle`
+        One of button styles. Use :class:`~pincer.commands.components.button.LinkButton`
+        if you need the ``LINK`` style.
+    label: APINullable[:class:`str`]
+        text that appears on the button, max 80 characters
+    emoji: APINullable[:class:`~pincer.objects.message.emoji.Emoji`]
+        ``name``, ``id``, and ``animated``
+    custom_id: APINullable[:class:`str`]
+        A developer-defined identifier for the button,
+        max 100 characters
+    disabled: APINullable[:class:`bool`]
+        Whether the button is disabled |default| :data:`False`
+    """
+    custom_id: APINullable[str]
+    label: APINullable[str]
+    style: ButtonStyle
+
+    emoji: APINullable[Emoji] = MISSING
+    disabled: APINullable[bool] = False
+
+    type: int = 2
+    _func: Optional[Callable] = None
+
+    def __post_init__(self):
+        self.type = 2
+
+    def __call__(self, *args, **kwargs):
+        return self._func(*args, **kwargs)
+
+
+@dataclass(repr=False)
+class LinkButton(_Component):
+    """
+    Represents Button message component with a link.
+
+    Attributes
+    ----------
     label: APINullable[:class:`str`]
         text that appears on the button, max 80 characters
     emoji: APINullable[:class:`~pincer.objects.message.emoji.Emoji`]
@@ -70,11 +103,12 @@ class Button(APIObject):
     disabled: APINullable[:class:`bool`]
         Whether the button is disabled (default `False`)
     """
-    type: int
-    style: ButtonStyle
 
-    label: APINullable[str] = MISSING
+    label: str
+    url: str
+
     emoji: APINullable[Emoji] = MISSING
-    custom_id: APINullable[str] = MISSING
-    url: APINullable[str] = MISSING
     disabled: APINullable[bool] = False
+
+    type: int = 2
+    style: ButtonStyle = ButtonStyle.LINK
