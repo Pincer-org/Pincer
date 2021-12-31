@@ -689,9 +689,6 @@ class ChatCommandHandler(metaclass=Singleton):
             self.__prefix + remove_endpoint.format(command=cmd)
         )
 
-        # TODO: Investigate this
-        # ChatCommandHandler.register.pop(hash_app_command(cmd, None, None), None)
-
     async def add_command(self, cmd: AppCommand):
         """|coro|
 
@@ -842,14 +839,6 @@ class ChatCommandHandler(metaclass=Singleton):
             logging.error("Cannot retrieve slash commands, skipping...")
             return
 
-        # I HAVE NO FUCKING CLUE WHAT THIS DOES
-        # im just leaving it out
-
-        # for api_cmd in self._api_commands:
-        #     cmd = ChatCommandHandler.register.get(hash_app_command(api_cmd))
-        #     if cmd and cmd.app == api_cmd:
-        #         cmd.app = api_cmd
-
     async def __remove_unused_commands(self):
         """|coro|
 
@@ -872,6 +861,8 @@ class ChatCommandHandler(metaclass=Singleton):
 
         # NOTE: Cannot be generator since it can't be consumed due to lines 743-745
         to_remove = list(filter(should_be_removed, self._api_commands))
+
+        print(to_remove)
 
         await gather(
             *map(
@@ -947,9 +938,24 @@ def hash_app_command(
 
 def hash_app_command_params(
     name: str,
-    guild_id: Snowflake,
+    guild_id: Union[Snowflake, None, MISSING],
     app_command_type: AppCommandType,
     group: Optional[str],
     sub_group: Optional[str]
 ) -> int:
+    """
+    Parameters
+    ----------
+    name : str
+        The name of the function for the command
+    guild_id : Union[:class:`~pincer.utils.snowflake.Snowflake`, None, MISSING]
+        The ID of a guild, None, or MISSING.
+    app_command_type : :class:`~pincer.objects.app.command_types.AppCommandType`
+        The app command type of the command. NOT THE OPTION TYPE.
+    group : str
+        The highest level of orginization the command is it. This should always be the
+        name of the base command.
+    sub_option : str
+        The name of the group that holds the lowest level of options.
+    """
     return hash((name, guild_id, app_command_type, group, sub_group))
