@@ -6,7 +6,8 @@ from __future__ import annotations
 from asyncio import sleep, ensure_future
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Any, AsyncIterator, overload, TYPE_CHECKING
+from urllib.parse import urlencode
+from typing import AsyncIterator, overload, TYPE_CHECKING
 
 from .invite import Invite, InviteTargetType
 from ..message.user_message import UserMessage
@@ -676,12 +677,14 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         :class:`~pincer.objects.channel.ThreadsResponse`
             The response object.
         """
-        data = await self._http.get(
-            f"channels/{self.id}/threads/archived/public",
-            data=remove_none({"before": before, "limit": limit}),
-        )
         return ThreadsResponse.from_dict(
-            construct_client_dict(self._client, data)
+            construct_client_dict(
+                self._client,
+                await self._http.get(
+                    f"channels/{self.id}/threads/archived/public?"
+                    + urlencode(remove_none({"before": before, "limit": limit}))
+                ),
+            )
         )
 
     async def list_private_archived_threads(
@@ -707,12 +710,14 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         :class:`~pincer.objects.channel.ThreadsResponse`
             The response object.
         """
-        data = await self._http.get(
-            f"channels/{self.id}/threads/archived/private",
-            data=remove_none({"before": before, "limit": limit}),
-        )
         return ThreadsResponse.from_dict(
-            construct_client_dict(self._client, data)
+            construct_client_dict(
+                self._client,
+                await self._http.get(
+                    f"channels/{self.id}/threads/archived/private?"
+                    + urlencode(remove_none({"before": before, "limit": limit}))
+                ),
+            )
         )
 
     async def list_joined_private_archived_threads(
@@ -738,12 +743,15 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         :class:`~pincer.objects.channel.ThreadsResponse`
             The response object.
         """
-        data = self._http.get(
-            f"channels/{self.id}/users/@me/threads/archived/private",
-            data=remove_none({"before": before, "limit": limit}),
-        )
+
         return ThreadsResponse.from_dict(
-            construct_client_dict(self._client, data)
+            construct_client_dict(
+                self._client,
+                self._http.get(
+                    f"channels/{self.id}/users/@me/threads/archived/private?"
+                    + urlencode(remove_none({"before": before, "limit": limit}))
+                ),
+            )
         )
 
     def __str__(self):
@@ -1103,6 +1111,7 @@ class PrivateThread(Thread):
 @dataclass(repr=False)
 class ThreadsResponse(APIObject):
     """A class representing a response from the API for a list of threads."""
+
     threads: AsyncIterator[Thread]
     members: AsyncIterator[ThreadMember]
     has_more: bool
