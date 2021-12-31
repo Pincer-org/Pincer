@@ -51,3 +51,24 @@ def remove_none(obj: Union[List, Dict, Set, Tuple]) -> Union[List, Dict, Set, Tu
         return obj - {None}
     elif isinstance(obj, dict):
         return {k: v for k, v in obj.items() if None not in (k, v)}
+
+
+def dict_to_query(data: Dict[str, Any]) -> str:
+    """
+    Takes a dictionary of arguments and converts it into a query string to append to a url.
+
+    Parameters
+    ----------
+    data : Dict[:class:`str`, :class:`~typing.Any`]
+        The arguments for the query string
+
+    Returns
+    -------
+    str
+        The query string to append to a url
+    """
+    query_str = ""
+    for key in data:
+        if data[key] is not None:
+            query_str += f"{key}={data[key]}&"
+    return query_str[:-1]
