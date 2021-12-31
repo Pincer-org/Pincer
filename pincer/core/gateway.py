@@ -80,6 +80,7 @@ class Gateway:
         number of shards that will be run. More information at
         `<https://discord.com/developers/docs/topics/gateway#sharding>`_.
     """
+
     def __init__(
         self,
         token: str, *,
@@ -181,7 +182,7 @@ class Gateway:
         """The Client that uses the handler can append their own methods. The gateway
         will run those methods when the specified opcode is received.
         """
-        self.__dispatch_handlers |= handlers
+        self.__dispatch_handlers = {**self.__dispatch_handlers, **handlers}
 
     def set_session_id(self, _id: str):
         """Session id is private for consistency"""
