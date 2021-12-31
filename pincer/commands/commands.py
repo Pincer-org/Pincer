@@ -547,14 +547,6 @@ def register_command(
             "the 100 character limit."
         )
 
-    if reg := ChatCommandHandler.register.get(
-        hash_app_command_params(cmd, guild, app_command_type)
-    ):
-        raise CommandAlreadyRegistered(
-            f"Command `{cmd}` (`{func.__name__}`) has already been "
-            f"registered by `{reg.call.__name__}`."
-        )
-
     group = MISSING
     sub_group = MISSING
 
@@ -565,8 +557,16 @@ def register_command(
         group = parent.parent
         sub_group = parent
 
+    if reg := ChatCommandHandler.register.get(
+        hash_app_command_params(cmd, guild, app_command_type, group, sub_group)
+    ):
+        raise CommandAlreadyRegistered(
+            f"Command `{cmd}` (`{func.__name__}`) has already been "
+            f"registered by `{reg.call.__name__}`."
+        )
+
     ChatCommandHandler.register[
-        hash_app_command_params(cmd, guild_id, app_command_type)
+        hash_app_command_params(cmd, guild_id, app_command_type, group, sub_group)
     ] = ClientCommandStructure(
         call=func,
         cooldown=cooldown,
@@ -689,7 +689,8 @@ class ChatCommandHandler(metaclass=Singleton):
             self.__prefix + remove_endpoint.format(command=cmd)
         )
 
-        ChatCommandHandler.register.pop(hash_app_command(cmd), None)
+        # TODO: Investigate this
+        # ChatCommandHandler.register.pop(hash_app_command(cmd, None, None), None)
 
     async def add_command(self, cmd: AppCommand):
         """|coro|
@@ -733,7 +734,9 @@ class ChatCommandHandler(metaclass=Singleton):
                 key = hash_app_command_params(
                     cmd.group.name,
                     cmd.app.guild_id,
-                    AppCommandType.CHAT_INPUT
+                    AppCommandType.CHAT_INPUT,
+                    None,
+                    None,
                 )
 
                 if key not in ChatCommandHandler.built_register:
@@ -784,7 +787,11 @@ class ChatCommandHandler(metaclass=Singleton):
             if cmd.group:
                 # Try to find if theres a command with this group
                 key = hash_app_command_params(
-                    cmd.group.name, cmd.app.guild_id, AppCommandOptionType.SUB_COMMAND
+                    cmd.group.name,
+                    cmd.app.guild_id,
+                    AppCommandOptionType.SUB_COMMAND,
+                    None,
+                    None
                 )
 
                 if key not in ChatCommandHandler.built_register:
@@ -813,7 +820,9 @@ class ChatCommandHandler(metaclass=Singleton):
 
                 continue
 
-            ChatCommandHandler.built_register[hash_app_command(cmd.app)] = cmd
+            ChatCommandHandler.built_register[
+                hash_app_command(cmd.app, cmd.group, cmd.sub_group)
+            ] = cmd
 
     def get_local_registered_commands(self):
         return [
@@ -922,11 +931,25 @@ class ChatCommandHandler(metaclass=Singleton):
         await self.__add_commands()
 
 
-def hash_app_command(command: AppCommand) -> int:
-    return hash_app_command_params(command.name, command.guild_id, command.type)
+def hash_app_command(
+    command: AppCommand,
+    group: Optional[str],
+    sub_group: Optional[str]
+) -> int:
+    return hash_app_command_params(
+        command.name,
+        command.guild_id,
+        command.type,
+        group,
+        sub_group
+    )
 
 
 def hash_app_command_params(
-    name: str, guild_id: Snowflake, app_command_type: AppCommandType
+    name: str,
+    guild_id: Snowflake,
+    app_command_type: AppCommandType,
+    group: Optional[str],
+    sub_group: Optional[str]
 ) -> int:
-    return hash((name, guild_id, app_command_type))
+    return hash((name, guild_id, app_command_type, group, sub_group))

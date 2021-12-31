@@ -6,6 +6,7 @@ from __future__ import annotations
 from contextlib import suppress
 import logging
 from inspect import isasyncgenfunction, _empty
+from re import sub
 from typing import Dict, Any
 from typing import TYPE_CHECKING
 
@@ -41,23 +42,41 @@ def get_command_from_registry(interaction: Interaction):
         The command is not registered
     """
 
+    name = interaction.data.name
+    group = None
+    sub_group = None
+
+    if interaction.data.options and interaction.data.options[0].type in {1, 2}:
+        option = interaction.data.options[0]
+        if option.type == 1:
+            group = name
+            name = option.name
+        else:
+            group = interaction.data.name
+            sub_group = option.name
+            name = option.options[0].name
+
     with suppress(KeyError):
         return ChatCommandHandler.register[hash_app_command_params(
-            interaction.data.name,
+            name,
             MISSING,
-            interaction.data.type
+            interaction.data.type,
+            group,
+            sub_group
         )]
 
     with suppress(KeyError):
         return ChatCommandHandler.register[hash_app_command_params(
-            interaction.data.name,
+            name,
             interaction.guild_id,
-            interaction.data.type
+            interaction.data.type,
+            group,
+            sub_group
         )]
 
     raise InteractionDoesNotExist(
         f"No command is registered for {interaction.data.name} with type"
-        f"{interaction.data.type}"
+        f" {interaction.data.type}"
     )
 
 
@@ -145,8 +164,16 @@ async def interaction_handler(
     }
     params = {}
 
-    if interaction.data.options is not MISSING:
-        params = {opt.name: opt.value for opt in interaction.data.options}
+    options = interaction.data.options
+
+    if interaction.data.options and interaction.data.options[0].type in {1, 2}:
+        if interaction.data.options[0].type == 1:
+            options = options[0].options
+        else:
+            options = options[0].options[0].options
+
+    if options is not MISSING:
+        params = {opt.name: opt.value for opt in options}
 
     args = []
 
