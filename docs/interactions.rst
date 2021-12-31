@@ -151,17 +151,6 @@ type.
         # Returns the name of the user that initiated the interaction
         return word
 
-Parameters will be an optional slash command arguments if they have a default value in Python.
-
-.. code-block:: python
-
-    @command
-    async def say(
-        self,
-        word: str = "apple"  # Word is not optional
-    ):
-        return word
-
 These are the available modifiers:
 
 .. list-table::
@@ -187,6 +176,17 @@ These are the available modifiers:
      - The minimum value for a number.
      - :class:`int`, :class:`float`
 
+Parameters will be an optional slash command arguments if they have a default value in Python.
+
+.. code-block:: python
+
+    @command
+    async def say(
+        self,
+        word: str = "apple"  # Word is optional
+    ):
+        return word
+
 Return Types
 ------------
 :class:`str` isn't the only thing you can return. For a more complex message, you can return a :class:`~pincer.objects.message.message.Message` object.
@@ -202,7 +202,7 @@ if you return a :class:`~pincer.objects.message.message.Message` object.
   @command
   async def a_complex_message(self):
     return Message(
-      "This is the message's content"
+      "This is the message's content",
       embeds=[
         Embed(
           title="Pincer",

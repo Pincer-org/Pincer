@@ -11,7 +11,6 @@ from typing import TYPE_CHECKING
 
 from ..commands import ChatCommandHandler, ComponentHandler, hash_app_command_params
 from ..exceptions import InteractionDoesNotExist
-from ..core.dispatch import GatewayDispatch
 from ..objects import Interaction, MessageContext, AppCommandType, InteractionType
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 from ..utils import get_index
@@ -21,7 +20,8 @@ from ..utils.signature import get_signature_and_params
 if TYPE_CHECKING:
     from typing import List, Tuple
     from ..client import Client
-
+    from ..core.gateway import Gateway
+    from ..core.gateway import GatewayDispatch
 
 _log = logging.getLogger(__name__)
 
@@ -176,16 +176,17 @@ async def interaction_handler(
 
 
 async def interaction_create_middleware(
-    self, payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ) -> Tuple[str, Interaction]:
     """Middleware for ``on_interaction``, which handles command
     execution.
 
     Parameters
     ----------
-    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
+    payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the interaction event.
-
+    gateway : :class:`~pincer.core.gateway.Gateway`
+        The gateway for the current shard.
 
     Raises
     ------

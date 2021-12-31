@@ -582,6 +582,7 @@ class ChatCommandHandler(metaclass=Singleton):
         Dictionary of ``ClientCommandStructure``
     """
 
+    has_been_initialized = False
     managers: Dict[str, Any] = {}
     register: Dict[str, ClientCommandStructure] = {}
 
@@ -796,6 +797,11 @@ class ChatCommandHandler(metaclass=Singleton):
 
         Call methods of this class to refresh all app commands
         """
+        if ChatCommandHandler.has_been_initialized:
+            # Only first shard should be initialized.
+            return
+
+        ChatCommandHandler.has_been_initialized = True
         await self.__get_existing_commands()
         await self.__remove_unused_commands()
         await self.__add_commands()
