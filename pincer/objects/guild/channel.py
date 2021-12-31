@@ -6,6 +6,7 @@ from __future__ import annotations
 from asyncio import sleep, ensure_future
 from dataclasses import dataclass
 from enum import IntEnum
+from urllib.parse import urlencode
 from typing import AsyncIterator, overload, TYPE_CHECKING
 
 from .invite import Invite, InviteTargetType
@@ -15,6 +16,7 @@ from ...utils.api_object import APIObject, GuildProperty
 from ...utils.conversion import construct_client_dict, remove_none
 from ...utils.convert_message import convert_message
 from ...utils.types import MISSING
+
 
 if TYPE_CHECKING:
     from typing import AsyncGenerator, Dict, List, Optional, Union
@@ -27,6 +29,7 @@ if TYPE_CHECKING:
     from ..message.embed import Embed
     from ..user.user import User
     from ...client import Client
+    from ...objects import ThreadMember
     from ...utils.timestamp import Timestamp
     from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
@@ -60,6 +63,7 @@ class ChannelType(IntEnum):
     GUILD_STAGE_VOICE:
         A stage channel.
     """
+
     GUILD_TEXT = 0
     DM = 1
     GUILD_VOICE = 2
@@ -147,6 +151,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
     video_quality_mode: APINullable[:class:`int`]
         The camera video quality mode of the voice channel, 1 when not present
     """
+
     # noqa: E501
     id: Snowflake
     type: ChannelType
@@ -208,10 +213,11 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         data = (await client.http.get(f"channels/{channel_id}")) or {}
 
-        data.update(construct_client_dict(
-            client,
-            {"type": ChannelType(data.pop("type"))}
-        ))
+        data.update(
+            construct_client_dict(
+                client, {"type": ChannelType(data.pop("type"))}
+            )
+        )
 
         channel_cls = _channel_type_map.get(data["type"], Channel)
         return channel_cls.from_dict(data)
@@ -232,16 +238,13 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         parent_id: Snowflake = None,
         rtc_region: str = None,
         video_quality_mod: int = None,
-        default_auto_archive_duration: int = None
+        default_auto_archive_duration: int = None,
     ) -> Channel:
         ...
 
-    async def edit(
-        self,
-        reason: Optional[str] = None,
-        **kwargs
-    ):
-        """Edit a channel with the given keyword arguments.
+    async def edit(self, reason: Optional[str] = None, **kwargs):
+        """|coro|
+        Edit a channel with the given keyword arguments.
 
         Parameters
         ----------
@@ -261,14 +264,13 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             headers["X-Audit-Log-Reason"] = str(reason)
 
         data = await self._http.patch(
-            f"channels/{self.id}",
-            kwargs,
-            headers=headers
+            f"channels/{self.id}", kwargs, headers=headers
         )
-        data.update(construct_client_dict(
-            self._client,
-            {"type": ChannelType(data.pop("type"))}
-        ))
+        data.update(
+            construct_client_dict(
+                self._client, {"type": ChannelType(data.pop("type"))}
+            )
+        )
         channel_cls = _channel_type_map.get(data["type"], Channel)
         return channel_cls.from_dict(data)
 
@@ -278,9 +280,9 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         allow: str,
         deny: str,
         type: int,
-        reason: Optional[str] = None
+        reason: Optional[str] = None,
     ):
-        """
+        """|coro|
         Edit the channel permission overwrites for a user or role in a channel.
         Only usable for guild channels. Requires the ``MANAGE_ROLES`` permission.
         Only permissions your bot has in the guild or channel can be
@@ -302,19 +304,13 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         await self._http.put(
             f"channels/{self.id}/permissions/{overwrite.id}",
             headers=remove_none({"X-Audit-Log-Reason": reason}),
-            data={
-                "allow": allow,
-                "deny": deny,
-                "type": type
-            }
+            data={"allow": allow, "deny": deny, "type": type},
         )
 
     async def delete_permission(
-        self,
-        overwrite: Overwrite,
-        reason: Optional[str] = None
+        self, overwrite: Overwrite, reason: Optional[str] = None
     ):
-        """
+        """|coro|
         Delete a channel permission overwrite for a user or role in a channel.
         Only usable for guild channels. Requires the ``MANAGE_ROLES`` permission.
 
@@ -331,10 +327,9 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         )
 
     async def follow_news_channel(
-        self,
-        webhook_channel_id: Snowflake
+        self, webhook_channel_id: Snowflake
     ) -> NewsChannel:
-        """
+        """|coro|
         Follow a News Channel to send messages to a target channel.
         Requires the ``MANAGE_WEBHOOKS`` permission in the target channel.
         Returns a followed channel object.
@@ -354,13 +349,13 @@ class Channel(APIObject, GuildProperty):  # noqa E501
                 self._client,
                 self._http.post(
                     f"channels/{self.id}/followers",
-                    data={"webhook_channel_id": webhook_channel_id}
-                )
+                    data={"webhook_channel_id": webhook_channel_id},
+                ),
             )
         )
 
     async def trigger_typing_indicator(self):
-        """
+        """|coro|
         Post a typing indicator for the specified channel.
         Generally bots should **not** implement this route. However, if a bot is
         responding to a command and expects the computation to take a few
@@ -370,7 +365,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         await self._http.post(f"channels/{self.id}/typing")
 
     async def get_pinned_messages(self) -> AsyncIterator[UserMessage]:
-        """
+        """|coro|
         Fetches all pinned messages in the channel. Returns an iterator of
         pinned messages.
 
@@ -382,18 +377,13 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         data = await self._http.get(f"channels/{self.id}/pins")
         for message in data:
             yield UserMessage.from_dict(
-                construct_client_dict(
-                    self._client,
-                    message
-                )
+                construct_client_dict(self._client, message)
             )
 
     async def pin_message(
-        self,
-        message: UserMessage,
-        reason: Optional[str] = None
+        self, message: UserMessage, reason: Optional[str] = None
     ):
-        """
+        """|coro|
         Pin a message in a channel. Requires the ``MANAGE_MESSAGES`` permission.
         The maximum number of pinned messages is ``50``.
         """
@@ -403,11 +393,9 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         )
 
     async def unpin_message(
-        self,
-        message: UserMessage,
-        reason: Optional[str] = None
+        self, message: UserMessage, reason: Optional[str] = None
     ):
-        """
+        """|coro|
         Unpin a message in a channel. Requires the ``MANAGE_MESSAGES`` permission.
         """
         await self._http.delete(
@@ -419,9 +407,9 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         self,
         user: User,
         access_token: Optional[str] = None,
-        nick: Optional[str] = None
+        nick: Optional[str] = None,
     ):
-        """
+        """|coro|
         Adds a recipient to a Group DM using their access token.
 
         Parameters
@@ -436,17 +424,11 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         await self._http.put(
             f"channels/{self.id}/recipients/{user.id}",
-            data={
-                "access_token": access_token,
-                "nick": nick
-            }
+            data={"access_token": access_token, "nick": nick},
         )
 
-    async def group_dm_remove_recipient(
-        self,
-        user: User
-    ):
-        """
+    async def group_dm_remove_recipient(self, user: User):
+        """|coro|
         Removes a recipient from a Group DM.
 
         Parameters
@@ -454,16 +436,13 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         user: :class:`~pincer.objects.user.User`
             The user to remove.
         """
-        await self._http.delete(
-            f"channels/{self.id}/recipients/{user.id}"
-        )
+        await self._http.delete(f"channels/{self.id}/recipients/{user.id}")
 
     async def bulk_delete_messages(
-        self,
-        messages: List[Snowflake],
-        reason: Optional[str] = None
+        self, messages: List[Snowflake], reason: Optional[str] = None
     ):
-        """Delete multiple messages in a single request.
+        """|coro|
+        Delete multiple messages in a single request.
         This endpoint can only be used on guild channels and requires
         the ``MANAGE_MESSAGES`` permission.
 
@@ -481,14 +460,14 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         await self._http.post(
             f"channels/{self.id}/messages/bulk_delete",
             headers=remove_none({"X-Audit-Log-Reason": reason}),
-            data={"messages": messages}
+            data={"messages": messages},
         )
 
     async def delete(
         self,
         reason: Optional[str] = None,
         /,
-        channel_id: Optional[Snowflake] = None
+        channel_id: Optional[Snowflake] = None,
     ):
         """|coro|
 
@@ -505,7 +484,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
         await self._http.delete(
             f"channels/{channel_id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason})
+            headers=remove_none({"X-Audit-Log-Reason": reason}),
         )
 
     async def __post_send_handler(self, message: UserMessage):
@@ -521,10 +500,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             await sleep(message.delete_after)
             await message.delete()
 
-    def __post_sent(
-        self,
-        message: UserMessage
-    ):
+    def __post_sent(self, message: UserMessage):
         """Ensure the `__post_send_handler` method its future.
 
         Parameters
@@ -552,9 +528,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         content_type, data = convert_message(self._client, message).serialize()
 
         resp = await self._http.post(
-            f"channels/{self.id}/messages",
-            data,
-            content_type=content_type
+            f"channels/{self.id}/messages", data, content_type=content_type
         )
         msg = UserMessage.from_dict(resp)
         self.__post_sent(msg)
@@ -572,14 +546,11 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         data = await self._http.get(f"channels/{self.id}/webhooks")
         for webhook_data in data:
             yield Webhook.from_dict(
-                construct_client_dict(
-                    self._client,
-                    webhook_data
-                )
+                construct_client_dict(self._client, webhook_data)
             )
 
     async def get_invites(self) -> AsyncIterator[Invite]:
-        """
+        """|coro|
         Fetches all the invite objects for the channel. Only usable for
         guild channels. Requires the ``MANAGE_CHANNELS`` permission.
 
@@ -601,9 +572,9 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         target_type: InviteTargetType = None,
         target_user_id: Snowflake = None,
         target_application_id: Snowflake = None,
-        reason: Optional[str] = None
+        reason: Optional[str] = None,
     ):
-        """
+        """|coro|
         Create a new invite object for the channel. Only usable for guild
         channels. Requires the ``CREATE_INSTANT_INVITE`` permission.
 
@@ -645,21 +616,143 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         :class:`~pincer.objects.guild.invite.Invite`
             The invite object.
         """
-        return Invite.from_dict(construct_client_dict(self._client,
-            await self._http.post(
-                f"channels/{self.id}/invites",
-                headers=remove_none({"X-Audit-Log-Reason": reason}),
-                data={
-                    "max_age": max_age,
-                    "max_uses": max_uses,
-                    "temporary": temporary,
-                    "unique": unique,
-                    "target_type": target_type,
-                    "target_user_id": target_user_id,
-                    "target_application_id": target_application_id
-                }
+        return Invite.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.post(
+                    f"channels/{self.id}/invites",
+                    headers=remove_none({"X-Audit-Log-Reason": reason}),
+                    data={
+                        "max_age": max_age,
+                        "max_uses": max_uses,
+                        "temporary": temporary,
+                        "unique": unique,
+                        "target_type": target_type,
+                        "target_user_id": target_user_id,
+                        "target_application_id": target_application_id,
+                    },
+                ),
             )
-        ))
+        )
+
+    async def list_active_threads(self) -> ThreadsResponse:
+        """|coro|
+        Returns all active threads in the channel, including public and
+        private threads. Threads are ordered by their id, in descending order.
+
+        Returns
+        -------
+        :class:`~pincer.objects.channel.ThreadsResponse`
+            The response object.
+        """
+        return ThreadsResponse.from_dict(
+            construct_client_dict(
+                self._client,
+                self._http.get(f"channels/{self.id}/threads/active"),
+            )
+        )
+
+    async def list_public_archived_threads(
+        self, before: Optional[Timestamp] = None, limit: Optional[int] = None
+    ) -> ThreadsResponse:
+        """|coro|
+        Returns archived threads in the channel that are public.
+        When called on a ``GUILD_TEXT`` channel, returns threads of type
+        ``GUILD_PUBLIC_THREAD``. When called on a ``GUILD_NEWS`` channel returns
+        threads of type ``GUILD_NEWS_THREAD``. Threads are ordered by
+        ``archive_timestamp``, in descending order. Requires the
+        ``READ_MESSAGE_HISTORY`` permission.
+
+        Parameters
+        ----------
+        before: Optional[:class:`~pincer.objects.timestamp.Timestamp`]
+            Returns threads before this timestamp.
+            |default| :data:`None`
+        limit: Optional[:class:`int`]
+            The maximum number of threads to return.
+            |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.channel.ThreadsResponse`
+            The response object.
+        """
+        return ThreadsResponse.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.get(
+                    f"channels/{self.id}/threads/archived/public?"
+                    + urlencode(remove_none({"before": before, "limit": limit}))
+                ),
+            )
+        )
+
+    async def list_private_archived_threads(
+        self, before: Optional[Timestamp] = None, limit: Optional[int] = None
+    ) -> ThreadsResponse:
+        """|coro|
+        Returns archived threads in the channel that are of type
+        ``GUILD_PRIVATE_THREAD``. Threads are ordered by ``archive_timestamp``,
+        in descending order. Requires both the ``READ_MESSAGE_HISTORY`` and
+        ``MANAGE_THREADS`` permissions.
+
+        Parameters
+        ----------
+        before: Optional[:class:`~pincer.objects.timestamp.Timestamp`]
+            Returns threads before this timestamp.
+            |default| :data:`None`
+        limit: Optional[:class:`int`]
+            The maximum number of threads to return.
+            |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.channel.ThreadsResponse`
+            The response object.
+        """
+        return ThreadsResponse.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.get(
+                    f"channels/{self.id}/threads/archived/private?"
+                    + urlencode(remove_none({"before": before, "limit": limit}))
+                ),
+            )
+        )
+
+    async def list_joined_private_archived_threads(
+        self, before: Optional[Timestamp] = None, limit: Optional[int] = None
+    ) -> ThreadsResponse:
+        """|coro|
+        Returns archived threads in the channel that are of type
+        ``GUILD_PRIVATE_THREAD``, and the user has joined. Threads are ordered
+        by their id, in descending order. Requires the ``READ_MESSAGE_HISTORY``
+        permission.
+
+        Parameters
+        ----------
+        before: Optional[:class:`~pincer.objects.timestamp.Timestamp`]
+            Returns threads before this timestamp.
+            |default| :data:`None`
+        limit: Optional[:class:`int`]
+            The maximum number of threads to return.
+            |default| :data:`None`
+
+        Returns
+        -------
+        :class:`~pincer.objects.channel.ThreadsResponse`
+            The response object.
+        """
+
+        return ThreadsResponse.from_dict(
+            construct_client_dict(
+                self._client,
+                self._http.get(
+                    f"channels/{self.id}/users/@me/threads/archived/private?"
+                    + urlencode(remove_none({"before": before, "limit": limit}))
+                ),
+            )
+        )
 
     def __str__(self):
         """return the discord tag when object gets used as a string."""
@@ -680,12 +773,13 @@ class TextChannel(Channel):
         rate_limit_per_user: int = None,
         permissions_overwrites: List[Overwrite] = None,
         parent_id: Snowflake = None,
-        default_auto_archive_duration: int = None
+        default_auto_archive_duration: int = None,
     ) -> Union[TextChannel, NewsChannel]:
         ...
 
     async def edit(self, **kwargs):
-        """Edit a text channel with the given keyword arguments.
+        """|coro|
+        Edit a text channel with the given keyword arguments.
 
         Parameters
         ----------
@@ -714,9 +808,7 @@ class TextChannel(Channel):
             The requested message.
         """
         return UserMessage.from_dict(
-            await self._http.get(
-                f"channels/{self.id}/messages/{message_id}"
-            )
+            await self._http.get(f"channels/{self.id}/messages/{message_id}")
         )
 
 
@@ -732,12 +824,13 @@ class VoiceChannel(Channel):
         user_limit: int = None,
         permissions_overwrites: List[Overwrite] = None,
         rtc_region: str = None,
-        video_quality_mod: int = None
+        video_quality_mod: int = None,
     ) -> VoiceChannel:
         ...
 
     async def edit(self, **kwargs):
-        """Edit a text channel with the given keyword arguments.
+        """|coro|
+        Edit a text channel with the given keyword arguments.
 
         Parameters
         ----------
@@ -751,14 +844,15 @@ class VoiceChannel(Channel):
         """
         return await super().edit(**kwargs)
 
+
 class GroupDMChannel(Channel):
     """A subclass of ``Channel`` for Group DMs"""
+
 
 class CategoryChannel(Channel):
     """A subclass of ``Channel`` for categories channels
     with all the same attributes.
     """
-    pass
 
 
 class NewsChannel(Channel):
@@ -774,12 +868,13 @@ class NewsChannel(Channel):
         nsfw: bool = None,
         permissions_overwrites: List[Overwrite] = None,
         parent_id: Snowflake = None,
-        default_auto_archive_duration: int = None
+        default_auto_archive_duration: int = None,
     ) -> Union[TextChannel, NewsChannel]:
         ...
 
     async def edit(self, **kwargs):
-        """Edit a text channel with the given keyword arguments.
+        """|coro|
+        Edit a text channel with the given keyword arguments.
 
         Parameters
         ----------
@@ -794,12 +889,232 @@ class NewsChannel(Channel):
         return await super().edit(**kwargs)
 
 
-class PublicThread(Channel):
-    """A subclass of ``Channel`` for public threads with all the same attributes."""
+class Thread(Channel):
+    """A subclass of ``Channel`` for threads with all the same attributes."""
+
+    async def start(
+        self,
+        name: Optional[str] = None,
+        auto_archive_duration: Optional[int] = None,
+        type_: Optional[ChannelType] = None,
+        invitable: Optional[bool] = None,
+        rate_limit_per_user: Optional[int] = None,
+        reason: Optional[str] = None,
+    ) -> Channel:
+        """|coro|
+        Creates a new thread that is not connected to an existing message.
+        The created thread defaults to a ``GUILD_PRIVATE_THREAD``*.
+        Returns a Channel on success.
+
+        Parameters
+        ----------
+        name: Optional[:class:`str`]
+            The name of the thread. 1-100 characters.
+            |default| :data:`None`
+        auto_archive_duration**: Optional[:class:`int`]
+            The duration in minutes to automatically archive the thread after
+            recent activity, can be set to: ``60``, ``1440``, ``4320``, ``10080``.
+            |default| :data:`None`
+        type_: Optional[:class:`~pincer.objects.channel.ChannelType`]
+            The type of thread to create.
+            |default| :data:`None`
+        invitable: Optional[:class:`bool`]
+            Whether non-moderators can add other non-moderators to a thread;
+            only available when creating a private thread.
+            |default| :data:`None`
+        rate_limit_per_user: Optional[:class:`int`]
+            Amount of seconds a user has to wait before sending another message.
+            (0-21600)
+            |default| :data:`None`
+        reason: Optional[:class:`str`]
+            The reason of the thread creation.
+            |default| :data:`None`
+
+        \\*: Creating a private thread requires the server to be boosted.
+        The guild features will indicate if that is possible for the guild.
+
+        \\*\\*: The 3 day and 7 day archive durations require the server to be boosted.
+        The guild features will indicate if that is possible for the guild.
+
+        Returns
+        -------
+        :class:`~pincer.objects.channel.Channel`
+            The created thread.
+        """
+        return Channel.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.post(
+                    f"channels/{self.id}/threads",
+                    headers=remove_none({"X-Audit-Log-Reason": reason}),
+                    data={
+                        "name": name,
+                        "auto_archive_duration": auto_archive_duration,
+                        "type": type_,
+                        "invitable": invitable,
+                        "rate_limit_per_user": rate_limit_per_user,
+                    },
+                ),
+            )
+        )
+
+    async def start_with_message(
+        self,
+        message: Optional[UserMessage],
+        name: Optional[str] = None,
+        auto_archive_duration: Optional[int] = None,
+        rate_limit_per_user: Optional[int] = None,
+        reason: Optional[str] = None,
+    ) -> Channel:
+        """|coro|
+        Creates a new thread from an existing message. Returns a Channel on
+        success.
+
+        When called on a ``GUILD_TEXT`` channel, creates a ``GUILD_PUBLIC_THREAD``.
+        When called on a ``GUILD_NEWS`` channel, creates a ``GUILD_NEWS_THREAD``.
+
+        The id of the created thread will be the same as the id of the message,
+        and as such a message can only have a single thread created from it.
+
+        Parameters
+        ----------
+        message: :class:`~pincer.objects.message.user_message.UserMessage`
+            The message to create the thread from.
+            |default| data:`None`
+        name: Optional[:class:`str`]
+            The name of the thread. 1-100 characters.
+            |default| data:`None`
+        auto_archive_duration: Optional[:class:`int`]
+            The duration in minutes to automatically archive the thread after
+            recent activity, can be set to: ``60``, ``1440``, ``4320``, ``10080``.
+            |default| data:`None`
+        rate_limit_per_user: Optional[:class:`int`]
+            Amount of seconds a user has to wait before sending another message.
+            (0-21600)
+            |default| data:`None`
+        reason: Optional[:class:`str`]
+            The reason of the thread creation.
+            |default| data:`None`
+
+        The 3 day and 7 day archive durations require the server to be boosted.
+        The guild features will indicate if a server is able to use those settings.
+
+        Returns
+        -------
+        :class:`~pincer.objects.channel.Channel`
+            The created thread.
+        """
+        return Channel.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.post(
+                    f"channels/{self.id}/messages/{message.id}/threads",
+                    headers=remove_none({"X-Audit-Log-Reason": reason}),
+                    data={
+                        "name": name,
+                        "auto_archive_duration": auto_archive_duration,
+                        "rate_limit_per_user": rate_limit_per_user,
+                    },
+                ),
+            )
+        )
+
+    async def join(self):
+        """|coro|
+        Adds the current user to a thread.
+        Also requires the thread to not be archived.
+        """
+        await self._http.put(f"channels/{self.id}/thread-members/@me")
+
+    async def add_member(self, user: User):
+        """|coro|
+        Adds another member to a thread.
+        Requires the ability to send messages in the thread.
+        Also requires the thread to not be archived.
+
+        Parameters
+        ----------
+        user: :class:`~pincer.objects.user.User`
+            The user to add to the thread.
+        """
+        await self._http.put(f"channels/{self.id}/thread-members/{user.id}")
+
+    async def leave(self):
+        """|coro|
+        Removes the current user from a thread.
+        Also requires the thread to not be archived.
+        """
+        await self._http.delete(f"channels/{self.id}/thread-members/@me")
+
+    async def remove_member(self, user: User):
+        """|coro|
+        Removes another member from a thread. Requires the ``MANAGE_THREADS``
+        permission, or the creator of the thread if it is a
+        ``GUILD_PRIVATE_THREAD``. Also requires the thread to not be archived.
+
+        Parameters
+        ----------
+        user: :class:`~pincer.objects.user.User`
+            The user to remove from the thread.
+        """
+        await self._http.delete(f"channels/{self.id}/thread-members/{user.id}")
+
+    async def get_member(self, user: User) -> ThreadMember:
+        """|coro|
+        Returns a thread member object for the specified user if they are a
+        member of the thread.
+
+        Parameters
+        ----------
+        user: :class:`~pincer.objects.user.User`
+            The user to get the thread member for.
+
+        Returns
+        -------
+        :class:`~pincer.objects.channel.ThreadMember`
+            The thread member object.
+        """
+        return ThreadMember.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.get(
+                    f"channels/{self.id}/thread-members/{user.id}"
+                ),
+            )
+        )
+
+    async def list_members(self) -> AsyncIterator[ThreadMember]:
+        """|coro|
+        Fetches all the thread members for the thread. Returns an iterator of
+        ThreadMember objects.
+
+        Returns
+        -------
+        AsyncIterator[:class:`~pincer.objects.channel.ThreadMember`]
+            An iterator of thread members.
+        """
+        data = await self._http.get(f"channels/{self.id}/thread-members")
+        for member in data:
+            yield ThreadMember.from_dict(
+                construct_client_dict(self._client, member)
+            )
 
 
-class PrivateThread(Channel):
-    """A subclass of ``Channel`` for private threads with all the same attributes."""
+class PublicThread(Thread):
+    """A subclass of ``Thread`` for public threads with all the same attributes."""
+
+
+class PrivateThread(Thread):
+    """A subclass of ``Thread`` for private threads with all the same attributes."""
+
+
+@dataclass(repr=False)
+class ThreadsResponse(APIObject):
+    """A class representing a response from the API for a list of threads."""
+
+    threads: AsyncIterator[Thread]
+    members: AsyncIterator[ThreadMember]
+    has_more: bool
 
 
 @dataclass(repr=False)
@@ -817,6 +1132,7 @@ class ChannelMention(APIObject):
     name: :class:`str`
         The name of the channel
     """
+
     id: Snowflake
     guild_id: Snowflake
     type: ChannelType
@@ -831,5 +1147,5 @@ _channel_type_map: Dict[ChannelType, Channel] = {
     ChannelType.GUILD_CATEGORY: CategoryChannel,
     ChannelType.GUILD_NEWS: NewsChannel,
     ChannelType.GUILD_PUBLIC_THREAD: PublicThread,
-    ChannelType.GUILD_PRIVATE_THREAD: PrivateThread
+    ChannelType.GUILD_PRIVATE_THREAD: PrivateThread,
 }
