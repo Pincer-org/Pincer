@@ -634,67 +634,6 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             )
         )
 
-    async def start_thread_with_message(
-        self,
-        message: Optional[UserMessage],
-        name: Optional[str] = None,
-        auto_archive_duration: Optional[int] = None,
-        rate_limit_per_user: Optional[int] = None,
-        reason: Optional[str] = None,
-    ) -> Channel:
-        """|coro|
-        Creates a new thread from an existing message. Returns a Channel on
-        success.
-
-        When called on a ``GUILD_TEXT`` channel, creates a ``GUILD_PUBLIC_THREAD``.
-        When called on a ``GUILD_NEWS`` channel, creates a ``GUILD_NEWS_THREAD``.
-
-        The id of the created thread will be the same as the id of the message,
-        and as such a message can only have a single thread created from it.
-
-        Parameters
-        ----------
-        message: :class:`~pincer.objects.message.user_message.UserMessage`
-            The message to create the thread from.
-            |default| data:`None`
-        name: Optional[:class:`str`]
-            The name of the thread. 1-100 characters.
-            |default| data:`None`
-        auto_archive_duration: Optional[:class:`int`]
-            The duration in minutes to automatically archive the thread after
-            recent activity, can be set to: ``60``, ``1440``, ``4320``, ``10080``.
-            |default| data:`None`
-        rate_limit_per_user: Optional[:class:`int`]
-            Amount of seconds a user has to wait before sending another message.
-            (0-21600)
-            |default| data:`None`
-        reason: Optional[:class:`str`]
-            The reason of the thread creation.
-            |default| data:`None`
-
-        The 3 day and 7 day archive durations require the server to be boosted.
-        The guild features will indicate if a server is able to use those settings.
-
-        Returns
-        -------
-        :class:`~pincer.objects.channel.Channel`
-            The created thread.
-        """
-        return Channel.from_dict(
-            construct_client_dict(
-                self._client,
-                await self._http.post(
-                    f"channels/{self.id}/messages/{message.id}/threads",
-                    headers=remove_none({"X-Audit-Log-Reason": reason}),
-                    data={
-                        "name": name,
-                        "auto_archive_duration": auto_archive_duration,
-                        "rate_limit_per_user": rate_limit_per_user,
-                    },
-                ),
-            )
-        )
-
     async def list_active_threads(self) -> ThreadsResponse:
         """|coro|
         Returns all active threads in the channel, including public and
@@ -1005,6 +944,67 @@ class Thread(Channel):
                         "auto_archive_duration": auto_archive_duration,
                         "type": type_,
                         "invitable": invitable,
+                        "rate_limit_per_user": rate_limit_per_user,
+                    },
+                ),
+            )
+        )
+
+    async def start_with_message(
+        self,
+        message: Optional[UserMessage],
+        name: Optional[str] = None,
+        auto_archive_duration: Optional[int] = None,
+        rate_limit_per_user: Optional[int] = None,
+        reason: Optional[str] = None,
+    ) -> Channel:
+        """|coro|
+        Creates a new thread from an existing message. Returns a Channel on
+        success.
+
+        When called on a ``GUILD_TEXT`` channel, creates a ``GUILD_PUBLIC_THREAD``.
+        When called on a ``GUILD_NEWS`` channel, creates a ``GUILD_NEWS_THREAD``.
+
+        The id of the created thread will be the same as the id of the message,
+        and as such a message can only have a single thread created from it.
+
+        Parameters
+        ----------
+        message: :class:`~pincer.objects.message.user_message.UserMessage`
+            The message to create the thread from.
+            |default| data:`None`
+        name: Optional[:class:`str`]
+            The name of the thread. 1-100 characters.
+            |default| data:`None`
+        auto_archive_duration: Optional[:class:`int`]
+            The duration in minutes to automatically archive the thread after
+            recent activity, can be set to: ``60``, ``1440``, ``4320``, ``10080``.
+            |default| data:`None`
+        rate_limit_per_user: Optional[:class:`int`]
+            Amount of seconds a user has to wait before sending another message.
+            (0-21600)
+            |default| data:`None`
+        reason: Optional[:class:`str`]
+            The reason of the thread creation.
+            |default| data:`None`
+
+        The 3 day and 7 day archive durations require the server to be boosted.
+        The guild features will indicate if a server is able to use those settings.
+
+        Returns
+        -------
+        :class:`~pincer.objects.channel.Channel`
+            The created thread.
+        """
+        return Channel.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.post(
+                    f"channels/{self.id}/messages/{message.id}/threads",
+                    headers=remove_none({"X-Audit-Log-Reason": reason}),
+                    data={
+                        "name": name,
+                        "auto_archive_duration": auto_archive_duration,
                         "rate_limit_per_user": rate_limit_per_user,
                     },
                 ),
