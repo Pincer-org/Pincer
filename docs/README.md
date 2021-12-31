@@ -15,6 +15,7 @@
 ![GitHub](https://img.shields.io/github/license/Pincer-org/Pincer)
 ![Discord](https://img.shields.io/discord/881531065859190804)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+![gitmoji](https://img.shields.io/badge/gitmoji-%20🚀%20💀-FFDD67.svg)
 
 # <img src="../assets/svg/pincer.svg" height="24px" alt="Pincer Logo"> Pincer
 The snappy asynchronous Discord API wrapper written with aiohttp.
