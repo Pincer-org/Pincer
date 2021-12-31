@@ -695,152 +695,6 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             )
         )
 
-    async def start_thread(
-        self,
-        name: Optional[str] = None,
-        auto_archive_duration: Optional[int] = None,
-        type_: Optional[ChannelType] = None,
-        invitable: Optional[bool] = None,
-        rate_limit_per_user: Optional[int] = None,
-        reason: Optional[str] = None,
-    ) -> Channel:
-        """|coro|
-        Creates a new thread that is not connected to an existing message.
-        The created thread defaults to a ``GUILD_PRIVATE_THREAD``*.
-        Returns a Channel on success.
-
-        Parameters
-        ----------
-        name: Optional[:class:`str`]
-            The name of the thread. 1-100 characters.
-            |default| :data:`None`
-        auto_archive_duration**: Optional[:class:`int`]
-            The duration in minutes to automatically archive the thread after
-            recent activity, can be set to: ``60``, ``1440``, ``4320``, ``10080``.
-            |default| :data:`None`
-        type_: Optional[:class:`~pincer.objects.channel.ChannelType`]
-            The type of thread to create.
-            |default| :data:`None`
-        invitable: Optional[:class:`bool`]
-            Whether non-moderators can add other non-moderators to a thread;
-            only available when creating a private thread.
-            |default| :data:`None`
-        rate_limit_per_user: Optional[:class:`int`]
-            Amount of seconds a user has to wait before sending another message.
-            (0-21600)
-            |default| :data:`None`
-        reason: Optional[:class:`str`]
-            The reason of the thread creation.
-            |default| :data:`None`
-
-        \\*: Creating a private thread requires the server to be boosted.
-        The guild features will indicate if that is possible for the guild.
-
-        \\*\\*: The 3 day and 7 day archive durations require the server to be boosted.
-        The guild features will indicate if that is possible for the guild.
-
-        Returns
-        -------
-        :class:`~pincer.objects.channel.Channel`
-            The created thread.
-        """
-        return Channel.from_dict(
-            construct_client_dict(
-                self._client,
-                await self._http.post(
-                    f"channels/{self.id}/threads",
-                    headers=remove_none({"X-Audit-Log-Reason": reason}),
-                    data={
-                        "name": name,
-                        "auto_archive_duration": auto_archive_duration,
-                        "type": type_,
-                        "invitable": invitable,
-                        "rate_limit_per_user": rate_limit_per_user,
-                    },
-                ),
-            )
-        )
-
-    async def join_thread(self):
-        """|coro|
-        Adds the current user to a thread.
-        Also requires the thread to not be archived.
-        """
-        await self._http.put(f"channels/{self.id}/thread-members/@me")
-
-    async def add_thread_member(self, user: User):
-        """|coro|
-        Adds another member to a thread.
-        Requires the ability to send messages in the thread.
-        Also requires the thread to not be archived.
-
-        Parameters
-        ----------
-        user: :class:`~pincer.objects.user.User`
-            The user to add to the thread.
-        """
-        await self._http.put(f"channels/{self.id}/thread-members/{user.id}")
-
-    async def leave_thread(self):
-        """|coro|
-        Removes the current user from a thread.
-        Also requires the thread to not be archived.
-        """
-        await self._http.delete(f"channels/{self.id}/thread-members/@me")
-
-    async def remove_thread_member(self, user: User):
-        """|coro|
-        Removes another member from a thread. Requires the ``MANAGE_THREADS``
-        permission, or the creator of the thread if it is a
-        ``GUILD_PRIVATE_THREAD``. Also requires the thread to not be archived.
-
-        Parameters
-        ----------
-        user: :class:`~pincer.objects.user.User`
-            The user to remove from the thread.
-        """
-        await self._http.delete(f"channels/{self.id}/thread-members/{user.id}")
-
-    async def get_thread_member(self, user: User) -> ThreadMember:
-        """|coro|
-        Returns a thread member object for the specified user if they are a
-        member of the thread.
-
-        Parameters
-        ----------
-        user: :class:`~pincer.objects.user.User`
-            The user to get the thread member for.
-
-        Returns
-        -------
-        :class:`~pincer.objects.channel.ThreadMember`
-            The thread member object.
-        """
-        return ThreadMember.from_dict(
-            construct_client_dict(
-                self._client,
-                await self._http.get(
-                    f"channels/{self.id}/thread-members/{user.id}"
-                ),
-            )
-        )
-
-    async def list_thread_members(self) -> AsyncIterator[ThreadMember]:
-        """|coro|
-        Fetches all the thread members for the thread. Returns an iterator of
-        ThreadMember objects.
-
-        Returns
-        -------
-        AsyncIterator[:class:`~pincer.objects.channel.ThreadMember`]
-            An iterator of thread members.
-        """
-        data = await self._http.get(f"channels/{self.id}/thread-members")
-        for member in data:
-            yield ThreadMember.from_dict(
-                construct_client_dict(self._client, member)
-            )
-
     async def list_active_threads(self) -> ThreadsResponse:
         """|coro|
         Returns all active threads in the channel, including public and
@@ -1090,6 +944,152 @@ class NewsChannel(Channel):
 
 class Thread(Channel):
     """A subclass of ``Channel`` for threads with all the same attributes."""
+
+    async def start(
+        self,
+        name: Optional[str] = None,
+        auto_archive_duration: Optional[int] = None,
+        type_: Optional[ChannelType] = None,
+        invitable: Optional[bool] = None,
+        rate_limit_per_user: Optional[int] = None,
+        reason: Optional[str] = None,
+    ) -> Channel:
+        """|coro|
+        Creates a new thread that is not connected to an existing message.
+        The created thread defaults to a ``GUILD_PRIVATE_THREAD``*.
+        Returns a Channel on success.
+
+        Parameters
+        ----------
+        name: Optional[:class:`str`]
+            The name of the thread. 1-100 characters.
+            |default| :data:`None`
+        auto_archive_duration**: Optional[:class:`int`]
+            The duration in minutes to automatically archive the thread after
+            recent activity, can be set to: ``60``, ``1440``, ``4320``, ``10080``.
+            |default| :data:`None`
+        type_: Optional[:class:`~pincer.objects.channel.ChannelType`]
+            The type of thread to create.
+            |default| :data:`None`
+        invitable: Optional[:class:`bool`]
+            Whether non-moderators can add other non-moderators to a thread;
+            only available when creating a private thread.
+            |default| :data:`None`
+        rate_limit_per_user: Optional[:class:`int`]
+            Amount of seconds a user has to wait before sending another message.
+            (0-21600)
+            |default| :data:`None`
+        reason: Optional[:class:`str`]
+            The reason of the thread creation.
+            |default| :data:`None`
+
+        \\*: Creating a private thread requires the server to be boosted.
+        The guild features will indicate if that is possible for the guild.
+
+        \\*\\*: The 3 day and 7 day archive durations require the server to be boosted.
+        The guild features will indicate if that is possible for the guild.
+
+        Returns
+        -------
+        :class:`~pincer.objects.channel.Channel`
+            The created thread.
+        """
+        return Channel.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.post(
+                    f"channels/{self.id}/threads",
+                    headers=remove_none({"X-Audit-Log-Reason": reason}),
+                    data={
+                        "name": name,
+                        "auto_archive_duration": auto_archive_duration,
+                        "type": type_,
+                        "invitable": invitable,
+                        "rate_limit_per_user": rate_limit_per_user,
+                    },
+                ),
+            )
+        )
+
+    async def join(self):
+        """|coro|
+        Adds the current user to a thread.
+        Also requires the thread to not be archived.
+        """
+        await self._http.put(f"channels/{self.id}/thread-members/@me")
+
+    async def add_member(self, user: User):
+        """|coro|
+        Adds another member to a thread.
+        Requires the ability to send messages in the thread.
+        Also requires the thread to not be archived.
+
+        Parameters
+        ----------
+        user: :class:`~pincer.objects.user.User`
+            The user to add to the thread.
+        """
+        await self._http.put(f"channels/{self.id}/thread-members/{user.id}")
+
+    async def leave(self):
+        """|coro|
+        Removes the current user from a thread.
+        Also requires the thread to not be archived.
+        """
+        await self._http.delete(f"channels/{self.id}/thread-members/@me")
+
+    async def remove_member(self, user: User):
+        """|coro|
+        Removes another member from a thread. Requires the ``MANAGE_THREADS``
+        permission, or the creator of the thread if it is a
+        ``GUILD_PRIVATE_THREAD``. Also requires the thread to not be archived.
+
+        Parameters
+        ----------
+        user: :class:`~pincer.objects.user.User`
+            The user to remove from the thread.
+        """
+        await self._http.delete(f"channels/{self.id}/thread-members/{user.id}")
+
+    async def get_member(self, user: User) -> ThreadMember:
+        """|coro|
+        Returns a thread member object for the specified user if they are a
+        member of the thread.
+
+        Parameters
+        ----------
+        user: :class:`~pincer.objects.user.User`
+            The user to get the thread member for.
+
+        Returns
+        -------
+        :class:`~pincer.objects.channel.ThreadMember`
+            The thread member object.
+        """
+        return ThreadMember.from_dict(
+            construct_client_dict(
+                self._client,
+                await self._http.get(
+                    f"channels/{self.id}/thread-members/{user.id}"
+                ),
+            )
+        )
+
+    async def list_members(self) -> AsyncIterator[ThreadMember]:
+        """|coro|
+        Fetches all the thread members for the thread. Returns an iterator of
+        ThreadMember objects.
+
+        Returns
+        -------
+        AsyncIterator[:class:`~pincer.objects.channel.ThreadMember`]
+            An iterator of thread members.
+        """
+        data = await self._http.get(f"channels/{self.id}/thread-members")
+        for member in data:
+            yield ThreadMember.from_dict(
+                construct_client_dict(self._client, member)
+            )
 
 
 class PublicThread(Thread):
