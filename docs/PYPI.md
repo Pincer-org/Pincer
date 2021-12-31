@@ -95,10 +95,15 @@ Pincer bots are required to inherit from the Client.
 from time import perf_counter
 from pincer import Client
 
+marker = perf_counter()
+
+
 class Bot(Client):
+
     @Client.event
     async def on_ready():
-        print(f"Logged in as {client.bot} after {perf_counter()} seconds")
+        print(f"Logged in as {client.bot} after {perf_counter() - marker} seconds")
+
 
 client = Bot("YOUR_TOKEN_HERE")
 client.run()
