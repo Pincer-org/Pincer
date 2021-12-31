@@ -135,7 +135,7 @@ class ActivitySecrets(APIObject):
 class ActivityFlags:
     """
     There is no information on what the flags are in the Discord API docs.
-    https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags
+    https://discord.dev/topics/gateway#activity-object-activity-flags
     """
     INSTANCE: bool
     JOIN: bool
