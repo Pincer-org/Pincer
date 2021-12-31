@@ -134,7 +134,7 @@ class ActivitySecrets(APIObject):
 @dataclass
 class ActivityFlags:
     """
-    There is no information on what the flags are on the Discord API docs
+    There is no information on what the flags are in the Discord API docs.
     https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags
     """
     INSTANCE: bool
