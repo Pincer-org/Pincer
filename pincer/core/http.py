@@ -114,7 +114,7 @@ class HTTPClient:
             content_type: str = "application/json",
             data: Optional[Union[Dict, str, Payload]] = None,
             headers: Optional[Dict[str, Any]] = None,
-            __ttl: int = None
+            _ttl: int = None
     ) -> Optional[Dict]:
         """
         Send an api request to the Discord REST API.
@@ -133,11 +133,11 @@ class HTTPClient:
         data:
             The data which will be added to the request.
 
-        __ttl:
+        _ttl:
             Private param used for recursively setting the retry amount.
             (Eg set to 1 for 1 max retry)
         """
-        ttl = __ttl or self.max_ttl
+        ttl = _ttl or self.max_ttl
 
         if ttl == 0:
             logging.error(
@@ -180,7 +180,7 @@ class HTTPClient:
             endpoint: str,
             content_type: str,
             data: Optional[str],
-            __ttl: int,
+            _ttl: int,
     ) -> Optional[Dict]:
         """
         Handle responses from the discord API.
@@ -203,7 +203,7 @@ class HTTPClient:
         data:
             The data which was added to the request.
 
-        __ttl:
+        _ttl:
             Private param used for recursively setting the retry amount.
             (Eg set to 1 for 1 max retry)
         """
@@ -255,7 +255,7 @@ class HTTPClient:
             raise exception
 
         # status code is guaranteed to be 5xx
-        retry_in = 1 + (self.max_ttl - __ttl) * 2
+        retry_in = 1 + (self.max_ttl - _ttl) * 2
 
         _log.debug(
             "Server side error occurred with status code "
@@ -269,7 +269,7 @@ class HTTPClient:
             method,
             endpoint,
             content_type=content_type,
-            __ttl=__ttl - 1,
+            _ttl=_ttl - 1,
             data=data
         )
 

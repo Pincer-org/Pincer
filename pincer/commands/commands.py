@@ -10,6 +10,8 @@ from functools import partial
 from inspect import Signature, isasyncgenfunction, _empty
 from typing import TYPE_CHECKING, Union, List
 
+from pincer.commands.groups import Group, SubGroup
+
 from . import __package__
 from ..commands.arg_types import (
     ChannelTypes,
@@ -85,6 +87,7 @@ def command(
     cooldown: Optional[int] = 0,
     cooldown_scale: Optional[float] = 60,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
+    parent: Optional[Union[Group, SubGroup]] = None
 ):
     """A decorator to create a slash command to register and respond to
     with the discord API from a function.
@@ -187,6 +190,7 @@ def command(
             cooldown=cooldown,
             cooldown_scale=cooldown_scale,
             cooldown_scope=cooldown_scope,
+            parent=parent
         )
 
     cmd = name or func.__name__
@@ -319,6 +323,7 @@ def command(
         cooldown_scale=cooldown_scale,
         cooldown_scope=cooldown_scope,
         command_options=options,
+        parent=parent
     )
 
 
@@ -472,7 +477,7 @@ def message_command(
         Annotation amount is max 25,
         Not a valid argument type,
         Annotations must consist of name and value
-    """
+    """  # noqa: E501
     return register_command(
         func=func,
         app_command_type=AppCommandType.MESSAGE,
@@ -497,6 +502,7 @@ def register_command(
     cooldown_scale: Optional[float] = 60,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
     command_options=MISSING,  # Missing typehint?
+    parent: Optional[Union[Group, SubGroup]] = MISSING
 ):
     if func is None:
         return partial(
@@ -509,6 +515,7 @@ def register_command(
             cooldown=cooldown,
             cooldown_scale=cooldown_scale,
             cooldown_scope=cooldown_scope,
+            parent=parent
         )
 
     cmd = name or func.__name__
@@ -548,6 +555,16 @@ def register_command(
             f"registered by `{reg.call.__name__}`."
         )
 
+    group = MISSING
+    sub_group = MISSING
+
+    if isinstance(parent, Group):
+        group = parent
+        sub_group = MISSING
+    if isinstance(parent, SubGroup):
+        group = parent.parent
+        sub_group = parent
+
     ChatCommandHandler.register[
         hash_app_command_params(cmd, guild_id, app_command_type)
     ] = ClientCommandStructure(
@@ -555,13 +572,15 @@ def register_command(
         cooldown=cooldown,
         cooldown_scale=cooldown_scale,
         cooldown_scope=cooldown_scope,
+        group=group,
+        sub_group=sub_group,
         app=AppCommand(
             name=cmd,
             description=description,
             type=app_command_type,
             default_permission=enable_default,
             options=command_options,
-            guild_id=guild_id,
+            guild_id=guild_id
         ),
     )
 
@@ -580,11 +599,15 @@ class ChatCommandHandler(metaclass=Singleton):
         Dictionary of managers
     register: Dict[:class:`str`, :class:`~objects.app.command.ClientCommandStructure`]
         Dictionary of ``ClientCommandStructure``
-    """
+    built_register: Dict[:class:`str`, :class:`~objects.app.command.ClientCommandStructure`]
+        Dictionary of ``ClientCommandStructure`` where the commands are converted to
+        the format that Discord expects for sub commands and sub command groups.
+    """  # noqa: E501
 
     has_been_initialized = False
     managers: Dict[str, Any] = {}
     register: Dict[str, ClientCommandStructure] = {}
+    built_register: Dict[str, ClientCommandStructure] = {}
 
     # Endpoints:
     __get = "/commands"
@@ -613,7 +636,7 @@ class ChatCommandHandler(metaclass=Singleton):
     async def get_commands(self) -> List[AppCommand]:
         """|coro|
 
-        Get a list of app commands
+        Get a list of app commands from Discord
 
         Returns
         -------
@@ -685,12 +708,8 @@ class ChatCommandHandler(metaclass=Singleton):
         if cmd.guild_id:
             add_endpoint = self.__add_guild.format(command=cmd)
 
-        res = await self.client.http.post(
+        await self.client.http.post(
             self.__prefix + add_endpoint, data=cmd.to_dict()
-        )
-
-        ChatCommandHandler.register[hash_app_command(cmd)].app.id = Snowflake(
-            res["id"]
         )
 
     async def add_commands(self, commands: List[AppCommand]):
@@ -705,6 +724,103 @@ class ChatCommandHandler(metaclass=Singleton):
         """
         await gather(*map(lambda cmd: self.add_command(cmd), commands))
 
+    def __build_local_commands(self):
+        # Commands need to changed to be in the form Discord expepcts
+        for cmd in ChatCommandHandler.register.values():
+
+            if cmd.sub_group:
+                # First make sure the command exists
+                key = hash_app_command_params(
+                    cmd.group.name,
+                    cmd.app.guild_id,
+                    AppCommandType.CHAT_INPUT
+                )
+
+                if key not in ChatCommandHandler.built_register:
+                    ChatCommandHandler.built_register[key] = ClientCommandStructure(
+                        call=None,
+                        cooldown=0,
+                        cooldown_scale=0,
+                        cooldown_scope=0,
+                        app=AppCommand(
+                            name=cmd.group.name,
+                            description=cmd.group.description,
+                            type=AppCommandType.CHAT_INPUT,
+                            guild_id=cmd.app.guild_id,
+                            options=[]
+                        )
+                    )
+
+                # Next we can ensure the SUB_COMMAND_GROUP exists that we're looking for
+                children = ChatCommandHandler.built_register[key].app.options
+
+                sub_command = AppCommandOption(
+                    name=cmd.sub_group.name,
+                    description=cmd.sub_group.description,
+                    type=AppCommandOptionType.SUB_COMMAND_GROUP,
+                    options=[]
+                )
+
+                for command_in_children in children:
+                    if (
+                        command_in_children.name == sub_command.name
+                        and command_in_children.description == sub_command.description
+                        and command_in_children.type == sub_command.type
+                    ):
+                        sub_command = command_in_children
+                        break
+                else:
+                    children.append(sub_command)
+
+                sub_command.options.append(AppCommandOption(
+                    name=cmd.app.name,
+                    description=cmd.app.description,
+                    type=AppCommandOptionType.SUB_COMMAND,
+                    options=cmd.app.options,
+                ))
+
+                continue
+
+            if cmd.group:
+                # Try to find if theres a command with this group
+                key = hash_app_command_params(
+                    cmd.group.name, cmd.app.guild_id, AppCommandOptionType.SUB_COMMAND
+                )
+
+                if key not in ChatCommandHandler.built_register:
+                    ChatCommandHandler.built_register[key] = ClientCommandStructure(
+                        call=None,
+                        cooldown=0,
+                        cooldown_scale=0,
+                        cooldown_scope=0,
+                        app=AppCommand(
+                            name=cmd.group.name,
+                            description=cmd.group.description,
+                            type=AppCommandOptionType.SUB_COMMAND,
+                            guild_id=cmd.app.guild_id,
+                            options=[]
+                        )
+                    )
+
+                ChatCommandHandler.built_register[key].app.options.append(
+                    AppCommandOption(
+                        name=cmd.app.name,
+                        description=cmd.app.description,
+                        type=AppCommandType.CHAT_INPUT,
+                        options=cmd.app.options
+                    )
+                )
+
+                continue
+
+            ChatCommandHandler.built_register[hash_app_command(cmd.app)] = cmd
+
+    def get_local_registered_commands(self):
+        return [
+            registered_cmd.app for registered_cmd
+            in ChatCommandHandler.built_register.values()
+        ]
+
     async def __get_existing_commands(self):
         """|coro|
 
@@ -717,10 +833,13 @@ class ChatCommandHandler(metaclass=Singleton):
             logging.error("Cannot retrieve slash commands, skipping...")
             return
 
-        for api_cmd in self._api_commands:
-            cmd = ChatCommandHandler.register.get(hash_app_command(api_cmd))
-            if cmd and cmd.app == api_cmd:
-                cmd.app = api_cmd
+        # I HAVE NO FUCKING CLUE WHAT THIS DOES
+        # im just leaving it out
+
+        # for api_cmd in self._api_commands:
+        #     cmd = ChatCommandHandler.register.get(hash_app_command(api_cmd))
+        #     if cmd and cmd.app == api_cmd:
+        #         cmd.app = api_cmd
 
     async def __remove_unused_commands(self):
         """|coro|
@@ -728,10 +847,7 @@ class ChatCommandHandler(metaclass=Singleton):
         Remove commands that are registered by discord but not in use
         by the current client
         """
-        local_registered_commands = [
-            registered_cmd.app for registered_cmd
-            in ChatCommandHandler.register.values()
-        ]
+        local_registered_commands = self.get_local_registered_commands()
 
         def should_be_removed(target: AppCommand) -> bool:
             for reg_cmd in local_registered_commands:
@@ -774,10 +890,7 @@ class ChatCommandHandler(metaclass=Singleton):
         Therefore, we don't need to use a separate loop for updating and adding
         commands.
         """
-        local_registered_commands = [
-            registered_cmd.app for registered_cmd
-            in ChatCommandHandler.register.values()
-        ]
+        local_registered_commands = self.get_local_registered_commands()
 
         def should_be_updated_or_uploaded(target):
             for command in self._api_commands:
@@ -802,6 +915,8 @@ class ChatCommandHandler(metaclass=Singleton):
             return
 
         ChatCommandHandler.has_been_initialized = True
+
+        self.__build_local_commands()
         await self.__get_existing_commands()
         await self.__remove_unused_commands()
         await self.__add_commands()

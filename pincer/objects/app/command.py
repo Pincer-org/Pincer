@@ -6,6 +6,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Union, TYPE_CHECKING
 
+from pincer.commands.groups import Group, SubGroup
+
 
 from .command_types import AppCommandOptionType, AppCommandType
 from ...objects.guild.channel import ChannelType
@@ -205,3 +207,6 @@ class ClientCommandStructure:
     cooldown: int
     cooldown_scale: float
     cooldown_scope: ThrottleScope
+
+    group: APINullable[Group] = MISSING
+    sub_group: APINullable[SubGroup] = MISSING
