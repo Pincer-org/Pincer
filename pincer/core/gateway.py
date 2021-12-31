@@ -353,7 +353,9 @@ class Gateway:
                     "properties": {
                         "$os": system(),
                         "$browser": __package__,
-                        "$device": __package__
+                        "$device": __package__,
+                        "$referrer": "",
+                        "$referring_domain": ""
                     },
                     "compress": GatewayConfig.compressed(),
                     "shard": self.shard_key
