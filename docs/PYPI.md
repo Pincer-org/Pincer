@@ -11,28 +11,31 @@
 ![Lines of code](https://tokei.rs/b1/github/pincer-org/pincer?category=code&path=pincer)
 ![Repo Size](https://img.shields.io/github/repo-size/Pincer-org/Pincer)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Pincer-org/Pincer)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Pincer-org/Pincer)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Pincer-org/Pincer?label=commits)
 ![GitHub](https://img.shields.io/github/license/Pincer-org/Pincer)
 ![Discord](https://img.shields.io/discord/881531065859190804)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+![gitmoji](https://img.shields.io/badge/gitmoji-%20🚀%20💀-FFDD67.svg)
 
-An asynchronous Python API wrapper meant to replace discord.py
+## :pushpin: Links
 
-## The package is currently within the pre-alpha phase
-
-## 📌 Links
-
-> Join the Discord server: <https://discord.gg/8WkYz3fNFm>  
-> The PyPI package: <https://pypi.org/project/Pincer>  
-> Our website: <https://pincer.dev>  
-> ReadTheDocs: <https://pincer.readthedocs.io>
+> <img src="../assets/svg/discord.svg" width="16px" alt="Discord Logo"> ｜Join the Discord server: https://discord.gg/pincer <br>
+> <img src="../assets/svg/pypi.svg" width="16px" alt="PyPI Logo"> ｜The PyPI package: https://pypi.org/project/Pincer <br>
+> <img src="../assets/svg/pincer.svg" width="16px" alt="Pincer Logo"> ｜Our website: https://pincer.dev <br>
+> 📝 | ReadTheDocs: https://pincer.readthedocs.io
 
 ## ☄️ Installation
 
 Use the following command to install Pincer into your Python environment:
 
-```bash
+```sh
 pip install pincer
+```
+
+To install our version with Aiohttp Speedup, use:
+
+```sh
+pip install pincer[speed]
 ```
 
 <details>
@@ -74,61 +77,49 @@ following:
 
 </details>
 
-## Current Features
-
-- Discord Gateway communication
-- logging
-- Http Client
-- Events
-- Event middleware
-- Commands
-- Command arguments *(for types: str, int, float, bool, User, Channel, Role)*
-- Command argument choices
-- Command argument descriptions
-- Command cool downs (Using WindowSliding technique)
-- Tasks
-- Cogs
-
 **Client base class example:**
 
 ```py
 from pincer.client import Bot
 
 # Note that both `Bot` and `Client` are valid!
-bot = Bot("...")
+bot = Bot("YOUR_TOKEN_HERE")
 bot.run()
 ```
 
 **An example on the `on_ready` event**
 
+Pincer bots are required to inherit from the Client.
+
 ```py
 from time import perf_counter
-from pincer.client import Client
+from pincer import Client
 
-client = Client("...")
-
-
-@client.event
-async def on_ready():
-    print(f"Logged in as {client.bot} after {perf_counter()} seconds")
+marker = perf_counter()
 
 
+class Bot(Client):
+
+    @Client.event
+    async def on_ready():
+        print(f"Logged in as {client.bot} after {perf_counter() - marker} seconds")
+
+
+client = Bot("YOUR_TOKEN_HERE")
 client.run()
 ```
 
-### Inherited client
+### Interactions
 
-You have the possibility to use your own class to inherit from the Pincer bot
-base.
+Pincer makes developing application commands intuitive and fast.
 
 ```py
 from pincer import Client
 from pincer.commands import command, CommandArg, Description
+from pincer.objects import UserMessage, User
+
 
 class Bot(Client):
-    def __init__(self) -> None:
-        super(Bot, self).__init__(token="...")
-
     @Client.event
     async def on_ready(self) -> None:
         ...
@@ -137,19 +128,32 @@ class Bot(Client):
     async def say(self, message: str):
         return message
 
+    @user_command
+    async def user_command(self, user: User):
+        return f"The user is {user}"
+
+    @message_command(name="Message command")
+    async def message_command(self, message: UserMessage):
+        return f"The message read '{message.content}'"
+
     @command(description="Add two numbers!")
     async def add(
-            self,
-            first: CommandArg[int, Description["The first number"]],
-            second: CommandArg[int, Description["The second number"]]
+        self,
+        first: CommandArg[int, Description["The first number"]],
+        second: CommandArg[int, Description["The second number"]]
     ):
         return f"The addition of `{first}` and `{second}` is `{first + second}`"
+
+
 ```
 
-For more examples you can take a look at the examples folder or check out our
-bot on GitHub:
+For more examples, you can take a look at the examples folder or check out our
+bot:
 
 > <https://github.com/Pincer-org/Pincer-bot>
+
+You can also read the interactions guide for more information:
+> <https://docs.pincer.dev/en/latest/interactions.html>
 
 ### Advanced Usage
 
@@ -165,20 +169,16 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 ```
 
-**Note:** _A lot of printing can happen, including sensitive information, so
-make sure to be aware of what you're doing if you're enabling it!_
-
 #### Middleware
 
-_From version 0.4.0-dev, the middleware system has been introduced. This system
-gives you the full freedom to remove the already existing middleware which has
-been created by the developers and create custom events. Your custom middleware
-directly receives the payload from Discord. You can't really do anything wrong
-without accessing the `override` attribute, but if you access this attribute the
-Pincer team will not provide any support for weird behavior. So in short, only
-use this if you know what you're doing. An example of using this with a custom
-`on_ready` event can be found
-[in our docs](https://pincer.readthedocs.io/en/latest/pincer.html#pincer.client.middleware)
+_The middleware system was introduced in version `0.4.0-dev`. This system gives you the
+freedom to create custom events and remove the already existing middleware created by
+the developers. Your custom middleware directly receives the payload from
+Discord. You can't do anything wrong without accessing the `override` attribute, but if
+you do access it, the Pincer team will not provide any support for weird behavior.
+So, in short, only use this if you know what you're doing. An example of using
+the middleware system with a custom `on_ready` event can be found
+[in our docs](https://pincer.readthedocs.io/en/latest/pincer.html#pincer.client.middleware).
 ._
 
 ## 🏷️ License
