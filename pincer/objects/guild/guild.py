@@ -9,7 +9,7 @@ from typing import AsyncGenerator, overload, TYPE_CHECKING
 
 from aiohttp import FormData
 
-from .channel import Channel
+from .channel import Channel, Thread
 from ..message.file import File
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
@@ -506,7 +506,7 @@ class Guild(APIObject):
         )
         return GuildMember.from_dict(construct_client_dict(self._client, data))
 
-      
+
     @overload
     async def create_channel(
         self,
@@ -573,7 +573,7 @@ class Guild(APIObject):
         return Channel.from_dict(construct_client_dict(self._client, data))
 
     async def modify_channel_positions(
-        self, 
+        self,
         reason: Optional[str] = None,
         *channel: Dict[str, Optional[Union[int, bool, Snowflake]]]
     ):
@@ -598,11 +598,11 @@ class Guild(APIObject):
         )
 
     async def list_active_threads(self) -> Tuple[
-        Generator[Union[PublicThread, PrivateThread]], Generator[GuildMember]]:
+        Generator[Thread], Generator[GuildMember]]:
         """|coro|
         Returns all active threads in the guild,
         including public and private threads.
-        
+
         Returns
         -------
         Generator[Union[:class:`~pincer.objects.guild.channel.PublicThread`, :class:`~pincer.objects.guild.channel.PrivateThread`]], Generator[:class:`~pincer.objects.guild.member.GuildMember`]]
@@ -635,7 +635,7 @@ class Guild(APIObject):
             max number of members to return (1-1000) |default| :data:`1`
         after : int
             the highest user id in the previous page |default| :data:`0`
-        
+
         Yields
         ------
         :class:`~pincer.objects.guild.member.GuildMember`
@@ -645,15 +645,15 @@ class Guild(APIObject):
         members = await self._http.get(
             f"guilds/{self.id}/members?{limit=}&{after=}"
         )
-        
+
         for member in members:
             yield GuildMember.from_dict(
                 construct_client_dict(self._client, member)
             )
-        
+
 
     async def search_guild_members(
-        self, 
+        self,
         query: str,
         limit: Optional[int] = None
     ) -> AsyncIterator[GuildMember]:
@@ -667,7 +667,7 @@ class Guild(APIObject):
             Query string to match username(s) and nickname(s) against.
         limit : Optional[int]
             max number of members to return (1-1000) |default| :data:`1`
-            
+
         Yields
         -------
         :class:`~pincer.objects.guild.member.GuildMember`
@@ -702,7 +702,7 @@ class Guild(APIObject):
         user_id : str
             id of the user to be added
         access_token : str
-            an oauth2 access token granted with the guilds.join to 
+            an oauth2 access token granted with the guilds.join to
             the bot's application for the user you want to add to the guild
         nick : Optional[str]
         	value to set users nickname to
@@ -724,12 +724,12 @@ class Guild(APIObject):
 
     async def add_guild_member(
         self,
-        user_id, 
-        reason=None, 
+        user_id,
+        reason=None,
         **kwargs
     ):
         data = await self._http.put(
-            f"guilds/{self.id}/members/{user_id}", 
+            f"guilds/{self.id}/members/{user_id}",
             data=kwargs,
             headers=remove_none({"X-Audit-Log-Reason": reason})
         )
@@ -739,8 +739,8 @@ class Guild(APIObject):
         ) if data else None
 
     async def modify_current_member(
-        self, 
-        nick: str, 
+        self,
+        nick: str,
         reason: Optional[str] = None
     ) -> GuildMember:
         """|coro|
@@ -758,8 +758,8 @@ class Guild(APIObject):
             current guild member
         """
         data = self._http.patch(
-            f"guilds/{self.id}/members/@me", 
-            {"nick": nick}, 
+            f"guilds/{self.id}/members/@me",
+            {"nick": nick},
             headers=remove_none({"X-Audit-Log-Reason":reason})
         )
         return GuildMember.from_dict(construct_client_dict(self._client, data))
@@ -788,7 +788,7 @@ class Guild(APIObject):
         )
 
     async def remove_guild_member_role(
-        self, 
+        self,
         user_id: int,
         role_id: int,
         reason: Optional[str] = None
@@ -1660,7 +1660,7 @@ class Guild(APIObject):
             The newly created emoji object.
         """
         roles = [] if roles is None else roles
-        
+
         data = await self._http.post(
             f"guilds/{self.id}/emojis",
             data={"name": name, "image": image.uri, "roles": roles},
@@ -1846,7 +1846,7 @@ class Guild(APIObject):
     async def list_stickers(self) -> AsyncIterator[Sticker]:
         """|coro|
         Yields sticker objects for the current guild.
-        Includes ``user`` fields if the bot has the 
+        Includes ``user`` fields if the bot has the
         ``MANAGE_EMOJIS_AND_STICKERS`` permission.
 
         Yields
@@ -1861,7 +1861,7 @@ class Guild(APIObject):
     async def get_sticker(self, _id: Snowflake) -> Sticker:
         """|coro|
         Returns a sticker object for the current guild and sticker IDs.
-        Includes the ``user`` field if the bot has the 
+        Includes the ``user`` field if the bot has the
         ``MANAGE_EMOJIS_AND_STICKERS`` permission.
 
         Parameters
