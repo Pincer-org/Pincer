@@ -29,7 +29,9 @@ _log = logging.getLogger(__name__)
 
 def get_command_from_registry(interaction: Interaction):
     """
-    Search for a command in ChatCommandHandler.register and return it if it exists
+    Search for a command in ChatCommandHandler.register and return it if it exists.
+    The naming of commands is converted from the Discord version to the Pincer verion
+    before checking the cahce. See ChatCommandHandler docs for more information.
 
     Parameters
     ---------

@@ -589,7 +589,26 @@ def register_command(
 
 
 class ChatCommandHandler(metaclass=Singleton):
-    """Metaclass containing methods used to handle various commands
+    """Singleton containing methods used to handle various commands
+
+    The Register and Built_register
+    -------------------------------
+    I found the way Discord expects commands to be registered to be very different than
+    how you want to think about registering a command. ie. Discord wants nesting but we
+    don't want any nesting. Nesting makes it hard to think about commands and also will
+    increase lookup time.
+    The way this problem is avoided is by storing a version of the commands that we can
+    deal with as library developers and a version of the command that Discord thinks we
+    should provide. That is where the register and the built_register help simplify the
+    design of the library.
+    The register is simply where the "Pincer version" of commands gets saved to memory.
+    The built_register is where the version of commands that Discord requires is saved.
+    The register allows for O(1) lookups by storing commands in a python dictionary. It
+    does cost some memory to save two copies in the current iteration of the system but
+    we should be able to drop the built_register in runtime if we want to. I don't feel
+    that lost maintainability from this is optimal. We can index by in O(1) by checking
+    the register but still can fall back to nested lookups if needed to by falling back
+    built_register.
 
     Attributes
     ----------
@@ -723,11 +742,27 @@ class ChatCommandHandler(metaclass=Singleton):
         await gather(*map(lambda cmd: self.add_command(cmd), commands))
 
     def __build_local_commands(self):
-        # Commands need to changed to be in the form Discord expepcts
+        """Builds the commands into the fomat that Discord expects. See class info
+        for the reasoning.
+        """
         for cmd in ChatCommandHandler.register.values():
 
             if cmd.sub_group:
-                # First make sure the command exists
+                # If a command has a sub_group, it must be nested to levels deep.
+                #
+                # command
+                #     subcommand-group
+                #         subcommand
+                #
+                # The chidlren of subcommand-group object are being set to include `cmd`
+                # If that subcommand-group object does not exist, it will be created
+                # here. The same goes for the top level command.
+                #
+                # First make sure the command exists. This command will hold the
+                # subcommand-group for `cmd`.
+
+                # `key` represents the hash value for the top level command that will
+                # hold the subcommand.
                 key = hash_app_command_params(
                     cmd.group.name,
                     cmd.app.guild_id,
@@ -751,23 +786,28 @@ class ChatCommandHandler(metaclass=Singleton):
                         )
                     )
 
-                # Next we can ensure the SUB_COMMAND_GROUP exists that we're looking for
+                # The top level command now exists. A subcommand-group now if placed
+                # inside the top level command. This subcommand-group will hold `cmd`.
+
                 children = ChatCommandHandler.built_register[key].app.options
 
-                sub_command = AppCommandOption(
+                sub_command_group = AppCommandOption(
                     name=cmd.sub_group.name,
                     description=cmd.sub_group.description,
                     type=AppCommandOptionType.SUB_COMMAND_GROUP,
                     options=[]
                 )
 
-                for command_in_children in children:
+                # This for-else makes sure that sub_command_group will hold a reference
+                # to the subcommand group that we want to modify to hold `cmd`
+
+                for cmd_in_children in children:
                     if (
-                        command_in_children.name == sub_command.name
-                        and command_in_children.description == sub_command.description
-                        and command_in_children.type == sub_command.type
+                        cmd_in_children.name == sub_command_group.name
+                        and cmd_in_children.description == sub_command_group.description
+                        and cmd_in_children.type == sub_command_group.type
                     ):
-                        sub_command = command_in_children
+                        sub_command = cmd_in_children
                         break
                 else:
                     children.append(sub_command)
@@ -782,7 +822,17 @@ class ChatCommandHandler(metaclass=Singleton):
                 continue
 
             if cmd.group:
-                # Try to find if theres a command with this group
+                # Any command at this point will only have one level of nesting.
+                #
+                # Command
+                #    subcommand
+                #
+                # A subcommand object is what is being generated here. If there is no
+                # top level command, it will be created here.
+
+                # `key` represents the hash value for the top level command that will
+                # hold the subcommand.
+
                 key = hash_app_command_params(
                     cmd.group.name,
                     cmd.app.guild_id,
@@ -806,6 +856,8 @@ class ChatCommandHandler(metaclass=Singleton):
                         )
                     )
 
+                # No checking has to be done before appending `cmd` since it is the
+                # lowest level.
                 ChatCommandHandler.built_register[key].app.options.append(
                     AppCommandOption(
                         name=cmd.app.name,
@@ -817,6 +869,7 @@ class ChatCommandHandler(metaclass=Singleton):
 
                 continue
 
+            # All single-level commands are registered here.
             ChatCommandHandler.built_register[
                 hash_app_command(cmd.app, cmd.group, cmd.sub_group)
             ] = cmd
@@ -927,6 +980,9 @@ def hash_app_command(
     group: Optional[str],
     sub_group: Optional[str]
 ) -> int:
+    """
+    See :func:`~pincer.commands.commands.hash_app_command_params` for information.
+    """
     return hash_app_command_params(
         command.name,
         command.guild_id,
@@ -944,6 +1000,20 @@ def hash_app_command_params(
     sub_group: Optional[str]
 ) -> int:
     """
+    The group layout in Pincer is very different than what discord has on their docs.
+    You can think of the Pincer group layout like this:
+
+    name: The name of the function that is being called.
+
+    group: The :class:`~pincer.commands.groups.Group` object that this function is
+        using.
+    sub_option: The :class:`~pincer.commands.groups.SubGroup` object that this
+        functions is using.
+
+    Abstracting away this part of the Discord API allows for a much cleaner
+    transformation between what users want to input and what commands Discord
+    expects.
+
     Parameters
     ----------
     name : str
@@ -954,8 +1024,9 @@ def hash_app_command_params(
         The app command type of the command. NOT THE OPTION TYPE.
     group : str
         The highest level of orginization the command is it. This should always be the
-        name of the base command.
+        name of the base command. :data:`None` or :data:`MISSING` if not there.
     sub_option : str
-        The name of the group that holds the lowest level of options.
+        The name of the group that holds the lowest level of options. :data:`None` or
+        :data:`MISSING` if not there.
     """
     return hash((name, guild_id, app_command_type, group, sub_group))
