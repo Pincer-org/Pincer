@@ -568,7 +568,7 @@ class UserMessage(APIObject):
 
         new_content = re.sub(
             re.compile(r"(.*?)```[a-zA-Z]+[\n]+((?:.|\s)*?)```"),
-            r"\1\2",
+            r"\2",
             new_content
         )
         
