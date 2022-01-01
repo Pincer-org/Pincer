@@ -571,5 +571,5 @@ class UserMessage(APIObject):
             r"\2",
             new_content
         )
-        
+
         return new_content[:-1] if new_content.endswith("\n") else new_content
