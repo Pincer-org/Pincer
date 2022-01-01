@@ -566,8 +566,10 @@ class UserMessage(APIObject):
         for pattern in MARKDOWN_PATTERNS:
             new_content = re.sub(pattern, r"\1", new_content)
 
-        return re.sub(
+        new_content = re.sub(
             re.compile(r"(.*?)```[a-zA-Z]+(\s*)+[\n]+((?:.|\s)*?)```"),
             r"\1\2\3",
             new_content
         )
+        
+        return new_content[:-1] if new_content.endswith("\n") else new_content
