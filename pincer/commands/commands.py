@@ -807,12 +807,12 @@ class ChatCommandHandler(metaclass=Singleton):
                         and cmd_in_children.description == sub_command_group.description
                         and cmd_in_children.type == sub_command_group.type
                     ):
-                        sub_command = cmd_in_children
+                        sub_command_group = cmd_in_children
                         break
                 else:
-                    children.append(sub_command)
+                    children.append(sub_command_group)
 
-                sub_command.options.append(AppCommandOption(
+                sub_command_group.options.append(AppCommandOption(
                     name=cmd.app.name,
                     description=cmd.app.description,
                     type=AppCommandOptionType.SUB_COMMAND,
