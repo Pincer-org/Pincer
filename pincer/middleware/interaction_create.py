@@ -42,7 +42,7 @@ def get_command_from_registry(interaction: Interaction):
         The command is not registered
     """
 
-    name = interaction.data.name
+    name: str = interaction.data.name
     group = None
     sub_group = None
 
