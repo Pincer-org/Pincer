@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from typing import TYPE_CHECKING, Tuple, List
 from typing import Union
 
@@ -71,3 +72,5 @@ def list_to_message_dict(item, kwargs):
         kwargs["components"].append(item)
     elif isinstance(item, str):
         kwargs["content"] = item
+    elif isinstance(item, InteractionFlags):
+        kwargs["flags"] = item
