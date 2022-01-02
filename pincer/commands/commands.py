@@ -558,7 +558,7 @@ def register_command(
         sub_group = parent
 
     if reg := ChatCommandHandler.register.get(
-        hash_app_command_params(cmd, guild, app_command_type, group, sub_group)
+        _hash_app_command_params(cmd, guild, app_command_type, group, sub_group)
     ):
         raise CommandAlreadyRegistered(
             f"Command `{cmd}` (`{func.__name__}`) has already been "
@@ -566,7 +566,7 @@ def register_command(
         )
 
     ChatCommandHandler.register[
-        hash_app_command_params(cmd, guild_id, app_command_type, group, sub_group)
+        _hash_app_command_params(cmd, guild_id, app_command_type, group, sub_group)
     ] = ClientCommandStructure(
         call=func,
         cooldown=cooldown,
@@ -594,7 +594,7 @@ class ChatCommandHandler(metaclass=Singleton):
     The register and built_register
     -------------------------------
     I found the way Discord expects commands to be registered to be very different than
-    how you want to think about registering a command. i.e. Discord wants nesting but we
+    how you want to think about command registration. i.e. Discord wants nesting but we
     don't want any nesting. Nesting makes it hard to think about commands and also will
     increase lookup time.
     The way this problem is avoided is by storing a version of the commands that we can
@@ -753,16 +753,16 @@ class ChatCommandHandler(metaclass=Singleton):
                 #     subcommand-group
                 #         subcommand
                 #
-                # The children of the subcommand-group object are being set to include `cmd`
-                # If that subcommand-group object does not exist, it will be created
-                # here. The same goes for the top-level command.
+                # The children of the subcommand-group object are being set to include
+                # `cmd` If that subcommand-group object does not exist, it will be
+                # created here. The same goes for the top-level command.
                 #
                 # First make sure the command exists. This command will hold the
                 # subcommand-group for `cmd`.
 
                 # `key` represents the hash value for the top-level command that will
                 # hold the subcommand.
-                key = hash_app_command_params(
+                key = _hash_app_command_params(
                     cmd.group.name,
                     cmd.app.guild_id,
                     AppCommandType.CHAT_INPUT,
@@ -832,7 +832,7 @@ class ChatCommandHandler(metaclass=Singleton):
                 # `key` represents the hash value for the top-level command that will
                 # hold the subcommand.
 
-                key = hash_app_command_params(
+                key = _hash_app_command_params(
                     cmd.group.name,
                     cmd.app.guild_id,
                     AppCommandOptionType.SUB_COMMAND,
@@ -870,7 +870,7 @@ class ChatCommandHandler(metaclass=Singleton):
 
             # All single-level commands are registered here.
             ChatCommandHandler.built_register[
-                hash_app_command(cmd.app, cmd.group, cmd.sub_group)
+                _hash_app_command(cmd.app, cmd.group, cmd.sub_group)
             ] = cmd
 
     def get_local_registered_commands(self):
@@ -972,15 +972,15 @@ class ChatCommandHandler(metaclass=Singleton):
         await self.__add_commands()
 
 
-def hash_app_command(
+def _hash_app_command(
     command: AppCommand,
     group: Optional[str],
     sub_group: Optional[str]
 ) -> int:
     """
-    See :func:`~pincer.commands.commands.hash_app_command_params` for information.
+    See :func:`~pincer.commands.commands._hash_app_command_params` for information.
     """
-    return hash_app_command_params(
+    return _hash_app_command_params(
         command.name,
         command.guild_id,
         command.type,
@@ -989,7 +989,7 @@ def hash_app_command(
     )
 
 
-def hash_app_command_params(
+def _hash_app_command_params(
     name: str,
     guild_id: Union[Snowflake, None, MISSING],
     app_command_type: AppCommandType,

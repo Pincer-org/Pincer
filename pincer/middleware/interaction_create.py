@@ -8,7 +8,8 @@ import logging
 from inspect import isasyncgenfunction, _empty
 from typing import TYPE_CHECKING
 
-from ..commands import ChatCommandHandler, ComponentHandler, hash_app_command_params
+from ..commands import ChatCommandHandler, ComponentHandler
+from ..commands.commands import _hash_app_command_params
 from ..exceptions import InteractionDoesNotExist
 from ..objects import Interaction, MessageContext, AppCommandType, InteractionType
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
@@ -57,7 +58,7 @@ def get_command_from_registry(interaction: Interaction):
             name = option.options[0].name
 
     with suppress(KeyError):
-        return ChatCommandHandler.register[hash_app_command_params(
+        return ChatCommandHandler.register[_hash_app_command_params(
             name,
             MISSING,
             interaction.data.type,
@@ -66,7 +67,7 @@ def get_command_from_registry(interaction: Interaction):
         )]
 
     with suppress(KeyError):
-        return ChatCommandHandler.register[hash_app_command_params(
+        return ChatCommandHandler.register[_hash_app_command_params(
             name,
             interaction.guild_id,
             interaction.data.type,
@@ -164,13 +165,16 @@ async def interaction_handler(
     }
     params = {}
 
-    options = interaction.data.options
-
-    if options and options[0].type in {1, 2}:
+    def get_options_from_command(options):
+        if not options:
+            return options
         if options[0].type == 1:
-            options = options[0].options
-        else:
-            options = options[0].options[0].options
+            return options[0].options
+        if options[0].type == 2:
+            return get_options_from_command(options[0].options)
+        return options
+
+    options = get_options_from_command(interaction.data.options)
 
     if options is not MISSING:
         params = {opt.name: opt.value for opt in options}
