@@ -418,7 +418,7 @@ To nest commands, Pincer organizes them into :class:`~pincer.commands.groups.Gro
 :class:`~pincer.commands.groups.SubGroup`s. Group and Subgroup names must only consist of
 lowercase letters and underscores.
 
-This chart shows the orginization of nested commands:
+This chart shows the organization of nested commands:
 
 .. code-block::
 

@@ -742,7 +742,7 @@ class ChatCommandHandler(metaclass=Singleton):
         await gather(*map(lambda cmd: self.add_command(cmd), commands))
 
     def __build_local_commands(self):
-        """Builds the commands into the fomat that Discord expects. See class info
+        """Builds the commands into the format that Discord expects. See class info
         for the reasoning.
         """
         for cmd in ChatCommandHandler.register.values():
@@ -1023,7 +1023,7 @@ def hash_app_command_params(
     app_command_type : :class:`~pincer.objects.app.command_types.AppCommandType`
         The app command type of the command. NOT THE OPTION TYPE.
     group : str
-        The highest level of orginization the command is it. This should always be the
+        The highest level of organization the command is it. This should always be the
         name of the base command. :data:`None` or :data:`MISSING` if not there.
     sub_option : str
         The name of the group that holds the lowest level of options. :data:`None` or
