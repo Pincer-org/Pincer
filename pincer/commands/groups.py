@@ -73,5 +73,5 @@ class Subgroup:
     parent: Group
     description: Optional[str] = None
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(self.name)
