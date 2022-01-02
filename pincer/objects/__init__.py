@@ -111,7 +111,7 @@ __all__ = (
     "AppCommandOption", "AppCommandOptionChoice", "AppCommandOptionType",
     "AppCommandType", "Application", "Attachment", "AuditEntryInfo",
     "AuditLog", "AuditLogChange", "AuditLogEntry", "AuditLogEvent", "Ban",
-    "BaseMember", "Button", "ButtonStyle", "CallbackType", "CategoryChannel",
+    "BaseMember", "CallbackType", "CategoryChannel",
     "Channel", "ChannelMention", "ChannelPinsUpdateEvent", "ChannelType",
     "ClientCommandStructure", "ClientStatus", "ComponentType", "Connection",
     "DefaultMessageNotificationLevel", "DefaultThrottleHandler",
