@@ -69,7 +69,7 @@ class Gateway:
     token : str.
         The token for this bot
     intents : :class:`~pincer.objects.app.intents.Intents`
-        The itents to use. More information can be found at
+        The intents to use. More information can be found at
         `<https://discord.com/developers/docs/topics/gateway#gateway-intents>`_.
     url : str
         The gateway url.
