@@ -176,7 +176,7 @@ class HTTPClient:
                     "Content-Type": content_type,
                     **(headers or {})
                 },
-                params=params
+                params=remove_none(params)
         ) as res:
             return await self.__handle_response(
                 res, method, endpoint, content_type, data, ttl
@@ -335,7 +335,7 @@ class HTTPClient:
         return await self.__send(
             self.__session.get,
             route,
-            params=remove_none(params)
+            params=params
         )
 
     async def head(self, route: str) -> Optional[Dict]:
