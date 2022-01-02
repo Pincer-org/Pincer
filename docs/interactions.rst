@@ -434,7 +434,7 @@ This chart shows the organization of nested commands:
     subgroup name
       command name
 
-  Orginizing commands like this is also valid:
+  Organizing commands like this is also valid:
 
   group name
     subgroup name
@@ -462,7 +462,7 @@ decorator to nest a command inside of them. They are not available for User Comm
     def command_sub_group_command():
       pass
 
-    # Creating these commands is valid because there is no top level command or group
+    # Creating these commands is valid because there is no top-level command or group
     # with the same name.
     @command
     def command_group_command():
