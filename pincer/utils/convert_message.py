@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from collections import defaultdict
 from collections.abc import Iterable
 from typing import TYPE_CHECKING, Tuple, List
 from typing import Union
@@ -42,8 +43,8 @@ def convert_message(client: Client, message: MessageConvertable) -> Message:
     :class:`~pincer.objects.message.message.Message`
         The message object to be sent
     """
-    if message and isinstance(message, (tuple, list)):
-        kwargs = {"attachments": [], "embeds": [], "components": []}
+    if message and isinstance(message, Iterable):
+        kwargs = defaultdict(list)
         for item in message:
             list_to_message_dict(item, kwargs)
         message = Message(**kwargs)
