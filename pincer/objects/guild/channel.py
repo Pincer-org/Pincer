@@ -6,8 +6,8 @@ from __future__ import annotations
 from asyncio import sleep, ensure_future
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import AsyncIterator, overload, TYPE_CHECKING
 from urllib.parse import urlencode
+from typing import AsyncIterator, overload, TYPE_CHECKING
 
 from .invite import Invite, InviteTargetType
 from ..message.user_message import UserMessage

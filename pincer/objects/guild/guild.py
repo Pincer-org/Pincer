@@ -455,16 +455,16 @@ class Guild(APIObject):
 
     @overload
     async def modify_member(
-            self,
-            *,
-            _id: int,
-            nick: Optional[str] = None,
-            roles: Optional[List[Snowflake]] = None,
-            mute: Optional[bool] = None,
-            deaf: Optional[bool] = None,
-            channel_id: Optional[Snowflake] = None,
-            reason: Optional[str] = None,
-            communication_disabled_until: Optional[Timestamp] = MISSING,
+        self,
+        *,
+        _id: int,
+        nick: Optional[str] = None,
+        roles: Optional[List[Snowflake]] = None,
+        mute: Optional[bool] = None,
+        deaf: Optional[bool] = None,
+        channel_id: Optional[Snowflake] = None,
+        reason: Optional[str] = None,
+        communication_disabled_until: Optional[Timestamp] = MISSING,
     ) -> GuildMember:
         """|coro|
         Modifies a member in the guild from its identifier and based on the
@@ -508,18 +508,18 @@ class Guild(APIObject):
 
     @overload
     async def create_channel(
-            self,
-            *,
-            name: str,
-            type: Optional[ChannelType] = None,
-            topic: Optional[str] = None,
-            bitrate: Optional[int] = None,
-            user_limit: Optional[int] = None,
-            rate_limit_per_user: Optional[int] = None,
-            position: Optional[int] = None,
-            permission_overwrites: Optional[List[Overwrite]] = None,
-            parent_id: Optional[Snowflake] = None,
-            nsfw: Optional[bool] = None
+        self,
+        *,
+        name: str,
+        type: Optional[ChannelType] = None,
+        topic: Optional[str] = None,
+        bitrate: Optional[int] = None,
+        user_limit: Optional[int] = None,
+        rate_limit_per_user: Optional[int] = None,
+        position: Optional[int] = None,
+        permission_overwrites: Optional[List[Overwrite]] = None,
+        parent_id: Optional[Snowflake] = None,
+        nsfw: Optional[bool] = None
     ) -> Channel:
         """|coro|
         Create a new channel object for the guild.
@@ -559,10 +559,10 @@ class Guild(APIObject):
         ...
 
     async def create_channel(
-            self,
-            *,
-            reason: Optional[str] = None,
-            **kwargs
+        self,
+        *,
+        reason: Optional[str] = None,
+        **kwargs
     ):
         data = await self._http.post(
             f"guilds/{self.id}/channels",
@@ -572,9 +572,9 @@ class Guild(APIObject):
         return Channel.from_dict(construct_client_dict(self._client, data))
 
     async def modify_channel_positions(
-            self,
-            reason: Optional[str] = None,
-            *channel: Dict[str, Optional[Union[int, bool, Snowflake]]]
+        self,
+        reason: Optional[str] = None,
+        *channel: Dict[str, Optional[Union[int, bool, Snowflake]]]
     ):
         """|coro|
         Create a new channel object for the guild.
@@ -621,9 +621,9 @@ class Guild(APIObject):
         return threads, members
 
     async def list_guild_members(
-            self,
-            limit: int = 1,
-            after: int = 0
+        self,
+        limit: int = 1,
+        after: int = 0
     ) -> AsyncIterator[GuildMember]:
         """|coro|
         Returns a list of guild member objects that are members of the guild.
@@ -651,9 +651,9 @@ class Guild(APIObject):
             )
 
     async def search_guild_members(
-            self,
-            query: str,
-            limit: Optional[int] = None
+        self,
+        query: str,
+        limit: Optional[int] = None
     ) -> AsyncIterator[GuildMember]:
         """|coro|
         Returns a list of guild member objects whose
@@ -682,14 +682,14 @@ class Guild(APIObject):
 
     @overload
     async def add_guild_member(
-            self, *,
-            user_id: Snowflake,
-            access_token: str,
-            nick: Optional[str] = None,
-            roles: Optional[List[Snowflake]] = None,
-            mute: Optional[bool] = None,
-            deaf: Optional[bool] = None,
-            reason: Optional[str] = None,
+        self, *,
+        user_id: Snowflake,
+        access_token: str,
+        nick: Optional[str] = None,
+        roles: Optional[List[Snowflake]] = None,
+        mute: Optional[bool] = None,
+        deaf: Optional[bool] = None,
+        reason: Optional[str] = None,
     ) -> Optional[GuildMember]:
         """|coro|
         Adds a user to the guild, provided you have a
@@ -721,10 +721,10 @@ class Guild(APIObject):
         """
 
     async def add_guild_member(
-            self,
-            user_id,
-            reason=None,
-            **kwargs
+        self,
+        user_id,
+        reason=None,
+        **kwargs
     ):
         data = await self._http.put(
             f"guilds/{self.id}/members/{user_id}",
@@ -737,9 +737,9 @@ class Guild(APIObject):
         ) if data else None
 
     async def modify_current_member(
-            self,
-            nick: str,
-            reason: Optional[str] = None
+        self,
+        nick: str,
+        reason: Optional[str] = None
     ) -> GuildMember:
         """|coro|
         Modifies the current member in a guild.
@@ -763,10 +763,10 @@ class Guild(APIObject):
         return GuildMember.from_dict(construct_client_dict(self._client, data))
 
     async def add_guild_member_role(
-            self,
-            user_id: int,
-            role_id: int,
-            reason: Optional[str] = None
+        self,
+        user_id: int,
+        role_id: int,
+        reason: Optional[str] = None
     ) -> None:
         """|coro|
         Adds a role to a guild member.
@@ -786,10 +786,10 @@ class Guild(APIObject):
         )
 
     async def remove_guild_member_role(
-            self,
-            user_id: int,
-            role_id: int,
-            reason: Optional[str] = None
+        self,
+        user_id: int,
+        role_id: int,
+        reason: Optional[str] = None
     ):
         """|coro|
         Removes a role from a guild member.
@@ -809,9 +809,9 @@ class Guild(APIObject):
         )
 
     async def remove_guild_member(
-            self,
-            user_id: int,
-            reason: Optional[str] = None
+        self,
+        user_id: int,
+        reason: Optional[str] = None
     ):
         """|coro|
         Remove a member from a guild.
@@ -829,10 +829,10 @@ class Guild(APIObject):
         )
 
     async def ban(
-            self,
-            member_id: int,
-            reason: str = None,
-            delete_message_days: int = None,
+        self,
+        member_id: int,
+        reason: str = None,
+        delete_message_days: int = None,
     ):
         """
         Parameters
@@ -893,16 +893,16 @@ class Guild(APIObject):
 
     @overload
     async def create_role(
-            self,
-            reason: Optional[str] = None,
-            *,
-            name: Optional[str] = "new role",
-            permissions: Optional[str] = None,
-            color: Optional[int] = 0,
-            hoist: Optional[bool] = False,
-            icon: Optional[str] = None,
-            unicode_emoji: Optional[str] = None,
-            mentionable: Optional[bool] = False,
+        self,
+        reason: Optional[str] = None,
+        *,
+        name: Optional[str] = "new role",
+        permissions: Optional[str] = None,
+        color: Optional[int] = 0,
+        hoist: Optional[bool] = False,
+        icon: Optional[str] = None,
+        unicode_emoji: Optional[str] = None,
+        mentionable: Optional[bool] = False,
     ) -> Role:
         """|coro|
         Creates a new role for the guild.
@@ -952,10 +952,10 @@ class Guild(APIObject):
         )
 
     async def edit_role_position(
-            self,
-            id: Snowflake,
-            reason: Optional[str] = None,
-            position: Optional[int] = None,
+        self,
+        id: Snowflake,
+        reason: Optional[str] = None,
+        position: Optional[int] = None,
     ) -> AsyncGenerator[Role, None]:
         """|coro|
         Edits the position of a role.
@@ -984,17 +984,17 @@ class Guild(APIObject):
 
     @overload
     async def edit_role(
-            self,
-            id: Snowflake,
-            reason: Optional[str] = None,
-            *,
-            name: Optional[str] = None,
-            permissions: Optional[str] = None,
-            color: Optional[int] = None,
-            hoist: Optional[bool] = None,
-            icon: Optional[str] = None,
-            unicode_emoji: Optional[str] = None,
-            mentionable: Optional[bool] = None,
+        self,
+        id: Snowflake,
+        reason: Optional[str] = None,
+        *,
+        name: Optional[str] = None,
+        permissions: Optional[str] = None,
+        color: Optional[int] = None,
+        hoist: Optional[bool] = None,
+        icon: Optional[str] = None,
+        unicode_emoji: Optional[str] = None,
+        mentionable: Optional[bool] = None,
     ) -> Role:
         """|coro|
         Edits a role.
@@ -1033,7 +1033,7 @@ class Guild(APIObject):
         ...
 
     async def edit_role(
-            self, id: Snowflake, reason: Optional[str] = None, **kwargs
+        self, id: Snowflake, reason: Optional[str] = None, **kwargs
     ) -> Role:
         return Role.from_dict(
             construct_client_dict(
@@ -1115,27 +1115,27 @@ class Guild(APIObject):
 
     @overload
     async def edit(
-            self,
-            *,
-            name: Optional[str] = None,
-            region: Optional[str] = None,
-            verification_level: Optional[int] = None,
-            default_message_notifications: Optional[int] = None,
-            explicit_content_filter: Optional[int] = None,
-            afk_channel_id: Optional[Snowflake] = None,
-            afk_timeout: Optional[int] = None,
-            icon: Optional[str] = None,
-            owner_id: Optional[Snowflake] = None,
-            splash: Optional[str] = None,
-            discovery_splash: Optional[str] = None,
-            banner: Optional[str] = None,
-            system_channel_id: Optional[Snowflake] = None,
-            system_channel_flags: Optional[int] = None,
-            rules_channel_id: Optional[Snowflake] = None,
-            public_updates_channel_id: Optional[Snowflake] = None,
-            preferred_locale: Optional[str] = None,
-            features: Optional[List[GuildFeature]] = None,
-            description: Optional[str] = None,
+        self,
+        *,
+        name: Optional[str] = None,
+        region: Optional[str] = None,
+        verification_level: Optional[int] = None,
+        default_message_notifications: Optional[int] = None,
+        explicit_content_filter: Optional[int] = None,
+        afk_channel_id: Optional[Snowflake] = None,
+        afk_timeout: Optional[int] = None,
+        icon: Optional[str] = None,
+        owner_id: Optional[Snowflake] = None,
+        splash: Optional[str] = None,
+        discovery_splash: Optional[str] = None,
+        banner: Optional[str] = None,
+        system_channel_id: Optional[Snowflake] = None,
+        system_channel_flags: Optional[int] = None,
+        rules_channel_id: Optional[Snowflake] = None,
+        public_updates_channel_id: Optional[Snowflake] = None,
+        preferred_locale: Optional[str] = None,
+        features: Optional[List[GuildFeature]] = None,
+        description: Optional[str] = None,
     ) -> Guild:
         """|coro|
         Modifies the guild
@@ -1220,7 +1220,7 @@ class Guild(APIObject):
         await self._http.delete(f"guilds/{self.id}")
 
     async def prune_count(
-            self, days: Optional[int] = 7, include_roles: Optional[str] = None
+        self, days: Optional[int] = 7, include_roles: Optional[str] = None
     ) -> int:
         """|coro|
         Returns the number of members that
@@ -1245,11 +1245,11 @@ class Guild(APIObject):
         )["pruned"]
 
     async def prune(
-            self,
-            days: Optional[int] = 7,
-            compute_prune_days: Optional[bool] = True,
-            include_roles: Optional[List[Snowflake]] = None,
-            reason: Optional[str] = None,
+        self,
+        days: Optional[int] = 7,
+        compute_prune_days: Optional[bool] = True,
+        include_roles: Optional[List[Snowflake]] = None,
+        reason: Optional[str] = None,
     ) -> int:
         """|coro|
         Prunes members from the guild. Requires the ``KICK_MEMBERS`` permission.
@@ -1331,7 +1331,7 @@ class Guild(APIObject):
             )
 
     async def delete_integration(
-            self, integration: Integration, reason: Optional[str] = None
+        self, integration: Integration, reason: Optional[str] = None
     ):
         """|coro|
         Deletes an integration.
@@ -1413,7 +1413,7 @@ class Guild(APIObject):
         return Invite.from_dict(construct_client_dict(self._client, data))
 
     async def get_widget_image(
-            self, style: Optional[str] = "shield"
+        self, style: Optional[str] = "shield"
     ) -> str:  # TODO Replace str with ImageURL object
         """|coro|
         Returns a PNG image widget for the guild.
@@ -1464,11 +1464,11 @@ class Guild(APIObject):
         )
 
     async def modify_welcome_screen(
-            self,
-            enabled: Optional[bool] = None,
-            welcome_channels: Optional[List[WelcomeScreenChannel]] = None,
-            description: Optional[str] = None,
-            reason: Optional[str] = None,
+        self,
+        enabled: Optional[bool] = None,
+        welcome_channels: Optional[List[WelcomeScreenChannel]] = None,
+        description: Optional[str] = None,
+        reason: Optional[str] = None,
     ) -> WelcomeScreen:
         """|coro|
         Modifies the guild's Welcome Screen.
@@ -1506,10 +1506,10 @@ class Guild(APIObject):
         )
 
     async def modify_current_user_voice_state(
-            self,
-            channel_id: Snowflake,
-            suppress: Optional[bool] = None,
-            request_to_speak_timestamp: Optional[Timestamp] = None,
+        self,
+        channel_id: Snowflake,
+        suppress: Optional[bool] = None,
+        request_to_speak_timestamp: Optional[Timestamp] = None,
     ):
         """|coro|
         Updates the current user's voice state.
@@ -1543,7 +1543,7 @@ class Guild(APIObject):
         )
 
     async def modify_user_voice_state(
-            self, user: User, channel_id: Snowflake, suppress: Optional[bool] = None
+        self, user: User, channel_id: Snowflake, suppress: Optional[bool] = None
     ):
         """|coro|
         Updates another user's voice state.
@@ -1627,12 +1627,12 @@ class Guild(APIObject):
         )
 
     async def create_emoji(
-            self,
-            *,
-            name: str,
-            image: File,
-            roles: Optional[List[Snowflake]] = None,
-            reason: Optional[str] = None,
+        self,
+        *,
+        name: str,
+        image: File,
+        roles: Optional[List[Snowflake]] = None,
+        reason: Optional[str] = None,
     ) -> Emoji:
         """|coro|
         Creates a new emoji for the guild.
@@ -1667,12 +1667,12 @@ class Guild(APIObject):
         return Emoji.from_dict(construct_client_dict(self._client, data))
 
     async def edit_emoji(
-            self,
-            id: Snowflake,
-            *,
-            name: Optional[str] = None,
-            roles: Optional[List[Snowflake]] = None,
-            reason: Optional[str] = None,
+        self,
+        id: Snowflake,
+        *,
+        name: Optional[str] = None,
+        roles: Optional[List[Snowflake]] = None,
+        reason: Optional[str] = None,
     ) -> Emoji:
         """|coro|
         Modifies the given emoji.
@@ -1702,7 +1702,7 @@ class Guild(APIObject):
         return Emoji.from_dict(construct_client_dict(self._client, data))
 
     async def delete_emoji(
-            self, id: Snowflake, *, reason: Optional[str] = None
+        self, id: Snowflake, *, reason: Optional[str] = None
     ):
         """|coro|
         Deletes the given emoji.
@@ -1736,7 +1736,7 @@ class Guild(APIObject):
             )
 
     async def create_template(
-            self, name: str, description: Optional[str] = None
+        self, name: str, description: Optional[str] = None
     ) -> GuildTemplate:
         """|coro|
         Creates a new template for the guild.
@@ -1785,11 +1785,11 @@ class Guild(APIObject):
         )
 
     async def edit_template(
-            self,
-            template: GuildTemplate,
-            *,
-            name: Optional[str] = None,
-            description: Optional[str] = None,
+        self,
+        template: GuildTemplate,
+        *,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
     ) -> GuildTemplate:
         """|coro|
         Modifies the template's metadata.
@@ -1876,12 +1876,12 @@ class Guild(APIObject):
         return Sticker.from_dict(sticker)
 
     async def create_sticker(
-            self,
-            name: str,
-            tags: str,
-            description: str,
-            file: File,
-            reason: Optional[str] = None,
+        self,
+        name: str,
+        tags: str,
+        description: str,
+        file: File,
+        reason: Optional[str] = None,
     ) -> Sticker:
         """|coro|
         Create a new sticker for the guild.
