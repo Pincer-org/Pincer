@@ -11,7 +11,6 @@ from ..objects.events.guild import GuildStickersUpdateEvent
 from ..utils import Coro
 from ..utils.conversion import construct_client_dict
 
-
 if TYPE_CHECKING:
     from ..client import Client
     from ..core.gateway import Gateway

@@ -14,7 +14,6 @@ from typing import (
 )
 
 from pincer.utils.conversion import construct_client_dict
-
 from .types import MissingType, MISSING, TypeCache
 from ..exceptions import InvalidArgumentAnnotation
 

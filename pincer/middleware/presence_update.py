@@ -11,7 +11,6 @@ from ..objects.events.presence import PresenceUpdateEvent
 from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
-
 if TYPE_CHECKING:
     from ..client import Client
     from ..core.gateway import Gateway

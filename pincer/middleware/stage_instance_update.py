@@ -8,8 +8,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects import StageInstance
-from ..utils.conversion import construct_client_dict
 from ..utils import Coro, replace
+from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client

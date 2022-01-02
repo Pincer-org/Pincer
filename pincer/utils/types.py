@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from sys import modules
 from typing import (
-    TYPE_CHECKING, TypeVar, Callable, Coroutine, Any, Union, Optional
+    TypeVar, Callable, Coroutine, Any, Union, Optional
 )
 
 

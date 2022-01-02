@@ -22,7 +22,7 @@ if TYPE_CHECKING:
     from collections.abc import AsyncIterator
     from .audit_log import AuditLog
     from .ban import Ban
-    from .channel import PublicThread, PrivateThread, ChannelType
+    from .channel import ChannelType
     from .member import GuildMember
     from .features import GuildFeature
     from .invite import Invite

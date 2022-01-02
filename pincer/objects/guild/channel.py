@@ -6,8 +6,8 @@ from __future__ import annotations
 from asyncio import sleep, ensure_future
 from dataclasses import dataclass
 from enum import IntEnum
-from urllib.parse import urlencode
 from typing import AsyncIterator, overload, TYPE_CHECKING
+from urllib.parse import urlencode
 
 from .invite import Invite, InviteTargetType
 from ..message.user_message import UserMessage
@@ -16,7 +16,6 @@ from ...utils.api_object import APIObject, GuildProperty
 from ...utils.conversion import construct_client_dict, remove_none
 from ...utils.convert_message import convert_message
 from ...utils.types import MISSING
-
 
 if TYPE_CHECKING:
     from typing import AsyncGenerator, Dict, List, Optional, Union
