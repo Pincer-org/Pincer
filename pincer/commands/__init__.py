@@ -23,7 +23,7 @@ from .components import (
     ActionRow, Button, ButtonStyle, ComponentHandler, SelectMenu, SelectOption,
     component, button, select_menu, LinkButton
 )
-from .groups import Group, SubGroup
+from .groups import Group, Subgroup
 
 __all__ = (
     "ActionRow", "Button", "ButtonStyle", "ChannelTypes",
@@ -31,5 +31,5 @@ __all__ = (
     "ComponentHandler", "Description", "LinkButton", "MaxValue", "MinValue",
     "Modifier", "SelectMenu", "SelectOption", "button", "command", "component",
     "hash_app_command", "hash_app_command_params", "message_command",
-    "select_menu", "user_command", "Group", "SubGroup"
+    "select_menu", "user_command", "Group", "Subgroup"
 )

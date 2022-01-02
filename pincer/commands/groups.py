@@ -40,7 +40,7 @@ class Group:
 
 
 @dataclass
-class SubGroup:
+class Subgroup:
     """
     A subgroup of commands. This allows you to create subcommands inside of a
     subcommand-group.
@@ -50,7 +50,7 @@ class SubGroup:
         class Bot:
 
             group = Group("cool_commands")
-            sub_group = SubGroup("group_of_cool_commands")
+            sub_group = Subgroup("group_of_cool_commands")
 
             @command(parent=sub_group)
             def a_very_cool_command():

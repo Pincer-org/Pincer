@@ -415,7 +415,7 @@ You can also dynamically set the selectable options.
 Subcommands and Subcommand Groups
 ---------------------------------
 To nest commands, Pincer organizes them into :class:`~pincer.commands.groups.Group` and
-:class:`~pincer.commands.groups.SubGroup` objects. Group and Subgroup names must only consist of
+:class:`~pincer.commands.groups.Subgroup` objects. Group and Subgroup names must only consist of
 lowercase letters and underscores.
 
 
@@ -441,18 +441,18 @@ This chart shows the organization of nested commands:
       command name
     command name
 
-:class:`~pincer.commands.groups.Group` and :class:`~pincer.commands.groups.SubGroup` are set to the parent in a @command
+:class:`~pincer.commands.groups.Group` and :class:`~pincer.commands.groups.Subgroup` are set to the parent in a @command
 decorator to nest a command inside of them. They are not available for User Commands and Message Commands.
 
 .. code-block:: python
 
-  from pincer.commands import Group, SubGroup
+  from pincer.commands import Group, Subgroup
   ...
 
   class Bot(Client):
 
     command_group = Group("command_group")
-    command_sub_group = Group("command_sub_group", parent=a_command_group)
+    command_sub_group = Subgroup("command_sub_group", parent=a_command_group)
 
     @command(parent=command_group)
     def command_group_command():

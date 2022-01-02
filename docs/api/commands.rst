@@ -55,3 +55,10 @@ Message Components
     :decorator:
 .. autofunction:: component
     :decorator:
+
+Command Groups
+~~~~~~~~~~~~~~
+.. currentmodule:: pincer.commands.groups
+
+.. autoclass:: Group()
+.. autoclass:: Subgroup()

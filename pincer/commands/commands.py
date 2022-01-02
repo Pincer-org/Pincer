@@ -10,7 +10,7 @@ from functools import partial
 from inspect import Signature, isasyncgenfunction, _empty
 from typing import TYPE_CHECKING, Union, List
 
-from pincer.commands.groups import Group, SubGroup
+from pincer.commands.groups import Group, Subgroup
 
 from . import __package__
 from ..commands.arg_types import (
@@ -87,7 +87,7 @@ def command(
     cooldown: Optional[int] = 0,
     cooldown_scale: Optional[float] = 60.0,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
-    parent: Optional[Union[Group, SubGroup]] = None
+    parent: Optional[Union[Group, Subgroup]] = None
 ):
     """A decorator to create a slash command to register and respond to
     with the discord API from a function.
@@ -502,7 +502,7 @@ def register_command(
     cooldown_scale: Optional[float] = 60.0,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
     command_options=MISSING,  # Missing typehint?
-    parent: Optional[Union[Group, SubGroup]] = MISSING
+    parent: Optional[Union[Group, Subgroup]] = MISSING
 ):
     if func is None:
         return partial(
@@ -553,7 +553,7 @@ def register_command(
     if isinstance(parent, Group):
         group = parent
         sub_group = MISSING
-    if isinstance(parent, SubGroup):
+    if isinstance(parent, Subgroup):
         group = parent.parent
         sub_group = parent
 
@@ -1004,7 +1004,7 @@ def hash_app_command_params(
 
     group: The :class:`~pincer.commands.groups.Group` object that this function is
         using.
-    sub_option: The :class:`~pincer.commands.groups.SubGroup` object that this
+    sub_option: The :class:`~pincer.commands.groups.Subgroup` object that this
         functions is using.
 
     Abstracting away this part of the Discord API allows for a much cleaner

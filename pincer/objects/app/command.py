@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Union, TYPE_CHECKING
 
-from pincer.commands.groups import Group, SubGroup
+from pincer.commands.groups import Group, Subgroup
 
 
 from .command_types import AppCommandOptionType, AppCommandType
@@ -209,4 +209,4 @@ class ClientCommandStructure:
     cooldown_scope: ThrottleScope
 
     group: APINullable[Group] = MISSING
-    sub_group: APINullable[SubGroup] = MISSING
+    sub_group: APINullable[Subgroup] = MISSING
