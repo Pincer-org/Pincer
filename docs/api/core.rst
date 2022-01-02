@@ -18,24 +18,12 @@ GatewayDispatch
 Gateway
 -------
 
-Dispatcher
+Gateway
 ~~~~~~~~~~
 
-.. attributetable:: Dispatcher
+.. attributetable:: Gateway
 
-.. autoclass:: Dispatcher()
-    :exclude-members: __handler_manager, __dispatcher
-
-Heartbeat
----------
-
-Heartbeat
-~~~~~~~~~
-
-.. attributetable:: Heartbeat
-
-.. autoclass:: Heartbeat()
-    :exclude-members: __send
+.. autoclass:: Gateway()
 
 Http
 ----

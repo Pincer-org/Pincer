@@ -42,11 +42,12 @@ Message Components
 
 .. autoclass:: ActionRow()
 .. autoclass:: Button()
+    :inherited-members:
 .. autoclass:: LinkButton()
 .. autoclass:: ButtonStyle()
 .. autoclass:: SelectMenu()
+    :inherited-members:
 .. autoclass:: SelectOption()
-.. autoclass:: _Component()
 
 .. autofunction:: button
     :decorator:

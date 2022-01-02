@@ -414,9 +414,10 @@ You can also dynamically set the selectable options.
 
 Subcommands and Subcommand Groups
 ---------------------------------
-To nest commands, Pincer organizes them into :class:`~pincer.commands.groups.Group`s and
-:class:`~pincer.commands.groups.SubGroup`s. Group and Subgroup names must only consist of
+To nest commands, Pincer organizes them into :class:`~pincer.commands.groups.Group` and
+:class:`~pincer.commands.groups.SubGroup` objects. Group and Subgroup names must only consist of
 lowercase letters and underscores.
+
 
 This chart shows the organization of nested commands:
 
