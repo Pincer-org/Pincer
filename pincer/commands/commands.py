@@ -486,7 +486,7 @@ def message_command(
 
 
 def register_command(
-    func=None,  # Missing typehint?
+    func: function=None,  # Missing typehint?
     *,
     app_command_type: Optional[AppCommandType] = None,
     name: Optional[str] = None,

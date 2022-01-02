@@ -327,20 +327,24 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
 
     # noqa: E501
 
+    # Always gaurenteed
     id: Snowflake
     channel_id: Snowflake
-    author: User
-    content: str
-    timestamp: Timestamp
-    tts: bool
-    mention_everyone: bool
-    mentions: List[GuildMember]
-    mention_roles: List[Role]
-    attachments: List[Attachment]
-    embeds: List[Embed]
-    pinned: bool
-    type: MessageType
 
+    # Only gaurenteed in Message Create event
+    author: APINullable[User] = MISSING
+    content: APINullable[str] = MISSING
+    timestamp: APINullable[Timestamp] = MISSING
+    tts: APINullable[bool] = MISSING
+    mention_everyone: APINullable[bool] = MISSING
+    mentions: APINullable[List[GuildMember]] = MISSING
+    mention_roles: APINullable[List[Role]] = MISSING
+    attachments: APINullable[List[Attachment]] = MISSING
+    embeds: APINullable[List[Embed]] = MISSING
+    pinned: APINullable[bool] = MISSING
+    type: APINullable[MessageType] = MISSING
+
+    # Never gaurenteed
     edited_timestamp: APINullable[Timestamp] = MISSING
     mention_channels: APINullable[List[ChannelMention]] = MISSING
     guild_id: APINullable[Snowflake] = MISSING
