@@ -133,8 +133,8 @@ class ActivitySecrets(APIObject):
 
 class ActivityFlags:
     """
-    There is no information on what the flags are on the Discord API docs
-    https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags
+    There is no information on what the flags are in the Discord API docs.
+    https://discord.dev/topics/gateway#activity-object-activity-flags
     """
 
     def __init__(self, flags) -> None:
