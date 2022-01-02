@@ -179,7 +179,7 @@ class HTTPClient:
                 data=data,
                 headers={
                     "Content-Type": content_type,
-                    **(headers or {})
+                    **(remove_none(headers) or {})
                 },
                 params=remove_none(params)
         ) as res:
