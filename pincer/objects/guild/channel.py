@@ -681,9 +681,12 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             construct_client_dict(
                 self._client,
                 await self._http.get(
-                    f"channels/{self.id}/threads/archived/public?"
-                    + urlencode(remove_none({"before": before, "limit": limit}))
-                ),
+                    f"channels/{self.id}/threads/archived/public",
+                    params={
+                        "before": before,
+                        "limit": limit
+                    }
+                )
             )
         )
 
@@ -714,9 +717,12 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             construct_client_dict(
                 self._client,
                 await self._http.get(
-                    f"channels/{self.id}/threads/archived/private?"
-                    + urlencode(remove_none({"before": before, "limit": limit}))
-                ),
+                    f"channels/{self.id}/threads/archived/private",
+                    params={
+                        "before": before,
+                        "limit": limit
+                    }
+                )
             )
         )
 
@@ -748,8 +754,11 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             construct_client_dict(
                 self._client,
                 self._http.get(
-                    f"channels/{self.id}/users/@me/threads/archived/private?"
-                    + urlencode(remove_none({"before": before, "limit": limit}))
+                    f"channels/{self.id}/users/@me/threads/archived/private",
+                    params={
+                        "before": before,
+                        "limit": limit
+                    }
                 ),
             )
         )

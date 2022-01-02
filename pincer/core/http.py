@@ -19,6 +19,7 @@ from ..exceptions import (
     ForbiddenError, MethodNotAllowedError, RateLimitError, ServerError,
     HTTPError
 )
+from ..utils.conversion import remove_none
 
 if TYPE_CHECKING:
     from typing import Any, Dict, Optional, Union
@@ -114,6 +115,7 @@ class HTTPClient:
             content_type: str = "application/json",
             data: Optional[Union[Dict, str, Payload]] = None,
             headers: Optional[Dict[str, Any]] = None,
+            params: Optional[Dict] = None,
             __ttl: int = None
     ) -> Optional[Dict]:
         """
@@ -132,6 +134,12 @@ class HTTPClient:
 
         data:
             The data which will be added to the request.
+
+        headers:
+            The request headers.
+
+        params:
+            The query parameters to add to the request.
 
         __ttl:
             Private param used for recursively setting the retry amount.
@@ -167,7 +175,8 @@ class HTTPClient:
                 headers={
                     "Content-Type": content_type,
                     **(headers or {})
-                }
+                },
+                params=params
         ) as res:
             return await self.__handle_response(
                 res, method, endpoint, content_type, data, ttl
@@ -301,7 +310,11 @@ class HTTPClient:
             headers=headers
         )
 
-    async def get(self, route: str) -> Optional[Dict]:
+    async def get(
+        self,
+        route: str,
+        params: Optional[dict] = None
+    ) -> Optional[Dict]:
         """|coro|
 
         Sends a get request to a Discord REST endpoint.
@@ -310,13 +323,20 @@ class HTTPClient:
         ----------
         route : :class:`str`
             The Discord REST endpoint to send a get request to.
+        params: Optional[:class:`dict`]
+            The query parameters to add to the request.
+            |default| :data:`None`
 
         Returns
         -------
         Optional[:class:`dict`]
             The response from discord.
         """
-        return await self.__send(self.__session.get, route)
+        return await self.__send(
+            self.__session.get,
+            route,
+            params=remove_none(params)
+        )
 
     async def head(self, route: str) -> Optional[Dict]:
         """|coro|

@@ -478,8 +478,8 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
         """
 
         for user in await self._http.get(
-            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}"
-            f"?after={after}&limit={limit}"
+            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}",
+            params={"after": after, "limit": limit}
         ):
             yield User.from_dict(user)
 

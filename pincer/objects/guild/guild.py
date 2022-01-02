@@ -643,7 +643,11 @@ class Guild(APIObject):
         """
 
         members = await self._http.get(
-            f"guilds/{self.id}/members?{limit=}&{after=}"
+            f"guilds/{self.id}/members",
+            params={
+                "limit": limit,
+                "after": after
+            }
         )
 
         for member in members:
@@ -675,8 +679,11 @@ class Guild(APIObject):
         """
 
         data = await self._http.get(
-            f"guilds/{id}/members/search?{query=!s}"
-            + (f"&{limit=}" if limit else "")
+            f"guilds/{self.id}/members/search",
+            params={
+                "query": query,
+                "limit": limit
+            }
         )
 
         for member in data:
@@ -1243,7 +1250,8 @@ class Guild(APIObject):
             The number of members that would be removed.
         """
         return await self._http.get(
-            f"guilds/{self.id}/prune?{days=}&{include_roles=!s}"
+            f"guilds/{self.id}/prune",
+            params={"days": days, "include_roles": include_roles},
         )["pruned"]
 
     async def prune(
