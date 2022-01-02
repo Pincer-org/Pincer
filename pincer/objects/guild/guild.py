@@ -1366,7 +1366,7 @@ class Guild(APIObject):
         )
 
     async def modify_widget(
-            self, reason: Optional[str] = None, **kwargs
+        self, reason: Optional[str] = None, **kwargs
     ) -> GuildWidget:
         """|coro|
         Modifies the guild widget for the guild.
