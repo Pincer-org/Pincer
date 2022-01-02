@@ -410,3 +410,67 @@ You can also dynamically set the selectable options.
     @select_menu
     async def select_menu(values: List[str]):
       return f"{values[0]} selected"
+
+Subcommands and Subcommand Groups
+---------------------------------
+
+To nest commands, Pincer orginizes them into :class:`~pincer.commands.groups.Group`s and
+:class:`~pincer.commands.groups.SubGroup`s. Group and Subgroup names must only consist of
+lowercase letters and underscores.
+
+This chart shows the orginization of nested commands:
+
+.. code-block::
+
+  If you use a group:
+
+  group name
+    command name
+  
+  If you use a group and sub group:
+
+  group name
+    subgroup name
+      command name
+
+  Orginizing commands like this is also valid:
+
+  group name
+    subgroup name
+      command name
+    command name
+
+:class:`~pincer.commands.groups.Group` and :class:`~pincer.commands.groups.SubGroup` are set to the parent in a @command
+decorator to nest a command inside of them. They are not available for User Commands and Message Commands.
+
+.. code-block:: python
+
+  from pincer.commands import Group, SubGroup
+  ...
+
+  class Bot(Client):
+
+    command_group = Group("command_group")
+    command_sub_group = Group("command_sub_group", parent=a_command_group)
+
+    @command(parent=command_group)
+    def command_group_command():
+      pass
+
+    @command(parent=command_sub_group)
+    def command_sub_group_command():
+      pass
+
+    # Creating these commands is valid because there is no top level command or group
+    # with the same name.
+    @command
+    def command_group_command():
+      pass
+    @command
+    def command_sub_group():
+      pass
+
+    # This command is not valid because there is a group with the same name.
+    @command
+    def a_command_group():
+      pass

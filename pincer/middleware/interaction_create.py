@@ -6,8 +6,6 @@ from __future__ import annotations
 from contextlib import suppress
 import logging
 from inspect import isasyncgenfunction, _empty
-from re import sub
-from typing import Dict, Any
 from typing import TYPE_CHECKING
 
 from ..commands import ChatCommandHandler, ComponentHandler, hash_app_command_params
@@ -19,7 +17,7 @@ from ..utils.conversion import construct_client_dict
 from ..utils.signature import get_signature_and_params
 
 if TYPE_CHECKING:
-    from typing import List, Tuple
+    from typing import Any, Dict, List, Tuple
     from ..client import Client
     from ..core.gateway import Gateway
     from ..core.gateway import GatewayDispatch
