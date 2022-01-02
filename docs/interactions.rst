@@ -411,10 +411,10 @@ You can also dynamically set the selectable options.
     async def select_menu(values: List[str]):
       return f"{values[0]} selected"
 
+
 Subcommands and Subcommand Groups
 ---------------------------------
-
-To nest commands, Pincer orginizes them into :class:`~pincer.commands.groups.Group`s and
+To nest commands, Pincer organizes them into :class:`~pincer.commands.groups.Group`s and
 :class:`~pincer.commands.groups.SubGroup`s. Group and Subgroup names must only consist of
 lowercase letters and underscores.
 
