@@ -131,21 +131,11 @@ class ActivitySecrets(APIObject):
     match_: APINullable[str] = MISSING
 
 
-@dataclass
 class ActivityFlags:
     """
     There is no information on what the flags are on the Discord API docs
     https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags
     """
-    INSTANCE: bool
-    JOIN: bool
-    SPECTATE: bool
-    JOIN_REQUEST: bool
-    SYNC: bool
-    PLAY: bool
-    PARTY_PRIVACY_FRIENDS: bool
-    PARTY_PRIVACY_VOICE_CHANNEL: bool
-    EMBEDDED: bool
 
     def __init__(self, flags) -> None:
         self.INSTANCE = bool(flags >> 0 & 1)
