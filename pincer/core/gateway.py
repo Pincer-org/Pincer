@@ -310,7 +310,7 @@ class Gateway:
             self.shard_key
         )
 
-        await self.__socket.close(code=1000)
+        await self.__socket.close()
         self.__should_reconnect = True
         await self.start_loop()
 
