@@ -21,8 +21,8 @@ class MissingType:
         return __o is MISSING
 
     def __hash__(self) -> int:
-        # By returning the hash of None, when searching for a command it doesn't what
-        # kinda of "nothing" it is.
+        # By returning the hash of None, when searching for a command it doesn't know
+        # what kind of "nothing" it is.
         return hash(None)
 
 

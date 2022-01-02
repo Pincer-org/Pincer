@@ -85,7 +85,7 @@ def command(
     enable_default: Optional[bool] = True,
     guild: Union[Snowflake, int, str] = None,
     cooldown: Optional[int] = 0,
-    cooldown_scale: Optional[float] = 60,
+    cooldown_scale: Optional[float] = 60.0,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
     parent: Optional[Union[Group, SubGroup]] = None
 ):
@@ -499,7 +499,7 @@ def register_command(
     enable_default: Optional[bool] = True,
     guild: Optional[Union[Snowflake, int, str]] = None,
     cooldown: Optional[int] = 0,
-    cooldown_scale: Optional[float] = 60,
+    cooldown_scale: Optional[float] = 60.0,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
     command_options=MISSING,  # Missing typehint?
     parent: Optional[Union[Group, SubGroup]] = MISSING
@@ -591,10 +591,10 @@ def register_command(
 class ChatCommandHandler(metaclass=Singleton):
     """Singleton containing methods used to handle various commands
 
-    The Register and Built_register
+    The register and built_register
     -------------------------------
     I found the way Discord expects commands to be registered to be very different than
-    how you want to think about registering a command. ie. Discord wants nesting but we
+    how you want to think about registering a command. i.e. Discord wants nesting but we
     don't want any nesting. Nesting makes it hard to think about commands and also will
     increase lookup time.
     The way this problem is avoided is by storing a version of the commands that we can
@@ -603,7 +603,7 @@ class ChatCommandHandler(metaclass=Singleton):
     design of the library.
     The register is simply where the "Pincer version" of commands gets saved to memory.
     The built_register is where the version of commands that Discord requires is saved.
-    The register allows for O(1) lookups by storing commands in a python dictionary. It
+    The register allows for O(1) lookups by storing commands in a Python dictionary. It
     does cost some memory to save two copies in the current iteration of the system but
     we should be able to drop the built_register in runtime if we want to. I don't feel
     that lost maintainability from this is optimal. We can index by in O(1) by checking
@@ -754,14 +754,14 @@ class ChatCommandHandler(metaclass=Singleton):
                 #     subcommand-group
                 #         subcommand
                 #
-                # The chidlren of subcommand-group object are being set to include `cmd`
+                # The children of the subcommand-group object are being set to include `cmd`
                 # If that subcommand-group object does not exist, it will be created
-                # here. The same goes for the top level command.
+                # here. The same goes for the top-level command.
                 #
                 # First make sure the command exists. This command will hold the
                 # subcommand-group for `cmd`.
 
-                # `key` represents the hash value for the top level command that will
+                # `key` represents the hash value for the top-level command that will
                 # hold the subcommand.
                 key = hash_app_command_params(
                     cmd.group.name,
@@ -786,8 +786,8 @@ class ChatCommandHandler(metaclass=Singleton):
                         )
                     )
 
-                # The top level command now exists. A subcommand-group now if placed
-                # inside the top level command. This subcommand-group will hold `cmd`.
+                # The top-level command now exists. A subcommand group now if placed
+                # inside the top-level command. This subcommand group will hold `cmd`.
 
                 children = ChatCommandHandler.built_register[key].app.options
 
@@ -830,7 +830,7 @@ class ChatCommandHandler(metaclass=Singleton):
                 # A subcommand object is what is being generated here. If there is no
                 # top level command, it will be created here.
 
-                # `key` represents the hash value for the top level command that will
+                # `key` represents the hash value for the top-level command that will
                 # hold the subcommand.
 
                 key = hash_app_command_params(
@@ -913,9 +913,7 @@ class ChatCommandHandler(metaclass=Singleton):
             return True
 
         # NOTE: Cannot be generator since it can't be consumed due to lines 743-745
-        to_remove = list(filter(should_be_removed, self._api_commands))
-
-        print(to_remove)
+        to_remove = [*filter(should_be_removed, self._api_commands)]
 
         await gather(
             *map(

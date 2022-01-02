@@ -166,8 +166,8 @@ async def interaction_handler(
 
     options = interaction.data.options
 
-    if interaction.data.options and interaction.data.options[0].type in {1, 2}:
-        if interaction.data.options[0].type == 1:
+    if options and options[0].type in {1, 2}:
+        if options[0].type == 1:
             options = options[0].options
         else:
             options = options[0].options[0].options

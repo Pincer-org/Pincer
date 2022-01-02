@@ -41,7 +41,7 @@ class Group:
 
 class SubGroup:
     """
-    A sub group of commands. This allows you to create subcommands inside of a
+    A subgroup of commands. This allows you to create subcommands inside of a
     subcommand-group.
 
     .. code-block:: python
