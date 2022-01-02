@@ -1,9 +1,11 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
+from dataclasses import dataclass
 from typing import Optional
 
 
+@dataclass
 class Group:
     """
     The group object represents a group that commands can be in. This is always a top
@@ -30,15 +32,14 @@ class Group:
         The description of the command. This has to be sent to Discord but it does
         nothing so it is optional.
     """
-
-    def __init__(self, name: str, description: Optional[str] = None):
-        self.name = name
-        self.description = description
+    name: str
+    description: Optional[str] = None
 
     def __hash__(self):
         return hash(self.name)
 
 
+@dataclass
 class SubGroup:
     """
     A sub group of commands. This allows you to create subcommands inside of a
@@ -68,11 +69,9 @@ class SubGroup:
         The description of the command. This has to be sent to Discord but it does
         nothing so it is optional.
     """
-
-    def __init__(self, name: str, parent: Group, description: Optional[str] = None):
-        self.name = name
-        self.parent = parent
-        self.description = description
+    name: str
+    parent: Group
+    description: Optional[str] = None
 
     def __hash__(self):
         return hash(self.name)

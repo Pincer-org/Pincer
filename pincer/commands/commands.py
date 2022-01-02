@@ -130,9 +130,9 @@ def command(
 
 
     References from above:
-        :class:`~client.Client`,
-        :class:`~objects.message.message.Message`,
-        :class:`~objects.message.context.MessageContext`,
+        :class:`~pincer.client.Client`,
+        :class:`~pincer.objects.message.message.Message`,
+        :class:`~pincer.objects.message.context.MessageContext`,
         :class:`~pincer.objects.app.interaction_flags.InteractionFlags`,
         :class:`~pincer.commands.arg_types.Choices`,
         :class:`~pincer.commands.arg_types.Choice`,
@@ -607,8 +607,7 @@ class ChatCommandHandler(metaclass=Singleton):
     does cost some memory to save two copies in the current iteration of the system but
     we should be able to drop the built_register in runtime if we want to. I don't feel
     that lost maintainability from this is optimal. We can index by in O(1) by checking
-    the register but still can fall back to nested lookups if needed to by falling back
-    built_register.
+    the register but can still use the built_register if we need to do a nested lookup.
 
     Attributes
     ----------
@@ -616,9 +615,9 @@ class ChatCommandHandler(metaclass=Singleton):
         The client object
     managers: Dict[:class:`str`, :class:`~typing.Any`]
         Dictionary of managers
-    register: Dict[:class:`str`, :class:`~objects.app.command.ClientCommandStructure`]
+    register: Dict[:class:`str`, :class:`~pincer.objects.app.command.ClientCommandStructure`]
         Dictionary of ``ClientCommandStructure``
-    built_register: Dict[:class:`str`, :class:`~objects.app.command.ClientCommandStructure`]
+    built_register: Dict[:class:`str`, :class:`~pincer.objects.app.command.ClientCommandStructure`]
         Dictionary of ``ClientCommandStructure`` where the commands are converted to
         the format that Discord expects for sub commands and sub command groups.
     """  # noqa: E501
