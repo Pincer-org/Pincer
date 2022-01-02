@@ -325,11 +325,11 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
         Sent if the message contains stickers
     """  # noqa: E501
 
-    # Always gaurenteed
+    # Always guaranteed
     id: Snowflake
     channel_id: Snowflake
 
-    # Only gaurenteed in Message Create event
+    # Only guaranteed in Message Create event
     author: APINullable[User] = MISSING
     content: APINullable[str] = MISSING
     timestamp: APINullable[Timestamp] = MISSING
@@ -342,7 +342,7 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
     pinned: APINullable[bool] = MISSING
     type: APINullable[MessageType] = MISSING
 
-    # Never gaurenteed
+    # Never guaranteed
     edited_timestamp: APINullable[Timestamp] = MISSING
     mention_channels: APINullable[List[ChannelMention]] = MISSING
     guild_id: APINullable[Snowflake] = MISSING
