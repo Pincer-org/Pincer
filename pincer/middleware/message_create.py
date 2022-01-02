@@ -12,11 +12,13 @@ from ..utils.conversion import construct_client_dict
 if TYPE_CHECKING:
     from typing import Tuple
 
-    from ..core.dispatch import GatewayDispatch
+    from ..client import Client
+    from ..core.gateway import Gateway
+    from ..core.gateway import GatewayDispatch
 
 
 async def message_create_middleware(
-    self, payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ) -> Tuple[str, UserMessage]:  # noqa: E501
     """|coro|
 
@@ -24,8 +26,10 @@ async def message_create_middleware(
 
     Parameters
     ----------
-    payload : :class:`pincer.core.dispatch.GatewayDispatch`
+    payload : :class:`pincer.core.gateway.GatewayDispatch`
         The data received from the message creation event.
+    gateway : :class:`~pincer.core.gateway.Gateway`
+        The gateway for the current shard.
 
     Returns
     -------

@@ -17,11 +17,12 @@ from .guild import (
     Guild, UnavailableGuild
 )
 from .invite import (
-    InviteTargetType, InviteStageInstance, InviteMetadata, Invite
+    InviteTargetType, InviteStageInstance, Invite
 )
 from .member import GuildMember, PartialGuildMember, BaseMember
 from .overwrite import Overwrite
 from .role import RoleTags, Role
+from .scheduled_events import GuildScheduledEventEntityType, EventStatus, ScheduledEvent
 from .stage import PrivacyLevel, StageInstance
 from .template import GuildTemplate
 from .thread import ThreadMetadata, ThreadMember
@@ -34,11 +35,12 @@ __all__ = (
     "AuditEntryInfo", "AuditLog", "AuditLogChange", "AuditLogEntry",
     "AuditLogEvent", "Ban", "BaseMember", "CategoryChannel", "Channel",
     "ChannelMention", "ChannelType", "DefaultMessageNotificationLevel",
-    "ExplicitContentFilterLevel", "FollowedChannel", "Guild", "GuildFeature",
-    "GuildMember", "GuildNSFWLevel", "GuildTemplate", "GuildWidget", "Invite",
-    "InviteMetadata", "InviteStageInstance", "InviteTargetType", "MFALevel",
-    "NewsChannel", "Overwrite", "PartialGuildMember", "PremiumTier",
-    "PrivacyLevel", "Role", "RoleTags", "StageInstance", "SystemChannelFlags",
+    "EventStatus", "ExplicitContentFilterLevel", "FollowedChannel", "Guild",
+    "GuildFeature", "GuildMember", "GuildNSFWLevel",
+    "GuildScheduledEventEntityType", "GuildTemplate", "GuildWidget", "Invite",
+    "InviteStageInstance", "InviteTargetType", "MFALevel", "NewsChannel",
+    "Overwrite", "PartialGuildMember", "PremiumTier", "PrivacyLevel", "Role",
+    "RoleTags", "ScheduledEvent", "StageInstance", "SystemChannelFlags",
     "TextChannel", "ThreadMember", "ThreadMetadata", "UnavailableGuild",
     "VerificationLevel", "VoiceChannel", "Webhook", "WebhookType",
     "WelcomeScreen", "WelcomeScreenChannel"

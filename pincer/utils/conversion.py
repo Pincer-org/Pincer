@@ -10,7 +10,7 @@ from .types import T, MISSING
 
 if TYPE_CHECKING:
     from ..client import Client
-    from typing import Any, Callable, Dict, List, Optional, Set, Union
+    from typing import Any, Callable, Dict, List, Optional, Set, Union, Tuple
 
 
 def construct_client_dict(
@@ -31,23 +31,25 @@ def construct_client_dict(
     return {**data, "_client": client}
 
 
-def remove_none(obj: Union[List, Dict, Set]) -> Union[List, Dict, Set]:
+def remove_none(obj: Union[List, Dict, Set, Tuple]) -> Union[List, Dict, Set, Tuple]:
     """
     Removes all ``None`` values from a list, dict or set.
 
     Parameters
     ----------
-    obj : Union[List, Dict, Set]
-        The list, dict or set to remove ``None`` values from.
+    obj : Union[List, Dict, Set, Tuple]
+        The list, dict, set or tuple to remove ``None`` values from.
 
     Returns
     -------
-    Union[List, Dict, Set]
-        The list, dict or set without ``None`` values.
+    Union[List, Dict, Set, Tuple]
+        The list, dict, set or tuple, without ``None`` values.
     """
     if isinstance(obj, list):
         return [i for i in obj if i is not None]
+    elif isinstance(obj, tuple):
+        return tuple(i for i in obj if i is not None)
     elif isinstance(obj, set):
         return obj - {None}
     elif isinstance(obj, dict):
-        return {k: v for k, v in obj.items() if None not in {k, v}}
+        return {k: v for k, v in obj.items() if None not in (k, v)}

@@ -22,7 +22,7 @@ class Bot(Client):
         """
         Generate a valid random Discord color!
         """
-        return int(hex(randint(0, 16581375)), 0)
+        return randint(0, 16581375)
 
     async def get_meme(self) -> Tuple[str, str]:
         """

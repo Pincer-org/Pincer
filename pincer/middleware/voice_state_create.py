@@ -3,21 +3,35 @@
 
 """sent when a user joins a subscribed voice channel"""
 
-from ..core.dispatch import GatewayDispatch
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from ..objects.user import VoiceState
 from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
+if TYPE_CHECKING:
+    from ..client import Client
+    from ..core.gateway import Gateway
+    from ..core.gateway import GatewayDispatch
 
-async def voice_state_create_middleware(self, payload: GatewayDispatch):
+
+async def voice_state_create_middleware(
+    self: Client,
+    gateway: Gateway,
+    payload: GatewayDispatch
+):
     """|coro|
 
     Middleware for the ``on_voice_state_create`` event.
 
     Parameters
     ----------
-    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
+    payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the voice state create event.
+    gateway : :class:`~pincer.core.gateway.Gateway`
+        The gateway for the current shard.
 
     Returns
     -------

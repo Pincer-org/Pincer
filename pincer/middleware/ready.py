@@ -17,24 +17,35 @@ from ..utils.conversion import construct_client_dict
 if TYPE_CHECKING:
     from typing import Tuple
     from ..utils.types import Coro
-    from ..core.dispatch import GatewayDispatch
+    from ..client import Client
+    from ..core.gateway import Gateway
+    from ..core.gateway import GatewayDispatch
 
 
-async def on_ready_middleware(self, payload: GatewayDispatch) -> Tuple[str]:
+async def on_ready_middleware(
+    self: Client,
+    gateway: Gateway,
+    payload: GatewayDispatch
+) -> Tuple[str]:
     """|coro|
 
     Middleware for the ``on_ready`` event.
 
     Parameters
     ----------
-    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
+    payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the stage instance create event
+    gateway : :class:`~pincer.core.gateway.Gateway`
+        The gateway for the current shard.
 
     Returns
     -------
     Tuple[:class:`str`]
         ``on_ready``
     """
+
+    gateway.set_session_id(payload.data.get("session_id"))
+
     user = payload.data.get("user")
     guilds = payload.data.get("guilds")
 

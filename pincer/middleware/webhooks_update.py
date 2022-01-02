@@ -6,20 +6,34 @@ sent when a user's voice state changes in a subscribed voice channel
 (mute, volume, etc.)
 """
 
-from ..core.dispatch import GatewayDispatch
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from ..objects.events.webhook import WebhooksUpdateEvent
 from ..utils.conversion import construct_client_dict
 
+if TYPE_CHECKING:
+    from ..client import Client
+    from ..core.gateway import Gateway
+    from ..core.gateway import GatewayDispatch
 
-async def webhooks_update_middleware(self, payload: GatewayDispatch):
+
+async def webhooks_update_middleware(
+    self: Client,
+    gateway: Gateway,
+    payload: GatewayDispatch
+):
     """|coro|
 
     Middleware for the ``on_webhooks_update`` event.
 
     Parameters
     ----------
-    payload : :class:`~pincer.core.dispatch.GatewayDispatch`
+    payload : :class:`~pincer.core.gateway.GatewayDispatch`
         The data received from the webhooks update event.
+    gateway : :class:`~pincer.core.gateway.Gateway`
+        The gateway for the current shard.
 
     Returns
     -------

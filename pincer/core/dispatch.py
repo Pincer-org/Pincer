@@ -38,7 +38,7 @@ class GatewayDispatch:
     def __init__(
             self,
             op: int,
-            data: Optional[JsonDict],
+            data: Optional[JsonDict] = None,
             seq: Optional[int] = None,
             name: Optional[str] = None
     ):
