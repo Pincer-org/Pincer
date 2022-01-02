@@ -259,7 +259,7 @@ class Gateway:
             self.shard_key
         )
         self.__should_reconnect = True
-        self.start_loop()
+        await self.start_loop()
 
     async def handle_data(self, data: Dict[Any]):
         """|coro|
