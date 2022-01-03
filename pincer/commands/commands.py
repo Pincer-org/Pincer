@@ -624,7 +624,7 @@ class ChatCommandHandler(metaclass=Singleton):
     has_been_initialized = False
     managers: Dict[str, Any] = {}
     register: Dict[str, ClientCommandStructure] = {}
-    built_register: Dict[str, ClientCommandStructure] = {}
+    built_register: Dict[str, AppCommand] = {}
 
     # Endpoints:
     __get = "/commands"
@@ -770,24 +770,18 @@ class ChatCommandHandler(metaclass=Singleton):
                 )
 
                 if key not in ChatCommandHandler.built_register:
-                    ChatCommandHandler.built_register[key] = ClientCommandStructure(
-                        call=None,
-                        cooldown=0.0,
-                        cooldown_scale=60.0,
-                        cooldown_scope=ThrottleScope.USER,
-                        app=AppCommand(
-                            name=cmd.group.name,
-                            description=cmd.group.description,
-                            type=AppCommandType.CHAT_INPUT,
-                            guild_id=cmd.app.guild_id,
-                            options=[]
-                        )
+                    ChatCommandHandler.built_register[key] = AppCommand(
+                        name=cmd.group.name,
+                        description=cmd.group.description,
+                        type=AppCommandType.CHAT_INPUT,
+                        guild_id=cmd.app.guild_id,
+                        options=[]
                     )
 
                 # The top-level command now exists. A subcommand group now if placed
                 # inside the top-level command. This subcommand group will hold `cmd`.
 
-                children = ChatCommandHandler.built_register[key].app.options
+                children = ChatCommandHandler.built_register[key].options
 
                 sub_command_group = AppCommandOption(
                     name=cmd.sub_group.name,
@@ -840,23 +834,17 @@ class ChatCommandHandler(metaclass=Singleton):
                 )
 
                 if key not in ChatCommandHandler.built_register:
-                    ChatCommandHandler.built_register[key] = ClientCommandStructure(
-                        call=None,
-                        cooldown=0.0,
-                        cooldown_scale=60.0,
-                        cooldown_scope=ThrottleScope.USER,
-                        app=AppCommand(
-                            name=cmd.group.name,
-                            description=cmd.group.description,
-                            type=AppCommandOptionType.SUB_COMMAND,
-                            guild_id=cmd.app.guild_id,
-                            options=[]
-                        )
+                    ChatCommandHandler.built_register[key] = AppCommand(
+                        name=cmd.group.name,
+                        description=cmd.group.description,
+                        type=AppCommandOptionType.SUB_COMMAND,
+                        guild_id=cmd.app.guild_id,
+                        options=[]
                     )
 
                 # No checking has to be done before appending `cmd` since it is the
                 # lowest level.
-                ChatCommandHandler.built_register[key].app.options.append(
+                ChatCommandHandler.built_register[key].options.append(
                     AppCommandOption(
                         name=cmd.app.name,
                         description=cmd.app.description,
@@ -870,11 +858,11 @@ class ChatCommandHandler(metaclass=Singleton):
             # All single-level commands are registered here.
             ChatCommandHandler.built_register[
                 _hash_app_command(cmd.app, cmd.group, cmd.sub_group)
-            ] = cmd
+            ] = cmd.app
 
     def get_local_registered_commands(self):
         return [
-            registered_cmd.app for registered_cmd
+            registered_cmd for registered_cmd
             in ChatCommandHandler.built_register.values()
         ]
 
