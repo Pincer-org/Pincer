@@ -10,7 +10,6 @@ from functools import partial
 from inspect import Signature, isasyncgenfunction, _empty
 from typing import TYPE_CHECKING, Union, List
 
-from pincer.commands.groups import Group, Subgroup
 
 from . import __package__
 from ..commands.arg_types import (
@@ -21,6 +20,7 @@ from ..commands.arg_types import (
     MaxValue,
     MinValue,
 )
+from ..commands.groups import Group, Subgroup
 from ..utils.snowflake import Snowflake
 from ..exceptions import (
     CommandIsNotCoroutine,
@@ -552,7 +552,6 @@ def register_command(
 
     if isinstance(parent, Group):
         group = parent
-        sub_group = MISSING
     if isinstance(parent, Subgroup):
         group = parent.parent
         sub_group = parent
@@ -773,9 +772,9 @@ class ChatCommandHandler(metaclass=Singleton):
                 if key not in ChatCommandHandler.built_register:
                     ChatCommandHandler.built_register[key] = ClientCommandStructure(
                         call=None,
-                        cooldown=0,
-                        cooldown_scale=0,
-                        cooldown_scope=0,
+                        cooldown=0.0,
+                        cooldown_scale=60.0,
+                        cooldown_scope=ThrottleScope.USER,
                         app=AppCommand(
                             name=cmd.group.name,
                             description=cmd.group.description,
@@ -843,9 +842,9 @@ class ChatCommandHandler(metaclass=Singleton):
                 if key not in ChatCommandHandler.built_register:
                     ChatCommandHandler.built_register[key] = ClientCommandStructure(
                         call=None,
-                        cooldown=0,
-                        cooldown_scale=0,
-                        cooldown_scope=0,
+                        cooldown=0.0,
+                        cooldown_scale=60.0,
+                        cooldown_scope=ThrottleScope.USER,
                         app=AppCommand(
                             name=cmd.group.name,
                             description=cmd.group.description,
