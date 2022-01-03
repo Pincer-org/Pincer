@@ -47,12 +47,14 @@ def get_command_from_registry(interaction: Interaction):
     group = None
     sub_group = None
 
-    if interaction.data.options and interaction.data.options[0].type in {1, 2}:
-        option = interaction.data.options[0]
+    options = interaction.data.options
+
+    if interaction.data.options:
+        option = options[0]
         if option.type == 1:
             group = name
             name = option.name
-        else:
+        elif option.type == 2:
             group = interaction.data.name
             sub_group = option.name
             name = option.options[0].name
