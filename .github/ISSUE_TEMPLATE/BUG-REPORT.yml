@@ -1,6 +1,6 @@
 name: Bug Report
 title: ":bug: "
-about: "Create A bug report"
+description: "Create A bug report"
 labels: ["bug"]
 body:
   - type: textarea
