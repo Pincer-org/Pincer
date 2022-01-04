@@ -861,10 +861,7 @@ class ChatCommandHandler(metaclass=Singleton):
             ] = cmd.app
 
     def get_local_registered_commands(self):
-        return [
-            registered_cmd for registered_cmd
-            in ChatCommandHandler.built_register.values()
-        ]
+        return ChatCommandHandler.built_register.values()
 
     async def __get_existing_commands(self):
         """|coro|
