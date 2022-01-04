@@ -67,7 +67,7 @@ def convert_message(client: Client, message: MessageConvertable) -> Message:
 def list_to_message_dict(item, kwargs):
     if isinstance(item, Embed):
         kwargs["embeds"].append(item)
-    elif PILLOW_IMPORT and isinstance(item, File):
+    elif isinstance(item, File) or (PILLOW_IMPORT and isinstance(item, Image)):
         kwargs["attachments"].append(item)
     elif isinstance(item, MessageComponent):
         kwargs["components"].append(item)
