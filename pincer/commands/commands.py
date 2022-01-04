@@ -860,7 +860,7 @@ class ChatCommandHandler(metaclass=Singleton):
                 _hash_app_command(cmd.app, cmd.group, cmd.sub_group)
             ] = cmd.app
 
-    def get_local_registered_commands(self):
+    def get_local_registered_commands(self) -> List[AppCommand]:
         return ChatCommandHandler.built_register.values()
 
     async def __get_existing_commands(self):
