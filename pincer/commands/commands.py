@@ -8,7 +8,7 @@ import re
 from asyncio import iscoroutinefunction, gather
 from functools import partial
 from inspect import Signature, isasyncgenfunction, _empty
-from typing import TYPE_CHECKING, Union, List
+from typing import TYPE_CHECKING, Union, List, ValuesView
 
 
 from . import __package__
@@ -860,7 +860,7 @@ class ChatCommandHandler(metaclass=Singleton):
                 _hash_app_command(cmd.app, cmd.group, cmd.sub_group)
             ] = cmd.app
 
-    def get_local_registered_commands(self) -> List[AppCommand]:
+    def get_local_registered_commands(self) -> ValuesView[AppCommand]:
         return ChatCommandHandler.built_register.values()
 
     async def __get_existing_commands(self):
