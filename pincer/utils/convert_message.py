@@ -43,7 +43,7 @@ def convert_message(client: Client, message: MessageConvertable) -> Message:
     :class:`~pincer.objects.message.message.Message`
         The message object to be sent
     """
-    if message and isinstance(message, Iterable):
+    if message and isinstance(message, Iterable) and not isinstance(message, str):
         kwargs = defaultdict(list)
         for item in message:
             list_to_message_dict(item, kwargs)
