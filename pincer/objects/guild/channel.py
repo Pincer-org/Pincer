@@ -17,7 +17,6 @@ from ...utils.conversion import construct_client_dict, remove_none
 from ...utils.convert_message import convert_message
 from ...utils.types import MISSING
 
-
 if TYPE_CHECKING:
     from typing import AsyncGenerator, Dict, List, Optional, Union
 

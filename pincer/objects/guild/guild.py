@@ -22,7 +22,7 @@ if TYPE_CHECKING:
     from collections.abc import AsyncIterator
     from .audit_log import AuditLog
     from .ban import Ban
-    from .channel import PublicThread, PrivateThread, ChannelType
+    from .channel import ChannelType
     from .member import GuildMember
     from .features import GuildFeature
     from .invite import Invite
@@ -506,7 +506,6 @@ class Guild(APIObject):
         )
         return GuildMember.from_dict(construct_client_dict(self._client, data))
 
-
     @overload
     async def create_channel(
         self,
@@ -594,11 +593,11 @@ class Guild(APIObject):
         await self._http.patch(
             f"guilds/{self.id}/channels",
             data=channel,
-            headers={"X-Audit-Log-Reason":reason}
+            headers={"X-Audit-Log-Reason": reason}
         )
 
     async def list_active_threads(self) -> Tuple[
-        Generator[Thread], Generator[GuildMember]]:
+            Generator[Thread], Generator[GuildMember]]:
         """|coro|
         Returns all active threads in the guild,
         including public and private threads.
@@ -654,7 +653,6 @@ class Guild(APIObject):
             yield GuildMember.from_dict(
                 construct_client_dict(self._client, member)
             )
-
 
     async def search_guild_members(
         self,
@@ -712,13 +710,13 @@ class Guild(APIObject):
             an oauth2 access token granted with the guilds.join to
             the bot's application for the user you want to add to the guild
         nick : Optional[str]
-        	value to set users nickname to
+            value to set users nickname to
         roles : Optional[List[:class:`~pincer.utils.snowflake.Snowflake`]]
-        	array of role ids the member is assigned
+            array of role ids the member is assigned
         mute : Optional[bool]
-        	whether the user is muted in voice channels
+            whether the user is muted in voice channels
         deaf : Optional[bool]
-        	whether the user is deafened in voice channels
+            whether the user is deafened in voice channels
         reason : Optional[:class:`str`]
             audit log reason |default| :data:`None`
         Returns
@@ -767,7 +765,7 @@ class Guild(APIObject):
         data = self._http.patch(
             f"guilds/{self.id}/members/@me",
             {"nick": nick},
-            headers={"X-Audit-Log-Reason":reason}
+            headers={"X-Audit-Log-Reason": reason}
         )
         return GuildMember.from_dict(construct_client_dict(self._client, data))
 
