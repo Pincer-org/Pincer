@@ -199,13 +199,6 @@ InviteStageInstance
 
 .. autoclass:: InviteStageInstance()
 
-InviteMetadata
-~~~~~~~~~~~~~~
-
-.. attributetable:: InviteMetadata
-
-.. autoclass:: InviteMetadata()
-
 Invite
 ~~~~~~
 
