@@ -13,7 +13,7 @@ from typing import (
     List, get_type_hints, get_origin, get_args
 )
 
-from pincer.utils.conversion import construct_client_dict
+from .conversion import construct_client_dict
 from .types import MissingType, MISSING, TypeCache
 from ..exceptions import InvalidArgumentAnnotation
 
