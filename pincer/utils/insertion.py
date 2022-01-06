@@ -8,13 +8,13 @@ from .types import Coro, TypeCache
 from ..objects.message.context import MessageContext
 
 
-def should_pass_cls(call: Union[Coro, Callable[..., Any]]) -> bool:
+def should_pass_cls(call: Union[Coro, Callable[[...], Any]]) -> bool:
     """
     Checks whether a callable requires a self/cls as first parameter.
 
     Parameters
     ----------
-    call: Union[Coro, Callable[..., Any]]
+    call: Union[Coro, Callable[[...], Any]]
         The callable to check.
 
     Returns
