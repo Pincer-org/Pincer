@@ -20,7 +20,7 @@ We'll use the issue to have a conversation about the problem you found.
 Whether you are a first time contributer or a frequent contributer, this is greatly appreciated.
 - Looking for something to contribute? Find an open issue with the tag [_enhancement_](https://github.com/Pincer-org/Pincer/labels/enhancement) in which that feature is not assigned.
 For people who just want to get their feet wet, browse issues with the [_easy_](https://github.com/Pincer-org/Pincer/labels/easy) tag.
-We are also really looking for people to help with isse [#265 *Implement Every Single Endpoint*](https://github.com/Pincer-org/Pincer/issues/265)
+We are also really looking for people to help with issue [#265 *Implement Every Single Endpoint*](https://github.com/Pincer-org/Pincer/issues/265)
 - Do you have a feature in mind that should be added and does not have an issue? Open one using the Feature Request issue form and fill out the relavant information. 
 
 ## :arrow_up: Make your update
