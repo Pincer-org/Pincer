@@ -21,7 +21,7 @@ Whether you are a first time contributor or a frequent contributor, this is grea
 - Looking for something to contribute? Find an open issue with the tag [_enhancement_](https://github.com/Pincer-org/Pincer/labels/enhancement) in which that feature is not assigned.
 For people who just want to get their feet wet, browse issues with the [_easy_](https://github.com/Pincer-org/Pincer/labels/easy) tag.
 We are also really looking for people to help with isse [#265 *Implement Every Single Endpoint*](https://github.com/Pincer-org/Pincer/issues/265)
-- Do you have a feature in mind that should be added and does not have an issue? Open one using the Feature Request issue form and fill out the relevant information. 
+- Do you have a feature in mind that should be added and does not have an issue? Open one using the Feature Request issue form and fill out the relevant information.
 
 ## :arrow_up: Make your update
 Make your changes to the file(s) you'd like to update to solve an issue
