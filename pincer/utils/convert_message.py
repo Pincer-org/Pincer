@@ -43,7 +43,7 @@ def convert_message(client: Client, message: MessageConvertable) -> Message:
     :class:`~pincer.objects.message.message.Message`
         The message object to be sent
     """
-    if message and isinstance(message, Iterable):
+    if message and isinstance(message, Iterable) and not isinstance(message, str):
         kwargs = defaultdict(list)
         for item in message:
             list_to_message_dict(item, kwargs)
@@ -67,7 +67,7 @@ def convert_message(client: Client, message: MessageConvertable) -> Message:
 def list_to_message_dict(item, kwargs):
     if isinstance(item, Embed):
         kwargs["embeds"].append(item)
-    elif PILLOW_IMPORT and isinstance(item, File):
+    elif isinstance(item, File) or (PILLOW_IMPORT and isinstance(item, Image)):
         kwargs["attachments"].append(item)
     elif isinstance(item, MessageComponent):
         kwargs["components"].append(item)

@@ -302,7 +302,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         await self._http.put(
             f"channels/{self.id}/permissions/{overwrite.id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
             data={"allow": allow, "deny": deny, "type": type},
         )
 
@@ -322,7 +322,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         await self._http.delete(
             f"channels/{self.id}/permissions/{overwrite.id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
 
     async def follow_news_channel(
@@ -388,7 +388,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         await self._http.put(
             f"channels/{self.id}/pins/{message.id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
 
     async def unpin_message(
@@ -399,7 +399,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         await self._http.delete(
             f"channels/{self.id}/pins/{message.id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
 
     async def group_dm_add_recipient(
@@ -458,7 +458,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         await self._http.post(
             f"channels/{self.id}/messages/bulk_delete",
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
             data={"messages": messages},
         )
 
@@ -483,7 +483,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
         await self._http.delete(
             f"channels/{channel_id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
 
     async def __post_send_handler(self, message: UserMessage):
@@ -620,7 +620,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
                 self._client,
                 await self._http.post(
                     f"channels/{self.id}/invites",
-                    headers=remove_none({"X-Audit-Log-Reason": reason}),
+                    headers={"X-Audit-Log-Reason": reason},
                     data={
                         "max_age": max_age,
                         "max_uses": max_uses,
@@ -680,9 +680,12 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             construct_client_dict(
                 self._client,
                 await self._http.get(
-                    f"channels/{self.id}/threads/archived/public?"
-                    + urlencode(remove_none({"before": before, "limit": limit}))
-                ),
+                    f"channels/{self.id}/threads/archived/public",
+                    params={
+                        "before": before,
+                        "limit": limit
+                    }
+                )
             )
         )
 
@@ -713,9 +716,12 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             construct_client_dict(
                 self._client,
                 await self._http.get(
-                    f"channels/{self.id}/threads/archived/private?"
-                    + urlencode(remove_none({"before": before, "limit": limit}))
-                ),
+                    f"channels/{self.id}/threads/archived/private",
+                    params={
+                        "before": before,
+                        "limit": limit
+                    }
+                )
             )
         )
 
@@ -747,8 +753,11 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             construct_client_dict(
                 self._client,
                 self._http.get(
-                    f"channels/{self.id}/users/@me/threads/archived/private?"
-                    + urlencode(remove_none({"before": before, "limit": limit}))
+                    f"channels/{self.id}/users/@me/threads/archived/private",
+                    params={
+                        "before": before,
+                        "limit": limit
+                    }
                 ),
             )
         )
@@ -945,7 +954,7 @@ class Thread(Channel):
                 self._client,
                 await self._http.post(
                     f"channels/{self.id}/threads",
-                    headers=remove_none({"X-Audit-Log-Reason": reason}),
+                    headers={"X-Audit-Log-Reason": reason},
                     data={
                         "name": name,
                         "auto_archive_duration": auto_archive_duration,
@@ -1008,7 +1017,7 @@ class Thread(Channel):
                 self._client,
                 await self._http.post(
                     f"channels/{self.id}/messages/{message.id}/threads",
-                    headers=remove_none({"X-Audit-Log-Reason": reason}),
+                    headers={"X-Audit-Log-Reason": reason},
                     data={
                         "name": name,
                         "auto_archive_duration": auto_archive_duration,
