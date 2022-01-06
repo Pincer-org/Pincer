@@ -46,7 +46,11 @@ Message Components
 .. autoclass:: ButtonStyle()
 .. autoclass:: SelectMenu()
 .. autoclass:: SelectOption()
+
+.. currentmodule:: pincer.commands.components._component
 .. autoclass:: _Component()
+
+.. currentmodule:: pincer.commands.components
 
 .. autofunction:: button
     :decorator:
