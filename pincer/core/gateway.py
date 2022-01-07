@@ -259,7 +259,6 @@ class Gateway:
             "%s Disconnected from Gateway due without any errors. Reconnecting.",
             self.shard_key
         )
-        self.__should_resume = True
         # ensure_future prevents a stack overflow
         ensure_future(self.start_loop())
 
@@ -312,8 +311,9 @@ class Gateway:
             self.shard_key
         )
 
-        await self.__socket.close()
         self.__should_resume = True
+        self.stop_heartbeat()
+        await self.__socket.close()
 
     async def handle_invalid_session(self, payload: GatewayDispatch):
         """|coro|
@@ -321,7 +321,12 @@ class Gateway:
         Attempt to relog. This is probably because the session was already invalidated
         when we tried to reconnect.
         """
-        _log.debug("%s Invalid session, attempting to relog...", self.shard_key)
+
+        if payload.data:
+            _log.debug("%s Invalid session, attempting to reconnect...", self.shard_key)
+        else:
+            _log.debug("%s Invalid session, attempting to relog...", self.shard_key)
+
         self.__should_resume = payload.data
 
     async def identify_and_handle_hello(self, payload: GatewayDispatch):
