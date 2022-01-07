@@ -28,7 +28,7 @@ class Group:
     ----------
     name : str
         The name of the command group.
-    description : Optional[str]
+    description : Optional[:class:`str`]
         The description of the command. This has to be sent to Discord but it does
         nothing so it is optional.
     """
