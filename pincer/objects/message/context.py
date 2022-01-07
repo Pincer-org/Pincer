@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
     from typing import Optional, Union
     from .user_message import UserMessage
-    from ..app import ClientCommandStructure, Interaction
+    from ..app import Interaction
     from ..app.interaction_flags import InteractionFlags
     from ..guild.member import GuildMember
     from ..user.user import User

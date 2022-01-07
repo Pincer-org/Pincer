@@ -69,7 +69,7 @@ class Gateway:
     token : str.
         The token for this bot
     intents : :class:`~pincer.objects.app.intents.Intents`
-        The itents to use. More information can be found at
+        The intents to use. More information can be found at
         `<https://discord.com/developers/docs/topics/gateway#gateway-intents>`_.
     url : str
         The gateway url.
@@ -259,7 +259,7 @@ class Gateway:
             self.shard_key
         )
         self.__should_reconnect = True
-        self.start_loop()
+        await self.start_loop()
 
     async def handle_data(self, data: Dict[Any]):
         """|coro|
@@ -310,7 +310,7 @@ class Gateway:
             self.shard_key
         )
 
-        await self.__socket.close(code=1000)
+        await self.__socket.close()
         self.__should_reconnect = True
         await self.start_loop()
 

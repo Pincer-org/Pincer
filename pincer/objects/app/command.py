@@ -6,8 +6,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Union, TYPE_CHECKING
 
-from pincer.commands.groups import Group, Subgroup
 
+from pincer.commands.groups import Group, Subgroup
 
 from .command_types import AppCommandOptionType, AppCommandType
 from ...objects.guild.channel import ChannelType

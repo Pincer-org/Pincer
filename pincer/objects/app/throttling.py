@@ -5,7 +5,6 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
-
 from .throttle_scope import ThrottleScope
 from ..app.command import ClientCommandStructure
 from ...exceptions import CommandCooldownError
@@ -15,7 +14,6 @@ if TYPE_CHECKING:
     from typing import Dict, Optional
 
     from ...utils.types import Coro
-    from ..message.context import MessageContext
 
 
 class ThrottleInterface(ABC):

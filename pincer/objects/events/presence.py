@@ -33,8 +33,7 @@ class ActivityType(IntEnum):
         \\{emoji} {name}; e.g. "\\:smiley: I am cool"; Not for bots; discord limitation
     COMPETING:
         Competing in {name}; e.g. "Competing in Arena World Champions"
-    """
-    # noqa: E501
+    """  # noqa: E501
     GAME = 0
     STREAMING = 1
     LISTENING = 2
@@ -132,13 +131,22 @@ class ActivitySecrets(APIObject):
     match_: APINullable[str] = MISSING
 
 
-class ActivityFlags(IntEnum):
-    INSTANCE = 1 << 0
-    JOIN = 1 << 1
-    SPECTATE = 1 << 2
-    JOIN_REQUEST = 1 << 3
-    SYNC = 1 << 4
-    PLAY = 1 << 5
+class ActivityFlags:
+    """
+    There is no information on what the flags are in the Discord API docs.
+    https://discord.dev/topics/gateway#activity-object-activity-flags
+    """
+
+    def __init__(self, flags) -> None:
+        self.INSTANCE = bool(flags >> 0 & 1)
+        self.JOIN = bool(flags >> 1 & 1)
+        self.SPECTATE = bool(flags >> 2 & 1)
+        self.JOIN_REQUEST = bool(flags >> 3 & 1)
+        self.SYNC = bool(flags >> 4 & 1)
+        self.PLAY = bool(flags >> 5 & 1)
+        self.PARTY_PRIVACY_FRIENDS = bool(flags >> 6 & 1)
+        self.PARTY_PRIVACY_VOICE_CHANNEL = bool(flags >> 7 & 1)
+        self.EMBEDDED = bool(flags >> 8 & 1)
 
 
 @dataclass(repr=False)

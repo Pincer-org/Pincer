@@ -147,7 +147,7 @@ class Sticker(APIObject):
             data=remove_none(
                 {"name": name, "description": description, "tags": tags}
             ),
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
 
         return Sticker.from_dict(sticker)

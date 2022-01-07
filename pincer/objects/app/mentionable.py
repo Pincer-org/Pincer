@@ -4,7 +4,6 @@
 from dataclasses import dataclass
 from typing import Optional
 
-
 from ...objects.guild.role import Role
 from ...objects.user.user import User
 

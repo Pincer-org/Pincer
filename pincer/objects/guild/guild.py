@@ -22,7 +22,7 @@ if TYPE_CHECKING:
     from collections.abc import AsyncIterator
     from .audit_log import AuditLog
     from .ban import Ban
-    from .channel import PublicThread, PrivateThread, ChannelType
+    from .channel import ChannelType
     from .member import GuildMember
     from .features import GuildFeature
     from .invite import Invite
@@ -502,10 +502,9 @@ class Guild(APIObject):
         data = await self._http.patch(
             f"guilds/{self.id}/members/{_id}",
             data=kwargs,
-            headers=remove_none({"X-Audit-Log-Reason": reason})
+            headers={"X-Audit-Log-Reason": reason}
         )
         return GuildMember.from_dict(construct_client_dict(self._client, data))
-
 
     @overload
     async def create_channel(
@@ -568,7 +567,7 @@ class Guild(APIObject):
         data = await self._http.post(
             f"guilds/{self.id}/channels",
             data=kwargs,
-            headers=remove_none({"X-Audit-Log-Reason": reason})
+            headers={"X-Audit-Log-Reason": reason}
         )
         return Channel.from_dict(construct_client_dict(self._client, data))
 
@@ -594,11 +593,11 @@ class Guild(APIObject):
         await self._http.patch(
             f"guilds/{self.id}/channels",
             data=channel,
-            headers=remove_none({"X-Audit-Log-Reason":reason})
+            headers={"X-Audit-Log-Reason": reason}
         )
 
     async def list_active_threads(self) -> Tuple[
-        Generator[Thread], Generator[GuildMember]]:
+            Generator[Thread], Generator[GuildMember]]:
         """|coro|
         Returns all active threads in the guild,
         including public and private threads.
@@ -643,14 +642,17 @@ class Guild(APIObject):
         """
 
         members = await self._http.get(
-            f"guilds/{self.id}/members?{limit=}&{after=}"
+            f"guilds/{self.id}/members",
+            params={
+                "limit": limit,
+                "after": after
+            }
         )
 
         for member in members:
             yield GuildMember.from_dict(
                 construct_client_dict(self._client, member)
             )
-
 
     async def search_guild_members(
         self,
@@ -675,8 +677,11 @@ class Guild(APIObject):
         """
 
         data = await self._http.get(
-            f"guilds/{id}/members/search?{query=!s}"
-            + (f"&{limit=}" if limit else "")
+            f"guilds/{self.id}/members/search",
+            params={
+                "query": query,
+                "limit": limit
+            }
         )
 
         for member in data:
@@ -705,13 +710,13 @@ class Guild(APIObject):
             an oauth2 access token granted with the guilds.join to
             the bot's application for the user you want to add to the guild
         nick : Optional[str]
-        	value to set users nickname to
+            value to set users nickname to
         roles : Optional[List[:class:`~pincer.utils.snowflake.Snowflake`]]
-        	array of role ids the member is assigned
+            array of role ids the member is assigned
         mute : Optional[bool]
-        	whether the user is muted in voice channels
+            whether the user is muted in voice channels
         deaf : Optional[bool]
-        	whether the user is deafened in voice channels
+            whether the user is deafened in voice channels
         reason : Optional[:class:`str`]
             audit log reason |default| :data:`None`
         Returns
@@ -731,7 +736,7 @@ class Guild(APIObject):
         data = await self._http.put(
             f"guilds/{self.id}/members/{user_id}",
             data=kwargs,
-            headers=remove_none({"X-Audit-Log-Reason": reason})
+            headers={"X-Audit-Log-Reason": reason}
         )
 
         return GuildMember.from_dict(
@@ -760,7 +765,7 @@ class Guild(APIObject):
         data = self._http.patch(
             f"guilds/{self.id}/members/@me",
             {"nick": nick},
-            headers=remove_none({"X-Audit-Log-Reason":reason})
+            headers={"X-Audit-Log-Reason": reason}
         )
         return GuildMember.from_dict(construct_client_dict(self._client, data))
 
@@ -784,7 +789,7 @@ class Guild(APIObject):
         """
         data = await self._http.put(
             f"guilds/{self.id}/{user_id}/roles/{role_id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason})
+            headers={"X-Audit-Log-Reason": reason}
         )
 
     async def remove_guild_member_role(
@@ -807,7 +812,7 @@ class Guild(APIObject):
         """
         await self._http.delete(
             f"guilds/{self.id}/{user_id}/roles/{role_id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason})
+            headers={"X-Audit-Log-Reason": reason}
         )
 
     async def remove_guild_member(
@@ -827,7 +832,7 @@ class Guild(APIObject):
         """
         await self._http.delete(
             f"guilds/{self.id}/members/{user_id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason})
+            headers={"X-Audit-Log-Reason": reason}
         )
 
     async def ban(
@@ -948,7 +953,7 @@ class Guild(APIObject):
                 await self._http.post(
                     f"guilds/{self.id}/roles",
                     data=kwargs,
-                    headers=remove_none({"X-Audit-Log-Reason": reason}),
+                    headers={"X-Audit-Log-Reason": reason},
                 ),
             )
         )
@@ -979,7 +984,7 @@ class Guild(APIObject):
         data = await self._http.patch(
             f"guilds/{self.id}/roles",
             data={"id": id, "position": position},
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
         for role_data in data:
             yield Role.from_dict(construct_client_dict(self._client, role_data))
@@ -1043,7 +1048,7 @@ class Guild(APIObject):
                 await self._http.patch(
                     f"guilds/{self.id}/roles/{id}",
                     data=kwargs,
-                    headers=remove_none({"X-Audit-Log-Reason": reason}),
+                    headers={"X-Audit-Log-Reason": reason},
                 ),
             )
         )
@@ -1062,7 +1067,7 @@ class Guild(APIObject):
         """
         await self._http.delete(
             f"guilds/{self.id}/roles/{id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
 
     async def get_bans(self) -> AsyncGenerator[Ban, None]:
@@ -1112,7 +1117,7 @@ class Guild(APIObject):
         """
         await self._http.delete(
             f"guilds/{self.id}/bans/{id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
 
     @overload
@@ -1243,7 +1248,8 @@ class Guild(APIObject):
             The number of members that would be removed.
         """
         return await self._http.get(
-            f"guilds/{self.id}/prune?{days=}&{include_roles=!s}"
+            f"guilds/{self.id}/prune",
+            params={"days": days, "include_roles": include_roles},
         )["pruned"]
 
     async def prune(
@@ -1282,7 +1288,7 @@ class Guild(APIObject):
                 "compute_prune_days": compute_prune_days,
                 "include_roles": include_roles,
             },
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )["pruned"]
 
     async def get_voice_regions(self) -> AsyncGenerator[VoiceRegion, None]:
@@ -1348,7 +1354,7 @@ class Guild(APIObject):
         """
         await self._http.delete(
             f"guilds/{self.id}/integrations/{integration.id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
 
     async def get_widget_settings(self) -> GuildWidget:
@@ -1389,7 +1395,7 @@ class Guild(APIObject):
         data = await self._http.patch(
             f"guilds/{self.id}/widget",
             data=kwargs,
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
         return GuildWidget.from_dict(construct_client_dict(self._client, data))
 
@@ -1501,7 +1507,7 @@ class Guild(APIObject):
                 "welcome_channels": welcome_channels,
                 "description": description,
             },
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
         return WelcomeScreen.from_dict(
             construct_client_dict(self._client, data)
@@ -1664,7 +1670,7 @@ class Guild(APIObject):
         data = await self._http.post(
             f"guilds/{self.id}/emojis",
             data={"name": name, "image": image.uri, "roles": roles},
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
         return Emoji.from_dict(construct_client_dict(self._client, data))
 
@@ -1699,7 +1705,7 @@ class Guild(APIObject):
         data = await self._http.patch(
             f"guilds/{self.id}/emojis/{id}",
             data={"name": name, "roles": roles},
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
         return Emoji.from_dict(construct_client_dict(self._client, data))
 
@@ -1719,7 +1725,7 @@ class Guild(APIObject):
         """
         await self._http.delete(
             f"guilds/{self.id}/emojis/{id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
 
     async def get_templates(self) -> AsyncIterator[GuildTemplate]:
@@ -1923,7 +1929,7 @@ class Guild(APIObject):
         sticker = await self._http.post(
             f"guilds/{self.id}/stickers",
             data=payload,
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
             content_type=payload.content_type
         )
 

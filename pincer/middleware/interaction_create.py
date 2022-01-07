@@ -3,8 +3,8 @@
 
 from __future__ import annotations
 
-from contextlib import suppress
 import logging
+from contextlib import suppress
 from inspect import isasyncgenfunction, _empty
 from typing import TYPE_CHECKING
 

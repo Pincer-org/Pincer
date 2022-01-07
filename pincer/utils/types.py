@@ -3,9 +3,7 @@
 from __future__ import annotations
 
 from sys import modules
-from typing import (
-    TYPE_CHECKING, TypeVar, Callable, Coroutine, Any, Union, Optional
-)
+from typing import TypeVar, Callable, Coroutine, Any, Union, Optional
 
 
 class MissingType:

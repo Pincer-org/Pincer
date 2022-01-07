@@ -11,7 +11,7 @@ from ..objects import UserMessage
 from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
-    from typing import List, Tuple
+    from typing import Tuple
 
     from ..client import Client
     from ..core.gateway import Gateway

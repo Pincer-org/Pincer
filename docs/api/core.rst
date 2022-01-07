@@ -25,6 +25,15 @@ Gateway
 
 .. autoclass:: Gateway()
 
+GatewayInfo
+~~~~~~~~~~
+
+.. attributetable:: GatewayInfo
+
+.. autoclass:: GatewayInfo()
+
+
+
 Http
 ----
 

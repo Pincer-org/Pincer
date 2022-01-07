@@ -13,7 +13,6 @@ from ..objects import Emoji
 from ..objects.events.message import MessageReactionRemoveEmojiEvent
 from ..utils.conversion import construct_client_dict
 
-
 if TYPE_CHECKING:
     from ..client import Client
     from ..core.gateway import Gateway

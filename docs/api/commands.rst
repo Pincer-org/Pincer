@@ -49,6 +49,11 @@ Message Components
     :inherited-members:
 .. autoclass:: SelectOption()
 
+.. currentmodule:: pincer.commands.components._component
+.. autoclass:: _Component()
+
+.. currentmodule:: pincer.commands.components
+
 .. autofunction:: button
     :decorator:
 .. autofunction:: select_menu

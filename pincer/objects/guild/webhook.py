@@ -323,8 +323,8 @@ class Webhook(APIObject):
             construct_client_dict(
                 self._client,
                 await self._http.get(
-                    f"webhooks/{self.id}/{self.token}/messages/{message_id}"
-                    + (f"?{thread_id=}" if thread_id else "")
+                    f"webhooks/{self.id}/{self.token}/messages/{message_id}",
+                    params={"thread_id": thread_id}
                 )
             )
         )

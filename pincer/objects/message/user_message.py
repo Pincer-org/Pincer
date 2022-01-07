@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
+from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum, IntEnum
 from typing import TYPE_CHECKING, DefaultDict
-from collections import defaultdict
 
 from .attachment import Attachment
 from .component import MessageComponent
@@ -323,24 +323,26 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
         action rows, or other interactive components
     sticker_items: APINullable[List[:class:`~pincer.objects.message.sticker.StickerItem`]]
         Sent if the message contains stickers
-    """
+    """  # noqa: E501
 
-    # noqa: E501
-
+    # Always guaranteed
     id: Snowflake
     channel_id: Snowflake
-    author: User
-    content: str
-    timestamp: Timestamp
-    tts: bool
-    mention_everyone: bool
-    mentions: List[GuildMember]
-    mention_roles: List[Role]
-    attachments: List[Attachment]
-    embeds: List[Embed]
-    pinned: bool
-    type: MessageType
 
+    # Only guaranteed in Message Create event
+    author: APINullable[User] = MISSING
+    content: APINullable[str] = MISSING
+    timestamp: APINullable[Timestamp] = MISSING
+    tts: APINullable[bool] = MISSING
+    mention_everyone: APINullable[bool] = MISSING
+    mentions: APINullable[List[GuildMember]] = MISSING
+    mention_roles: APINullable[List[Role]] = MISSING
+    attachments: APINullable[List[Attachment]] = MISSING
+    embeds: APINullable[List[Embed]] = MISSING
+    pinned: APINullable[bool] = MISSING
+    type: APINullable[MessageType] = MISSING
+
+    # Never guaranteed
     edited_timestamp: APINullable[Timestamp] = MISSING
     mention_channels: APINullable[List[ChannelMention]] = MISSING
     guild_id: APINullable[Snowflake] = MISSING
@@ -478,8 +480,8 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
         """
 
         for user in await self._http.get(
-            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}"
-            f"?after={after}&limit={limit}"
+            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}",
+            params={"after": after, "limit": limit}
         ):
             yield User.from_dict(user)
 

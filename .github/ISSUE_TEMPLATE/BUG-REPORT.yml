@@ -1,0 +1,36 @@
+name: Bug Report
+title: ":bug: "
+description: "Create A bug report"
+labels: ["bug"]
+body:
+  - type: textarea
+    id: bug-occured
+    attributes:
+      label: Describe the bug
+      placeholder: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      placeholder: |
+        1.  Go to '...'
+        2.  Click on '....'
+        3.  Scroll down to '....'
+        4.  See error
+      render: markdown
+  - type: textarea
+    id: terminal
+    attributes:
+      label: Relevant console output
+      description: Paste the console output that is relevant to the error
+  - type: input
+    id: version
+    attributes:
+      label: Pincer Version used
+      description: Can be found with `python -c "print(__import__('pincer').__version__)"` in the terminal
+      placeholder: 0.14.0 or git
+    validations:
+      required: true
+      
