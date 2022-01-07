@@ -30,12 +30,12 @@ class GatewayDispatch:
     def __init__(
             self,
             op: int,
-            data: Optional[Union[int, Dict[str, Any]]] = None,
+            data: Optional[Union[int, bool, Dict[str, Any]]] = None,
             seq: Optional[int] = None,
             name: Optional[str] = None
     ):
         self.op: int = op
-        self.data: Optional[Union[int, Dict[str, Any]]] = data
+        self.data: Optional[Union[int, bool, Dict[str, Any]]] = data
         self.seq: Optional[int] = seq
         self.event_name: Optional[str] = name
 
