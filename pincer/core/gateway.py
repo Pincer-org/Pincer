@@ -328,6 +328,8 @@ class Gateway:
         )
 
         self.__should_resume = payload.data
+        self.stop_heartbeat()
+        await self.__socket.close()
 
     async def identify_and_handle_hello(self, payload: GatewayDispatch):
         """|coro|
