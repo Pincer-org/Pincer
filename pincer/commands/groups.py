@@ -18,7 +18,7 @@ class Group:
             group = Group("cool_commands")
 
             @command(parent=group)
-            def a_very_cool_command():
+            async def a_very_cool_command():
                 pass
 
     This code creates a command called ``cool_commands`` with the subcommand
@@ -53,7 +53,7 @@ class Subgroup:
             sub_group = Subgroup("group_of_cool_commands")
 
             @command(parent=sub_group)
-            def a_very_cool_command():
+            async def a_very_cool_command():
                 pass
 
     This code creates a command called ``cool_commands`` with the subcommand-group
@@ -65,7 +65,7 @@ class Subgroup:
         The name of the command sub-group.
     parent : :class:`~pincer.commands.groups.Group`
         The parent group of this command.
-    description : Optional[str]
+    description : Optional[:class:`str`]
         The description of the command. This has to be sent to Discord but it does
         nothing so it is optional.
     """
