@@ -59,8 +59,8 @@ version_info = VersionInfo(0, 15, 1)
 __version__ = repr(version_info)
 
 __all__ = (
-    "BadRequestError", "Bot", "ChatCommandHandler", "Client", "CommandAlreadyRegistered",
-    "CogAlreadyExists", "CogError", "CogNotFound",
+    "BadRequestError", "Bot", "ChatCommandHandler", "Client",
+    "CogAlreadyExists", "CogError", "CogNotFound", "CommandAlreadyRegistered",
     "CommandCooldownError", "CommandDescriptionTooLong", "CommandError",
     "CommandIsNotCoroutine", "CommandReturnIsEmpty", "DisallowedIntentsError",
     "DispatchError", "EmbedFieldError", "EmbedOverflow", "ForbiddenError",
