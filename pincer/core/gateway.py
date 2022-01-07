@@ -321,10 +321,11 @@ class Gateway:
         when we tried to reconnect.
         """
 
-        if payload.data:
-            _log.debug("%s Invalid session, attempting to reconnect...", self.shard_key)
-        else:
-            _log.debug("%s Invalid session, attempting to relog...", self.shard_key)
+        _log.debug(
+            "%s Invalid session, attempting to %s...",
+            self.shard_key,
+            "reconnect" if payload.data else "relog"
+        )
 
         self.__should_resume = payload.data
 
