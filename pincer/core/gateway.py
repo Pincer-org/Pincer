@@ -312,7 +312,6 @@ class Gateway:
         )
 
         self.__should_resume = True
-        self.stop_heartbeat()
         await self.__socket.close()
 
     async def handle_invalid_session(self, payload: GatewayDispatch):
@@ -368,8 +367,6 @@ class Gateway:
         ))
         self.__heartbeat_interval = payload.data["heartbeat_interval"]
 
-        # This process should already be forked to the background so there is no need to
-        # `ensure_future()` here.
         self.start_heartbeat()
 
     async def handle_heartbeat(self, payload: GatewayDispatch):
