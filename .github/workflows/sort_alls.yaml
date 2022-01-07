@@ -1,9 +1,6 @@
 name: Sort Alls
 
-on:
-  push:
-    branches:
-      - main
+on: push
 
 jobs:
   build:
@@ -32,4 +29,4 @@ jobs:
           git pull
           git add .
           git diff-index --quiet HEAD || git commit -m ":art: Automatic `__all__` sorting"
-          git push origin main
+          git push
