@@ -21,8 +21,7 @@ from .groups import Group, Subgroup
 __all__ = (
     "ActionRow", "Button", "ButtonStyle", "ChannelTypes",
     "ChatCommandHandler", "Choice", "Choices", "CommandArg",
-    "ComponentHandler", "Description", "LinkButton", "MaxValue", "MinValue",
-    "Modifier", "SelectMenu", "SelectOption", "button", "command", "component",
-    "message_command",
-    "select_menu", "user_command", "Group", "Subgroup"
+    "ComponentHandler", "Description", "Group", "LinkButton", "MaxValue",
+    "MinValue", "Modifier", "SelectMenu", "SelectOption", "Subgroup", "button",
+    "command", "component", "message_command", "select_menu", "user_command"
 )
