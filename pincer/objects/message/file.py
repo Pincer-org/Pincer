@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass
 from io import BytesIO
 from typing import Any
 from typing import TYPE_CHECKING

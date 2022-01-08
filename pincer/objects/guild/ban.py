@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import Optional, TYPE_CHECKING
 
 from ...utils import APIObject

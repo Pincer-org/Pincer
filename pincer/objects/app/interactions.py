@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 from asyncio import gather, iscoroutine, sleep, ensure_future
-from dataclasses import dataclass
 from typing import Dict, TYPE_CHECKING, Union, Optional
 
 from .command_types import AppCommandOptionType

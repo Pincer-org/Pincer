@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from enum import Enum, IntEnum
 from typing import TYPE_CHECKING
 

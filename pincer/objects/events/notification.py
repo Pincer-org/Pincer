@@ -2,7 +2,7 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 
-from dataclasses import dataclass
+
 
 from ...objects.message import UserMessage
 from ...utils.api_object import APIObject

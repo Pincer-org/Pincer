@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+
 from typing import TYPE_CHECKING
 
 from ...utils.api_object import APIObject
