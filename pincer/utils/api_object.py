@@ -104,7 +104,6 @@ class HTTPMeta(type):
         return dataclass(http_object)
 
 
-@dataclass
 class APIObject(metaclass=HTTPMeta):
     """
     Represents an object which has been fetched from the Discord API.
