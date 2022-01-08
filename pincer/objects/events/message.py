@@ -17,7 +17,6 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
 class MessageDeleteEvent(APIObject):
     """Sent when a message is deleted.
 
@@ -30,13 +29,13 @@ class MessageDeleteEvent(APIObject):
     guild_id: APIObject[:class:`~pincer.utils.snowflake.Snowflake`]
         The id of the guild
     """
+
     id: Snowflake
     channel_id: Snowflake
 
     guild_id: APINullable[Snowflake] = MISSING
 
 
-@dataclass
 class MessageDeleteBulkEvent(APIObject):
     """Sent when multiple messages are deleted at once.
 
@@ -49,13 +48,13 @@ class MessageDeleteBulkEvent(APIObject):
     guild_id: APIObject[:class:`~pincer.utils.snowflake.Snowflake`]
         The id of the guild
     """
+
     ids: List[Snowflake]
     channel_id: Snowflake
 
     guild_id: APINullable[Snowflake] = MISSING
 
 
-@dataclass
 class MessageReactionAddEvent(APIObject):
     """Sent when a user adds a reaction to a message.
 
@@ -74,6 +73,7 @@ class MessageReactionAddEvent(APIObject):
     member: :class:`~pincer.objects.guild.member.GuildMember`
         The member who reacted if this happened in a guild
     """
+
     user_id: Snowflake
     channel_id: Snowflake
     message_id: Snowflake
@@ -83,7 +83,6 @@ class MessageReactionAddEvent(APIObject):
     member: APINullable[GuildMember] = MISSING
 
 
-@dataclass
 class MessageReactionRemoveEvent(APIObject):
     """Sent when a user removes a reaction from a message.
 
@@ -100,6 +99,7 @@ class MessageReactionRemoveEvent(APIObject):
     guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The id of the guild
     """
+
     user_id: Snowflake
     channel_id: Snowflake
     message_id: Snowflake
@@ -108,7 +108,6 @@ class MessageReactionRemoveEvent(APIObject):
     guild_id: APINullable[Snowflake] = MISSING
 
 
-@dataclass
 class MessageReactionRemoveAllEvent(APIObject):
     """Sent when a user explicitly removes all reactions from a message.
 
@@ -121,12 +120,12 @@ class MessageReactionRemoveAllEvent(APIObject):
     guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The id of the guild
     """
+
     channel_id: Snowflake
     message_id: Snowflake
     guild_id: APINullable[Snowflake] = MISSING
 
 
-@dataclass
 class MessageReactionRemoveEmojiEvent(APIObject):
     """Sent when a bot removes all instances of a given
     emoji from the reactions of a message.
@@ -142,6 +141,7 @@ class MessageReactionRemoveEmojiEvent(APIObject):
     guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The id of the guild
     """
+
     channel_id: Snowflake
     message_id: Snowflake
     emoji: Emoji

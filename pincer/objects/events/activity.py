@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from ...utils import APIObject
 
 
-@dataclass
 class ActivityJoinEvent(APIObject):
     """
     Sent when the user clicks a Rich Presence join invite in chat to join a game.
@@ -20,7 +19,6 @@ class ActivityJoinEvent(APIObject):
     secret: str
 
 
-@dataclass
 class ActivitySpectateEvent(APIObject):
     """
     Sent when the user clicks a Rich Presence spectate invite in chat to spectate a game.

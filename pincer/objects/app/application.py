@@ -17,7 +17,6 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
 class Application(APIObject):
     """Represents a Discord application. (eg Bot, OAuth)
 
@@ -64,6 +63,7 @@ class Application(APIObject):
     terms_of_service_url: APINullable[:class:`str`]
         the url of the app's terms of service
     """
+
     bot_public: bool
     bot_require_code_grant: bool
     description: str

@@ -14,7 +14,6 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
 class WelcomeScreenChannel(APIObject):
     """Represents a welcome screen channel. This is a channel which gets
     shown on the welcome screen.
@@ -31,6 +30,7 @@ class WelcomeScreenChannel(APIObject):
         The emoji name if custom, the unicode character if standard,
         or null if no emoji is set
     """
+
     channel_id: Snowflake
     description: str
 
@@ -38,7 +38,6 @@ class WelcomeScreenChannel(APIObject):
     emoji_name: Optional[str] = None
 
 
-@dataclass
 class WelcomeScreen(APIObject):
     """Representation of a Discord guild/server welcome screen.
 
@@ -49,6 +48,7 @@ class WelcomeScreen(APIObject):
     welcome_channels: Optional[:class:`str`]
         The channels shown in the welcome screen, up to 5
     """  # noqa: E501
+
     welcome_channels: List[WelcomeScreenChannel]
 
     description: Optional[str] = None

@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from ...utils.api_object import APIObject
 
 
-@dataclass
 class SessionStartLimit(APIObject):
     """Represents a Discord Session Start Limit object
 
@@ -22,6 +21,7 @@ class SessionStartLimit(APIObject):
     max_concurrency: :class:`int`
         The number of identify requests allowed per 5 seconds
     """
+
     total: int
     remaining: int
     reset_after: int

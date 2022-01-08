@@ -6,21 +6,26 @@ from pincer.exceptions import TimeoutError
 
 
 class Bot(Client):
-
     @command()
     async def guess(self, ctx: MessageContext, biggest_number: int):
 
-        await ctx.reply(f"Starting the guessing game! Pick a number between 0 and {biggest_number}.")
+        await ctx.reply(
+            f"Starting the guessing game! Pick a number between 0 and {biggest_number}."
+        )
         channel = await self.get_channel(ctx.channel_id)
         number = random.randint(0, biggest_number)
 
         try:
-            async for next_message, in self.loop_for('on_message', loop_timeout=60):
+            async for next_message, in self.loop_for(
+                "on_message", loop_timeout=60
+            ):
                 if next_message.author.bot:
                     continue
 
                 if not next_message.content.isdigit():
-                    await channel.send(f"{next_message.content} is not a number. Try again!")
+                    await channel.send(
+                        f"{next_message.content} is not a number. Try again!"
+                    )
                     continue
 
                 guessed_number = int(next_message.content)

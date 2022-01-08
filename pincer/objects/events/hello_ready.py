@@ -16,7 +16,6 @@ if TYPE_CHECKING:
     from ..app.application import Application
 
 
-@dataclass
 class HelloEvent(APIObject):
     """Sent on connection to the websocket.
     Defines the heartbeat interval that the client should heartbeat to.
@@ -26,10 +25,10 @@ class HelloEvent(APIObject):
     heartbeat_interval: :class:`int`
         The interval (in milliseconds) the client should heartbeat with
     """
+
     heartbeat_interval: int
 
 
-@dataclass
 class ReadyEvent(APIObject):
     """Dispatched when a client has completed the initial
     handshake with the gateway (for new sessions).
@@ -50,6 +49,7 @@ class ReadyEvent(APIObject):
         The shard information associated
         with this session, if sent when identifying
     """
+
     v: int
     user: User
     guilds: List[Guild]

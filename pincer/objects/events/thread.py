@@ -17,7 +17,6 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
 class ThreadListSyncEvent(APIObject):
     """Sent when the current user gains access to a channel.
 
@@ -38,6 +37,7 @@ class ThreadListSyncEvent(APIObject):
         This array may contain channel_ids that have no active
         threads as well, so you know to clear that data.
     """
+
     guild_id: Snowflake
     threads: List[Channel]
     members: List[ThreadMember]
@@ -45,7 +45,6 @@ class ThreadListSyncEvent(APIObject):
     channel_ids: APINullable[List[Snowflake]] = MISSING
 
 
-@dataclass
 class ThreadMembersUpdateEvent(APIObject):
     """Sent when anyone is added to or removed from a thread.
     If the current user does not have the `GUILD_MEMBERS`
@@ -65,6 +64,7 @@ class ThreadMembersUpdateEvent(APIObject):
     removed_member_ids: APINullable[List[:class:`~pincer.utils.snowflake.Snowflake`]]
         The id of the users who were removed from the thread
     """
+
     # noqa: E501
     id: Snowflake
     guild_id: Snowflake

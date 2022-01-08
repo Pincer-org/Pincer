@@ -27,6 +27,7 @@ class StickerType(IntEnum):
     GUILD:
         Sticker is a custom sticker from a discord server.
     """
+
     STANDARD = 1
     GUILD = 2
 
@@ -43,12 +44,12 @@ class StickerFormatType(IntEnum):
     LOTTIE:
         Sticker is animated with with LOTTIE format. (vector based)
     """
+
     PNG = 1
     APNG = 2
     LOTTIE = 3
 
 
-@dataclass
 class Sticker(APIObject):
     """Represents a Discord sticker.
 
@@ -95,7 +96,6 @@ class Sticker(APIObject):
     user: APINullable[User] = MISSING
 
 
-@dataclass
 class StickerItem(APIObject):
     """Represents the smallest amount of data required to render a sticker.
     A partial sticker object.
@@ -115,7 +115,6 @@ class StickerItem(APIObject):
     format_type: StickerFormatType
 
 
-@dataclass
 class StickerPack(APIObject):
     """Represents a pack of standard stickers.
 

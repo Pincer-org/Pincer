@@ -4,7 +4,6 @@ from pincer.utils import Snowflake
 
 
 class TestSnowflake:
-
     def test_boundaries(self):
         with pytest.raises(ValueError):
             Snowflake(9223372036854775808)

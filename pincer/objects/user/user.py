@@ -63,7 +63,6 @@ class VisibilityType(IntEnum):
     EVERYONE = 1
 
 
-@dataclass
 class User(APIObject):
     """Represents a Discord user. This can be a bot account or a
     human account.
@@ -130,7 +129,9 @@ class User(APIObject):
         user their premium type in a usable enum.
         """
         return (
-            MISSING if self.premium_type is MISSING else PremiumTypes(self.premium_type)
+            MISSING
+            if self.premium_type is MISSING
+            else PremiumTypes(self.premium_type)
         )
 
     @property

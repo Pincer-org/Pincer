@@ -18,7 +18,6 @@ if TYPE_CHECKING:
     from ...utils.timestamp import Timestamp
 
 
-@dataclass
 class VoiceState(APIObject):
     """Used to represent a user's voice connection status
 
@@ -51,6 +50,7 @@ class VoiceState(APIObject):
     self_stream: APINullable[:class:`bool`]
         Whether this user is streaming using "Go Live"
     """
+
     # noqa: E501
 
     channel_id: Optional[Snowflake]

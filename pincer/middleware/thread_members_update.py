@@ -29,22 +29,23 @@ async def thread_members_update_middleware(self, payload: GatewayDispatch):
     """
 
     added_members: List[ThreadMember] = [
-        ThreadMember.from_dict(construct_client_dict(
-            self,
-            {
-                "join_timestamp": Timestamp(added_member.pop("join_timestamp")),
-                **added_member
-            }
-        ))
+        ThreadMember.from_dict(
+            construct_client_dict(
+                self,
+                {
+                    "join_timestamp": Timestamp(
+                        added_member.pop("join_timestamp")
+                    ),
+                    **added_member,
+                },
+            )
+        )
         for added_member in payload.data.pop("added_members")
     ]
 
     return "on_thread_members_update", [
         ThreadMembersUpdateEvent.from_dict(
-            {
-                "added_members": added_members,
-                **payload.data
-            }
+            {"added_members": added_members, **payload.data}
         )
     ]
 

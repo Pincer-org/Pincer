@@ -34,6 +34,7 @@ class ActivityType(IntEnum):
     COMPETING:
         Competing in {name}; e.g. "Competing in Arena World Champions"
     """
+
     # noqa: E501
     GAME = 0
     STREAMING = 1
@@ -43,7 +44,6 @@ class ActivityType(IntEnum):
     COMPETING = 5
 
 
-@dataclass
 class ActivityTimestamp(APIObject):
     """Represents the timestamp of an activity.
 
@@ -54,11 +54,11 @@ class ActivityTimestamp(APIObject):
     end: APINullable[:class:`int`]
         Unix time (in milliseconds) of when the activity ends
     """
+
     start: APINullable[int] = MISSING
     end: APINullable[int] = MISSING
 
 
-@dataclass
 class ActivityEmoji(APIObject):
     """Represents an emoji in an activity.
 
@@ -71,12 +71,12 @@ class ActivityEmoji(APIObject):
     animated: APINullable[:class:`bool`]
         Whether this emoji is animated
     """
+
     name: str
     id: APINullable[Snowflake] = MISSING
     animated: APINullable[bool] = MISSING
 
 
-@dataclass
 class ActivityParty(APIObject):
     """Represents a party in an activity.
 
@@ -87,11 +87,11 @@ class ActivityParty(APIObject):
     size: APINullable[Tuple[:class:`int`, :class:`int`]]
         Array of two integers (current_size, max_size)
     """
+
     id: APINullable[str] = MISSING
     size: APINullable[Tuple[int, int]] = MISSING
 
 
-@dataclass
 class ActivityAssets(APIObject):
     """Represents an asset of an activity.
 
@@ -108,13 +108,13 @@ class ActivityAssets(APIObject):
         text displayed when hovering over
         the small image of the activity
     """
+
     large_image: APINullable[str] = MISSING
     large_text: APINullable[str] = MISSING
     small_image: APINullable[str] = MISSING
     small_text: APINullable[str] = MISSING
 
 
-@dataclass
 class ActivitySecrets(APIObject):
     """Represents a secret of an activity.
 
@@ -127,6 +127,7 @@ class ActivitySecrets(APIObject):
     match: APINullable[:class:`str`]
         The secret for a specific instanced match
     """
+
     join: APINullable[str] = MISSING
     spectate: APINullable[str] = MISSING
     match_: APINullable[str] = MISSING
@@ -141,7 +142,6 @@ class ActivityFlags(IntEnum):
     PLAY = 1 << 5
 
 
-@dataclass
 class ActivityButton(APIObject):
     """When received over the gateway, the buttons field is an array
     of strings, which are the button labels. Bots cannot access
@@ -155,11 +155,11 @@ class ActivityButton(APIObject):
     url: :class:`str`
         The url opened when clicking the button (1-512 characters)
     """
+
     label: str
     url: str
 
 
-@dataclass
 class Activity(APIObject):
     """Bots are only able to send ``name``, ``type``, and optionally ``url``.
 
@@ -198,6 +198,7 @@ class Activity(APIObject):
     buttons: APINullable[List[:class:`~pincer.objects.events.presence.ActivityButton`]]
         The url button on an activity.
     """
+
     # noqa: E501
     name: str
     type: ActivityType
@@ -217,7 +218,6 @@ class Activity(APIObject):
     buttons: APINullable[List[ActivityButton]] = MISSING
 
 
-@dataclass
 class ClientStatus(APIObject):
     """Active sessions are indicated with an "online",
     "idle", or "dnd" string per platform.
@@ -236,12 +236,12 @@ class ClientStatus(APIObject):
         The user's status set for an active web
         (browser, bot account) application session
     """
+
     desktop: APINullable[str] = MISSING
     mobile: APINullable[str] = MISSING
     web: APINullable[str] = MISSING
 
 
-@dataclass
 class PresenceUpdateEvent(APIObject):
     """This event is sent when a user's presence or info,
     such as name or avatar, is updated.
@@ -259,6 +259,7 @@ class PresenceUpdateEvent(APIObject):
     client_status: :class:`~pincer.objects.events.presence.ClientStatus`
         User's platform-dependent status
     """
+
     user: User
     status: str
     activities: List[Activity]

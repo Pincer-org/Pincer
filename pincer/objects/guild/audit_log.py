@@ -117,6 +117,7 @@ class AuditLogEvent(IntEnum):
     THREAD_DELETE1:
         Thread deleted.
     """
+
     GUILD_UPDATE = 1
     CHANNEL_CREATE = 10
     CHANNEL_UPDATE = 11
@@ -163,7 +164,6 @@ class AuditLogEvent(IntEnum):
     THREAD_DELETE = 112
 
 
-@dataclass
 class AuditLogChange(APIObject):
     """Representation of Discord Audit Log Change object
 
@@ -176,12 +176,12 @@ class AuditLogChange(APIObject):
     key: :class:`str`
         Name of audit log change key
     """
+
     new_value: Any
     old_value: Any
     key: str
 
 
-@dataclass
 class AuditEntryInfo(APIObject):
     """Represents Discord Optional Audit Entry Info
 
@@ -204,6 +204,7 @@ class AuditEntryInfo(APIObject):
     role_name: :class:`str`
         Name of the role if type is "0" (not present if type is "1")
     """
+
     delete_member_days: str
     members_removed: str
     channel_id: Snowflake
@@ -214,7 +215,6 @@ class AuditEntryInfo(APIObject):
     role_name: str
 
 
-@dataclass
 class AuditLogEntry(APIObject):
     """Represents a Discord Audit Log Entry object.
 
@@ -235,6 +235,7 @@ class AuditLogEntry(APIObject):
     reason: APINullable[:class:`str`]
         The reason for the change x(0-512 characters)
     """
+
     # noqa: E501
     target_id: Optional[str]
     user_id: Optional[Snowflake]
@@ -246,7 +247,6 @@ class AuditLogEntry(APIObject):
     reason: APINullable[str] = MISSING
 
 
-@dataclass
 class AuditLog(APIObject):
     """Represents a Discord Audit Log object.
 
@@ -261,6 +261,7 @@ class AuditLog(APIObject):
     threads: List[:class:`~pincer.objects.guild.channel.Channel`]
         list of threads found in the audit log
     """
+
     # noqa: E501
     webhooks: List[Webhook]
     users: List[User]

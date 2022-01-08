@@ -23,7 +23,6 @@ if TYPE_CHECKING:
     from .presence import PresenceUpdateEvent
 
 
-@dataclass
 class GuildBanAddEvent(APIObject):
     """Sent when a user is banned from a guild.
 
@@ -39,7 +38,6 @@ class GuildBanAddEvent(APIObject):
     user: User
 
 
-@dataclass
 class GuildBanRemoveEvent(APIObject):
     """Sent when a user is unbanned from a guild.
 
@@ -55,7 +53,6 @@ class GuildBanRemoveEvent(APIObject):
     user: User
 
 
-@dataclass
 class GuildEmojisUpdateEvent(APIObject):
     """Sent when a guild's emojis have been updated.
 
@@ -71,7 +68,6 @@ class GuildEmojisUpdateEvent(APIObject):
     emojis: List[Emoji]
 
 
-@dataclass
 class GuildStickersUpdateEvent(APIObject):
     """Sent when a guild's stickers have been updated.
 
@@ -87,7 +83,6 @@ class GuildStickersUpdateEvent(APIObject):
     stickers: List[Sticker]
 
 
-@dataclass
 class GuildIntegrationsUpdateEvent(APIObject):
     """Sent when a guild integration is updated.
 
@@ -100,7 +95,6 @@ class GuildIntegrationsUpdateEvent(APIObject):
     guild_id: Snowflake
 
 
-@dataclass
 class GuildMemberAddEvent(GuildMember):
     """
     Sent when a user joins a guild.
@@ -117,7 +111,6 @@ class GuildMemberAddEvent(GuildMember):
     guild_id: Snowflake = 0
 
 
-@dataclass
 class GuildMemberRemoveEvent(APIObject):
     """Sent when a user is removed from a guild (leave/kick/ban).
 
@@ -138,7 +131,6 @@ class GuildMemberRemoveEvent(APIObject):
         )
 
 
-@dataclass
 class GuildMemberUpdateEvent(APIObject):
     """Sent when a guild member is updated.
     This will also fire when the user object
@@ -166,6 +158,7 @@ class GuildMemberUpdateEvent(APIObject):
         whether the user has not yet passed the guild's
         Membership Screening requirements
     """
+
     # noqa: E501
 
     guild_id: Snowflake
@@ -184,7 +177,6 @@ class GuildMemberUpdateEvent(APIObject):
         )
 
 
-@dataclass
 class GuildMembersChunkEvent(APIObject):
     """Sent in response to Guild Request Members.
     You can use the ``chunk_index`` and ``chunk_count``
@@ -210,6 +202,7 @@ class GuildMembersChunkEvent(APIObject):
     nonce: APINullable[:class:`str`]
         The nonce used in the Guild Members Request
     """
+
     # noqa: E501
     guild_id: Snowflake
     members: List[GuildMember]
@@ -227,7 +220,6 @@ class GuildMembersChunkEvent(APIObject):
         ]
 
 
-@dataclass
 class GuildRoleCreateEvent(APIObject):
     """Sent when a guild role is created.
 
@@ -243,7 +235,6 @@ class GuildRoleCreateEvent(APIObject):
     role: Role
 
 
-@dataclass
 class GuildRoleUpdateEvent(APIObject):
     """Sent when a guild role is updated.
 
@@ -259,7 +250,6 @@ class GuildRoleUpdateEvent(APIObject):
     role: Role
 
 
-@dataclass
 class GuildRoleDeleteEvent(APIObject):
     """Sent when a guild role is deleted.
 
@@ -275,7 +265,6 @@ class GuildRoleDeleteEvent(APIObject):
     role_id: Snowflake
 
 
-@dataclass
 class GuildStatusEvent(APIObject):
     """
     Sent when a subscribed server's state changes

@@ -12,9 +12,15 @@ from aiohttp import ClientSession, ClientResponse
 from . import __package__
 from .._config import GatewayConfig
 from ..exceptions import (
-    NotFoundError, BadRequestError, NotModifiedError, UnauthorizedError,
-    ForbiddenError, MethodNotAllowedError, RateLimitError, ServerError,
-    HTTPError
+    NotFoundError,
+    BadRequestError,
+    NotModifiedError,
+    UnauthorizedError,
+    ForbiddenError,
+    MethodNotAllowedError,
+    RateLimitError,
+    ServerError,
+    HTTPError,
 )
 
 if TYPE_CHECKING:
@@ -30,13 +36,16 @@ _log = logging.getLogger(__package__)
 
 class HttpCallable(Protocol):
     """Aiohttp HTTP method."""
+
     __name__: str
 
     def __call__(
-            self, url: StrOrURL, *,
-            allow_redirects: bool = True,
-            method: Optional[Union[Dict, str, Payload]] = None,
-            **kwargs: Any
+        self,
+        url: StrOrURL,
+        *,
+        allow_redirects: bool = True,
+        method: Optional[Union[Dict, str, Payload]] = None,
+        **kwargs: Any,
     ) -> _RequestContextManager:
         ...
 
@@ -83,7 +92,7 @@ class HTTPClient:
             403: ForbiddenError(),
             404: NotFoundError(),
             405: MethodNotAllowedError(),
-            429: RateLimitError()
+            429: RateLimitError(),
         }
 
     # for with block
@@ -101,13 +110,14 @@ class HTTPClient:
         await self.__session.close()
 
     async def __send(
-            self,
-            method: HttpCallable,
-            endpoint: str, *,
-            content_type: str = "application/json",
-            data: Optional[Union[Dict, str, Payload]] = None,
-            headers: Optional[Dict[str, Any]] = None,
-            __ttl: int = None
+        self,
+        method: HttpCallable,
+        endpoint: str,
+        *,
+        content_type: str = "application/json",
+        data: Optional[Union[Dict, str, Payload]] = None,
+        headers: Optional[Dict[str, Any]] = None,
+        __ttl: int = None,
     ) -> Optional[Dict]:
         """
         Send an api request to the Discord REST API.
@@ -150,25 +160,22 @@ class HTTPClient:
 
         url = f"{self.url}/{endpoint}"
         async with method(
-                url,
-                data=data,
-                headers={
-                    "Content-Type": content_type,
-                    **(headers or {})
-                }
+            url,
+            data=data,
+            headers={"Content-Type": content_type, **(headers or {})},
         ) as res:
             return await self.__handle_response(
                 res, method, endpoint, content_type, data, ttl
             )
 
     async def __handle_response(
-            self,
-            res: ClientResponse,
-            method: HttpCallable,
-            endpoint: str,
-            content_type: str,
-            data: Optional[str],
-            __ttl: int,
+        self,
+        res: ClientResponse,
+        method: HttpCallable,
+        endpoint: str,
+        content_type: str,
+        data: Optional[str],
+        __ttl: int,
     ) -> Optional[Dict]:
         """
         Handle responses from the discord API.
@@ -198,9 +205,7 @@ class HTTPClient:
         _log.debug(f"Received response for {endpoint} | {await res.text()}")
         if res.ok:
             if res.status == 204:
-                _log.debug(
-                    "Request has been sent successfully. "
-                )
+                _log.debug("Request has been sent successfully. ")
                 return
 
             _log.debug(
@@ -222,10 +227,7 @@ class HTTPClient:
                 )
                 await sleep(timeout)
                 return await self.__send(
-                    method,
-                    endpoint,
-                    content_type=content_type,
-                    data=data
+                    method, endpoint, content_type=content_type, data=data
                 )
 
             _log.error(
@@ -252,13 +254,11 @@ class HTTPClient:
             endpoint,
             content_type=content_type,
             __ttl=__ttl - 1,
-            data=data
+            data=data,
         )
 
     async def delete(
-            self,
-            route: str,
-            headers: Optional[Dict[str, Any]] = None
+        self, route: str, headers: Optional[Dict[str, Any]] = None
     ) -> Optional[Dict]:
         """|coro|
 
@@ -277,11 +277,7 @@ class HTTPClient:
         Optional[Dict]
             The response from discord.
         """
-        return await self.__send(
-            self.__session.delete,
-            route,
-            headers=headers
-        )
+        return await self.__send(self.__session.delete, route, headers=headers)
 
     async def get(self, route: str) -> Optional[Dict]:
         """|coro|
@@ -335,11 +331,11 @@ class HTTPClient:
         return await self.__send(self.__session.options, route)
 
     async def patch(
-            self,
-            route: str,
-            data: Optional[Dict] = None,
-            content_type: str = "application/json",
-            headers: Optional[Dict[str, Any]] = None
+        self,
+        route: str,
+        data: Optional[Dict] = None,
+        content_type: str = "application/json",
+        headers: Optional[Dict[str, Any]] = None,
     ) -> Optional[Dict]:
         """|coro|
 
@@ -367,15 +363,15 @@ class HTTPClient:
             route,
             content_type=content_type,
             data=data,
-            headers=headers
+            headers=headers,
         )
 
     async def post(
-            self,
-            route: str,
-            data: Optional[Dict] = None,
-            content_type: str = "application/json",
-            headers: Optional[Dict[str, Any]] = None
+        self,
+        route: str,
+        data: Optional[Dict] = None,
+        content_type: str = "application/json",
+        headers: Optional[Dict[str, Any]] = None,
     ) -> Optional[Dict]:
         """|coro|
 
@@ -402,15 +398,15 @@ class HTTPClient:
             route,
             content_type=content_type,
             data=data,
-            headers=headers
+            headers=headers,
         )
 
     async def put(
-            self,
-            route: str,
-            data: Optional[Dict] = None,
-            content_type: str = "application/json",
-            headers: Optional[Dict[str, Any]] = None
+        self,
+        route: str,
+        data: Optional[Dict] = None,
+        content_type: str = "application/json",
+        headers: Optional[Dict[str, Any]] = None,
     ) -> Optional[Dict]:
         """|coro|
 
@@ -437,5 +433,5 @@ class HTTPClient:
             route,
             content_type=content_type,
             data=data,
-            headers=headers
+            headers=headers,
         )

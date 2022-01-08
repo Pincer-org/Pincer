@@ -16,7 +16,6 @@ if TYPE_CHECKING:
     from ...utils.types import APINullable
 
 
-@dataclass
 class Connection(APIObject):
     """The connection object that the user has attached.
 
@@ -42,6 +41,7 @@ class Connection(APIObject):
     integrations: APINullable[List[:class:`~pincer.objects.user.integration.Integration`]]
         An array of partial server integrations
     """
+
     # noqa: E501
 
     id: str

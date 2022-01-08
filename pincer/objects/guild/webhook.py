@@ -34,12 +34,12 @@ class WebhookType(IntEnum):
     APPLICATION:
         Application webhooks are webhooks used with Interactions
     """
+
     INCOMING = 1
     CHANNEL_FOLLOWER = 2
     APPLICATION = 3
 
 
-@dataclass
 class Webhook(APIObject):
     """Represents a Discord channel webhook.
 
@@ -75,6 +75,7 @@ class Webhook(APIObject):
     guild_id: APINullable[Optional[:class:`~pincer.objects.guild.guild.Guild`]]
         The guild id this webhook is for, if any
     """
+
     id: Snowflake
     type: WebhookType
 

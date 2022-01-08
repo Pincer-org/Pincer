@@ -20,14 +20,17 @@ from .._config import GatewayConfig
 from ..core.dispatch import GatewayDispatch
 from ..core.heartbeat import Heartbeat
 from ..exceptions import (
-    PincerError, InvalidTokenError, UnhandledException,
-    _InternalPerformReconnectError, DisallowedIntentsError
+    PincerError,
+    InvalidTokenError,
+    UnhandledException,
+    _InternalPerformReconnectError,
+    DisallowedIntentsError,
 )
 
 if TYPE_CHECKING:
     from ..objects.app.intents import Intents
 
-ZLIB_SUFFIX = b'\x00\x00\xff\xff'
+ZLIB_SUFFIX = b"\x00\x00\xff\xff"
 
 Handler = Callable[[WebSocketClientProtocol, GatewayDispatch], Awaitable[None]]
 _log = logging.getLogger(__package__)
@@ -46,10 +49,12 @@ class Dispatcher:
     """
 
     def __init__(
-            self, token: str, *,
-            handlers: Dict[int, Handler],
-            intents: Intents,
-            reconnect: bool
+        self,
+        token: str,
+        *,
+        handlers: Dict[int, Handler],
+        intents: Intents,
+        reconnect: bool,
     ) -> None:
         if len(token) != 59:
             raise InvalidTokenError(
@@ -64,8 +69,7 @@ class Dispatcher:
         self.__reconnect = reconnect
 
         async def identify_and_handle_hello(
-                socket: WebSocketClientProtocol,
-                payload: GatewayDispatch
+            socket: WebSocketClientProtocol, payload: GatewayDispatch
         ):
             """|coro|
 
@@ -100,7 +104,7 @@ class Dispatcher:
             7: handle_reconnect,
             9: handle_reconnect,
             10: identify_and_handle_hello,
-            11: Heartbeat.handle_heartbeat
+            11: Heartbeat.handle_heartbeat,
         }
 
         self.__dispatch_errors: Dict[int, PincerError] = {
@@ -109,7 +113,7 @@ class Dispatcher:
             4004: InvalidTokenError(),
             4007: _InternalPerformReconnectError(),
             4009: _InternalPerformReconnectError(),
-            4014: DisallowedIntentsError()
+            4014: DisallowedIntentsError(),
         }
 
     @property
@@ -121,24 +125,25 @@ class Dispatcher:
     def __hello_socket(self) -> str:
         return str(
             GatewayDispatch(
-                2, {
+                2,
+                {
                     "token": self.__token,
                     "intents": self.__intents,
                     "properties": {
                         "$os": system(),
                         "$browser": __package__,
-                        "$device": __package__
+                        "$device": __package__,
                     },
-                    "compress": GatewayConfig.compressed()
-                }
+                    "compress": GatewayConfig.compressed(),
+                },
             )
         )
 
     async def __handler_manager(
-            self,
-            socket: WebSocketClientProtocol,
-            payload: GatewayDispatch,
-            loop: AbstractEventLoop
+        self,
+        socket: WebSocketClientProtocol,
+        payload: GatewayDispatch,
+        loop: AbstractEventLoop,
     ):
         """
         This manages all handles for given OP codes.
@@ -155,7 +160,7 @@ class Dispatcher:
         """
         _log.debug(
             "New event received, checking if handler exists for opcode: %i",
-            payload.op
+            payload.op,
         )
 
         handler: Handler = self.__dispatch_handlers.get(payload.op)
@@ -164,7 +169,8 @@ class Dispatcher:
         if not handler:
             _log.error(
                 "No handler was found for opcode %i, please report this to the "
-                "pincer dev team!", payload.op
+                "pincer dev team!",
+                payload.op,
             )
 
             if not all_handler:
@@ -204,7 +210,7 @@ class Dispatcher:
 
             _log.debug(
                 "Successfully established websocket connection with `%s`",
-                GatewayConfig.uri()
+                GatewayConfig.uri(),
             )
 
             if GatewayConfig.compression == "zlib-stream":
@@ -229,18 +235,19 @@ class Dispatcher:
                             while not buffer.endswith(ZLIB_SUFFIX):
                                 buffer.extend(await socket.recv())
 
-                            msg = inflator.decompress(buffer).decode('utf-8')
+                            msg = inflator.decompress(buffer).decode("utf-8")
 
                     await self.__handler_manager(
-                        socket,
-                        GatewayDispatch.from_string(msg),
-                        loop
+                        socket, GatewayDispatch.from_string(msg), loop
                     )
 
                 except ConnectionClosedError as exc:
                     _log.debug(
                         "The connection with `%s` has been broken unexpectedly."
-                        " (%i, %s)", GatewayConfig.uri(), exc.code, exc.reason
+                        " (%i, %s)",
+                        GatewayConfig.uri(),
+                        exc.code,
+                        exc.reason,
                     )
 
                     await self.close()

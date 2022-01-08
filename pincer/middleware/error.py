@@ -19,8 +19,7 @@ if TYPE_CHECKING:
 
 
 def error_middleware(
-    self,
-    payload: GatewayDispatch
+    self, payload: GatewayDispatch
 ) -> Tuple[str, List[DiscordError]]:
     """|coro|
 

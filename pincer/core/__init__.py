@@ -7,6 +7,4 @@ from .heartbeat import Heartbeat
 from .http import HTTPClient
 
 
-__all__ = (
-    "Dispatcher", "GatewayDispatch", "HTTPClient", "Heartbeat"
-)
+__all__ = ("Dispatcher", "GatewayDispatch", "HTTPClient", "Heartbeat")

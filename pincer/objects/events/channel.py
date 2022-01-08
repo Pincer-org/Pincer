@@ -14,7 +14,6 @@ if TYPE_CHECKING:
     from ...utils.timestamp import Timestamp
 
 
-@dataclass
 class ChannelPinsUpdateEvent(APIObject):
     """Sent when a message is pinned or unpinned in a text channel.
     This is not sent when a pinned message is deleted.
@@ -28,8 +27,8 @@ class ChannelPinsUpdateEvent(APIObject):
     last_pin_timestamp: APINullable[:class:`~pincer.utils.timestamp.Timestamp`]
         The time at which the most recent pinned message was pinned
     """
+
     channel_id: Snowflake
 
     guild_id: APINullable[Snowflake] = MISSING
     last_pin_timestamp: APINullable[Timestamp] = MISSING
-

@@ -30,7 +30,11 @@ async def guild_member_update_middleware(self, payload: GatewayDispatch):
 
     return (
         "on_guild_member_update",
-        [GuildMemberUpdateEvent.from_dict(construct_client_dict(self, payload.data))],
+        [
+            GuildMemberUpdateEvent.from_dict(
+                construct_client_dict(self, payload.data)
+            )
+        ],
     )
 
 

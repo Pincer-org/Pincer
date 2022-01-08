@@ -12,7 +12,6 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
 class WebhooksUpdateEvent(APIObject):
     """
     Sent when a guild's channel webhook
@@ -25,5 +24,6 @@ class WebhooksUpdateEvent(APIObject):
     channel_id: :class:`~pincer.utils.snowflake.Snowflake`
         id of the channel
     """
+
     guild_id: Snowflake
     channel_id: Snowflake

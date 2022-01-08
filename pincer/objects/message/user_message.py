@@ -44,12 +44,12 @@ class AllowedMentionTypes(str, Enum):
     EVERYONE:
         Controls @everyone and @here mentions
     """
+
     ROLES = "roles"
     USERS = "users"
     EVERYONE = "everyone"
 
 
-@dataclass
 class AllowedMentions(APIObject):
     """Represents the entities the client can mention
 
@@ -82,7 +82,7 @@ class AllowedMentions(APIObject):
             "parse": self.parse,
             "roles": list(map(get_str_id, self.roles)),
             "users": list(map(get_str_id, self.users)),
-            "replied_user": self.reply
+            "replied_user": self.reply,
         }
 
 
@@ -102,6 +102,7 @@ class MessageActivityType(IntEnum):
     JOIN_REQUEST:
         Request to join.
     """
+
     JOIN = 1
     SPECTATE = 2
     LISTEN = 3
@@ -136,6 +137,7 @@ class MessageFlags(IntEnum):
         This message is an Interaction
         Response and the bot is "thinking"
     """
+
     CROSSPOSTED = 1 << 0
     IS_CROSSPOST = 1 << 1
     SUPPRESS_EMBEDS = 1 << 2
@@ -196,6 +198,7 @@ class MessageType(IntEnum):
     GUILD_INVITE_REMINDER:
         ??
     """
+
     DEFAULT = 0
     RECIPIENT_ADD = 1
     RECIPIENT_REMOVE = 2
@@ -227,7 +230,6 @@ class MessageType(IntEnum):
     GUILD_INVITE_REMINDER = 22
 
 
-@dataclass
 class MessageActivity(APIObject):
     """Represents a Discord Message Activity object
 
@@ -238,11 +240,11 @@ class MessageActivity(APIObject):
     party_id: APINullable[:class:`str`]
         party_id from a Rich Presence event
     """
+
     type: MessageActivityType
     party_id: APINullable[str] = MISSING
 
 
-@dataclass
 class UserMessage(APIObject):
     """Represents a message sent in a channel within Discord.
 
@@ -314,6 +316,7 @@ class UserMessage(APIObject):
     sticker_items: APINullable[List[:class:`~pincer.objects.message.sticker.StickerItem`]]
         Sent if the message contains stickers
     """
+
     # noqa: E501
 
     id: Snowflake
@@ -364,7 +367,7 @@ class UserMessage(APIObject):
                 self._client,
                 await self._http.get(
                     f"/channels/{self.channel_id}/messages/{self.id}"
-                )
+                ),
             )
         )
 
@@ -480,7 +483,7 @@ class UserMessage(APIObject):
         flags: int = None,
         allowed_mentions: AllowedMentions = None,
         attachments: List[Attachment] = None,
-        components: List[MessageComponent] = None
+        components: List[MessageComponent] = None,
     ):
         """|coro|
 
@@ -525,8 +528,7 @@ class UserMessage(APIObject):
         set_if_not_none(components, "components")
 
         await self._http.patch(
-            f"/channels/{self.channel_id}/messages/{self.id}",
-            data=data
+            f"/channels/{self.channel_id}/messages/{self.id}", data=data
         )
 
     async def delete(self):

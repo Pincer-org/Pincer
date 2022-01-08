@@ -15,8 +15,13 @@ from ..message.context import MessageContext
 from ..message.message import Message
 from ..message.user_message import UserMessage
 from ..user import User
-from ...exceptions import InteractionDoesNotExist, UseFollowup, \
-    InteractionAlreadyAcknowledged, NotFoundError, InteractionTimedOut
+from ...exceptions import (
+    InteractionDoesNotExist,
+    UseFollowup,
+    InteractionAlreadyAcknowledged,
+    NotFoundError,
+    InteractionTimedOut,
+)
 from ...utils import APIObject, convert
 from ...utils.convert_message import convert_message
 from ...utils.snowflake import Snowflake
@@ -31,7 +36,6 @@ if TYPE_CHECKING:
     from ...utils import APINullable
 
 
-@dataclass
 class ResolvedData(APIObject):
     """Represents a Discord Resolved Data structure
 
@@ -48,6 +52,7 @@ class ResolvedData(APIObject):
     messages: APINullable[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.message.user_message.UserMessage`]]
         Map of Snowflakes to partial message objects
     """
+
     # noqa: E501
     users: APINullable[Dict[Snowflake, User]] = MISSING
     members: APINullable[Dict[Snowflake, GuildMember]] = MISSING
@@ -56,7 +61,6 @@ class ResolvedData(APIObject):
     messages: APINullable[Dict[Snowflake, UserMessage]] = MISSING
 
 
-@dataclass
 class InteractionData(APIObject):
     """Represents a Discord Interaction Data structure
 
@@ -81,6 +85,7 @@ class InteractionData(APIObject):
     target_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Id of the user or message targeted by a user or message command
     """
+
     # noqa: E501
     id: Snowflake
     name: str
@@ -94,7 +99,6 @@ class InteractionData(APIObject):
     target_id: APINullable[Snowflake] = MISSING
 
 
-@dataclass
 class Interaction(APIObject):
     """Represents a Discord Interaction object
 
@@ -123,6 +127,7 @@ class Interaction(APIObject):
     message: APINullable[:class:`~pincer.objects.message.user_message.UserMessage`]
         For components, the message they were attached to
     """
+
     # noqa: E501
     id: Snowflake
     application_id: Snowflake
@@ -146,57 +151,44 @@ class Interaction(APIObject):
         )
         self.type = convert(self.type, InteractionType)
         self.data = convert(
-            self.data,
-            InteractionData.from_dict,
-            InteractionData
+            self.data, InteractionData.from_dict, InteractionData
         )
         self.guild_id = convert(self.guild_id, Snowflake.from_string)
         self.channel_id = convert(self.channel_id, Snowflake.from_string)
 
         self.member = convert(
-            self.member,
-            GuildMember.from_dict,
-            GuildMember,
-            client=self._client
+            self.member, GuildMember.from_dict, GuildMember, client=self._client
         )
 
         self.user = convert(
-            self.user,
-            User.from_dict,
-            User,
-            client=self._client
+            self.user, User.from_dict, User, client=self._client
         )
 
         self.message = convert(
             self.message,
             UserMessage.from_dict,
             UserMessage,
-            client=self._client
+            client=self._client,
         )
 
         self._convert_functions = {
             AppCommandOptionType.SUB_COMMAND: None,
             AppCommandOptionType.SUB_COMMAND_GROUP: None,
-
             AppCommandOptionType.STRING: str,
             AppCommandOptionType.INTEGER: int,
             AppCommandOptionType.BOOLEAN: bool,
             AppCommandOptionType.NUMBER: float,
-
-            AppCommandOptionType.USER: lambda value:
-            self._client.get_user(
+            AppCommandOptionType.USER: lambda value: self._client.get_user(
                 convert(value, Snowflake.from_string)
             ),
-            AppCommandOptionType.CHANNEL: lambda value:
-            self._client.get_channel(
+            AppCommandOptionType.CHANNEL: lambda value: self._client.get_channel(
                 convert(value, Snowflake.from_string)
             ),
-            AppCommandOptionType.ROLE: lambda value:
-            self._client.get_role(
+            AppCommandOptionType.ROLE: lambda value: self._client.get_role(
                 convert(self.guild_id, Snowflake.from_string),
-                convert(value, Snowflake.from_string)
+                convert(value, Snowflake.from_string),
             ),
-            AppCommandOptionType.MENTIONABLE: None
+            AppCommandOptionType.MENTIONABLE: None,
         }
 
     async def build(self):
@@ -208,9 +200,7 @@ class Interaction(APIObject):
         if not self.data.options:
             return
 
-        await gather(
-            *map(self.convert, self.data.options)
-        )
+        await gather(*map(self.convert, self.data.options))
 
     async def convert(self, option: AppCommandInteractionDataOption):
         """|coro|
@@ -236,7 +226,7 @@ class Interaction(APIObject):
             command,
             self,
             self.guild_id,
-            self.channel_id
+            self.channel_id,
         )
 
     async def response(self) -> UserMessage:
@@ -284,12 +274,7 @@ class Interaction(APIObject):
         self.has_acknowledged = True
         await self._http.post(
             f"interactions/{self.id}/{self.token}/callback",
-            {
-                "type": CallbackType.DEFERRED_MESSAGE,
-                "data": {
-                    "flags": flags
-                }
-            }
+            {"type": CallbackType.DEFERRED_MESSAGE, "data": {"flags": flags}},
         )
 
     async def __post_send_handler(self, message: Message):
@@ -357,7 +342,7 @@ class Interaction(APIObject):
             await self._http.post(
                 f"interactions/{self.id}/{self.token}/callback",
                 data,
-                content_type=content_type
+                content_type=content_type,
             )
         except NotFoundError:
             raise InteractionTimedOut(
@@ -402,7 +387,7 @@ class Interaction(APIObject):
         resp = await self._http.patch(
             f"webhooks/{self._client.bot.id}/{self.token}/messages/@original",
             data,
-            content_type=content_type
+            content_type=content_type,
         )
         self.__post_sent(message)
         return UserMessage.from_dict(resp)
@@ -428,9 +413,7 @@ class Interaction(APIObject):
         )
 
     async def __post_followup_send_handler(
-            self,
-            followup: UserMessage,
-            message: Message
+        self, followup: UserMessage, message: Message
     ):
         """Process a followup after it was sent.
 
@@ -446,11 +429,7 @@ class Interaction(APIObject):
             await sleep(message.delete_after)
             await self.delete_followup(followup.id)
 
-    def __post_followup_sent(
-            self,
-            followup: UserMessage,
-            message: Message
-    ):
+    def __post_followup_sent(self, followup: UserMessage, message: Message):
         """Ensure the `__post_followup_send_handler` method its future.
 
         Parameters
@@ -484,16 +463,14 @@ class Interaction(APIObject):
         resp = await self._http.post(
             f"webhooks/{self._client.bot.id}/{self.token}",
             data,
-            content_type=content_type
+            content_type=content_type,
         )
         msg = UserMessage.from_dict(resp)
         self.__post_followup_sent(msg, message)
         return msg
 
     async def edit_followup(
-            self,
-            message_id: int,
-            message: MessageConvertable
+        self, message_id: int, message: MessageConvertable
     ) -> UserMessage:
         """|coro|
 
@@ -517,7 +494,7 @@ class Interaction(APIObject):
         resp = await self._http.patch(
             f"webhooks/{self._client.bot.id}/{self.token}/messages/{message_id}",
             data,
-            content_type=content_type
+            content_type=content_type,
         )
         msg = UserMessage.from_dict(resp)
         self.__post_followup_sent(msg, message)

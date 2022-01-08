@@ -16,7 +16,6 @@ if TYPE_CHECKING:
     from ..guild.invite import InviteTargetType
 
 
-@dataclass
 class InviteCreateEvent(APIObject):
     """Sent when a new invite to a channel is created.
 
@@ -47,6 +46,7 @@ class InviteCreateEvent(APIObject):
     uses: :class:`int`
         How many times the invite has been used (always will be ``0``)
     """
+
     # noqa: E501
     channel_id: Snowflake
     code: str
@@ -62,7 +62,6 @@ class InviteCreateEvent(APIObject):
     uses: int = 0
 
 
-@dataclass
 class InviteDeleteEvent(APIObject):
     """Sent when an invite is deleted.
 
@@ -75,6 +74,7 @@ class InviteDeleteEvent(APIObject):
     guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The guild of the invite
     """
+
     channel_id: Snowflake
     code: str
 

@@ -16,7 +16,6 @@ if TYPE_CHECKING:
     from ...utils.types import APINullable
 
 
-@dataclass
 class SelectOption(APIObject):
     """Represents a Discord Select Option object
 
@@ -33,6 +32,7 @@ class SelectOption(APIObject):
     default: APINullable[:class:`bool`]
         Will render this option as selected by default
     """
+
     label: str
     value: str
     description: APINullable[str] = MISSING
@@ -40,7 +40,6 @@ class SelectOption(APIObject):
     default: APINullable[bool] = MISSING
 
 
-@dataclass
 class SelectMenu(APIObject):
     """Represents a Discord Select Menu object
 
@@ -66,6 +65,7 @@ class SelectMenu(APIObject):
         Disable the select
         |default| False
     """
+
     type: int
     custom_id: str
     options: List[SelectOption]

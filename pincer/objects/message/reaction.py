@@ -12,7 +12,6 @@ if TYPE_CHECKING:
     from .emoji import Emoji
 
 
-@dataclass
 class Reaction(APIObject):
     """Represents a Discord Reaction object
 
@@ -25,6 +24,7 @@ class Reaction(APIObject):
     emoji: :class:`~pincer.objects.message.emoji.Emoji`
         Emoji information
     """
+
     count: int
     me: bool
     emoji: Emoji

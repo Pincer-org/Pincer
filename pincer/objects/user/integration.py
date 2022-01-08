@@ -27,11 +27,11 @@ class IntegrationExpireBehavior(IntEnum):
     KICK:
         Kick on expire.
     """
+
     REMOVE_ROLE = 0
     KICK = 1
 
 
-@dataclass
 class IntegrationAccount(APIObject):
     """Represents a Discord Integration Account object
 
@@ -42,11 +42,11 @@ class IntegrationAccount(APIObject):
     name: :class:`str`
         Name of the account
     """
+
     id: str
     name: str
 
 
-@dataclass
 class IntegrationApplication(APIObject):
     """Represents a Discord Integration Application object
 
@@ -65,6 +65,7 @@ class IntegrationApplication(APIObject):
     bot: APINullable[:class:`~pincer.objects.user.user.User`]
         The bot associated with this application
     """
+
     id: Snowflake
     name: str
     icon: Optional[str]
@@ -73,7 +74,6 @@ class IntegrationApplication(APIObject):
     bot: APINullable[User] = MISSING
 
 
-@dataclass
 class Integration(APIObject):
     """Represents a Discord Integration object
 
@@ -111,6 +111,7 @@ class Integration(APIObject):
     application: APINullable[:class:`~pincer.objects.user.integration.IntegrationApplication`]
         The bot/OAuth2 application for discord integrations
     """
+
     # noqa: E501
 
     id: Snowflake

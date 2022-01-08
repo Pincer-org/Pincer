@@ -25,7 +25,9 @@ async def integration_delete_middleware(self, payload: GatewayDispatch):
         ``on_integration_delete`` and an ``IntegrationDeleteEvent``
     """
     return "on_integration_delete", [
-        IntegrationDeleteEvent.from_dict(construct_client_dict(self, payload.data))
+        IntegrationDeleteEvent.from_dict(
+            construct_client_dict(self, payload.data)
+        )
     ]
 
 

@@ -3,16 +3,12 @@ from pincer.objects import Embed
 
 
 class Bot(Client):
-
     @command(description="Say something as the bot!")
     async def say(
-            self, ctx,
-            content: Descripted[str, "The content of the message"]
+        self, ctx, content: Descripted[str, "The content of the message"]
     ) -> Embed:
         # Using the ctx to get the command author
-        return Embed(
-            description=f"{ctx.author.user.mention} said {content}"
-        )
+        return Embed(description=f"{ctx.author.user.mention} said {content}")
 
     @Client.event
     async def on_ready(self):

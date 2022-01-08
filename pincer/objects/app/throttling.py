@@ -18,6 +18,7 @@ if TYPE_CHECKING:
 
 class ThrottleInterface(ABC):
     """An ABC for throttling."""
+
     throttle: Dict[Coro, Dict[Optional[str], SlidingWindow]] = {}
 
     @staticmethod
@@ -30,11 +31,12 @@ class DefaultThrottleHandler(ThrottleInterface, ABC):
     """The default throttlehandler based off the
     :class:`~pincer.objects.app.throttling.ThrottleInterface` ABC
     """
+
     __throttle_scopes = {
         ThrottleScope.GLOBAL: None,
         ThrottleScope.GUILD: "guild_id",
         ThrottleScope.CHANNEL: "channel_id",
-        ThrottleScope.USER: "author.user.id"
+        ThrottleScope.USER: "author.user.id",
     }
 
     @staticmethod
@@ -53,7 +55,8 @@ class DefaultThrottleHandler(ThrottleInterface, ABC):
             The throttlescope enum
         """
         scope = DefaultThrottleHandler.__throttle_scopes[
-            ctx.command.cooldown_scope]
+            ctx.command.cooldown_scope
+        ]
 
         if not scope:
             return None
@@ -67,8 +70,9 @@ class DefaultThrottleHandler(ThrottleInterface, ABC):
 
     @staticmethod
     def init_throttler(ctx: MessageContext, throttle_key: Optional[int]):
-        DefaultThrottleHandler.throttle[ctx.command.call][throttle_key] \
-            = SlidingWindow(ctx.command.cooldown, ctx.command.cooldown_scale)
+        DefaultThrottleHandler.throttle[ctx.command.call][
+            throttle_key
+        ] = SlidingWindow(ctx.command.cooldown, ctx.command.cooldown_scale)
 
     @staticmethod
     def handle(ctx: MessageContext, **kwargs):
@@ -82,8 +86,7 @@ class DefaultThrottleHandler(ThrottleInterface, ABC):
         if window_slider:
             if not window_slider.allow():
                 raise CommandCooldownError(
-                    f"Cooldown for command {ctx.command.app.name} not met!",
-                    ctx
+                    f"Cooldown for command {ctx.command.app.name} not met!", ctx
                 )
         else:
             DefaultThrottleHandler.init_throttler(ctx, throttle_key)

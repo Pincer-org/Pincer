@@ -17,7 +17,6 @@ if TYPE_CHECKING:
     from ...utils.timestamp import Timestamp
 
 
-@dataclass
 class GuildTemplate(APIObject):
     """Represents a code that when used,
     creates a guild based on a snapshot of an existing guild.
@@ -47,6 +46,7 @@ class GuildTemplate(APIObject):
     is_dirty: Optional[:class:`bool`]
         whether the template has unsynced changes
     """
+
     code: str
     name: str
     description: Optional[str]

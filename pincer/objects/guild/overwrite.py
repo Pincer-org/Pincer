@@ -12,7 +12,6 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
 class Overwrite(APIObject):
     """Represents a Discord Overwrite object
 
@@ -27,6 +26,7 @@ class Overwrite(APIObject):
     deny: :class:`str`
         Permission bit set
     """
+
     id: Snowflake
     type: int
     allow: str

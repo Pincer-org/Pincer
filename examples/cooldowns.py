@@ -51,25 +51,27 @@ class Bot(Client):
     @command(
         # We don't want to send too many requests to our `MEME_URL` so
         # lets use cooldowns!
-
         # Only allow one request
         cooldown=1,
         # For every three seconds
         cooldown_scale=3,
-
         # And just to make things more clear for our user on what this
         # command does, lets define a description!
-        description="Get a random meme!"
+        description="Get a random meme!",
     )
     async def meme(self):
         # Fetch our caption and image from our `MEME_URL`.
         caption, image = await self.get_meme()
 
         # Respond with an embed which contains the meme and caption!
-        return Embed(caption, color=self.random_color()) \
-            .set_image(image) \
-            .set_footer("Provided by some-random-api.ml",
-                        "https://i.some-random-api.ml/logo.png")
+        return (
+            Embed(caption, color=self.random_color())
+            .set_image(image)
+            .set_footer(
+                "Provided by some-random-api.ml",
+                "https://i.some-random-api.ml/logo.png",
+            )
+        )
 
     @Client.event
     async def on_command_error(self, ctx: MessageContext, error: Exception):
@@ -86,10 +88,10 @@ class Bot(Client):
                         f"The `{ctx.command.app.name}` command can only be used"
                         f" `{ctx.command.cooldown}` time*(s)* every "
                         f"`{ctx.command.cooldown_scale}` second*(s)*!",
-                        self.random_color()
+                        self.random_color(),
                     )
                 ],
-                flags=InteractionFlags.EPHEMERAL
+                flags=InteractionFlags.EPHEMERAL,
             )
 
         # Oh no, it wasn't a cooldown error. Lets throw it!

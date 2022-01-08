@@ -4,15 +4,16 @@ from pincer import __version__
 
 
 def get_packages():
-    return '\n\t'.join(
+    return "\n\t".join(
         item[0].replace("./", "").replace("\\", ".").replace("/", ".")
-        for item in list(walk('pincer')) if "__pycache__" not in item[0]
+        for item in list(walk("pincer"))
+        if "__pycache__" not in item[0]
     )
 
 
 def get_dependencies(path: str) -> str:
     with open(path) as f:
-        return '\n\t'.join(f.read().strip().splitlines())
+        return "\n\t".join(f.read().strip().splitlines())
 
 
 def main():
@@ -28,18 +29,14 @@ def main():
         "requires": get_dependencies("requirements.txt"),
         "testing_requires": get_dependencies("packages/dev.txt"),
         "images_requires": get_dependencies("packages/img.txt"),
-        "speed_requires": get_dependencies("packages/speed.txt")
+        "speed_requires": get_dependencies("packages/speed.txt"),
     }
 
     with open("setup.cfg", "w") as f:
         f.write(
-            base.format(
-                version=__version__,
-                packages=packages,
-                **dependencies
-            )
+            base.format(version=__version__, packages=packages, **dependencies)
         )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

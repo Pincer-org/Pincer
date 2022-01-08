@@ -28,7 +28,6 @@ except (ModuleNotFoundError, ImportError):
     PILLOW_IMPORT = False
 
 
-@dataclass
 class File(APIObject):
     """A file that is prepared by the user to be send to the discord
     API.
@@ -63,17 +62,16 @@ class File(APIObject):
             file = data.read()
 
         return cls(
-            content=file,
-            filename=filename or os.path.basename(filepath)
+            content=file, filename=filename or os.path.basename(filepath)
         )
 
     @classmethod
     def from_pillow_image(
-            cls,
-            img: IMAGE_TYPE,
-            filename: str,
-            image_format: Optional[str] = None,
-            **kwargs
+        cls,
+        img: IMAGE_TYPE,
+        filename: str,
+        image_format: Optional[str] = None,
+        **kwargs,
     ) -> File:
         """Creates a file object from a PIL image
         Supports GIF, PNG, JPEG, and WEBP.
@@ -117,7 +115,4 @@ class File(APIObject):
         img.save(img_byte_arr, format=image_format)
         img_bytes = img_byte_arr.getvalue()
 
-        return cls(
-            content=img_bytes,
-            filename=filename
-        )
+        return cls(content=img_bytes, filename=filename)

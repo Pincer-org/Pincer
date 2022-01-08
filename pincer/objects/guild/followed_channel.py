@@ -12,7 +12,6 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
 class FollowedChannel(APIObject):
     """Represents a Discord Followed Channel object
 
@@ -23,5 +22,6 @@ class FollowedChannel(APIObject):
     webhook_id: :class:`~pincer.utils.snowflake.Snowflake`
         Created target webhook id
     """
+
     channel_id: Snowflake
     webhook_id: Snowflake

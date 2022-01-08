@@ -10,7 +10,6 @@ from typing import List
 from ...utils.api_object import APIObject
 
 
-@dataclass
 class AvailableDevices(APIObject):
     """
     Represents an available device for voice settings
@@ -28,7 +27,6 @@ class AvailableDevices(APIObject):
     name: str
 
 
-@dataclass
 class VoiceSettingsInput(APIObject):
     """
     Represents a voice setting input object
@@ -50,7 +48,6 @@ class VoiceSettingsInput(APIObject):
     available_devices: List[AvailableDevices]
 
 
-@dataclass
 class VoiceSettingsOutput(APIObject):
     """
     Represents a voice setting output object
@@ -88,7 +85,6 @@ class KeyTypes(IntEnum):
     GAMEPAD_BUTTON = 3
 
 
-@dataclass
 class ShortcutKeyCombo(APIObject):
     """
     Represents a shortcut key combo for the voice mode settings from a user
@@ -110,7 +106,6 @@ class ShortcutKeyCombo(APIObject):
     name: str
 
 
-@dataclass
 class VoiceSettingsMode(APIObject):
     """
     Represents the voice mode settings from a user
@@ -140,7 +135,6 @@ class VoiceSettingsMode(APIObject):
     delay: float
 
 
-@dataclass
 class VoiceSettingsUpdateEvent(APIObject):
     """
     Represents a user's voice settings

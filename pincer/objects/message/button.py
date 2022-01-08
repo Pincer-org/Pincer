@@ -37,6 +37,7 @@ class ButtonStyle(IntEnum):
         - color: gray, navigates to a URL
         - required_field: url
     """
+
     PRIMARY = 1
     SECONDARY = 2
     SUCCESS = 3
@@ -44,7 +45,6 @@ class ButtonStyle(IntEnum):
     LINK = 5
 
 
-@dataclass
 class Button(APIObject):
     """Represents a Discord Button object.
     Buttons are interactive components that render on messages.
@@ -70,6 +70,7 @@ class Button(APIObject):
     disabled: APINullable[:class:`bool`]
         Whether the button is disabled (default `False`)
     """
+
     type: int
     style: ButtonStyle
 

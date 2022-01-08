@@ -16,8 +16,7 @@ if TYPE_CHECKING:
 
 
 async def on_message_delete_middleware(
-    self,
-    payload: GatewayDispatch
+    self, payload: GatewayDispatch
 ) -> Tuple[str, List[MessageDeleteEvent]]:
     """|coro|
     Middleware for ``on_message_delete`` event.

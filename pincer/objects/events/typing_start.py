@@ -14,7 +14,6 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
 class TypingStartEvent(APIObject):
     """Sent when a user starts typing in a channel.
 
@@ -31,6 +30,7 @@ class TypingStartEvent(APIObject):
     member: APINullable[:class:`~pincer.objects.guild.member.GuildMember`]
         The member who started typing if this happened in a guild
     """
+
     channel_id: Snowflake
     user_id: Snowflake
     timestamp: int

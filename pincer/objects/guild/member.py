@@ -19,7 +19,6 @@ if TYPE_CHECKING:
     from ...utils.types import APINullable
 
 
-@dataclass
 class BaseMember(APIObject):
     """Represents the base of a guild member.
 
@@ -36,6 +35,7 @@ class BaseMember(APIObject):
     hoisted_role: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The user's top role in the guild.
     """
+
     deaf: bool
     joined_at: Timestamp
     mute: bool
@@ -44,7 +44,6 @@ class BaseMember(APIObject):
     hoisted_role: APINullable[Snowflake] = MISSING
 
 
-@dataclass
 class PartialGuildMember(APIObject):
     """Represents a partial guild member.
     This is a reference to a member from a guild which does not contain
@@ -67,6 +66,7 @@ class PartialGuildMember(APIObject):
     member: :class:`~pincer.objects.guild.member.BaseMember`
         The user their (partial) guild information.
     """
+
     id: Snowflake
     username: str
     discriminator: str
@@ -75,7 +75,6 @@ class PartialGuildMember(APIObject):
     member: Optional[BaseMember]
 
 
-@dataclass
 class GuildMember(BaseMember, APIObject):
     """Represents a member which resides in a guild/server.
 
@@ -109,10 +108,7 @@ class GuildMember(BaseMember, APIObject):
 
     @classmethod
     async def from_id(
-            cls,
-            client: Client,
-            guild_id: int,
-            _id: int
+        cls, client: Client, guild_id: int, _id: int
     ) -> GuildMember:
         data = await client.http.get(f"guilds/{guild_id}/members/{_id}")
         return cls.from_dict({**data, "_client": client, "_http": client.http})

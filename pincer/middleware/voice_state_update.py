@@ -19,8 +19,7 @@ if TYPE_CHECKING:
 
 
 async def voice_state_update_middleware(
-    self,
-    payload: GatewayDispatch
+    self, payload: GatewayDispatch
 ) -> Tuple[str, List[VoiceState]]:
     """|coro|
     Middleware for ``on_voice_state_update`` event.

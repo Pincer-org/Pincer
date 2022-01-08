@@ -23,7 +23,9 @@ async def guild_delete_middleware(self, payload: GatewayDispatch):
     Tuple[:class:`str`, List[:class:`~pincer.objects.guild.guild.UnavailableGuild`]]
         ``on_guild_delete`` and an ``UnavailableGuild``
     """
-    guild = UnavailableGuild.from_dict(construct_client_dict(self, payload.data))
+    guild = UnavailableGuild.from_dict(
+        construct_client_dict(self, payload.data)
+    )
 
     if guild.id in self.guilds.key():
         self.guilds.pop(guild.id)

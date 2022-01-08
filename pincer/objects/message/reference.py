@@ -14,7 +14,6 @@ if TYPE_CHECKING:
     from ...utils.snowflake import Snowflake
 
 
-@dataclass
 class MessageReference(APIObject):
     """Represents a Discord Message Reference object
 
@@ -31,6 +30,7 @@ class MessageReference(APIObject):
         exist instead of sending as a normal (non-reply) message,
         default true
     """
+
     message_id: APINullable[Snowflake] = MISSING
     channel_id: APINullable[Snowflake] = MISSING
     guild_id: APINullable[Snowflake] = MISSING

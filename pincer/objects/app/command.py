@@ -18,7 +18,6 @@ if TYPE_CHECKING:
     from ..app.throttle_scope import ThrottleScope
 
 
-@dataclass
 class AppCommandInteractionDataOption(APIObject):
     """Represents a Discord Application Command Interaction Data Option
 
@@ -33,15 +32,14 @@ class AppCommandInteractionDataOption(APIObject):
     options: APINullable[List[:data:`~pincer.objects.app.command.AppCommandInteractionDataOption`]]
         Present if this option is a group or subcommand
     """
+
     # noqa: E501
     name: str
     value: APINullable[str] = MISSING
     type: APINullable[AppCommandOptionType] = MISSING
-    options: APINullable[
-        List[AppCommandInteractionDataOption]] = MISSING
+    options: APINullable[List[AppCommandInteractionDataOption]] = MISSING
 
 
-@dataclass
 class AppCommandOptionChoice(APIObject):
     """Represents a Discord Application Command Option Choice object
 
@@ -52,11 +50,11 @@ class AppCommandOptionChoice(APIObject):
     value: Union[:data:`~pincer.utils.types.choice_value_types`]
         Value of the choice, up to 100 characters if string
     """
+
     name: str
     value: choice_value_types
 
 
-@dataclass
 class AppCommandOption(APIObject):
     """Represents a Discord Application Command Option object
 
@@ -77,6 +75,7 @@ class AppCommandOption(APIObject):
         If the option is a subcommand or subcommand group type,
         this nested options will be the parameters
     """
+
     # noqa: E501
     type: AppCommandOptionType
     name: str
@@ -91,16 +90,13 @@ class AppCommandOption(APIObject):
         self.choices = convert(
             self.choices,
             AppCommandOptionChoice.from_dict,
-            AppCommandOptionChoice
+            AppCommandOptionChoice,
         )
         self.options = convert(
-            self.options,
-            AppCommandOption.from_dict,
-            AppCommandOption
+            self.options, AppCommandOption.from_dict, AppCommandOption
         )
 
 
-@dataclass
 class AppCommand(APIObject):
     """Represents a Discord Application Command object
 
@@ -128,6 +124,7 @@ class AppCommand(APIObject):
         Whether the command is enabled by default
         when the app is added to a guild
     """
+
     # noqa: E501
     type: AppCommandType
     name: str
@@ -143,8 +140,12 @@ class AppCommand(APIObject):
     dm_permission: APINullable[None] = None
 
     _eq_props = [
-        "type", "name", "description", "guild_id", "default_permission",
-        "options"
+        "type",
+        "name",
+        "description",
+        "guild_id",
+        "default_permission",
+        "options",
     ]
 
     def __post_init__(self):
@@ -156,9 +157,7 @@ class AppCommand(APIObject):
         )
 
         self.options = convert(
-            self.options,
-            AppCommandOption.from_dict,
-            AppCommandOption
+            self.options, AppCommandOption.from_dict, AppCommandOption
         )
         self.guild_id = convert(self.guild_id, Snowflake.from_string)
 
@@ -209,6 +208,7 @@ class ClientCommandStructure:
     cooldown_scope: :class:`~pincer.objects.app.throttle_scope.ThrottleScope`
         The type of cooldown
     """
+
     app: AppCommand
     call: Coro
     cooldown: int

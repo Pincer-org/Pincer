@@ -28,11 +28,11 @@ class GatewayDispatch:
     """
 
     def __init__(
-            self,
-            op: int,
-            data: Optional[Union[int, Dict[str, Any]]],
-            seq: Optional[int] = None,
-            name: Optional[str] = None
+        self,
+        op: int,
+        data: Optional[Union[int, Dict[str, Any]]],
+        seq: Optional[int] = None,
+        name: Optional[str] = None,
     ):
         self.op: int = op
         self.data: Optional[Union[int, Dict[str, Any]]] = data
@@ -41,12 +41,7 @@ class GatewayDispatch:
 
     def __str__(self) -> str:
         return dumps(
-            dict(
-                op=self.op,
-                d=self.data,
-                s=self.seq,
-                t=self.event_name
-            )
+            dict(op=self.op, d=self.data, s=self.seq, t=self.event_name)
         )
 
     @classmethod
@@ -69,5 +64,5 @@ class GatewayDispatch:
             payload.get("op"),
             payload.get("d"),
             payload.get("s"),
-            payload.get("t")
+            payload.get("t"),
         )

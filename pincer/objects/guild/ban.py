@@ -12,7 +12,6 @@ if TYPE_CHECKING:
     from ..user.user import User
 
 
-@dataclass
 class Ban(APIObject):
     """Representation of the Discord Ban object
 
@@ -23,5 +22,6 @@ class Ban(APIObject):
     user: :class:`~pincer.objects.user.user.User`
         The banned user
     """
+
     reason: Optional[str]
     user: User

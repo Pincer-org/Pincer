@@ -22,6 +22,7 @@ class AppCommandType(IntEnum):
         A UI-based command that shows up when you right click or tap on
         a message
     """
+
     CHAT_INPUT = 1
     USER = 2
     MESSAGE = 3
@@ -63,6 +64,7 @@ class AppCommandOptionType(IntEnum):
     NUMBER:
         The parameter will be a float. (-2^53 and 2^53)
     """
+
     SUB_COMMAND = 1
     SUB_COMMAND_GROUP = 2
     STRING = 3

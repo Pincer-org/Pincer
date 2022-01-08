@@ -26,13 +26,17 @@ async def thread_member_update_middleware(self, payload: GatewayDispatch):
     """
 
     return "on_thread_member_update", [
-        ThreadMember.from_dict(construct_client_dict(
-            self,
-            {
-                "join_timestamp": Timestamp(payload.data.pop("join_timestamp")),
-                **payload.data
-            }
-        ))
+        ThreadMember.from_dict(
+            construct_client_dict(
+                self,
+                {
+                    "join_timestamp": Timestamp(
+                        payload.data.pop("join_timestamp")
+                    ),
+                    **payload.data,
+                },
+            )
+        )
     ]
 
 

@@ -18,7 +18,6 @@ if TYPE_CHECKING:
     from ...utils.types import APINullable
 
 
-@dataclass
 class MessageComponent(APIObject):
     """Represents a Discord Message Component object
 
@@ -54,6 +53,7 @@ class MessageComponent(APIObject):
     components: APINullable[List[:class:`~pincer.objects.message.component.MessageComponent`]]
         A list of child components
     """
+
     # noqa: E501
     type: int
     options: List[SelectOption]
