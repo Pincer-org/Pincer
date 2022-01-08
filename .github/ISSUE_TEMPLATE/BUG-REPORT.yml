@@ -23,8 +23,8 @@ body:
   - type: textarea
     id: terminal
     attributes:
-      label: Relevant console output
-      description: Paste the console output that is relevant to the error
+      label: Relavant console output
+      description: Paste the console output that is relavant to the error
   - type: input
     id: version
     attributes:
