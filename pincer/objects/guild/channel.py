@@ -529,7 +529,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         resp = await self._http.post(
             f"channels/{self.id}/messages", data, content_type=content_type
         )
-        msg = UserMessage.from_dict(resp)
+        msg = UserMessage.from_dict(construct_client_dict(self._client, resp))
         self.__post_sent(msg)
         return msg
 
