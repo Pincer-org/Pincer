@@ -3,7 +3,7 @@
 
 from .api_object import APIObject, HTTPMeta, ChannelProperty, GuildProperty
 from .color import Color
-from .conversion import construct_client_dict
+from .conversion import construct_client_dict, remove_none
 from .directory import chdir
 from .event_mgr import EventMgr
 from .extraction import get_index
@@ -22,6 +22,6 @@ __all__ = (
     "Color", "Coro", "EventMgr", "GuildProperty", "HTTPMeta", "MISSING",
     "MissingType", "Snowflake", "Task", "TaskScheduler", "Timestamp", "chdir",
     "choice_value_types", "construct_client_dict", "get_index", "get_params",
-    "get_signature_and_params", "replace", "should_pass_cls",
+    "get_signature_and_params", "remove_none", "replace", "should_pass_cls",
     "should_pass_ctx"
 )
