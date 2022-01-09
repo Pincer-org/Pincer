@@ -47,6 +47,7 @@ from .objects import (
     File
 )
 from .objects.guild.channel import GroupDMChannel
+from .utils import APIObject
 from .utils.conversion import construct_client_dict, remove_none
 from .utils.event_mgr import EventMgr
 from .utils.extraction import get_index
@@ -209,6 +210,8 @@ class Client:
         self.bot: Optional[User] = None
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
+        APIObject.link(self)
+
         self.throttler = throttler
         self.event_mgr = EventMgr()
 

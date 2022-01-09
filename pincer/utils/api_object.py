@@ -10,7 +10,7 @@ from enum import Enum, EnumMeta
 from inspect import getfullargspec
 from typing import (
     Dict, Tuple, Union, Generic, TypeVar, Any, TYPE_CHECKING,
-    List, get_type_hints, get_origin, get_args
+    List, get_type_hints, get_origin, get_args, Optional
 )
 
 from .conversion import construct_client_dict
@@ -18,6 +18,7 @@ from .types import MissingType, MISSING, TypeCache
 from ..exceptions import InvalidArgumentAnnotation
 
 if TYPE_CHECKING:
+    from ..core import HTTPClient
     from ..objects.guild.channel import Channel
     from ..objects.guild.guild import Guild
     from ..client import Client
@@ -109,7 +110,24 @@ class APIObject(metaclass=HTTPMeta):
     """
     Represents an object which has been fetched from the Discord API.
     """
-    _client: Client
+    _client: Optional[Client] = None
+
+    # DO NOT TYPE WITH `Optional[HTTPClient]`, THIS WILL BREAK EVERYTHING.
+    _http = None
+
+    @classmethod
+    def link(cls, client: Client):
+        """
+        Links the object to the client.
+
+        Parameters
+        ----------
+
+        client: Client
+            The client to link to.
+        """
+        cls._client = client
+        cls._http = client.http
 
     def __get_types(self, attr: str, arg_type: type) -> Tuple[type]:
         """Get the types from type annotations.
@@ -184,7 +202,6 @@ class APIObject(metaclass=HTTPMeta):
         return factory(attr_value)
 
     def __post_init__(self):
-        self._http = getattr(self._client, "http", None)
         TypeCache()
 
         # Get all type annotations for the attributes.
