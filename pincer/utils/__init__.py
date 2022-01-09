@@ -3,7 +3,7 @@
 
 from .api_object import APIObject, HTTPMeta, ChannelProperty, GuildProperty
 from .color import Color
-from .conversion import construct_client_dict, remove_none
+from .conversion import remove_none
 from .directory import chdir
 from .event_mgr import EventMgr
 from .extraction import get_index
