@@ -132,8 +132,6 @@ class GuildMemberRemoveEvent(APIObject, GuildProperty):
     user: User
 
     def __post_init__(self):
-        # NOTE: Idk if this works, but I got a type Error otherwise
-        # TODO: Test this
         self.user = User.from_dict({**self.user})
 
 
@@ -219,7 +217,6 @@ class GuildMembersChunkEvent(APIObject, GuildProperty):
 
     def __post_init__(self):
         self.members = [
-            # TODO: Test this
             GuildMember.from_dict({**member})
             for member in self.members
         ]
