@@ -10,7 +10,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.error import DiscordError
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -45,7 +44,7 @@ def error_middleware(
 
     return (
         "on_error",
-        DiscordError.from_dict(construct_client_dict(self, payload.data)),
+        DiscordError.from_dict(payload.data)
     )
 
 

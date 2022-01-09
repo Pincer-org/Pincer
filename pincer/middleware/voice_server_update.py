@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.voice import VoiceServerUpdateEvent
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -40,9 +39,7 @@ async def voice_server_update_middleware(
     """  # noqa: E501
     return (
         "on_voice_server_update",
-        VoiceServerUpdateEvent.from_dict(
-            construct_client_dict(self, payload.data)
-        ),
+        VoiceServerUpdateEvent.from_dict(payload.data)
     )
 
 

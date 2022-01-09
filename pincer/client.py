@@ -48,7 +48,7 @@ from .objects import (
 )
 from .objects.guild.channel import GroupDMChannel
 from .utils import APIObject
-from .utils.conversion import construct_client_dict, remove_none
+from .utils.conversion import remove_none
 from .utils.event_mgr import EventMgr
 from .utils.extraction import get_index
 from .utils.insertion import should_pass_cls, should_pass_gateway
@@ -791,9 +791,7 @@ class Client:
             The guild template
         """
         return GuildTemplate.from_dict(
-            construct_client_dict(
-                self, await self.http.get(f"guilds/templates/{code}")
-            )
+            await self.http.get(f"guilds/templates/{code}")
         )
 
     async def create_guild_from_template(
@@ -817,12 +815,9 @@ class Client:
             The created guild
         """
         return Guild.from_dict(
-            construct_client_dict(
-                self,
-                await self.http.post(
-                    f"guilds/templates/{template.code}",
-                    data={"name": name, "icon": icon},
-                ),
+            await self.http.post(
+                f"guilds/templates/{template.code}",
+                data={"name": name, "icon": icon},
             )
         )
 
@@ -1008,12 +1003,7 @@ class Client:
         -------
         :class:`~pincer.objects.user.user.User`
         """
-        return User.from_dict(
-            construct_client_dict(
-                self,
-                await self.http.get("users/@me")
-            )
-        )
+        return User.from_dict(await self.http.get("users/@me"))
 
     async def modify_current_user(
         self, username: Optional[str] = None, avatar: Optional[File] = None
@@ -1043,7 +1033,7 @@ class Client:
         user = await self.http.patch(
             "users/@me", remove_none({"username": username, "avatar": avatar})
         )
-        return User.from_dict(construct_client_dict(self, user))
+        return User.from_dict(user)
 
     async def get_current_user_guilds(
         self,
@@ -1077,7 +1067,7 @@ class Client:
         )
 
         for guild in guilds:
-            yield Guild.from_dict(construct_client_dict(self, guild))
+            yield Guild.from_dict(guild)
 
     async def leave_guild(self, _id: Snowflake):
         """|coro|
@@ -1117,7 +1107,7 @@ class Client:
             {"access_tokens": access_tokens, "nicks": nicks},
         )
 
-        return GroupDMChannel.from_dict(construct_client_dict(self, channel))
+        return GroupDMChannel.from_dict(channel)
 
     async def get_connections(self) -> AsyncIterator[Connection]:
         """|coro|

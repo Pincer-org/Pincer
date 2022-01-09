@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects import Channel
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -38,7 +37,7 @@ async def channel_delete_middleware(
         ``on_channel_delete`` and a ``Channel``
     """
 
-    channel = Channel.from_dict(construct_client_dict(self, payload.data))
+    channel = Channel.from_dict(payload.data)
 
     guild = self.guilds.get(channel.guild_id)
     if guild:

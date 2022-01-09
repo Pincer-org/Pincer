@@ -21,7 +21,6 @@ from ..guild.role import Role
 from ..user.user import User
 from ..._config import GatewayConfig
 from ...utils.api_object import APIObject, GuildProperty, ChannelProperty
-from ...utils.conversion import construct_client_dict
 from ...utils.snowflake import Snowflake
 from ...utils.types import MISSING, JSONSerializable
 
@@ -386,7 +385,7 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
             The message object.
         """
         msg = await client.http.get(f"channels/{channel_id}/messages/{_id}")
-        return cls.from_dict(construct_client_dict(client, msg))
+        return cls.from_dict(msg)
 
     def __str__(self):
         return self.content
@@ -400,11 +399,8 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
         """
 
         return self.from_dict(
-            construct_client_dict(
-                self._client,
-                await self._http.get(
-                    f"/channels/{self.channel_id}/messages/{self.id}"
-                ),
+            await self._http.get(
+                f"/channels/{self.channel_id}/messages/{self.id}"
             )
         )
 

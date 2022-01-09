@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.invite import InviteDeleteEvent
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -40,7 +39,7 @@ async def invite_delete_middleware(
     """
     return (
         "on_invite_delete",
-        InviteDeleteEvent.from_dict(construct_client_dict(self, payload.data)),
+        InviteDeleteEvent.from_dict(payload.data)
     )
 
 

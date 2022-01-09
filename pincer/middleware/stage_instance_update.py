@@ -8,7 +8,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects import StageInstance
-from ..utils import Coro, replace, construct_client_dict
+from ..utils import Coro, replace
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -38,7 +38,7 @@ async def stage_instance_update_middleware(
         ``on_stage_instance_update`` and a ``StageInstance``
     """
 
-    stage = StageInstance.from_dict(construct_client_dict(self, payload.data))
+    stage = StageInstance.from_dict(payload.data)
 
     guild = self.guilds.get(stage.guild_id)
     if guild:

@@ -14,7 +14,6 @@ from ..exceptions import InteractionDoesNotExist
 from ..objects import Interaction, MessageContext, AppCommandType, InteractionType
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 from ..utils import get_index
-from ..utils.conversion import construct_client_dict
 from ..utils.signature import get_signature_and_params
 
 if TYPE_CHECKING:
@@ -232,9 +231,7 @@ async def interaction_create_middleware(
     Tuple[:class:`str`, :class:`~pincer.objects.app.interactions.Interaction`]
         ``on_interaction_create`` and an ``Interaction``
     """
-    interaction: Interaction = Interaction.from_dict(
-        construct_client_dict(self, payload.data)
-    )
+    interaction: Interaction = Interaction.from_dict(payload.data)
 
     call = get_call(self, interaction)
     context = interaction.get_message_context()

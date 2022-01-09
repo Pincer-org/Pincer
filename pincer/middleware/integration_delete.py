@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.integration import IntegrationDeleteEvent
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -40,9 +39,7 @@ async def integration_delete_middleware(
     """  # noqa: E501
     return (
         "on_integration_delete",
-        IntegrationDeleteEvent.from_dict(
-            construct_client_dict(self, payload.data)
-        ),
+        IntegrationDeleteEvent.from_dict(payload.data)
     )
 
 

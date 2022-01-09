@@ -11,7 +11,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.activity import ActivitySpectateEvent
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -41,9 +40,7 @@ async def activity_spectate_middleware(
     Tuple[:class:`str`, :class:`~pincer.objects.event.activity.ActivitySpectateEvent`]
         ``on_activity_spectate`` and an ``ActivitySpectateEvent``
     """  # noqa: E501
-    return "on_activity_spectate", ActivitySpectateEvent.from_dict(
-        construct_client_dict(self, payload.data)
-    )
+    return "on_activity_spectate", ActivitySpectateEvent.from_dict(payload.data)
 
 
 def export() -> Coro:

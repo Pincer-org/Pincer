@@ -10,7 +10,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.user.voice_state import VoiceState
-from ..utils import construct_client_dict
 
 if TYPE_CHECKING:
     from typing import List, Tuple
@@ -39,10 +38,7 @@ async def voice_state_update_middleware(
         ``on_voice_state_update`` and a ``VoiceState``
     """  # noqa: E501
 
-    voice_state = VoiceState.from_dict(
-        construct_client_dict(self, payload.data)
-    )
-
+    voice_state = VoiceState.from_dict(payload.data)
     guild = self.guilds.get(voice_state.guild_id)
 
     if guild:

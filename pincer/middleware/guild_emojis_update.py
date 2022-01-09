@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 
 from ..objects.events.guild import GuildEmojisUpdateEvent
 from ..utils import Coro
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -39,11 +38,9 @@ async def guild_emojis_update_middleware(
         ``on_guild_emoji_update`` and a ``GuildEmojisUpdateEvent``
     """  # noqa: E501
 
-    event = GuildEmojisUpdateEvent.from_dict(
-        construct_client_dict(self, payload.data)
-    )
-
+    event = GuildEmojisUpdateEvent.from_dict(payload.data)
     guild = self.guild.get(event.guild_id)
+
     if guild:
         guild.emojis = event.emojis
 

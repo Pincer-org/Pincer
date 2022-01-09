@@ -11,7 +11,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.notification import NotificationCreateEvent
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -45,9 +44,7 @@ async def notification_create_middleware(
     payload.data["message"]["channel_id"] = channel_id
     return (
         "on_notification_create",
-        NotificationCreateEvent.from_dict(
-            construct_client_dict(self, payload.data)
-        ),
+        NotificationCreateEvent.from_dict(payload.data)
     )
 
 

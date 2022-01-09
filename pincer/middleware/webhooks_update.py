@@ -11,7 +11,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.webhook import WebhooksUpdateEvent
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -42,7 +41,7 @@ async def webhooks_update_middleware(
     """  # noqa: E501
     return (
         "on_webhooks_update",
-        WebhooksUpdateEvent.from_dict(construct_client_dict(self, payload.data)),
+        WebhooksUpdateEvent.from_dict(payload.data)
     )
 
 

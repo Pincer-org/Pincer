@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 
 from ..objects import Emoji
 from ..objects.events.message import MessageReactionRemoveEvent
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -42,16 +41,11 @@ async def message_reaction_remove_middleware(
     return (
         "on_message_reaction_remove",
         MessageReactionRemoveEvent.from_dict(
-            construct_client_dict(
-                self,
-                {
-                    "emoji": Emoji.from_dict(
-                        construct_client_dict(self, payload.data.pop("emoji"))
-                    ),
-                    **payload.data,
-                },
-            )
-        ),
+            {
+                "emoji": Emoji.from_dict(payload.data.pop("emoji")),
+                **payload.data,
+            }
+        )
     )
 
 

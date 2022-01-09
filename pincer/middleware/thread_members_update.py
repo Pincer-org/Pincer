@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.thread import ThreadMembersUpdateEvent
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -39,9 +38,7 @@ async def thread_members_update_middleware(
     """  # noqa: E501
     return (
         "on_thread_members_update",
-        ThreadMembersUpdateEvent.from_dict(
-            construct_client_dict(self, payload.data)
-        ),
+        ThreadMembersUpdateEvent.from_dict(payload.data)
     )
 
 

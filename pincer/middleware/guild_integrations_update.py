@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 
 from ..objects.events.guild import GuildIntegrationsUpdateEvent
 from ..utils import Coro
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -41,9 +40,7 @@ async def guild_integrations_update_middleware(
 
     return (
         "on_guild_integrations_update",
-        GuildIntegrationsUpdateEvent.from_dict(
-            construct_client_dict(self, payload.data)
-        ),
+        GuildIntegrationsUpdateEvent.from_dict(payload.data)
     )
 
 

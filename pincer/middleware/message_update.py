@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects import UserMessage
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from typing import Tuple
@@ -41,7 +40,7 @@ async def message_update_middleware(
     """  # noqa: E501
     return (
         "on_message_update",
-        UserMessage.from_dict(construct_client_dict(self, payload.data)),
+        UserMessage.from_dict(payload.data)
     )
 
 

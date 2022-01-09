@@ -12,7 +12,6 @@ from typing import TYPE_CHECKING
 
 from ..objects.events.guild import GuildMembersChunkEvent
 from ..utils import Coro
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -44,9 +43,7 @@ async def guild_member_chunk_middleware(
 
     return (
         "on_guild_member_chunk",
-        GuildMembersChunkEvent.from_dict(
-            construct_client_dict(self, payload.data)
-        ),
+        GuildMembersChunkEvent.from_dict(payload.data)
     )
 
 

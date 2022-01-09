@@ -13,7 +13,6 @@ from typing import (
     List, get_type_hints, get_origin, get_args, Optional
 )
 
-from .conversion import construct_client_dict
 from .types import MissingType, MISSING, TypeCache
 from ..exceptions import InvalidArgumentAnnotation
 
@@ -197,7 +196,7 @@ class APIObject(metaclass=HTTPMeta):
             return attr_value
 
         if isinstance(attr_value, dict):
-            return factory(construct_client_dict(self._client, attr_value))
+            return factory(attr_value)
 
         return factory(attr_value)
 

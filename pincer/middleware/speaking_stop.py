@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.voice import SpeakingStopEvent
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -40,7 +39,7 @@ async def speaking_stop_middleware(
     """
     return (
         "on_speaking_stop",
-        SpeakingStopEvent.from_dict(construct_client_dict(self, payload.data)),
+        SpeakingStopEvent.from_dict(payload.data)
     )
 
 

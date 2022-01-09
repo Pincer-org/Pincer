@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING, overload
 
 from ...exceptions import EmbedOverflow
 from ...utils.api_object import APIObject
-from ...utils.conversion import construct_client_dict
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
@@ -145,9 +144,7 @@ class Webhook(APIObject):
             request_route,
             data=request_data
         )
-        return Webhook.from_dict(
-            construct_client_dict(self._client, data)
-        )
+        return Webhook.from_dict(data)
 
     async def delete(self, token: Optional[str] = None):
         """
@@ -320,12 +317,9 @@ class Webhook(APIObject):
             The message
         """
         return UserMessage.from_dict(
-            construct_client_dict(
-                self._client,
-                await self._http.get(
-                    f"webhooks/{self.id}/{self.token}/messages/{message_id}",
-                    params={"thread_id": thread_id}
-                )
+            await self._http.get(
+                f"webhooks/{self.id}/{self.token}/messages/{message_id}",
+                params={"thread_id": thread_id}
             )
         )
 
@@ -406,9 +400,7 @@ class Webhook(APIObject):
             + (f"?{thread_id=}" if thread_id else ""),
             data=kwargs
         )
-        return UserMessage.from_dict(
-            construct_client_dict(self._client, data)
-        )
+        return UserMessage.from_dict(data)
 
     @classmethod
     async def from_id(
@@ -435,11 +427,8 @@ class Webhook(APIObject):
             The webhook with the given ID.
         """
         return cls.from_dict(
-            construct_client_dict(
-                client,
-                await client.http.get(
-                    f"webhooks/{id}"
-                    + (f"/{token}" if token else "")
-                )
+            await client.http.get(
+                f"webhooks/{id}"
+                + (f"/{token}" if token else "")
             )
         )

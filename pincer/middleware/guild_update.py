@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects import Guild
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -38,7 +37,7 @@ async def guild_update_middleware(
         ``on_guild_Update`` and an ``Guild``
     """
 
-    guild = Guild.from_dict(construct_client_dict(self, payload.data))
+    guild = Guild.from_dict(payload.data)
     self.guilds[guild.id] = guild
 
     for channel in guild.channels:

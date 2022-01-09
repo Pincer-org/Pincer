@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.guild import GuildStatusEvent
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -40,7 +39,7 @@ async def guild_status_middleware(
     """
     return (
         "on_guild_status",
-        GuildStatusEvent.from_dict(construct_client_dict(self, payload.data)),
+        GuildStatusEvent.from_dict(payload.data)
     )
 
 

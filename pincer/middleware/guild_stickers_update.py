@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 
 from ..objects.events.guild import GuildStickersUpdateEvent
 from ..utils import Coro
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -39,10 +38,7 @@ async def guild_stickers_update_middleware(
         ``on_guild_sticker_update`` and a ``GuildStickersUpdateEvent``
     """  # noqa: E501
 
-    event = GuildStickersUpdateEvent.from_dict(
-        construct_client_dict(self, payload.data)
-    )
-
+    event = GuildStickersUpdateEvent.from_dict(payload.data)
     guild = self.guilds.get(event.guild_id)
 
     if guild:

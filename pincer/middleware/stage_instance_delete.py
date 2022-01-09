@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects import StageInstance
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -39,7 +38,7 @@ async def stage_instance_delete_middleware(
         ``on_stage_instance_delete`` and a ``StageInstance``
     """
 
-    stage = StageInstance.from_dict(construct_client_dict(self, payload.data))
+    stage = StageInstance.from_dict(payload.data)
 
     guild = self.guilds.get(stage.guild_id)
     if guild:
