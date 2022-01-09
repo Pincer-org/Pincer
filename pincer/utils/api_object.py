@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import copy
 import logging
-from dataclasses import dataclass, fields, _is_dataclass_instance
+from dataclasses import fields, _is_dataclass_instance
 from enum import Enum, EnumMeta
 from inspect import getfullargspec
 from itertools import chain
@@ -85,47 +85,27 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
         return copy.deepcopy(obj)
 
 
-class HTTPMeta(type):
-    __meta_items: List[str] = ["_client", "_http"]
-    __ori_annotations: Dict[str, type] = {}
-
-    def __new__(mcs, name, base, mapping):
-        # Iterates through the meta items, these are keys whom should
-        # be added to every object. But to keep typehints we have to
-        # define those in the parent class. Yet this gives a conflict
-        # because the value is not defined. (that's why we remove it)
-        for key in HTTPMeta.__meta_items:
-            if mapping.get("__annotations__") and (
-                value := mapping["__annotations__"].get(key)
-            ):
-                # We want to keep the type annotations of the objects
-                # tho, so lets statically store them, so we can read
-                # them later.
-                HTTPMeta.__ori_annotations.update({key: value})
-                del mapping["__annotations__"][key]
-
-        # Instantiate our object
-        http_object = super().__new__(mcs, name, base, mapping)
-
-        # Read all removed items
-        if getattr(http_object, "__annotations__", None):
-            for k, v in HTTPMeta.__ori_annotations.items():
-                http_object.__annotations__[k] = v
-                setattr(http_object, k, None)
-
-        return http_object
-
-
-@dataclass(repr=False)
-class APIObject(metaclass=HTTPMeta):
+class APIObject:
     """
     Represents an object which has been fetched from the Discord API.
     """
 
-    _client: Optional[Client] = None
+    __client: Optional[Client] = None
+    __http: Optional[HTTPClient] = None
 
-    # DO NOT TYPE WITH `Optional[HTTPClient]`, THIS WILL BREAK EVERYTHING.
-    _http = None
+    @property
+    def _client(self) -> Client:
+        if not self.__client:
+            raise AttributeError("Object is not yet linked to a client")
+
+        return self.__client
+
+    @property
+    def _http(self) -> HTTPClient:
+        if not self.__http:
+            raise AttributeError("Object is not yet linked to a client")
+
+        return self.__http
 
     @classmethod
     def link(cls, client: Client):
@@ -134,12 +114,11 @@ class APIObject(metaclass=HTTPMeta):
 
         Parameters
         ----------
-
         client: Client
             The client to link to.
         """
-        cls._client = client
-        cls._http = client.http
+        cls.__client = client
+        cls.__http = client.http
 
     def __get_types(self, attr: str, arg_type: type) -> Tuple[type]:
         """Get the types from type annotations.
@@ -215,7 +194,6 @@ class APIObject(metaclass=HTTPMeta):
 
     def __post_init__(self):
         TypeCache()
-
         attributes = ()
 
         for cls in chain(self.__class__.__bases__, (self,)):

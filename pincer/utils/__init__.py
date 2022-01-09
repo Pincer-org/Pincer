@@ -1,7 +1,7 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from .api_object import APIObject, HTTPMeta, ChannelProperty, GuildProperty
+from .api_object import APIObject, ChannelProperty, GuildProperty
 from .color import Color
 from .conversion import remove_none
 from .directory import chdir
@@ -24,7 +24,7 @@ from .types import (
 
 __all__ = (
     "", "APINullable", "APIObject", "ChannelProperty",
-    "CheckFunction", "Color", "Coro", "EventMgr", "GuildProperty", "HTTPMeta",
+    "CheckFunction", "Color", "Coro", "EventMgr", "GuildProperty",
     "MISSING", "MissingType", "Snowflake", "Task", "TaskScheduler",
     "Timestamp", "chdir", "choice_value_types", "get_index", "get_params",
     "get_signature_and_params", "remove_none", "replace", "should_pass_cls",
