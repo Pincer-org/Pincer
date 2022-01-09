@@ -8,6 +8,7 @@ import logging
 from dataclasses import dataclass, fields, _is_dataclass_instance
 from enum import Enum, EnumMeta
 from inspect import getfullargspec
+from itertools import chain
 from typing import (
     Dict, Tuple, Union, Generic, TypeVar, Any, TYPE_CHECKING,
     List, get_type_hints, get_origin, get_args
@@ -187,8 +188,13 @@ class APIObject(metaclass=HTTPMeta):
         self._http = getattr(self._client, "http", None)
         TypeCache()
 
-        # Get all type annotations for the attributes.
-        attributes = get_type_hints(self, globalns=TypeCache.cache).items()
+        attributes = ()
+
+        for cls in chain(self.__class__.__bases__, (self,)):
+            attributes = chain(
+                attributes,
+                get_type_hints(cls, globalns=TypeCache.cache).items()
+            )
 
         for attr, attr_type in attributes:
             # Ignore private attributes.

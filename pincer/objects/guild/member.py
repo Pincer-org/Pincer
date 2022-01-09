@@ -77,7 +77,7 @@ class PartialGuildMember(APIObject):
 
 
 @dataclass(repr=False)
-class GuildMember(BaseMember, User, APIObject):
+class GuildMember(BaseMember, User):
     """Represents a member which resides in a guild/server.
 
     Attributes

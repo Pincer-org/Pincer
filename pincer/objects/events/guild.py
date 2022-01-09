@@ -132,11 +132,6 @@ class GuildMemberRemoveEvent(APIObject, GuildProperty):
     guild_id: Snowflake
     user: User
 
-    def __post_init__(self):
-        self.user = User.from_dict(
-            construct_client_dict(self._client, self.user)
-        )
-
 
 @dataclass(repr=False)
 class GuildMemberUpdateEvent(APIObject, GuildProperty):
@@ -177,11 +172,6 @@ class GuildMemberUpdateEvent(APIObject, GuildProperty):
     deaf: APINullable[bool] = MISSING
     mute: APINullable[bool] = MISSING
     pending: APINullable[bool] = MISSING
-
-    def __post_init__(self):
-        self.user = User.from_dict(
-            construct_client_dict(self._client, self.user)
-        )
 
 
 @dataclass(repr=False)
