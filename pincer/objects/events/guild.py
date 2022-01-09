@@ -131,6 +131,11 @@ class GuildMemberRemoveEvent(APIObject, GuildProperty):
     guild_id: Snowflake
     user: User
 
+    def __post_init__(self):
+        # NOTE: Idk if this works, but I got a type Error otherwise
+        # TODO: Test this
+        self.user = User.from_dict({**self.user})
+
 
 @dataclass(repr=False)
 class GuildMemberUpdateEvent(APIObject, GuildProperty):
@@ -172,6 +177,9 @@ class GuildMemberUpdateEvent(APIObject, GuildProperty):
     mute: APINullable[bool] = MISSING
     pending: APINullable[bool] = MISSING
 
+    def __post_init__(self):
+        self.user = User.from_dict({**self.user})
+
 
 @dataclass(repr=False)
 class GuildMembersChunkEvent(APIObject, GuildProperty):
@@ -208,6 +216,13 @@ class GuildMembersChunkEvent(APIObject, GuildProperty):
     not_found: APINullable[List[Any]] = MISSING
     presences: APINullable[PresenceUpdateEvent] = MISSING
     nonce: APINullable[str] = MISSING
+
+    def __post_init__(self):
+        self.members = [
+            # TODO: Test this
+            GuildMember.from_dict({**member})
+            for member in self.members
+        ]
 
 
 @dataclass(repr=False)
