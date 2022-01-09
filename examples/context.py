@@ -18,10 +18,6 @@ class Bot(Client):
         # Our client has successfully started, lets let ourself know that!
         print("Logged in as", self.bot)
 
-    @Client.event
-    async def on_payload(self, payload):
-        print(payload)
-
 
 if __name__ == "__main__":
-    Bot("ODkxNzM4NTExMzExNTE1NzA4.YVCuNA.5OrfKz5KADVhIlxMgXjSs4aQcMk").run()
+    Bot("XXXYOURBOTTOKENHEREXXX").run()
