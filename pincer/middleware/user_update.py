@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.user import User
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -18,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def user_update_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -38,10 +35,7 @@ async def user_update_middleware(
     Tuple[:class:`str`, :class:`~pincer.objects.user.user.User`]
         ``on_user_update`` and a ``User``
     """
-    return (
-        "on_user_update",
-        User.from_dict(construct_client_dict(self, payload.data)),
-    )
+    return ("on_user_update", User.from_dict(payload.data))
 
 
 def export() -> Coro:

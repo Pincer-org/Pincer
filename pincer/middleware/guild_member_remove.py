@@ -11,7 +11,6 @@ from typing import TYPE_CHECKING
 
 from ..objects.events.guild import GuildMemberRemoveEvent
 from ..utils import Coro
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -20,9 +19,7 @@ if TYPE_CHECKING:
 
 
 async def guild_member_remove_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -43,9 +40,7 @@ async def guild_member_remove_middleware(
 
     return (
         "on_guild_member_remove",
-        GuildMemberRemoveEvent.from_dict(
-            construct_client_dict(self, payload.data)
-        ),
+        GuildMemberRemoveEvent.from_dict(payload.data),
     )
 
 

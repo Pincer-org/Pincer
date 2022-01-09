@@ -7,7 +7,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.guild.channel import Channel
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from typing import Tuple
@@ -17,9 +16,7 @@ if TYPE_CHECKING:
 
 
 async def channel_create_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ) -> Tuple[str, Channel]:
     """|coro|
 
@@ -38,11 +35,9 @@ async def channel_create_middleware(
         ``on_channel_creation`` and a channel.
     """
 
-    channel: Channel = Channel.from_dict(
-        construct_client_dict(self, payload.data)
-    )
-    self.guilds[channel.guild_id].channels.append(channel)
+    channel: Channel = Channel.from_dict(payload.data)
 
+    self.guilds[channel.guild_id].channels.append(channel)
     self.channels[channel.id] = channel
 
     return "on_channel_creation", channel

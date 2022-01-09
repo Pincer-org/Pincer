@@ -9,7 +9,6 @@ from ..guild.guild import Guild
 from ..guild.member import GuildMember
 from ..user import User
 from ...utils.api_object import APIObject, GuildProperty
-from ...utils.conversion import construct_client_dict
 from ...utils.types import MISSING, APINullable
 
 if TYPE_CHECKING:
@@ -133,9 +132,7 @@ class GuildMemberRemoveEvent(APIObject, GuildProperty):
     user: User
 
     def __post_init__(self):
-        self.user = User.from_dict(
-            construct_client_dict(self._client, self.user)
-        )
+        self.user = User.from_dict({**self.user})
 
 
 @dataclass(repr=False)
@@ -166,6 +163,7 @@ class GuildMemberUpdateEvent(APIObject, GuildProperty):
         whether the user has not yet passed the guild's
         Membership Screening requirements
     """
+
     # noqa: E501
 
     guild_id: Snowflake
@@ -179,9 +177,7 @@ class GuildMemberUpdateEvent(APIObject, GuildProperty):
     pending: APINullable[bool] = MISSING
 
     def __post_init__(self):
-        self.user = User.from_dict(
-            construct_client_dict(self._client, self.user)
-        )
+        self.user = User.from_dict({**self.user})
 
 
 @dataclass(repr=False)
@@ -210,6 +206,7 @@ class GuildMembersChunkEvent(APIObject, GuildProperty):
     nonce: APINullable[:class:`str`]
         The nonce used in the Guild Members Request
     """
+
     # noqa: E501
     guild_id: Snowflake
     members: List[GuildMember]
@@ -222,8 +219,7 @@ class GuildMembersChunkEvent(APIObject, GuildProperty):
 
     def __post_init__(self):
         self.members = [
-            GuildMember.from_dict(construct_client_dict(self._client, member))
-            for member in self.members
+            GuildMember.from_dict({**member}) for member in self.members
         ]
 
 

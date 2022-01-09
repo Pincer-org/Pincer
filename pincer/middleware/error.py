@@ -10,7 +10,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.error import DiscordError
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -21,9 +20,7 @@ if TYPE_CHECKING:
 
 
 def error_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ) -> Tuple[str, DiscordError]:
     """|coro|
 
@@ -43,10 +40,7 @@ def error_middleware(
     """
     # noqa: E501
 
-    return (
-        "on_error",
-        DiscordError.from_dict(construct_client_dict(self, payload.data)),
-    )
+    return ("on_error", DiscordError.from_dict(payload.data))
 
 
 def export() -> Coro:

@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.user import VoiceState
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -18,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def voice_state_create_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -40,7 +37,7 @@ async def voice_state_create_middleware(
     """
     return (
         "on_voice_state_create",
-        VoiceState.from_dict(construct_client_dict(self, payload.data)),
+        VoiceState.from_dict(payload.data),
     )
 
 
