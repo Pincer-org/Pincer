@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.integration import IntegrationCreateEvent
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -18,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def integration_create_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -40,9 +37,7 @@ async def integration_create_middleware(
     """  # noqa: E501
     return (
         "on_integration_create",
-        IntegrationCreateEvent.from_dict(
-            construct_client_dict(self, payload.data)
-        ),
+        IntegrationCreateEvent.from_dict(payload.data),
     )
 
 

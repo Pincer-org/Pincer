@@ -12,7 +12,6 @@ from typing import TYPE_CHECKING
 from ..commands import ChatCommandHandler
 from ..exceptions import InvalidPayload
 from ..objects.user.user import User
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from typing import Tuple
@@ -23,9 +22,7 @@ if TYPE_CHECKING:
 
 
 async def on_ready_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ) -> Tuple[str]:
     """|coro|
 
@@ -55,7 +52,7 @@ async def on_ready_middleware(
             "`ready` payload event."
         )
 
-    self.bot = User.from_dict(construct_client_dict(self, user))
+    self.bot = User.from_dict(user)
     self.guilds = dict(map(lambda i: (i["id"], None), guilds))
 
     await ChatCommandHandler(self).initialize()

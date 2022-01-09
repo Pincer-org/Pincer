@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 
 from ..objects.events.guild import GuildRoleUpdateEvent
 from ..utils import Coro
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -18,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def guild_role_update_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -39,10 +36,7 @@ async def guild_role_update_middleware(
         ``on_guild_role_update`` and a ``GuildRoleUpdateEvent``
     """
 
-    event = GuildRoleUpdateEvent.from_dict(
-        construct_client_dict(self, payload.data)
-    )
-
+    event = GuildRoleUpdateEvent.from_dict(payload.data)
     guild = self.guilds.get(event.guild_id)
 
     if guild:

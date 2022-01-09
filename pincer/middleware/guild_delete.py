@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.guild import UnavailableGuild
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -17,9 +16,7 @@ if TYPE_CHECKING:
 
 
 async def guild_delete_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -38,9 +35,7 @@ async def guild_delete_middleware(
         ``on_guild_delete`` and an ``UnavailableGuild``
     """
 
-    guild = UnavailableGuild.from_dict(
-        construct_client_dict(self, payload.data)
-    )
+    guild = UnavailableGuild.from_dict(payload.data)
 
     self.guilds.pop(guild.id, None)
 

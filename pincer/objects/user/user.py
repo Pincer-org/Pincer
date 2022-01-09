@@ -13,7 +13,6 @@ from aiohttp import ClientSession
 from ..guild import channel
 from ...utils.api_object import APIObject
 from ...utils.color import Color
-from ...utils.conversion import construct_client_dict
 from ...utils.convert_message import MessageConvertable
 from ...utils.types import MISSING
 
@@ -215,7 +214,7 @@ class User(APIObject):
 
         """
         data = await client.http.get(f"users/{user_id}")
-        return cls.from_dict(construct_client_dict(client, data))
+        return cls.from_dict(data)
 
     async def get_dm_channel(self) -> channel.Channel:
         """
@@ -225,11 +224,8 @@ class User(APIObject):
             DM channel for this user.
         """
         return channel.Channel.from_dict(
-            construct_client_dict(
-                self._client,
-                await self._http.post(
-                    "/users/@me/channels", data={"recipient_id": self.id}
-                ),
+            await self._http.post(
+                "/users/@me/channels", data={"recipient_id": self.id}
             )
         )
 

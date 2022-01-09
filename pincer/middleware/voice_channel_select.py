@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.voice import VoiceChannelSelectEvent
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -18,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def voice_channel_select_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -40,9 +37,7 @@ async def voice_channel_select_middleware(
     """  # noqa: E501
     return (
         "on_voice_channel_select",
-        VoiceChannelSelectEvent.from_dict(
-            construct_client_dict(self, payload.data)
-        ),
+        VoiceChannelSelectEvent.from_dict(payload.data),
     )
 
 
