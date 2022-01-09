@@ -17,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def guild_integrations_update_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -40,7 +38,7 @@ async def guild_integrations_update_middleware(
 
     return (
         "on_guild_integrations_update",
-        GuildIntegrationsUpdateEvent.from_dict(payload.data)
+        GuildIntegrationsUpdateEvent.from_dict(payload.data),
     )
 
 

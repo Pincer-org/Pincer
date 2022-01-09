@@ -17,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def presence_update_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -37,10 +35,7 @@ async def presence_update_middleware(
     Tuple[:class:`str`, :class:`~pincer.objects.user.voice_state.PresenceUpdateEvent`]
         ``on_presence_update`` and a ``PresenceUpdateEvent``
     """  # noqa: E501
-    return (
-        "on_presence_update",
-        PresenceUpdateEvent.from_dict(payload.data)
-    )
+    return ("on_presence_update", PresenceUpdateEvent.from_dict(payload.data))
 
 
 def export() -> Coro:

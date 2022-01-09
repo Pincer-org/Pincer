@@ -37,7 +37,7 @@ async def message_reaction_remove_all_middleware(
 
     return (
         "on_message_reaction_remove_all",
-        MessageReactionRemoveAllEvent.from_dict(payload.data)
+        MessageReactionRemoveAllEvent.from_dict(payload.data),
     )
 
 

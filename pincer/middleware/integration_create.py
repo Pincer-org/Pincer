@@ -17,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def integration_create_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -39,7 +37,7 @@ async def integration_create_middleware(
     """  # noqa: E501
     return (
         "on_integration_create",
-        IntegrationCreateEvent.from_dict(payload.data)
+        IntegrationCreateEvent.from_dict(payload.data),
     )
 
 

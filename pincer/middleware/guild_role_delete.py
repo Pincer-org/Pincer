@@ -17,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def guild_role_delete_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -43,7 +41,8 @@ async def guild_role_delete_middleware(
 
     if guild:
         guild.roles = [
-            role for role in self.guilds[event.guild_id].roles
+            role
+            for role in self.guilds[event.guild_id].roles
             if role.id != event.role_id
         ]
 

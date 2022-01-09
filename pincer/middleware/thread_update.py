@@ -17,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def thread_update_middleware(
-    self: Client,
-    gatewayer: Gateway,
-    payload: GatewayDispatch
+    self: Client, gatewayer: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 

@@ -17,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def voice_channel_select_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -39,7 +37,7 @@ async def voice_channel_select_middleware(
     """  # noqa: E501
     return (
         "on_voice_channel_select",
-        VoiceChannelSelectEvent.from_dict(payload.data)
+        VoiceChannelSelectEvent.from_dict(payload.data),
     )
 
 

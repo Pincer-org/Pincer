@@ -19,9 +19,7 @@ if TYPE_CHECKING:
 
 
 async def webhooks_update_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -39,10 +37,7 @@ async def webhooks_update_middleware(
     Tuple[:class:`str`, :class:`~pincer.objects.events.webhook.WebhooksUpdateEvent`]
         ``on_webhooks_update`` and a ``WebhooksUpdateEvent``
     """  # noqa: E501
-    return (
-        "on_webhooks_update",
-        WebhooksUpdateEvent.from_dict(payload.data)
-    )
+    return ("on_webhooks_update", WebhooksUpdateEvent.from_dict(payload.data))
 
 
 def export():

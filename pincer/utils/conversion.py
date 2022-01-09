@@ -9,7 +9,9 @@ if TYPE_CHECKING:
     from typing import Dict, List, Set, Union, Tuple
 
 
-def remove_none(obj: Union[List, Dict, Set, Tuple]) -> Union[List, Dict, Set, Tuple]:
+def remove_none(
+    obj: Union[List, Dict, Set, Tuple]
+) -> Union[List, Dict, Set, Tuple]:
     """
     Removes all ``None`` values from a list, dict or set.
 

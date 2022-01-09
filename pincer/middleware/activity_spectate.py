@@ -20,9 +20,7 @@ if TYPE_CHECKING:
 
 
 async def activity_spectate_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 

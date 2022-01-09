@@ -20,9 +20,7 @@ if TYPE_CHECKING:
 
 
 async def guild_member_add_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -41,10 +39,7 @@ async def guild_member_add_middleware(
         ``on_guild_member_add`` and a ``GuildMemberAddEvent``
     """
 
-    return (
-        "on_guild_member_add",
-        GuildMemberAddEvent.from_dict(payload.data)
-    )
+    return ("on_guild_member_add", GuildMemberAddEvent.from_dict(payload.data))
 
 
 def export() -> Coro:

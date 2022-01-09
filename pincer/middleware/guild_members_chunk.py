@@ -20,9 +20,7 @@ if TYPE_CHECKING:
 
 
 async def guild_member_chunk_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -43,7 +41,7 @@ async def guild_member_chunk_middleware(
 
     return (
         "on_guild_member_chunk",
-        GuildMembersChunkEvent.from_dict(payload.data)
+        GuildMembersChunkEvent.from_dict(payload.data),
     )
 
 

@@ -163,6 +163,7 @@ class GuildMemberUpdateEvent(APIObject, GuildProperty):
         whether the user has not yet passed the guild's
         Membership Screening requirements
     """
+
     # noqa: E501
 
     guild_id: Snowflake
@@ -205,6 +206,7 @@ class GuildMembersChunkEvent(APIObject, GuildProperty):
     nonce: APINullable[:class:`str`]
         The nonce used in the Guild Members Request
     """
+
     # noqa: E501
     guild_id: Snowflake
     members: List[GuildMember]
@@ -217,8 +219,7 @@ class GuildMembersChunkEvent(APIObject, GuildProperty):
 
     def __post_init__(self):
         self.members = [
-            GuildMember.from_dict({**member})
-            for member in self.members
+            GuildMember.from_dict({**member}) for member in self.members
         ]
 
 

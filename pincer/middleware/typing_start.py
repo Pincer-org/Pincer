@@ -17,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def typing_start_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -37,10 +35,7 @@ async def typing_start_middleware(
     Tuple[:class:`str`, :class:`~pincer.objects.events.typing_start.TypingStartEvent`]
         ``on_typing_start`` and a ``TypingStartEvent``
     """  # noqa: E501
-    return (
-        "on_typing_start",
-        TypingStartEvent.from_dict(payload.data)
-    )
+    return ("on_typing_start", TypingStartEvent.from_dict(payload.data))
 
 
 def export() -> Coro:

@@ -36,6 +36,7 @@ class BaseMember(APIObject):
     hoisted_role: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The user's top role in the guild.
     """
+
     joined_at: APINullable[Timestamp] = MISSING
     roles: APINullable[List[Snowflake]] = MISSING
     deaf: bool = MISSING
@@ -67,6 +68,7 @@ class PartialGuildMember(APIObject):
     member: :class:`~pincer.objects.guild.member.BaseMember`
         The user their (partial) guild information.
     """
+
     id: Snowflake
     username: str
     discriminator: str
@@ -139,10 +141,7 @@ class GuildMember(BaseMember, User, APIObject):
 
     @classmethod
     async def from_id(
-            cls,
-            client: Client,
-            guild_id: int,
-            user_id: int
+        cls, client: Client, guild_id: int, user_id: int
     ) -> GuildMember:
         data = await client.http.get(f"guilds/{guild_id}/members/{user_id}")
         return cls.from_dict(data)

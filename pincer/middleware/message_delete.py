@@ -35,10 +35,7 @@ async def on_message_delete_middleware(
         ``on_message_delete`` and a ``MessageDeleteEvent``
     """  # noqa: E501
 
-    return (
-        "on_message_delete",
-        MessageDeleteEvent.from_dict(payload.data)
-    )
+    return ("on_message_delete", MessageDeleteEvent.from_dict(payload.data))
 
 
 def export():

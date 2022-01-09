@@ -16,9 +16,7 @@ if TYPE_CHECKING:
 
 
 async def thread_members_update_middleware(
-    self: Client,
-    gatewayer: Gateway,
-    payload: GatewayDispatch
+    self: Client, gatewayer: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -38,7 +36,7 @@ async def thread_members_update_middleware(
     """  # noqa: E501
     return (
         "on_thread_members_update",
-        ThreadMembersUpdateEvent.from_dict(payload.data)
+        ThreadMembersUpdateEvent.from_dict(payload.data),
     )
 
 

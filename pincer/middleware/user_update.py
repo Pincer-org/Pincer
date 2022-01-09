@@ -17,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def user_update_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -37,10 +35,7 @@ async def user_update_middleware(
     Tuple[:class:`str`, :class:`~pincer.objects.user.user.User`]
         ``on_user_update`` and a ``User``
     """
-    return (
-        "on_user_update",
-        User.from_dict(payload.data)
-    )
+    return ("on_user_update", User.from_dict(payload.data))
 
 
 def export() -> Coro:

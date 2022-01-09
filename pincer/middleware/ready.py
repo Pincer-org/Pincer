@@ -22,9 +22,7 @@ if TYPE_CHECKING:
 
 
 async def on_ready_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ) -> Tuple[str]:
     """|coro|
 

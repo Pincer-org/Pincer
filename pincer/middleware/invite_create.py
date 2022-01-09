@@ -17,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def invite_create_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -37,10 +35,7 @@ async def invite_create_middleware(
     Tuple[:class:`str`, :class:`~pincer.objects.events.invite.InviteCreateEvent`]
         ``on_invite_create`` and an ``InviteCreateEvent``
     """  # noqa: E501
-    return (
-        "on_invite_create",
-        InviteCreateEvent.from_dict(payload.data)
-    )
+    return ("on_invite_create", InviteCreateEvent.from_dict(payload.data))
 
 
 def export() -> Coro:

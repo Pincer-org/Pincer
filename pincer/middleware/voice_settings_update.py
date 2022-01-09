@@ -17,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def voice_settings_update_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -39,7 +37,7 @@ async def voice_settings_update_middleware(
     """  # noqa: E501
     return (
         "on_voice_settings_update",
-        VoiceSettingsUpdateEvent.from_dict(payload.data)
+        VoiceSettingsUpdateEvent.from_dict(payload.data),
     )
 
 

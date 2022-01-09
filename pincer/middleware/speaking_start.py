@@ -17,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def speaking_start_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -37,10 +35,7 @@ async def speaking_start_middleware(
     Tuple[:class:`str`, :class:`SpeakingStartEvent`]
         ``on_speaking_start`` and a ``SpeakingStartEvent``
     """
-    return (
-        "on_speaking_start",
-        SpeakingStartEvent.from_dict(payload.data)
-    )
+    return ("on_speaking_start", SpeakingStartEvent.from_dict(payload.data))
 
 
 def export() -> Coro:

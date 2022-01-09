@@ -20,9 +20,7 @@ if TYPE_CHECKING:
 
 
 def error_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ) -> Tuple[str, DiscordError]:
     """|coro|
 
@@ -42,10 +40,7 @@ def error_middleware(
     """
     # noqa: E501
 
-    return (
-        "on_error",
-        DiscordError.from_dict(payload.data)
-    )
+    return ("on_error", DiscordError.from_dict(payload.data))
 
 
 def export() -> Coro:

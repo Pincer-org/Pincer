@@ -9,8 +9,18 @@ from dataclasses import dataclass, fields, _is_dataclass_instance
 from enum import Enum, EnumMeta
 from inspect import getfullargspec
 from typing import (
-    Dict, Tuple, Union, Generic, TypeVar, Any, TYPE_CHECKING,
-    List, get_type_hints, get_origin, get_args, Optional
+    Dict,
+    Tuple,
+    Union,
+    Generic,
+    TypeVar,
+    Any,
+    TYPE_CHECKING,
+    List,
+    get_type_hints,
+    get_origin,
+    get_args,
+    Optional,
 )
 
 from .types import MissingType, MISSING, TypeCache
@@ -52,12 +62,14 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
             if isinstance(value, Enum):
                 result.append((f.name, value.value))
             # This if statement was added to the function
-            elif not isinstance(value, MissingType) and not f.name.startswith("_"):
+            elif not isinstance(value, MissingType) and not f.name.startswith(
+                "_"
+            ):
                 result.append((f.name, value))
 
         return dict(result)
 
-    elif isinstance(obj, tuple) and hasattr(obj, '_fields'):
+    elif isinstance(obj, tuple) and hasattr(obj, "_fields"):
         return type(obj)(*[_asdict_ignore_none(v) for v in obj])
 
     elif isinstance(obj, (list, tuple)):
@@ -65,10 +77,8 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
 
     elif isinstance(obj, dict):
         return type(obj)(
-            (
-                _asdict_ignore_none(k),
-                _asdict_ignore_none(v)
-            ) for k, v in obj.items()
+            (_asdict_ignore_none(k), _asdict_ignore_none(v))
+            for k, v in obj.items()
         )
     else:
         return copy.deepcopy(obj)
@@ -84,8 +94,9 @@ class HTTPMeta(type):
         # define those in the parent class. Yet this gives a conflict
         # because the value is not defined. (that's why we remove it)
         for key in HTTPMeta.__meta_items:
-            if mapping.get("__annotations__") and \
-                    (value := mapping["__annotations__"].get(key)):
+            if mapping.get("__annotations__") and (
+                value := mapping["__annotations__"].get(key)
+            ):
                 # We want to keep the type annotations of the objects
                 # tho, so lets statically store them, so we can read
                 # them later.
@@ -109,6 +120,7 @@ class APIObject(metaclass=HTTPMeta):
     """
     Represents an object which has been fetched from the Discord API.
     """
+
     _client: Optional[Client] = None
 
     # DO NOT TYPE WITH `Optional[HTTPClient]`, THIS WILL BREAK EVERYTHING.
@@ -165,7 +177,7 @@ class APIObject(metaclass=HTTPMeta):
                 f"or not enough arguments! (got {len(args)} expected 2-3)"
             )
 
-        return arg_type,
+        return (arg_type,)
 
     def __attr_convert(self, attr_value: Dict, attr_type: T) -> T:
         """Convert an attribute to the requested attribute type using
@@ -208,15 +220,16 @@ class APIObject(metaclass=HTTPMeta):
 
         for attr, attr_type in attributes:
             # Ignore private attributes.
-            if attr.startswith('_'):
+            if attr.startswith("_"):
                 continue
 
             types = self.__get_types(attr, attr_type)
 
-            types = tuple(filter(
-                lambda tpe: tpe is not None and tpe is not MISSING,
-                types
-            ))
+            types = tuple(
+                filter(
+                    lambda tpe: tpe is not None and tpe is not MISSING, types
+                )
+            )
 
             if not types:
                 raise InvalidArgumentAnnotation(
@@ -254,9 +267,10 @@ class APIObject(metaclass=HTTPMeta):
         return cls.from_dict(*args, **kwargs)
 
     def __repr__(self):
-        attrs = ', '.join(
-            f"{k}={v!r}" for k, v in self.__dict__.items()
-            if v and not k.startswith('_')
+        attrs = ", ".join(
+            f"{k}={v!r}"
+            for k, v in self.__dict__.items()
+            if v and not k.startswith("_")
         )
 
         return f"{type(self).__name__}({attrs})"
@@ -276,8 +290,7 @@ class APIObject(metaclass=HTTPMeta):
 
     @classmethod
     def from_dict(
-            cls: Generic[T],
-            data: Dict[str, Union[str, bool, int, Any]]
+        cls: Generic[T], data: Dict[str, Union[str, bool, int, Any]]
     ) -> T:
         """
         Parse an API object from a dictionary.
@@ -288,16 +301,23 @@ class APIObject(metaclass=HTTPMeta):
         # Disable inspection for IDE because this is valid code for the
         # inherited classes:
         # noinspection PyArgumentList
-        return cls(**dict(map(
-            lambda key: (
-                key,
-                data[key].value if isinstance(data[key], Enum) else data[key]
-            ),
-            filter(
-                lambda object_argument: data.get(object_argument) is not None,
-                getfullargspec(cls.__init__).args
+        return cls(
+            **dict(
+                map(
+                    lambda key: (
+                        key,
+                        data[key].value
+                        if isinstance(data[key], Enum)
+                        else data[key],
+                    ),
+                    filter(
+                        lambda object_argument: data.get(object_argument)
+                        is not None,
+                        getfullargspec(cls.__init__).args,
+                    ),
+                )
             )
-        )))
+        )
 
     def to_dict(self) -> Dict:
         """
@@ -308,7 +328,6 @@ class APIObject(metaclass=HTTPMeta):
 
 
 class GuildProperty:
-
     @property
     def guild(self) -> Guild:
         """Return a guild from an APIObject
@@ -324,7 +343,6 @@ class GuildProperty:
 
 
 class ChannelProperty:
-
     @property
     def channel(self) -> Channel:
         """Return a channel from an APIObject

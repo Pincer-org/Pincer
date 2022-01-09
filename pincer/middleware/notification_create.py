@@ -20,9 +20,7 @@ if TYPE_CHECKING:
 
 
 async def notification_create_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -44,7 +42,7 @@ async def notification_create_middleware(
     payload.data["message"]["channel_id"] = channel_id
     return (
         "on_notification_create",
-        NotificationCreateEvent.from_dict(payload.data)
+        NotificationCreateEvent.from_dict(payload.data),
     )
 
 

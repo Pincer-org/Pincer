@@ -17,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def invite_delete_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -37,10 +35,7 @@ async def invite_delete_middleware(
     Tuple[:class:`str`, :class:`~pincer.events.invite.InviteDeleteEvent`]
         ``on_invite_delete`` and an ``InviteDeleteEvent``
     """
-    return (
-        "on_invite_delete",
-        InviteDeleteEvent.from_dict(payload.data)
-    )
+    return ("on_invite_delete", InviteDeleteEvent.from_dict(payload.data))
 
 
 def export() -> Coro:

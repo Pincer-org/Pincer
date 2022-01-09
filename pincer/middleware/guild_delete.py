@@ -16,9 +16,7 @@ if TYPE_CHECKING:
 
 
 async def guild_delete_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 

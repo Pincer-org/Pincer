@@ -17,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def guild_ban_remove_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -38,10 +36,7 @@ async def guild_ban_remove_middleware(
         ``on_guild_ban_remove_update`` and a ``GuildBanRemoveEvent``
     """  # noqa: E501
 
-    return (
-        "on_guild_ban_remove",
-        GuildBanRemoveEvent.from_dict(payload.data)
-    )
+    return ("on_guild_ban_remove", GuildBanRemoveEvent.from_dict(payload.data))
 
 
 def export() -> Coro:

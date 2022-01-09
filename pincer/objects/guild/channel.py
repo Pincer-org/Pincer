@@ -657,10 +657,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         return ThreadsResponse.from_dict(
             await self._http.get(
                 f"channels/{self.id}/threads/archived/public",
-                params={
-                    "before": before,
-                    "limit": limit
-                }
+                params={"before": before, "limit": limit},
             )
         )
 
@@ -690,10 +687,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         return ThreadsResponse.from_dict(
             await self._http.get(
                 f"channels/{self.id}/threads/archived/private",
-                params={
-                    "before": before,
-                    "limit": limit
-                }
+                params={"before": before, "limit": limit},
             )
         )
 
@@ -724,10 +718,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         return ThreadsResponse.from_dict(
             self._http.get(
                 f"channels/{self.id}/users/@me/threads/archived/private",
-                params={
-                    "before": before,
-                    "limit": limit
-                }
+                params={"before": before, "limit": limit},
             )
         )
 
@@ -1046,9 +1037,7 @@ class Thread(Channel):
             The thread member object.
         """
         return ThreadMember.from_dict(
-            await self._http.get(
-                f"channels/{self.id}/thread-members/{user.id}"
-            )
+            await self._http.get(f"channels/{self.id}/thread-members/{user.id}")
         )
 
     async def list_members(self) -> AsyncIterator[ThreadMember]:

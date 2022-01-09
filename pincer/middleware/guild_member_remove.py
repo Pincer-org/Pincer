@@ -19,9 +19,7 @@ if TYPE_CHECKING:
 
 
 async def guild_member_remove_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -42,7 +40,7 @@ async def guild_member_remove_middleware(
 
     return (
         "on_guild_member_remove",
-        GuildMemberRemoveEvent.from_dict(payload.data)
+        GuildMemberRemoveEvent.from_dict(payload.data),
     )
 
 

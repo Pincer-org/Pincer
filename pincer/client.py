@@ -4,7 +4,12 @@
 from __future__ import annotations
 
 import logging
-from asyncio import iscoroutinefunction, ensure_future, create_task, get_event_loop
+from asyncio import (
+    iscoroutinefunction,
+    ensure_future,
+    create_task,
+    get_event_loop,
+)
 from collections import defaultdict
 from functools import partial
 from importlib import import_module
@@ -18,7 +23,7 @@ from typing import (
     Tuple,
     Union,
     overload,
-    TYPE_CHECKING
+    TYPE_CHECKING,
 )
 from . import __package__
 from .commands import ChatCommandHandler
@@ -44,7 +49,7 @@ from .objects import (
     StickerPack,
     UserMessage,
     Connection,
-    File
+    File,
 )
 from .objects.guild.channel import GroupDMChannel
 from .utils import APIObject
@@ -216,9 +221,7 @@ class Client:
         self.event_mgr = EventMgr()
 
         async def get_gateway():
-            return GatewayInfo.from_dict(
-                await self.http.get("gateway/bot")
-            )
+            return GatewayInfo.from_dict(await self.http.get("gateway/bot"))
 
         loop = get_event_loop()
         self.gateway: GatewayInfo = loop.run_until_complete(get_gateway())
@@ -237,9 +240,7 @@ class Client:
         Get a list of chat command calls which have been registered in
         the :class:`~pincer.commands.ChatCommandHandler`\\.
         """
-        return [
-            cmd.app.name for cmd in ChatCommandHandler.register.values()
-        ]
+        return [cmd.app.name for cmd in ChatCommandHandler.register.values()]
 
     @property
     def guild_ids(self) -> List[Snowflake]:
@@ -301,9 +302,8 @@ class Client:
         InvalidEventName
             If the function name is not a valid event (on_x)
         """
-        if (
-            not iscoroutinefunction(coroutine)
-            and not isasyncgenfunction(coroutine)
+        if not iscoroutinefunction(coroutine) and not isasyncgenfunction(
+            coroutine
         ):
             raise TypeError(
                 "Any event which is registered must be a coroutine function"
@@ -337,11 +337,12 @@ class Client:
         calls = _events.get(name.strip().lower())
 
         return (
-            [] if not calls
+            []
+            if not calls
             else [
-                call for call in calls
-                if iscoroutinefunction(call)
-                or isasyncgenfunction(call)
+                call
+                for call in calls
+                if iscoroutinefunction(call) or isasyncgenfunction(call)
             ]
         )
 
@@ -521,11 +522,7 @@ class Client:
 
         loop.run_forever()
 
-    async def start_shard(
-        self,
-        shard: int,
-        num_shards: int
-    ):
+    async def start_shard(self, shard: int, num_shards: int):
         """|coro|
         Starts a shard
         This should not be run most of the time. ``run_shards`` and ``run_autosharded``
@@ -542,16 +539,18 @@ class Client:
             intents=self.intents,
             url=self.gateway.url,
             shard=shard,
-            num_shards=num_shards
+            num_shards=num_shards,
         )
         await gateway.init_session()
 
-        gateway.append_handlers({
-            # Gets triggered on all events
-            -1: partial(self.payload_event_handler, gateway),
-            # Use this event handler for opcode 0.
-            0: partial(self.event_handler, gateway)
-        })
+        gateway.append_handlers(
+            {
+                # Gets triggered on all events
+                -1: partial(self.payload_event_handler, gateway),
+                # Use this event handler for opcode 0.
+                0: partial(self.event_handler, gateway),
+            }
+        )
 
         create_task(gateway.start_loop())
 
@@ -566,7 +565,7 @@ class Client:
         key: str,
         gateway: Gateway,
         *args,
-        **kwargs
+        **kwargs,
     ) -> Tuple[Optional[Coro], List[Any], Dict[str, Any]]:
         """|coro|
 
@@ -623,7 +622,7 @@ class Client:
         gateway: Gateway,
         name: str = "on_error",
         *args,
-        **kwargs
+        **kwargs,
     ):
         """|coro|
 
@@ -647,10 +646,7 @@ class Client:
             raise error
 
     async def process_event(
-        self,
-        name: str,
-        payload: GatewayDispatch,
-        gateway: Gateway
+        self, name: str, payload: GatewayDispatch, gateway: Gateway
     ):
         """|coro|
 
@@ -676,11 +672,7 @@ class Client:
         except Exception as e:
             await self.execute_error(e, gateway)
 
-    async def event_handler(
-        self,
-        gateway: Gateway,
-        payload: GatewayDispatch
-    ):
+    async def event_handler(self, gateway: Gateway, payload: GatewayDispatch):
         """|coro|
 
         Handles all payload events with opcode 0.
@@ -698,9 +690,7 @@ class Client:
         await self.process_event(payload.event_name.lower(), payload, gateway)
 
     async def payload_event_handler(
-        self,
-        gateway: Gateway,
-        payload: GatewayDispatch
+        self, gateway: Gateway, payload: GatewayDispatch
     ):
         """|coro|
 
@@ -950,7 +940,9 @@ class Client:
         """
         return await Channel.from_id(self, _id)
 
-    async def get_message(self, _id: Snowflake, channel_id: Snowflake) -> UserMessage:
+    async def get_message(
+        self, _id: Snowflake, channel_id: Snowflake
+    ) -> UserMessage:
         """|coro|
         Creates a UserMessage object
 

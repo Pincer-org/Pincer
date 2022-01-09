@@ -35,10 +35,7 @@ async def message_create_middleware(
     Tuple[:class:`str`, :class:`~pincer.objects.message.user_message.UserMessage`]
         ``on_message`` and a ``UserMessage``
     """  # noqa: E501
-    return (
-        "on_message",
-        UserMessage.from_dict(payload.data)
-    )
+    return ("on_message", UserMessage.from_dict(payload.data))
 
 
 def export():

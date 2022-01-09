@@ -17,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def message_delete_bulk_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -39,7 +37,7 @@ async def message_delete_bulk_middleware(
     """
     return (
         "on_message_delete_bulk",
-        MessageDeleteBulkEvent.from_dict(payload.data)
+        MessageDeleteBulkEvent.from_dict(payload.data),
     )
 
 

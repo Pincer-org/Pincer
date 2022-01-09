@@ -16,9 +16,7 @@ if TYPE_CHECKING:
 
 
 async def thread_list_sync(
-    self: Client,
-    gatewayer: Gateway,
-    payload: GatewayDispatch
+    self: Client, gatewayer: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 

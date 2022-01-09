@@ -17,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def guild_status_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -37,10 +35,7 @@ async def guild_status_middleware(
     Tuple[:class:`str`, :class:`~pincer.objects.events.guild.GuildStatusEvent`]
         ``on_guild_status`` and a ``GuildStatusEvent``
     """
-    return (
-        "on_guild_status",
-        GuildStatusEvent.from_dict(payload.data)
-    )
+    return ("on_guild_status", GuildStatusEvent.from_dict(payload.data))
 
 
 def export() -> Coro:

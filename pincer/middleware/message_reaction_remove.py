@@ -17,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def message_reaction_remove_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -45,7 +43,7 @@ async def message_reaction_remove_middleware(
                 "emoji": Emoji.from_dict(payload.data.pop("emoji")),
                 **payload.data,
             }
-        )
+        ),
     )
 
 

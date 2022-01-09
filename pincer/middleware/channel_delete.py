@@ -16,9 +16,7 @@ if TYPE_CHECKING:
 
 
 async def channel_delete_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -41,9 +39,7 @@ async def channel_delete_middleware(
 
     guild = self.guilds.get(channel.guild_id)
     if guild:
-        guild.channels = [
-            c for c in guild.channels if c.id != channel.id
-        ]
+        guild.channels = [c for c in guild.channels if c.id != channel.id]
 
     self.channels.pop(channel.id, None)
 
