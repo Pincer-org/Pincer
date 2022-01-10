@@ -93,18 +93,11 @@ class APIObject:
     _client: Optional[Client] = None
 
     @property
-    def _client(self) -> Client:
-        if not self.__client:
-            raise AttributeError("Object is not yet linked to a client")
-
-        return self.__client
-
-    @property
     def _http(self) -> HTTPClient:
-        if not self.__http:
+        if not self._client:
             raise AttributeError("Object is not yet linked to a client")
 
-        return self.__http
+        return self._client.http
 
     @classmethod
     def link(cls, client: Client):
