@@ -109,8 +109,7 @@ class APIObject:
         client: Client
             The client to link to.
         """
-        cls.__client = client
-        cls.__http = client.http
+        cls._client = client
 
     def __get_types(self, attr: str, arg_type: type) -> Tuple[type]:
         """Get the types from type annotations.
