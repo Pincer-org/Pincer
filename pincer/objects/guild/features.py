@@ -53,6 +53,8 @@ class GuildFeature(Enum):
         Guild can have seven day archive time for threads.
     PRIVATE_THREADS : str
         Guild can have private threads.
+    THREADS_ENABLED : str
+        Guild can have threads enabled.
     """
     ANIMATED_ICON = "ANIMATED_ICON"
     BANNER = "BANNER"
