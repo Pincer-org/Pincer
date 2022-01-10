@@ -168,13 +168,7 @@ class ChannelTypes(Modifier):
         A list of channel types that the user can pick from.
     """
 
-    def __init__(self, *types):
-        for ty in types:
-            if str(ty) not in ("ChannelType.GUILD_TEXT", "ChannelType.GUILD_VOICE"):
-                raise ValueError(
-                    "A channel type must be one of the following Enums: ChannelType.GUILD_TEXT or ChannelType.GUILD_VOICE"
-                    )
-            
+    def __init__(self, *types):            
         self.types = types
 
     def get_payload(self):
