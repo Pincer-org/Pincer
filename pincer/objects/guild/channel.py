@@ -779,6 +779,69 @@ class TextChannel(Channel):
             await self._http.get(f"channels/{self.id}/messages/{message_id}")
         )
 
+    async def history(
+        self, limit: int = 50,
+        before: Union[int, Snowflake] = None,
+        after: Union[int, Snowflake] = None,
+        around: Union[int, Snowflake] = None,
+    ) -> AsyncIterator[UserMessage]:
+        """
+        Returns a list of messages in this channel.
+
+        Parameters
+        ----------
+        around
+            The message ID to look around.
+        after
+            The message ID to look after.
+        before
+            The message ID to look before.
+        limit
+            The maximum number of messages to return.
+
+        Returns
+        -------
+        AsyncIterator[:class:`~pincer.objects.message.user_message.UserMessage`]
+            An iterator of messages.
+        """
+
+        if isinstance(before, int):
+            before = Snowflake(before)
+
+        if isinstance(after, int):
+            after = Snowflake(after)
+
+        if isinstance(around, int):
+            around = Snowflake(around)
+
+        if limit is None:
+            limit = float('inf')
+
+        while limit > 0:
+            retrieve = min(limit, 100)
+
+            raw_messages = await self._http.get(
+                f'/channels/{self.id}/messages',
+                params={
+                    'limit': retrieve,
+                    'before': before,
+                    'after': after,
+                    'around': around,
+                }
+            )
+
+            if not raw_messages:
+                break
+
+            for _message in raw_messages[:-1]:
+                yield UserMessage.from_dict(_message)
+
+            last = UserMessage.from_dict(raw_messages[-1])
+            yield last
+
+            before = last.id
+            limit -= retrieve
+
 
 class VoiceChannel(Channel):
     """A subclass of ``Channel`` for voice channels with all the same attributes."""
