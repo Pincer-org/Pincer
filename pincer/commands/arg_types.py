@@ -22,6 +22,12 @@ class CommandArg(metaclass=_CommandTypeMeta):
     """
     Holds the parameters of an application command option
 
+    .. note::
+        Deprecated. :class:`typing.Annotated` or :class:`typing_extensions.Annotated`
+        should be used instead. See
+        https://docs.pincer.dev/en/latest/interactions.html#arguments for more
+        information.
+
     .. code-block:: python3
 
         Annotated[
