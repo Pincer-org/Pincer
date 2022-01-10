@@ -85,28 +85,19 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
         return copy.deepcopy(obj)
 
 
-@dataclass
 class APIObject:
     """
     Represents an object which has been fetched from the Discord API.
     """
 
-    __client = None
-    __http = None
-
-    @property
-    def _client(self) -> Client:
-        if not self.__client:
-            raise AttributeError("Object is not yet linked to a client")
-
-        return self.__client
+    _client: Optional[Client] = None
 
     @property
     def _http(self) -> HTTPClient:
-        if not self.__http:
+        if not self._client:
             raise AttributeError("Object is not yet linked to a client")
 
-        return self.__http
+        return self._client.http
 
     @classmethod
     def link(cls, client: Client):
@@ -118,8 +109,7 @@ class APIObject:
         client: Client
             The client to link to.
         """
-        cls.__client = client
-        cls.__http = client.http
+        cls._client = client
 
     def __get_types(self, attr: str, arg_type: type) -> Tuple[type]:
         """Get the types from type annotations.
