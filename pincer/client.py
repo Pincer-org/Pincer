@@ -218,13 +218,14 @@ class Client:
         APIObject.link(self)
 
         self.throttler = throttler
-        self.event_mgr = EventMgr()
 
         async def get_gateway():
             return GatewayInfo.from_dict(await self.http.get("gateway/bot"))
 
-        loop = get_event_loop()
-        self.gateway: GatewayInfo = loop.run_until_complete(get_gateway())
+        self.loop = get_event_loop()
+        self.event_mgr = EventMgr(self.loop)
+
+        self.gateway: GatewayInfo = self.loop.run_until_complete(get_gateway())
 
         # The guild and channel value is only registered if the Client has the GUILDS
         # intent.
@@ -495,9 +496,8 @@ class Client:
 
     def run(self):
         """Start the bot."""
-        loop = get_event_loop()
-        ensure_future(self.start_shard(0, 1), loop=loop)
-        loop.run_forever()
+        ensure_future(self.start_shard(0, 1), loop=self.loop)
+        self.loop.run_forever()
 
     def run_autosharded(self):
         """
@@ -515,12 +515,10 @@ class Client:
         num_shards: int
             The total amount of shards.
         """
-        loop = get_event_loop()
-
         for shard in shards:
-            ensure_future(self.start_shard(shard, num_shards), loop=loop)
+            ensure_future(self.start_shard(shard, num_shards), loop=self.loop)
 
-        loop.run_forever()
+        self.loop.run_forever()
 
     async def start_shard(self, shard: int, num_shards: int):
         """|coro|

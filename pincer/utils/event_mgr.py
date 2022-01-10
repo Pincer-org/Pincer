@@ -4,13 +4,14 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from asyncio import Event, wait_for as _wait_for, get_running_loop, TimeoutError
+from asyncio import Event, wait_for as _wait_for, TimeoutError
 from collections import deque
 from typing import TYPE_CHECKING
 
 from ..exceptions import TimeoutError as PincerTimeoutError
 
 if TYPE_CHECKING:
+    from asyncio import AbstractEventLoop
     from typing import Any, List, Union, Optional
     from .types import CheckFunction
 
@@ -197,8 +198,9 @@ class EventMgr:
         The List of events that need to be processed.
     """
 
-    def __init__(self):
+    def __init__(self, loop: AbstractEventLoop):
         self.event_list: List[_Processable] = []
+        self.loop = loop
 
     def process_events(self, event_name, event_value):
         """
@@ -277,10 +279,8 @@ class EventMgr:
         loop_mgr = _LoopMgr(event_name, check)
         self.event_list.append(loop_mgr)
 
-        loop = get_running_loop()
-
         while True:
-            start_time = loop.time()
+            start_time = self.loop.time()
 
             try:
                 yield await _wait_for(
@@ -305,7 +305,7 @@ class EventMgr:
             # `not` can't be used here because there is a check for
             # `loop_timeout == 0`
             if loop_timeout is not None:
-                loop_timeout -= loop.time() - start_time
+                loop_timeout -= self.loop.time() - start_time
 
                 # loop_timeout can be below 0 if the user's code in the for loop
                 # takes longer than the time left in loop_timeout
