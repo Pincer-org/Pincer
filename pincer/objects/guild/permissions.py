@@ -53,16 +53,16 @@ class Permission:
         valid_perms = (enum.name.lower() for enum in PermissionEnums)
         for perm in valid_perms:
             setattr(self, perm, kwargs.pop(perm, None))
-        
+
         if kwargs:
             invalid_perms = ', '.join(kwargs.keys())
             raise ValueError(f"Invalid permissions were passed in: {invalid_perms}")
-        
+
     def __setattr__(self, name: str, value: Optional[bool]) -> None:
         if not (value is None or isinstance(value, bool)):
             raise ValueError(f"Permission {name!r} must be a boolean or None")
         return super().__setattr__(name, value)
-    
+
     @classmethod
     def from_int(cls, allow: int, deny: int) -> Permission:
         clsobj = cls()
