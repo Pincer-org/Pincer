@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import copy
 import logging
-from dataclasses import fields, _is_dataclass_instance
+from dataclasses import dataclass, fields, _is_dataclass_instance
 from enum import Enum, EnumMeta
 from inspect import getfullargspec
 from itertools import chain
@@ -85,13 +85,14 @@ def _asdict_ignore_none(obj: Generic[T]) -> Union[Tuple, Dict, T]:
         return copy.deepcopy(obj)
 
 
+@dataclass
 class APIObject:
     """
     Represents an object which has been fetched from the Discord API.
     """
 
-    __client: Optional[Client] = None
-    __http: Optional[HTTPClient] = None
+    __client = None
+    __http = None
 
     @property
     def _client(self) -> Client:
@@ -194,13 +195,13 @@ class APIObject:
 
     def __post_init__(self):
         TypeCache()
-        attributes = ()
 
-        for cls in chain(self.__class__.__bases__, (self,)):
-            attributes = chain(
-                attributes,
+        attributes = chain(
+            *(
                 get_type_hints(cls, globalns=TypeCache.cache).items()
+                for cls in chain(self.__class__.__bases__, (self,))
             )
+        )
 
         for attr, attr_type in attributes:
             # Ignore private attributes.
