@@ -413,7 +413,12 @@ class Guild(APIObject):
     welcome_screen: APINullable[WelcomeScreen] = MISSING
 
     @classmethod
-    async def from_id(cls, client: Client, _id: Union[int, Snowflake]) -> Guild:
+    async def from_id(
+        cls,
+        client: Client,
+        _id: Union[int, Snowflake],
+        with_counts: bool = False,
+    ) -> Guild:
         """
         Parameters
         ----------
@@ -426,7 +431,11 @@ class Guild(APIObject):
         :class:`~pincer.objects.guild.guild.Guild`
             The new guild object.
         """
-        data = await client.http.get(f"/guilds/{_id}")
+        data = await client.http.get(
+            f"/guilds/{_id}",
+            # Yarl don't support boolean params
+            params={"with_counts": "true" if with_counts else None},
+        )
         channel_data = await client.http.get(f"/guilds/{_id}/channels")
 
         data["channels"]: List[Channel] = [
