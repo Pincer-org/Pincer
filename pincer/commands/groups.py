@@ -29,8 +29,8 @@ class Group:
     name : str
         The name of the command group.
     description : Optional[:class:`str`]
-        The description of the command. This has to be sent to Discord but it does
-        nothing so it is optional.
+        The description of the command. This has to be sent to Discord, but it does
+        nothing, so it is optional.
     """
     name: str
     description: Optional[str] = None
@@ -42,7 +42,7 @@ class Group:
 @dataclass
 class Subgroup:
     """
-    A subgroup of commands. This allows you to create subcommands inside of a
+    A subgroup of commands. This allows you to create subcommands inside a
     subcommand-group.
 
     .. code-block:: python
@@ -66,8 +66,8 @@ class Subgroup:
     parent : :class:`~pincer.commands.groups.Group`
         The parent group of this command.
     description : Optional[:class:`str`]
-        The description of the command. This has to be sent to Discord but it does
-        nothing so it is optional.
+        The description of the command. This has to be sent to Discord, but it does
+        nothing, so it is optional.
     """
     name: str
     parent: Group

@@ -136,7 +136,7 @@ class Gateway:
         # `ClientWebSocketResponse` is a parent class.
         self.__socket: Optional[ClientWebSocketResponse] = None
 
-        # Buffer used to store information in transport conpression.
+        # Buffer used to store information in transport compression.
         self.__buffer = bytearray()
 
         # The gateway can be disconnected from Discord. This variable stores if the
@@ -228,7 +228,7 @@ class Gateway:
                 )
                 await sleep(15)
 
-        _log.debug("%s Starting envent loop...", self.shard_key)
+        _log.debug("%s Starting event loop...", self.shard_key)
         await self.event_loop()
 
     async def event_loop(self):
@@ -248,7 +248,7 @@ class Gateway:
 
         # The loop is broken when the gateway stops receiving messages.
         # The "error" op codes are in `self.__close_codes`. The rest of the
-        # close codes are unknown issues (such as a unintended disconnect) so the
+        # close codes are unknown issues (such as an unintended disconnect) so the
         # client should reconnect to the gateway.
         err = self.__close_codes.get(self.__socket.close_code)
 
@@ -266,7 +266,7 @@ class Gateway:
         """|coro|
         Method is run when a payload is received from the gateway.
         The message is expected to already have been decompressed.
-        Handling the opcode is forked to the background so they aren't blocking.
+        Handling the opcode is forked to the background, so they aren't blocking.
         """
         payload = GatewayDispatch.from_string(data)
 
@@ -374,7 +374,7 @@ class Gateway:
 
     async def handle_heartbeat(self, payload: GatewayDispatch):
         """|coro|
-        Opcode 11 - Heatbeat
+        Opcode 11 - Heartbeat
         Track that the heartbeat has been received using shared state (Rustaceans would
         be very mad)
         """
@@ -419,7 +419,7 @@ class Gateway:
 
     def send_next_heartbeat(self):
         """
-        It is expected to always be waiting for a hearbeat. By canceling that task,
+        It is expected to always be waiting for a heartbeat. By canceling that task,
         a heartbeat can be sent.
         """
         self.__wait_for_heartbeat.cancel()

@@ -104,7 +104,7 @@ class ExplicitContentFilterLevel(IntEnum):
 
 
 class MFALevel(IntEnum):
-    """Represents the multi factor authentication level of a guild.
+    """Represents the multi-factor authentication level of a guild.
     Attributes
     ----------
     NONE:

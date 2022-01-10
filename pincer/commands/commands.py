@@ -746,7 +746,7 @@ class ChatCommandHandler(metaclass=Singleton):
         for cmd in ChatCommandHandler.register.values():
 
             if cmd.sub_group:
-                # If a command has a sub_group, it must be nested to levels deep.
+                # If a command has a sub_group, it must be nested to level deep.
                 #
                 # command
                 #     subcommand-group
@@ -981,7 +981,7 @@ def _hash_app_command_params(
     sub_group: Optional[str]
 ) -> int:
     """
-    The group layout in Pincer is very different than what discord has on their docs.
+    The group layout in Pincer is very different from what discord has on their docs.
     You can think of the Pincer group layout like this:
 
     name: The name of the function that is being called.
