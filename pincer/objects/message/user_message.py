@@ -508,7 +508,7 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
             f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}"
         )
 
-    # TODO: Implement file (https://discord.def/resources/channel#edit-message)
+    # TODO: Implement file (https://discord.dev/resources/channel#edit-message)
     async def edit(
         self,
         content: str = None,
