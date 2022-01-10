@@ -235,6 +235,7 @@ def command(
         argument_type = None
         if type(annotation) is CommandArg:
             argument_type = annotation.command_type
+        # isinstance and type don't work for Annotated. This is the best way 💀
         elif hasattr(annotation, "__metadata__"):
             argument_type = get_origin(annotation)
 
