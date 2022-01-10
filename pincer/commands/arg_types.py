@@ -183,7 +183,7 @@ class Value(Modifier):
         if not isinstance(value, int):
             raise TypeError("The type of a minimal value must be {int!r}")
         elif value < 10:
-            raise ValueError(f"The minimal value is 10, {value} is too litle")
+            raise ValueError(f"The minimal value is 10, {value} is too little")
         
         return value
 
