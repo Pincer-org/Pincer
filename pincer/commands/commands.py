@@ -9,7 +9,6 @@ from asyncio import iscoroutinefunction, gather
 from functools import partial
 from inspect import Signature, isasyncgenfunction, _empty
 from typing import TYPE_CHECKING, TypeVar, Union, List, ValuesView, get_origin
-from typing_extensions import Annotated
 
 
 from . import __package__
