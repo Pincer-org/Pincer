@@ -154,8 +154,6 @@ class ChannelTypes(Modifier):
 
         CommandArg[
             Channel,
-            # The user will only be able to choice between GUILD_TEXT and
-            GUILD_TEXT channels.
             ChannelTypes[
                 ChannelType.GUILD_TEXT,
                 ChannelType.GUILD_VOICE
