@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import logging
+import signal
 from asyncio import (
     iscoroutinefunction,
     ensure_future,
@@ -201,6 +202,17 @@ class Client:
         throttler: ThrottleInterface = DefaultThrottleHandler,
         reconnect: bool = True,
     ):
+        def sigint_handler(_signal, _frame):
+            _log.info("SIGINT received, shutting down...")
+
+            # A print statement to make sure the user sees the message
+            print("Closing the client loop, this can take a few seconds...")
+
+            create_task(self.http.close())
+            if self.loop.is_running():
+                self.loop.stop()
+
+        signal.signal(signal.SIGINT, sigint_handler)
 
         if isinstance(intents, Iterable):
             intents = sum(intents)
@@ -218,13 +230,14 @@ class Client:
         APIObject.link(self)
 
         self.throttler = throttler
-        self.event_mgr = EventMgr()
 
         async def get_gateway():
             return GatewayInfo.from_dict(await self.http.get("gateway/bot"))
 
-        loop = get_event_loop()
-        self.gateway: GatewayInfo = loop.run_until_complete(get_gateway())
+        self.loop = get_event_loop()
+        self.event_mgr = EventMgr(self.loop)
+
+        self.gateway: GatewayInfo = self.loop.run_until_complete(get_gateway())
 
         # The guild and channel value is only registered if the Client has the GUILDS
         # intent.
@@ -495,9 +508,8 @@ class Client:
 
     def run(self):
         """Start the bot."""
-        loop = get_event_loop()
-        ensure_future(self.start_shard(0, 1), loop=loop)
-        loop.run_forever()
+        ensure_future(self.start_shard(0, 1), loop=self.loop)
+        self.loop.run_forever()
 
     def run_autosharded(self):
         """
@@ -515,12 +527,10 @@ class Client:
         num_shards: int
             The total amount of shards.
         """
-        loop = get_event_loop()
-
         for shard in shards:
-            ensure_future(self.start_shard(shard, num_shards), loop=loop)
+            ensure_future(self.start_shard(shard, num_shards), loop=self.loop)
 
-        loop.run_forever()
+        self.loop.run_forever()
 
     async def start_shard(self, shard: int, num_shards: int):
         """|coro|
@@ -554,10 +564,32 @@ class Client:
 
         create_task(gateway.start_loop())
 
-    def __del__(self):
-        """Ensure close of the http client."""
+    @property
+    def is_closed(self) -> bool:
+        """
+        Returns
+        -------
+        bool
+            Whether the bot is closed.
+        """
+        return self.loop.is_running()
+
+    def close(self):
+        """
+        Ensure close of the http client.
+        Allow for script execution to continue.
+        """
         if hasattr(self, "http"):
             create_task(self.http.close())
+
+        self.loop.stop()
+
+    def __del__(self):
+        if self.loop.is_running():
+            self.loop.stop()
+
+        if not self.loop.is_closed():
+            self.close()
 
     async def handle_middleware(
         self,
