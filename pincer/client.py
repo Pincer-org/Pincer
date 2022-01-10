@@ -679,9 +679,6 @@ class Client:
 
         Parameters
         ----------
-        _ :
-            Socket param, but this isn't required for this handler. So
-            it's just a filler parameter, doesn't matter what is passed.
         payload : :class:`~pincer.core.dispatch.GatewayDispatch`
             The payload sent from the Discord gateway, this contains the
             required data for the client to know what event it is and
@@ -698,9 +695,6 @@ class Client:
 
         Parameters
         ----------
-        _ :
-            Socket param, but this isn't required for this handler. So
-            it's just a filler parameter, doesn't matter what is passed.
         payload : :class:`~pincer.core.dispatch.GatewayDispatch`
             The payload sent from the Discord gateway, this contains the
             required data for the client to know what event it is and

@@ -48,7 +48,7 @@ from ..objects.app import (
     ClientCommandStructure,
     AppCommandType,
 )
-from ..utils import get_index, should_pass_ctx
+from ..utils import should_pass_ctx
 from ..utils.signature import get_signature_and_params
 from ..utils.types import MISSING
 from ..utils.types import Singleton
@@ -739,14 +739,15 @@ class ChatCommandHandler(metaclass=Singleton):
         """
         await gather(*map(lambda cmd: self.add_command(cmd), commands))
 
-    def __build_local_commands(self):
+    @staticmethod
+    def __build_local_commands():
         """Builds the commands into the format that Discord expects. See class info
         for the reasoning.
         """
         for cmd in ChatCommandHandler.register.values():
 
             if cmd.sub_group:
-                # If a command has a sub_group, it must be nested to levels deep.
+                # If a command has a sub_group, it must be nested 2 levels deep.
                 #
                 # command
                 #     subcommand-group
@@ -860,7 +861,8 @@ class ChatCommandHandler(metaclass=Singleton):
                 _hash_app_command(cmd.app, cmd.group, cmd.sub_group)
             ] = cmd.app
 
-    def get_local_registered_commands(self) -> ValuesView[AppCommand]:
+    @staticmethod
+    def get_local_registered_commands() -> ValuesView[AppCommand]:
         return ChatCommandHandler.built_register.values()
 
     async def __get_existing_commands(self):
@@ -981,7 +983,7 @@ def _hash_app_command_params(
     sub_group: Optional[str]
 ) -> int:
     """
-    The group layout in Pincer is very different than what discord has on their docs.
+    The group layout in Pincer is very different from what discord has on their docs.
     You can think of the Pincer group layout like this:
 
     name: The name of the function that is being called.

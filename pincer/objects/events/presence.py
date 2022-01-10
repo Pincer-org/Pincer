@@ -199,7 +199,7 @@ class Activity(APIObject):
     secrets: APINullable[:class:`~pincer.objects.events.presence.ActivitySecrets`]
         Secrets for Rich Presence joining and spectating
     instance: APINullable[:class:`bool`]
-        "nether or not the activity is an instanced game session
+        whether or not the activity is an instanced game session
     flags: APINullable[:class:`~pincer.objects.events.presence.ActivityFlags`]
         Activity flags ``OR``\\d together,
         describes what the payload includes

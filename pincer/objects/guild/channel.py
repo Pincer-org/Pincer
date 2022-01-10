@@ -472,7 +472,8 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             headers={"X-Audit-Log-Reason": reason},
         )
 
-    async def __post_send_handler(self, message: UserMessage):
+    @staticmethod
+    async def __post_send_handler(message: UserMessage):
         """Process a message after it was sent.
 
         Parameters

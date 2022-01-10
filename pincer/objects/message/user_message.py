@@ -198,7 +198,7 @@ class MessageType(IntEnum):
     APPLICATION_COMMAND:
         Slash command is used and responded to.
     THREAD_STARTER_MESSAGE:
-        The initial message in a thread when its created off a message.
+        The initial message in a thread when it's created off a message.
     GUILD_INVITE_REMINDER:
         ??
     """
@@ -508,7 +508,7 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
             f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}"
         )
 
-    # TODO: Implement file (https://discord.com/developers/docs/resources/channel#edit-message)
+    # TODO: Implement file (https://discord.dev/resources/channel#edit-message)
     async def edit(
         self,
         content: str = None,
