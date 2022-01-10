@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import logging
+import signal
 from asyncio import (
     iscoroutinefunction,
     ensure_future,
@@ -201,6 +202,18 @@ class Client:
         throttler: ThrottleInterface = DefaultThrottleHandler,
         reconnect: bool = True,
     ):
+
+        def sigint_handler(_signal, _frame):
+            _log.info("SIGINT received, shutting down...")
+
+            # This is a print statement to make sure the user sees the message
+            print('Close the client loop, this can take a few seconds...')
+
+            create_task(self.http.close())
+            if self.loop.is_running():
+                self.loop.stop()
+
+        signal.signal(signal.SIGINT, sigint_handler)
 
         if isinstance(intents, Iterable):
             intents = sum(intents)
