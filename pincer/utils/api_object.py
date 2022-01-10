@@ -90,8 +90,7 @@ class APIObject:
     Represents an object which has been fetched from the Discord API.
     """
 
-    __client: Optional[Client] = None
-    __http: Optional[HTTPClient] = None
+    _client: Optional[Client] = None
 
     @property
     def _client(self) -> Client:
