@@ -155,8 +155,6 @@ class ChannelTypes(Modifier):
 
         CommandArg[
             Channel,
-            # The user will only be able to choice between GUILD_TEXT and
-            GUILD_TEXT channels.
             ChannelTypes[
                 ChannelType.GUILD_TEXT,
                 ChannelType.GUILD_VOICE
@@ -184,7 +182,6 @@ class MaxValue(Modifier):
 
         CommandArg[
             int,
-            # The user can't pick a number above 10
             MaxValue[10]
         ]
 
@@ -209,7 +206,6 @@ class MinValue(Modifier):
 
         CommandArg[
             int,
-            # The user can't pick a number below 10
             MinValue[10]
         ]
 
