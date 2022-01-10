@@ -434,7 +434,7 @@ class Guild(APIObject):
         data = await client.http.get(
             f"/guilds/{_id}",
             # Yarl don't support boolean params
-            params={"with_counts": ("true" * with_counts) or None},
+            params={"with_counts": "true" if with_counts else None},
         )
         channel_data = await client.http.get(f"/guilds/{_id}/channels")
 
