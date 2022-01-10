@@ -552,10 +552,24 @@ class Client:
 
         create_task(gateway.start_loop())
 
-    def __del__(self):
+    @property
+    def is_closed(self) -> bool:
+        """Whether the bot is closed."""
+        return self.loop.is_running()
+
+    def close(self):
         """Ensure close of the http client."""
         if hasattr(self, "http"):
             create_task(self.http.close())
+
+        self.loop.stop()
+
+    def __del__(self):
+        if self.loop.is_running():
+            self.loop.stop()
+
+        if not self.loop.is_closed():
+            self.close()
 
     async def handle_middleware(
         self,
