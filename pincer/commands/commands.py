@@ -8,7 +8,7 @@ import re
 from asyncio import iscoroutinefunction, gather
 from functools import partial
 from inspect import Signature, isasyncgenfunction, _empty
-from typing import TYPE_CHECKING, TypeVar, Union, List, ValuesView, get_origin
+from typing import TYPE_CHECKING, TypeVar, Union, List, ValuesView
 
 
 from . import __package__
@@ -237,7 +237,9 @@ def command(
             argument_type = annotation.command_type
         # isinstance and type don't work for Annotated. This is the best way 💀
         elif hasattr(annotation, "__metadata__"):
-            argument_type = get_origin(annotation)
+            # typing.get_origin doesn't work in 3.9+ for some reason. Maybe they forgor
+            # to implement it.
+            argument_type = annotation.__origin__
 
         if not argument_type:
             if annotation in _options_type_link:
