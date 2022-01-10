@@ -8,7 +8,8 @@ import re
 from asyncio import iscoroutinefunction, gather
 from functools import partial
 from inspect import Signature, isasyncgenfunction, _empty
-from typing import TYPE_CHECKING, Union, List, ValuesView
+from typing import TYPE_CHECKING, TypeVar, Union, List, ValuesView, get_origin
+from typing_extensions import Annotated
 
 
 from . import __package__
@@ -76,6 +77,8 @@ _options_type_link = {
 if TYPE_CHECKING:
     from ..client import Client
 
+T = TypeVar("T")
+
 
 def command(
     func=None,
@@ -114,13 +117,13 @@ def command(
                 amount: int,
                 name: CommandArg[
                     str,
-                    Description["Do something cool"],
-                    Choices[Choice["first value", 1], 5]
+                    Description("Do something cool"),
+                    Choices(Choice("first value", 1), 5)
                 ],
                 optional_int: CommandArg[
                     int,
-                    MinValue[10],
-                    MaxValue[100],
+                    MinValue(10),
+                    MaxValue(100),
                 ] = 50
             ):
                 return Message(
@@ -228,7 +231,13 @@ def command(
         if annotation == MessageContext and idx == 1:
             return
 
-        if type(annotation) is not CommandArg:
+        argument_type = None
+        if type(annotation) is CommandArg:
+            argument_type = annotation.command_type
+        elif hasattr(annotation, "__metadata__"):
+            argument_type = get_origin(annotation)
+
+        if not argument_type:
             if annotation in _options_type_link:
                 options.append(
                     AppCommandOption(
@@ -242,16 +251,27 @@ def command(
 
             # TODO: Write better exception
             raise InvalidArgumentAnnotation(
-                "Type must be CommandArg or other valid type"
+                "Type must be Annotated or other valid type"
             )
 
-        command_type = _options_type_link[annotation.command_type]
-        argument_description = (
-            annotation.get_arg(Description) or "Description not set"
-        )
-        choices = annotation.get_arg(Choices)
+        command_type = _options_type_link[argument_type]
 
-        if choices is not MISSING and annotation.command_type not in {
+        def get_arg(t: T) -> T:
+            if type(annotation) is CommandArg:
+                return annotation.get_arg(t)
+            elif hasattr(annotation, "__metadata__"):
+                for obj in annotation.__metadata__:
+                    if isinstance(obj, t):
+                        return obj.get_payload()
+                return MISSING
+
+        argument_description = (
+            get_arg(Description) or "Description not set"
+        )
+
+        choices = get_arg(Choices)
+
+        if choices is not MISSING and argument_type not in {
             int,
             float,
             str,
@@ -263,31 +283,31 @@ def command(
             for choice in choices:
                 if (
                     isinstance(choice.value, int)
-                    and annotation.command_type is float
+                    and argument_type is float
                 ):
                     continue
-                if not isinstance(choice.value, annotation.command_type):
+                if not isinstance(choice.value, argument_type):
                     raise InvalidArgumentAnnotation(
                         "Choice value must match the command type"
                     )
 
-        channel_types = annotation.get_arg(ChannelTypes)
+        channel_types = get_arg(ChannelTypes)
         if (
             channel_types is not MISSING
-            and annotation.command_type is not Channel
+            and argument_type is not Channel
         ):
             raise InvalidArgumentAnnotation(
                 "ChannelTypes are only available for Channels"
             )
 
-        max_value = annotation.get_arg(MaxValue)
-        min_value = annotation.get_arg(MinValue)
+        max_value = get_arg(MaxValue)
+        min_value = get_arg(MinValue)
 
         for i, value in enumerate((min_value, max_value)):
             if (
                 value is not MISSING
-                and annotation.command_type is not int
-                and annotation.command_type is not float
+                and argument_type is not int
+                and argument_type is not float
             ):
                 t = ("MinValue", "MaxValue")
                 raise InvalidArgumentAnnotation(

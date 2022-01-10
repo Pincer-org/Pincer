@@ -2,6 +2,7 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 from typing import Any, List, Tuple, Union, T
+from typing_extensions import Annotated
 
 from ..utils.types import MISSING
 from ..objects.app.command import AppCommandOptionChoice
@@ -26,9 +27,9 @@ class CommandArg(metaclass=_CommandTypeMeta):
             # Supported types are str, int, bool, float, User, Channel, and Role
             int,
             # The modifiers to the command go here
-            Description["Pick a number 1-10"],
-            MinValue[1],
-            MaxValue[10]
+            Description("Pick a number 1-10"),
+            MinValue(1),
+            MaxValue(10)
         ]
 
     Parameters
@@ -67,7 +68,7 @@ class Description(Modifier):
         # Creates an int argument with the description "example description"
         CommandArg[
             int,
-            Description["example description"]
+            Description("example description")
         ]
 
     Parameters
@@ -89,16 +90,16 @@ class Choice(Modifier):
 
     .. code-block:: python3
 
-        Choices[
-            Choice["First Number", 10],
-            Choice["Second Number", 20]
-        ]
+        Choices(
+            Choice("First Number", 10),
+            Choice("Second Number", 20)
+        )
 
     Parameters
     ----------
     name : str
         The name of the choice
-    value : Union[int, str, float]
+    value : Union(int, str, float)
         The value of the choice
     """
 
@@ -115,11 +116,11 @@ class Choices(Modifier):
 
         CommandArg[
             int,
-            Choices[
-                Choice["First Number", 10],
+            Choices(
+                Choice("First Number", 10),
                 20,
                 50
-            ]
+            )
         ]
 
     Parameters
@@ -157,10 +158,10 @@ class ChannelTypes(Modifier):
             Channel,
             # The user will only be able to choice between GUILD_TEXT and
             GUILD_TEXT channels.
-            ChannelTypes[
+            ChannelTypes(
                 ChannelType.GUILD_TEXT,
                 ChannelType.GUILD_VOICE
-            ]
+            )
         ]
 
     Parameters
@@ -185,7 +186,7 @@ class MaxValue(Modifier):
         CommandArg[
             int,
             # The user can't pick a number above 10
-            MaxValue[10]
+            MaxValue(10)
         ]
 
     Parameters
@@ -210,7 +211,7 @@ class MinValue(Modifier):
         CommandArg[
             int,
             # The user can't pick a number below 10
-            MinValue[10]
+            MinValue(10)
         ]
 
     Parameters
