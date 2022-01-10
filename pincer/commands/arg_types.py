@@ -166,13 +166,13 @@ class ChannelTypes(Modifier):
         A list of channel types that the user can pick from.
     """
 
-    def __init__(self, *types):            
+    def __init__(self, *types):  
         self.types = types
 
     def get_payload(self):
         return self.types
-    
-    
+
+
 class Value(Modifier):
     """
     Represents a value that a user can pick from, this class is used to check types and
@@ -184,7 +184,7 @@ class Value(Modifier):
             raise TypeError("The type of a minimal value must be {int!r}")
         elif value < 10:
             raise ValueError(f"The minimal value is 10, {value} is too little")
-        
+
         return value
 
 
