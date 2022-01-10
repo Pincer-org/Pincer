@@ -865,13 +865,17 @@ class Client:
             event_name, check, iteration_timeout, loop_timeout
         )
 
-    async def get_guild(self, guild_id: int) -> Guild:
+    async def get_guild(self, guild_id: int, with_count: bool = False) -> Guild:
         """|coro|
 
         Fetch a guild object by the guild identifier.
 
         Parameters
         ----------
+        with_count: :class:bool
+            Whether to include the member count in the guild object.
+            Default to `False`
+
         guild_id : :class:`int`
             The id of the guild which should be fetched from the Discord
             gateway.
@@ -881,7 +885,7 @@ class Client:
         :class:`~pincer.objects.guild.guild.Guild`
             The guild object.
         """
-        return await Guild.from_id(self, guild_id)
+        return await Guild.from_id(self, guild_id, with_count)
 
     async def get_user(self, _id: int) -> User:
         """|coro|
