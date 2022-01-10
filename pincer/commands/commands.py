@@ -49,7 +49,7 @@ from ..objects.app import (
     ClientCommandStructure,
     AppCommandType,
 )
-from ..utils import get_index, should_pass_ctx
+from ..utils import should_pass_ctx
 from ..utils.signature import get_signature_and_params
 from ..utils.types import MISSING
 from ..utils.types import Singleton
@@ -139,6 +139,7 @@ def command(
         :class:`~pincer.objects.app.interaction_flags.InteractionFlags`,
         :class:`~pincer.commands.arg_types.Choices`,
         :class:`~pincer.commands.arg_types.Choice`,
+        :class:`~typing.Annotated`
         :class:`~pincer.commands.arg_types.CommandArg`,
         :class:`~pincer.commands.arg_types.Description`,
         :class:`~pincer.commands.arg_types.MinValue`,

@@ -1,11 +1,13 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
+import logging
 from typing import Any, List, Tuple, Union, T
-from typing_extensions import Annotated
 
 from ..utils.types import MISSING
 from ..objects.app.command import AppCommandOptionChoice
+
+_log = logging.getLogger(__name__)
 
 
 class _CommandTypeMeta(type):
@@ -22,7 +24,7 @@ class CommandArg(metaclass=_CommandTypeMeta):
 
     .. code-block:: python3
 
-        CommandArg[
+        Annotated[
             # This is the type of command.
             # Supported types are str, int, bool, float, User, Channel, and Role
             int,
@@ -43,6 +45,12 @@ class CommandArg(metaclass=_CommandTypeMeta):
     def __init__(self, command_type, *args):
         self.command_type = command_type
         self.modifiers = args
+        _log.warn(
+            "CommandArg is deprecated and will be removed in future releases."
+            " `typing.Annotated`/`typing_extensions.Annotated.` should be used instead."
+            " See https://docs.pincer.dev/en/latest/interactions.html#arguments for"
+            " more information."
+        )
 
     def get_arg(self, arg_type: T) -> T:
         for arg in self.modifiers:
@@ -56,6 +64,21 @@ class Modifier(metaclass=_CommandTypeMeta):
     """
     Modifies a CommandArg by being added to
     :class:`~pincer.commands.arg_types.CommandArg`'s args.
+
+    Modifiers go inside an :class:`typing.Annotated` type hint.
+
+    .. code-block:: python3
+
+        Annotated[
+            # This is the type of command.
+            # Supported types are str, int, bool, float, User, Channel, and Role
+            int,
+            # The modifiers to the command go here
+            Description("Pick a number 1-10"),
+            MinValue(1),
+            MaxValue(10)
+        ]
+
     """
 
 
@@ -66,7 +89,7 @@ class Description(Modifier):
     .. code-block:: python3
 
         # Creates an int argument with the description "example description"
-        CommandArg[
+        Annotated[
             int,
             Description("example description")
         ]
@@ -114,7 +137,7 @@ class Choices(Modifier):
 
     .. code-block:: python3
 
-        CommandArg[
+        Annotated[
             int,
             Choices(
                 Choice("First Number", 10),
@@ -154,7 +177,7 @@ class ChannelTypes(Modifier):
 
     .. code-block:: python3
 
-        CommandArg[
+        Annotated[
             Channel,
             # The user will only be able to choice between GUILD_TEXT and
             GUILD_TEXT channels.
@@ -183,7 +206,7 @@ class MaxValue(Modifier):
 
     .. code-block:: python3
 
-        CommandArg[
+        Annotated[
             int,
             # The user can't pick a number above 10
             MaxValue(10)
@@ -208,7 +231,7 @@ class MinValue(Modifier):
 
     .. code-block:: python3
 
-        CommandArg[
+        Annotated[
             int,
             # The user can't pick a number below 10
             MinValue(10)
