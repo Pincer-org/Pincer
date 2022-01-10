@@ -59,7 +59,7 @@ class AppCommandOptionChoice(APIObject):
     value: choice_value_types
 
     def __post_init__(self):
-        # APIObject __post_init__ caues converts value to a string
+        # APIObject __post_init_ causes issues by converting `value` to a string
         self.name = str(self.name)
 
 
