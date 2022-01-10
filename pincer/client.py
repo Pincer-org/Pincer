@@ -206,7 +206,7 @@ class Client:
             _log.info("SIGINT received, shutting down...")
 
             # This is a print statement to make sure the user sees the message
-            print("Close the client loop, this can take a few seconds...")
+            print("Closing the client loop, this can take a few seconds...")
 
             create_task(self.http.close())
             if self.loop.is_running():
