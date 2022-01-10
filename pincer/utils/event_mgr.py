@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 
 
 class _Processable(ABC):
-
     @abstractmethod
     def process(self, event_name: str, event_value: Any):
         """
@@ -90,11 +89,7 @@ class _Event(_Processable):
         returned later.
     """
 
-    def __init__(
-        self,
-        event_name: str,
-        check: CheckFunction
-    ):
+    def __init__(self, event_name: str, check: CheckFunction):
         self.event_name = event_name
         self.check = check
         self.event = Event()
@@ -215,10 +210,7 @@ class EventMgr:
             event.process(event_name, event_value)
 
     async def wait_for(
-        self,
-        event_name: str,
-        check: CheckFunction,
-        timeout: Optional[float]
+        self, event_name: str, check: CheckFunction, timeout: Optional[float]
     ) -> Any:
         """
         Parameters
@@ -285,9 +277,7 @@ class EventMgr:
             try:
                 yield await _wait_for(
                     loop_mgr.get_next(),
-                    timeout=_lowest_value(
-                        loop_timeout, iteration_timeout
-                    )
+                    timeout=_lowest_value(loop_timeout, iteration_timeout),
                 )
 
             except TimeoutError:
