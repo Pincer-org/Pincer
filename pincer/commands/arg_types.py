@@ -38,15 +38,14 @@ class CommandArg(metaclass=_CommandTypeMeta):
     \\*args : :class:`~pincer.commands.arg_types.Modifier`
 
     """
-
-    def __init__(self, command_type, *args):
+    def __init__(self, command_type, *options):
         self.command_type = command_type
-        self.modifiers = args
+        self.modifiers = options
 
     def get_arg(self, arg_type: T) -> T:
-        for arg in self.modifiers:
-            if isinstance(arg, arg_type):
-                return arg.get_payload()
+        for mod in self.modifiers:
+            if isinstance(mod, arg_type):
+                return mod.get_payload()
 
         return MISSING
 
@@ -170,13 +169,34 @@ class ChannelTypes(Modifier):
     """
 
     def __init__(self, *types):
+        for ty in types:
+            if str(ty) not in ("ChannelType.GUILD_TEXT", "ChannelType.GUILD_VOICE"):
+                raise ValueError(
+                    "A channel type must be one of the following Enums: ChannelType.GUILD_TEXT or ChannelType.GUILD_VOICE"
+                    )
+            
         self.types = types
 
     def get_payload(self):
         return self.types
+    
+    
+class Value(Modifier):
+    """
+    Represents a value that a user can pick from, this class is used to check types and
+    values of MaxValue and MinValue
+    """
+
+    def check(self, value):
+        if not isinstance(value, int):
+            raise TypeError("The type of a minimal value must be {int!r}")
+        elif value < 10:
+            raise ValueError(f"The minimal value is 10, {value} is too litle")
+        
+        return value
 
 
-class MaxValue(Modifier):
+class MaxValue(Value):
     """
     Represents the max value for a number
 
@@ -195,13 +215,13 @@ class MaxValue(Modifier):
     """
 
     def __init__(self, max_value):
-        self.max_value = max_value
+        self.max_value = self.check(max_value)
 
     def get_payload(self):
         return self.max_value
 
 
-class MinValue(Modifier):
+class MinValue(Value):
     """
     Represents the minimum value for a number
 
@@ -220,7 +240,7 @@ class MinValue(Modifier):
     """
 
     def __init__(self, min_value):
-        self.min_value = min_value
+        self.min_value = self.check(min_value)
 
     def get_payload(self):
         return self.min_value
