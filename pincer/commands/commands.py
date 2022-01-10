@@ -747,7 +747,7 @@ class ChatCommandHandler(metaclass=Singleton):
         for cmd in ChatCommandHandler.register.values():
 
             if cmd.sub_group:
-                # If a command has a sub_group, it must be nested to level deep.
+                # If a command has a sub_group, it must be nested 2 levels deep.
                 #
                 # command
                 #     subcommand-group
