@@ -66,6 +66,15 @@ class Permission:
             raise ValueError(f"Permission {name!r} must be a boolean or None")
         return super().__setattr__(name, value)
 
+    def __eq__(self, object) -> bool:
+        """
+        Permission equality is determined by comparing the integer values of the permissions
+        """
+        if isinstance(object, Permission):
+            return self.to_int() == object.to_int()
+        elif isinstance(object, tuple):
+            return self.to_int() == object
+
     @classmethod
     def from_int(cls, allow: int, deny: int) -> Permission:
         clsobj = cls()
