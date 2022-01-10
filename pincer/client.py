@@ -554,11 +554,19 @@ class Client:
 
     @property
     def is_closed(self) -> bool:
-        """Whether the bot is closed."""
+        """
+        Returns
+        -------
+        bool
+            Whether the bot is closed.
+        """
         return self.loop.is_running()
 
     def close(self):
-        """Ensure close of the http client."""
+        """
+        Ensure close of the http client.
+        Allow for script execution to continue.
+        """
         if hasattr(self, "http"):
             create_task(self.http.close())
 
