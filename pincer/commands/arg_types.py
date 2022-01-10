@@ -184,7 +184,7 @@ class MaxValue(Modifier):
 
         CommandArg[
             int,
-            # The user can't pick a number below 10
+            # The user can't pick a number above 10
             MaxValue[10]
         ]
 
