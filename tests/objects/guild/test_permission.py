@@ -89,3 +89,15 @@ class TestPermission:
                 deny |= enum.value
 
         assert Permission.to_int(Permission()) == (0, 0)
+        
+    @staticmethod
+    def test_allow():
+        permission = Permission(
+            view_channel=True,
+            manage_channels=False,
+            create_instant_invite=True,
+            manage_roles=False,
+        )
+                
+        assert permission.allow == 1025
+        assert permission.deny == 268435472
