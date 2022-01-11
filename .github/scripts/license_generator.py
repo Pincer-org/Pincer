@@ -10,7 +10,7 @@ pincer_license = """# Copyright Pincer 2021-Present
 for file in glob("./pincer/**/*.py", recursive=True):
     if file == "./pincer/__init__.py":
         continue
-    
+
     with open(file, "r+") as f:
         lines = f.readlines()
         if not lines[0].startswith("# Copyright Pincer 2021-Present\n"):
