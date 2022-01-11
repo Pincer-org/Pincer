@@ -1,5 +1,4 @@
 from glob import glob
-from inspect import cleandoc
 
 pincer_license = """# Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
