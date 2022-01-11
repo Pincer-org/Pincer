@@ -128,7 +128,7 @@ class Choice(Modifier):
     ----------
     name : str
         The name of the choice
-    value : Union(int, str, float)
+    value : Union[int, str, float]
         The value of the choice
     """
 

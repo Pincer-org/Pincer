@@ -260,7 +260,7 @@ def command(
 
         command_type = _options_type_link[argument_type]
 
-        def get_arg(t: T) -> T:
+        def get_arg(t: T) -> APINullable[T]:
             if type(annotation) is CommandArg:
                 return annotation.get_arg(t)
             elif hasattr(annotation, "__metadata__"):
