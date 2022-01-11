@@ -59,7 +59,7 @@ class Permissions(Enum):
 class Permission:
     """
     Allows for easier access to the permissions
-    
+
     Parameters
     __________
     create_instant_invite: :class:`Optional[bool]`
