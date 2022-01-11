@@ -8,11 +8,9 @@ class TestPermission:
     @staticmethod
     def test_invalid_permissions():
         with pytest.raises(ValueError):
-            Permission(
-                this_permisison_does_not_exist=True
-            )
+            Permission(this_permisison_does_not_exist=True)
 
-        with pytest.raises(TypeError):
+        with pytest.raises(ValueError):
             Permission(
                 manage_channels="True",
             )
@@ -71,8 +69,8 @@ class TestPermission:
         assert Permission.from_int(1025, 268435472) == Permission(
             view_channel=True,
             manage_channels=False,
-            manage_webhooks=False,
             create_instant_invite=True,
+            manage_roles=False,
         )
 
         assert Permission.from_int(0, 0) == Permission()
