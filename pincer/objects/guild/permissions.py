@@ -75,6 +75,8 @@ class Permission:
         elif isinstance(object, tuple):
             return self.to_int() == object
 
+        return False
+
     @classmethod
     def from_int(cls, allow: int, deny: int) -> Permission:
         clsobj = cls()
