@@ -3,12 +3,15 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import Tuple, Optional
 
 
 class Permissions(Enum):
+    """
+    Represents the permissions for a guild.
+    """
     CREATE_INSTANT_INVITE = 1 << 0
     KICK_MEMBERS = 1 << 1
     BAN_MEMBERS = 1 << 2
@@ -54,6 +57,95 @@ class Permissions(Enum):
 
 @dataclass
 class Permission:
+    """
+    Allows for easier access to the permissions
+    
+    Parameters
+    __________
+    create_instant_invite: :class:`Optional[bool]`
+        Allows creation of instant invites
+    kick_members: :class:`Optional[bool]`
+        Allows kicking members
+    ban_members: :class:`Optional[bool]`
+        Allows banning members
+    administrator: :class:`Optional[bool]`
+        Allows all permissions and bypasses channel permission overwrites
+    manage_channels: :class:`Optional[bool]`
+        Allows management and editing of channels
+    manage_guild: :class:`Optional[bool]`
+        Allows management and editing of the guild
+    add_reactions: :class:`Optional[bool]`
+        Allows for the addition of reactions to messages
+    view_audit_log: :class:`Optional[bool]`
+        Allows for viewing of audit logs
+    priority_speaker: :class:`Optional[bool]`
+        Allows for using priority speaker in a voice channel
+    stream: :class:`Optional[bool]`
+        Allows the user to go live
+    view_channel: :class:`Optional[bool]`
+        Allows guild members to view a channel, which includes reading messages in text channels
+    send_messages: :class:`Optional[bool]`
+        Allows for sending messages in a channel (does not allow sending messages in threads)
+    send_tts_messages: :class:`Optional[bool]`
+        Allows for sending of tts messages
+    manage_messages: :class:`Optional[bool]`
+        Allows for deletion of other users messages
+    embed_links: :class:`Optional[bool]`
+        Links sent by users with this permission will be auto-embedded
+    attach_files: :class:`Optional[bool]`
+        Allows for uploading images and files
+    read_message_history: :class:`Optional[bool]`
+        Allows for reading of message history
+    mention_everyone: :class:`Optional[bool]`
+        Allows for using the @everyone tag to notify all users in a channel, and the @here tag to notify all online users in a channel
+    use_external_emojis: :class:`Optional[bool]`
+        Allows the usage of custom emojis from other servers
+    view_guild_insights: :class:`Optional[bool]`
+        Allows for viewing of guild insights
+    connect: :class:`Optional[bool]`
+        Allows for joining of a voice channel
+    speak: :class:`Optional[bool]`
+        Allows for speaking in a voice channel
+    mute_members: :class:`Optional[bool]`
+        Allows for muting members in a voice channel
+    deafen_members: :class:`Optional[bool]`
+        Allows for deafening of members in a voice channel
+    move_members: :class:`Optional[bool]`
+        Allows for moving of members between voice channels
+    use_vad: :class:`Optional[bool]`
+        Allows for using voice activity detection in a voice channel
+    change_nickname: :class:`Optional[bool]`
+        Allows for modification of own nickname
+    manage_nicknames: :class:`Optional[bool]`
+        Allows for modification of other users nicknames
+    manage_roles: :class:`Optional[bool]`
+        Allows for management and editing of roles
+    manage_webhooks: :class:`Optional[bool]`
+        Allows for management and editing of webhooks
+    manage_emojis_and_stickers: :class:`Optional[bool]`
+        Allows for management and editing of emojis and stickers
+    use_application_commands: :class:`Optional[bool]`
+        Allows for using application-specific commands
+    request_to_speak: :class:`Optional[bool]`
+        Allows for requesting to speak in a voice channel
+    manage_events: :class:`Optional[bool]`
+        Allows for management and editing of events
+    manage_threads: :class:`Optional[bool]`
+        Allows for management and editing of threads
+    create_public_threads: :class:`Optional[bool]`
+        Allows for the creation of public threads
+    create_private_threads: :class:`Optional[bool]`
+        Allows for the creation of private threads
+    use_external_stickers: :class:`Optional[bool]`
+        Allows for the usage of stickers from other servers
+    send_messages_in_threads: :class:`Optional[bool]`
+        Allows for sending messages in threads
+    start_embedded_activities: :class:`Optional[bool]`
+        Allows for starting of embedded activities
+    moderate_members: :class:`Optional[bool]`
+        Allows for moderation of members in a guild
+    """
+    
     create_instant_invite: Optional[bool] = None
     kick_members: Optional[bool] = None
     ban_members: Optional[bool] = None
@@ -114,6 +206,16 @@ class Permission:
 
     @classmethod
     def from_int(cls, allow: int, deny: int) -> Permission:
+        """
+        Create a Permission object from an integer representation of the permissions (deny and allow)
+        
+        Parameters
+        __________
+        allow: :class:`int`
+            The integer representation of the permissions that are allowed
+        deny: :class:`int`
+            The integer representation of the permissions that are denied
+        """
         clsobj = cls()
 
         for enum in Permissions:
@@ -127,6 +229,14 @@ class Permission:
         return clsobj
 
     def to_int(self) -> Tuple[int]:
+        """
+        Convert the Permission object to an integer representation of the permissions (deny and allow)
+        
+        Returns
+        _______
+        :class:`Tuple[int]`
+            The integer representation of the permissions that are allowed and denied
+        """
         allow = 0
         deny = 0
         for enum in Permissions:
@@ -139,6 +249,9 @@ class Permission:
 
     @property
     def allow(self) -> int:
+        """
+        Returns the integer representation of the permissions that are allowed
+        """
         allow = 0
         for enum in Permissions:
             if getattr(self, enum.name.lower()):
@@ -148,6 +261,9 @@ class Permission:
 
     @property
     def deny(self) -> int:
+        """
+        Returns the integer representation of the permissions that are denied
+        """
         deny = 0
         for enum in Permissions:
             if getattr(self, enum.name.lower()) is False:
