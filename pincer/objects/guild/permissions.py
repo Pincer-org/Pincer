@@ -97,7 +97,7 @@ class Permission:
         for enum in PermissionEnums:
             if getattr(self, enum.name.lower()):
                 allow |= enum.value
-            elif not getattr(self, enum.name.lower()):
+            elif getattr(self, enum.name.lower()) is False:
                 deny |= enum.value
 
         return allow, deny
@@ -115,7 +115,7 @@ class Permission:
     def deny(self) -> int:
         deny = 0
         for enum in PermissionEnums:
-            if not getattr(self, enum.name.lower()):
+            if getattr(self, enum.name.lower()) is False:
                 deny |= enum.value
 
         return deny
