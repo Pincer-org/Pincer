@@ -8,7 +8,7 @@ class TestPermission:
     @staticmethod
     def test_invalid_permissions():
         with pytest.raises(ValueError):
-            Permission(this_permisison_does_not_exist=True)
+            Permission(this_permission_does_not_exist=True)
 
         with pytest.raises(ValueError):
             Permission(
@@ -89,7 +89,7 @@ class TestPermission:
                 deny |= enum.value
 
         assert Permission.to_int(Permission()) == (0, 0)
-        
+
     @staticmethod
     def test_allow():
         permission = Permission(
@@ -98,6 +98,6 @@ class TestPermission:
             create_instant_invite=True,
             manage_roles=False,
         )
-                
+
         assert permission.allow == 1025
         assert permission.deny == 268435472
