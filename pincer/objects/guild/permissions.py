@@ -145,7 +145,7 @@ class Permission:
     moderate_members: :class:`Optional[bool]`
         Allows for moderation of members in a guild
     """
-    
+
     create_instant_invite: Optional[bool] = None
     kick_members: Optional[bool] = None
     ban_members: Optional[bool] = None
@@ -208,7 +208,7 @@ class Permission:
     def from_int(cls, allow: int, deny: int) -> Permission:
         """
         Create a Permission object from an integer representation of the permissions (deny and allow)
-        
+
         Parameters
         __________
         allow: :class:`int`
@@ -231,7 +231,7 @@ class Permission:
     def to_int(self) -> Tuple[int]:
         """
         Convert the Permission object to an integer representation of the permissions (deny and allow)
-        
+
         Returns
         _______
         :class:`Tuple[int]`
