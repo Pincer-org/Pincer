@@ -62,7 +62,7 @@ class Permission:
             raise ValueError(f"Invalid permissions were passed in: {invalid_perms}")
 
     def __setattr__(self, name: str, value: Optional[bool]) -> None:
-        if not (value is None or isinstance(value, bool)):
+        if not isinstance(value, bool) and value is not None:
             raise ValueError(f"Permission {name!r} must be a boolean or None")
         return super().__setattr__(name, value)
 
