@@ -40,9 +40,9 @@ __all__ = (
     "GuildFeature", "GuildMember", "GuildNSFWLevel",
     "GuildScheduledEventEntityType", "GuildTemplate", "GuildWidget", "Invite",
     "InviteStageInstance", "InviteTargetType", "MFALevel", "NewsChannel",
-    "Overwrite", "PartialGuildMember", "Permission", "PremiumTier", "PrivacyLevel",
-    "Role", "RoleTags", "ScheduledEvent", "StageInstance", "SystemChannelFlags",
-    "TextChannel", "ThreadMember", "ThreadMetadata", "UnavailableGuild",
-    "VerificationLevel", "VoiceChannel", "Webhook", "WebhookType",
-    "WelcomeScreen", "WelcomeScreenChannel"
+    "Overwrite", "PartialGuildMember", "Permission", "PremiumTier",
+    "PrivacyLevel", "Role", "RoleTags", "ScheduledEvent", "StageInstance",
+    "SystemChannelFlags", "TextChannel", "ThreadMember", "ThreadMetadata",
+    "UnavailableGuild", "VerificationLevel", "VoiceChannel", "Webhook",
+    "WebhookType", "WelcomeScreen", "WelcomeScreenChannel"
 )
