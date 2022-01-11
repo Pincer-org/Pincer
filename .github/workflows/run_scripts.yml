@@ -1,4 +1,4 @@
-name: Sort Alls
+name: Run Scripts
 
 on: push
 
@@ -16,17 +16,19 @@ jobs:
           python-version: '3.8'
           architecture: 'x64'
 
-      - name: running script
-        run: python ./.github/scripts/all_sorter.py
-
       - name: setup git
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@pincer.dev"
-
-      - name: add to git
-        run: |
           git pull
-          git add .
-          git diff-index --quiet HEAD || git commit -m ":art: Automatic `__all__` sorting"
-          git push
+
+      - name: running all sorter
+        run: |
+          python ./.github/scripts/all_sorter.py
+          git diff-index --quiet HEAD || git commit -am ":art: Automatic `__all__` sorting"
+
+
+      - name: running license generator
+        run: |
+          python ./.github/scripts/license_generator.py
+          git diff-index --quiet HEAD || git commit -am ":page_facing_up: Automatic license generator"
