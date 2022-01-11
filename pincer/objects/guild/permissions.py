@@ -7,7 +7,7 @@ from enum import Enum
 from typing import Tuple, Optional
 
 
-class PermissionEnums(Enum):
+class Permissions(Enum):
     CREATE_INSTANT_INVITE = 1 << 0
     KICK_MEMBERS = 1 << 1
     BAN_MEMBERS = 1 << 2
