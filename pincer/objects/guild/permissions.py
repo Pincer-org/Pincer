@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Tuple, Optional
 
@@ -52,7 +52,7 @@ class Permissions(Enum):
     MODERATE_MEMBERS = 1 << 40
 
 
-@dataclass(kw_only=True)
+@dataclass
 class Permission:
     create_instant_invite: Optional[bool] = None
     kick_members: Optional[bool] = None
