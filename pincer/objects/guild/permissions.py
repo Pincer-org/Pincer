@@ -101,21 +101,21 @@ class Permission:
                 deny |= enum.value
 
         return allow, deny
-    
+
     @property
     def allow(self) -> int:
         allow = 0
         for enum in PermissionEnums:
             if getattr(self, enum.name.lower()):
                 allow |= enum.value
-                
+
         return allow
-    
+
     @property
     def deny(self) -> int:
         deny = 0
         for enum in PermissionEnums:
             if getattr(self, enum.name.lower()) is False:
                 deny |= enum.value
-                
+
         return deny
