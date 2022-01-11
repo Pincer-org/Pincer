@@ -1,20 +1,10 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 import pytest
-from pincer.objects.guild.permissions import Permission, PermissionEnums
+from pincer.objects.guild.permissions import Permission, Permissions
 
 
 class TestPermission:
-    @staticmethod
-    def test_invalid_permissions():
-        with pytest.raises(ValueError):
-            Permission(this_permission_does_not_exist=True)
-
-        with pytest.raises(ValueError):
-            Permission(
-                manage_channels="True",
-            )
-
     @staticmethod
     def test_valid_permissions():
         valid_perms = (
@@ -82,7 +72,7 @@ class TestPermission:
         assert deny == 0
 
         permission = Permission()
-        for enum in PermissionEnums:
+        for enum in Permissions:
             if getattr(permission, enum.name.lower()):
                 allow |= enum.value
             elif getattr(permission, enum.name.lower()) is False:

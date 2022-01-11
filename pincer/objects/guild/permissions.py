@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from enum import Enum
 from typing import Tuple, Optional
 
@@ -51,15 +52,49 @@ class Permissions(Enum):
     MODERATE_MEMBERS = 1 << 40
 
 
+@dataclass(kw_only=True)
 class Permission:
-    def __init__(self, **kwargs: Optional[bool]) -> None:
-        valid_perms = (enum.name.lower() for enum in PermissionEnums)
-        for perm in valid_perms:
-            setattr(self, perm, kwargs.pop(perm, None))
-
-        if kwargs:
-            invalid_perms = ', '.join(kwargs.keys())
-            raise ValueError(f"Invalid permissions were passed in: {invalid_perms}")
+    create_instant_invite: Optional[bool] = None
+    kick_members: Optional[bool] = None
+    ban_members: Optional[bool] = None
+    administrator: Optional[bool] = None
+    manage_channels: Optional[bool] = None
+    manage_guild: Optional[bool] = None
+    add_reactions: Optional[bool] = None
+    view_audit_log: Optional[bool] = None
+    priority_speaker: Optional[bool] = None
+    stream: Optional[bool] = None
+    view_channel: Optional[bool] = None
+    send_messages: Optional[bool] = None
+    send_tts_messages: Optional[bool] = None
+    manage_messages: Optional[bool] = None
+    embed_links: Optional[bool] = None
+    attach_files: Optional[bool] = None
+    read_message_history: Optional[bool] = None
+    mention_everyone: Optional[bool] = None
+    use_external_emojis: Optional[bool] = None
+    view_guild_insights: Optional[bool] = None
+    connect: Optional[bool] = None
+    speak: Optional[bool] = None
+    mute_members: Optional[bool] = None
+    deafen_members: Optional[bool] = None
+    move_members: Optional[bool] = None
+    use_vad: Optional[bool] = None
+    change_nickname: Optional[bool] = None
+    manage_nicknames: Optional[bool] = None
+    manage_roles: Optional[bool] = None
+    manage_webhooks: Optional[bool] = None
+    manage_emojis_and_stickers: Optional[bool] = None
+    use_application_commands: Optional[bool] = None
+    request_to_speak: Optional[bool] = None
+    manage_events: Optional[bool] = None
+    manage_threads: Optional[bool] = None
+    create_public_threads: Optional[bool] = None
+    create_private_threads: Optional[bool] = None
+    use_external_stickers: Optional[bool] = None
+    send_messages_in_threads: Optional[bool] = None
+    start_embedded_activities: Optional[bool] = None
+    moderate_members: Optional[bool] = None
 
     def __setattr__(self, name: str, value: Optional[bool]) -> None:
         if not isinstance(value, bool) and value is not None:
@@ -81,7 +116,7 @@ class Permission:
     def from_int(cls, allow: int, deny: int) -> Permission:
         clsobj = cls()
 
-        for enum in PermissionEnums:
+        for enum in Permissions:
             if bool(enum.value & allow):
                 setattr(clsobj, enum.name.lower(), True)
             elif bool(enum.value & deny):
@@ -94,7 +129,7 @@ class Permission:
     def to_int(self) -> Tuple[int]:
         allow = 0
         deny = 0
-        for enum in PermissionEnums:
+        for enum in Permissions:
             if getattr(self, enum.name.lower()):
                 allow |= enum.value
             elif getattr(self, enum.name.lower()) is False:
@@ -105,7 +140,7 @@ class Permission:
     @property
     def allow(self) -> int:
         allow = 0
-        for enum in PermissionEnums:
+        for enum in Permissions:
             if getattr(self, enum.name.lower()):
                 allow |= enum.value
 
@@ -114,7 +149,7 @@ class Permission:
     @property
     def deny(self) -> int:
         deny = 0
-        for enum in PermissionEnums:
+        for enum in Permissions:
             if getattr(self, enum.name.lower()) is False:
                 deny |= enum.value
 
