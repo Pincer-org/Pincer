@@ -61,7 +61,7 @@ class Permission:
     Allows for easier access to the permissions
 
     Parameters
-    __________
+    --------------
     create_instant_invite: :class:`Optional[bool]`
         Allows creation of instant invites
     kick_members: :class:`Optional[bool]`
