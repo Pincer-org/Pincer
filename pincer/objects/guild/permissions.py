@@ -61,7 +61,7 @@ class Permissions:
     Allows for easier access to the permissions
 
     Parameters
-    __________
+    ----------
     create_instant_invite: :class:`Optional[:class:`bool`]`
         Allows creation of instant invites
     kick_members: :class:`Optional[:class:`bool`]`
@@ -192,17 +192,6 @@ class Permissions:
         if not isinstance(value, bool) and value is not None:
             raise ValueError(f"Permission {name!r} must be a boolean or None")
         return super().__setattr__(name, value)
-
-    def __eq__(self, object) -> bool:
-        """
-        Permission equality is determined by comparing the integer values of the permissions
-        """
-        if isinstance(object, Permissions):
-            return self.to_int() == object.to_int()
-        elif isinstance(object, tuple):
-            return self.to_int() == object
-
-        return False
 
     @classmethod
     def from_int(cls, allow: int, deny: int) -> Permissions:
