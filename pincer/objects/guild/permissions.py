@@ -208,12 +208,13 @@ class Permissions:
         clsobj = cls()
 
         for enum in PermissionEnum:
-            if bool(enum.value & allow):
-                setattr(clsobj, enum.name.lower(), True)
-            elif bool(enum.value & deny):
-                setattr(clsobj, enum.name.lower(), False)
-            else:
-                setattr(clsobj, enum.name.lower(), None)
+            value = None
+            if enum.value & allow:
+                value = True
+            elif enum.value & deny:
+                value = False
+
+            setattr(clsobj, enum.name, value)
 
         return clsobj
 
@@ -222,8 +223,8 @@ class Permissions:
         Convert the Permission object to an integer representation of the permissions (deny and allow)
 
         Returns
-        _______
-        :class:`Tuple[int]`
+        -------
+        :class:`Tuple[:class:`int`]`
             The integer representation of the permissions that are allowed and denied
         """
         allow = 0
