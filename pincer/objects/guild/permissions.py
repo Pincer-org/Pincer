@@ -8,7 +8,7 @@ from enum import Enum
 from typing import Tuple, Optional
 
 
-class Permissions(Enum):
+class PermissionEnum(Enum):
     """
     Represents the permissions for a guild.
     """
@@ -56,7 +56,7 @@ class Permissions(Enum):
 
 
 @dataclass
-class Permission:
+class Permissions:
     """
     Allows for easier access to the permissions
 
@@ -197,7 +197,7 @@ class Permission:
         """
         Permission equality is determined by comparing the integer values of the permissions
         """
-        if isinstance(object, Permission):
+        if isinstance(object, Permissions):
             return self.to_int() == object.to_int()
         elif isinstance(object, tuple):
             return self.to_int() == object
@@ -205,7 +205,7 @@ class Permission:
         return False
 
     @classmethod
-    def from_int(cls, allow: int, deny: int) -> Permission:
+    def from_int(cls, allow: int, deny: int) -> Permissions:
         """
         Create a Permission object from an integer representation of the permissions (deny and allow)
 
@@ -218,7 +218,7 @@ class Permission:
         """
         clsobj = cls()
 
-        for enum in Permissions:
+        for enum in PermissionEnum:
             if bool(enum.value & allow):
                 setattr(clsobj, enum.name.lower(), True)
             elif bool(enum.value & deny):
@@ -239,7 +239,7 @@ class Permission:
         """
         allow = 0
         deny = 0
-        for enum in Permissions:
+        for enum in PermissionEnum:
             if getattr(self, enum.name.lower()):
                 allow |= enum.value
             elif getattr(self, enum.name.lower()) is False:
@@ -253,7 +253,7 @@ class Permission:
         Returns the integer representation of the permissions that are allowed
         """
         allow = 0
-        for enum in Permissions:
+        for enum in PermissionEnum:
             if getattr(self, enum.name.lower()):
                 allow |= enum.value
 
@@ -265,7 +265,7 @@ class Permission:
         Returns the integer representation of the permissions that are denied
         """
         deny = 0
-        for enum in Permissions:
+        for enum in PermissionEnum:
             if getattr(self, enum.name.lower()) is False:
                 deny |= enum.value
 

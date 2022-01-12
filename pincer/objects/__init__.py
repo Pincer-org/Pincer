@@ -68,7 +68,7 @@ from .guild.invite import (
 )
 from .guild.member import GuildMember, PartialGuildMember, BaseMember
 from .guild.overwrite import Overwrite
-from .guild.permissions import Permission
+from .guild.permissions import Permissions
 from .guild.role import RoleTags, Role
 from .guild.stage import PrivacyLevel, StageInstance
 from .guild.template import GuildTemplate
@@ -135,7 +135,7 @@ __all__ = (
     "MessageReactionAddEvent", "MessageReactionRemoveAllEvent",
     "MessageReactionRemoveEmojiEvent", "MessageReactionRemoveEvent",
     "MessageReference", "MessageType", "NewsChannel", "Overwrite",
-    "PartialGuildMember", "Permission", "PremiumTier", "PremiumTypes",
+    "PartialGuildMember", "Permissions", "PremiumTier", "PremiumTypes",
     "PresenceUpdateEvent", "PrivacyLevel", "Reaction", "ReadyEvent",
     "RequestGuildMembers", "ResolvedData", "Resume", "Role", "RoleTags",
     "SessionStartLimit", "StageInstance", "StatusType", "Sticker",

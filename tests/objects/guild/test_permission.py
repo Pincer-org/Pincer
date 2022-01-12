@@ -1,7 +1,7 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from pincer.objects.guild.permissions import Permission
+from pincer.objects.guild.permissions import Permissions, PermissionEnum
 
 
 class TestPermission:
@@ -52,37 +52,37 @@ class TestPermission:
         )
 
         for perm in valid_perms:
-            assert hasattr(Permission(), perm)
+            assert hasattr(Permissions(), perm)
 
     @staticmethod
     def test_from_int():
-        assert Permission.from_int(1025, 268435472) == Permission(
+        assert Permissions.from_int(1025, 268435472) == Permissions(
             view_channel=True,
             manage_channels=False,
             create_instant_invite=True,
             manage_roles=False,
         )
 
-        assert Permission.from_int(0, 0) == Permission()
+        assert Permissions.from_int(0, 0) == Permissions()
 
     @staticmethod
     def test_to_int():
-        allow, deny = Permission.to_int(Permission())
+        allow, deny = Permissions.to_int(Permissions())
         assert allow == 0
         assert deny == 0
 
-        permission = Permission()
-        for enum in Permission:
+        permission = Permissions()
+        for enum in PermissionEnum:
             if getattr(permission, enum.name.lower()):
                 allow |= enum.value
             elif getattr(permission, enum.name.lower()) is False:
                 deny |= enum.value
 
-        assert Permission.to_int(Permission()) == (0, 0)
+        assert Permissions.to_int(Permissions()) == (0, 0)
 
     @staticmethod
     def test_allow():
-        permission = Permission(
+        permission = Permissions(
             view_channel=True,
             manage_channels=False,
             create_instant_invite=True,
