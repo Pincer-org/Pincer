@@ -54,7 +54,7 @@ class CommandArg(metaclass=_CommandTypeMeta):
         _log.warn(
             "CommandArg is deprecated and will be removed in future releases."
             " `typing.Annotated`/`typing_extensions.Annotated.` should be used instead."
-            " See https://docs.pincer.dev/en/latest/interactions.html#arguments for"
+            " See https://docs.pincer.dev/en/stable/interactions.html#arguments for"
             " more information."
         )
 
