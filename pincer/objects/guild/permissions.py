@@ -210,7 +210,7 @@ class Permission:
         Create a Permission object from an integer representation of the permissions (deny and allow)
 
         Parameters
-        __________
+        ----------
         allow: :class:`int`
             The integer representation of the permissions that are allowed
         deny: :class:`int`
