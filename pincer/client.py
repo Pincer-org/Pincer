@@ -575,7 +575,7 @@ class Client:
         num_shards: Optional[int] = None
     ) -> Gateway:
         """
-        Returns the shard recieving events for a specified guild_id.
+        Returns the shard receiving events for a specified guild_id.
 
         ``num_shards`` is inferred from the num_shards value for the most recently
         started shard. If your shards do not all have the same ``num_shard`` value, you
