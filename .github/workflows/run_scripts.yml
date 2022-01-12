@@ -11,10 +11,8 @@ jobs:
       - uses: actions/setup-python@v2
 
         with:
-          persist-credentials: false
-          fetch-depth: 0
-          python-version: '3.8'
-          architecture: 'x64'
+          python-version: "3.8"
+          architecture: "x64"
 
       - name: setup git
         run: |
@@ -25,10 +23,12 @@ jobs:
       - name: running all sorter
         run: |
           python ./.github/scripts/all_sorter.py
-          git diff-index --quiet HEAD || git commit -am ":art: Automatic `__all__` sorting"
+          git commit -am ":art: Automatic `__all__` sorting" || echo "No changes to commit"
+          git push || echo "No changes to push"
 
 
       - name: running license generator
         run: |
           python ./.github/scripts/license_generator.py
-          git diff-index --quiet HEAD || git commit -am ":page_facing_up: Automatic license generator"
+          git commit -am ":page_facing_up: Automatic license generator" || echo "No changes to commit"
+          git push || echo "No changes to push"
