@@ -785,7 +785,7 @@ class TextChannel(Channel):
         after: Union[int, Snowflake] = None,
         around: Union[int, Snowflake] = None,
     ) -> AsyncIterator[UserMessage]:
-        """
+        """|coro|
         Returns a list of messages in this channel.
 
         Parameters
