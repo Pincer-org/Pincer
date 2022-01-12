@@ -1,7 +1,7 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
-import pytest
-from pincer.objects.guild.permissions import Permission, Permissions
+
+from pincer.objects.guild.permissions import Permission
 
 
 class TestPermission:
@@ -72,7 +72,7 @@ class TestPermission:
         assert deny == 0
 
         permission = Permission()
-        for enum in Permissions:
+        for enum in Permission:
             if getattr(permission, enum.name.lower()):
                 allow |= enum.value
             elif getattr(permission, enum.name.lower()) is False:
