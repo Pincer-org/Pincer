@@ -214,7 +214,7 @@ class Permissions:
             elif enum.value & deny:
                 value = False
 
-            setattr(clsobj, enum.name, value)
+            setattr(clsobj, enum.name.lower(), value)
 
         return clsobj
 
