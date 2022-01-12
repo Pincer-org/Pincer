@@ -581,6 +581,8 @@ class Client:
         shard. If your shards do not all have the same ``num_shard`` value, you must
         specify value to get the expected result.
 
+        Parameters
+        ----------
         guild_id : Optional[~pincer.utils.snowflake.Snowflake]
             The guild_id of the shard to look for
         num_shards : Optional[int]

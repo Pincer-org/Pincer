@@ -4,6 +4,8 @@
 def calculate_shard_id(guild_id, num_shards):
     """Calculates the shard receiving the events for a specified guild
 
+    Parameters
+    ----------
     guild_id : Optional[~pincer.utils.snowflake.Snowflake]
         The guild_id of the shard to look for
     num_shards : Optional[int]
