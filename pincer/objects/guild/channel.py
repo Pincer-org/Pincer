@@ -805,14 +805,6 @@ class TextChannel(Channel):
             An iterator of messages.
         """
 
-        if isinstance(before, int):
-            before = Snowflake(before)
-
-        if isinstance(after, int):
-            after = Snowflake(after)
-
-        if isinstance(around, int):
-            around = Snowflake(around)
 
         if limit is None:
             limit = float('inf')
