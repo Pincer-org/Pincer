@@ -781,9 +781,9 @@ class TextChannel(Channel):
 
     async def history(
         self, limit: int = 50,
-        before: Union[int, Snowflake] = None,
-        after: Union[int, Snowflake] = None,
-        around: Union[int, Snowflake] = None,
+        before: Optional[Union[int, Snowflake]] = None,
+        after: Optional[Union[int, Snowflake]] = None,
+        around: Optional[Union[int, Snowflake]] = None,
     ) -> AsyncIterator[UserMessage]:
         """|coro|
         Returns a list of messages in this channel.
