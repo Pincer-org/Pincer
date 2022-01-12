@@ -21,6 +21,7 @@ from typing import (
     List,
     Optional,
     Iterable,
+    OrderedDict,
     Tuple,
     Union,
     overload,
@@ -37,6 +38,7 @@ from .exceptions import (
     NoCogManagerReturnFound,
     CogAlreadyExists,
     CogNotFound,
+    GatewayConnectionError
 )
 from .middleware import middleware
 from .objects import (
@@ -58,6 +60,7 @@ from .utils.conversion import remove_none
 from .utils.event_mgr import EventMgr
 from .utils.extraction import get_index
 from .utils.insertion import should_pass_cls, should_pass_gateway
+from .utils.shards import calculate_shard_id
 from .utils.signature import get_params
 from .utils.types import CheckFunction
 from .utils.types import Coro
@@ -238,6 +241,7 @@ class Client:
         self.event_mgr = EventMgr(self.loop)
 
         self.gateway: GatewayInfo = self.loop.run_until_complete(get_gateway())
+        self.shards: OrderedDict[int, Gateway] = OrderedDict()
 
         # The guild and channel value is only registered if the Client has the GUILDS
         # intent.
@@ -562,7 +566,35 @@ class Client:
             }
         )
 
+        self.shards[gateway.shard] = gateway
         create_task(gateway.start_loop())
+
+    def get_shard(
+        self,
+        guild_id: Optional[Snowflake] = None,
+        num_shards: Optional[int] = None
+    ) -> Gateway:
+        """
+        Returns the shard recieving events for a specified guild_id.
+
+        ``num_shards`` is inferred from the num_shards value for the most recently
+        started shard. If your shards do not all have the same ``num_shard`` value, you
+        must specify value to get the expected result.
+
+        guild_id : Optional[~pincer.utils.snowflake.Snowflake]
+            The guild_id of the shard to look for
+        num_shards : Optional[int]
+            The number of shards.
+        """
+        if not guild_id:
+            return self.shards[0]
+        if not num_shards:
+            if not self.shards:
+                raise GatewayConnectionError(
+                    "The client has never connected to a gateway"
+                )
+            num_shards = next(iter(self.shards.values())).num_shards
+        return self.shards[calculate_shard_id(guild_id, num_shards)]
 
     @property
     def is_closed(self) -> bool:
