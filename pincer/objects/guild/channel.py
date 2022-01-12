@@ -805,7 +805,6 @@ class TextChannel(Channel):
             An iterator of messages.
         """
 
-
         if limit is None:
             limit = float('inf')
 
@@ -825,13 +824,10 @@ class TextChannel(Channel):
             if not raw_messages:
                 break
 
-            for _message in raw_messages[:-1]:
+            for _message in raw_messages:
                 yield UserMessage.from_dict(_message)
 
-            last = UserMessage.from_dict(raw_messages[-1])
-            yield last
-
-            before = last.id
+            before = raw_messages[-1]['id']
             limit -= retrieve
 
 
