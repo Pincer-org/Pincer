@@ -7,8 +7,6 @@ from .commands import (
     user_command,
     message_command,
     ChatCommandHandler,
-    hash_app_command,
-    hash_app_command_params,
 )
 
 from .arg_types import (
