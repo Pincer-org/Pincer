@@ -22,7 +22,7 @@ from ..user.user import User
 from ..._config import GatewayConfig
 from ...utils.api_object import APIObject, GuildProperty, ChannelProperty
 from ...utils.snowflake import Snowflake
-from ...utils.types import MISSING, JSONSerializable
+from ...utils.types import MISSING, JsonVal
 
 if TYPE_CHECKING:
     from typing import Any, List, Optional, Union, Generator
@@ -544,7 +544,7 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
             the components to include with the message
         """
 
-        data: DefaultDict[str, JSONSerializable] = defaultdict(list)
+        data: DefaultDict[str, JsonVal] = defaultdict(list)
 
         def set_if_not_none(value: Any, name: str):
             if isinstance(value, list):
