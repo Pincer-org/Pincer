@@ -104,7 +104,7 @@ from .user.voice_state import VoiceState
 from .voice.region import VoiceRegion
 
 __all__ = (
-    "", "Activity", "ActivityAssets", "ActivityButton",
+    "Activity", "ActivityAssets", "ActivityButton",
     "ActivityEmoji", "ActivityFlags", "ActivityParty", "ActivitySecrets",
     "ActivityTimestamp", "ActivityType", "AllowedMentionTypes",
     "AllowedMentions", "AppCommand", "AppCommandInteractionDataOption",
