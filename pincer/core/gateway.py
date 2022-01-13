@@ -17,10 +17,6 @@ from random import random
 from typing import TYPE_CHECKING, Any, Dict, Callable, Optional
 from zlib import decompressobj
 
-
-from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
-from websockets.legacy.client import WebSocketClientProtocol, connect
-
 from aiohttp import (
     ClientSession, WSMsgType, ClientConnectorError, ClientWebSocketResponse
 )
