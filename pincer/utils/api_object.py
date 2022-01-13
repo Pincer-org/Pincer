@@ -6,7 +6,7 @@ from __future__ import annotations
 import copy
 import logging
 
-from dataclasses import fields, _is_dataclass_instance
+from dataclasses import fields, is_dataclass
 from enum import Enum, EnumMeta
 from inspect import getfullargspec
 from itertools import chain
