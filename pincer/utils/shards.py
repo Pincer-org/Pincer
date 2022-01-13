@@ -1,7 +1,7 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-def calculate_shard_id(guild_id, num_shards):
+def calculate_shard_id(guild_id: Union[Snowflake, int], num_shards: int) -> int:
     """Calculates the shard receiving the events for a specified guild
 
     Parameters

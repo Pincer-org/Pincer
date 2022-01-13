@@ -583,14 +583,14 @@ class Client:
 
         Parameters
         ----------
-        guild_id : Optional[~pincer.utils.snowflake.Snowflake]
+        guild_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
             The guild_id of the shard to look for
-        num_shards : Optional[int]
+        num_shards : Optional[:class:`int`]
             The number of shards.
         """
-        if not guild_id:
+        if guild_id is None:
             return self.shards[0]
-        if not num_shards:
+        if num_shards is None:
             if not self.shards:
                 raise GatewayConnectionError(
                     "The client has never connected to a gateway"
