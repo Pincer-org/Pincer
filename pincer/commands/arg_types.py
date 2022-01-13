@@ -25,7 +25,7 @@ class CommandArg(metaclass=_CommandTypeMeta):
     .. note::
         Deprecated. :class:`typing.Annotated` or :class:`typing_extensions.Annotated`
         should be used instead. See
-        https://docs.pincer.dev/en/latest/interactions.html#arguments for more
+        https://docs.pincer.dev/en/stable/interactions.html#arguments for more
         information.
 
     .. code-block:: python3
