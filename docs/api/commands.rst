@@ -27,6 +27,7 @@ Command Types
 .. autoclass:: MaxValue()
 .. autoclass:: MinValue()
 .. autoclass:: ChannelTypes()
+.. autoclass:: CommandArg()
 
 ChatCommandHandler
 ------------------

@@ -128,24 +128,24 @@ The list of possible type hints is as follows:
      - Mentionable
 
 You might want to specify more information for your arguments. If you want a description for your command, you will have to use the
-:class:`~pincer.commands.arg_types.Description` type. Modifier types like this need to be inside of the :class:`~pincer.commands.arg_types.CommandArg`
+:class:`~pincer.commands.arg_types.Description` type. Modifier types like this need to be inside of the :class:`~typing.Annotated`
 type.
 
 .. code-block:: python
 
-    from pincer.commands import CommandArg, Description
+    from typing import Annotated # Python 3.9+
+    from typing_extensions import Annotated # Python 3.8
+
+    from pincer.commands import Description
     from pincer.objects import MessageContext
 
     @command
     async def say(
         self,
         ctx: MessageContext,
-        word: CommandArg[
+        word: Annotated[
           str,
-          # This will likely be marked as incorrect by your linter but it is
-          # valid Python. Simply append # type: ignore for most linters and
-          # noqa: F722 if you are using Flake8.
-          Description["A word that the bot will say."]  # type: ignore # noqa: F722
+          Description("A word that the bot will say.")  # type: ignore # noqa: F722
         ]
     ):
         # Returns the name of the user that initiated the interaction
