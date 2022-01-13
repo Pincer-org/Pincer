@@ -1,3 +1,6 @@
+# Copyright Pincer 2021-Present
+# Full MIT License can be found in `LICENSE` at the project root.
+
 from typing import Any, Callable, Iterable, List, T
 
 
