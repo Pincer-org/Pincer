@@ -585,7 +585,7 @@ class Client:
         ----------
         guild_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
             The guild_id of the shard to look for. If no guild id is provided, the
-            shard that recieves dms will be returned. |default| :data:`None`
+            shard that receives dms will be returned. |default| :data:`None`
         num_shards : Optional[:class:`int`]
             The number of shards. If no number is provided, the value will default to
             the num_shards for the first started shard. |default| :data:`None`
