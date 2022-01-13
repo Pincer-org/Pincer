@@ -67,7 +67,7 @@ class TestPermission:
 
     @staticmethod
     def test_to_int():
-        allow, deny = Permissions.to_int(Permissions())
+        allow, deny = Permissions.to_tuple(Permissions())
         assert allow == 0
         assert deny == 0
 
@@ -78,7 +78,7 @@ class TestPermission:
             elif getattr(permission, enum.name.lower()) is False:
                 deny |= enum.value
 
-        assert Permissions.to_int(Permissions()) == (0, 0)
+        assert Permissions.to_tuple(Permissions()) == (0, 0)
 
     @staticmethod
     def test_allow():

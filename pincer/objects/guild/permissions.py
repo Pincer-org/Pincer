@@ -4,11 +4,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import IntEnum
 from typing import Tuple, Optional
 
 
-class PermissionEnum(Enum):
+class PermissionEnum(IntEnum):
     """
     Represents the permissions for a guild.
     """
@@ -62,87 +62,87 @@ class Permissions:
 
     Parameters
     ----------
-    create_instant_invite: :class:`Optional[:class:`bool`]`
+    create_instant_invite: :class:Optional[:class:`bool`]
         Allows creation of instant invites
-    kick_members: :class:`Optional[:class:`bool`]`
+    kick_members: :class:Optional[:class:`bool`]
         Allows kicking members
-    ban_members: :class:`Optional[:class:`bool`]`
+    ban_members: :class:Optional[:class:`bool`]
         Allows banning members
-    administrator: :class:`Optional[:class:`bool`]`
+    administrator: :class:Optional[:class:`bool`]
         Allows all permissions and bypasses channel permission overwrites
-    manage_channels: :class:`Optional[:class:`bool`]`
+    manage_channels: :class:Optional[:class:`bool`]
         Allows management and editing of channels
-    manage_guild: :class:`Optional[:class:`bool`]`
+    manage_guild: :class:Optional[:class:`bool`]
         Allows management and editing of the guild
-    add_reactions: :class:`Optional[:class:`bool`]`
+    add_reactions: :class:Optional[:class:`bool`]
         Allows for the addition of reactions to messages
-    view_audit_log: :class:`Optional[:class:`bool`]`
+    view_audit_log: :class:Optional[:class:`bool`]
         Allows for viewing of audit logs
-    priority_speaker: :class:`Optional[:class:`bool`]`
+    priority_speaker: :class:Optional[:class:`bool`]
         Allows for using priority speaker in a voice channel
-    stream: :class:`Optional[:class:`bool`]`
+    stream: :class:Optional[:class:`bool`]
         Allows the user to go live
-    view_channel: :class:`Optional[:class:`bool`]`
+    view_channel: :class:Optional[:class:`bool`]
         Allows guild members to view a channel, which includes reading messages in text channels
-    send_messages: :class:`Optional[:class:`bool`]`
+    send_messages: :class:Optional[:class:`bool`]
         Allows for sending messages in a channel (does not allow sending messages in threads)
-    send_tts_messages: :class:`Optional[:class:`bool`]`
+    send_tts_messages: :class:Optional[:class:`bool`]
         Allows for sending of tts messages
-    manage_messages: :class:`Optional[:class:`bool`]`
+    manage_messages: :class:Optional[:class:`bool`]
         Allows for deletion of other users messages
-    embed_links: :class:`Optional[:class:`bool`]`
+    embed_links: :class:Optional[:class:`bool`]
         Links sent by users with this permission will be auto-embedded
-    attach_files: :class:`Optional[:class:`bool`]`
+    attach_files: :class:Optional[:class:`bool`]
         Allows for uploading images and files
-    read_message_history: :class:`Optional[:class:`bool`]`
+    read_message_history: :class:Optional[:class:`bool`]
         Allows for reading of message history
-    mention_everyone: :class:`Optional[:class:`bool`]`
+    mention_everyone: :class:Optional[:class:`bool`]
         Allows for using the @everyone tag to notify all users in a channel, and the @here tag to notify all online users in a channel
-    use_external_emojis: :class:`Optional[:class:`bool`]`
+    use_external_emojis: :class:Optional[:class:`bool`]
         Allows the usage of custom emojis from other servers
-    view_guild_insights: :class:`Optional[:class:`bool`]`
+    view_guild_insights: :class:Optional[:class:`bool`]
         Allows for viewing of guild insights
-    connect: :class:`Optional[:class:`bool`]`
+    connect: :class:Optional[:class:`bool`]
         Allows for joining of a voice channel
-    speak: :class:`Optional[:class:`bool`]`
+    speak: :class:Optional[:class:`bool`]
         Allows for speaking in a voice channel
-    mute_members: :class:`Optional[:class:`bool`]`
+    mute_members: :class:Optional[:class:`bool`]
         Allows for muting members in a voice channel
-    deafen_members: :class:`Optional[:class:`bool`]`
+    deafen_members: :class:Optional[:class:`bool`]
         Allows for deafening of members in a voice channel
-    move_members: :class:`Optional[:class:`bool`]`
+    move_members: :class:Optional[:class:`bool`]
         Allows for moving of members between voice channels
-    use_vad: :class:`Optional[:class:`bool`]`
+    use_vad: :class:Optional[:class:`bool`]
         Allows for using voice activity detection in a voice channel
-    change_nickname: :class:`Optional[:class:`bool`]`
+    change_nickname: :class:Optional[:class:`bool`]
         Allows for modification of own nickname
-    manage_nicknames: :class:`Optional[:class:`bool`]`
+    manage_nicknames: :class:Optional[:class:`bool`]
         Allows for modification of other users nicknames
-    manage_roles: :class:`Optional[:class:`bool`]`
+    manage_roles: :class:Optional[:class:`bool`]
         Allows for management and editing of roles
-    manage_webhooks: :class:`Optional[:class:`bool`]`
+    manage_webhooks: :class:Optional[:class:`bool`]
         Allows for management and editing of webhooks
-    manage_emojis_and_stickers: :class:`Optional[:class:`bool`]`
+    manage_emojis_and_stickers: :class:Optional[:class:`bool`]
         Allows for management and editing of emojis and stickers
-    use_application_commands: :class:`Optional[:class:`bool`]`
+    use_application_commands: :class:Optional[:class:`bool`]
         Allows for using application-specific commands
-    request_to_speak: :class:`Optional[:class:`bool`]`
+    request_to_speak: :class:Optional[:class:`bool`]
         Allows for requesting to speak in a voice channel
-    manage_events: :class:`Optional[:class:`bool`]`
+    manage_events: :class:Optional[:class:`bool`]
         Allows for management and editing of events
-    manage_threads: :class:`Optional[:class:`bool`]`
+    manage_threads: :class:Optional[:class:`bool`]
         Allows for management and editing of threads
-    create_public_threads: :class:`Optional[:class:`bool`]`
+    create_public_threads: :class:Optional[:class:`bool`]
         Allows for the creation of public threads
-    create_private_threads: :class:`Optional[:class:`bool`]`
+    create_private_threads: :class:Optional[:class:`bool`]
         Allows for the creation of private threads
-    use_external_stickers: :class:`Optional[:class:`bool`]`
+    use_external_stickers: :class:Optional[:class:`bool`]
         Allows for the usage of stickers from other servers
-    send_messages_in_threads: :class:`Optional[:class:`bool`]`
+    send_messages_in_threads: :class:Optional[:class:`bool`]
         Allows for sending messages in threads
-    start_embedded_activities: :class:`Optional[:class:`bool`]`
+    start_embedded_activities: :class:Optional[:class:`bool`]
         Allows for starting of embedded activities
-    moderate_members: :class:`Optional[:class:`bool`]`
+    moderate_members: :class:Optional[:class:`bool`]
         Allows for moderation of members in a guild
     """
 
@@ -218,7 +218,7 @@ class Permissions:
 
         return clsobj
 
-    def to_int(self) -> Tuple[int]:
+    def to_tuple(self) -> Tuple[int]:
         """
         Convert the Permission object to an integer representation of the permissions (deny and allow)
 
