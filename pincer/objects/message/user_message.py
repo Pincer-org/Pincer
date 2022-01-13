@@ -16,7 +16,6 @@ from .reference import MessageReference
 from .sticker import StickerItem
 
 from ..app.interaction_base import MessageInteraction
-from ..guild.member import GuildMember
 from ..guild.role import Role
 from ..user.user import User
 from ..._config import GatewayConfig
@@ -29,6 +28,7 @@ if TYPE_CHECKING:
     from ..app.application import Application
     from ... import Client
     from ..guild.channel import Channel, ChannelMention
+    from ..guild.member import GuildMember
     from ...utils.types import APINullable
     from ...utils.timestamp import Timestamp
 
