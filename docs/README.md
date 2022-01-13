@@ -121,8 +121,8 @@ client.run()
 Pincer makes developing application commands intuitive and fast.
 
 ```py
-from typing import Annotation  # python 3.9+
-from typing_extensions import Annotation  # python 3.8
+from typing import Annotated  # python 3.9+
+from typing_extensions import Annotated  # python 3.8
 
 from pincer import Client
 from pincer.commands import command, CommandArg, Description
@@ -149,8 +149,8 @@ class Bot(Client):
     @command(description="Add two numbers!")
     async def add(
         self,
-        first: Annotation[int, Description("The first number")],
-        second: Annotation[int, Description("The second number")]
+        first: Annotated[int, Description("The first number")],
+        second: Annotated[int, Description("The second number")]
     ):
         return f"The addition of `{first}` and `{second}` is `{first + second}`"
 
