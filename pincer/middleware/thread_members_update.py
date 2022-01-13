@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.thread import ThreadMembersUpdateEvent
-from ..utils.conversion import construct_client_dict
 from ..utils.types import JsonDict
 
 if TYPE_CHECKING:
