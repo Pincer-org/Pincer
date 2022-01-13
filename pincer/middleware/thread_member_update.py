@@ -2,11 +2,9 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 """sent when the thread member object for the current user is updated"""
-from typing import Union
-
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 
 from ..objects import ThreadMember
 
