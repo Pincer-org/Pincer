@@ -194,7 +194,7 @@ class Permissions:
         return super().__setattr__(name, value)
 
     @classmethod
-    def from_int(cls, allow: int, deny: int) -> Permissions:
+    def from_ints(cls, allow: int, deny: int) -> Permissions:
         """
         Create a Permission object from an integer representation of the permissions (deny and allow)
 

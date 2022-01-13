@@ -56,14 +56,14 @@ class TestPermission:
 
     @staticmethod
     def test_from_int():
-        assert Permissions.from_int(1025, 268435472) == Permissions(
+        assert Permissions.from_ints(1025, 268435472) == Permissions(
             view_channel=True,
             manage_channels=False,
             create_instant_invite=True,
             manage_roles=False,
         )
 
-        assert Permissions.from_int(0, 0) == Permissions()
+        assert Permissions.from_ints(0, 0) == Permissions()
 
     @staticmethod
     def test_to_int():

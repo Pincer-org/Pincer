@@ -36,4 +36,4 @@ class Overwrite(APIObject):
     @property
     def permissions(self) -> Permissions:
         """Returns the permissions for this overwrite"""
-        return Permissions.from_int(int(self.allow), int(self.deny))
+        return Permissions.from_ints(int(self.allow), int(self.deny))
