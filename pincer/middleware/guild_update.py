@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects import Guild
-from ..utils.conversion import construct_client_dict
 from ..utils.types import JsonDict
 
 if TYPE_CHECKING:
@@ -40,7 +39,7 @@ async def guild_update_middleware(
     channel_list: List[JsonDict] = payload.data.pop("channels", [])
 
     channels: List[Channel] = [
-        Channel.from_dict(construct_client_dict(self, channel))
+        Channel.from_dict(self, channel)
         for channel in channel_list
     ]
 
