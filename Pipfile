@@ -6,15 +6,15 @@ name = "pypi"
 [packages]
 websockets = ">=10.0"
 aiohttp = ">=3.7.4post0,<4.1.0"
-Pillow = "==8.4.0"
+Pillow = "==9.0.0"
 
 [dev-packages]
 flake8 = "==4.0.1"
 tox = "==3.24.5"
 pytest = "==6.2.5"
-pytest-asyncio = "==0.16.0"
+pytest-asyncio = "==0.17.0"
 pytest-cov = "==3.0.0"
-mypy = "==0.930"
+mypy = "==0.931"
 twine = "==3.7.1"
 wheel = "==0.37.1"
 

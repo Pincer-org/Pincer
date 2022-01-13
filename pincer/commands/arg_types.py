@@ -1,12 +1,17 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
+
 from typing import Any, List, Tuple, Union, TypeVar, Type
+
+import logging
 
 from ..objects.app.command import AppCommandOptionChoice
 from ..utils.types import MISSING
 
 T = TypeVar("T")
+
+_log = logging.getLogger(__name__)
 
 
 class _CommandTypeMeta(type):
@@ -21,16 +26,22 @@ class CommandArg(metaclass=_CommandTypeMeta):
     """
     Holds the parameters of an application command option
 
+    .. note::
+        Deprecated. :class:`typing.Annotated` or :class:`typing_extensions.Annotated`
+        should be used instead. See
+        https://docs.pincer.dev/en/stable/interactions.html#arguments for more
+        information.
+
     .. code-block:: python3
 
-        CommandArg[
+        Annotated[
             # This is the type of command.
             # Supported types are str, int, bool, float, User, Channel, and Role
             int,
             # The modifiers to the command go here
-            Description["Pick a number 1-10"],
-            MinValue[1],
-            MaxValue[10]
+            Description("Pick a number 1-10"),
+            MinValue(1),
+            MaxValue(10)
         ]
 
     Parameters
@@ -44,6 +55,12 @@ class CommandArg(metaclass=_CommandTypeMeta):
     def __init__(self, command_type, *args):
         self.command_type = command_type
         self.modifiers = args
+        _log.warn(
+            "CommandArg is deprecated and will be removed in future releases."
+            " `typing.Annotated`/`typing_extensions.Annotated.` should be used instead."
+            " See https://docs.pincer.dev/en/stable/interactions.html#arguments for"
+            " more information."
+        )
 
     def get_arg(self, arg_type: Type[T]) -> T:
         for arg in self.modifiers:
@@ -57,6 +74,21 @@ class Modifier(metaclass=_CommandTypeMeta):
     """
     Modifies a CommandArg by being added to
     :class:`~pincer.commands.arg_types.CommandArg`'s args.
+
+    Modifiers go inside an :class:`typing.Annotated` type hint.
+
+    .. code-block:: python3
+
+        Annotated[
+            # This is the type of command.
+            # Supported types are str, int, bool, float, User, Channel, and Role
+            int,
+            # The modifiers to the command go here
+            Description("Pick a number 1-10"),
+            MinValue(1),
+            MaxValue(10)
+        ]
+
     """
 
 
@@ -67,9 +99,9 @@ class Description(Modifier):
     .. code-block:: python3
 
         # Creates an int argument with the description "example description"
-        CommandArg[
+        Annotated[
             int,
-            Description["example description"]
+            Description("example description")
         ]
 
     Parameters
@@ -91,10 +123,10 @@ class Choice(Modifier):
 
     .. code-block:: python3
 
-        Choices[
-            Choice["First Number", 10],
-            Choice["Second Number", 20]
-        ]
+        Choices(
+            Choice("First Number", 10),
+            Choice("Second Number", 20)
+        )
 
     Parameters
     ----------
@@ -115,13 +147,13 @@ class Choices(Modifier):
 
     .. code-block:: python3
 
-        CommandArg[
+        Annotated[
             int,
-            Choices[
-                Choice["First Number", 10],
+            Choices(
+                Choice("First Number", 10),
                 20,
                 50
-            ]
+            )
         ]
 
     Parameters
@@ -155,14 +187,14 @@ class ChannelTypes(Modifier):
 
     .. code-block:: python3
 
-        CommandArg[
+        Annotated[
             Channel,
             # The user will only be able to choice between GUILD_TEXT and
             GUILD_TEXT channels.
-            ChannelTypes[
+            ChannelTypes(
                 ChannelType.GUILD_TEXT,
                 ChannelType.GUILD_VOICE
-            ]
+            )
         ]
 
     Parameters
@@ -184,10 +216,10 @@ class MaxValue(Modifier):
 
     .. code-block:: python3
 
-        CommandArg[
+        Annotated[
             int,
             # The user can't pick a number above 10
-            MaxValue[10]
+            MaxValue(10)
         ]
 
     Parameters
@@ -209,10 +241,10 @@ class MinValue(Modifier):
 
     .. code-block:: python3
 
-        CommandArg[
+        Annotated[
             int,
             # The user can't pick a number below 10
-            MinValue[10]
+            MinValue(10)
         ]
 
     Parameters

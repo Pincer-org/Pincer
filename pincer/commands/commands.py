@@ -8,7 +8,8 @@ import re
 from asyncio import iscoroutinefunction, gather
 from functools import partial
 from inspect import Signature, isasyncgenfunction, _empty
-from typing import TYPE_CHECKING, Union, List
+from typing import TYPE_CHECKING, TypeVar, Union, List, ValuesView
+
 
 from . import __package__
 from ..commands.arg_types import (
@@ -19,6 +20,10 @@ from ..commands.arg_types import (
     MaxValue,
     MinValue,
 )
+
+from ..commands.groups import Group, Subgroup
+from ..utils.snowflake import Snowflake
+
 from ..exceptions import (
     CommandIsNotCoroutine,
     CommandAlreadyRegistered,
@@ -45,7 +50,7 @@ from ..objects.app import (
     ClientCommandStructure,
     AppCommandType,
 )
-from ..utils import get_index, should_pass_ctx
+from ..utils import should_pass_ctx
 from ..utils.signature import get_signature_and_params
 from ..utils.snowflake import Snowflake
 from ..utils.types import MISSING
@@ -74,6 +79,8 @@ _options_type_link = {
 if TYPE_CHECKING:
     from ..client import Client
 
+T = TypeVar("T")
+
 
 def command(
     func=None,
@@ -83,8 +90,9 @@ def command(
     enable_default: Optional[bool] = True,
     guild: Union[Snowflake, int, str] = None,
     cooldown: Optional[int] = 0,
-    cooldown_scale: Optional[float] = 60,
+    cooldown_scale: Optional[float] = 60.0,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
+    parent: Optional[Union[Group, Subgroup]] = None
 ):
     """A decorator to create a slash command to register and respond to
     with the discord API from a function.
@@ -111,13 +119,13 @@ def command(
                 amount: int,
                 name: CommandArg[
                     str,
-                    Description["Do something cool"],
-                    Choices[Choice["first value", 1], 5]
+                    Description("Do something cool"),
+                    Choices(Choice("first value", 1), 5)
                 ],
                 optional_int: CommandArg[
                     int,
-                    MinValue[10],
-                    MaxValue[100],
+                    MinValue(10),
+                    MaxValue(100),
                 ] = 50
             ):
                 return Message(
@@ -127,12 +135,14 @@ def command(
 
 
     References from above:
-        :class:`~client.Client`,
-        :class:`~objects.message.message.Message`,
-        :class:`~objects.message.context.MessageContext`,
+        :class:`~pincer.client.Client`,
+        :class:`~pincer.objects.message.message.Message`,
+        :class:`~pincer.objects.message.context.MessageContext`,
         :class:`~pincer.objects.app.interaction_flags.InteractionFlags`,
         :class:`~pincer.commands.arg_types.Choices`,
         :class:`~pincer.commands.arg_types.Choice`,
+        :class:`typing_extensions.Annotated` (Python 3.8),
+        :class:`typing.Annotated` (Python 3.9+),
         :class:`~pincer.commands.arg_types.CommandArg`,
         :class:`~pincer.commands.arg_types.Description`,
         :class:`~pincer.commands.arg_types.MinValue`,
@@ -187,6 +197,7 @@ def command(
             cooldown=cooldown,
             cooldown_scale=cooldown_scale,
             cooldown_scope=cooldown_scope,
+            parent=parent
         )
 
     cmd = name or func.__name__
@@ -224,7 +235,16 @@ def command(
         if annotation == MessageContext and idx == 1:
             return
 
-        if type(annotation) is not CommandArg:
+        argument_type = None
+        if type(annotation) is CommandArg:
+            argument_type = annotation.command_type
+        # isinstance and type don't work for Annotated. This is the best way 💀
+        elif hasattr(annotation, "__metadata__"):
+            # typing.get_origin doesn't work in 3.9+ for some reason. Maybe they forgor
+            # to implement it.
+            argument_type = annotation.__origin__
+
+        if not argument_type:
             if annotation in _options_type_link:
                 options.append(
                     AppCommandOption(
@@ -238,16 +258,27 @@ def command(
 
             # TODO: Write better exception
             raise InvalidArgumentAnnotation(
-                "Type must be CommandArg or other valid type"
+                "Type must be Annotated or other valid type"
             )
 
-        command_type = _options_type_link[annotation.command_type]
-        argument_description = (
-            annotation.get_arg(Description) or "Description not set"
-        )
-        choices = annotation.get_arg(Choices)
+        command_type = _options_type_link[argument_type]
 
-        if choices is not MISSING and annotation.command_type not in {
+        def get_arg(t: T) -> APINullable[T]:
+            if type(annotation) is CommandArg:
+                return annotation.get_arg(t)
+            elif hasattr(annotation, "__metadata__"):
+                for obj in annotation.__metadata__:
+                    if isinstance(obj, t):
+                        return obj.get_payload()
+                return MISSING
+
+        argument_description = (
+            get_arg(Description) or "Description not set"
+        )
+
+        choices = get_arg(Choices)
+
+        if choices is not MISSING and argument_type not in {
             int,
             float,
             str,
@@ -259,31 +290,31 @@ def command(
             for choice in choices:
                 if (
                     isinstance(choice.value, int)
-                    and annotation.command_type is float
+                    and argument_type is float
                 ):
                     continue
-                if not isinstance(choice.value, annotation.command_type):
+                if not isinstance(choice.value, argument_type):
                     raise InvalidArgumentAnnotation(
                         "Choice value must match the command type"
                     )
 
-        channel_types = annotation.get_arg(ChannelTypes)
+        channel_types = get_arg(ChannelTypes)
         if (
             channel_types is not MISSING
-            and annotation.command_type is not Channel
+            and argument_type is not Channel
         ):
             raise InvalidArgumentAnnotation(
                 "ChannelTypes are only available for Channels"
             )
 
-        max_value = annotation.get_arg(MaxValue)
-        min_value = annotation.get_arg(MinValue)
+        max_value = get_arg(MaxValue)
+        min_value = get_arg(MinValue)
 
         for i, value in enumerate((min_value, max_value)):
             if (
                 value is not MISSING
-                and annotation.command_type is not int
-                and annotation.command_type is not float
+                and argument_type is not int
+                and argument_type is not float
             ):
                 t = ("MinValue", "MaxValue")
                 raise InvalidArgumentAnnotation(
@@ -319,6 +350,7 @@ def command(
         cooldown_scale=cooldown_scale,
         cooldown_scope=cooldown_scope,
         command_options=options,
+        parent=parent
     )
 
 
@@ -472,7 +504,7 @@ def message_command(
         Annotation amount is max 25,
         Not a valid argument type,
         Annotations must consist of name and value
-    """
+    """  # noqa: E501
     return register_command(
         func=func,
         app_command_type=AppCommandType.MESSAGE,
@@ -494,9 +526,10 @@ def register_command(
     enable_default: Optional[bool] = True,
     guild: Optional[Union[Snowflake, int, str]] = None,
     cooldown: Optional[int] = 0,
-    cooldown_scale: Optional[float] = 60,
+    cooldown_scale: Optional[float] = 60.0,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
     command_options=MISSING,  # Missing typehint?
+    parent: Optional[Union[Group, Subgroup]] = MISSING
 ):
     if func is None:
         return partial(
@@ -509,6 +542,7 @@ def register_command(
             cooldown=cooldown,
             cooldown_scale=cooldown_scale,
             cooldown_scope=cooldown_scope,
+            parent=parent
         )
 
     cmd = name or func.__name__
@@ -540,8 +574,17 @@ def register_command(
             "the 100 character limit."
         )
 
+    group = MISSING
+    sub_group = MISSING
+
+    if isinstance(parent, Group):
+        group = parent
+    if isinstance(parent, Subgroup):
+        group = parent.parent
+        sub_group = parent
+
     if reg := ChatCommandHandler.register.get(
-        hash_app_command_params(cmd, guild, app_command_type)
+        _hash_app_command_params(cmd, guild, app_command_type, group, sub_group)
     ):
         raise CommandAlreadyRegistered(
             f"Command `{cmd}` (`{func.__name__}`) has already been "
@@ -549,19 +592,21 @@ def register_command(
         )
 
     ChatCommandHandler.register[
-        hash_app_command_params(cmd, guild_id, app_command_type)
+        _hash_app_command_params(cmd, guild_id, app_command_type, group, sub_group)
     ] = ClientCommandStructure(
         call=func,
         cooldown=cooldown,
         cooldown_scale=cooldown_scale,
         cooldown_scope=cooldown_scope,
+        group=group,
+        sub_group=sub_group,
         app=AppCommand(
             name=cmd,
             description=description,
             type=app_command_type,
             default_permission=enable_default,
             options=command_options,
-            guild_id=guild_id,
+            guild_id=guild_id
         ),
     )
 
@@ -570,7 +615,25 @@ def register_command(
 
 
 class ChatCommandHandler(metaclass=Singleton):
-    """Metaclass containing methods used to handle various commands
+    """Singleton containing methods used to handle various commands
+
+    The register and built_register
+    -------------------------------
+    I found the way Discord expects commands to be registered to be very different than
+    how you want to think about command registration. i.e. Discord wants nesting but we
+    don't want any nesting. Nesting makes it hard to think about commands and also will
+    increase lookup time.
+    The way this problem is avoided is by storing a version of the commands that we can
+    deal with as library developers and a version of the command that Discord thinks we
+    should provide. That is where the register and the built_register help simplify the
+    design of the library.
+    The register is simply where the "Pincer version" of commands gets saved to memory.
+    The built_register is where the version of commands that Discord requires is saved.
+    The register allows for O(1) lookups by storing commands in a Python dictionary. It
+    does cost some memory to save two copies in the current iteration of the system but
+    we should be able to drop the built_register in runtime if we want to. I don't feel
+    that lost maintainability from this is optimal. We can index by in O(1) by checking
+    the register but can still use the built_register if we need to do a nested lookup.
 
     Attributes
     ----------
@@ -578,13 +641,17 @@ class ChatCommandHandler(metaclass=Singleton):
         The client object
     managers: Dict[:class:`str`, :class:`~typing.Any`]
         Dictionary of managers
-    register: Dict[:class:`str`, :class:`~objects.app.command.ClientCommandStructure`]
+    register: Dict[:class:`str`, :class:`~pincer.objects.app.command.ClientCommandStructure`]
         Dictionary of ``ClientCommandStructure``
-    """
+    built_register: Dict[:class:`str`, :class:`~pincer.objects.app.command.ClientCommandStructure`]
+        Dictionary of ``ClientCommandStructure`` where the commands are converted to
+        the format that Discord expects for sub commands and sub command groups.
+    """  # noqa: E501
 
     has_been_initialized = False
     managers: Dict[str, Any] = {}
     register: Dict[str, ClientCommandStructure] = {}
+    built_register: Dict[str, AppCommand] = {}
 
     # Endpoints:
     __get = "/commands"
@@ -613,7 +680,7 @@ class ChatCommandHandler(metaclass=Singleton):
     async def get_commands(self) -> List[AppCommand]:
         """|coro|
 
-        Get a list of app commands
+        Get a list of app commands from Discord
 
         Returns
         -------
@@ -666,8 +733,6 @@ class ChatCommandHandler(metaclass=Singleton):
             self.__prefix + remove_endpoint.format(command=cmd)
         )
 
-        ChatCommandHandler.register.pop(hash_app_command(cmd), None)
-
     async def add_command(self, cmd: AppCommand):
         """|coro|
 
@@ -685,12 +750,8 @@ class ChatCommandHandler(metaclass=Singleton):
         if cmd.guild_id:
             add_endpoint = self.__add_guild.format(command=cmd)
 
-        res = await self.client.http.post(
+        await self.client.http.post(
             self.__prefix + add_endpoint, data=cmd.to_dict()
-        )
-
-        ChatCommandHandler.register[hash_app_command(cmd)].app.id = Snowflake(
-            res["id"]
         )
 
     async def add_commands(self, commands: List[AppCommand]):
@@ -705,6 +766,132 @@ class ChatCommandHandler(metaclass=Singleton):
         """
         await gather(*map(lambda cmd: self.add_command(cmd), commands))
 
+    @staticmethod
+    def __build_local_commands():
+        """Builds the commands into the format that Discord expects. See class info
+        for the reasoning.
+        """
+        for cmd in ChatCommandHandler.register.values():
+
+            if cmd.sub_group:
+                # If a command has a sub_group, it must be nested 2 levels deep.
+                #
+                # command
+                #     subcommand-group
+                #         subcommand
+                #
+                # The children of the subcommand-group object are being set to include
+                # `cmd` If that subcommand-group object does not exist, it will be
+                # created here. The same goes for the top-level command.
+                #
+                # First make sure the command exists. This command will hold the
+                # subcommand-group for `cmd`.
+
+                # `key` represents the hash value for the top-level command that will
+                # hold the subcommand.
+                key = _hash_app_command_params(
+                    cmd.group.name,
+                    cmd.app.guild_id,
+                    AppCommandType.CHAT_INPUT,
+                    None,
+                    None,
+                )
+
+                if key not in ChatCommandHandler.built_register:
+                    ChatCommandHandler.built_register[key] = AppCommand(
+                        name=cmd.group.name,
+                        description=cmd.group.description,
+                        type=AppCommandType.CHAT_INPUT,
+                        guild_id=cmd.app.guild_id,
+                        options=[]
+                    )
+
+                # The top-level command now exists. A subcommand group now if placed
+                # inside the top-level command. This subcommand group will hold `cmd`.
+
+                children = ChatCommandHandler.built_register[key].options
+
+                sub_command_group = AppCommandOption(
+                    name=cmd.sub_group.name,
+                    description=cmd.sub_group.description,
+                    type=AppCommandOptionType.SUB_COMMAND_GROUP,
+                    options=[]
+                )
+
+                # This for-else makes sure that sub_command_group will hold a reference
+                # to the subcommand group that we want to modify to hold `cmd`
+
+                for cmd_in_children in children:
+                    if (
+                        cmd_in_children.name == sub_command_group.name
+                        and cmd_in_children.description == sub_command_group.description
+                        and cmd_in_children.type == sub_command_group.type
+                    ):
+                        sub_command_group = cmd_in_children
+                        break
+                else:
+                    children.append(sub_command_group)
+
+                sub_command_group.options.append(AppCommandOption(
+                    name=cmd.app.name,
+                    description=cmd.app.description,
+                    type=AppCommandOptionType.SUB_COMMAND,
+                    options=cmd.app.options,
+                ))
+
+                continue
+
+            if cmd.group:
+                # Any command at this point will only have one level of nesting.
+                #
+                # Command
+                #    subcommand
+                #
+                # A subcommand object is what is being generated here. If there is no
+                # top level command, it will be created here.
+
+                # `key` represents the hash value for the top-level command that will
+                # hold the subcommand.
+
+                key = _hash_app_command_params(
+                    cmd.group.name,
+                    cmd.app.guild_id,
+                    AppCommandOptionType.SUB_COMMAND,
+                    None,
+                    None
+                )
+
+                if key not in ChatCommandHandler.built_register:
+                    ChatCommandHandler.built_register[key] = AppCommand(
+                        name=cmd.group.name,
+                        description=cmd.group.description,
+                        type=AppCommandOptionType.SUB_COMMAND,
+                        guild_id=cmd.app.guild_id,
+                        options=[]
+                    )
+
+                # No checking has to be done before appending `cmd` since it is the
+                # lowest level.
+                ChatCommandHandler.built_register[key].options.append(
+                    AppCommandOption(
+                        name=cmd.app.name,
+                        description=cmd.app.description,
+                        type=AppCommandType.CHAT_INPUT,
+                        options=cmd.app.options
+                    )
+                )
+
+                continue
+
+            # All single-level commands are registered here.
+            ChatCommandHandler.built_register[
+                _hash_app_command(cmd.app, cmd.group, cmd.sub_group)
+            ] = cmd.app
+
+    @staticmethod
+    def get_local_registered_commands() -> ValuesView[AppCommand]:
+        return ChatCommandHandler.built_register.values()
+
     async def __get_existing_commands(self):
         """|coro|
 
@@ -717,21 +904,13 @@ class ChatCommandHandler(metaclass=Singleton):
             logging.error("Cannot retrieve slash commands, skipping...")
             return
 
-        for api_cmd in self._api_commands:
-            cmd = ChatCommandHandler.register.get(hash_app_command(api_cmd))
-            if cmd and cmd.app == api_cmd:
-                cmd.app = api_cmd
-
     async def __remove_unused_commands(self):
         """|coro|
 
         Remove commands that are registered by discord but not in use
         by the current client
         """
-        local_registered_commands = [
-            registered_cmd.app for registered_cmd
-            in ChatCommandHandler.register.values()
-        ]
+        local_registered_commands = self.get_local_registered_commands()
 
         def should_be_removed(target: AppCommand) -> bool:
             for reg_cmd in local_registered_commands:
@@ -746,7 +925,7 @@ class ChatCommandHandler(metaclass=Singleton):
             return True
 
         # NOTE: Cannot be generator since it can't be consumed due to lines 743-745
-        to_remove = list(filter(should_be_removed, self._api_commands))
+        to_remove = [*filter(should_be_removed, self._api_commands)]
 
         await gather(
             *map(
@@ -774,10 +953,7 @@ class ChatCommandHandler(metaclass=Singleton):
         Therefore, we don't need to use a separate loop for updating and adding
         commands.
         """
-        local_registered_commands = [
-            registered_cmd.app for registered_cmd
-            in ChatCommandHandler.register.values()
-        ]
+        local_registered_commands = self.get_local_registered_commands()
 
         def should_be_updated_or_uploaded(target):
             for command in self._api_commands:
@@ -802,16 +978,65 @@ class ChatCommandHandler(metaclass=Singleton):
             return
 
         ChatCommandHandler.has_been_initialized = True
+
+        self.__build_local_commands()
         await self.__get_existing_commands()
         await self.__remove_unused_commands()
         await self.__add_commands()
 
 
-def hash_app_command(command: AppCommand) -> int:
-    return hash_app_command_params(command.name, command.guild_id, command.type)
-
-
-def hash_app_command_params(
-    name: str, guild_id: Snowflake, app_command_type: AppCommandType
+def _hash_app_command(
+    command: AppCommand,
+    group: Optional[str],
+    sub_group: Optional[str]
 ) -> int:
-    return hash((name, guild_id, app_command_type))
+    """
+    See :func:`~pincer.commands.commands._hash_app_command_params` for information.
+    """
+    return _hash_app_command_params(
+        command.name,
+        command.guild_id,
+        command.type,
+        group,
+        sub_group
+    )
+
+
+def _hash_app_command_params(
+    name: str,
+    guild_id: Union[Snowflake, None, MISSING],
+    app_command_type: AppCommandType,
+    group: Optional[str],
+    sub_group: Optional[str]
+) -> int:
+    """
+    The group layout in Pincer is very different from what discord has on their docs.
+    You can think of the Pincer group layout like this:
+
+    name: The name of the function that is being called.
+
+    group: The :class:`~pincer.commands.groups.Group` object that this function is
+        using.
+    sub_option: The :class:`~pincer.commands.groups.Subgroup` object that this
+        functions is using.
+
+    Abstracting away this part of the Discord API allows for a much cleaner
+    transformation between what users want to input and what commands Discord
+    expects.
+
+    Parameters
+    ----------
+    name : str
+        The name of the function for the command
+    guild_id : Union[:class:`~pincer.utils.snowflake.Snowflake`, None, MISSING]
+        The ID of a guild, None, or MISSING.
+    app_command_type : :class:`~pincer.objects.app.command_types.AppCommandType`
+        The app command type of the command. NOT THE OPTION TYPE.
+    group : str
+        The highest level of organization the command is it. This should always be the
+        name of the base command. :data:`None` or :data:`MISSING` if not there.
+    sub_option : str
+        The name of the group that holds the lowest level of options. :data:`None` or
+        :data:`MISSING` if not there.
+    """
+    return hash((name, guild_id, app_command_type, group, sub_group))

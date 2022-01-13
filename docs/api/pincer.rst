@@ -20,6 +20,8 @@ Client
 Exceptions
 ----------
 
+.. currentmodule:: pincer.exceptions
+
 .. autoexception:: PincerError()
 
 .. autoexception:: InvalidPayload()

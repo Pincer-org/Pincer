@@ -14,10 +14,8 @@ from .invite import Invite, InviteTargetType
 from ..message.user_message import UserMessage
 from ..._config import GatewayConfig
 from ...utils.api_object import APIObject, GuildProperty
-from ...utils.conversion import construct_client_dict, remove_none
 from ...utils.convert_message import convert_message
 from ...utils.types import MISSING
-
 
 if TYPE_CHECKING:
     from typing import AsyncGenerator, Dict, List, Optional, Union
@@ -214,11 +212,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         data = (await client.http.get(f"channels/{channel_id}")) or {}
 
-        data.update(
-            construct_client_dict(
-                client, {"type": ChannelType(data.pop("type"))}
-            )
-        )
+        data.update({"type": ChannelType(data.pop("type"))})
 
         channel_cls = _channel_type_map.get(data["type"], Channel)
         return channel_cls.from_dict(data)
@@ -267,11 +261,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         data = await self._http.patch(
             f"channels/{self.id}", kwargs, headers=headers
         )
-        data.update(
-            construct_client_dict(
-                self._client, {"type": ChannelType(data.pop("type"))}
-            )
-        )
+        data.update({"type": ChannelType(data.pop("type"))})
         channel_cls = _channel_type_map.get(data["type"], Channel)
         return channel_cls.from_dict(data)
 
@@ -304,7 +294,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         await self._http.put(
             f"channels/{self.id}/permissions/{overwrite.id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
             data={"allow": allow, "deny": deny, "type": type},
         )
 
@@ -324,7 +314,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         await self._http.delete(
             f"channels/{self.id}/permissions/{overwrite.id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
 
     async def follow_news_channel(
@@ -346,12 +336,9 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             The followed channel object.
         """
         return NewsChannel.from_dict(
-            construct_client_dict(
-                self._client,
-                self._http.post(
-                    f"channels/{self.id}/followers",
-                    data={"webhook_channel_id": webhook_channel_id},
-                ),
+            self._http.post(
+                f"channels/{self.id}/followers",
+                data={"webhook_channel_id": webhook_channel_id},
             )
         )
 
@@ -377,9 +364,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         data = await self._http.get(f"channels/{self.id}/pins")
         for message in data:
-            yield UserMessage.from_dict(
-                construct_client_dict(self._client, message)
-            )
+            yield UserMessage.from_dict(message)
 
     async def pin_message(
         self, message: UserMessage, reason: Optional[str] = None
@@ -390,7 +375,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         await self._http.put(
             f"channels/{self.id}/pins/{message.id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
 
     async def unpin_message(
@@ -401,7 +386,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         await self._http.delete(
             f"channels/{self.id}/pins/{message.id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
 
     async def group_dm_add_recipient(
@@ -460,7 +445,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         await self._http.post(
             f"channels/{self.id}/messages/bulk_delete",
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
             data={"messages": messages},
         )
 
@@ -485,10 +470,11 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
         await self._http.delete(
             f"channels/{channel_id}",
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
 
-    async def __post_send_handler(self, message: Union[UserMessage, Message]):
+    @staticmethod
+    async def __post_send_handler(message: Union[UserMessage, Message]):
         """Process a message after it was sent.
 
         Parameters
@@ -551,9 +537,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         data = await self._http.get(f"channels/{self.id}/webhooks")
         for webhook_data in data:
-            yield Webhook.from_dict(
-                construct_client_dict(self._client, webhook_data)
-            )
+            yield Webhook.from_dict(webhook_data)
 
     async def get_invites(self) -> AsyncIterator[Invite]:
         """|coro|
@@ -567,7 +551,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         data = await self._http.get(f"channels/{self.id}/invites")
         for invite in data:
-            yield Invite.from_dict(construct_client_dict(self._client, invite))
+            yield Invite.from_dict(invite)
 
     async def create_invite(
         self,
@@ -623,21 +607,18 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             The invite object.
         """
         return Invite.from_dict(
-            construct_client_dict(
-                self._client,
-                await self._http.post(
-                    f"channels/{self.id}/invites",
-                    headers=remove_none({"X-Audit-Log-Reason": reason}),
-                    data={
-                        "max_age": max_age,
-                        "max_uses": max_uses,
-                        "temporary": temporary,
-                        "unique": unique,
-                        "target_type": target_type,
-                        "target_user_id": target_user_id,
-                        "target_application_id": target_application_id,
-                    },
-                ),
+            await self._http.post(
+                f"channels/{self.id}/invites",
+                headers={"X-Audit-Log-Reason": reason},
+                data={
+                    "max_age": max_age,
+                    "max_uses": max_uses,
+                    "temporary": temporary,
+                    "unique": unique,
+                    "target_type": target_type,
+                    "target_user_id": target_user_id,
+                    "target_application_id": target_application_id,
+                },
             )
         )
 
@@ -652,10 +633,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             The response object.
         """
         return ThreadsResponse.from_dict(
-            construct_client_dict(
-                self._client,
-                self._http.get(f"channels/{self.id}/threads/active"),
-            )
+            self._http.get(f"channels/{self.id}/threads/active")
         )
 
     async def list_public_archived_threads(
@@ -684,12 +662,9 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             The response object.
         """
         return ThreadsResponse.from_dict(
-            construct_client_dict(
-                self._client,
-                await self._http.get(
-                    f"channels/{self.id}/threads/archived/public?"
-                    + urlencode(remove_none({"before": before, "limit": limit}))
-                ),
+            await self._http.get(
+                f"channels/{self.id}/threads/archived/public",
+                params={"before": before, "limit": limit},
             )
         )
 
@@ -717,12 +692,9 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             The response object.
         """
         return ThreadsResponse.from_dict(
-            construct_client_dict(
-                self._client,
-                await self._http.get(
-                    f"channels/{self.id}/threads/archived/private?"
-                    + urlencode(remove_none({"before": before, "limit": limit}))
-                ),
+            await self._http.get(
+                f"channels/{self.id}/threads/archived/private",
+                params={"before": before, "limit": limit},
             )
         )
 
@@ -751,12 +723,9 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
 
         return ThreadsResponse.from_dict(
-            construct_client_dict(
-                self._client,
-                self._http.get(
-                    f"channels/{self.id}/users/@me/threads/archived/private?"
-                    + urlencode(remove_none({"before": before, "limit": limit}))
-                ),
+            self._http.get(
+                f"channels/{self.id}/users/@me/threads/archived/private",
+                params={"before": before, "limit": limit},
             )
         )
 
@@ -816,6 +785,57 @@ class TextChannel(Channel):
         return UserMessage.from_dict(
             await self._http.get(f"channels/{self.id}/messages/{message_id}")
         )
+
+    async def history(
+        self, limit: int = 50,
+        before: Optional[Union[int, Snowflake]] = None,
+        after: Optional[Union[int, Snowflake]] = None,
+        around: Optional[Union[int, Snowflake]] = None,
+    ) -> AsyncIterator[UserMessage]:
+        """|coro|
+        Returns a list of messages in this channel.
+
+        Parameters
+        ----------
+        around : Optional[Union[:class:`int`, :class:`Snowflake`]]
+            The message ID to look around.
+        after : Optional[Union[:class:`int`, :class:`Snowflake`]]
+            The message ID to look after.
+        before : Optional[Union[:class:`int`, :class:`Snowflake`]]
+            The message ID to look before.
+        limit : Optional[Union[:class:`int`, :class:`Snowflake`]]
+            The maximum number of messages to return.
+
+        Returns
+        -------
+        AsyncIterator[:class:`~pincer.objects.message.user_message.UserMessage`]
+            An iterator of messages.
+        """
+
+        if limit is None:
+            limit = float('inf')
+
+        while limit > 0:
+            retrieve = min(limit, 100)
+
+            raw_messages = await self._http.get(
+                f'/channels/{self.id}/messages',
+                params={
+                    'limit': retrieve,
+                    'before': before,
+                    'after': after,
+                    'around': around,
+                }
+            )
+
+            if not raw_messages:
+                break
+
+            for _message in raw_messages:
+                yield UserMessage.from_dict(_message)
+
+            before = raw_messages[-1]['id']
+            limit -= retrieve
 
 
 class VoiceChannel(Channel):
@@ -947,20 +967,17 @@ class Thread(Channel):
             The created thread.
         """
         return Channel.from_dict(
-            construct_client_dict(
-                self._client,
-                await self._http.post(
-                    f"channels/{self.id}/threads",
-                    headers=remove_none({"X-Audit-Log-Reason": reason}),
-                    data={
-                        "name": name,
-                        "auto_archive_duration": auto_archive_duration,
-                        "type": type_,
-                        "invitable": invitable,
-                        "rate_limit_per_user": rate_limit_per_user,
-                    },
-                ),
-            )
+            await self._http.post(
+                f"channels/{self.id}/threads",
+                headers={"X-Audit-Log-Reason": reason},
+                data={
+                    "name": name,
+                    "auto_archive_duration": auto_archive_duration,
+                    "type": type_,
+                    "invitable": invitable,
+                    "rate_limit_per_user": rate_limit_per_user,
+                },
+            ),
         )
 
     async def start_with_message(
@@ -1010,17 +1027,14 @@ class Thread(Channel):
             The created thread.
         """
         return Channel.from_dict(
-            construct_client_dict(
-                self._client,
-                await self._http.post(
-                    f"channels/{self.id}/messages/{message.id}/threads",
-                    headers=remove_none({"X-Audit-Log-Reason": reason}),
-                    data={
-                        "name": name,
-                        "auto_archive_duration": auto_archive_duration,
-                        "rate_limit_per_user": rate_limit_per_user,
-                    },
-                ),
+            await self._http.post(
+                f"channels/{self.id}/messages/{message.id}/threads",
+                headers={"X-Audit-Log-Reason": reason},
+                data={
+                    "name": name,
+                    "auto_archive_duration": auto_archive_duration,
+                    "rate_limit_per_user": rate_limit_per_user,
+                },
             )
         )
 
@@ -1080,12 +1094,7 @@ class Thread(Channel):
             The thread member object.
         """
         return ThreadMember.from_dict(
-            construct_client_dict(
-                self._client,
-                await self._http.get(
-                    f"channels/{self.id}/thread-members/{user.id}"
-                ),
-            )
+            await self._http.get(f"channels/{self.id}/thread-members/{user.id}")
         )
 
     async def list_members(self) -> AsyncIterator[ThreadMember]:
@@ -1100,9 +1109,7 @@ class Thread(Channel):
         """
         data = await self._http.get(f"channels/{self.id}/thread-members")
         for member in data:
-            yield ThreadMember.from_dict(
-                construct_client_dict(self._client, member)
-            )
+            yield ThreadMember.from_dict(member)
 
 
 class PublicThread(Thread):

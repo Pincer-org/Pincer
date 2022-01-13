@@ -84,13 +84,13 @@ class Sticker(APIObject):
         the user that uploaded the guild sticker
     """
 
-    description: Optional[str]
     format_type: StickerFormatType
     id: Snowflake
     name: str
     tags: str
     type: StickerType
 
+    description: Optional[str] = None
     available: APINullable[bool] = MISSING
     guild_id: APINullable[Snowflake] = MISSING
     pack_id: APINullable[Snowflake] = MISSING
@@ -147,7 +147,7 @@ class Sticker(APIObject):
             data=remove_none(
                 {"name": name, "description": description, "tags": tags}
             ),
-            headers=remove_none({"X-Audit-Log-Reason": reason}),
+            headers={"X-Audit-Log-Reason": reason},
         )
 
         return Sticker.from_dict(sticker)

@@ -6,6 +6,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Union, TYPE_CHECKING
 
+
+from ...commands.groups import Group, Subgroup
 from .command_types import AppCommandOptionType, AppCommandType
 from ...objects.guild.channel import ChannelType
 from ...utils.api_object import APIObject, GuildProperty
@@ -54,6 +56,10 @@ class AppCommandOptionChoice(APIObject):
     """
     name: str
     value: choice_value_types
+
+    def __post_init__(self):
+        # APIObject __post_init_ causes issues by converting `value` to a string
+        self.name = str(self.name)
 
 
 @dataclass(repr=False)
@@ -208,10 +214,5 @@ class ClientCommandStructure:
     cooldown: int
     cooldown_scale: float
     cooldown_scope: ThrottleScope
-
-
-__all__ = (
-    "AppCommandType", "AppCommandOptionType", "AppCommandInteractionDataOption",
-    "AppCommandOptionChoice", "AppCommandOption", "AppCommand",
-    "ClientCommandStructure"
-)
+    group: APINullable[Group] = MISSING
+    sub_group: APINullable[Subgroup] = MISSING

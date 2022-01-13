@@ -8,7 +8,6 @@ from dataclasses import dataclass
 from typing import Any, Dict, TYPE_CHECKING, Union, Optional, List
 
 from pincer.utils.api_object import ChannelProperty, GuildProperty
-
 from .command_types import AppCommandOptionType
 from .interaction_base import InteractionType, CallbackType
 from .mentionable import Mentionable
@@ -383,7 +382,7 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
 
     async def reply(self, message: MessageConvertable) -> UserMessage:
         """|coro|
-        Sends a reply to a interaction.
+        Sends a reply to an interaction.
         """
         return await self._base_reply(message, CallbackType.MESSAGE, False)
 

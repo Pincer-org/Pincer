@@ -44,6 +44,7 @@ class GatewayDispatch:
     ):
         self.op: int = op
         self.data: JsonDict = data or {}
+        self.data: Optional[Union[int, bool, Dict[str, Any]]] = data
         self.seq: Optional[int] = seq
         self.event_name: Optional[str] = name
 

@@ -18,9 +18,7 @@ if TYPE_CHECKING:
 
 
 async def guild_update_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -46,7 +44,8 @@ async def guild_update_middleware(
         for channel in channel_list
     ]
 
-    guild = Guild.from_dict(construct_client_dict(self, payload.data))
+
+    guild = Guild.from_dict(payload.data)
     self.guilds[guild.id] = guild
 
     for channel in guild.channels:

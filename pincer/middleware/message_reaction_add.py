@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 
 from ..objects import GuildMember, Emoji
 from ..objects.events.message import MessageReactionAddEvent
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -18,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def message_reaction_add_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -42,18 +39,11 @@ async def message_reaction_add_middleware(
     return (
         "on_message_reaction_add",
         MessageReactionAddEvent.from_dict(
-            construct_client_dict(
-                self,
-                {
-                    "member": GuildMember.from_dict(
-                        construct_client_dict(self, payload.data.pop("member"))
-                    ),
-                    "emoji": Emoji.from_dict(
-                        construct_client_dict(self, payload.data.pop("emoji"))
-                    ),
-                    **payload.data,
-                },
-            )
+            {
+                "member": GuildMember.from_dict(payload.data.pop("member")),
+                "emoji": Emoji.from_dict(payload.data.pop("emoji")),
+                **payload.data,
+            }
         ),
     )
 

@@ -2,7 +2,6 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 from dataclasses import dataclass
-from typing import Optional
 
 
 @dataclass(repr=False)
@@ -13,7 +12,7 @@ class GatewayConfig:
     MAX_RETRIES: int = 5
     version: int = 9
     encoding: str = "json"
-    compression: str = "zlib-stream"
+    compression: str = "zlib-payload"
 
     @classmethod
     def make_uri(cls, uri) -> str:

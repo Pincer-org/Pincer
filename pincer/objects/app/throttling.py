@@ -5,7 +5,6 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
-
 from .throttle_scope import ThrottleScope
 from ..app.command import ClientCommandStructure
 from ...exceptions import CommandCooldownError
@@ -15,7 +14,6 @@ if TYPE_CHECKING:
     from typing import Dict, Optional
 
     from ...utils.types import Coro
-    from ..message.context import MessageContext
 
 
 class ThrottleInterface(ABC):
@@ -29,7 +27,7 @@ class ThrottleInterface(ABC):
 
 
 class DefaultThrottleHandler(ThrottleInterface, ABC):
-    """The default throttlehandler based off the
+    """The default throttle-handler based off the
     :class:`~pincer.objects.app.throttling.ThrottleInterface` ABC
     """
     __throttle_scopes = {
@@ -52,7 +50,7 @@ class DefaultThrottleHandler(ThrottleInterface, ABC):
         Returns
         -------
         Optional[:class:`int`]
-            The throttlescope enum
+            The throttle-scope enum
         """
         scope = DefaultThrottleHandler.__throttle_scopes[command.cooldown_scope]
 

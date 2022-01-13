@@ -27,6 +27,7 @@ Command Types
 .. autoclass:: MaxValue()
 .. autoclass:: MinValue()
 .. autoclass:: ChannelTypes()
+.. autoclass:: CommandArg()
 
 ChatCommandHandler
 ------------------
@@ -42,11 +43,17 @@ Message Components
 
 .. autoclass:: ActionRow()
 .. autoclass:: Button()
+    :inherited-members:
 .. autoclass:: LinkButton()
 .. autoclass:: ButtonStyle()
 .. autoclass:: SelectMenu()
+    :inherited-members:
 .. autoclass:: SelectOption()
+
+.. currentmodule:: pincer.commands.components._component
 .. autoclass:: _Component()
+
+.. currentmodule:: pincer.commands.components
 
 .. autofunction:: button
     :decorator:
@@ -54,3 +61,10 @@ Message Components
     :decorator:
 .. autofunction:: component
     :decorator:
+
+Command Groups
+~~~~~~~~~~~~~~
+.. currentmodule:: pincer.commands.groups
+
+.. autoclass:: Group()
+.. autoclass:: Subgroup()

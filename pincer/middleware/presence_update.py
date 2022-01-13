@@ -8,9 +8,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.presence import PresenceUpdateEvent
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
-
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -19,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def presence_update_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -39,10 +35,7 @@ async def presence_update_middleware(
     Tuple[:class:`str`, :class:`~pincer.objects.user.voice_state.PresenceUpdateEvent`]
         ``on_presence_update`` and a ``PresenceUpdateEvent``
     """  # noqa: E501
-    return (
-        "on_presence_update",
-        PresenceUpdateEvent.from_dict(construct_client_dict(self, payload.data)),
-    )
+    return ("on_presence_update", PresenceUpdateEvent.from_dict(payload.data))
 
 
 def export() -> Coro:

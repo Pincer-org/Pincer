@@ -117,7 +117,8 @@ class Gateway:
         }
 
         # 4000 and 4009 are not included. The client will reconnect when receiving
-        # either.
+        # either. Code 4000 is also used for internal disconnects that will lead to a
+        # reconnect.
         self.__close_codes: Dict[int, GatewayError] = {
             4001: GatewayError("Invalid opcode was sent"),
             4002: GatewayError("Invalid payload was sent."),
@@ -142,12 +143,12 @@ class Gateway:
         # `ClientWebSocketResponse` is a parent class.
         self.__socket: Optional[ClientWebSocketResponse] = None
 
-        # Buffer used to store information in transport conpression.
+        # Buffer used to store information in transport compression.
         self.__buffer = bytearray()
 
         # The gateway can be disconnected from Discord. This variable stores if the
         # gateway should send a hello or reconnect.
-        self.__should_reconnect: bool = False
+        self.__should_resume: bool = False
 
         # The sequence number for the last received payload. This is used reconnecting.
         self.__sequence_number: int = 0
@@ -234,7 +235,7 @@ class Gateway:
                 )
                 await sleep(15)
 
-        _log.debug("%s Starting envent loop...", self.shard_key)
+        _log.debug("%s Starting event loop...", self.shard_key)
         await self.event_loop()
 
     async def event_loop(self):
@@ -254,7 +255,7 @@ class Gateway:
 
         # The loop is broken when the gateway stops receiving messages.
         # The "error" op codes are in `self.__close_codes`. The rest of the
-        # close codes are unknown issues (such as a unintended disconnect) so the
+        # close codes are unknown issues (such as an unintended disconnect) so the
         # client should reconnect to the gateway.
         err = self.__close_codes.get(self.__socket.close_code)
 
@@ -265,14 +266,14 @@ class Gateway:
             "%s Disconnected from Gateway due without any errors. Reconnecting.",
             self.shard_key
         )
-        self.__should_reconnect = True
-        self.start_loop()
+        # ensure_future prevents a stack overflow
+        ensure_future(self.start_loop())
 
     async def handle_data(self, data: Dict[Any]):
         """|coro|
         Method is run when a payload is received from the gateway.
         The message is expected to already have been decompressed.
-        Handling the opcode is forked to the background so they aren't blocking.
+        Handling the opcode is forked to the background, so they aren't blocking.
         """
         payload = GatewayDispatch.from_string(data)
 
@@ -317,9 +318,8 @@ class Gateway:
             self.shard_key
         )
 
-        await self.__socket.close(code=1000)
-        self.__should_reconnect = True
-        await self.start_loop()
+        self.__should_resume = True
+        await self.__socket.close()
 
     async def handle_invalid_session(self, payload: GatewayDispatch):
         """|coro|
@@ -327,9 +327,16 @@ class Gateway:
         Attempt to relog. This is probably because the session was already invalidated
         when we tried to reconnect.
         """
-        _log.debug("%s Invalid session, attempting to relog...", self.shard_key)
-        self.__should_reconnect = False
-        await self.start_loop()
+
+        _log.debug(
+            "%s Invalid session, attempting to %s...",
+            self.shard_key,
+            "reconnect" if payload.data else "relog"
+        )
+
+        self.__should_resume = payload.data
+        self.stop_heartbeat()
+        await self.__socket.close()
 
     async def identify_and_handle_hello(self, payload: GatewayDispatch):
         """|coro|
@@ -341,7 +348,7 @@ class Gateway:
 
         Successful reconnects are handled in the `resumed` middleware.
         """
-        if self.__should_reconnect:
+        if self.__should_resume:
             _log.debug("%s Resuming connection with Discord", self.shard_key)
 
             await self.send(str(GatewayDispatch(
@@ -370,13 +377,11 @@ class Gateway:
         ))
         self.__heartbeat_interval = payload.data["heartbeat_interval"]
 
-        # This process should already be forked to the background so there is no need to
-        # `ensure_future()` here.
         self.start_heartbeat()
 
     async def handle_heartbeat(self, payload: GatewayDispatch):
         """|coro|
-        Opcode 11 - Heatbeat
+        Opcode 11 - Heartbeat
         Track that the heartbeat has been received using shared state (Rustaceans would
         be very mad)
         """
@@ -421,7 +426,7 @@ class Gateway:
 
     def send_next_heartbeat(self):
         """
-        It is expected to always be waiting for a hearbeat. By canceling that task,
+        It is expected to always be waiting for a heartbeat. By canceling that task,
         a heartbeat can be sent.
         """
         self.__wait_for_heartbeat.cancel()
@@ -459,14 +464,13 @@ class Gateway:
                 # Close code is specified to be anything that is not 1000 in the docs.
                 _log.debug(
                     "%s %s ack not received. Attempting to reconnect."
-                    " Closing socket with close code 1001. \U0001f480",
+                    " Closing socket with close code 4000. \U0001f480",
                     datetime.now(),
                     self.shard_key
                 )
-                await self.__socket.close(code=1001)
-                self.__should_reconnect = True
+                await self.__socket.close(code=4000)
+                self.__should_resume = True
                 # A new loop is started in the background while this one is stopped.
-                ensure_future(self.start_loop())
                 self.stop_heartbeat()
                 return
 

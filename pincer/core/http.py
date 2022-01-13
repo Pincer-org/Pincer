@@ -19,6 +19,7 @@ from ..exceptions import (
     ForbiddenError, MethodNotAllowedError, RateLimitError, ServerError,
     HTTPError
 )
+from ..utils.conversion import remove_none
 
 if TYPE_CHECKING:
     from ..utils.types import JsonDict
@@ -113,30 +114,42 @@ class HTTPClient:
             content_type: str = "application/json",
             data: Optional[Union[JsonDict, str, Payload]] = None,
             headers: Optional[Dict[str, Any]] = None,
-            __ttl: int = None
+            _ttl: Optional[int] = None,
+            params: Optional[Dict] = None,
     ) -> Optional[JsonDict]:
         """
         Send an api request to the Discord REST API.
 
-        method:
+        Parameters
+        ----------
+
+        method: :class:`aiohttp.ClientSession.request`
             The method for the request. (e.g. GET or POST)
 
-        endpoint:
+        endpoint: :class:`str`
             The endpoint to which the request will be sent.
 
-        Keyword Arguments:
-
-        content_type:
+        content_type: :class:`str`
             The request's content type.
 
-        data:
+        data: Optional[Union[:class:`Dict`, :class:`str`, :class:`aiohttp.payload.Payload`]]
             The data which will be added to the request.
+            |default| :data:`None`
 
-        __ttl:
+        headers: Optional[:class:`Dict`]
+            The request headers.
+            |default| :data:`None`
+
+        params: Optional[:class:`Dict`]
+            The query parameters to add to the request.
+            |default| :data:`None`
+
+        _ttl: Optional[:class:`int`]
             Private param used for recursively setting the retry amount.
             (Eg set to 1 for 1 max retry)
+            |default| :data:`None`
         """
-        ttl = __ttl or self.max_ttl
+        ttl = _ttl or self.max_ttl
 
         if ttl == 0:
             logging.error(
@@ -165,8 +178,9 @@ class HTTPClient:
                 data=data,
                 headers={
                     "Content-Type": content_type,
-                    **(headers or {})
-                }
+                    **(remove_none(headers) or {})
+                },
+                params=remove_none(params)
         ) as res:
             return await self.__handle_response(
                 res, method, endpoint, content_type, data, ttl
@@ -179,7 +193,7 @@ class HTTPClient:
             endpoint: str,
             content_type: str,
             data: Optional[str],
-            __ttl: int,
+            _ttl: int,
     ) -> Optional[JsonDict]:
         """
         Handle responses from the discord API.
@@ -187,22 +201,25 @@ class HTTPClient:
         Side effects:
             If a 5xx error code is returned it will retry the request.
 
-        res:
+        Parameters
+        ----------
+
+        res: :class:`aiohttp.ClientResponse`
             The response from the discord API.
 
-        method:
+        method: :class:`aiohttp.ClientSession.request`
             The method which was used to call the endpoint.
 
-        endpoint:
+        endpoint: :class:`str`
             The endpoint to which the request was sent.
 
-        content_type:
+        content_type: :class:`str`
             The request's content type.
 
-        data:
+        data: Optional[:class:`str`]
             The data which was added to the request.
 
-        __ttl:
+        _ttl: :class:`int`
             Private param used for recursively setting the retry amount.
             (Eg set to 1 for 1 max retry)
         """
@@ -254,7 +271,7 @@ class HTTPClient:
             raise exception
 
         # status code is guaranteed to be 5xx
-        retry_in = 1 + (self.max_ttl - __ttl) * 2
+        retry_in = 1 + (self.max_ttl - _ttl) * 2
 
         _log.debug(
             "Server side error occurred with status code "
@@ -268,7 +285,7 @@ class HTTPClient:
             method,
             endpoint,
             content_type=content_type,
-            __ttl=__ttl - 1,
+            _ttl=_ttl - 1,
             data=data
         )
 
@@ -291,7 +308,7 @@ class HTTPClient:
 
         Returns
         -------
-        Optional[:class:`dict`]
+        Optional[:class:`Dict`]
             The response from discord.
         """
         return await self.__send(
@@ -300,7 +317,11 @@ class HTTPClient:
             headers=headers
         )
 
-    async def get(self, route: str) -> Optional[JsonDict]:
+    async def get(
+        self,
+        route: str,
+        params: Optional[Dict] = None
+    ) -> Optional[JsonDict]:
         """|coro|
 
         Sends a get request to a Discord REST endpoint.
@@ -309,13 +330,20 @@ class HTTPClient:
         ----------
         route : :class:`str`
             The Discord REST endpoint to send a get request to.
+        params: Optional[:class:`Dict`]
+            The query parameters to add to the request.
+            |default| :data:`None`
 
         Returns
         -------
-        Optional[:class:`dict`]
+        Optional[:class:`Dict`]
             The response from discord.
         """
-        return await self.__send(self.__session.get, route)
+        return await self.__send(
+            self.__session.get,
+            route,
+            params=params
+        )
 
     async def head(self, route: str) -> Optional[JsonDict]:
         """|coro|
@@ -329,7 +357,7 @@ class HTTPClient:
 
         Returns
         -------
-        Optional[:class:`dict`]
+        Optional[:class:`Dict`]
             The response from discord.
         """
         return await self.__send(self.__session.head, route)
@@ -346,7 +374,7 @@ class HTTPClient:
 
         Returns
         -------
-        Optional[:class:`dict`]
+        Optional[:class:`Dict`]
             The response from discord.
         """
         return await self.__send(self.__session.options, route)
@@ -366,7 +394,7 @@ class HTTPClient:
         ----------
         route : :class:`str`
             The Discord REST endpoint to send a patch request to.
-        data : :class:`dict`
+        data : :class:`Dict`
             The update data for the patch request.
         content_type: :class:`str`
             Body content type.
@@ -376,7 +404,7 @@ class HTTPClient:
 
         Returns
         -------
-        Optional[:class:`dict`]
+        Optional[:class:`Dict`]
             JSON response from the discord API.
         """
         return await self.__send(
@@ -411,7 +439,7 @@ class HTTPClient:
 
         Returns
         -------
-        Optional[:class:`dict`]
+        Optional[:class:`Dict`]
             JSON response from the discord API.
         """
         return await self.__send(
@@ -446,7 +474,7 @@ class HTTPClient:
 
         Returns
         -------
-        Optional[:class:`dict`]
+        Optional[:class:`Dict`]
             JSON response from the discord API.
         """
         return await self.__send(

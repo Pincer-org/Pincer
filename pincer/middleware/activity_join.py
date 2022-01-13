@@ -11,7 +11,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.activity import ActivityJoinEvent
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -21,9 +20,7 @@ if TYPE_CHECKING:
 
 
 async def activity_join_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -43,7 +40,7 @@ async def activity_join_middleware(
     """  # noqa: E501
     return (
         "on_activity_join",
-        ActivityJoinEvent.from_dict(construct_client_dict(self, payload.data)),
+        ActivityJoinEvent.from_dict(payload.data),
     )
 
 

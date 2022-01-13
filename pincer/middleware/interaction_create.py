@@ -3,24 +3,28 @@
 
 from __future__ import annotations
 
-from contextlib import suppress
 import logging
+from contextlib import suppress
 from inspect import isasyncgenfunction, _empty
-from typing import Dict, Any
 from typing import TYPE_CHECKING
 
-from ..core.dispatch import GatewayDispatch
-from ..commands import ChatCommandHandler, ComponentHandler, hash_app_command_params
+
+from ..commands import ChatCommandHandler, ComponentHandler
+from ..commands.commands import _hash_app_command_params
 from ..exceptions import InteractionDoesNotExist
-from ..objects import Interaction, MessageContext, AppCommandType, InteractionType
+from ..objects import (
+    Interaction,
+    MessageContext,
+    AppCommandType,
+    InteractionType,
+)
 
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 from ..utils import get_index
-from ..utils.conversion import construct_client_dict
 from ..utils.signature import get_signature_and_params
 
 if TYPE_CHECKING:
-    from typing import List, Tuple
+    from typing import Any, Dict, List, Tuple
     from ..client import Client
     from ..core.gateway import Gateway
     from ..core.gateway import GatewayDispatch
@@ -30,7 +34,9 @@ _log = logging.getLogger(__name__)
 
 def get_command_from_registry(interaction: Interaction):
     """
-    Search for a command in ChatCommandHandler.register and return it if it exists
+    Search for a command in ChatCommandHandler.register and return it if it exists.
+    The naming of commands is converted from the Discord version to the Pincer version
+    before checking the cache. See ChatCommandHandler docs for more information.
 
     Parameters
     ---------
@@ -43,23 +49,43 @@ def get_command_from_registry(interaction: Interaction):
         The command is not registered
     """
 
-    with suppress(KeyError):
-        return ChatCommandHandler.register[hash_app_command_params(
-            interaction.data.name,
-            MISSING,
-            interaction.data.type
-        )]
+    name: str = interaction.data.name
+    group = None
+    sub_group = None
+
+    options = interaction.data.options
+
+    if interaction.data.options:
+        option = options[0]
+        if option.type == 1:
+            group = name
+            name = option.name
+        elif option.type == 2:
+            group = interaction.data.name
+            sub_group = option.name
+            name = option.options[0].name
 
     with suppress(KeyError):
-        return ChatCommandHandler.register[hash_app_command_params(
-            interaction.data.name,
-            interaction.guild_id,
-            interaction.data.type
-        )]
+        return ChatCommandHandler.register[
+            _hash_app_command_params(
+                name, MISSING, interaction.data.type, group, sub_group
+            )
+        ]
+
+    with suppress(KeyError):
+        return ChatCommandHandler.register[
+            _hash_app_command_params(
+                name,
+                interaction.guild_id,
+                interaction.data.type,
+                group,
+                sub_group,
+            )
+        ]
 
     raise InteractionDoesNotExist(
         f"No command is registered for {interaction.data.name} with type"
-        f"{interaction.data.type}"
+        f" {interaction.data.type}"
     )
 
 
@@ -84,7 +110,7 @@ async def interaction_response_handler(
     context: MessageContext,
     interaction: Interaction,
     args: List[Any],
-    kwargs: Dict[str, Any]
+    kwargs: Dict[str, Any],
 ):
     """|coro|
 
@@ -147,8 +173,19 @@ async def interaction_handler(
     }
     params = {}
 
-    if interaction.data.options is not MISSING:
-        params = {opt.name: opt.value for opt in interaction.data.options}
+    def get_options_from_command(options):
+        if not options:
+            return options
+        if options[0].type == 1:
+            return options[0].options
+        if options[0].type == 2:
+            return get_options_from_command(options[0].options)
+        return options
+
+    options = get_options_from_command(interaction.data.options)
+
+    if options is not MISSING:
+        params = {opt.name: opt.value for opt in options}
 
     args = []
 
@@ -201,9 +238,7 @@ async def interaction_create_middleware(
     Tuple[:class:`str`, :class:`~pincer.objects.app.interactions.Interaction`]
         ``on_interaction_create`` and an ``Interaction``
     """
-    interaction: Interaction = Interaction.from_dict(
-        construct_client_dict(self, payload.data)
-    )
+    interaction: Interaction = Interaction.from_dict(payload.data)
 
     call = get_call(self, interaction)
     context = interaction.get_message_context()

@@ -128,24 +128,24 @@ The list of possible type hints is as follows:
      - Mentionable
 
 You might want to specify more information for your arguments. If you want a description for your command, you will have to use the
-:class:`~pincer.commands.arg_types.Description` type. Modifier types like this need to be inside of the :class:`~pincer.commands.arg_types.CommandArg`
+:class:`~pincer.commands.arg_types.Description` type. Modifier types like this need to be inside of the :class:`~typing.Annotated`
 type.
 
 .. code-block:: python
 
-    from pincer.commands import CommandArg, Description
+    from typing import Annotated # Python 3.9+
+    from typing_extensions import Annotated # Python 3.8
+
+    from pincer.commands import Description
     from pincer.objects import MessageContext
 
     @command
     async def say(
         self,
         ctx: MessageContext,
-        word: CommandArg[
+        word: Annotated[
           str,
-          # This will likely be marked as incorrect by your linter but it is
-          # valid Python. Simply append # type: ignore for most linters and
-          # noqa: F722 if you are using Flake8.
-          Description["A word that the bot will say."]  # type: ignore # noqa: F722
+          Description("A word that the bot will say.")  # type: ignore # noqa: F722
         ]
     ):
         # Returns the name of the user that initiated the interaction
@@ -410,3 +410,68 @@ You can also dynamically set the selectable options.
     @select_menu
     async def select_menu(values: List[str]):
       return f"{values[0]} selected"
+
+
+Subcommands and Subcommand Groups
+---------------------------------
+To nest commands, Pincer organizes them into :class:`~pincer.commands.groups.Group` and
+:class:`~pincer.commands.groups.Subgroup` objects. Group and Subgroup names must only consist of
+lowercase letters and underscores.
+
+
+This chart shows the organization of nested commands:
+
+.. code-block::
+
+  If you use a group:
+
+  group name
+    command name
+  
+  If you use a group and sub group:
+
+  group name
+    subgroup name
+      command name
+
+  Organizing commands like this is also valid:
+
+  group name
+    subgroup name
+      command name
+    command name
+
+:class:`~pincer.commands.groups.Group` and :class:`~pincer.commands.groups.Subgroup` are set to the parent in a @command
+decorator to nest a command inside of them. They are not available for User Commands and Message Commands.
+
+.. code-block:: python
+
+  from pincer.commands import Group, Subgroup
+  ...
+
+  class Bot(Client):
+
+    command_group = Group("command_group")
+    command_sub_group = Subgroup("command_sub_group", parent=a_command_group)
+
+    @command(parent=command_group)
+    def command_group_command():
+      pass
+
+    @command(parent=command_sub_group)
+    def command_sub_group_command():
+      pass
+
+    # Creating these commands is valid because there is no top-level command or group
+    # with the same name.
+    @command
+    def command_group_command():
+      pass
+    @command
+    def command_sub_group():
+      pass
+
+    # This command is not valid because there is a group with the same name.
+    @command
+    def a_command_group():
+      pass

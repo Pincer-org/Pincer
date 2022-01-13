@@ -9,7 +9,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects import ThreadMember
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -18,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def thread_member_update_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -42,7 +39,7 @@ async def thread_member_update_middleware(
 
     return (
         "on_thread_member_update",
-        ThreadMember.from_dict(construct_client_dict(self, payload.data)),
+        ThreadMember.from_dict(payload.data),
     )
 
 
