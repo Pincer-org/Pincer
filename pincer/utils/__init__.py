@@ -26,8 +26,8 @@ from .types import (
 __all__ = (
     "APINullable", "APIObject", "ChannelProperty", "CheckFunction",
     "Color", "Coro", "EventMgr", "GuildProperty", "MISSING", "MissingType",
-    "Snowflake", "Task", "TaskScheduler", "Timestamp", "calculate_shard_id",
-    "chdir", "choice_value_types", "get_index", "get_params",
+    "Snowflake", "Task", "TaskScheduler", "Timestamp", "chdir",
+    "choice_value_types", "get_index", "get_params", "calculate_shard_id",
     "get_signature_and_params", "remove_none", "replace", "should_pass_cls",
     "should_pass_ctx"
 )
