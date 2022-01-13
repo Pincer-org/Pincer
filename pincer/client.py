@@ -584,17 +584,19 @@ class Client:
         Parameters
         ----------
         guild_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
-            The guild_id of the shard to look for
+            The guild_id of the shard to look for. If no guild id is provided, the
+            shard that recieves dms will be returned. |default| :data:`None`
         num_shards : Optional[:class:`int`]
-            The number of shards.
+            The number of shards. If no number is provided, the value will default to
+            the num_shards for the first started shard. |default| :data:`None`
         """
+        if not self.shards:
+            raise GatewayConnectionError(
+                "The client has never connected to a gateway"
+            )
         if guild_id is None:
             return self.shards[0]
         if num_shards is None:
-            if not self.shards:
-                raise GatewayConnectionError(
-                    "The client has never connected to a gateway"
-                )
             num_shards = next(iter(self.shards.values())).num_shards
         return self.shards[calculate_shard_id(guild_id, num_shards)]
 
