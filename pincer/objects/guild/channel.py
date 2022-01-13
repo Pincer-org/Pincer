@@ -790,13 +790,13 @@ class TextChannel(Channel):
 
         Parameters
         ----------
-        around
+        around : Optional[Union[:class:`int`, :class:`Snowflake`]]
             The message ID to look around.
-        after
+        after : Optional[Union[:class:`int`, :class:`Snowflake`]]
             The message ID to look after.
-        before
+        before : Optional[Union[:class:`int`, :class:`Snowflake`]]
             The message ID to look before.
-        limit
+        limit : Optional[Union[:class:`int`, :class:`Snowflake`]]
             The maximum number of messages to return.
 
         Returns
