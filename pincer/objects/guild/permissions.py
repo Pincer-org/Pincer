@@ -218,7 +218,7 @@ class Permissions:
 
         return clsobj
 
-    def to_tuple(self) -> Tuple[int]:
+    def to_ints(self) -> Tuple[int]:
         """
         Convert the Permission object to an integer representation of the permissions (deny and allow)
 
