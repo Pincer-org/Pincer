@@ -26,6 +26,10 @@ from typing import (
     overload,
     TYPE_CHECKING,
 )
+
+from pincer.cog import load_cog, reload_cog
+from pincer.commands.interactable import Interactable
+
 from . import __package__
 from .commands import ChatCommandHandler
 from .core import HTTPClient
@@ -63,6 +67,7 @@ from .utils.types import CheckFunction
 from .utils.types import Coro
 
 if TYPE_CHECKING:
+    from .cog import Cog
     from .objects.app import AppCommand
     from .utils.snowflake import Snowflake
     from .core.dispatch import GatewayDispatch
@@ -160,7 +165,7 @@ for event, middleware_ in middleware.items():
     event_middleware(event)(middleware_)
 
 
-class Client:
+class Client(Interactable):
     """The client is the main instance which is between the programmer
     and the discord API.
 
@@ -244,7 +249,9 @@ class Client:
         self.guilds: Dict[Snowflake, Optional[Guild]] = {}
         self.channels: Dict[Snowflake, Optional[Channel]] = {}
 
-        ChatCommandHandler.managers[self.__module__] = self
+        ChatCommandHandler.managers.append(self)
+
+        super().__init__()
 
     @property
     def chat_commands(self) -> List[str]:
@@ -359,7 +366,7 @@ class Client:
             ]
         )
 
-    def load_cog(self, path: str, package: Optional[str] = None):
+    def load_cog(self, cog: Cog, package: Optional[str] = None):
         """Load a cog from a string path, setup method in COG may
         optionally have a first argument which will contain the client!
 
@@ -397,43 +404,7 @@ class Client:
             The package name for relative based imports.
             |default| :data:`None`
         """
-
-        if ChatCommandHandler.managers.get(path):
-            raise CogAlreadyExists(
-                f"Cog `{path}` is trying to be loaded but already exists."
-            )
-
-        try:
-            module = import_module(path, package=package)
-        except ModuleNotFoundError:
-            raise CogNotFound(f"Cog `{path}` could not be found!")
-
-        setup = getattr(module, "setup", None)
-
-        if not callable(setup):
-            raise NoValidSetupMethod(
-                f"`setup` method was expected in `{path}` but none was found!"
-            )
-
-        args, params = [], get_params(setup)
-
-        if len(params) == 1:
-            args.append(self)
-        elif (length := len(params)) > 1:
-            raise TooManySetupArguments(
-                f"Setup method in `{path}` requested {length} arguments "
-                f"but the maximum is 1!"
-            )
-
-        cog_manager = setup(*args)
-
-        if not cog_manager:
-            raise NoCogManagerReturnFound(
-                f"Setup method in `{path}` didn't return a cog manager! "
-                "(Did you forget to return the cog?)"
-            )
-
-        ChatCommandHandler.managers[path] = cog_manager
+        load_cog(self, cog)
 
     @staticmethod
     def get_cogs() -> Dict[str, Any]:
@@ -446,16 +417,16 @@ class Client:
         Dict[:class:`str`, Any]
             The dictionary of cogs
         """
-        return ChatCommandHandler.managers
+        return ChatCommandHandler.managers.values()
 
-    async def unload_cog(self, path: str):
+    async def reload_cog(self, cog: Cog):
         """|coro|
 
         Unloads a currently loaded Cog
 
         Parameters
         ----------
-        path : :class:`str`
+        cog : :class:`Cog`
             The path to the cog
 
         Raises
@@ -463,22 +434,9 @@ class Client:
         CogNotFound
             When the cog is not in that path
         """
-        if not ChatCommandHandler.managers.get(path):
-            raise CogNotFound(f"Cog `{path}` could not be found!")
+        await reload_cog(self, cog)
 
-        to_remove: List[AppCommand] = []
-
-        for command in ChatCommandHandler.register.values():
-            if not command:
-                continue
-
-            if command.call.__module__ == path:
-                to_remove.append(command.app)
-
-        await ChatCommandHandler(self).remove_commands(to_remove)
-
-    @staticmethod
-    def execute_event(calls: List[Coro], gateway: Gateway, *args, **kwargs):
+    def execute_event(self, calls: List[Coro], gateway: Gateway, *args, **kwargs):
         """Invokes an event.
 
         Parameters
@@ -497,7 +455,7 @@ class Client:
             call_args = args
             if should_pass_cls(call):
                 call_args = (
-                    ChatCommandHandler.managers[call.__module__],
+                    self,
                     *remove_none(args),
                 )
 

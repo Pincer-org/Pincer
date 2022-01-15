@@ -6,10 +6,10 @@ from __future__ import annotations
 import logging
 from contextlib import suppress
 from inspect import isasyncgenfunction, _empty
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from ..commands import ChatCommandHandler, ComponentHandler
-from ..commands.commands import _hash_app_command_params
+from ..commands.chat_command_handler import _hash_app_command_params
 from ..exceptions import InteractionDoesNotExist
 from ..objects import (
     Interaction,
@@ -87,14 +87,14 @@ def get_command_from_registry(interaction: Interaction):
     )
 
 
-def get_call(self: Client, interaction: Interaction):
+def get_call(self: Client, interaction: Interaction) -> Optional[Tuple[Coro, Any]]:
     if interaction.type == InteractionType.APPLICATION_COMMAND:
         command = get_command_from_registry(interaction)
         if command is None:
             return None
         # Only application commands can be throttled
         self.throttler.handle(command)
-        return command.call
+        return command.call, command.manager
     elif interaction.type == InteractionType.MESSAGE_COMPONENT:
         return ComponentHandler.register.get(interaction.data.custom_id)
     elif interaction.type == InteractionType.AUTOCOMPLETE:
@@ -105,6 +105,7 @@ def get_call(self: Client, interaction: Interaction):
 
 async def interaction_response_handler(
     command: Coro,
+    manager: Any,
     context: MessageContext,
     interaction: Interaction,
     args: List[Any],
@@ -130,7 +131,7 @@ async def interaction_response_handler(
         args.insert(0, context)
 
     if should_pass_cls(command):
-        args.insert(0, ChatCommandHandler.managers[command.__module__])
+        args.insert(0, manager)
 
     if isasyncgenfunction(command):
         message = command(*args, **kwargs)
@@ -147,7 +148,7 @@ async def interaction_response_handler(
 
 
 async def interaction_handler(
-    interaction: Interaction, context: MessageContext, command: Coro
+    interaction: Interaction, context: MessageContext, command: Coro, manager: Any
 ):
     """|coro|
 
@@ -208,7 +209,7 @@ async def interaction_handler(
     kwargs = {**defaults, **params}
 
     await interaction_response_handler(
-        command, context, interaction, args, kwargs
+        command, manager, context, interaction, args, kwargs
     )
 
 
@@ -237,12 +238,11 @@ async def interaction_create_middleware(
         ``on_interaction_create`` and an ``Interaction``
     """
     interaction: Interaction = Interaction.from_dict(payload.data)
-
-    call = get_call(self, interaction)
+    call, manager = get_call(self, interaction)
     context = interaction.get_message_context()
 
     try:
-        await interaction_handler(interaction, context, call)
+        await interaction_handler(interaction, context, call, manager)
     except Exception as e:
         if coro := get_index(self.get_event_coro("on_command_error"), 0):
             params = get_signature_and_params(coro)[1]

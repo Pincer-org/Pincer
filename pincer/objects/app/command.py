@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List, Union, TYPE_CHECKING
+from typing import Any, List, Union, TYPE_CHECKING
 
 
 from pincer.commands.groups import Group, Subgroup
@@ -214,3 +214,4 @@ class ClientCommandStructure:
 
     group: APINullable[Group] = MISSING
     sub_group: APINullable[Subgroup] = MISSING
+    manager: APINullable[Any] = MISSING

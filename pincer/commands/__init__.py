@@ -1,7 +1,8 @@
 # Copyright Pincer 2021-Present
 # Full MIT License can be found in `LICENSE` at the project root.
 
-from .commands import command, user_command, message_command, ChatCommandHandler
+from .commands import command, user_command, message_command
+from .chat_command_handler import ChatCommandHandler
 from .arg_types import (
     CommandArg,
     Description,
