@@ -4,36 +4,34 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING, Callable, TypeVar
 
 if TYPE_CHECKING:
     from typing import Any
 
-from .chat_command_handler import ChatCommandHandler
-from ..objects.app.command import ClientCommandStructure
 
 _log = logging.getLogger(__name__)
 
+T = TypeVar("T")
 
-class PartialInteractable:
-    def __init__(self, key: int, value: ClientCommandStructure) -> None:
-        self.key = key
-        self.value = value
 
-    def register(self, manager: Any):
-        _log.info(
-            f"Registered command `{self.value.app.name}` to"
-            f" `{self.value.call.__name__}` locally."
-        )
-        self.value.manager = manager
-        ChatCommandHandler.register[self.key] = self.value
+class PartialInteractable(ABC):
+    def __init__(self, func: Callable[..., Any], *args: Any, **kwargs: Any):
+        self.func = func
+        self.args = args
+        self.kwargs = kwargs
 
     def __call__(self, *args: Any, **kwds: Any) -> Any:
-        self.value.call(*args, **kwds)
+        return self.func.__call__(*args, **kwds)
+
+    @abstractmethod
+    def register(self, manager: Any) -> type[T]:
+        """Registers a command to a command handler to be called later"""
 
 
 class Interactable:
     def __init__(self) -> None:
-        for item in self.__class__.__dict__.values():
-            if isinstance(item, PartialInteractable):
-                item.register(self)
+        for key, value in self.__class__.__dict__.items():
+            if isinstance(value, PartialInteractable):
+                setattr(self, key, value.register(self))

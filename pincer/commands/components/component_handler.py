@@ -16,6 +16,3 @@ class ComponentHandler(metaclass=Singleton):
     """
 
     register: Dict[str, Callable] = {}
-
-    def register_id(self, _id: str, func: Callable):
-        self.register[_id] = func

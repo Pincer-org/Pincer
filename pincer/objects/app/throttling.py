@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 from .throttle_scope import ThrottleScope
-from ..app.command import ClientCommandStructure
+from ..app.command import InteractableStructure
 from ...exceptions import CommandCooldownError
 from ...utils.slidingwindow import SlidingWindow
 
@@ -22,7 +22,7 @@ class ThrottleInterface(ABC):
 
     @staticmethod
     @abstractmethod
-    def handle(command: ClientCommandStructure, **kwargs):
+    def handle(command: InteractableStructure, **kwargs):
         raise NotImplementedError
 
 
@@ -38,7 +38,7 @@ class DefaultThrottleHandler(ThrottleInterface, ABC):
     }
 
     @staticmethod
-    def get_key_from_scope(command: ClientCommandStructure) -> Optional[int]:
+    def get_key_from_scope(command: InteractableStructure) -> Optional[int]:
         """Retrieve the appropriate key from the context through the
         throttle scope.
 
@@ -65,12 +65,12 @@ class DefaultThrottleHandler(ThrottleInterface, ABC):
         return last_obj
 
     @staticmethod
-    def init_throttler(command: ClientCommandStructure, throttle_key: Optional[int]):
+    def init_throttler(command: InteractableStructure, throttle_key: Optional[int]):
         DefaultThrottleHandler.throttle[command.call][throttle_key] \
             = SlidingWindow(command.cooldown, command.cooldown_scale)
 
     @staticmethod
-    def handle(command: ClientCommandStructure, **kwargs):
+    def handle(command: InteractableStructure, **kwargs):
         if command.cooldown <= 0:
             return
 

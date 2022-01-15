@@ -5,7 +5,7 @@ from .app.application import Application
 from .app.command import (
     AppCommandType, AppCommandOptionType, AppCommandInteractionDataOption,
     AppCommandOptionChoice, AppCommandOption, AppCommand,
-    ClientCommandStructure
+    InteractableStructure
 )
 from .app.intents import Intents
 from .app.interaction_base import (
@@ -112,7 +112,7 @@ __all__ = (
     "Application", "Attachment", "AuditEntryInfo", "AuditLog",
     "AuditLogChange", "AuditLogEntry", "AuditLogEvent", "Ban", "BaseMember",
     "CallbackType", "CategoryChannel", "Channel", "ChannelMention",
-    "ChannelPinsUpdateEvent", "ChannelType", "ClientCommandStructure",
+    "ChannelPinsUpdateEvent", "ChannelType", "InteractableStructure",
     "ClientStatus", "ComponentType", "Connection",
     "DefaultMessageNotificationLevel", "DefaultThrottleHandler",
     "DiscordError", "Embed", "EmbedAuthor", "EmbedField", "EmbedFooter",

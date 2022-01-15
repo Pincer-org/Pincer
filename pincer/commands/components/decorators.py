@@ -3,11 +3,13 @@
 
 from functools import partial
 from inspect import iscoroutinefunction
-from typing import List
+from typing import Any, List
 
 from .button import Button, ButtonStyle
 from .select_menu import SelectMenu, SelectOption
 from .component_handler import ComponentHandler
+from ..interactable import PartialInteractable
+from ...objects.app.command import InteractableStructure
 from ...exceptions import CommandIsNotCoroutine
 from ...objects.message.emoji import Emoji
 from ...utils.conversion import remove_none
@@ -75,29 +77,31 @@ def button(
         if custom_id is None:
             custom_id = func.__name__
 
-        ComponentHandler().register_id(custom_id, func)
-
-        button = Button(
-            # Hack to not override defaults in button class
-            **remove_none(
-                {
-                    "custom_id": custom_id,
-                    "style": style,
-                    "label": label,
-                    "disabled": disabled,
-                    "emoji": emoji,
-                    "url": url,
-                    "_func": func
-                }
-            )
+        return PartialButton(
+            func=func,
+            custom_id=custom_id,
+            style=style,
+            label=label,
+            disabled=disabled,
+            emoji=emoji,
+            url=url,
         )
 
-        button.func = func
-        button.__call__ = partial(func)
+    return partial(wrap, custom_id)
+
+
+class PartialButton(PartialInteractable):
+    def register(self, manager: Any) -> Button:
+        button = Button(*self.args, _func=self.func, **remove_none(self.kwargs))
+        button.func = self.func
+        button.__call__ = partial(self.func)
+
+        ComponentHandler.register[self.kwargs.get("custom_id")] = InteractableStructure(
+            call=self.func,
+            manager=manager
+        )
 
         return button
-
-    return partial(wrap, custom_id)
 
 
 def select_menu(
@@ -108,6 +112,8 @@ def select_menu(
     max_values: int = None,
     disabled: bool = None,
     custom_id: str = None
+
+
 ) -> SelectMenu:
     """
     Turn a function into handler for a :class:`~pincer.commands.components.select_menu.SelectMenu`.
@@ -149,26 +155,31 @@ def select_menu(
         if custom_id is None:
             custom_id = func.__name__
 
-        ComponentHandler().register_id(custom_id, func)
-
-        menu = SelectMenu(
-            # Hack to not override defaults in button class
-            **remove_none(
-                {
-                    "custom_id": custom_id,
-                    "options": options,
-                    "placeholder": placeholder,
-                    "min_values": min_values,
-                    "max_values": max_values,
-                    "disabled": disabled,
-                    "_func": func
-                }
-            )
+        return PartialSelectMenu(
+            _func=func,
+            custom_id=custom_id,
+            options=options,
+            placeholder=placeholder,
+            min_values=min_values,
+            max_values=max_values,
+            disabled=disabled,
         )
-
-        return menu
 
     if func is None:
         return partial(wrap, custom_id)
 
     return wrap(custom_id, func)
+
+
+class PartialSelectMenu(PartialInteractable):
+    def register(self, manager: Any) -> SelectMenu:
+        ComponentHandler.register[self.kwargs.get("custom_id")] = InteractableStructure(
+            call=self.func,
+            manager=manager
+        )
+
+        return SelectMenu(
+            *self.args,
+            _func=self.func,
+            **remove_none(self.kwargs)
+        )

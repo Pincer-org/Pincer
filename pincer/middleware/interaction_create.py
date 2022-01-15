@@ -96,7 +96,8 @@ def get_call(self: Client, interaction: Interaction) -> Optional[Tuple[Coro, Any
         self.throttler.handle(command)
         return command.call, command.manager
     elif interaction.type == InteractionType.MESSAGE_COMPONENT:
-        return ComponentHandler.register.get(interaction.data.custom_id)
+        command = ComponentHandler.register.get(interaction.data.custom_id)
+        return (command.call, command.manager)
     elif interaction.type == InteractionType.AUTOCOMPLETE:
         raise NotImplementedError(
             "Handling for autocomplete is not implemented"

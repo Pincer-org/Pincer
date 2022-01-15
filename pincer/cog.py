@@ -7,7 +7,7 @@ from hashlib import new
 from importlib import reload, import_module
 from typing import TYPE_CHECKING, Type
 
-from .commands.commands import ChatCommandHandler, PartialInteractable
+from .commands.commands import ChatCommandHandler, PartialCommand
 from .commands.interactable import Interactable
 from .exceptions import CogAlreadyExists, CogNotFound
 
@@ -65,6 +65,4 @@ class Cog(Interactable):
     def __init__(self, client: Client) -> None:
         self.client = client
 
-        for item in self.__class__.__dict__.values():
-            if isinstance(item, PartialInteractable):
-                item.register(self)
+        super().__init__()

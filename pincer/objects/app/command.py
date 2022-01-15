@@ -3,13 +3,14 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, List, Union, TYPE_CHECKING
 
 
 from pincer.commands.groups import Group, Subgroup
 
 from .command_types import AppCommandOptionType, AppCommandType
+from ..app.throttle_scope import ThrottleScope
 from ...objects.guild.channel import ChannelType
 from ...utils.api_object import APIObject, GuildProperty
 from ...utils.snowflake import Snowflake
@@ -18,7 +19,6 @@ from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from ...utils.types import APINullable
-    from ..app.throttle_scope import ThrottleScope
 
 
 @dataclass(repr=False)
@@ -146,8 +146,8 @@ class AppCommand(APIObject, GuildProperty):
         if self.options is MISSING and self.type is AppCommandType.MESSAGE:
             self.options = []
 
-    def __eq__(self, other: Union[AppCommand, ClientCommandStructure]):
-        if isinstance(other, ClientCommandStructure):
+    def __eq__(self, other: Union[AppCommand, InteractableStructure]):
+        if isinstance(other, InteractableStructure):
             other = other.app
 
         # `description` and `options` are tested for equality with a custom check
@@ -188,9 +188,9 @@ class AppCommand(APIObject, GuildProperty):
 
 
 @dataclass(repr=False)
-class ClientCommandStructure:
+class InteractableStructure:
     """Represents the structure of how the client saves the existing
-    commands in the register.
+    commands to registers.
 
     Attributes
     ----------
@@ -206,11 +206,14 @@ class ClientCommandStructure:
     cooldown_scope: :class:`~pincer.objects.app.throttle_scope.ThrottleScope`
         The type of cooldown
     """
-    app: AppCommand
     call: Coro
-    cooldown: int
-    cooldown_scale: float
-    cooldown_scope: ThrottleScope
+
+    app: AppCommand = None
+    extensions: List = list
+
+    cooldown: int = 0
+    cooldown_scale: float = 60.0
+    cooldown_scope: ThrottleScope = ThrottleScope.USER
 
     group: APINullable[Group] = MISSING
     sub_group: APINullable[Subgroup] = MISSING

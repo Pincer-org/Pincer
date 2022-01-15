@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from .interactable import Interactable
     from ..client import Client
     from ..utils.snowflake import Snowflake
-    from ..objects.app.command import ClientCommandStructure
+    from ..objects.app.command import InteractableStructure
 
 _log = logging.getLogger(__name__)
 
@@ -49,16 +49,16 @@ class ChatCommandHandler(metaclass=Singleton):
         The client object
     managers: Dict[:class:`str`, :class:`~typing.Any`]
         Dictionary of managers
-    register: Dict[:class:`str`, :class:`~pincer.objects.app.command.ClientCommandStructure`]
-        Dictionary of ``ClientCommandStructure``
-    built_register: Dict[:class:`str`, :class:`~pincer.objects.app.command.ClientCommandStructure`]
-        Dictionary of ``ClientCommandStructure`` where the commands are converted to
+    register: Dict[:class:`str`, :class:`~pincer.objects.app.command.InteractableStructure`]
+        Dictionary of ``InteractableStructure``
+    built_register: Dict[:class:`str`, :class:`~pincer.objects.app.command.InteractableStructure`]
+        Dictionary of ``InteractableStructure`` where the commands are converted to
         the format that Discord expects for sub commands and sub command groups.
     """  # noqa: E501
 
     has_been_initialized = False
     managers: List[Interactable] = []
-    register: Dict[str, ClientCommandStructure] = {}
+    register: Dict[str, InteractableStructure] = {}
     built_register: Dict[str, AppCommand] = {}
 
     # Endpoints:

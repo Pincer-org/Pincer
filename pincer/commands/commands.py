@@ -8,13 +8,14 @@ import re
 from asyncio import iscoroutinefunction
 from functools import partial
 from inspect import Signature, isasyncgenfunction, _empty
-from typing import TYPE_CHECKING, TypeVar, Union, List
+from typing import TYPE_CHECKING, Any, Callable, TypeVar, Union, List
+
+from pincer.commands.interactable import PartialInteractable
 
 from . import __package__
 from .chat_command_handler import (
     ChatCommandHandler, _hash_app_command_params
 )
-from .interactable import PartialInteractable
 from ..commands.arg_types import (
     ChannelTypes,
     CommandArg,
@@ -47,7 +48,7 @@ from ..objects import (
 from ..objects.app import (
     AppCommandOptionType,
     AppCommandOption,
-    ClientCommandStructure,
+    InteractableStructure,
     AppCommandType,
 )
 from ..utils import should_pass_ctx
@@ -338,7 +339,7 @@ def command(
     if not options:
         options = MISSING
 
-    return register_command(
+    return PartialCommand(
         func=func,
         app_command_type=AppCommandType.CHAT_INPUT,
         name=name,
@@ -425,7 +426,7 @@ def user_command(
         Not a valid argument type,
         Annotations must consist of name and value
     """  # noqa: E501
-    return register_command(
+    return PartialCommand(
         func=func,
         app_command_type=AppCommandType.USER,
         name=name,
@@ -504,7 +505,7 @@ def message_command(
         Not a valid argument type,
         Annotations must consist of name and value
     """  # noqa: E501
-    return register_command(
+    return PartialCommand(
         func=func,
         app_command_type=AppCommandType.MESSAGE,
         name=name,
@@ -517,8 +518,8 @@ def message_command(
 
 
 def register_command(
-    func=None,  # Missing typehint?
-    *,
+    manager: Any,
+    func: Callable[..., Any] = None,
     app_command_type: Optional[AppCommandType] = None,
     name: Optional[str] = None,
     description: Optional[str] = MISSING,
@@ -530,20 +531,6 @@ def register_command(
     command_options=MISSING,  # Missing typehint?
     parent: Optional[Union[Group, Subgroup]] = MISSING
 ):
-    if func is None:
-        return partial(
-            register_command,
-            name=name,
-            app_command_type=app_command_type,
-            description=description,
-            enable_default=enable_default,
-            guild=guild,
-            cooldown=cooldown,
-            cooldown_scale=cooldown_scale,
-            cooldown_scope=cooldown_scope,
-            parent=parent
-        )
-
     cmd = name or func.__name__
 
     if not re.match(REGULAR_COMMAND_NAME_REGEX, cmd):
@@ -590,24 +577,38 @@ def register_command(
             f"registered by `{reg.call.__name__}`."
         )
 
-    _log.info(f"Loaded command `{cmd}` (`{func.__name__}`).")
-
-    return PartialInteractable(
-        _hash_app_command_params(cmd, guild_id, app_command_type, group, sub_group),
-        ClientCommandStructure(
-            call=func,
-            cooldown=cooldown,
-            cooldown_scale=cooldown_scale,
-            cooldown_scope=cooldown_scope,
-            group=group,
-            sub_group=sub_group,
-            app=AppCommand(
-                name=cmd,
-                description=description,
-                type=app_command_type,
-                default_permission=enable_default,
-                options=command_options,
-                guild_id=guild_id
-            ),
-        )
+    _log.info(
+        f"Registered command `{cmd}` to `{func.__name__}` locally."
     )
+
+    ChatCommandHandler.register[
+        _hash_app_command_params(
+            cmd,
+            guild_id,
+            app_command_type,
+            group,
+            sub_group
+        )
+    ] = InteractableStructure(
+        call=func,
+        cooldown=cooldown,
+        cooldown_scale=cooldown_scale,
+        cooldown_scope=cooldown_scope,
+        manager=manager,
+        group=group,
+        sub_group=sub_group,
+        app=AppCommand(
+            name=cmd,
+            description=description,
+            type=app_command_type,
+            default_permission=enable_default,
+            options=command_options,
+            guild_id=guild_id
+        ),
+    )
+
+
+class PartialCommand(PartialInteractable):
+    def register(self, manager: Any) -> Callable[..., Any]:
+        register_command(manager, *self.args, func=self.func, **self.kwargs)
+        return self.func
