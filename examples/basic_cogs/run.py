@@ -1,5 +1,3 @@
-from glob import glob
-
 from pincer import Client
 
 from cogs import OnReadyCog, SayCog, ErrorHandler
