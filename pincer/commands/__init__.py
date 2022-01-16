@@ -23,8 +23,8 @@ from .interactable import PartialInteractable, Interactable
 __all__ = (
     "ActionRow", "Button", "ButtonStyle", "ChannelTypes",
     "ChatCommandHandler", "Choice", "Choices", "CommandArg",
-    "ComponentHandler", "Description", "Group", "LinkButton", "MaxValue",
-    "MinValue", "Modifier", "SelectMenu", "SelectOption", "Subgroup", "button",
-    "command", "component", "message_command", "select_menu", "user_command",
-    "Interactable", "PartialInteractable"
+    "ComponentHandler", "Description", "Group", "Interactable", "LinkButton",
+    "MaxValue", "MinValue", "Modifier", "PartialInteractable", "SelectMenu",
+    "SelectOption", "Subgroup", "button", "command", "component",
+    "message_command", "select_menu", "user_command"
 )
