@@ -151,7 +151,7 @@ def select_menu(
 
         ComponentHandler().register_id(custom_id, func)
 
-        menu = SelectMenu(
+        return SelectMenu(
             # Hack to not override defaults in button class
             **remove_none(
                 {
@@ -165,8 +165,6 @@ def select_menu(
                 }
             )
         )
-
-        return menu
 
     if func is None:
         return partial(wrap, custom_id)

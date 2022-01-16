@@ -953,10 +953,7 @@ class ChatCommandHandler(metaclass=Singleton):
         local_registered_commands = self.get_local_registered_commands()
 
         def should_be_updated_or_uploaded(target):
-            for command in self._api_commands:
-                if target == command:
-                    return False
-            return True
+            return all(target != command for command in self._api_commands)
 
         changed_commands = filter(
             should_be_updated_or_uploaded, local_registered_commands
