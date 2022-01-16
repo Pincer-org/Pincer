@@ -21,8 +21,8 @@ from .throttling import ThrottleInterface, DefaultThrottleHandler
 __all__ = (
     "AppCommand", "AppCommandInteractionDataOption",
     "AppCommandOption", "AppCommandOptionChoice", "AppCommandOptionType",
-    "AppCommandType", "Application", "CallbackType", "InteractableStructure",
-    "DefaultThrottleHandler", "Intents", "Interaction", "InteractionData",
+    "AppCommandType", "Application", "CallbackType", "DefaultThrottleHandler",
+    "Intents", "InteractableStructure", "Interaction", "InteractionData",
     "InteractionFlags", "InteractionType", "Mentionable", "MessageInteraction",
     "ResolvedData", "SessionStartLimit", "ThrottleInterface", "ThrottleScope"
 )
