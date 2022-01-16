@@ -50,7 +50,7 @@ from ..objects.app import (
 )
 from ..utils import should_pass_ctx
 from ..utils.signature import get_signature_and_params
-from ..utils.types import MISSING
+from ..utils.types import MISSING, APINullable
 from ..utils.types import Singleton
 
 if TYPE_CHECKING:
