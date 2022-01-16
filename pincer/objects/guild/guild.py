@@ -1329,6 +1329,13 @@ class Guild(APIObject):
             headers={"X-Audit-Log-Reason": reason},
         )
 
+    async def delete_invite(self, code: str):
+        """|coro|
+        Deletes an invite.
+        Requires the ``MANAGE_GUILD`` permission.
+        """
+        await self._http.delete(f"guilds/{self.id}/invites/{code}")
+
     async def get_widget_settings(self) -> GuildWidget:
         """|coro|
         Returns the guild widget settings.
