@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, TypeVar
+from typing import TYPE_CHECKING, Type, TypeVar
 
 if TYPE_CHECKING:
     from typing import Any, Awaitable, Callable
@@ -35,7 +35,7 @@ class PartialInteractable(ABC):
         return self.func.__call__(*args, **kwds)
 
     @abstractmethod
-    def register(self, manager: Any) -> type[T]:
+    def register(self, manager: Any) -> Type[T]:
         """Registers a command to a command handler to be called later"""
 
 

@@ -444,8 +444,8 @@ class Client(Interactable):
 
         Returns
         -------
-        Dict[:class:`str`, Any]
-            The dictionary of cogs
+        List[:class:`~pincer.cog.Cog`]
+            The list of cogs
         """
         return [
             manager for manager in ChatCommandHandler.managers
