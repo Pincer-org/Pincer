@@ -31,6 +31,8 @@ def load_cog(client: Client, cog: Type[Cog]):
 
     Parameters
     ----------
+    client : :class:`~pincer.client.Client`
+        The client the cog should hold a reference to.
     cog : Type[:class:`~pincer.cog.Cog`]
         The cog to load.
     """
@@ -49,6 +51,8 @@ def load_module(client: Client, module: ModuleType):
 
     Parameters
     ----------
+    client : :class:`~pincer.client.Client`
+        The client the cog should hold a reference to.
     module : :class:`~types.ModuleType`
         The module to load.
     """
@@ -64,6 +68,8 @@ def reload_cog(client: Client, cog: Type[Cog]):
 
     Parameters
     ----------
+    client : :class:`~pincer.client.Client`
+        The client the cog should hold a reference to.
     cog : Type[:class:`~pincer.cog.Cog`]
         The cog to load.
     """
