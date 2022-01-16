@@ -3,15 +3,11 @@
 
 from __future__ import annotations
 
-import logging
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, TypeVar
 
 if TYPE_CHECKING:
     from typing import Any, Awaitable, Callable
-
-
-_log = logging.getLogger(__name__)
 
 T = TypeVar("T")
 
@@ -46,9 +42,9 @@ class PartialInteractable(ABC):
 class Interactable:
     """
     Class that can register :class:`~pincer.commands.interactable.PartialInteractable`
-    objects.
+    objects. Any class that subclasses this class can register Application Commands and
+    Message Components.
     """
-
     def __init__(self):
         for key, value in self.__class__.__dict__.items():
             if isinstance(value, PartialInteractable):

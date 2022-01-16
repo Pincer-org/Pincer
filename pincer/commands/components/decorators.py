@@ -76,7 +76,7 @@ def button(
         if custom_id is None:
             custom_id = func.__name__
 
-        return PartialButton(
+        return _PartialButton(
             func=func,
             custom_id=custom_id,
             style=style,
@@ -89,7 +89,7 @@ def button(
     return partial(wrap, custom_id)
 
 
-class PartialButton(PartialInteractable):
+class _PartialButton(PartialInteractable):
     def register(self, manager: Any) -> Button:
         button = Button(*self.args, _func=self.func, **remove_none(self.kwargs))
         button.func = self.func
@@ -153,7 +153,7 @@ def select_menu(
         if custom_id is None:
             custom_id = func.__name__
 
-        return PartialSelectMenu(
+        return _PartialSelectMenu(
             _func=func,
             custom_id=custom_id,
             options=options,
@@ -169,7 +169,7 @@ def select_menu(
     return wrap(custom_id, func)
 
 
-class PartialSelectMenu(PartialInteractable):
+class _PartialSelectMenu(PartialInteractable):
     def register(self, manager: Any) -> SelectMenu:
         ComponentHandler.register[self.kwargs.get("custom_id")] = InteractableStructure(
             call=self.func,

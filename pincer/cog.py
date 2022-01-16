@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from importlib import reload, import_module
+from types import ModuleType
 from typing import TYPE_CHECKING
 
 from .commands.commands import ChatCommandHandler
@@ -39,6 +40,19 @@ def load_cog(client: Client, cog: Type[Cog]):
     cog_manager = cog(client)
 
     ChatCommandHandler.managers.append(cog_manager)
+
+
+async def load_module(client: Client, module: ModuleType):
+    """Loads the cogs from a module recursively.
+
+    Parameters
+    ----------
+    module : :class:`~types.ModuleType`
+        The module to load.
+    """
+
+    for item in module.__dict__.values():
+        print(item)
 
 
 async def reload_cog(client: Client, cog: Type[Cog]):
