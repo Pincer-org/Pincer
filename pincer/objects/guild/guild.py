@@ -1290,7 +1290,7 @@ class Guild(APIObject):
 
         Returns
         -------
-        :class:`~pincer.objects.invite.Invite`
+        :class:`~pincer.objects.guild.invite.Invite`
             The invite object.
         """
         data = await self._http.get(f"invite/{code}")
