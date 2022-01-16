@@ -60,7 +60,7 @@ version_info = VersionInfo(0, 15, 3)
 __version__ = repr(version_info)
 
 __all__ = (
-    "BadRequestError", "Bot", "ChatCommandHandler", "Client",
+    "BadRequestError", "Bot", "ChatCommandHandler", "Client", "Cog",
     "CogAlreadyExists", "CogError", "CogNotFound", "CommandAlreadyRegistered",
     "CommandCooldownError", "CommandDescriptionTooLong", "CommandError",
     "CommandIsNotCoroutine", "CommandReturnIsEmpty", "DisallowedIntentsError",
@@ -74,6 +74,6 @@ __all__ = (
     "RateLimitError", "ServerError", "TaskAlreadyRunning", "TaskCancelError",
     "TaskError", "TaskInvalidDelay", "TaskIsNotCoroutine", "TooManyArguments",
     "TooManySetupArguments", "UnauthorizedError", "UnavailableGuildError",
-    "UnhandledException", "__author__", "__email__", "__package__", "Cog",
+    "UnhandledException", "__author__", "__email__", "__package__",
     "__title__", "__version__", "command", "event_middleware"
 )
