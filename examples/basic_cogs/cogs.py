@@ -12,8 +12,6 @@ class ErrorHandler(Cog):
         args: List[Any],
         kwargs: Dict[str, Any]
     ):
-        print(args)
-        print(kwargs)
         return Embed(
             "Oops...",
             "An error occurred while trying to execute the "
