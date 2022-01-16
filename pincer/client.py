@@ -166,7 +166,6 @@ class PartialEvent(PartialInteractable):
         name = self.func.__name__
 
         if name == "on_command_error" and _events.get(name):
-            print(manager, _events[name][0].manager)
             raise InvalidEventName(
                 f"The `{name}` event can only exist once. This is because "
                 "it gets treated as a command and can have a response."
