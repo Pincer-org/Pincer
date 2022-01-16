@@ -134,7 +134,7 @@ class Invite(APIObject):
     def link(self):
         return f"https://discord.gg/{self.code}"
 
-    def delete(self):
+    async def delete(self):
         """Delete this invite.
 
         Raises
@@ -146,4 +146,4 @@ class Invite(APIObject):
         HTTPException
             Deleting the invite failed
         """
-        return self._http.delete(f"guilds/{self.guild.id}/invites/{self.code}")
+        await self._http.delete(f"guilds/{self.guild.id}/invites/{self.code}")
