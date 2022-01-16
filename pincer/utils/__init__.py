@@ -9,6 +9,7 @@ from .event_mgr import EventMgr
 from .extraction import get_index
 from .insertion import should_pass_cls, should_pass_ctx
 from .replace import replace
+from .shards import calculate_shard_id
 from .signature import get_params, get_signature_and_params
 from .snowflake import Snowflake
 from .tasks import Task, TaskScheduler
@@ -25,8 +26,8 @@ from .types import (
 __all__ = (
     "APINullable", "APIObject", "ChannelProperty", "CheckFunction",
     "Color", "Coro", "EventMgr", "GuildProperty", "MISSING", "MissingType",
-    "Snowflake", "Task", "TaskScheduler", "Timestamp", "chdir",
-    "choice_value_types", "get_index", "get_params",
+    "Snowflake", "Task", "TaskScheduler", "Timestamp", "calculate_shard_id",
+    "chdir", "choice_value_types", "get_index", "get_params",
     "get_signature_and_params", "remove_none", "replace", "should_pass_cls",
     "should_pass_ctx"
 )
