@@ -1281,7 +1281,7 @@ class Guild(APIObject):
 
     async def get_invite(self, code: str) -> Invite:
         """|coro|
-        Returns an invite object for an invite code.
+        Returns an Invite object for the given invite code.
 
         Parameters
         ----------
