@@ -9,7 +9,7 @@ from enum import IntEnum
 from typing import AsyncIterator, overload, TYPE_CHECKING, Type
 
 from .invite import Invite, InviteTargetType
-from ..message.user_message import UserMessage
+from ..message import user_message
 from ..._config import GatewayConfig
 from ...utils.api_object import APIObject, GuildProperty
 from ...utils.convert_message import convert_message
@@ -350,7 +350,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         await self._http.post(f"channels/{self.id}/typing")
 
-    async def get_pinned_messages(self) -> AsyncIterator[UserMessage]:
+    async def get_pinned_messages(self) -> AsyncIterator[user_message.UserMessage]:
         """|coro|
         Fetches all pinned messages in the channel. Returns an iterator of
         pinned messages.
@@ -362,10 +362,10 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         data = await self._http.get(f"channels/{self.id}/pins")
         for message in data:
-            yield UserMessage.from_dict(message)
+            yield user_message.UserMessage.from_dict(message)
 
     async def pin_message(
-        self, message: UserMessage, reason: Optional[str] = None
+        self, message: user_message.UserMessage, reason: Optional[str] = None
     ):
         """|coro|
         Pin a message in a channel. Requires the ``MANAGE_MESSAGES`` permission.
@@ -377,7 +377,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         )
 
     async def unpin_message(
-        self, message: UserMessage, reason: Optional[str] = None
+        self, message: user_message.UserMessage, reason: Optional[str] = None
     ):
         """|coro|
         Unpin a message in a channel. Requires the ``MANAGE_MESSAGES`` permission.
@@ -472,7 +472,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         )
 
     @staticmethod
-    async def __post_send_handler(message: Union[UserMessage, Message]):
+    async def __post_send_handler(message: Union[user_message.UserMessage, Message]):
         """Process a message after it was sent.
 
         Parameters
@@ -480,7 +480,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         message :class:`~.pincer.objects.message.message.Message`
             The message.
         """
-        if isinstance(message, UserMessage):
+        if isinstance(message, user_message.UserMessage):
             return
 
         if message.delete_after is not None:
@@ -489,7 +489,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
 
     def __post_sent(
             self,
-            message: Union[UserMessage, Message]
+            message: Union[user_message.UserMessage, Message]
     ):
         """Ensure the `__post_send_handler` method its future.
 
@@ -500,7 +500,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         ensure_future(self.__post_send_handler(message))
 
-    async def send(self, message: Union[Embed, Message, str]) -> UserMessage:
+    async def send(self, message: Union[Embed, Message, str]) -> user_message.UserMessage:
         """|coro|
 
         Send a message in the channel.
@@ -520,7 +520,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         resp = await self._http.post(
             f"channels/{self.id}/messages", data, content_type=content_type
         )
-        msg: UserMessage = UserMessage.from_dict(resp)
+        msg: user_message.UserMessage = user_message.UserMessage.from_dict(resp)
         self.__post_sent(msg)
         return msg
 
@@ -766,7 +766,7 @@ class TextChannel(Channel):
         """
         return await super().edit(**kwargs)
 
-    async def fetch_message(self, message_id: int) -> UserMessage:
+    async def fetch_message(self, message_id: int) -> user_message.UserMessage:
         """|coro|
         Returns a UserMessage from this channel with the given id.
 
@@ -780,7 +780,7 @@ class TextChannel(Channel):
         :class:`~pincer.objects.message.user_message.UserMessage`
             The requested message.
         """
-        return UserMessage.from_dict(
+        return user_message.UserMessage.from_dict(
             await self._http.get(f"channels/{self.id}/messages/{message_id}")
         )
 
@@ -789,7 +789,7 @@ class TextChannel(Channel):
         before: Optional[Union[int, Snowflake]] = None,
         after: Optional[Union[int, Snowflake]] = None,
         around: Optional[Union[int, Snowflake]] = None,
-    ) -> AsyncIterator[UserMessage]:
+    ) -> AsyncIterator[user_message.UserMessage]:
         """|coro|
         Returns a list of messages in this channel.
 
@@ -830,7 +830,7 @@ class TextChannel(Channel):
                 break
 
             for _message in raw_messages:
-                yield UserMessage.from_dict(_message)
+                yield user_message.UserMessage.from_dict(_message)
 
             before = raw_messages[-1]['id']
             limit -= retrieve
@@ -980,7 +980,7 @@ class Thread(Channel):
 
     async def start_with_message(
         self,
-        message: Optional[UserMessage],
+        message: Optional[user_message.UserMessage],
         name: Optional[str] = None,
         auto_archive_duration: Optional[int] = None,
         rate_limit_per_user: Optional[int] = None,
