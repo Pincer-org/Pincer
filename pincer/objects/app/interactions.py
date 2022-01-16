@@ -198,10 +198,7 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
         data : Dict[:class:`~pincer.utils.types.Snowflake`, Any]
             Resolved data to search through.
         """
-        if data:
-            return data[option.value]
-
-        return None
+        return data[option.value] if data else None
 
     def get_message_context(self):
         return MessageContext(
