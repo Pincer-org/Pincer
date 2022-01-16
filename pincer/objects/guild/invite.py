@@ -130,3 +130,17 @@ class Invite(APIObject):
     @property
     def link(self):
         return f"https://discord.gg/{self.code}"
+
+    def delete(self):
+        """Delete this invite.
+
+        Raises
+        ------
+        Forbidden
+            You do not have permission to delete this invite
+        NotFound
+            This invite does not exist
+        HTTPException
+            Deleting the invite failed
+        """
+        return self._http.delete(f"guilds/{self.guild.id}/invites/{self.code}")
