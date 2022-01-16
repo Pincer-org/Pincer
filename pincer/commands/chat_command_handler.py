@@ -175,7 +175,7 @@ class ChatCommandHandler(metaclass=Singleton):
         commands : List[:class:`~pincer.objects.app.command.AppCommand`]
             List of command objects to add
         """
-        await gather(*map(lambda cmd: self.add_command(cmd), commands))
+        await gather(*map(self.add_command, commands))
 
     @staticmethod
     def __build_local_commands():
