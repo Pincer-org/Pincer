@@ -28,7 +28,7 @@ from typing import (
 )
 
 from pincer.cog import load_cog, reload_cog
-from pincer.commands.interactable import Interactable
+from pincer.commands.interactable import Interactable, PartialInteractable
 
 from . import __package__
 from .commands import ChatCommandHandler
@@ -163,6 +163,13 @@ def event_middleware(call: str, *, override: bool = False):
 
 for event, middleware_ in middleware.items():
     event_middleware(event)(middleware_)
+
+
+class PartialEvent(PartialInteractable):
+    def register(self, manager: Any):
+        self.manager = manager
+        _events[self.func.__name__].append(self)
+        return self.func
 
 
 class Client(Interactable):
@@ -342,11 +349,10 @@ class Client(Interactable):
                 "it gets treated as a command and can have a response."
             )
 
-        _events[name].append(coroutine)
-        return coroutine
+        return PartialEvent(func=coroutine)
 
     @staticmethod
-    def get_event_coro(name: str) -> List[Optional[Coro]]:
+    def get_event_coro(name: str) -> List[Optional[PartialEvent]]:
         """get the coroutine for an event
 
         Parameters
@@ -362,7 +368,7 @@ class Client(Interactable):
             else [
                 call
                 for call in calls
-                if iscoroutinefunction(call) or isasyncgenfunction(call)
+                if isinstance(call, PartialEvent)
             ]
         )
 
@@ -436,12 +442,18 @@ class Client(Interactable):
         """
         await reload_cog(self, cog)
 
-    def execute_event(self, calls: List[Coro], gateway: Gateway, *args, **kwargs):
+    def execute_event(
+        self,
+        events: List[PartialEvent],
+        gateway: Gateway,
+        *args,
+        **kwargs
+    ):
         """Invokes an event.
 
         Parameters
         ----------
-        calls: :class:`~pincer.utils.types.Coro`
+        calls: List[:class:`~pincer.client.PartialEvent`]
             The call (method) to which the event is registered.
 
         \\*args:
@@ -451,18 +463,18 @@ class Client(Interactable):
             The named arguments for the event.
         """
 
-        for call in calls:
+        for event in events:
             call_args = args
-            if should_pass_cls(call):
+            if should_pass_cls(event.func):
                 call_args = (
-                    self,
+                    event.manager,
                     *remove_none(args),
                 )
 
-            if should_pass_gateway(call):
+            if should_pass_gateway(event.func):
                 call_args = (call_args[0], gateway, *call_args[1:])
 
-            ensure_future(call(*call_args, **kwargs))
+            ensure_future(event.func(*call_args, **kwargs))
 
     def run(self):
         """Start the bot."""

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import logging
+from copy import copy
 from contextlib import suppress
 from inspect import isasyncgenfunction, _empty
 from typing import TYPE_CHECKING, Optional
@@ -127,6 +128,9 @@ async def interaction_response_handler(
     \\*\\*kwargs :
         The arguments to be passed to the command.
     """
+    # Prevent args from being mutated unexpectedly
+    args = copy(args)
+
     sig, params = get_signature_and_params(command)
     if should_pass_ctx(sig, params):
         args.insert(0, context)
@@ -149,7 +153,11 @@ async def interaction_response_handler(
 
 
 async def interaction_handler(
-    interaction: Interaction, context: MessageContext, command: Coro, manager: Any
+    self: Client,
+    interaction: Interaction,
+    context: MessageContext,
+    command: Coro,
+    manager: Any
 ):
     """|coro|
 
@@ -209,9 +217,20 @@ async def interaction_handler(
 
     kwargs = {**defaults, **params}
 
-    await interaction_response_handler(
-        command, manager, context, interaction, args, kwargs
-    )
+    try:
+        await interaction_response_handler(
+            command, manager, context, interaction, args, kwargs
+        )
+    except Exception as e:
+        if coro := get_index(self.get_event_coro("on_command_error"), 0):
+            await interaction_response_handler(
+                coro.func,
+                manager,
+                context,
+                interaction,
+                [e, args, kwargs],
+                {},
+            )
 
 
 async def interaction_create_middleware(
@@ -242,25 +261,7 @@ async def interaction_create_middleware(
     call, manager = get_call(self, interaction)
     context = interaction.get_message_context()
 
-    try:
-        await interaction_handler(interaction, context, call, manager)
-    except Exception as e:
-        if coro := get_index(self.get_event_coro("on_command_error"), 0):
-            params = get_signature_and_params(coro)[1]
-
-            # Check if a context or error var has been passed.
-            if 0 < len(params) < 3:
-                await interaction_response_handler(
-                    coro,
-                    context,
-                    interaction,
-                    # Always take the error parameter its name.
-                    {params[-1]: e},
-                )
-            else:
-                raise e
-        else:
-            raise e
+    await interaction_handler(self, interaction, context, call, manager)
 
     return "on_interaction_create", interaction
 

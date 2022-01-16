@@ -426,6 +426,17 @@ def user_command(
         Not a valid argument type,
         Annotations must consist of name and value
     """  # noqa: E501
+    if func is None:
+        return partial(
+            user_command,
+            name=name,
+            enable_default=enable_default,
+            guild=guild,
+            cooldown=cooldown,
+            cooldown_scale=cooldown_scale,
+            cooldown_scope=cooldown_scope,
+        )
+
     return PartialCommand(
         func=func,
         app_command_type=AppCommandType.USER,
@@ -505,6 +516,17 @@ def message_command(
         Not a valid argument type,
         Annotations must consist of name and value
     """  # noqa: E501
+    if func is None:
+        return partial(
+            message_command,
+            name=name,
+            enable_default=enable_default,
+            guild=guild,
+            cooldown=cooldown,
+            cooldown_scale=cooldown_scale,
+            cooldown_scope=cooldown_scope,
+        )
+
     return PartialCommand(
         func=func,
         app_command_type=AppCommandType.MESSAGE,

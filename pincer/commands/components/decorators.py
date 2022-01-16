@@ -70,7 +70,6 @@ def button(
     """  # noqa: E501
 
     def wrap(custom_id, func) -> Button:
-
         if not iscoroutinefunction(func):
             raise CommandIsNotCoroutine(f"`{func.__name__}` must be a coroutine.")
 
@@ -148,7 +147,6 @@ def select_menu(
     """  # noqa: E501
 
     def wrap(custom_id, func) -> SelectMenu:
-
         if not iscoroutinefunction(func):
             raise CommandIsNotCoroutine(f"`{func.__name__}` must be a coroutine.")
 

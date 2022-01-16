@@ -11,6 +11,7 @@ from typing import NamedTuple, Literal, Optional
 
 from ._config import GatewayConfig
 from .client import event_middleware, Client, Bot
+from .cog import Cog
 from .commands import command, ChatCommandHandler
 from .exceptions import (
     PincerError, InvalidPayload, UnhandledException, NoExportMethod,
@@ -73,6 +74,6 @@ __all__ = (
     "RateLimitError", "ServerError", "TaskAlreadyRunning", "TaskCancelError",
     "TaskError", "TaskInvalidDelay", "TaskIsNotCoroutine", "TooManyArguments",
     "TooManySetupArguments", "UnauthorizedError", "UnavailableGuildError",
-    "UnhandledException", "__author__", "__email__", "__package__",
+    "UnhandledException", "__author__", "__email__", "__package__", "Cog",
     "__title__", "__version__", "command", "event_middleware"
 )
