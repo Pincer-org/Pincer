@@ -68,6 +68,7 @@ from .guild.invite import (
 )
 from .guild.member import GuildMember, PartialGuildMember, BaseMember
 from .guild.overwrite import Overwrite
+from .guild.permissions import Permissions
 from .guild.role import RoleTags, Role
 from .guild.stage import PrivacyLevel, StageInstance
 from .guild.template import GuildTemplate
@@ -137,6 +138,19 @@ __all__ = (
     "PremiumTypes", "PresenceUpdateEvent", "PrivacyLevel", "Reaction",
     "ReadyEvent", "RequestGuildMembers", "ResolvedData", "Resume", "Role",
     "RoleTags", "SessionStartLimit", "StageInstance", "StatusType", "Sticker",
+    "IntegrationExpireBehavior", "Intents", "Interaction", "InteractionData",
+    "InteractionFlags", "InteractionType", "Invite", "InviteCreateEvent",
+    "InviteDeleteEvent", "InviteStageInstance", "InviteTargetType", "MFALevel",
+    "Mentionable", "Message", "MessageActivity", "MessageActivityType",
+    "MessageComponent", "MessageContext", "MessageDeleteBulkEvent",
+    "MessageDeleteEvent", "MessageFlags", "MessageInteraction",
+    "MessageReactionAddEvent", "MessageReactionRemoveAllEvent",
+    "MessageReactionRemoveEmojiEvent", "MessageReactionRemoveEvent",
+    "MessageReference", "MessageType", "NewsChannel", "Overwrite",
+    "PartialGuildMember", "Permissions", "PremiumTier", "PremiumTypes",
+    "PresenceUpdateEvent", "PrivacyLevel", "Reaction", "ReadyEvent",
+    "RequestGuildMembers", "ResolvedData", "Resume", "Role", "RoleTags",
+    "SessionStartLimit", "StageInstance", "StatusType", "Sticker",
     "StickerFormatType", "StickerItem", "StickerPack", "StickerType",
     "SystemChannelFlags", "TextChannel", "ThreadListSyncEvent", "ThreadMember",
     "ThreadMembersUpdateEvent", "ThreadMetadata", "ThrottleInterface",
