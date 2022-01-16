@@ -26,7 +26,7 @@ from ..commands.arg_types import (
 )
 from ..commands.groups import Group, Subgroup
 from ..utils.snowflake import Snowflake
-from ..utils.types import APINullable
+from ..utils.types import APINullable, MISSING
 from ..exceptions import (
     CommandIsNotCoroutine,
     CommandAlreadyRegistered,
@@ -53,8 +53,6 @@ from ..objects.app import (
 )
 from ..utils import should_pass_ctx
 from ..utils.signature import get_signature_and_params
-from ..utils.types import MISSING, APINullable
-from ..utils.types import Singleton
 
 if TYPE_CHECKING:
     from typing import Optional
