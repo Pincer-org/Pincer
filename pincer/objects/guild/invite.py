@@ -32,6 +32,7 @@ class InviteTargetType(IntEnum):
     EMBEDDED_APPLICATION:
         An embedded application invite, e.g. poker-night etc.
     """
+
     STREAM = 1
     EMBEDDED_APPLICATION = 2
 
@@ -51,6 +52,7 @@ class InviteStageInstance(APIObject):
     topic: :class:`str`
         the topic of the Stage instance (1-120 characters)
     """
+
     members: List[GuildMember]
     participant_count: int
     speaker_count: int
@@ -101,6 +103,7 @@ class Invite(APIObject):
     created_at: APINullable[:class:`~pincer.utils.timestamp.Timestamp`]
         When this invite was created
     """
+
     # noqa: E501
 
     channel: Channel
@@ -130,3 +133,17 @@ class Invite(APIObject):
     @property
     def link(self):
         return f"https://discord.gg/{self.code}"
+
+    async def delete(self):
+        """Delete this invite.
+
+        Raises
+        ------
+        Forbidden
+            You do not have permission to delete this invite
+        NotFound
+            This invite does not exist
+        HTTPException
+            Deleting the invite failed
+        """
+        await self._http.delete(f"guilds/{self.guild.id}/invites/{self.code}")

@@ -1279,6 +1279,23 @@ class Guild(APIObject):
         for invite_data in data:
             yield Invite.from_dict(invite_data)
 
+    async def get_invite(self, code: str) -> Invite:
+        """|coro|
+        Returns an Invite object for the given invite code.
+
+        Parameters
+        ----------
+        code : :class:`str`
+            The invite code to get the invite for.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.invite.Invite`
+            The invite object.
+        """
+        data = await self._http.get(f"invite/{code}")
+        return Invite.from_dict(data)
+
     async def get_integrations(self) -> AsyncIterator[Integration]:
         """|coro|
         Returns an async generator of integrations for the guild.
@@ -1311,6 +1328,18 @@ class Guild(APIObject):
             f"guilds/{self.id}/integrations/{integration.id}",
             headers={"X-Audit-Log-Reason": reason},
         )
+
+    async def delete_invite(self, code: str):
+        """|coro|
+        Deletes an invite.
+        Requires the ``MANAGE_GUILD`` intent.
+
+        Parameters
+        ----------
+        code : :class:`str`
+            The code of the invite to delete.
+        """
+        await self._http.delete(f"guilds/{self.id}/invites/{code}")
 
     async def get_widget_settings(self) -> GuildWidget:
         """|coro|
