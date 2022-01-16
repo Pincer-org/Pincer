@@ -103,8 +103,9 @@ def reload_cog(client: Client, cog: Type[Cog]):
 
 class Cog(Interactable):
     """A cog object
-    This is an object that store commands that isn't a Client. It also can be loaded
-    and unloaded in runtime so commands can be changed without restarting the bot.
+    This is an object that can register commands and message components that isn't a
+    client. It also can be loaded and unloaded in runtime so commands can be changed
+    without restarting the bot.
     """
 
     def __init__(self, client: Client) -> None:
