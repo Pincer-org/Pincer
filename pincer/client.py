@@ -15,6 +15,7 @@ from collections import defaultdict
 from functools import partial
 from importlib import import_module
 from inspect import isasyncgenfunction
+from types import ModuleType
 from typing import (
     Any,
     Dict,
@@ -22,12 +23,13 @@ from typing import (
     Optional,
     Iterable,
     Tuple,
+    Type,
     Union,
     overload,
     TYPE_CHECKING,
 )
 
-from pincer.cog import load_cog, reload_cog
+from pincer.cog import get_cog_name, load_cog, load_module, reload_cog
 from pincer.commands.interactable import Interactable, PartialInteractable
 
 from . import __package__
@@ -167,6 +169,15 @@ for event, middleware_ in middleware.items():
 
 class PartialEvent(PartialInteractable):
     def register(self, manager: Any):
+        name = self.func.__name__
+
+        if name == "on_command_error" and _events.get(name):
+            print(manager, _events[name][0].manager)
+            raise InvalidEventName(
+                f"The `{name}` event can only exist once. This is because "
+                "it gets treated as a command and can have a response."
+            )
+
         self.manager = manager
         _events[self.func.__name__].append(self)
         return self.func
@@ -343,12 +354,6 @@ class Client(Interactable):
                 f"The event named `{name}` must start with `on_`"
             )
 
-        if name == "on_command_error" and _events.get(name):
-            raise InvalidEventName(
-                f"The `{name}` event can only exist once. This is because "
-                "it gets treated as a command and can have a response."
-            )
-
         return PartialEvent(func=coroutine)
 
     @staticmethod
@@ -372,7 +377,7 @@ class Client(Interactable):
             ]
         )
 
-    def load_cog(self, cog: Cog, package: Optional[str] = None):
+    def load_cog(self, cog: Type[Cog]):
         """Load a cog from a string path, setup method in COG may
         optionally have a first argument which will contain the client!
 
@@ -395,12 +400,10 @@ class Client(Interactable):
 
              from pincer import command
 
-             class SayCommand:
+             class SayCommand(Cog):
                  @command()
                  async def say(self, message: str) -> str:
                      return message
-
-             setup = SayCommand
 
         Parameters
         ----------
@@ -412,20 +415,17 @@ class Client(Interactable):
         """
         load_cog(self, cog)
 
-    @staticmethod
-    def get_cogs() -> Dict[str, Any]:
-        """Get a dictionary of all loaded cogs.
+    def load_module(self, module: ModuleType):
+        """Loads all the cogs from a module recursively
 
-        The key/value pair is import path/cog class.
-
-        Returns
-        -------
-        Dict[:class:`str`, Any]
-            The dictionary of cogs
+        Parameters
+        ----------
+        module : :class:`~types.ModuleType`
+            The module to load.
         """
-        return ChatCommandHandler.managers.values()
+        load_module(self, module)
 
-    async def reload_cog(self, cog: Cog):
+    def reload_cog(self, cog: Type[Cog]):
         """|coro|
 
         Unloads a currently loaded Cog
@@ -440,7 +440,20 @@ class Client(Interactable):
         CogNotFound
             When the cog is not in that path
         """
-        await reload_cog(self, cog)
+        reload_cog(self, cog)
+
+    @staticmethod
+    def get_cogs() -> Dict[str, Any]:
+        """Get a dictionary of all loaded cogs.
+
+        The key/value pair is import path/cog class.
+
+        Returns
+        -------
+        Dict[:class:`str`, Any]
+            The dictionary of cogs
+        """
+        return ChatCommandHandler.managers
 
     def execute_event(
         self,

@@ -2,12 +2,14 @@
 # Full MIT License can be found in `LICENSE` at the project root.
 
 from __future__ import annotations
+from asyncio import ensure_future
 
 from importlib import reload, import_module
 from types import ModuleType
 from typing import TYPE_CHECKING
 
-from .commands.commands import ChatCommandHandler
+from . import client as _client
+from .commands.chat_command_handler import ChatCommandHandler
 from .commands.interactable import Interactable
 from .exceptions import CogAlreadyExists, CogNotFound
 
@@ -42,7 +44,7 @@ def load_cog(client: Client, cog: Type[Cog]):
     ChatCommandHandler.managers.append(cog_manager)
 
 
-async def load_module(client: Client, module: ModuleType):
+def load_module(client: Client, module: ModuleType):
     """Loads the cogs from a module recursively.
 
     Parameters
@@ -50,12 +52,14 @@ async def load_module(client: Client, module: ModuleType):
     module : :class:`~types.ModuleType`
         The module to load.
     """
-
     for item in module.__dict__.values():
-        print(item)
+        if isinstance(item, ModuleType):
+            load_module(client, item)
+        elif hasattr(item, "__bases__") and Cog in item.__bases__:
+            load_cog(client, item)
 
 
-async def reload_cog(client: Client, cog: Type[Cog]):
+def reload_cog(client: Client, cog: Type[Cog]):
     """Reloads a cog.
 
     Parameters
@@ -63,6 +67,8 @@ async def reload_cog(client: Client, cog: Type[Cog]):
     cog : Type[:class:`~pincer.cog.Cog`]
         The cog to load.
     """
+
+    # Remove application commands registered to this cog
     for item in ChatCommandHandler.managers:
         if get_cog_name(item) == get_cog_name(cog):
             old_cog = item
@@ -83,11 +89,16 @@ async def reload_cog(client: Client, cog: Type[Cog]):
 
     ChatCommandHandler.managers.remove(old_cog)
 
+    # Remove events registered to this cog
+    for event in type(old_cog).__dict__.values():
+        if isinstance(event, _client.PartialEvent):
+            _client._events.pop(event.func.__name__)
+
     mod = reload(import_module(cog.__module__))
     new_cog = getattr(mod, cog.__name__)
     client.load_cog(new_cog)
     ChatCommandHandler.has_been_initialized = False
-    await ChatCommandHandler().initialize()
+    ensure_future(ChatCommandHandler().initialize())
 
 
 class Cog(Interactable):
