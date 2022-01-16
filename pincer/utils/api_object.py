@@ -99,7 +99,7 @@ class APIObject:
         return self._client.http
 
     @classmethod
-    def link(cls, client: Client):
+    def bind_client(cls, client: Client):
         """
         Links the object to the client.
 

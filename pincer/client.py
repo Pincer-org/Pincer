@@ -230,7 +230,7 @@ class Client:
         self.bot: Optional[User] = None
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
-        APIObject.link(self)
+        APIObject.bind_client(self)
 
         self.throttler = throttler
 
