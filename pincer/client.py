@@ -436,7 +436,7 @@ class Client(Interactable):
         reload_cog(self, cog)
 
     @staticmethod
-    def get_cogs() -> Dict[str, Any]:
+    def get_cogs() -> List[Cog]:
         """Get a dictionary of all loaded cogs.
 
         The key/value pair is import path/cog class.
@@ -446,7 +446,10 @@ class Client(Interactable):
         Dict[:class:`str`, Any]
             The dictionary of cogs
         """
-        return ChatCommandHandler.managers
+        return [
+            manager for manager in ChatCommandHandler.managers
+            if isinstance(manager, Cog)
+        ]
 
     def execute_event(
         self,
