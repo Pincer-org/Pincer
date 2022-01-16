@@ -29,8 +29,8 @@ from typing import (
     TYPE_CHECKING,
 )
 
-from pincer.cog import get_cog_name, load_cog, load_module, reload_cog
-from pincer.commands.interactable import Interactable, PartialInteractable
+from .cog import load_cog, load_module, reload_cog
+from .commands.interactable import Interactable, PartialInteractable
 
 from . import __package__
 from .commands import ChatCommandHandler

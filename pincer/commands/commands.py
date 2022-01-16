@@ -339,7 +339,7 @@ def command(
     if not options:
         options = MISSING
 
-    return PartialCommand(
+    return _PartialCommand(
         func=func,
         app_command_type=AppCommandType.CHAT_INPUT,
         name=name,
@@ -437,7 +437,7 @@ def user_command(
             cooldown_scope=cooldown_scope,
         )
 
-    return PartialCommand(
+    return _PartialCommand(
         func=func,
         app_command_type=AppCommandType.USER,
         name=name,
@@ -527,7 +527,7 @@ def message_command(
             cooldown_scope=cooldown_scope,
         )
 
-    return PartialCommand(
+    return _PartialCommand(
         func=func,
         app_command_type=AppCommandType.MESSAGE,
         name=name,
@@ -630,7 +630,7 @@ def register_command(
     )
 
 
-class PartialCommand(PartialInteractable):
+class _PartialCommand(PartialInteractable):
     def register(self, manager: Any) -> Callable[..., Any]:
         register_command(manager, *self.args, func=self.func, **self.kwargs)
         return self.func
