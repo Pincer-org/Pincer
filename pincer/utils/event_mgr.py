@@ -53,12 +53,7 @@ class _Processable(ABC):
             return False
 
         if self.check:
-            if event_value is not None:
-                return self.check(event_value)
-            else:
-                # Certain middleware do not have an event_value
-                return self.check()
-
+            return self.check(event_value) if event_value is not None else self.check()
         return True
 
 
