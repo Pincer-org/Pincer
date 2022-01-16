@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from .client import Client
 
 
-def get_cog_name(cog: Type[Cog]):
+def get_cog_name(cog: Type[Cog]) -> str:
     """Gets the path to import a cog. This is used as a unique identifier"""
     try:
         return f"{cog.__module__}.{cog.__name__}"
