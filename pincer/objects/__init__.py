@@ -68,6 +68,7 @@ from .guild.invite import (
 )
 from .guild.member import GuildMember, PartialGuildMember, BaseMember
 from .guild.overwrite import Overwrite
+from .guild.permissions import Permissions
 from .guild.role import RoleTags, Role
 from .guild.stage import PrivacyLevel, StageInstance
 from .guild.template import GuildTemplate
@@ -144,5 +145,5 @@ __all__ = (
     "User", "UserMessage", "VerificationLevel", "VisibilityType",
     "VoiceChannel", "VoiceRegion", "VoiceServerUpdateEvent", "VoiceState",
     "Webhook", "WebhookType", "WebhooksUpdateEvent", "WelcomeScreen",
-    "WelcomeScreenChannel"
+    "WelcomeScreenChannel", "Permissions"
 )

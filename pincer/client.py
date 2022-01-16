@@ -13,7 +13,6 @@ from asyncio import (
 )
 from collections import defaultdict
 from functools import partial
-from importlib import import_module
 from inspect import isasyncgenfunction
 from types import ModuleType
 from typing import (
@@ -22,6 +21,7 @@ from typing import (
     List,
     Optional,
     Iterable,
+    OrderedDict,
     Tuple,
     Type,
     Union,
@@ -36,7 +36,7 @@ from . import __package__
 from .commands import ChatCommandHandler
 from .core import HTTPClient
 from .core.gateway import GatewayInfo, Gateway
-from .exceptions import InvalidEventName
+from .exceptions import InvalidEventName, GatewayConnectionError
 from .middleware import middleware
 from .objects import (
     Role,
@@ -57,6 +57,7 @@ from .utils.conversion import remove_none
 from .utils.event_mgr import EventMgr
 from .utils.extraction import get_index
 from .utils.insertion import should_pass_cls, should_pass_gateway
+from .utils.shards import calculate_shard_id
 from .utils.signature import get_params
 from .utils.types import CheckFunction
 from .utils.types import Coro
@@ -254,6 +255,7 @@ class Client(Interactable):
         self.event_mgr = EventMgr(self.loop)
 
         self.gateway: GatewayInfo = self.loop.run_until_complete(get_gateway())
+        self.shards: OrderedDict[int, Gateway] = OrderedDict()
 
         # The guild and channel value is only registered if the Client has the GUILDS
         # intent.
@@ -541,7 +543,39 @@ class Client(Interactable):
             }
         )
 
+        self.shards[gateway.shard] = gateway
         create_task(gateway.start_loop())
+
+    def get_shard(
+        self,
+        guild_id: Optional[Snowflake] = None,
+        num_shards: Optional[int] = None
+    ) -> Gateway:
+        """
+        Returns the shard receiving events for a specified guild_id.
+
+        ``num_shards`` is inferred from the num_shards value for the first started
+        shard. If your shards do not all have the same ``num_shard`` value, you must
+        specify value to get the expected result.
+
+        Parameters
+        ----------
+        guild_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            The guild_id of the shard to look for. If no guild id is provided, the
+            shard that receives dms will be returned. |default| :data:`None`
+        num_shards : Optional[:class:`int`]
+            The number of shards. If no number is provided, the value will default to
+            the num_shards for the first started shard. |default| :data:`None`
+        """
+        if not self.shards:
+            raise GatewayConnectionError(
+                "The client has never connected to a gateway"
+            )
+        if guild_id is None:
+            return self.shards[0]
+        if num_shards is None:
+            num_shards = next(iter(self.shards.values())).num_shards
+        return self.shards[calculate_shard_id(guild_id, num_shards)]
 
     @property
     def is_closed(self) -> bool:
