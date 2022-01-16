@@ -1279,6 +1279,23 @@ class Guild(APIObject):
         for invite_data in data:
             yield Invite.from_dict(invite_data)
 
+    async def get_invite(self, code: str) -> Invite:
+        """|coro|
+        Returns an invite object for an invite code.
+
+        Parameters
+        ----------
+        code : :class:`str`
+            The invite code to get the invite for.
+
+        Returns
+        -------
+        :class:`~pincer.objects.invite.Invite`
+            The invite object.
+        """
+        data = await self._http.get(f"invite/{code}")
+        return Invite.from_dict(data)
+
     async def get_integrations(self) -> AsyncIterator[Integration]:
         """|coro|
         Returns an async generator of integrations for the guild.
