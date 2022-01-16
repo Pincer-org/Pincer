@@ -55,7 +55,7 @@ def load_module(client: Client, module: ModuleType):
     for item in module.__dict__.values():
         if isinstance(item, ModuleType):
             load_module(client, item)
-        elif hasattr(item, "__bases__") and Cog in item.__bases__:
+        elif Cog in getattr(item, "__bases__", []):
             load_cog(client, item)
 
 
