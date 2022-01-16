@@ -1333,6 +1333,11 @@ class Guild(APIObject):
         """|coro|
         Deletes an invite.
         Requires the ``MANAGE_GUILD`` intent.
+
+        Parameters
+        ----------
+        code : :class:`str`
+            The code of the invite to delete.
         """
         await self._http.delete(f"guilds/{self.id}/invites/{code}")
 
