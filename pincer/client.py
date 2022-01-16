@@ -36,14 +36,7 @@ from . import __package__
 from .commands import ChatCommandHandler
 from .core import HTTPClient
 from .core.gateway import GatewayInfo, Gateway
-from .exceptions import (
-    InvalidEventName,
-    TooManySetupArguments,
-    NoValidSetupMethod,
-    NoCogManagerReturnFound,
-    CogAlreadyExists,
-    CogNotFound,
-)
+from .exceptions import InvalidEventName
 from .middleware import middleware
 from .objects import (
     Role,
