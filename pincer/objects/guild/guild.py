@@ -1332,7 +1332,7 @@ class Guild(APIObject):
     async def delete_invite(self, code: str):
         """|coro|
         Deletes an invite.
-        Requires the ``MANAGE_GUILD`` permission.
+        Requires the ``MANAGE_GUILD`` intent.
         """
         await self._http.delete(f"guilds/{self.id}/invites/{code}")
 
