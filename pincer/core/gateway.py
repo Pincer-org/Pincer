@@ -4,14 +4,12 @@
 
 from __future__ import annotations
 
-from asyncio import create_task, Task, ensure_future, sleep
+import logging
+from asyncio import create_task, Task, sleep
+from asyncio import ensure_future
 from dataclasses import dataclass
 from datetime import datetime
 from itertools import repeat, count, chain
-import logging
-import zlib
-from asyncio import AbstractEventLoop, ensure_future, get_event_loop
-
 from platform import system
 from random import random
 from typing import TYPE_CHECKING, Any, Dict, Callable, Optional
@@ -22,12 +20,12 @@ from aiohttp import (
 )
 
 from . import __package__
-from ..utils.api_object import APIObject
 from .._config import GatewayConfig
 from ..core.dispatch import GatewayDispatch
 from ..exceptions import (
     InvalidTokenError, GatewayConnectionError, GatewayError, UnhandledException
 )
+from ..utils.api_object import APIObject
 
 if TYPE_CHECKING:
     from ..objects.app.intents import Intents
