@@ -14,7 +14,6 @@ from asyncio import (
 from collections import defaultdict
 from functools import partial
 from inspect import isasyncgenfunction
-from types import ModuleType
 from typing import (
     Any,
     Dict,
@@ -23,7 +22,6 @@ from typing import (
     Iterable,
     OrderedDict,
     Tuple,
-    Type,
     Union,
     overload,
     TYPE_CHECKING,

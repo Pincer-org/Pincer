@@ -80,7 +80,7 @@ class CogManager:
 
         Parameters
         ----------
-        *cogs : Type[:class:`~pincer.cog.Cog`]
+        \\*cogs : Type[:class:`~pincer.cog.Cog`]
             A list of cogs to load.
         """
         for cog in cogs:
@@ -131,7 +131,7 @@ class CogManager:
         ChatCommandHandler.managers.remove(old_cog)
 
         # Remove events registered to this cog
-        for event in type(old_cog).__dict__.values():
+        for event in vars(type(old_cog)).values():
             if isinstance(event, _client.PartialEvent):
                 _client._events.pop(event.func.__name__)
 
