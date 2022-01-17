@@ -173,6 +173,10 @@ class ChatCommandHandler(metaclass=Singleton):
         """Builds the commands into the format that Discord expects. See class info
         for the reasoning.
         """
+
+        # Reset the built register
+        ChatCommandHandler.built_register = {}
+
         for cmd in ChatCommandHandler.register.values():
 
             if cmd.sub_group:
