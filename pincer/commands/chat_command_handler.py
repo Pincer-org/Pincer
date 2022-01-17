@@ -333,9 +333,10 @@ class ChatCommandHandler(metaclass=Singleton):
             *(self.remove_command(cmd) for cmd in to_remove)
         )
 
-        self._api_commands = list(
-            filter(lambda cmd: cmd not in to_remove, self._api_commands)
-        )
+        self._api_commands = [
+            cmd for cmd in self._api_commands
+            if cmd not in to_remove
+        ]
 
     async def __add_commands(self):
         """|coro|
