@@ -356,10 +356,9 @@ class ChatCommandHandler(metaclass=Singleton):
         Therefore, we don't need to use a separate loop for updating and adding
         commands.
         """
-        for command in filter(
-            lambda command: command not in self._api_commands,
-            self.get_local_registered_commands()
-        ):
+        for command in self.get_local_registered_commands():
+            if command in self._api_commands:
+                continue
             await self.add_command(command)
 
     async def initialize(self):
