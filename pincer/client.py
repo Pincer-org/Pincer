@@ -367,8 +367,8 @@ class Client(Interactable, CogManager):
             ]
         )
 
+    @staticmethod
     def execute_event(
-        self,
         events: List[PartialEvent],
         gateway: Gateway,
         *args,
