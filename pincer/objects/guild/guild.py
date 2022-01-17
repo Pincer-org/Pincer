@@ -14,6 +14,7 @@ from .channel import Channel, Thread
 from .scheduled_events import ScheduledEvent, GuildScheduledEventUser
 from ..message.file import File
 from ...exceptions import UnavailableGuildError
+from ...utils import remove_none
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
 
