@@ -37,11 +37,12 @@ __all__ = (
     "ChannelMention", "ChannelType", "DefaultMessageNotificationLevel",
     "EventStatus", "ExplicitContentFilterLevel", "FollowedChannel", "Guild",
     "GuildFeature", "GuildMember", "GuildNSFWLevel",
-    "GuildScheduledEventEntityType", "GuildScheduledEventUser", "GuildTemplate", "GuildWidget", "Invite",
-    "InviteStageInstance", "InviteTargetType", "MFALevel", "NewsChannel",
-    "Overwrite", "PartialGuildMember", "Permissions", "PremiumTier",
-    "PrivacyLevel", "Role", "RoleTags", "ScheduledEvent", "StageInstance",
-    "SystemChannelFlags", "TextChannel", "ThreadMember", "ThreadMetadata",
-    "UnavailableGuild", "VerificationLevel", "VoiceChannel", "Webhook",
-    "WebhookType", "WelcomeScreen", "WelcomeScreenChannel"
+    "GuildScheduledEventEntityType", "GuildScheduledEventUser",
+    "GuildTemplate", "GuildWidget", "Invite", "InviteStageInstance",
+    "InviteTargetType", "MFALevel", "NewsChannel", "Overwrite",
+    "PartialGuildMember", "Permissions", "PremiumTier", "PrivacyLevel", "Role",
+    "RoleTags", "ScheduledEvent", "StageInstance", "SystemChannelFlags",
+    "TextChannel", "ThreadMember", "ThreadMetadata", "UnavailableGuild",
+    "VerificationLevel", "VoiceChannel", "Webhook", "WebhookType",
+    "WelcomeScreen", "WelcomeScreenChannel"
 )
