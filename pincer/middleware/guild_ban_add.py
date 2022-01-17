@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 
 from ..objects.events.guild import GuildBanAddEvent
 from ..utils import Coro
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -18,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def guild_ban_add_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -39,10 +36,7 @@ async def guild_ban_add_middleware(
         ``on_guild_ban_add_update`` and a ``GuildBanAddEvent``
     """
 
-    return (
-        "on_guild_ban_add",
-        GuildBanAddEvent.from_dict(construct_client_dict(self, payload.data)),
-    )
+    return ("on_guild_ban_add", GuildBanAddEvent.from_dict(payload.data))
 
 
 def export() -> Coro:

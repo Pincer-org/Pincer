@@ -121,6 +121,9 @@ client.run()
 Pincer makes developing application commands intuitive and fast.
 
 ```py
+from typing import Annotated  # python 3.9+
+from typing_extensions import Annotated  # python 3.8
+
 from pincer import Client
 from pincer.commands import command, CommandArg, Description
 from pincer.objects import UserMessage, User
@@ -146,8 +149,8 @@ class Bot(Client):
     @command(description="Add two numbers!")
     async def add(
         self,
-        first: CommandArg[int, Description["The first number"]],
-        second: CommandArg[int, Description["The second number"]]
+        first: Annotated[int, Description("The first number")],
+        second: Annotated[int, Description("The second number")]
     ):
         return f"The addition of `{first}` and `{second}` is `{first + second}`"
 
@@ -183,9 +186,7 @@ freedom to create custom events and remove the already existing middleware creat
 the developers. Your custom middleware directly receives the payload from
 Discord. You can't do anything wrong without accessing the `override` attribute, but if
 you do access it, the Pincer team will not provide any support for weird behavior.
-So, in short, only use this if you know what you're doing. An example of using
-the middleware system with a custom `on_ready` event can be found
-[in our docs](https://pincer.readthedocs.io/en/latest/pincer.html#pincer.client.middleware).
+So, in short, only use this if you know what you're doing.
 ._
 
 ## 🏷️ License

@@ -6,6 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from .permissions import Permissions
 from ...utils import APIObject
 
 if TYPE_CHECKING:
@@ -31,3 +32,8 @@ class Overwrite(APIObject):
     type: int
     allow: str
     deny: str
+
+    @property
+    def permissions(self) -> Permissions:
+        """Returns the permissions for this overwrite"""
+        return Permissions.from_ints(int(self.allow), int(self.deny))

@@ -4,7 +4,13 @@
 from __future__ import annotations
 
 import logging
-from asyncio import iscoroutinefunction, ensure_future, create_task, get_event_loop
+import signal
+from asyncio import (
+    iscoroutinefunction,
+    ensure_future,
+    create_task,
+    get_event_loop,
+)
 from collections import defaultdict
 from functools import partial
 from importlib import import_module
@@ -15,10 +21,11 @@ from typing import (
     List,
     Optional,
     Iterable,
+    OrderedDict,
     Tuple,
     Union,
     overload,
-    TYPE_CHECKING
+    TYPE_CHECKING,
 )
 from . import __package__
 from .commands import ChatCommandHandler
@@ -31,6 +38,7 @@ from .exceptions import (
     NoCogManagerReturnFound,
     CogAlreadyExists,
     CogNotFound,
+    GatewayConnectionError
 )
 from .middleware import middleware
 from .objects import (
@@ -44,13 +52,15 @@ from .objects import (
     StickerPack,
     UserMessage,
     Connection,
-    File
+    File,
 )
 from .objects.guild.channel import GroupDMChannel
-from .utils.conversion import construct_client_dict, remove_none
+from .utils import APIObject
+from .utils.conversion import remove_none
 from .utils.event_mgr import EventMgr
 from .utils.extraction import get_index
 from .utils.insertion import should_pass_cls, should_pass_gateway
+from .utils.shards import calculate_shard_id
 from .utils.signature import get_params
 from .utils.types import CheckFunction
 from .utils.types import Coro
@@ -195,6 +205,17 @@ class Client:
         throttler: ThrottleInterface = DefaultThrottleHandler,
         reconnect: bool = True,
     ):
+        def sigint_handler(_signal, _frame):
+            _log.info("SIGINT received, shutting down...")
+
+            # A print statement to make sure the user sees the message
+            print("Closing the client loop, this can take a few seconds...")
+
+            create_task(self.http.close())
+            if self.loop.is_running():
+                self.loop.stop()
+
+        signal.signal(signal.SIGINT, sigint_handler)
 
         if isinstance(intents, Iterable):
             intents = sum(intents)
@@ -209,16 +230,18 @@ class Client:
         self.bot: Optional[User] = None
         self.received_message = received or "Command arrived successfully!"
         self.http = HTTPClient(token)
+        APIObject.bind_client(self)
+
         self.throttler = throttler
-        self.event_mgr = EventMgr()
 
         async def get_gateway():
-            return GatewayInfo.from_dict(
-                await self.http.get("gateway/bot")
-            )
+            return GatewayInfo.from_dict(await self.http.get("gateway/bot"))
 
-        loop = get_event_loop()
-        self.gateway: GatewayInfo = loop.run_until_complete(get_gateway())
+        self.loop = get_event_loop()
+        self.event_mgr = EventMgr(self.loop)
+
+        self.gateway: GatewayInfo = self.loop.run_until_complete(get_gateway())
+        self.shards: OrderedDict[int, Gateway] = OrderedDict()
 
         # The guild and channel value is only registered if the Client has the GUILDS
         # intent.
@@ -234,9 +257,7 @@ class Client:
         Get a list of chat command calls which have been registered in
         the :class:`~pincer.commands.ChatCommandHandler`\\.
         """
-        return [
-            cmd.app.name for cmd in ChatCommandHandler.register.values()
-        ]
+        return [cmd.app.name for cmd in ChatCommandHandler.register.values()]
 
     @property
     def guild_ids(self) -> List[Snowflake]:
@@ -298,9 +319,8 @@ class Client:
         InvalidEventName
             If the function name is not a valid event (on_x)
         """
-        if (
-            not iscoroutinefunction(coroutine)
-            and not isasyncgenfunction(coroutine)
+        if not iscoroutinefunction(coroutine) and not isasyncgenfunction(
+            coroutine
         ):
             raise TypeError(
                 "Any event which is registered must be a coroutine function"
@@ -334,11 +354,12 @@ class Client:
         calls = _events.get(name.strip().lower())
 
         return (
-            [] if not calls
+            []
+            if not calls
             else [
-                call for call in calls
-                if iscoroutinefunction(call)
-                or isasyncgenfunction(call)
+                call
+                for call in calls
+                if iscoroutinefunction(call) or isasyncgenfunction(call)
             ]
         )
 
@@ -491,9 +512,8 @@ class Client:
 
     def run(self):
         """Start the bot."""
-        loop = get_event_loop()
-        ensure_future(self.start_shard(0, 1), loop=loop)
-        loop.run_forever()
+        ensure_future(self.start_shard(0, 1), loop=self.loop)
+        self.loop.run_forever()
 
     def run_autosharded(self):
         """
@@ -511,18 +531,12 @@ class Client:
         num_shards: int
             The total amount of shards.
         """
-        loop = get_event_loop()
-
         for shard in shards:
-            ensure_future(self.start_shard(shard, num_shards), loop=loop)
+            ensure_future(self.start_shard(shard, num_shards), loop=self.loop)
 
-        loop.run_forever()
+        self.loop.run_forever()
 
-    async def start_shard(
-        self,
-        shard: int,
-        num_shards: int
-    ):
+    async def start_shard(self, shard: int, num_shards: int):
         """|coro|
         Starts a shard
         This should not be run most of the time. ``run_shards`` and ``run_autosharded``
@@ -539,23 +553,79 @@ class Client:
             intents=self.intents,
             url=self.gateway.url,
             shard=shard,
-            num_shards=num_shards
+            num_shards=num_shards,
         )
         await gateway.init_session()
 
-        gateway.append_handlers({
-            # Gets triggered on all events
-            -1: partial(self.payload_event_handler, gateway),
-            # Use this event handler for opcode 0.
-            0: partial(self.event_handler, gateway)
-        })
+        gateway.append_handlers(
+            {
+                # Gets triggered on all events
+                -1: partial(self.payload_event_handler, gateway),
+                # Use this event handler for opcode 0.
+                0: partial(self.event_handler, gateway),
+            }
+        )
 
+        self.shards[gateway.shard] = gateway
         create_task(gateway.start_loop())
 
-    def __del__(self):
-        """Ensure close of the http client."""
+    def get_shard(
+        self,
+        guild_id: Optional[Snowflake] = None,
+        num_shards: Optional[int] = None
+    ) -> Gateway:
+        """
+        Returns the shard receiving events for a specified guild_id.
+
+        ``num_shards`` is inferred from the num_shards value for the first started
+        shard. If your shards do not all have the same ``num_shard`` value, you must
+        specify value to get the expected result.
+
+        Parameters
+        ----------
+        guild_id : Optional[:class:`~pincer.utils.snowflake.Snowflake`]
+            The guild_id of the shard to look for. If no guild id is provided, the
+            shard that receives dms will be returned. |default| :data:`None`
+        num_shards : Optional[:class:`int`]
+            The number of shards. If no number is provided, the value will default to
+            the num_shards for the first started shard. |default| :data:`None`
+        """
+        if not self.shards:
+            raise GatewayConnectionError(
+                "The client has never connected to a gateway"
+            )
+        if guild_id is None:
+            return self.shards[0]
+        if num_shards is None:
+            num_shards = next(iter(self.shards.values())).num_shards
+        return self.shards[calculate_shard_id(guild_id, num_shards)]
+
+    @property
+    def is_closed(self) -> bool:
+        """
+        Returns
+        -------
+        bool
+            Whether the bot is closed.
+        """
+        return self.loop.is_running()
+
+    def close(self):
+        """
+        Ensure close of the http client.
+        Allow for script execution to continue.
+        """
         if hasattr(self, "http"):
             create_task(self.http.close())
+
+        self.loop.stop()
+
+    def __del__(self):
+        if self.loop.is_running():
+            self.loop.stop()
+
+        if not self.loop.is_closed():
+            self.close()
 
     async def handle_middleware(
         self,
@@ -563,7 +633,7 @@ class Client:
         key: str,
         gateway: Gateway,
         *args,
-        **kwargs
+        **kwargs,
     ) -> Tuple[Optional[Coro], List[Any], Dict[str, Any]]:
         """|coro|
 
@@ -620,7 +690,7 @@ class Client:
         gateway: Gateway,
         name: str = "on_error",
         *args,
-        **kwargs
+        **kwargs,
     ):
         """|coro|
 
@@ -644,10 +714,7 @@ class Client:
             raise error
 
     async def process_event(
-        self,
-        name: str,
-        payload: GatewayDispatch,
-        gateway: Gateway
+        self, name: str, payload: GatewayDispatch, gateway: Gateway
     ):
         """|coro|
 
@@ -673,20 +740,13 @@ class Client:
         except Exception as e:
             await self.execute_error(e, gateway)
 
-    async def event_handler(
-        self,
-        gateway: Gateway,
-        payload: GatewayDispatch
-    ):
+    async def event_handler(self, gateway: Gateway, payload: GatewayDispatch):
         """|coro|
 
         Handles all payload events with opcode 0.
 
         Parameters
         ----------
-        _ :
-            Socket param, but this isn't required for this handler. So
-            it's just a filler parameter, doesn't matter what is passed.
         payload : :class:`~pincer.core.dispatch.GatewayDispatch`
             The payload sent from the Discord gateway, this contains the
             required data for the client to know what event it is and
@@ -695,9 +755,7 @@ class Client:
         await self.process_event(payload.event_name.lower(), payload, gateway)
 
     async def payload_event_handler(
-        self,
-        gateway: Gateway,
-        payload: GatewayDispatch
+        self, gateway: Gateway, payload: GatewayDispatch
     ):
         """|coro|
 
@@ -705,9 +763,6 @@ class Client:
 
         Parameters
         ----------
-        _ :
-            Socket param, but this isn't required for this handler. So
-            it's just a filler parameter, doesn't matter what is passed.
         payload : :class:`~pincer.core.dispatch.GatewayDispatch`
             The payload sent from the Discord gateway, this contains the
             required data for the client to know what event it is and
@@ -788,9 +843,7 @@ class Client:
             The guild template
         """
         return GuildTemplate.from_dict(
-            construct_client_dict(
-                self, await self.http.get(f"guilds/templates/{code}")
-            )
+            await self.http.get(f"guilds/templates/{code}")
         )
 
     async def create_guild_from_template(
@@ -814,12 +867,9 @@ class Client:
             The created guild
         """
         return Guild.from_dict(
-            construct_client_dict(
-                self,
-                await self.http.post(
-                    f"guilds/templates/{template.code}",
-                    data={"name": name, "icon": icon},
-                ),
+            await self.http.post(
+                f"guilds/templates/{template.code}",
+                data={"name": name, "icon": icon},
             )
         )
 
@@ -877,13 +927,17 @@ class Client:
             event_name, check, iteration_timeout, loop_timeout
         )
 
-    async def get_guild(self, guild_id: int) -> Guild:
+    async def get_guild(self, guild_id: int, with_count: bool = False) -> Guild:
         """|coro|
 
         Fetch a guild object by the guild identifier.
 
         Parameters
         ----------
+        with_count: :class:bool
+            Whether to include the member count in the guild object.
+            Default to `False`
+
         guild_id : :class:`int`
             The id of the guild which should be fetched from the Discord
             gateway.
@@ -893,7 +947,7 @@ class Client:
         :class:`~pincer.objects.guild.guild.Guild`
             The guild object.
         """
-        return await Guild.from_id(self, guild_id)
+        return await Guild.from_id(self, guild_id, with_count)
 
     async def get_user(self, _id: int) -> User:
         """|coro|
@@ -952,7 +1006,9 @@ class Client:
         """
         return await Channel.from_id(self, _id)
 
-    async def get_message(self, _id: Snowflake, channel_id: Snowflake) -> UserMessage:
+    async def get_message(
+        self, _id: Snowflake, channel_id: Snowflake
+    ) -> UserMessage:
         """|coro|
         Creates a UserMessage object
 
@@ -1005,12 +1061,7 @@ class Client:
         -------
         :class:`~pincer.objects.user.user.User`
         """
-        return User.from_dict(
-            construct_client_dict(
-                self,
-                await self.http.get("users/@me")
-            )
-        )
+        return User.from_dict(await self.http.get("users/@me"))
 
     async def modify_current_user(
         self, username: Optional[str] = None, avatar: Optional[File] = None
@@ -1040,7 +1091,7 @@ class Client:
         user = await self.http.patch(
             "users/@me", remove_none({"username": username, "avatar": avatar})
         )
-        return User.from_dict(construct_client_dict(self, user))
+        return User.from_dict(user)
 
     async def get_current_user_guilds(
         self,
@@ -1074,7 +1125,7 @@ class Client:
         )
 
         for guild in guilds:
-            yield Guild.from_dict(construct_client_dict(self, guild))
+            yield Guild.from_dict(guild)
 
     async def leave_guild(self, _id: Snowflake):
         """|coro|
@@ -1114,7 +1165,7 @@ class Client:
             {"access_tokens": access_tokens, "nicks": nicks},
         )
 
-        return GroupDMChannel.from_dict(construct_client_dict(self, channel))
+        return GroupDMChannel.from_dict(channel)
 
     async def get_connections(self) -> AsyncIterator[Connection]:
         """|coro|

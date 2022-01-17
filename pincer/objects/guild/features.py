@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from enum import Enum, auto
+from enum import Enum
 
 
 class GuildFeature(Enum):
@@ -53,6 +53,8 @@ class GuildFeature(Enum):
         Guild can have seven day archive time for threads.
     PRIVATE_THREADS : str
         Guild can have private threads.
+    THREADS_ENABLED : str
+        Guild can have threads enabled.
     """
     ANIMATED_ICON = "ANIMATED_ICON"
     BANNER = "BANNER"
@@ -76,3 +78,5 @@ class GuildFeature(Enum):
     SEVEN_DAY_THREAD_ARCHIVE = "SEVEN_DAY_THREAD_ARCHIVE"
     PRIVATE_THREADS = "PRIVATE_THREADS"
     NEW_THREAD_PERMISSIONS = "NEW_THREAD_PERMISSIONS"
+    THREADS_ENABLED = "THREADS_ENABLED"
+

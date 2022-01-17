@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects import StageInstance
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -18,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def stage_instance_create_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -39,7 +36,7 @@ async def stage_instance_create_middleware(
         ``on_stage_instance_create`` and a ``StageInstance``
     """
 
-    stage = StageInstance.from_dict(construct_client_dict(self, payload.data))
+    stage = StageInstance.from_dict(payload.data)
 
     guild = self.guilds.get(stage.guild_id)
     if guild:

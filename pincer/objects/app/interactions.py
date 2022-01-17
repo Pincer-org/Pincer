@@ -198,10 +198,7 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
         data : Dict[:class:`~pincer.utils.types.Snowflake`, Any]
             Resolved data to search through.
         """
-        if data:
-            return data[option.value]
-
-        return None
+        return data[option.value] if data else None
 
     def get_message_context(self):
         return MessageContext(
@@ -382,7 +379,7 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
 
     async def reply(self, message: MessageConvertable) -> UserMessage:
         """|coro|
-        Sends a reply to a interaction.
+        Sends a reply to an interaction.
         """
         return await self._base_reply(message, CallbackType.MESSAGE, False)
 

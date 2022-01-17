@@ -6,27 +6,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ..client import Client
     from typing import Dict, List, Set, Union, Tuple
 
 
-def construct_client_dict(client: Client, data: Dict) -> Dict:
-    # TODO: fix docs
-    """
-
-    Parameters
-    ----------
-    client
-    data
-
-    Returns
-    -------
-
-    """
-    return {**data, "_client": client}
-
-
-def remove_none(obj: Union[List, Dict, Set, Tuple]) -> Union[List, Dict, Set, Tuple]:
+def remove_none(
+    obj: Union[List, Dict, Set, Tuple]
+) -> Union[List, Dict, Set, Tuple]:
     """
     Removes all ``None`` values from a list, dict or set.
 
