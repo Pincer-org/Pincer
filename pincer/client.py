@@ -56,7 +56,6 @@ from .utils.event_mgr import EventMgr
 from .utils.extraction import get_index
 from .utils.insertion import should_pass_cls, should_pass_gateway
 from .utils.shards import calculate_shard_id
-from .utils.signature import get_params
 from .utils.types import CheckFunction
 from .utils.types import Coro
 
