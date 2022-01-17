@@ -78,7 +78,7 @@ class ChatCommandHandler(metaclass=Singleton):
         self.client = client
         self._api_commands: List[AppCommand] = []
         _log.debug(
-            "%i commands registered.", len(ChatCommandHandler.register.items())
+            "%i commands registered.", len(ChatCommandHandler.register)
         )
 
         self.__prefix = f"applications/{self.client.bot.id}"
@@ -357,9 +357,8 @@ class ChatCommandHandler(metaclass=Singleton):
         commands.
         """
         for command in self.get_local_registered_commands():
-            if command in self._api_commands:
-                continue
-            await self.add_command(command)
+            if command not in self._api_commands:
+                await self.add_command(command)
 
     async def initialize(self):
         """|coro|
