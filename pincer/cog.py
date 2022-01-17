@@ -6,7 +6,7 @@ from asyncio import ensure_future
 
 from importlib import reload, import_module
 from types import ModuleType
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
 from . import client as _client
 from .commands.chat_command_handler import ChatCommandHandler
@@ -26,85 +26,136 @@ def get_cog_name(cog: Type[Cog]) -> str:
         return f"{cog.__module__}.{cog.__class__.__name__}"
 
 
-def load_cog(client: Client, cog: Type[Cog]):
-    """Loads a cog
-
-    Parameters
-    ----------
-    client : :class:`~pincer.client.Client`
-        The client the cog should hold a reference to.
-    cog : Type[:class:`~pincer.cog.Cog`]
-        The cog to load.
+class CogManager:
     """
-    if cog in ChatCommandHandler.managers:
-        raise CogAlreadyExists(
-            f"Cog `{cog}` is trying to be loaded but already exists."
-        )
-
-    cog_manager = cog(client)
-
-    ChatCommandHandler.managers.append(cog_manager)
-
-
-def load_module(client: Client, module: ModuleType):
-    """Loads the cogs from a module recursively.
-
-    Parameters
-    ----------
-    client : :class:`~pincer.client.Client`
-        The client the cog should hold a reference to.
-    module : :class:`~types.ModuleType`
-        The module to load.
-    """
-    for item in module.__dict__.values():
-        if isinstance(item, ModuleType):
-            load_module(client, item)
-        elif Cog in getattr(item, "__bases__", []):
-            load_cog(client, item)
-
-
-def reload_cog(client: Client, cog: Type[Cog]):
-    """Reloads a cog.
-
-    Parameters
-    ----------
-    client : :class:`~pincer.client.Client`
-        The client the cog should hold a reference to.
-    cog : Type[:class:`~pincer.cog.Cog`]
-        The cog to load.
+    A class that can load and unload cogs
     """
 
-    # Remove application commands registered to this cog
-    for item in ChatCommandHandler.managers:
-        if get_cog_name(item) == get_cog_name(cog):
-            old_cog = item
-            break
-    else:
-        raise CogNotFound(f"Cog `{cog}` could not be found!")
+    def load_cog(self, cog: Type[Cog]):
+        """Load a cog from a string path, setup method in COG may
+        optionally have a first argument which will contain the client!
 
-    to_pop = []
+        :Example usage:
 
-    for key, command in ChatCommandHandler.register.items():
-        if not command:
-            continue
-        if command.manager == old_cog:
-            to_pop.append(key)
+        run.py
 
-    for pop in to_pop:
-        ChatCommandHandler.register.pop(pop)
+        .. code-block:: python3
 
-    ChatCommandHandler.managers.remove(old_cog)
+             from pincer import Client
+             from cogs.say import SayCommand
 
-    # Remove events registered to this cog
-    for event in type(old_cog).__dict__.values():
-        if isinstance(event, _client.PartialEvent):
-            _client._events.pop(event.func.__name__)
+             class MyClient(Client):
+                 def __init__(self, *args, **kwargs):
+                     self.load_cog(SayCommand)
+                     super().__init__(*args, **kwargs)
 
-    mod = reload(import_module(cog.__module__))
-    new_cog = getattr(mod, cog.__name__)
-    client.load_cog(new_cog)
-    ChatCommandHandler.has_been_initialized = False
-    ensure_future(ChatCommandHandler().initialize())
+        cogs/say.py
+
+        .. code-block:: python3
+
+             from pincer import command
+
+             class SayCommand(Cog):
+                 @command()
+                 async def say(self, message: str) -> str:
+                     return message
+
+        Parameters
+        ----------
+        cog : Type[:class:`~pincer.cog.Cog`]
+            The cog to load.
+        """
+        if cog in ChatCommandHandler.managers:
+            raise CogAlreadyExists(
+                f"Cog `{cog}` is trying to be loaded but already exists."
+            )
+
+        cog_manager = cog(self)
+
+        ChatCommandHandler.managers.append(cog_manager)
+
+    def load_cogs(self, *cogs: Type[Cog]):
+        """
+        Loads a list of cogs
+
+        Parameters
+        ----------
+        *cogs : Type[:class:`~pincer.cog.Cog`]
+            A list of cogs to load.
+        """
+        for cog in cogs:
+            self.load_cog(cog)
+
+    def load_module(self, module: ModuleType):
+        """Loads the cogs from a module recursively.
+
+        Parameters
+        ----------
+        module : :class:`~types.ModuleType`
+            The module to load.
+        """
+        for item in module.__dict__.values():
+            if isinstance(item, ModuleType):
+                self.load_module(item)
+            elif Cog in getattr(item, "__bases__", []):
+                self.load_cog(item)
+
+    def reload_cog(self, cog: Type[Cog]):
+        """Reloads a cog.
+
+        Parameters
+        ----------
+        cog : Type[:class:`~pincer.cog.Cog`]
+            The cog to load.
+        """
+
+        # Remove application commands registered to this cog
+        for item in ChatCommandHandler.managers:
+            if get_cog_name(item) == get_cog_name(cog):
+                old_cog = item
+                break
+        else:
+            raise CogNotFound(f"Cog `{cog}` could not be found!")
+
+        to_pop = []
+
+        for key, command in ChatCommandHandler.register.items():
+            if not command:
+                continue
+            if command.manager == old_cog:
+                to_pop.append(key)
+
+        for pop in to_pop:
+            ChatCommandHandler.register.pop(pop)
+
+        ChatCommandHandler.managers.remove(old_cog)
+
+        # Remove events registered to this cog
+        for event in type(old_cog).__dict__.values():
+            if isinstance(event, _client.PartialEvent):
+                _client._events.pop(event.func.__name__)
+
+        mod = reload(import_module(cog.__module__))
+        new_cog = getattr(mod, cog.__name__)
+        self.load_cog(new_cog)
+        ChatCommandHandler.has_been_initialized = False
+        ensure_future(ChatCommandHandler().initialize())
+
+    @staticmethod
+    def get_cogs() -> List[Cog]:
+        """Get a dictionary of all loaded cogs.
+
+        The key/value pair is import path/cog class.
+
+        Returns
+        -------
+        List[:class:`~pincer.cog.Cog`]
+            The list of cogs
+        """
+        return [
+            manager for manager in ChatCommandHandler.managers
+            if isinstance(manager, Cog)
+        ]
 
 
 class Cog(Interactable):

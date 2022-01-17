@@ -29,7 +29,7 @@ from typing import (
     TYPE_CHECKING,
 )
 
-from .cog import load_cog, load_module, reload_cog
+from .cog import CogManager
 from .commands.interactable import Interactable, PartialInteractable
 
 from . import __package__
@@ -63,8 +63,6 @@ from .utils.types import CheckFunction
 from .utils.types import Coro
 
 if TYPE_CHECKING:
-    from .cog import Cog
-    from .objects.app import AppCommand
     from .utils.snowflake import Snowflake
     from .core.dispatch import GatewayDispatch
     from .objects.app.throttling import ThrottleInterface
@@ -176,7 +174,7 @@ class PartialEvent(PartialInteractable):
         return self.func
 
 
-class Client(Interactable):
+class Client(Interactable, CogManager):
     """The client is the main instance which is between the programmer
     and the discord API.
 
@@ -370,87 +368,6 @@ class Client(Interactable):
                 if isinstance(call, PartialEvent)
             ]
         )
-
-    def load_cog(self, cog: Type[Cog]):
-        """Load a cog from a string path, setup method in COG may
-        optionally have a first argument which will contain the client!
-
-        :Example usage:
-
-        run.py
-
-        .. code-block:: python3
-
-             from pincer import Client
-
-             class MyClient(Client):
-                 def __init__(self, *args, **kwargs):
-                     self.load_cog("cogs.say")
-                     super().__init__(*args, **kwargs)
-
-        cogs/say.py
-
-        .. code-block:: python3
-
-             from pincer import command
-
-             class SayCommand(Cog):
-                 @command()
-                 async def say(self, message: str) -> str:
-                     return message
-
-        Parameters
-        ----------
-        path : :class:`str`
-            The import path for the cog.
-        package : :class:`str`
-            The package name for relative based imports.
-            |default| :data:`None`
-        """
-        load_cog(self, cog)
-
-    def load_module(self, module: ModuleType):
-        """Loads all the cogs from a module recursively
-
-        Parameters
-        ----------
-        module : :class:`~types.ModuleType`
-            The module to load.
-        """
-        load_module(self, module)
-
-    def reload_cog(self, cog: Type[Cog]):
-        """|coro|
-
-        Unloads a currently loaded Cog
-
-        Parameters
-        ----------
-        cog : :class:`Cog`
-            The path to the cog
-
-        Raises
-        ------
-        CogNotFound
-            When the cog is not in that path
-        """
-        reload_cog(self, cog)
-
-    @staticmethod
-    def get_cogs() -> List[Cog]:
-        """Get a dictionary of all loaded cogs.
-
-        The key/value pair is import path/cog class.
-
-        Returns
-        -------
-        List[:class:`~pincer.cog.Cog`]
-            The list of cogs
-        """
-        return [
-            manager for manager in ChatCommandHandler.managers
-            if isinstance(manager, Cog)
-        ]
 
     def execute_event(
         self,
