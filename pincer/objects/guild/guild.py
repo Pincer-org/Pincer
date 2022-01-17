@@ -1971,10 +1971,10 @@ class Guild(APIObject):
         self, _id: Snowflake, with_user_count: bool = False
     ) -> ScheduledEvent:
         data = await self._http.get(
-            f"guilds/{self.id}/scheduled-events/{_id}?{with_user_count=!s}"
+            f"guilds/{self.id}/scheduled-events/{_id}",
+            params={"with_user_count": with_user_count},
         )
-        return ScheduledEvent.from_dict(self._client, data)
-
+        return ScheduledEvent.from_dict(data)
 
     async def modify_scheduled_event(
         self,
@@ -1995,7 +1995,10 @@ class Guild(APIObject):
             if timestamp < datetime.now().timestamp():
                 raise ValueError("An event cannot be created in the past")
 
-            if scheduled_end_time and timestamp > scheduled_end_time.timestamp():
+            if (
+                scheduled_end_time
+                and timestamp > scheduled_end_time.timestamp()
+            ):
                 raise ValueError("An event cannot start before it ends")
 
         kwargs: Dict[str, str] = remove_none(
@@ -2021,7 +2024,7 @@ class Guild(APIObject):
             data=kwargs,
             headers={"X-Audit-Log-Reason": reason},
         )
-        return ScheduledEvent.from_dict(self._client, data)
+        return ScheduledEvent.from_dict(data)
 
     async def delete_scheduled_event(self, _id: Union[int, Snowflake]):
         await self._http.delete(f"guilds/{self.id}/scheduled-events/{_id}")
@@ -2034,17 +2037,22 @@ class Guild(APIObject):
         before: Optional[Snowflake] = None,
         after: Optional[Snowflake] = None,
     ) -> AsyncGenerator[GuildScheduledEventUser, None]:
-        url = f"guilds/{self.id}/scheduled-events/{_id}/users?{limit=!s}&{with_member=!s}"
-
+        params = {
+            "limit": limit,
+            "with_member": with_member,
+        }
         if before is not None:
-            url += f"&{before!s}"
+            params.update({"before": before})
         if after is not None:
-            url += f"&{after!s}"
+            params.update({"after": after})
 
-        data = await self._http.get(url)
+        data = await self._http.get(
+            f"guilds/{self.id}/scheduled-events/{_id}/users?",
+            params=params,
+        )
 
         for user_data in data:
-            yield GuildScheduledEventUser.from_dict(self._client, user_data)
+            yield GuildScheduledEventUser.from_dict(user_data)
 
     @classmethod
     def from_dict(cls, data) -> Guild:
