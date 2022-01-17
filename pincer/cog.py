@@ -5,6 +5,7 @@ from __future__ import annotations
 from asyncio import ensure_future
 
 from importlib import reload, import_module
+from inspect import isclass
 from types import ModuleType
 from typing import TYPE_CHECKING, List
 
@@ -16,14 +17,6 @@ from .exceptions import CogAlreadyExists, CogNotFound
 if TYPE_CHECKING:
     from typing import Type
     from .client import Client
-
-
-def get_cog_name(cog: Type[Cog]) -> str:
-    """Gets the path to import a cog. This is used as a unique identifier"""
-    try:
-        return f"{cog.__module__}.{cog.__name__}"
-    except AttributeError:
-        return f"{cog.__module__}.{cog.__class__.__name__}"
 
 
 class CogManager:
@@ -97,7 +90,7 @@ class CogManager:
         for item in module.__dict__.values():
             if isinstance(item, ModuleType):
                 self.load_module(item)
-            elif Cog in getattr(item, "__bases__", []):
+            elif isclass(item) and issubclass(item, Cog):
                 self.load_cog(item)
 
     def reload_cog(self, cog: Type[Cog]):
@@ -110,23 +103,17 @@ class CogManager:
         """
 
         # Remove application commands registered to this cog
-        for item in ChatCommandHandler.managers:
-            if get_cog_name(item) == get_cog_name(cog):
+        for item in self.cogs:
+            if item.name() == cog.name():
                 old_cog = item
                 break
         else:
             raise CogNotFound(f"Cog `{cog}` could not be found!")
 
-        to_pop = []
-
-        for key, command in ChatCommandHandler.register.items():
-            if not command:
-                continue
-            if command.manager == old_cog:
-                to_pop.append(key)
-
-        for pop in to_pop:
-            ChatCommandHandler.register.pop(pop)
+        ChatCommandHandler.register = {
+            key: command for key, command in ChatCommandHandler.register.items()
+            if command and command.manager != old_cog
+        }
 
         ChatCommandHandler.managers.remove(old_cog)
 
@@ -141,8 +128,8 @@ class CogManager:
         ChatCommandHandler.has_been_initialized = False
         ensure_future(ChatCommandHandler().initialize())
 
-    @staticmethod
-    def get_cogs() -> List[Cog]:
+    @property
+    def cogs(self) -> List[Cog]:
         """Get a dictionary of all loaded cogs.
 
         The key/value pair is import path/cog class.
@@ -169,3 +156,15 @@ class Cog(Interactable):
         self.client = client
 
         super().__init__()
+
+    @classmethod
+    def name(cls) -> str:
+        """
+        Returns a unique name for this cog.
+
+        Returns
+        -------
+        str
+            A unique name for this cog.
+        """
+        return f"{cls.__module__}.{cls.__name__}"
