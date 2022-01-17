@@ -126,7 +126,7 @@ class CogManager:
         new_cog = getattr(mod, cog.__name__)
         self.load_cog(new_cog)
         ChatCommandHandler.has_been_initialized = False
-        ensure_future(ChatCommandHandler().initialize())
+        ensure_future(ChatCommandHandler(self).initialize())
 
     @property
     def cogs(self) -> List[Cog]:
