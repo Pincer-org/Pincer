@@ -157,6 +157,11 @@ for event, middleware_ in middleware.items():
 
 
 class PartialEvent(PartialInteractable):
+    """
+    Represents a function that will registered to an event when the Client is
+    constructed.
+    """
+
     def register(self, manager: Any):
         name = self.func.__name__
 
