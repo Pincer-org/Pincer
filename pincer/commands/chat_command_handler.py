@@ -94,17 +94,13 @@ class ChatCommandHandler(metaclass=Singleton):
             List of commands.
         """
         # TODO: Update if discord adds bulk get guild commands
-        guild_commands = await gather(
-            *map(
-                lambda guild: self.client.http.get(
-                    self.__prefix
-                    + self.__get_guild.format(
-                        guild_id=guild.id if isinstance(guild, Guild) else guild
-                    )
-                ),
-                self.client.guilds,
-            )
-        )
+        guild_commands = await gather(*(
+            self.client.http.get(
+                self.__prefix + self.__get_guild.format(
+                    guild_id=guild.id if isinstance(guild, Guild) else guild
+                )
+            ) for guild in self.client.guilds
+        ))
         return list(
             map(
                 AppCommand.from_dict,
