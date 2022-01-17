@@ -80,11 +80,6 @@ class ChatCommandHandler(metaclass=Singleton):
         _log.debug(
             "%i commands registered.", len(ChatCommandHandler.register.items())
         )
-        self.client.throttler.throttle = dict(
-            map(
-                lambda cmd: (cmd.call, {}), ChatCommandHandler.register.values()
-            )
-        )
 
         self.__prefix = f"applications/{self.client.bot.id}"
 

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, DefaultDict
 
 from .throttle_scope import ThrottleScope
 from ..app.command import InteractableStructure
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 class ThrottleInterface(ABC):
     """An ABC for throttling."""
-    throttle: Dict[Coro, Dict[Optional[str], SlidingWindow]] = {}
+    throttle: DefaultDict[Coro, Dict[Optional[str], SlidingWindow]] = DefaultDict(dict)
 
     @staticmethod
     @abstractmethod
