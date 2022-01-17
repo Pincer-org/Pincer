@@ -334,10 +334,7 @@ class ChatCommandHandler(metaclass=Singleton):
         to_remove = [*filter(should_be_removed, self._api_commands)]
 
         await gather(
-            *map(
-                lambda cmd: self.remove_command(cmd),
-                to_remove,
-            )
+            *(self.remove_command(cmd) for cmd in to_remove)
         )
 
         self._api_commands = list(
