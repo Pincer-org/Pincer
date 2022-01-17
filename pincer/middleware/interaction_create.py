@@ -98,7 +98,7 @@ def get_call(self: Client, interaction: Interaction) -> Optional[Tuple[Coro, Any
         return command.call, command.manager
     elif interaction.type == InteractionType.MESSAGE_COMPONENT:
         command = ComponentHandler.register.get(interaction.data.custom_id)
-        return (command.call, command.manager)
+        return command.call, command.manager
     elif interaction.type == InteractionType.AUTOCOMPLETE:
         raise NotImplementedError(
             "Handling for autocomplete is not implemented"
@@ -131,8 +131,7 @@ async def interaction_response_handler(
     # Prevent args from being mutated unexpectedly
     args = copy(args)
 
-    sig, params = get_signature_and_params(command)
-    if should_pass_ctx(sig, params):
+    if should_pass_ctx(*get_signature_and_params(command)):
         args.insert(0, context)
 
     if should_pass_cls(command):

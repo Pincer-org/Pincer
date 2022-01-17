@@ -46,6 +46,6 @@ class Interactable:
     Message Components.
     """
     def __init__(self):
-        for key, value in self.__class__.__dict__.items():
+        for key, value in type(self).__dict__.items():
             if isinstance(value, PartialInteractable):
                 setattr(self, key, value.register(self))
