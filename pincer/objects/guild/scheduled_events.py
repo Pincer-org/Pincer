@@ -11,6 +11,7 @@ from ...utils.api_object import APIObject, MISSING
 
 if TYPE_CHECKING:
     from ..guild.stage import PrivacyLevel
+    from ..guild.member import GuildMember
     from ..user.user import User
     from ...utils.snowflake import Snowflake
     from ...utils.timestamp import Timestamp
@@ -112,3 +113,22 @@ class ScheduledEvent(APIObject):
     entity_metadata: APINullable[str] = MISSING
     creator: APINullable[User] = MISSING
     user_count: APINullable[int] = MISSING
+
+
+@dataclass
+class GuildScheduledEventUser(APIObject):
+    """
+    Represents a user who has joined a scheduled event.
+
+    Attributes
+    ----------
+    guild_scheduled_event_id: :class:`int`
+        the scheduled event id which the user subscribed to
+    user : :class:`~pincer.objects.user.user.User`
+        user which subscribed to an event
+    member : :class:`~pincer.objects.guild.member.GuildMember`
+        	guild member data for this user for the guild which this event belongs to, if any
+    """
+    guild_scheduled_event_id: Snowflake
+    user: User
+    member: APINullable[GuildMember] = MISSING

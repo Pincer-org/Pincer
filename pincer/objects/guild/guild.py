@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import datetime
 from enum import IntEnum
 from typing import AsyncGenerator, overload, TYPE_CHECKING
 
@@ -28,7 +29,7 @@ if TYPE_CHECKING:
     from .invite import Invite
     from .overwrite import Overwrite
     from .role import Role
-    from .scheduled_events import ScheduledEvent
+    from .scheduled_events import ScheduledEvent, GuildScheduledEventUser
     from .stage import StageInstance
     from .template import GuildTemplate
     from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
@@ -1960,6 +1961,118 @@ class Guild(APIObject):
         for webhook_data in data:
             yield Webhook.from_dict(
                 construct_client_dict(self._client, webhook_data)
+            )
+
+    async def get_scheduled_events(
+        self, with_user_count: bool = False
+        ) -> AsyncGenerator[ScheduledEvent, None]:
+        data = await self._http.get(f"guilds/{self.id}/scheduled-events?{with_user_count=!s}")
+        for event_data in data:
+            yield ScheduledEvent.from_dict(
+                construct_client_dict(self._client, event_data)
+            )
+
+    async def create_scheduled_event(
+        self,
+        name: str,
+        privacy_level: int,
+        entity_type: int,
+        scheduled_start_time: datetime,
+        scheduled_end_time: Optional[datetime] = None,
+        entity_metadata: Optional[str] = None,
+        channel_id: Optional[Snowflake] = None,
+        description: Optional[str] = None,
+        reason: Optional[str] = None,
+    ) -> ScheduledEvent:
+        if scheduled_start_time.timestamp() < datetime.now().timestamp():
+            raise ValueError("An event cannot be created in the past")
+
+        if scheduled_end_time is not None and scheduled_end_time.timestamp() < datetime.now().timestamp():
+            raise ValueError("An event cannot start before it ends")
+
+        data = await self._http.post(
+            f"guilds/{self.id}/scheduled-events",
+            data={
+                "name": name,
+                "privacy_level": privacy_level,
+                "entity_type": entity_type,
+                "scheduled_start_time": scheduled_start_time.isoformat(),
+                "scheduled_end_time": scheduled_end_time.isoformat() if scheduled_end_time is not None else None,
+                "entity_metadata": entity_metadata,
+                "channel_id": channel_id,
+                "description": description,
+                },
+            headers={"X-Audit-Log-Reason": reason},
+            )
+        return ScheduledEvent.from_dict(
+            construct_client_dict(self._client, data)
+        )
+
+    async def get_scheduled_event(self, _id: Snowflake, with_user_count: bool = False) -> ScheduledEvent:
+        data = await self._http.get(f"guilds/{self.id}/scheduled-events/{_id}?{with_user_count=!s}")
+        return ScheduledEvent.from_dict(
+            construct_client_dict(self._client, data)
+        )
+
+    async def modify_scheduled_event(
+        self,
+        _id: Snowflake,
+        name: Optional[str] = None,
+        entity_type: Optional[int] = None,
+        privacy_level: Optional[int] = None,
+        scheduled_start_time: Optional[datetime] = None,
+        scheduled_end_time: Optional[datetime] = None,
+        entity_metadata: Optional[str] = None,
+        channel_id: Optional[Snowflake] = None,
+        description: Optional[str] = None,
+        status: Optional[int] = None,
+        reason: Optional[str] = None,
+    ) -> ScheduledEvent:
+        if scheduled_start_time is not None and scheduled_start_time.timestamp() < datetime.now().timestamp():
+            raise ValueError("An event cannot be created in the past")
+
+        if scheduled_end_time is not None and scheduled_end_time.timestamp() < datetime.now().timestamp():
+            raise ValueError("An event cannot start before it ends")
+
+        kwargs: Dict[str, str] = remove_none({
+            "name": name,
+            "privacy_level": privacy_level,
+            "entity_type": entity_type,
+            "scheduled_start_time": scheduled_start_time.isoformat() if scheduled_start_time is not None else None,
+            "scheduled_end_time": scheduled_end_time.isoformat() if scheduled_end_time is not None else None,
+            "entity_metadata": entity_metadata,
+            "channel_id": channel_id,
+            "description": description,
+            "status": status,
+            })
+
+        data = await self._http.patch(
+            f"guilds/{self.id}/scheduled-events/{_id}",
+            data=kwargs,
+            headers={"X-Audit-Log-Reason": reason},
+            )
+        return ScheduledEvent.from_dict(
+            construct_client_dict(self._client, data)
+        )
+
+    async def delete_scheduled_event(self, _id: Snowflake):
+        await self._http.delete(f"guilds/{self.id}/scheduled-events/{_id}")
+
+    async def get_guild_scheduled_event_users(
+        self,
+        _id: Snowflake,
+        limit: int = 100,
+        with_member: bool = False,
+        before: Optional[Snowflake] = None,
+        after: Optional[Snowflake] = None,
+        ) -> AsyncGenerator[GuildScheduledEventUser, None]:
+        data = await self._http.get(
+            f"guilds/{self.id}/scheduled-events/{_id}/users?{limit=!s}&{with_member=!s}&{before=!s}&{after=!s}",
+            )
+
+        for user_data in data:
+            yield GuildScheduledEventUser.from_dict(
+                construct_client_dict(self._client, user_data)
             )
 
     @classmethod
