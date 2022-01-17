@@ -154,7 +154,7 @@ def select_menu(
             custom_id = func.__name__
 
         return _PartialSelectMenu(
-            _func=func,
+            func=func,
             custom_id=custom_id,
             options=options,
             placeholder=placeholder,
