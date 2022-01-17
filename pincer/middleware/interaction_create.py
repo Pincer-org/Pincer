@@ -227,8 +227,8 @@ async def interaction_handler(
                 manager,
                 context,
                 interaction,
-                [e, args, kwargs],
-                {},
+                [e, *args],
+                kwargs,
             )
 
 
