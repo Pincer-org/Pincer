@@ -357,9 +357,8 @@ class ChatCommandHandler(metaclass=Singleton):
         commands.
         """
         for command in self.get_local_registered_commands():
-            if command in self._api_commands:
-                continue
-            await self.add_command(command)
+            if command not in self._api_commands:
+                await self.add_command(command)
 
     async def initialize(self):
         """|coro|
