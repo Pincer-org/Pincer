@@ -32,7 +32,7 @@ class PartialInteractable(ABC):
         self.kwargs = kwargs
 
     def __call__(self, *args: Any, **kwds: Any) -> Any:
-        return self.func.__call__(*args, **kwds)
+        return self.func(*args, **kwds)
 
     @abstractmethod
     def register(self, manager: Any) -> Type[T]:
