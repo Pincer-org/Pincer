@@ -2013,17 +2013,13 @@ class Guild(APIObject):
         status: Optional[int] = None,
         reason: Optional[str] = None,
     ) -> ScheduledEvent:
-        if (
-            scheduled_start_time is not None
-            and scheduled_start_time.timestamp() < datetime.now().timestamp()
-        ):
-            raise ValueError("An event cannot be created in the past")
+        if scheduled_start_time:
+            timestamp = scheduled_start_time.timestamp()
+            if timestamp < datetime.now().timestamp():
+                raise ValueError("An event cannot be created in the past")
 
-        if (
-            scheduled_end_time is not None
-            and scheduled_end_time.timestamp() < datetime.now().timestamp()
-        ):
-            raise ValueError("An event cannot start before it ends")
+            if scheduled_end_time and timestamp > scheduled_end_time.timestamp():
+                raise ValueError("An event cannot start before it ends")
 
         kwargs: Dict[str, str] = remove_none(
             {
