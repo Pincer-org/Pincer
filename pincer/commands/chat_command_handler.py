@@ -78,7 +78,7 @@ class ChatCommandHandler(metaclass=Singleton):
         self.client = client
         self._api_commands: List[AppCommand] = []
         _log.debug(
-            "%i commands registered.", len(ChatCommandHandler.register.items())
+            "%i commands registered.", len(ChatCommandHandler.register)
         )
 
         self.__prefix = f"applications/{self.client.bot.id}"
