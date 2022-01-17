@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.voice import VoiceConnectionStatusEvent
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -18,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def voice_connection_status_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -40,9 +37,7 @@ async def voice_connection_status_middleware(
     """  # noqa: E501
     return (
         "on_voice_connection_status",
-        VoiceConnectionStatusEvent.from_dict(
-            construct_client_dict(self, payload.data)
-        ),
+        VoiceConnectionStatusEvent.from_dict(payload.data),
     )
 
 

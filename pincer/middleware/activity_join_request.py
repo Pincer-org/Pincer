@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.user.user import User
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -18,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def activity_join_request_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -40,7 +37,7 @@ async def activity_join_request_middleware(
     """
     return (
         "on_activity_join_request",
-        User.from_dict(construct_client_dict(self, payload.data)),
+        User.from_dict(payload.data),
     )
 
 

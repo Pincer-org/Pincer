@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING, overload
 
 from ...exceptions import EmbedOverflow
 from ...utils.api_object import APIObject
-from ...utils.conversion import construct_client_dict
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
@@ -48,6 +47,7 @@ class WebhookType(IntEnum):
     APPLICATION:
         Application webhooks are webhooks used with Interactions
     """
+
     INCOMING = 1
     CHANNEL_FOLLOWER = 2
     APPLICATION = 3
@@ -89,6 +89,7 @@ class Webhook(APIObject):
     guild_id: APINullable[Optional[:class:`~pincer.objects.guild.guild.Guild`]]
         The guild id this webhook is for, if any
     """
+
     id: Snowflake
     type: WebhookType
 
@@ -111,7 +112,7 @@ class Webhook(APIObject):
         name: Optional[str] = None,
         avatar: Optional[str] = None,
         channel_id: Optional[Snowflake] = None,
-        token: Optional[str] = None
+        token: Optional[str] = None,
     ) -> Webhook:
         """
         Modifies a webhook and returns it.
@@ -128,26 +129,18 @@ class Webhook(APIObject):
         token: Optional[:class:`str`]
             The new token of the webhook
         """
-        request_route = (
-            f"webhooks/{self.id}"
-            + (f"/{token}" if token else "")
-        )
+        request_route = f"webhooks/{self.id}" + (f"/{token}" if token else "")
         request_data = {
             "name": name,
             "avatar": avatar,
-            "channel_id": channel_id
+            "channel_id": channel_id,
         }
 
         if token:
             del request_data["channel_id"]
 
-        data = await self._http.patch(
-            request_route,
-            data=request_data
-        )
-        return Webhook.from_dict(
-            construct_client_dict(self._client, data)
-        )
+        data = await self._http.patch(request_route, data=request_data)
+        return Webhook.from_dict(data)
 
     async def delete(self, token: Optional[str] = None):
         """
@@ -160,8 +153,7 @@ class Webhook(APIObject):
             The token of the webhook
         """
         await self._http.delete(
-            f"webhooks/{self.id}"
-            + (f"/{token}" if token else "")
+            f"webhooks/{self.id}" + (f"/{token}" if token else "")
         )
 
     @overload
@@ -180,7 +172,7 @@ class Webhook(APIObject):
         components: Optional[List[MessageComponent]] = None,
         files: Optional[str] = None,  # TODO: Add support for files
         payload_json: Optional[str] = None,
-        attachments: Optional[List[Attachment]] = None
+        attachments: Optional[List[Attachment]] = None,
     ):
         """|coro|
         Executes a webhook.
@@ -227,7 +219,7 @@ class Webhook(APIObject):
         *,
         thread_id: Optional[Snowflake] = None,
         wait: Optional[bool] = None,
-        **kwargs
+        **kwargs,
     ):
         if len(kwargs.get("embeds", [])) > 10:
             raise EmbedOverflow("You can only include up to 10 embeds")
@@ -255,7 +247,7 @@ class Webhook(APIObject):
         self,
         *,
         thread_id: Optional[Snowflake] = None,
-        wait: Optional[bool] = None
+        wait: Optional[bool] = None,
     ):
         """|coro|
         Executes a GitHub compatible webhook.
@@ -270,16 +262,14 @@ class Webhook(APIObject):
             that is not saved does not return an error)
         """
         await self.execute(
-            WebhookCompatibility.GitHub,
-            thread_id=thread_id,
-            wait=wait
+            WebhookCompatibility.GitHub, thread_id=thread_id, wait=wait
         )
 
     async def execute_slack(
         self,
         *,
         thread_id: Optional[Snowflake] = None,
-        wait: Optional[bool] = None
+        wait: Optional[bool] = None,
     ):
         """|coro|
         Executes a Slack compatible webhook.
@@ -294,15 +284,11 @@ class Webhook(APIObject):
             that is not saved does not return an error)
         """
         await self.execute(
-            WebhookCompatibility.Slack,
-            thread_id=thread_id,
-            wait=wait
+            WebhookCompatibility.Slack, thread_id=thread_id, wait=wait
         )
 
     async def get_message(
-        self,
-        message_id: Snowflake,
-        thread_id: Snowflake
+        self, message_id: Snowflake, thread_id: Snowflake
     ) -> UserMessage:
         """|coro|
         Returns a previously-sent webhook message from the same token.
@@ -320,20 +306,13 @@ class Webhook(APIObject):
             The message
         """
         return UserMessage.from_dict(
-            construct_client_dict(
-                self._client,
-                await self._http.get(
-                    f"webhooks/{self.id}/{self.token}/messages/{message_id}",
-                    params={"thread_id": thread_id}
-                )
+            await self._http.get(
+                f"webhooks/{self.id}/{self.token}/messages/{message_id}",
+                params={"thread_id": thread_id},
             )
         )
 
-    async def delete_message(
-        self,
-        message_id: Snowflake,
-        thread_id: Snowflake
-    ):
+    async def delete_message(self, message_id: Snowflake, thread_id: Snowflake):
         """|coro|
         Deletes a message created by a webhook.
 
@@ -361,7 +340,7 @@ class Webhook(APIObject):
         components: Optional[List[MessageComponent]] = None,
         files: Optional[str] = None,  # TODO: Add support for files
         payload_json: Optional[str] = None,
-        attachments: Optional[List[Attachment]] = None
+        attachments: Optional[List[Attachment]] = None,
     ) -> UserMessage:
         """|coro|
         Edits a previously-sent webhook message from the same token.
@@ -396,7 +375,7 @@ class Webhook(APIObject):
         message_id: Snowflake,
         *,
         thread_id: Optional[Snowflake] = None,
-        **kwargs
+        **kwargs,
     ) -> UserMessage:
         if len(kwargs.get("embeds", [])) > 10:
             raise EmbedOverflow("You can only include up to 10 embeds")
@@ -404,18 +383,13 @@ class Webhook(APIObject):
         data = await self._http.patch(
             f"webhooks/{self.id}/{self.token}/messages/{message_id}"
             + (f"?{thread_id=}" if thread_id else ""),
-            data=kwargs
+            data=kwargs,
         )
-        return UserMessage.from_dict(
-            construct_client_dict(self._client, data)
-        )
+        return UserMessage.from_dict(data)
 
     @classmethod
     async def from_id(
-        cls,
-        client: Client,
-        id: Snowflake,
-        token: Optional[str] = None
+        cls, client: Client, id: Snowflake, token: Optional[str] = None
     ) -> Webhook:
         """|coro|
         Gets a webhook by its ID.
@@ -435,11 +409,7 @@ class Webhook(APIObject):
             The webhook with the given ID.
         """
         return cls.from_dict(
-            construct_client_dict(
-                client,
-                await client.http.get(
-                    f"webhooks/{id}"
-                    + (f"/{token}" if token else "")
-                )
+            await client.http.get(
+                f"webhooks/{id}" + (f"/{token}" if token else "")
             )
         )

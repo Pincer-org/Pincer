@@ -21,7 +21,6 @@ from ..guild.role import Role
 from ..user.user import User
 from ..._config import GatewayConfig
 from ...utils.api_object import APIObject, GuildProperty, ChannelProperty
-from ...utils.conversion import construct_client_dict
 from ...utils.snowflake import Snowflake
 from ...utils.types import MISSING, JSONSerializable
 
@@ -199,7 +198,7 @@ class MessageType(IntEnum):
     APPLICATION_COMMAND:
         Slash command is used and responded to.
     THREAD_STARTER_MESSAGE:
-        The initial message in a thread when its created off a message.
+        The initial message in a thread when it's created off a message.
     GUILD_INVITE_REMINDER:
         ??
     """
@@ -386,7 +385,7 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
             The message object.
         """
         msg = await client.http.get(f"channels/{channel_id}/messages/{_id}")
-        return cls.from_dict(construct_client_dict(client, msg))
+        return cls.from_dict(msg)
 
     def __str__(self):
         return self.content
@@ -400,11 +399,8 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
         """
 
         return self.from_dict(
-            construct_client_dict(
-                self._client,
-                await self._http.get(
-                    f"/channels/{self.channel_id}/messages/{self.id}"
-                ),
+            await self._http.get(
+                f"/channels/{self.channel_id}/messages/{self.id}"
             )
         )
 
@@ -481,7 +477,7 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
 
         for user in await self._http.get(
             f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}",
-            params={"after": after, "limit": limit}
+            params={"after": after, "limit": limit},
         ):
             yield User.from_dict(user)
 
@@ -512,7 +508,7 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
             f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}"
         )
 
-    # TODO: Implement file (https://discord.com/developers/docs/resources/channel#edit-message)
+    # TODO: Implement file (https://discord.dev/resources/channel#edit-message)
     async def edit(
         self,
         content: str = None,

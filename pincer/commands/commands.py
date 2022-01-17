@@ -8,7 +8,7 @@ import re
 from asyncio import iscoroutinefunction, gather
 from functools import partial
 from inspect import Signature, isasyncgenfunction, _empty
-from typing import TYPE_CHECKING, Union, List, ValuesView
+from typing import TYPE_CHECKING, TypeVar, Union, List, ValuesView
 
 
 from . import __package__
@@ -48,9 +48,9 @@ from ..objects.app import (
     ClientCommandStructure,
     AppCommandType,
 )
-from ..utils import get_index, should_pass_ctx
+from ..utils import should_pass_ctx
 from ..utils.signature import get_signature_and_params
-from ..utils.types import MISSING
+from ..utils.types import MISSING, APINullable
 from ..utils.types import Singleton
 
 if TYPE_CHECKING:
@@ -75,6 +75,8 @@ _options_type_link = {
 
 if TYPE_CHECKING:
     from ..client import Client
+
+T = TypeVar("T")
 
 
 def command(
@@ -114,13 +116,13 @@ def command(
                 amount: int,
                 name: CommandArg[
                     str,
-                    Description["Do something cool"],
-                    Choices[Choice["first value", 1], 5]
+                    Description("Do something cool"),
+                    Choices(Choice("first value", 1), 5)
                 ],
                 optional_int: CommandArg[
                     int,
-                    MinValue[10],
-                    MaxValue[100],
+                    MinValue(10),
+                    MaxValue(100),
                 ] = 50
             ):
                 return Message(
@@ -136,6 +138,8 @@ def command(
         :class:`~pincer.objects.app.interaction_flags.InteractionFlags`,
         :class:`~pincer.commands.arg_types.Choices`,
         :class:`~pincer.commands.arg_types.Choice`,
+        :class:`typing_extensions.Annotated` (Python 3.8),
+        :class:`typing.Annotated` (Python 3.9+),
         :class:`~pincer.commands.arg_types.CommandArg`,
         :class:`~pincer.commands.arg_types.Description`,
         :class:`~pincer.commands.arg_types.MinValue`,
@@ -228,7 +232,16 @@ def command(
         if annotation == MessageContext and idx == 1:
             return
 
-        if type(annotation) is not CommandArg:
+        argument_type = None
+        if type(annotation) is CommandArg:
+            argument_type = annotation.command_type
+        # isinstance and type don't work for Annotated. This is the best way 💀
+        elif hasattr(annotation, "__metadata__"):
+            # typing.get_origin doesn't work in 3.9+ for some reason. Maybe they forgor
+            # to implement it.
+            argument_type = annotation.__origin__
+
+        if not argument_type:
             if annotation in _options_type_link:
                 options.append(
                     AppCommandOption(
@@ -242,16 +255,27 @@ def command(
 
             # TODO: Write better exception
             raise InvalidArgumentAnnotation(
-                "Type must be CommandArg or other valid type"
+                "Type must be Annotated or other valid type"
             )
 
-        command_type = _options_type_link[annotation.command_type]
-        argument_description = (
-            annotation.get_arg(Description) or "Description not set"
-        )
-        choices = annotation.get_arg(Choices)
+        command_type = _options_type_link[argument_type]
 
-        if choices is not MISSING and annotation.command_type not in {
+        def get_arg(t: T) -> APINullable[T]:
+            if type(annotation) is CommandArg:
+                return annotation.get_arg(t)
+            elif hasattr(annotation, "__metadata__"):
+                for obj in annotation.__metadata__:
+                    if isinstance(obj, t):
+                        return obj.get_payload()
+                return MISSING
+
+        argument_description = (
+            get_arg(Description) or "Description not set"
+        )
+
+        choices = get_arg(Choices)
+
+        if choices is not MISSING and argument_type not in {
             int,
             float,
             str,
@@ -263,31 +287,31 @@ def command(
             for choice in choices:
                 if (
                     isinstance(choice.value, int)
-                    and annotation.command_type is float
+                    and argument_type is float
                 ):
                     continue
-                if not isinstance(choice.value, annotation.command_type):
+                if not isinstance(choice.value, argument_type):
                     raise InvalidArgumentAnnotation(
                         "Choice value must match the command type"
                     )
 
-        channel_types = annotation.get_arg(ChannelTypes)
+        channel_types = get_arg(ChannelTypes)
         if (
             channel_types is not MISSING
-            and annotation.command_type is not Channel
+            and argument_type is not Channel
         ):
             raise InvalidArgumentAnnotation(
                 "ChannelTypes are only available for Channels"
             )
 
-        max_value = annotation.get_arg(MaxValue)
-        min_value = annotation.get_arg(MinValue)
+        max_value = get_arg(MaxValue)
+        min_value = get_arg(MinValue)
 
         for i, value in enumerate((min_value, max_value)):
             if (
                 value is not MISSING
-                and annotation.command_type is not int
-                and annotation.command_type is not float
+                and argument_type is not int
+                and argument_type is not float
             ):
                 t = ("MinValue", "MaxValue")
                 raise InvalidArgumentAnnotation(
@@ -739,14 +763,15 @@ class ChatCommandHandler(metaclass=Singleton):
         """
         await gather(*map(lambda cmd: self.add_command(cmd), commands))
 
-    def __build_local_commands(self):
+    @staticmethod
+    def __build_local_commands():
         """Builds the commands into the format that Discord expects. See class info
         for the reasoning.
         """
         for cmd in ChatCommandHandler.register.values():
 
             if cmd.sub_group:
-                # If a command has a sub_group, it must be nested to levels deep.
+                # If a command has a sub_group, it must be nested 2 levels deep.
                 #
                 # command
                 #     subcommand-group
@@ -860,7 +885,8 @@ class ChatCommandHandler(metaclass=Singleton):
                 _hash_app_command(cmd.app, cmd.group, cmd.sub_group)
             ] = cmd.app
 
-    def get_local_registered_commands(self) -> ValuesView[AppCommand]:
+    @staticmethod
+    def get_local_registered_commands() -> ValuesView[AppCommand]:
         return ChatCommandHandler.built_register.values()
 
     async def __get_existing_commands(self):
@@ -927,10 +953,7 @@ class ChatCommandHandler(metaclass=Singleton):
         local_registered_commands = self.get_local_registered_commands()
 
         def should_be_updated_or_uploaded(target):
-            for command in self._api_commands:
-                if target == command:
-                    return False
-            return True
+            return all(target != command for command in self._api_commands)
 
         changed_commands = filter(
             should_be_updated_or_uploaded, local_registered_commands
@@ -981,7 +1004,7 @@ def _hash_app_command_params(
     sub_group: Optional[str]
 ) -> int:
     """
-    The group layout in Pincer is very different than what discord has on their docs.
+    The group layout in Pincer is very different from what discord has on their docs.
     You can think of the Pincer group layout like this:
 
     name: The name of the function that is being called.

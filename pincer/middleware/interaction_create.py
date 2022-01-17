@@ -11,10 +11,14 @@ from typing import TYPE_CHECKING
 from ..commands import ChatCommandHandler, ComponentHandler
 from ..commands.commands import _hash_app_command_params
 from ..exceptions import InteractionDoesNotExist
-from ..objects import Interaction, MessageContext, AppCommandType, InteractionType
+from ..objects import (
+    Interaction,
+    MessageContext,
+    AppCommandType,
+    InteractionType,
+)
 from ..utils import MISSING, should_pass_cls, Coro, should_pass_ctx
 from ..utils import get_index
-from ..utils.conversion import construct_client_dict
 from ..utils.signature import get_signature_and_params
 
 if TYPE_CHECKING:
@@ -60,22 +64,22 @@ def get_command_from_registry(interaction: Interaction):
             name = option.options[0].name
 
     with suppress(KeyError):
-        return ChatCommandHandler.register[_hash_app_command_params(
-            name,
-            MISSING,
-            interaction.data.type,
-            group,
-            sub_group
-        )]
+        return ChatCommandHandler.register[
+            _hash_app_command_params(
+                name, MISSING, interaction.data.type, group, sub_group
+            )
+        ]
 
     with suppress(KeyError):
-        return ChatCommandHandler.register[_hash_app_command_params(
-            name,
-            interaction.guild_id,
-            interaction.data.type,
-            group,
-            sub_group
-        )]
+        return ChatCommandHandler.register[
+            _hash_app_command_params(
+                name,
+                interaction.guild_id,
+                interaction.data.type,
+                group,
+                sub_group,
+            )
+        ]
 
     raise InteractionDoesNotExist(
         f"No command is registered for {interaction.data.name} with type"
@@ -104,7 +108,7 @@ async def interaction_response_handler(
     context: MessageContext,
     interaction: Interaction,
     args: List[Any],
-    kwargs: Dict[str, Any]
+    kwargs: Dict[str, Any],
 ):
     """|coro|
 
@@ -232,9 +236,7 @@ async def interaction_create_middleware(
     Tuple[:class:`str`, :class:`~pincer.objects.app.interactions.Interaction`]
         ``on_interaction_create`` and an ``Interaction``
     """
-    interaction: Interaction = Interaction.from_dict(
-        construct_client_dict(self, payload.data)
-    )
+    interaction: Interaction = Interaction.from_dict(payload.data)
 
     call = get_call(self, interaction)
     context = interaction.get_message_context()

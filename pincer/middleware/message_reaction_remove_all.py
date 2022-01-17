@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.message import MessageReactionRemoveAllEvent
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -38,9 +37,7 @@ async def message_reaction_remove_all_middleware(
 
     return (
         "on_message_reaction_remove_all",
-        MessageReactionRemoveAllEvent.from_dict(
-            construct_client_dict(self, payload.data)
-        ),
+        MessageReactionRemoveAllEvent.from_dict(payload.data),
     )
 
 

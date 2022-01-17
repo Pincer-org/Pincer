@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.thread import ThreadListSyncEvent
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -17,9 +16,7 @@ if TYPE_CHECKING:
 
 
 async def thread_list_sync(
-    self: Client,
-    gatewayer: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -38,11 +35,9 @@ async def thread_list_sync(
         ``on_thread_list_sync`` and an ``ThreadListSyncEvent``
     """  # noqa: E501
 
-    event = ThreadListSyncEvent.from_dict(
-        construct_client_dict(self, payload.data)
-    )
-
+    event = ThreadListSyncEvent.from_dict(payload.data)
     guild = self.guilds.get(event.guild_id)
+
     if guild:
         guild.threads = event.threads
 

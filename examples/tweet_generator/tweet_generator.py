@@ -12,12 +12,9 @@ from pincer.objects import Message, Embed, MessageContext
 # you need to manually download the font files and put them into the folder
 # ./examples/tweet_generator/ to make the script works using this link:
 # https://fonts.google.com/share?selection.family=Noto%20Sans:wght@400;700
-if not all(
-        font in os.listdir()
-        for font in [
-            "NotoSans-Regular.ttf",
-            "NotoSans-Bold.ttf"
-        ]
+if any(
+    font not in os.listdir()
+    for font in ["NotoSans-Regular.ttf", "NotoSans-Bold.ttf"]
 ):
     print(
         "You don't have the font files installed! you need to manually "

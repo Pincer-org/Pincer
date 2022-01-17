@@ -7,7 +7,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.message import MessageDeleteEvent
-from ..utils.conversion import construct_client_dict
 
 if TYPE_CHECKING:
     from typing import Tuple
@@ -36,10 +35,7 @@ async def on_message_delete_middleware(
         ``on_message_delete`` and a ``MessageDeleteEvent``
     """  # noqa: E501
 
-    return (
-        "on_message_delete",
-        MessageDeleteEvent.from_dict(construct_client_dict(self, payload.data)),
-    )
+    return ("on_message_delete", MessageDeleteEvent.from_dict(payload.data))
 
 
 def export():

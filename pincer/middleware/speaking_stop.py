@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..objects.events.voice import SpeakingStopEvent
-from ..utils.conversion import construct_client_dict
 from ..utils.types import Coro
 
 if TYPE_CHECKING:
@@ -18,9 +17,7 @@ if TYPE_CHECKING:
 
 
 async def speaking_stop_middleware(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ):
     """|coro|
 
@@ -38,10 +35,7 @@ async def speaking_stop_middleware(
     Tuple[:class:`str`, :class:`Snowflake`]
         ``on_speaking_stop`` and a ``Snowflake`` (user_id)
     """
-    return (
-        "on_speaking_stop",
-        SpeakingStopEvent.from_dict(construct_client_dict(self, payload.data)),
-    )
+    return ("on_speaking_stop", SpeakingStopEvent.from_dict(payload.data))
 
 
 def export() -> Coro:
