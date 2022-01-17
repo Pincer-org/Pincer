@@ -185,11 +185,9 @@ class APIObject:
     def __post_init__(self):
         TypeCache()
 
-        attributes = chain(
-            *(
-                get_type_hints(cls, globalns=TypeCache.cache).items()
-                for cls in chain(self.__class__.__bases__, (self,))
-            )
+        attributes = chain.from_iterable(
+            get_type_hints(cls, globalns=TypeCache.cache).items()
+            for cls in chain(self.__class__.__bases__, (self,))
         )
 
         for attr, attr_type in attributes:
