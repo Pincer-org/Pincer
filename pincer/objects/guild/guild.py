@@ -11,6 +11,7 @@ from typing import AsyncGenerator, overload, TYPE_CHECKING
 from aiohttp import FormData
 
 from .channel import Channel, Thread
+from .scheduled_events import ScheduledEvent, GuildScheduledEventUser
 from ..message.file import File
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
@@ -2066,9 +2067,14 @@ class Guild(APIObject):
         before: Optional[Snowflake] = None,
         after: Optional[Snowflake] = None,
         ) -> AsyncGenerator[GuildScheduledEventUser, None]:
-        data = await self._http.get(
-            f"guilds/{self.id}/scheduled-events/{_id}/users?{limit=!s}&{with_member=!s}&{before=!s}&{after=!s}",
-            )
+        url = f"guilds/{self.id}/scheduled-events/{_id}/users?{limit=!s}&{with_member=!s}"
+
+        if before is not None:
+            url += f"&{before!s}"
+        if after is not None:
+            url += f"&{after!s}"
+
+        data = await self._http.get(url)
 
         for user_data in data:
             yield GuildScheduledEventUser.from_dict(
