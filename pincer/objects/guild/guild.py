@@ -2010,7 +2010,7 @@ class Guild(APIObject):
             construct_client_dict(self._client, data)
         )
 
-    async def delete_scheduled_event(self, _id: Snowflake):
+    async def delete_scheduled_event(self, _id: Union[int, Snowflake]):
         await self._http.delete(f"guilds/{self.id}/scheduled-events/{_id}")
 
     async def get_guild_scheduled_event_users(
