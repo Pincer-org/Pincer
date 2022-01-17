@@ -344,7 +344,6 @@ class ChatCommandHandler(metaclass=Singleton):
 
     async def __add_commands(self):
         """|coro|
-
         Add all new commands which have been registered by the decorator to Discord.
 
         .. code-block::
@@ -357,13 +356,10 @@ class ChatCommandHandler(metaclass=Singleton):
         Therefore, we don't need to use a separate loop for updating and adding
         commands.
         """
-        local_registered_commands = self.get_local_registered_commands()
-
-        changed_commands = filter(
-            lambda target: target not in self._api_commands, local_registered_commands
-        )
-
-        for command in changed_commands:
+        for command in filter(
+            lambda command: command not in self._api_commands,
+            self.get_local_registered_commands()
+        ):
             await self.add_command(command)
 
     async def initialize(self):
