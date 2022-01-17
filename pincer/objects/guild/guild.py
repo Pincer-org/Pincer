@@ -498,13 +498,15 @@ class Guild(APIObject):
         """
         ...
 
-    async def modify_member(self, _id: int, reason=None, **kwargs) -> GuildMember:
+    async def modify_member(
+        self, _id: int, reason=None, **kwargs
+    ) -> GuildMember:
         if kwargs.get("communication_disabled_until") is MISSING:
             kwargs.pop("communication_disabled_until")
         data = await self._http.patch(
             f"guilds/{self.id}/members/{_id}",
             data=kwargs,
-            headers={"X-Audit-Log-Reason": reason}
+            headers={"X-Audit-Log-Reason": reason},
         )
         return GuildMember.from_dict(construct_client_dict(self._client, data))
 
@@ -521,7 +523,7 @@ class Guild(APIObject):
         position: Optional[int] = None,
         permission_overwrites: Optional[List[Overwrite]] = None,
         parent_id: Optional[Snowflake] = None,
-        nsfw: Optional[bool] = None
+        nsfw: Optional[bool] = None,
     ) -> Channel:
         """|coro|
         Create a new channel object for the guild.
@@ -560,23 +562,18 @@ class Guild(APIObject):
         """
         ...
 
-    async def create_channel(
-        self,
-        *,
-        reason: Optional[str] = None,
-        **kwargs
-    ):
+    async def create_channel(self, *, reason: Optional[str] = None, **kwargs):
         data = await self._http.post(
             f"guilds/{self.id}/channels",
             data=kwargs,
-            headers={"X-Audit-Log-Reason": reason}
+            headers={"X-Audit-Log-Reason": reason},
         )
         return Channel.from_dict(construct_client_dict(self._client, data))
 
     async def modify_channel_positions(
         self,
         reason: Optional[str] = None,
-        *channel: Dict[str, Optional[Union[int, bool, Snowflake]]]
+        *channel: Dict[str, Optional[Union[int, bool, Snowflake]]],
     ):
         """|coro|
         Create a new channel object for the guild.
@@ -595,11 +592,12 @@ class Guild(APIObject):
         await self._http.patch(
             f"guilds/{self.id}/channels",
             data=channel,
-            headers={"X-Audit-Log-Reason": reason}
+            headers={"X-Audit-Log-Reason": reason},
         )
 
-    async def list_active_threads(self) -> Tuple[
-            Generator[Thread], Generator[GuildMember]]:
+    async def list_active_threads(
+        self,
+    ) -> Tuple[Generator[Thread], Generator[GuildMember]]:
         """|coro|
         Returns all active threads in the guild,
         including public and private threads.
@@ -623,9 +621,7 @@ class Guild(APIObject):
         return threads, members
 
     async def list_guild_members(
-        self,
-        limit: int = 1,
-        after: int = 0
+        self, limit: int = 1, after: int = 0
     ) -> AsyncIterator[GuildMember]:
         """|coro|
         Returns a list of guild member objects that are members of the guild.
@@ -644,11 +640,7 @@ class Guild(APIObject):
         """
 
         members = await self._http.get(
-            f"guilds/{self.id}/members",
-            params={
-                "limit": limit,
-                "after": after
-            }
+            f"guilds/{self.id}/members", params={"limit": limit, "after": after}
         )
 
         for member in members:
@@ -657,9 +649,7 @@ class Guild(APIObject):
             )
 
     async def search_guild_members(
-        self,
-        query: str,
-        limit: Optional[int] = None
+        self, query: str, limit: Optional[int] = None
     ) -> AsyncIterator[GuildMember]:
         """|coro|
         Returns a list of guild member objects whose
@@ -680,18 +670,18 @@ class Guild(APIObject):
 
         data = await self._http.get(
             f"guilds/{self.id}/members/search",
-            params={
-                "query": query,
-                "limit": limit
-            }
+            params={"query": query, "limit": limit},
         )
 
         for member in data:
-            yield GuildMember.from_dict(construct_client_dict(self._client, member))
+            yield GuildMember.from_dict(
+                construct_client_dict(self._client, member)
+            )
 
     @overload
     async def add_guild_member(
-        self, *,
+        self,
+        *,
         user_id: Snowflake,
         access_token: str,
         nick: Optional[str] = None,
@@ -729,26 +719,21 @@ class Guild(APIObject):
             If the user is in the guild
         """
 
-    async def add_guild_member(
-        self,
-        user_id,
-        reason=None,
-        **kwargs
-    ):
+    async def add_guild_member(self, user_id, reason=None, **kwargs):
         data = await self._http.put(
             f"guilds/{self.id}/members/{user_id}",
             data=kwargs,
-            headers={"X-Audit-Log-Reason": reason}
+            headers={"X-Audit-Log-Reason": reason},
         )
 
-        return GuildMember.from_dict(
-            construct_client_dict(self._client, data)
-        ) if data else None
+        return (
+            GuildMember.from_dict(construct_client_dict(self._client, data))
+            if data
+            else None
+        )
 
     async def modify_current_member(
-        self,
-        nick: str,
-        reason: Optional[str] = None
+        self, nick: str, reason: Optional[str] = None
     ) -> GuildMember:
         """|coro|
         Modifies the current member in a guild.
@@ -767,15 +752,12 @@ class Guild(APIObject):
         data = self._http.patch(
             f"guilds/{self.id}/members/@me",
             {"nick": nick},
-            headers={"X-Audit-Log-Reason": reason}
+            headers={"X-Audit-Log-Reason": reason},
         )
         return GuildMember.from_dict(construct_client_dict(self._client, data))
 
     async def add_guild_member_role(
-        self,
-        user_id: int,
-        role_id: int,
-        reason: Optional[str] = None
+        self, user_id: int, role_id: int, reason: Optional[str] = None
     ) -> None:
         """|coro|
         Adds a role to a guild member.
@@ -791,14 +773,11 @@ class Guild(APIObject):
         """
         data = await self._http.put(
             f"guilds/{self.id}/{user_id}/roles/{role_id}",
-            headers={"X-Audit-Log-Reason": reason}
+            headers={"X-Audit-Log-Reason": reason},
         )
 
     async def remove_guild_member_role(
-        self,
-        user_id: int,
-        role_id: int,
-        reason: Optional[str] = None
+        self, user_id: int, role_id: int, reason: Optional[str] = None
     ):
         """|coro|
         Removes a role from a guild member.
@@ -814,13 +793,11 @@ class Guild(APIObject):
         """
         await self._http.delete(
             f"guilds/{self.id}/{user_id}/roles/{role_id}",
-            headers={"X-Audit-Log-Reason": reason}
+            headers={"X-Audit-Log-Reason": reason},
         )
 
     async def remove_guild_member(
-        self,
-        user_id: int,
-        reason: Optional[str] = None
+        self, user_id: int, reason: Optional[str] = None
     ):
         """|coro|
         Remove a member from a guild.
@@ -834,7 +811,7 @@ class Guild(APIObject):
         """
         await self._http.delete(
             f"guilds/{self.id}/members/{user_id}",
-            headers={"X-Audit-Log-Reason": reason}
+            headers={"X-Audit-Log-Reason": reason},
         )
 
     async def ban(
@@ -1920,11 +1897,7 @@ class Guild(APIObject):
         form.add_field("name", name)
         form.add_field("tags", tags)
         form.add_field("description", description)
-        form.add_field(
-            "file",
-            file.content,
-            content_type=file.content_type
-        )
+        form.add_field("file", file.content, content_type=file.content_type)
 
         payload = form()
 
@@ -1932,7 +1905,7 @@ class Guild(APIObject):
             f"guilds/{self.id}/stickers",
             data=payload,
             headers={"X-Audit-Log-Reason": reason},
-            content_type=payload.content_type
+            content_type=payload.content_type,
         )
 
         return Sticker.from_dict(sticker)
@@ -1966,8 +1939,10 @@ class Guild(APIObject):
 
     async def get_scheduled_events(
         self, with_user_count: bool = False
-        ) -> AsyncGenerator[ScheduledEvent, None]:
-        data = await self._http.get(f"guilds/{self.id}/scheduled-events?{with_user_count=!s}")
+    ) -> AsyncGenerator[ScheduledEvent, None]:
+        data = await self._http.get(
+            f"guilds/{self.id}/scheduled-events?{with_user_count=!s}"
+        )
         for event_data in data:
             yield ScheduledEvent.from_dict(
                 construct_client_dict(self._client, event_data)
@@ -1988,7 +1963,10 @@ class Guild(APIObject):
         if scheduled_start_time.timestamp() < datetime.now().timestamp():
             raise ValueError("An event cannot be created in the past")
 
-        if scheduled_end_time is not None and scheduled_end_time.timestamp() < datetime.now().timestamp():
+        if (
+            scheduled_end_time is not None
+            and scheduled_end_time.timestamp() < datetime.now().timestamp()
+        ):
             raise ValueError("An event cannot start before it ends")
 
         data = await self._http.post(
@@ -1998,19 +1976,25 @@ class Guild(APIObject):
                 "privacy_level": privacy_level,
                 "entity_type": entity_type,
                 "scheduled_start_time": scheduled_start_time.isoformat(),
-                "scheduled_end_time": scheduled_end_time.isoformat() if scheduled_end_time is not None else None,
+                "scheduled_end_time": scheduled_end_time.isoformat()
+                if scheduled_end_time is not None
+                else None,
                 "entity_metadata": entity_metadata,
                 "channel_id": channel_id,
                 "description": description,
-                },
+            },
             headers={"X-Audit-Log-Reason": reason},
-            )
+        )
         return ScheduledEvent.from_dict(
             construct_client_dict(self._client, data)
         )
 
-    async def get_scheduled_event(self, _id: Snowflake, with_user_count: bool = False) -> ScheduledEvent:
-        data = await self._http.get(f"guilds/{self.id}/scheduled-events/{_id}?{with_user_count=!s}")
+    async def get_scheduled_event(
+        self, _id: Snowflake, with_user_count: bool = False
+    ) -> ScheduledEvent:
+        data = await self._http.get(
+            f"guilds/{self.id}/scheduled-events/{_id}?{with_user_count=!s}"
+        )
         return ScheduledEvent.from_dict(
             construct_client_dict(self._client, data)
         )
@@ -2029,29 +2013,41 @@ class Guild(APIObject):
         status: Optional[int] = None,
         reason: Optional[str] = None,
     ) -> ScheduledEvent:
-        if scheduled_start_time is not None and scheduled_start_time.timestamp() < datetime.now().timestamp():
+        if (
+            scheduled_start_time is not None
+            and scheduled_start_time.timestamp() < datetime.now().timestamp()
+        ):
             raise ValueError("An event cannot be created in the past")
 
-        if scheduled_end_time is not None and scheduled_end_time.timestamp() < datetime.now().timestamp():
+        if (
+            scheduled_end_time is not None
+            and scheduled_end_time.timestamp() < datetime.now().timestamp()
+        ):
             raise ValueError("An event cannot start before it ends")
 
-        kwargs: Dict[str, str] = remove_none({
-            "name": name,
-            "privacy_level": privacy_level,
-            "entity_type": entity_type,
-            "scheduled_start_time": scheduled_start_time.isoformat() if scheduled_start_time is not None else None,
-            "scheduled_end_time": scheduled_end_time.isoformat() if scheduled_end_time is not None else None,
-            "entity_metadata": entity_metadata,
-            "channel_id": channel_id,
-            "description": description,
-            "status": status,
-            })
+        kwargs: Dict[str, str] = remove_none(
+            {
+                "name": name,
+                "privacy_level": privacy_level,
+                "entity_type": entity_type,
+                "scheduled_start_time": scheduled_start_time.isoformat()
+                if scheduled_start_time is not None
+                else None,
+                "scheduled_end_time": scheduled_end_time.isoformat()
+                if scheduled_end_time is not None
+                else None,
+                "entity_metadata": entity_metadata,
+                "channel_id": channel_id,
+                "description": description,
+                "status": status,
+            }
+        )
 
         data = await self._http.patch(
             f"guilds/{self.id}/scheduled-events/{_id}",
             data=kwargs,
             headers={"X-Audit-Log-Reason": reason},
-            )
+        )
         return ScheduledEvent.from_dict(
             construct_client_dict(self._client, data)
         )
@@ -2066,7 +2062,7 @@ class Guild(APIObject):
         with_member: bool = False,
         before: Optional[Snowflake] = None,
         after: Optional[Snowflake] = None,
-        ) -> AsyncGenerator[GuildScheduledEventUser, None]:
+    ) -> AsyncGenerator[GuildScheduledEventUser, None]:
         url = f"guilds/{self.id}/scheduled-events/{_id}/users?{limit=!s}&{with_member=!s}"
 
         if before is not None:
