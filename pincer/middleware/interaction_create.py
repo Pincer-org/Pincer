@@ -131,8 +131,7 @@ async def interaction_response_handler(
     # Prevent args from being mutated unexpectedly
     args = copy(args)
 
-    sig, params = get_signature_and_params(command)
-    if should_pass_ctx(sig, params):
+    if should_pass_ctx(*get_signature_and_params(command)):
         args.insert(0, context)
 
     if should_pass_cls(command):
