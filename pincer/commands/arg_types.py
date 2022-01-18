@@ -51,7 +51,7 @@ class CommandArg(metaclass=_CommandTypeMeta):
     def __init__(self, command_type, *args):
         self.command_type = command_type
         self.modifiers = args
-        _log.warn(
+        _log.warning(
             "CommandArg is deprecated and will be removed in future releases."
             " `typing.Annotated`/`typing_extensions.Annotated.` should be used instead."
             " See https://docs.pincer.dev/en/stable/interactions.html#arguments for"
