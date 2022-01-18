@@ -1936,7 +1936,8 @@ class Guild(APIObject):
             The scheduled event object.
         """
         data = await self._http.get(
-            f"guilds/{self.id}/scheduled-events?{with_user_count=!s}"
+            f"guilds/{self.id}/scheduled-events",
+            param={"with_user_count": with_user_count},
         )
         for event_data in data:
             yield ScheduledEvent.from_dict(event_data)
@@ -1982,12 +1983,12 @@ class Guild(APIObject):
         :class:`~pincer.objects.guild.scheduled_event.ScheduledEvent`
             The newly created scheduled event.
         """
-        if scheduled_start_time.timestamp() < datetime.now().timestamp():
+        if scheduled_start_time < datetime.now():
             raise ValueError("An event cannot be created in the past")
 
         if (
-            scheduled_end_time is not None
-            and scheduled_end_time.timestamp() < datetime.now().timestamp()
+            scheduled_end_time
+            and scheduled_end_time < scheduled_start_time
         ):
             raise ValueError("An event cannot start before it ends")
 
@@ -2087,13 +2088,12 @@ class Guild(APIObject):
             The scheduled event object.
         """
         if scheduled_start_time:
-            timestamp = scheduled_start_time.timestamp()
-            if timestamp < datetime.now().timestamp():
+            if scheduled_start_time < datetime.now():
                 raise ValueError("An event cannot be created in the past")
 
             if (
                 scheduled_end_time
-                and timestamp > scheduled_end_time.timestamp()
+                and scheduled_end_time < scheduled_start_time
             ):
                 raise ValueError("An event cannot start before it ends")
 
@@ -2162,17 +2162,15 @@ class Guild(APIObject):
         :class:`~pincer.objects.guild.scheduled_event.GuildScheduledEventUser`
             The scheduled event user object.
         """
-        params = {
+        params = remove_none({
             "limit": limit,
             "with_member": with_member,
-        }
-        if before is not None:
-            params.update({"before": before})
-        if after is not None:
-            params.update({"after": after})
+            "before": before,
+            "after": after,
+        })
 
         data = await self._http.get(
-            f"guilds/{self.id}/scheduled-events/{_id}/users?",
+            f"guilds/{self.id}/scheduled-events/{_id}/users",
             params=params,
         )
 
