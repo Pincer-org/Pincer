@@ -10,8 +10,6 @@ from functools import partial
 from inspect import Signature, isasyncgenfunction, _empty
 from typing import TYPE_CHECKING, Any, Callable, TypeVar, Union, List
 
-from pincer.commands.interactable import PartialInteractable
-
 from . import __package__
 from .chat_command_handler import (
     ChatCommandHandler, _hash_app_command_params
@@ -337,7 +335,7 @@ def command(
     if not options:
         options = MISSING
 
-    return _PartialCommand(
+    return register_command(
         func=func,
         app_command_type=AppCommandType.CHAT_INPUT,
         name=name,
@@ -435,7 +433,7 @@ def user_command(
             cooldown_scope=cooldown_scope,
         )
 
-    return _PartialCommand(
+    return register_command(
         func=func,
         app_command_type=AppCommandType.USER,
         name=name,
@@ -525,7 +523,7 @@ def message_command(
             cooldown_scope=cooldown_scope,
         )
 
-    return _PartialCommand(
+    return register_command(
         func=func,
         app_command_type=AppCommandType.MESSAGE,
         name=name,
@@ -538,7 +536,6 @@ def message_command(
 
 
 def register_command(
-    manager: Any,
     func: Callable[..., Any] = None,
     app_command_type: Optional[AppCommandType] = None,
     name: Optional[str] = None,
@@ -601,23 +598,15 @@ def register_command(
         f"Registered command `{cmd}` to `{func.__name__}` locally."
     )
 
-    ChatCommandHandler.register[
-        _hash_app_command_params(
-            cmd,
-            guild_id,
-            app_command_type,
-            group,
-            sub_group
-        )
-    ] = InteractableStructure(
+    interactable = InteractableStructure(
         call=func,
         cooldown=cooldown,
         cooldown_scale=cooldown_scale,
         cooldown_scope=cooldown_scope,
-        manager=manager,
+        manager=None,
         group=group,
         sub_group=sub_group,
-        app=AppCommand(
+        metadata=AppCommand(
             name=cmd,
             description=description,
             type=app_command_type,
@@ -627,8 +616,14 @@ def register_command(
         ),
     )
 
+    ChatCommandHandler.register[
+        _hash_app_command_params(
+            cmd,
+            guild_id,
+            app_command_type,
+            group,
+            sub_group
+        )
+    ] = interactable
 
-class _PartialCommand(PartialInteractable):
-    def register(self, manager: Any) -> Callable[..., Any]:
-        register_command(manager, *self.args, func=self.func, **self.kwargs)
-        return self.func
+    return interactable

@@ -75,13 +75,9 @@ class Button(_Component):
     disabled: APINullable[bool] = False
 
     type: int = 2
-    _func: Optional[Callable] = None
 
     def __post_init__(self):
         self.type = 2
-
-    def __call__(self, *args, **kwargs):
-        return self._func(*args, **kwargs)
 
 
 @dataclass(repr=False)

@@ -3,13 +3,13 @@
 
 from functools import partial
 from inspect import iscoroutinefunction
-from typing import Any, List
+from typing import List
+
+from pincer.objects.app.command import InteractableStructure
 
 from .button import Button, ButtonStyle
 from .select_menu import SelectMenu, SelectOption
 from .component_handler import ComponentHandler
-from ..interactable import PartialInteractable
-from ...objects.app.command import InteractableStructure
 from ...exceptions import CommandIsNotCoroutine
 from ...objects.message.emoji import Emoji
 from ...utils.conversion import remove_none
@@ -70,37 +70,35 @@ def button(
     """  # noqa: E501
 
     def wrap(custom_id, func) -> Button:
+
         if not iscoroutinefunction(func):
             raise CommandIsNotCoroutine(f"`{func.__name__}` must be a coroutine.")
 
         if custom_id is None:
             custom_id = func.__name__
 
-        return _PartialButton(
-            func=func,
-            custom_id=custom_id,
-            style=style,
-            label=label,
-            disabled=disabled,
-            emoji=emoji,
-            url=url,
+        interactable = InteractableStructure(
+            call=func,
+            metadata=Button(
+                # Hack to not override defaults in button class
+                **remove_none(
+                    {
+                        "custom_id": custom_id,
+                        "style": style,
+                        "label": label,
+                        "disabled": disabled,
+                        "emoji": emoji,
+                        "url": url,
+                    }
+                )
+            )
         )
+
+        ComponentHandler.register[interactable.metadata.custom_id] = interactable
+
+        return interactable
 
     return partial(wrap, custom_id)
-
-
-class _PartialButton(PartialInteractable):
-    def register(self, manager: Any) -> Button:
-        button = Button(*self.args, _func=self.func, **remove_none(self.kwargs))
-        button.func = self.func
-        button.__call__ = partial(self.func)
-
-        ComponentHandler.register[self.kwargs.get("custom_id")] = InteractableStructure(
-            call=self.func,
-            manager=manager
-        )
-
-        return button
 
 
 def select_menu(
@@ -111,8 +109,6 @@ def select_menu(
     max_values: int = None,
     disabled: bool = None,
     custom_id: str = None
-
-
 ) -> SelectMenu:
     """
     Turn a function into handler for a :class:`~pincer.commands.components.select_menu.SelectMenu`.
@@ -147,37 +143,35 @@ def select_menu(
     """  # noqa: E501
 
     def wrap(custom_id, func) -> SelectMenu:
+
         if not iscoroutinefunction(func):
             raise CommandIsNotCoroutine(f"`{func.__name__}` must be a coroutine.")
 
         if custom_id is None:
             custom_id = func.__name__
 
-        return _PartialSelectMenu(
-            func=func,
-            custom_id=custom_id,
-            options=options,
-            placeholder=placeholder,
-            min_values=min_values,
-            max_values=max_values,
-            disabled=disabled,
+        interactable = InteractableStructure(
+            call=func,
+            metadata=SelectMenu(
+                # Hack to not override defaults in button class
+                **remove_none(
+                    {
+                        "custom_id": custom_id,
+                        "options": options,
+                        "placeholder": placeholder,
+                        "min_values": min_values,
+                        "max_values": max_values,
+                        "disabled": disabled,
+                    }
+                )
+            )
         )
+
+        ComponentHandler.register[interactable.metadata.custom_id] = interactable
+
+        return interactable
 
     if func is None:
         return partial(wrap, custom_id)
 
     return wrap(custom_id, func)
-
-
-class _PartialSelectMenu(PartialInteractable):
-    def register(self, manager: Any) -> SelectMenu:
-        ComponentHandler.register[self.kwargs.get("custom_id")] = InteractableStructure(
-            call=self.func,
-            manager=manager
-        )
-
-        return SelectMenu(
-            *self.args,
-            _func=self.func,
-            **remove_none(self.kwargs)
-        )

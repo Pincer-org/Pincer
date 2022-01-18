@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Awaitable, Callable, List, Union, TYPE_CHECKING
+from typing import Any, Awaitable, Callable, Generic, List, Optional, Union, TYPE_CHECKING, TypeVar
 
 from .command_types import AppCommandOptionType, AppCommandType
 from ..app.throttle_scope import ThrottleScope
@@ -18,6 +18,7 @@ from ...utils.types import MISSING
 if TYPE_CHECKING:
     from ...utils.types import APINullable
 
+T = TypeVar("T")
 
 @dataclass(repr=False)
 class AppCommandInteractionDataOption(APIObject):
@@ -186,7 +187,7 @@ class AppCommand(APIObject, GuildProperty):
 
 
 @dataclass(repr=False)
-class InteractableStructure:
+class InteractableStructure(Generic[T]):
     """Represents the structure of how the client saves the existing
     commands to registers. This is generic over Application Commands,
     Message Components, and Autocomplete.
@@ -210,9 +211,9 @@ class InteractableStructure:
         The type of cooldown |default| :data:`ThrottleScope.USER`
     """
     call: Coro
-    manager: Any
 
-    app: AppCommand = None
+    metadata: T = None
+    manager: Optional[Any] = None
     extensions: List[Callable[..., Awaitable[bool]]] = field(default_factory=list)
 
     cooldown: int = 0
@@ -221,3 +222,6 @@ class InteractableStructure:
 
     group: APINullable[Group] = MISSING
     sub_group: APINullable[Subgroup] = MISSING
+
+    def __call__(self, *args: Any, **kwargs: Any) -> Any:
+        self.func(*args, **kwargs)

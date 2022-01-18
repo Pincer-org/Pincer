@@ -28,7 +28,7 @@ from typing import (
 )
 
 from .cog import CogManager
-from .commands.interactable import Interactable, PartialInteractable
+from .commands.interactable import Interactable
 
 from . import __package__
 from .commands import ChatCommandHandler
@@ -156,11 +156,14 @@ for event, middleware_ in middleware.items():
     event_middleware(event)(middleware_)
 
 
-class PartialEvent(PartialInteractable):
+class PartialEvent:
     """
     Represents a function that will registered to an event when the Client is
     constructed.
     """
+
+    def __init__(self, func) -> None:
+        self.func = func
 
     def register(self, manager: Any):
         name = self.func.__name__

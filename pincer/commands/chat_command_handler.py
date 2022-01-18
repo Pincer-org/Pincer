@@ -61,7 +61,7 @@ class ChatCommandHandler(metaclass=Singleton):
 
     has_been_initialized = False
     managers: List[Interactable] = []
-    register: Dict[str, InteractableStructure] = {}
+    register: Dict[str, InteractableStructure[AppCommand]] = {}
     built_register: Dict[str, AppCommand] = {}
 
     # Endpoints:
@@ -197,7 +197,7 @@ class ChatCommandHandler(metaclass=Singleton):
                 # hold the subcommand.
                 key = _hash_app_command_params(
                     cmd.group.name,
-                    cmd.app.guild_id,
+                    cmd.metadata.guild_id,
                     AppCommandType.CHAT_INPUT,
                     None,
                     None,
@@ -208,7 +208,7 @@ class ChatCommandHandler(metaclass=Singleton):
                         name=cmd.group.name,
                         description=cmd.group.description,
                         type=AppCommandType.CHAT_INPUT,
-                        guild_id=cmd.app.guild_id,
+                        guild_id=cmd.metadata.guild_id,
                         options=[]
                     )
 
@@ -239,10 +239,10 @@ class ChatCommandHandler(metaclass=Singleton):
                     children.append(sub_command_group)
 
                 sub_command_group.options.append(AppCommandOption(
-                    name=cmd.app.name,
-                    description=cmd.app.description,
+                    name=cmd.metadata.name,
+                    description=cmd.metadata.description,
                     type=AppCommandOptionType.SUB_COMMAND,
-                    options=cmd.app.options,
+                    options=cmd.metadata.options,
                 ))
 
                 continue
@@ -261,7 +261,7 @@ class ChatCommandHandler(metaclass=Singleton):
 
                 key = _hash_app_command_params(
                     cmd.group.name,
-                    cmd.app.guild_id,
+                    cmd.metadata.guild_id,
                     AppCommandOptionType.SUB_COMMAND,
                     None,
                     None
@@ -272,7 +272,7 @@ class ChatCommandHandler(metaclass=Singleton):
                         name=cmd.group.name,
                         description=cmd.group.description,
                         type=AppCommandOptionType.SUB_COMMAND,
-                        guild_id=cmd.app.guild_id,
+                        guild_id=cmd.metadata.guild_id,
                         options=[]
                     )
 
@@ -280,10 +280,10 @@ class ChatCommandHandler(metaclass=Singleton):
                 # lowest level.
                 ChatCommandHandler.built_register[key].options.append(
                     AppCommandOption(
-                        name=cmd.app.name,
-                        description=cmd.app.description,
+                        name=cmd.metadata.name,
+                        description=cmd.metadata.description,
                         type=AppCommandType.CHAT_INPUT,
-                        options=cmd.app.options
+                        options=cmd.metadata.options
                     )
                 )
 
@@ -291,8 +291,8 @@ class ChatCommandHandler(metaclass=Singleton):
 
             # All single-level commands are registered here.
             ChatCommandHandler.built_register[
-                _hash_app_command(cmd.app, cmd.group, cmd.sub_group)
-            ] = cmd.app
+                _hash_app_command(cmd.metadata, cmd.group, cmd.sub_group)
+            ] = cmd.metadata
 
     @staticmethod
     def get_local_registered_commands() -> ValuesView[AppCommand]:
@@ -375,6 +375,14 @@ class ChatCommandHandler(metaclass=Singleton):
         await self.__get_existing_commands()
         await self.__remove_unused_commands()
         await self.__add_commands()
+
+
+def _hash_interactable_structure(interactable: InteractableStructure[AppCommand]):
+    return _hash_app_command(
+        interactable.app,
+        interactable.group,
+        interactable.sub_group
+    )
 
 
 def _hash_app_command(

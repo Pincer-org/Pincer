@@ -81,13 +81,9 @@ class SelectMenu(_Component):
     disabled: APINullable[bool] = False
 
     type: int = 3
-    _func: Optional[Callable] = None
 
     def __post_init__(self):
         self.type = 3
-
-    def __call__(self, *args, **kwargs):
-        return self._func(*args, **kwargs)
 
     def with_options(self, *options: SelectOption) -> SelectMenu:
         """

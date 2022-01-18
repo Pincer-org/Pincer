@@ -106,6 +106,7 @@ def get_call(self: Client, interaction: Interaction) -> Optional[Tuple[Coro, Any
 
 
 async def interaction_response_handler(
+    self: Client,
     command: Coro,
     manager: Any,
     context: MessageContext,
@@ -135,7 +136,7 @@ async def interaction_response_handler(
         args.insert(0, context)
 
     if should_pass_cls(command):
-        args.insert(0, manager)
+        args.insert(0, manager or self)
 
     if isasyncgenfunction(command):
         message = command(*args, **kwargs)
@@ -218,18 +219,23 @@ async def interaction_handler(
 
     try:
         await interaction_response_handler(
-            command, manager, context, interaction, args, kwargs
+            self, command, manager, context, interaction, args, kwargs
         )
     except Exception as e:
         if coro := get_index(self.get_event_coro("on_command_error"), 0):
-            await interaction_response_handler(
-                coro.func,
-                manager,
-                context,
-                interaction,
-                [e, *args],
-                kwargs,
-            )
+            try:
+                await interaction_response_handler(
+                    self,
+                    coro.func,
+                    manager,
+                    context,
+                    interaction,
+                    [e, *args],
+                    kwargs,
+                )
+            except Exception as e:
+                raise e
+        raise e
 
 
 async def interaction_create_middleware(

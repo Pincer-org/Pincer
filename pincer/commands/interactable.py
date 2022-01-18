@@ -3,40 +3,16 @@
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Type, TypeVar
+from collections import ChainMap
+from types import MethodType
+from typing import Any
 
-if TYPE_CHECKING:
-    from typing import Any, Awaitable, Callable
+from .chat_command_handler import ChatCommandHandler, _hash_interactable_structure
+from .components.component_handler import ComponentHandler
+from ..objects.app.command import InteractableStructure
 
-T = TypeVar("T")
 
-
-class PartialInteractable(ABC):
-    """
-    Represents a command or message component to be registered to a class.
-
-    Parameters
-    ----------
-    func : Callable[..., Awaitable[Any]]
-        The function to run for this interaction.
-    args : Any
-        Args to be stored to used in register.
-    kwargs : Any
-        Kwargs to store to be used in register.
-    """
-
-    def __init__(self, func: Callable[..., Awaitable[Any]], *args: Any, **kwargs: Any):
-        self.func = func
-        self.args = args
-        self.kwargs = kwargs
-
-    def __call__(self, *args: Any, **kwds: Any) -> Any:
-        return self.func(*args, **kwds)
-
-    @abstractmethod
-    def register(self, manager: Any) -> Type[T]:
-        """Registers a command to a command handler to be called later"""
+INTERACTION_REGISTERS = ChainMap(ChatCommandHandler.register, ComponentHandler.register)
 
 
 class Interactable:
@@ -49,6 +25,13 @@ class Interactable:
     """
 
     def __init__(self):
-        for key, value in vars(type(self)).items():
-            if isinstance(value, PartialInteractable):
-                setattr(self, key, value.register(self))
+        for value in vars(type(self)).values():
+            if isinstance(value, InteractableStructure):
+                value.manager = self
+
+    def __del__(self):
+        for value in vars(type(self)).values():
+            if isinstance(value, InteractableStructure):
+                INTERACTION_REGISTERS.pop(
+                    _hash_interactable_structure(InteractableStructure)
+                )

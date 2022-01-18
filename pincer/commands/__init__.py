@@ -18,13 +18,13 @@ from .components import (
     component, button, select_menu, LinkButton
 )
 from .groups import Group, Subgroup
-from .interactable import PartialInteractable, Interactable
+from .interactable import Interactable, INTERACTION_REGISTERS
 
 __all__ = (
     "ActionRow", "Button", "ButtonStyle", "ChannelTypes",
     "ChatCommandHandler", "Choice", "Choices", "CommandArg",
     "ComponentHandler", "Description", "Group", "Interactable", "LinkButton",
-    "MaxValue", "MinValue", "Modifier", "PartialInteractable", "SelectMenu",
+    "MaxValue", "MinValue", "Modifier", "SelectMenu",
     "SelectOption", "Subgroup", "button", "command", "component",
-    "message_command", "select_menu", "user_command"
+    "message_command", "select_menu", "user_command", "INTERACTION_REGISTERS"
 )
