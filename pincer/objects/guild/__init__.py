@@ -45,5 +45,4 @@ __all__ = (
     "SystemChannelFlags", "TextChannel", "ThreadMember", "ThreadMetadata",
     "UnavailableGuild", "VerificationLevel", "VoiceChannel", "Webhook",
     "WebhookType", "WelcomeScreen", "WelcomeScreenChannel",
-    "WelcomeScreenChannelGuildScheduledEventEntityType"
 )
