@@ -23,8 +23,8 @@ from .interactable import Interactable, INTERACTION_REGISTERS
 __all__ = (
     "ActionRow", "Button", "ButtonStyle", "ChannelTypes",
     "ChatCommandHandler", "Choice", "Choices", "CommandArg",
-    "ComponentHandler", "Description", "Group", "Interactable", "LinkButton",
-    "MaxValue", "MinValue", "Modifier", "SelectMenu",
-    "SelectOption", "Subgroup", "button", "command", "component",
-    "message_command", "select_menu", "user_command", "INTERACTION_REGISTERS"
+    "ComponentHandler", "Description", "Group", "INTERACTION_REGISTERS",
+    "Interactable", "LinkButton", "MaxValue", "MinValue", "Modifier",
+    "SelectMenu", "SelectOption", "Subgroup", "button", "command", "component",
+    "message_command", "select_menu", "user_command"
 )
