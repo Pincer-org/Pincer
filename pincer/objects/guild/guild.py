@@ -1922,6 +1922,19 @@ class Guild(APIObject):
     async def get_scheduled_events(
         self, with_user_count: bool = False
     ) -> AsyncGenerator[ScheduledEvent, None]:
+        """
+        Returns an async generator of the guild scheduled events.
+
+        Parameters
+        ----------
+        with_user_count : :class:`bool`
+            Whether to include the user count in the scheduled event.
+
+        Yields
+        ------
+        :class:`~pincer.objects.guild.scheduled_event.ScheduledEvent`
+            The scheduled event object.
+        """
         data = await self._http.get(
             f"guilds/{self.id}/scheduled-events?{with_user_count=!s}"
         )
@@ -1936,10 +1949,39 @@ class Guild(APIObject):
         scheduled_start_time: datetime,
         scheduled_end_time: Optional[datetime] = None,
         entity_metadata: Optional[str] = None,
-        channel_id: Optional[Snowflake] = None,
+        channel_id: Optional[int] = None,
         description: Optional[str] = None,
         reason: Optional[str] = None,
     ) -> ScheduledEvent:
+        """
+        Create a new scheduled event for the guild.
+
+        Parameters
+        ----------
+        name : :class:`str`
+            The name of the scheduled event.
+        privacy_level : :class:`int`
+            The privacy level of the scheduled event.
+        entity_type : :class:`int`
+            The type of entity to be scheduled.
+        scheduled_start_time : :class:`datetime`
+            The scheduled start time of the event.
+        scheduled_end_time : Optional[:class:`datetime`]
+            The scheduled end time of the event.
+        entity_metadata : Optional[:class:`str`]
+            The metadata of the entity to be scheduled.
+        channel_id : Optional[:class:`int`]
+            The channel id of the channel to be scheduled.
+        description : Optional[:class:`str`]
+            The description of the scheduled event.
+        reason : Optional[:class:`str`]
+            The reason for creating the scheduled event.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.scheduled_event.ScheduledEvent`
+            The newly created scheduled event.
+        """
         if scheduled_start_time.timestamp() < datetime.now().timestamp():
             raise ValueError("An event cannot be created in the past")
 
@@ -1970,6 +2012,21 @@ class Guild(APIObject):
     async def get_scheduled_event(
         self, _id: int, with_user_count: bool = False
     ) -> ScheduledEvent:
+        """
+        Get a scheduled event by id.
+
+        Parameters
+        ----------
+        _id : :class:`int`
+            The id of the scheduled event.
+        with_user_count : :class:`bool`
+            Whether to include the user count in the scheduled event.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.scheduled_event.ScheduledEvent`
+            The scheduled event object.
+        """
         data = await self._http.get(
             f"guilds/{self.id}/scheduled-events/{_id}",
             params={"with_user_count": with_user_count},
@@ -1990,6 +2047,45 @@ class Guild(APIObject):
         status: Optional[int] = None,
         reason: Optional[str] = None,
     ) -> ScheduledEvent:
+        """
+        Modify a scheduled event.
+
+        Parameters
+        ----------
+        _id : :class:`int`
+            The id of the scheduled event.
+        name : Optional[:class:`str`]
+            The name of the scheduled event.
+        entity_type : Optional[:class:`int`]
+            The type of entity to be scheduled.
+        privacy_level : Optional[:class:`int`]
+            The privacy level of the scheduled event.
+        scheduled_start_time : Optional[:class:`datetime`]
+            The scheduled start time of the event.
+        scheduled_end_time : Optional[:class:`datetime`]
+            The scheduled end time of the event.
+        entity_metadata : Optional[:class:`str`]
+            The metadata of the entity to be scheduled.
+        channel_id : Optional[:class:`int`]
+            The channel id of the channel to be scheduled.
+        description : Optional[:class:`str`]
+            The description of the scheduled event.
+        status : Optional[:class:`int`]
+            The status of the scheduled event.
+        reason : Optional[:class:`str`]
+            The reason for modifying the scheduled event.
+
+        Raises
+        ------
+        :class:`ValueError`
+            If the scheduled event is in the past,
+            or if the scheduled end time is before the scheduled start time.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.scheduled_event.ScheduledEvent`
+            The scheduled event object.
+        """
         if scheduled_start_time:
             timestamp = scheduled_start_time.timestamp()
             if timestamp < datetime.now().timestamp():
@@ -2026,7 +2122,15 @@ class Guild(APIObject):
         )
         return ScheduledEvent.from_dict(data)
 
-    async def delete_scheduled_event(self, _id: Union[int, Snowflake]):
+    async def delete_scheduled_event(self, _id: int):
+        """
+        Delete a scheduled event.
+
+        Parameters
+        ----------
+        _id : :class:`int`
+            The id of the scheduled event.
+        """
         await self._http.delete(f"guilds/{self.id}/scheduled-events/{_id}")
 
     async def get_guild_scheduled_event_users(
@@ -2034,9 +2138,30 @@ class Guild(APIObject):
         _id: int,
         limit: int = 100,
         with_member: bool = False,
-        before: Optional[Snowflake] = None,
-        after: Optional[Snowflake] = None,
+        before: Optional[int] = None,
+        after: Optional[int] = None,
     ) -> AsyncGenerator[GuildScheduledEventUser, None]:
+        """
+        Get the users of a scheduled event.
+
+        Parameters
+        ----------
+        _id : :class:`int`
+            The id of the scheduled event.
+        limit : :class:`int`
+            The number of users to retrieve.
+        with_member : :class:`bool`
+            Whether to include the member object in the scheduled event user.
+        before : Optional[:class:`int`]
+            consider only users before given user id
+        after : Optional[:class:`int`]
+            consider only users after given user id
+
+        Yields
+        ------
+        :class:`~pincer.objects.guild.scheduled_event.GuildScheduledEventUser`
+            The scheduled event user object.
+        """
         params = {
             "limit": limit,
             "with_member": with_member,
