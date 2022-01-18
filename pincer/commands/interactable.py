@@ -44,7 +44,10 @@ class Interactable:
     Class that can register :class:`~pincer.commands.interactable.PartialInteractable`
     objects. Any class that subclasses this class can register Application Commands and
     Message Components.
+    PartialInteractable objects are registered by running the register function and
+    setting an attribute of the client to the result.
     """
+
     def __init__(self):
         for key, value in vars(type(self)).items():
             if isinstance(value, PartialInteractable):
