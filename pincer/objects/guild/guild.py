@@ -1968,7 +1968,7 @@ class Guild(APIObject):
         return ScheduledEvent.from_dict(data)
 
     async def get_scheduled_event(
-        self, _id: Snowflake, with_user_count: bool = False
+        self, _id: int, with_user_count: bool = False
     ) -> ScheduledEvent:
         data = await self._http.get(
             f"guilds/{self.id}/scheduled-events/{_id}",
@@ -1978,14 +1978,14 @@ class Guild(APIObject):
 
     async def modify_scheduled_event(
         self,
-        _id: Snowflake,
+        _id: int,
         name: Optional[str] = None,
         entity_type: Optional[int] = None,
         privacy_level: Optional[int] = None,
         scheduled_start_time: Optional[datetime] = None,
         scheduled_end_time: Optional[datetime] = None,
         entity_metadata: Optional[str] = None,
-        channel_id: Optional[Snowflake] = None,
+        channel_id: Optional[int] = None,
         description: Optional[str] = None,
         status: Optional[int] = None,
         reason: Optional[str] = None,
@@ -2031,7 +2031,7 @@ class Guild(APIObject):
 
     async def get_guild_scheduled_event_users(
         self,
-        _id: Snowflake,
+        _id: int,
         limit: int = 100,
         with_member: bool = False,
         before: Optional[Snowflake] = None,
