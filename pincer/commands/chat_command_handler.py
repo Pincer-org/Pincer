@@ -291,7 +291,7 @@ class ChatCommandHandler(metaclass=Singleton):
 
             # All single-level commands are registered here.
             ChatCommandHandler.built_register[
-                _hash_app_command(cmd.metadata, cmd.group, cmd.sub_group)
+                _hash_interactable_structure(cmd)
             ] = cmd.metadata
 
     @staticmethod
