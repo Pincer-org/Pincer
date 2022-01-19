@@ -3,17 +3,15 @@
 
 from __future__ import annotations
 from asyncio import ensure_future
-from contextlib import suppress
 
 from importlib import reload, import_module
 from inspect import isclass
 from types import ModuleType
 from typing import TYPE_CHECKING, List
 
-from . import client as _client
 from .commands.chat_command_handler import ChatCommandHandler
 from .commands.interactable import Interactable
-from .exceptions import CogAlreadyExists, CogNotFound
+from .exceptions import CogAlreadyExists
 
 if TYPE_CHECKING:
     from typing import Type
@@ -111,8 +109,8 @@ class CogManager:
 
         for cog in self.cogs:
             for mod in modules:
-                with suppress(AttributeError):
-                    cog = getattr(mod, type(cog).__name__)
+                cog = getattr(mod, type(cog).__name__, None)
+                if cog:
                     self.load_cog(cog)
 
         ChatCommandHandler.has_been_initialized = False
