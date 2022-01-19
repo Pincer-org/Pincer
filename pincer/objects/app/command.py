@@ -212,7 +212,7 @@ class InteractableStructure(Generic[T]):
     """
     call: Coro
 
-    metadata: T = None
+    metadata: Optional[T] = None
     manager: Optional[Any] = None
     extensions: List[Callable[..., Awaitable[bool]]] = field(default_factory=list)
 
