@@ -351,6 +351,10 @@ class Client(Interactable, CogManager):
         ----------
         name : :class:`str`
             name of the event
+
+        Returns
+        -------
+        List[Optional[:class:`~pincer.objects.app.command.InteractableStructure`[None]]]
         """
         calls = _events.get(name.strip().lower())
 
@@ -375,7 +379,7 @@ class Client(Interactable, CogManager):
 
         Parameters
         ----------
-        calls: List[:class:`~pincer.client.PartialEvent`]
+        calls: List[:class:`~pincer.objects.app.command.InteractableStructure`]
             The call (method) to which the event is registered.
 
         \\*args:
