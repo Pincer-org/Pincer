@@ -197,10 +197,10 @@ class InteractableStructure(Generic[T]):
     call: :class:`~pincer.utils.types.Coro`
         The coroutine which should be called when the command gets
         executed.
-    manager : Any
-        The manager for this interactable.
-    app: Optional[:class:`~pincer.objects.app.command.AppCommand`]
-        The application command. |default| :data:`None`
+    metadata: T
+        The metadata for this command. |default| :data:`None`
+    manager : Optional[Any]
+        The manager for this interactable. |default| :data:`None`
     extensions: List[Callable[..., Awaitable[bool]]]
         List of extensions for this command. |default| :data:`[]`
     cooldown: :class:`int`
