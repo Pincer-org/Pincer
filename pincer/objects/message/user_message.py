@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
-from enum import Enum, IntEnum
+from enum import Enum, IntEnum, IntFlag
 from typing import TYPE_CHECKING, DefaultDict
 
 from .attachment import Attachment
@@ -113,7 +113,7 @@ class MessageActivityType(IntEnum):
     JOIN_REQUEST = 5
 
 
-class MessageFlags(IntEnum):
+class MessageFlags(IntFlag):
     """Special message properties.
 
     Attributes
