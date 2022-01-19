@@ -5,12 +5,12 @@ from functools import partial
 from inspect import iscoroutinefunction
 from typing import List
 
-from pincer.objects.app.command import InteractableStructure
 
 from .button import Button, ButtonStyle
 from .select_menu import SelectMenu, SelectOption
 from .component_handler import ComponentHandler
 from ...exceptions import CommandIsNotCoroutine
+from ...objects.app.command import InteractableStructure
 from ...objects.message.emoji import Emoji
 from ...utils.conversion import remove_none
 
