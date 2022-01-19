@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from collections import ChainMap
+from typing import List
 
 from .. import client as _client
 from .chat_command_handler import ChatCommandHandler, _hash_interactable_structure
@@ -35,11 +36,15 @@ class Interactable:
         for value in vars(type(self)).values():
             if isinstance(value, InteractableStructure):
                 if isinstance(value.metadata, AppCommand):
-                    INTERACTION_REGISTERS.pop(
-                        _hash_interactable_structure(value),
-                        None
-                    )
+                    for key, _value in INTERACTION_REGISTERS.items():
+                        if value is _value:
+                            INTERACTION_REGISTERS.pop(key)
 
-                _client._events.pop(
-                    value.call.__name__.lower(), None
-                )
+                key = value.call.__name__.lower()
+
+                event_or_list = _client._events.get(key)
+                if isinstance(event_or_list, List):
+                    if value in event_or_list:
+                        event_or_list.remove(value)
+                else:
+                    _client._events.pop(key, None)
