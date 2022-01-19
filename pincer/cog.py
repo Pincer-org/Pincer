@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 from asyncio import ensure_future
+from contextlib import suppress
 
 from importlib import reload, import_module
 from inspect import isclass
@@ -106,7 +107,13 @@ class CogManager:
                 modules.append(mod)
 
         for mod in modules:
-            self.load_module(reload(mod))
+            reload(mod)
+
+        for cog in self.cogs:
+            for mod in modules:
+                with suppress(AttributeError):
+                    cog = getattr(mod, type(cog).__name__)
+                    self.load_cog(cog)
 
         ChatCommandHandler.has_been_initialized = False
         ensure_future(ChatCommandHandler(self).initialize())
