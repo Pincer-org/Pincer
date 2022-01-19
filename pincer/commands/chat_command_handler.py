@@ -52,9 +52,9 @@ class ChatCommandHandler(metaclass=Singleton):
         The client object
     managers: Dict[:class:`str`, :class:`~typing.Any`]
         Dictionary of managers
-    register: Dict[:class:`str`, :class:`~pincer.objects.app.command.InteractableStructure`]
+    register: Dict[:class:`str`, :class:`~pincer.objects.app.command.InteractableStructure`[:class:`~pincer.objects.app.command.AppCommand`]]
         Dictionary of ``InteractableStructure``
-    built_register: Dict[:class:`str`, :class:`~pincer.objects.app.command.InteractableStructure`]
+    built_register: Dict[:class:`str`, :class:`~pincer.objects.app.command.AppCommand`]]
         Dictionary of ``InteractableStructure`` where the commands are converted to
         the format that Discord expects for sub commands and sub command groups.
     """  # noqa: E501
