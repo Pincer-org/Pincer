@@ -379,7 +379,7 @@ class ChatCommandHandler(metaclass=Singleton):
 
 def _hash_interactable_structure(interactable: InteractableStructure[AppCommand]):
     return _hash_app_command(
-        interactable.app,
+        interactable.metadata,
         interactable.group,
         interactable.sub_group
     )

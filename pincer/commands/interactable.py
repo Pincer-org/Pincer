@@ -7,9 +7,10 @@ from collections import ChainMap
 from types import MethodType
 from typing import Any
 
+from .. import client as _client
 from .chat_command_handler import ChatCommandHandler, _hash_interactable_structure
 from .components.component_handler import ComponentHandler
-from ..objects.app.command import InteractableStructure
+from ..objects.app.command import AppCommand, InteractableStructure
 
 
 INTERACTION_REGISTERS = ChainMap(ChatCommandHandler.register, ComponentHandler.register)
@@ -30,8 +31,17 @@ class Interactable:
                 value.manager = self
 
     def __del__(self):
+        self.unassign()
+
+    def unassign(self):
         for value in vars(type(self)).values():
             if isinstance(value, InteractableStructure):
-                INTERACTION_REGISTERS.pop(
-                    _hash_interactable_structure(InteractableStructure)
+                if isinstance(value.metadata, AppCommand):
+                    INTERACTION_REGISTERS.pop(
+                        _hash_interactable_structure(value),
+                        None
+                    )
+
+                _client._events.pop(
+                    value.call.__name__.lower(), None
                 )

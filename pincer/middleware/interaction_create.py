@@ -226,8 +226,8 @@ async def interaction_handler(
             try:
                 await interaction_response_handler(
                     self,
-                    coro.func,
-                    manager,
+                    coro.call,
+                    coro.manager,
                     context,
                     interaction,
                     [e, *args],

@@ -87,44 +87,27 @@ class CogManager:
         module : :class:`~types.ModuleType`
             The module to load.
         """
-        for item in module.__dict__.values():
+        for item in vars(module).values():
             if isinstance(item, ModuleType):
                 self.load_module(item)
-            elif isclass(item) and issubclass(item, Cog):
+            elif item is not Cog and isclass(item) and issubclass(item, Cog):
                 self.load_cog(item)
 
-    def reload_cog(self, cog: Type[Cog]):
-        """Reloads a cog.
+    def reload_cogs(self):
+        """Reloads all of the loaded cogs"""
 
-        Parameters
-        ----------
-        cog : Type[:class:`~pincer.cog.Cog`]
-            The cog to load.
-        """
+        modules = []
 
-        # Remove application commands registered to this cog
-        for item in self.cogs:
-            if item.name() == cog.name():
-                old_cog = item
-                break
-        else:
-            raise CogNotFound(f"Cog `{cog}` could not be found!")
+        for cog in self.cogs:
+            cog.unassign()
 
-        ChatCommandHandler.register = {
-            key: command for key, command in ChatCommandHandler.register.items()
-            if command and command.manager != old_cog
-        }
+            mod = import_module(type(cog).__module__)
+            if mod not in modules:
+                modules.append(mod)
 
-        ChatCommandHandler.managers.remove(old_cog)
+        for mod in modules:
+            self.load_module(reload(mod))
 
-        # Remove events registered to this cog
-        for event in vars(type(old_cog)).values():
-            if isinstance(event, _client.PartialEvent):
-                _client._events.pop(event.func.__name__)
-
-        mod = reload(import_module(cog.__module__))
-        new_cog = getattr(mod, cog.__name__)
-        self.load_cog(new_cog)
         ChatCommandHandler.has_been_initialized = False
         ensure_future(ChatCommandHandler(self).initialize())
 

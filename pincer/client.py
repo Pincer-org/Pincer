@@ -27,8 +27,10 @@ from typing import (
     TYPE_CHECKING,
 )
 
+
 from .cog import CogManager
 from .commands.interactable import Interactable
+from .objects.app.command import InteractableStructure
 
 from . import __package__
 from .commands import ChatCommandHandler
@@ -71,7 +73,7 @@ _log = logging.getLogger(__package__)
 
 MiddlewareType = Optional[Union[Coro, Tuple[str, List[Any], Dict[str, Any]]]]
 
-_event = Union[str, Coro]
+_event = Union[str, InteractableStructure[None]]
 _events: Dict[str, Optional[Union[List[_event], _event]]] = defaultdict(list)
 
 
@@ -154,29 +156,6 @@ def event_middleware(call: str, *, override: bool = False):
 
 for event, middleware_ in middleware.items():
     event_middleware(event)(middleware_)
-
-
-class PartialEvent:
-    """
-    Represents a function that will registered to an event when the Client is
-    constructed.
-    """
-
-    def __init__(self, func) -> None:
-        self.func = func
-
-    def register(self, manager: Any):
-        name = self.func.__name__
-
-        if name == "on_command_error" and _events.get(name):
-            raise InvalidEventName(
-                f"The `{name}` event can only exist once. This is because "
-                "it gets treated as a command and can have a response."
-            )
-
-        self.manager = manager
-        _events[self.func.__name__].append(self)
-        return self.func
 
 
 class Client(Interactable, CogManager):
@@ -275,7 +254,7 @@ class Client(Interactable, CogManager):
         Get a list of chat command calls which have been registered in
         the :class:`~pincer.commands.ChatCommandHandler`\\.
         """
-        return [cmd.app.name for cmd in ChatCommandHandler.register.values()]
+        return [cmd.metadata.name for cmd in ChatCommandHandler.register.values()]
 
     @property
     def guild_ids(self) -> List[Snowflake]:
@@ -351,10 +330,21 @@ class Client(Interactable, CogManager):
                 f"The event named `{name}` must start with `on_`"
             )
 
-        return PartialEvent(func=coroutine)
+        if name == "on_command_error" and _events.get(name):
+            raise InvalidEventName(
+                f"The `{name}` event can only exist once. This is because "
+                "it gets treated as a command and can have a response."
+            )
+
+        event = InteractableStructure(
+            call=coroutine
+        )
+
+        _events[name].append(event)
+        return event
 
     @staticmethod
-    def get_event_coro(name: str) -> List[Optional[PartialEvent]]:
+    def get_event_coro(name: str) -> List[Optional[InteractableStructure[None]]]:
         """get the coroutine for an event
 
         Parameters
@@ -370,13 +360,13 @@ class Client(Interactable, CogManager):
             else [
                 call
                 for call in calls
-                if isinstance(call, PartialEvent)
+                if isinstance(call, InteractableStructure)
             ]
         )
 
     @staticmethod
     def execute_event(
-        events: List[PartialEvent],
+        events: List[InteractableStructure],
         gateway: Gateway,
         *args,
         **kwargs
@@ -397,16 +387,16 @@ class Client(Interactable, CogManager):
 
         for event in events:
             call_args = args
-            if should_pass_cls(event.func):
+            if should_pass_cls(event.call):
                 call_args = (
                     event.manager,
                     *remove_none(args),
                 )
 
-            if should_pass_gateway(event.func):
+            if should_pass_gateway(event.call):
                 call_args = (call_args[0], gateway, *call_args[1:])
 
-            ensure_future(event.func(*call_args, **kwargs))
+            ensure_future(event.call(*call_args, **kwargs))
 
     def run(self):
         """Start the bot."""
