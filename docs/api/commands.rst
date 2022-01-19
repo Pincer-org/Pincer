@@ -75,6 +75,3 @@ Interactable Objects
 
 .. attributetable:: Interactable
 .. autoclass:: Interactable()
-
-.. attributetable:: PartialInteractable
-.. autoclass:: PartialInteractable()
