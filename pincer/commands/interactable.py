@@ -33,6 +33,10 @@ class Interactable:
         self.unassign()
 
     def unassign(self):
+        """
+        Removes this objects loaded commands from ChatCommandHandler and
+        ComponentHandler and removes loaded events from the client.
+        """
         for value in vars(type(self)).values():
             if isinstance(value, InteractableStructure):
                 if isinstance(value.metadata, AppCommand):
