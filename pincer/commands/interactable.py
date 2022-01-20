@@ -47,7 +47,7 @@ class Interactable:
                 key = value.call.__name__.lower()
 
                 event_or_list = _client._events.get(key)
-                if isinstance(event_or_list, List):
+                if isinstance(event_or_list, list):
                     if value in event_or_list:
                         event_or_list.remove(value)
                 else:
