@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 from collections import ChainMap
-from typing import List
 
 from .. import client as _client
 from .chat_command_handler import ChatCommandHandler
