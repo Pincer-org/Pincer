@@ -10,6 +10,7 @@ from typing import AsyncGenerator, overload, TYPE_CHECKING
 from aiohttp import FormData
 
 from .channel import Channel, Thread
+from ..message.emoji import Emoji
 from ..message.file import File
 from ...exceptions import UnavailableGuildError
 from ...utils.api_object import APIObject
@@ -37,7 +38,6 @@ if TYPE_CHECKING:
     from ..user.integration import Integration
     from ..voice.region import VoiceRegion
     from ..events.presence import PresenceUpdateEvent
-    from ..message.emoji import Emoji
     from ..message.sticker import Sticker
     from ..user.voice_state import VoiceState
     from ...client import Client
