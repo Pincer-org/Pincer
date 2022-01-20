@@ -67,15 +67,10 @@ class Intents(IntFlag):
     DIRECT_MESSAGE_REACTIONS = 1 << 13
     DIRECT_MESSAGE_TYPING = 1 << 14
 
-    @staticmethod
-    def all() -> Intents:
+    @classmethod
+    def all(cls) -> Intents:
         """
         :class:`~pincer.objects.app.intents.Intents`:
         Method of all intents
         """
-        res = 0
-
-        for intent in list(map(lambda itm: itm.value, Intents)):
-            res |= intent
-
-        return Intents(res)
+        return cls(sum(cls))
