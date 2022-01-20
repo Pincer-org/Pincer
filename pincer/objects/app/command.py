@@ -224,4 +224,4 @@ class InteractableStructure(Generic[T]):
     sub_group: APINullable[Subgroup] = MISSING
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
-        self.func(*args, **kwargs)
+        self.call(*args, **kwargs)
