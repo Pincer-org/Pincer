@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from copy import copy
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Callable, Optional
+from typing import TYPE_CHECKING, Optional
 
 from ._component import _Component
 from ...utils.api_object import APIObject
