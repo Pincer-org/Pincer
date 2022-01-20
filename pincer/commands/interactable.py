@@ -7,7 +7,7 @@ from collections import ChainMap
 from typing import List
 
 from .. import client as _client
-from .chat_command_handler import ChatCommandHandler, _hash_interactable_structure
+from .chat_command_handler import ChatCommandHandler
 from .components.component_handler import ComponentHandler
 from ..objects.app.command import AppCommand, InteractableStructure
 
