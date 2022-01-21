@@ -1977,6 +1977,11 @@ class Guild(APIObject):
             The description of the scheduled event.
         reason : Optional[:class:`str`]
             The reason for creating the scheduled event.
+            
+        Raises
+        ------
+        ValueError:
+            If an event is created in the past or if an event ends before it starts
 
         Returns
         -------
