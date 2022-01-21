@@ -12,6 +12,7 @@ from aiohttp import FormData
 
 from .channel import Channel, Thread
 from .scheduled_events import ScheduledEvent, GuildScheduledEventUser
+from .message.emoji import Emoji
 from ..message.file import File
 from ...exceptions import UnavailableGuildError
 from ...utils import remove_none
@@ -40,7 +41,6 @@ if TYPE_CHECKING:
     from ..user.integration import Integration
     from ..voice.region import VoiceRegion
     from ..events.presence import PresenceUpdateEvent
-    from ..message.emoji import Emoji
     from ..message.sticker import Sticker
     from ..user.voice_state import VoiceState
     from ...client import Client

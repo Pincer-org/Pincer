@@ -4,11 +4,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import IntEnum
+from enum import IntFlag
 from typing import Tuple, Optional
 
 
-class PermissionEnum(IntEnum):
+class PermissionEnum(IntFlag):
     """
     Represents the permissions for a guild.
     """

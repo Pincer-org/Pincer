@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from enum import IntEnum
+from enum import IntFlag
 
 
-class Intents(IntEnum):
+class Intents(IntFlag):
     """Discord client intents.
 
     These give your client more permissions.
@@ -67,21 +67,10 @@ class Intents(IntEnum):
     DIRECT_MESSAGE_REACTIONS = 1 << 13
     DIRECT_MESSAGE_TYPING = 1 << 14
 
-    @staticmethod
-    def all() -> int:
+    @classmethod
+    def all(cls) -> Intents:
         """
         :class:`~pincer.objects.app.intents.Intents`:
         Method of all intents
         """
-        res = 0
-
-        for intent in list(map(lambda itm: itm.value, Intents)):
-            res |= intent
-
-        return res
-
-    def __repr__(self):
-        return f"Intents({self.name})"
-
-    def __str__(self) -> str:
-        return self.name.lower().replace("_", " ")
+        return cls(sum(cls))
