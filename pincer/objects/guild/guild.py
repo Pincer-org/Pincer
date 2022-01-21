@@ -1921,7 +1921,7 @@ class Guild(APIObject):
 
     async def get_scheduled_events(
         self, with_user_count: bool = False
-    ) -> AsyncGenerator[ScheduledEvent, None]:
+    ) -> AsyncIterator[ScheduledEvent]:
         """
         Returns an async generator of the guild scheduled events.
 
