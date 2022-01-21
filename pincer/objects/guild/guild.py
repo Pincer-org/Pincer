@@ -2140,7 +2140,7 @@ class Guild(APIObject):
         with_member: bool = False,
         before: Optional[int] = None,
         after: Optional[int] = None,
-    ) -> AsyncGenerator[GuildScheduledEventUser, None]:
+    ) -> AsyncIterator[GuildScheduledEventUser]:
         """
         Get the users of a scheduled event.
 
