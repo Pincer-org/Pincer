@@ -12,7 +12,7 @@ from aiohttp import FormData
 
 from .channel import Channel, Thread
 from .scheduled_events import ScheduledEvent, GuildScheduledEventUser
-from .message.emoji import Emoji
+from ..message.emoji import Emoji
 from ..message.file import File
 from ...exceptions import UnavailableGuildError
 from ...utils import remove_none
@@ -31,7 +31,6 @@ if TYPE_CHECKING:
     from .invite import Invite
     from .overwrite import Overwrite
     from .role import Role
-    from .scheduled_events import ScheduledEvent, GuildScheduledEventUser
     from .stage import StageInstance
     from .template import GuildTemplate
     from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
