@@ -6,15 +6,12 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import IntEnum
-from typing import AsyncGenerator, overload, TYPE_CHECKING
+from typing import overload, TYPE_CHECKING
 
 from aiohttp import FormData
 
-from . import GuildScheduledEventUser, ScheduledEvent
 from .channel import Channel, Thread
 from .scheduled_events import ScheduledEvent, GuildScheduledEventUser
-from .. import GuildMember, Role, Ban, VoiceRegion, Invite, Integration, Emoji, \
-    GuildTemplate, Sticker, Webhook
 from ..message.emoji import Emoji
 from ..message.file import File
 from ...exceptions import UnavailableGuildError
@@ -26,7 +23,6 @@ from ...utils.types import MISSING
 if TYPE_CHECKING:
     from typing import Any, Dict, List, Optional, Tuple, Union, Generator
 
-    from collections.abc import AsyncIterator
     from .audit_log import AuditLog
     from .ban import Ban
     from .channel import ChannelType

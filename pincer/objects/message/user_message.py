@@ -14,7 +14,6 @@ from .embed import Embed
 from .reaction import Reaction
 from .reference import MessageReference
 from .sticker import StickerItem
-from .. import User
 from ..app.application import Application
 from ..app.interaction_base import MessageInteraction
 from ..guild.member import GuildMember
