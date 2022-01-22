@@ -11,6 +11,7 @@ from ...utils.api_object import APIObject, MISSING
 
 if TYPE_CHECKING:
     from ..guild.stage import PrivacyLevel
+    from ..guild.member import GuildMember
     from ..user.user import User
     from ...utils.snowflake import Snowflake
     from ...utils.timestamp import Timestamp
@@ -77,22 +78,22 @@ class ScheduledEvent(APIObject):
         The status of the scheduled event.
     entity_type: :class:`~pincer.guild.schedule_events.GuildScheduledEventEntityType`
         The type of the scheduled event
-    channel_id: :class:`int`
+    channel_id: APINullable[:class:`int`]
         The channel id in which the scheduled event will be hosted,
         or null if scheduled entity type is EXTERNAL
-    creator_id: :class:`int`
+    creator_id: APINullable[:class:`int`]
         The user id of the creator of the scheduled event
     scheduled_end_time: str
         The time the scheduled event will end, required if entity_type is EXTERNAL
-    description: :class:`str`
+    description: APINullable[:class:`str`]
         The description of the scheduled event (0-1000 characters)
-    entity_id: :class:`int`
+    entity_id: APINullable[:class:`int`]
         The id of an entity associated with a guild scheduled event
-    entity_metadata: :class:`str`
+    entity_metadata: APINullable[:class:`str`]
         Additional metadata for the guild scheduled event
-    creator: :class:`~pincer.objects.user.user.User`
+    creator: APINullable[:class:`~pincer.objects.user.user.User`]
         The user who created the scheduled event
-    user_count: :class:`int`
+    user_count: APINullable[:class:`int`]
         The number of users who have joined the scheduled event
     """
     id: Snowflake
@@ -112,3 +113,22 @@ class ScheduledEvent(APIObject):
     entity_metadata: APINullable[str] = MISSING
     creator: APINullable[User] = MISSING
     user_count: APINullable[int] = MISSING
+
+
+@dataclass
+class GuildScheduledEventUser(APIObject):
+    """
+    Represents a user who has joined a scheduled event.
+
+    Attributes
+    ----------
+    guild_scheduled_event_id: :class:`int`
+        the scheduled event id which the user subscribed to
+    user : :class:`~pincer.objects.user.user.User`
+        user which subscribed to an event
+    member : APINullable[:class:`~pincer.objects.guild.member.GuildMember`]
+        	guild member data for this user for the guild which this event belongs to, if any
+    """
+    guild_scheduled_event_id: Snowflake
+    user: User
+    member: APINullable[GuildMember] = MISSING

@@ -23,7 +23,7 @@ from .member import GuildMember, PartialGuildMember, BaseMember
 from .overwrite import Overwrite
 from .permissions import Permissions
 from .role import RoleTags, Role
-from .scheduled_events import GuildScheduledEventEntityType, EventStatus, ScheduledEvent
+from .scheduled_events import GuildScheduledEventEntityType, GuildScheduledEventUser, EventStatus, ScheduledEvent
 from .stage import PrivacyLevel, StageInstance
 from .template import GuildTemplate
 from .thread import ThreadMetadata, ThreadMember
@@ -33,16 +33,17 @@ from .widget import GuildWidget
 
 
 __all__ = (
-    "AuditEntryInfo", "AuditLog", "AuditLogChange", "AuditLogEntry",
-    "AuditLogEvent", "Ban", "BaseMember", "CategoryChannel", "Channel",
-    "ChannelMention", "ChannelType", "DefaultMessageNotificationLevel",
-    "EventStatus", "ExplicitContentFilterLevel", "FollowedChannel", "Guild",
-    "GuildFeature", "GuildMember", "GuildNSFWLevel",
-    "GuildScheduledEventEntityType", "GuildTemplate", "GuildWidget", "Invite",
-    "InviteStageInstance", "InviteTargetType", "MFALevel", "NewsChannel",
-    "Overwrite", "PartialGuildMember", "Permissions", "PremiumTier",
-    "PrivacyLevel", "Role", "RoleTags", "ScheduledEvent", "StageInstance",
-    "SystemChannelFlags", "TextChannel", "ThreadMember", "ThreadMetadata",
-    "UnavailableGuild", "VerificationLevel", "VoiceChannel", "Webhook",
-    "WebhookType", "WelcomeScreen", "WelcomeScreenChannel"
+    "", "AuditEntryInfo", "AuditLog", "AuditLogChange",
+    "AuditLogEntry", "AuditLogEvent", "Ban", "BaseMember", "CategoryChannel",
+    "Channel", "ChannelMention", "ChannelType",
+    "DefaultMessageNotificationLevel", "EventStatus",
+    "ExplicitContentFilterLevel", "FollowedChannel", "Guild", "GuildFeature",
+    "GuildMember", "GuildNSFWLevel", "GuildScheduledEventEntityType",
+    "GuildTemplate", "GuildWidget", "Invite", "InviteStageInstance",
+    "InviteTargetType", "MFALevel", "NewsChannel", "Overwrite",
+    "PartialGuildMember", "Permissions", "PremiumTier", "PrivacyLevel", "Role",
+    "RoleTags", "ScheduledEvent", "StageInstance", "SystemChannelFlags",
+    "TextChannel", "ThreadMember", "ThreadMetadata", "UnavailableGuild",
+    "VerificationLevel", "VoiceChannel", "Webhook", "WebhookType",
+    "WelcomeScreen", "WelcomeScreenChannel"
 )

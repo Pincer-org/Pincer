@@ -4,15 +4,18 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import datetime
 from enum import IntEnum
 from typing import AsyncGenerator, overload, TYPE_CHECKING
 
 from aiohttp import FormData
 
 from .channel import Channel, Thread
+from .scheduled_events import ScheduledEvent, GuildScheduledEventUser
 from ..message.emoji import Emoji
 from ..message.file import File
 from ...exceptions import UnavailableGuildError
+from ...utils import remove_none
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
 
@@ -28,7 +31,6 @@ if TYPE_CHECKING:
     from .invite import Invite
     from .overwrite import Overwrite
     from .role import Role
-    from .scheduled_events import ScheduledEvent
     from .stage import StageInstance
     from .template import GuildTemplate
     from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
@@ -1915,6 +1917,269 @@ class Guild(APIObject):
         data = await self._http.get(f"guilds/{self.id}/webhooks")
         for webhook_data in data:
             yield Webhook.from_dict(webhook_data)
+
+    async def get_scheduled_events(
+        self, with_user_count: bool = False
+    ) -> AsyncIterator[ScheduledEvent]:
+        """
+        Returns an async generator of the guild scheduled events.
+
+        Parameters
+        ----------
+        with_user_count : :class:`bool`
+            Whether to include the user count in the scheduled event.
+
+        Yields
+        ------
+        :class:`~pincer.objects.guild.scheduled_event.ScheduledEvent`
+            The scheduled event object.
+        """
+        data = await self._http.get(
+            f"guilds/{self.id}/scheduled-events",
+            param={"with_user_count": with_user_count},
+        )
+        for event_data in data:
+            yield ScheduledEvent.from_dict(event_data)
+
+    async def create_scheduled_event(
+        self,
+        name: str,
+        privacy_level: int,
+        entity_type: int,
+        scheduled_start_time: datetime,
+        scheduled_end_time: Optional[datetime] = None,
+        entity_metadata: Optional[str] = None,
+        channel_id: Optional[int] = None,
+        description: Optional[str] = None,
+        reason: Optional[str] = None,
+    ) -> ScheduledEvent:
+        """
+        Create a new scheduled event for the guild.
+
+        Parameters
+        ----------
+        name : :class:`str`
+            The name of the scheduled event.
+        privacy_level : :class:`int`
+            The privacy level of the scheduled event.
+        entity_type : :class:`int`
+            The type of entity to be scheduled.
+        scheduled_start_time : :class:`datetime`
+            The scheduled start time of the event.
+        scheduled_end_time : Optional[:class:`datetime`]
+            The scheduled end time of the event.
+        entity_metadata : Optional[:class:`str`]
+            The metadata of the entity to be scheduled.
+        channel_id : Optional[:class:`int`]
+            The channel id of the channel to be scheduled.
+        description : Optional[:class:`str`]
+            The description of the scheduled event.
+        reason : Optional[:class:`str`]
+            The reason for creating the scheduled event.
+            
+        Raises
+        ------
+        ValueError:
+            If an event is created in the past or if an event ends before it starts
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.scheduled_event.ScheduledEvent`
+            The newly created scheduled event.
+        """
+        if scheduled_start_time < datetime.now():
+            raise ValueError("An event cannot be created in the past")
+
+        if (
+            scheduled_end_time
+            and scheduled_end_time < scheduled_start_time
+        ):
+            raise ValueError("An event cannot start before it ends")
+
+        data = await self._http.post(
+            f"guilds/{self.id}/scheduled-events",
+            data={
+                "name": name,
+                "privacy_level": privacy_level,
+                "entity_type": entity_type,
+                "scheduled_start_time": scheduled_start_time.isoformat(),
+                "scheduled_end_time": scheduled_end_time.isoformat()
+                if scheduled_end_time is not None
+                else None,
+                "entity_metadata": entity_metadata,
+                "channel_id": channel_id,
+                "description": description,
+            },
+            headers={"X-Audit-Log-Reason": reason},
+        )
+        return ScheduledEvent.from_dict(data)
+
+    async def get_scheduled_event(
+        self, _id: int, with_user_count: bool = False
+    ) -> ScheduledEvent:
+        """
+        Get a scheduled event by id.
+
+        Parameters
+        ----------
+        _id : :class:`int`
+            The id of the scheduled event.
+        with_user_count : :class:`bool`
+            Whether to include the user count in the scheduled event.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.scheduled_event.ScheduledEvent`
+            The scheduled event object.
+        """
+        data = await self._http.get(
+            f"guilds/{self.id}/scheduled-events/{_id}",
+            params={"with_user_count": with_user_count},
+        )
+        return ScheduledEvent.from_dict(data)
+
+    async def modify_scheduled_event(
+        self,
+        _id: int,
+        name: Optional[str] = None,
+        entity_type: Optional[int] = None,
+        privacy_level: Optional[int] = None,
+        scheduled_start_time: Optional[datetime] = None,
+        scheduled_end_time: Optional[datetime] = None,
+        entity_metadata: Optional[str] = None,
+        channel_id: Optional[int] = None,
+        description: Optional[str] = None,
+        status: Optional[int] = None,
+        reason: Optional[str] = None,
+    ) -> ScheduledEvent:
+        """
+        Modify a scheduled event.
+
+        Parameters
+        ----------
+        _id : :class:`int`
+            The id of the scheduled event.
+        name : Optional[:class:`str`]
+            The name of the scheduled event.
+        entity_type : Optional[:class:`int`]
+            The type of entity to be scheduled.
+        privacy_level : Optional[:class:`int`]
+            The privacy level of the scheduled event.
+        scheduled_start_time : Optional[:class:`datetime`]
+            The scheduled start time of the event.
+        scheduled_end_time : Optional[:class:`datetime`]
+            The scheduled end time of the event.
+        entity_metadata : Optional[:class:`str`]
+            The metadata of the entity to be scheduled.
+        channel_id : Optional[:class:`int`]
+            The channel id of the channel to be scheduled.
+        description : Optional[:class:`str`]
+            The description of the scheduled event.
+        status : Optional[:class:`int`]
+            The status of the scheduled event.
+        reason : Optional[:class:`str`]
+            The reason for modifying the scheduled event.
+
+        Raises
+        ------
+        :class:`ValueError`
+            If the scheduled event is in the past,
+            or if the scheduled end time is before the scheduled start time.
+
+        Returns
+        -------
+        :class:`~pincer.objects.guild.scheduled_event.ScheduledEvent`
+            The scheduled event object.
+        """
+        if scheduled_start_time:
+            if scheduled_start_time < datetime.now():
+                raise ValueError("An event cannot be created in the past")
+
+            if (
+                scheduled_end_time
+                and scheduled_end_time < scheduled_start_time
+            ):
+                raise ValueError("An event cannot start before it ends")
+
+        kwargs: Dict[str, str] = remove_none(
+            {
+                "name": name,
+                "privacy_level": privacy_level,
+                "entity_type": entity_type,
+                "scheduled_start_time": scheduled_start_time.isoformat()
+                if scheduled_start_time is not None
+                else None,
+                "scheduled_end_time": scheduled_end_time.isoformat()
+                if scheduled_end_time is not None
+                else None,
+                "entity_metadata": entity_metadata,
+                "channel_id": channel_id,
+                "description": description,
+                "status": status,
+            }
+        )
+
+        data = await self._http.patch(
+            f"guilds/{self.id}/scheduled-events/{_id}",
+            data=kwargs,
+            headers={"X-Audit-Log-Reason": reason},
+        )
+        return ScheduledEvent.from_dict(data)
+
+    async def delete_scheduled_event(self, _id: int):
+        """
+        Delete a scheduled event.
+
+        Parameters
+        ----------
+        _id : :class:`int`
+            The id of the scheduled event.
+        """
+        await self._http.delete(f"guilds/{self.id}/scheduled-events/{_id}")
+
+    async def get_guild_scheduled_event_users(
+        self,
+        _id: int,
+        limit: int = 100,
+        with_member: bool = False,
+        before: Optional[int] = None,
+        after: Optional[int] = None,
+    ) -> AsyncIterator[GuildScheduledEventUser]:
+        """
+        Get the users of a scheduled event.
+
+        Parameters
+        ----------
+        _id : :class:`int`
+            The id of the scheduled event.
+        limit : :class:`int`
+            The number of users to retrieve.
+        with_member : :class:`bool`
+            Whether to include the member object in the scheduled event user.
+        before : Optional[:class:`int`]
+            consider only users before given user id
+        after : Optional[:class:`int`]
+            consider only users after given user id
+
+        Yields
+        ------
+        :class:`~pincer.objects.guild.scheduled_event.GuildScheduledEventUser`
+            The scheduled event user object.
+        """
+        params = remove_none({
+            "limit": limit,
+            "with_member": with_member,
+            "before": before,
+            "after": after,
+        })
+
+        data = await self._http.get(
+            f"guilds/{self.id}/scheduled-events/{_id}/users",
+            params=params,
+        )
+
+        for user_data in data:
+            yield GuildScheduledEventUser.from_dict(user_data)
 
     @classmethod
     def from_dict(cls, data) -> Guild:
