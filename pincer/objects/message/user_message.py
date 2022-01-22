@@ -14,12 +14,14 @@ from .embed import Embed
 from .reaction import Reaction
 from .reference import MessageReference
 from .sticker import StickerItem
+from .. import User
 from ..app.application import Application
 from ..app.interaction_base import MessageInteraction
 from ..guild.member import GuildMember
 from ..guild.role import Role
 from ..user.user import User
 from ..._config import GatewayConfig
+from ...utils.api_data import APIDataGen
 from ...utils.api_object import APIObject, GuildProperty, ChannelProperty
 from ...utils.snowflake import Snowflake
 from ...utils.types import MISSING, JSONSerializable
@@ -455,9 +457,9 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
             f"/{user_id}"
         )
 
-    async def get_reactions(
+    def get_reactions(
         self, emoji: str, after: Snowflake = 0, limit=25
-    ) -> Generator[User, None, None]:
+    ) -> APIDataGen[User]:
         # TODO: HTTP Client will need to refactored to allow parameters using aiohttp's system.
         """|coro|
 
@@ -474,12 +476,13 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
             Max number of users to return (1-100).
             |default| ``25``
         """
-
-        for user in await self._http.get(
-            f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}",
-            params={"after": after, "limit": limit},
-        ):
-            yield User.from_dict(user)
+        return APIDataGen(
+            User,
+            self._http.get(
+                f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}",
+                params={"after": after, "limit": limit},
+            )
+        )
 
     async def remove_all_reactions(self):
         """|coro|
