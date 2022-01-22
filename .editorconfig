@@ -7,13 +7,13 @@ indent_size = 4
 indent_style = space
 insert_final_newline = false
 max_line_length = 88
+ij_visual_guides = 88
 tab_width = 4
-ij_continuation_indent_size = 8
+ij_continuation_indent_size = 4
 ij_formatter_off_tag = @formatter:off
 ij_formatter_on_tag = @formatter:on
 ij_formatter_tags_enabled = false
 ij_smart_tabs = false
-ij_visual_guides = 72
 ij_wrap_on_typing = false
 
 [*.css]
@@ -51,7 +51,6 @@ ij_markdown_min_lines_around_header = 1
 ij_markdown_min_lines_between_paragraphs = 1
 
 [{*.py,*.pyw}]
-ij_visual_guides = none
 ij_python_align_collections_and_comprehensions = true
 ij_python_align_multiline_imports = true
 ij_python_align_multiline_parameters = true
