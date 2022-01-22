@@ -1310,7 +1310,7 @@ class Guild(APIObject):
         data = await self._http.get(f"invite/{code}")
         return Invite.from_dict(data)
 
-    async def get_integrations(self) -> APIDataGen[Integration]:
+    def get_integrations(self) -> APIDataGen[Integration]:
         """|coro|
         Returns an async generator of integrations for the guild.
         Requires the ``MANAGE_GUILD`` permission.

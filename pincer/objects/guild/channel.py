@@ -537,7 +537,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             self._http.get(f"channels/{self.id}/webhooks")
         )
 
-    async def get_invites(self) -> APIDataGen[Invite]:
+    def get_invites(self) -> APIDataGen[Invite]:
         """|coro|
         Fetches all the invite objects for the channel. Only usable for
         guild channels. Requires the ``MANAGE_CHANNELS`` permission.
@@ -1097,7 +1097,7 @@ class Thread(Channel):
             await self._http.get(f"channels/{self.id}/thread-members/{user.id}")
         )
 
-    async def list_members(self) -> APIDataGen[ThreadMember]:
+    def list_members(self) -> APIDataGen[ThreadMember]:
         """|coro|
         Fetches all the thread members for the thread. Returns an iterator of
         ThreadMember objects.
