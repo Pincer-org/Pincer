@@ -305,7 +305,6 @@ class ChatCommandHandler(metaclass=Singleton):
         """
         try:
             self._api_commands = await self.get_commands()
-
         except ForbiddenError:
             logging.error("Cannot retrieve slash commands, skipping...")
             return
