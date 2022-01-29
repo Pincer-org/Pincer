@@ -336,9 +336,7 @@ class Client(Interactable, CogManager):
                 "it gets treated as a command and can have a response."
             )
 
-        event = InteractableStructure(
-            call=coroutine
-        )
+        event = InteractableStructure(call=coroutine)
 
         _events[name].append(event)
         return event
