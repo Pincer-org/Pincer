@@ -6,18 +6,18 @@ from __future__ import annotations
 from asyncio import sleep, ensure_future
 from dataclasses import dataclass
 from enum import IntEnum
-from urllib.parse import urlencode
 from typing import AsyncIterator, overload, TYPE_CHECKING
 
 from .invite import Invite, InviteTargetType
 from ..message.user_message import UserMessage
 from ..._config import GatewayConfig
+from ...utils.api_data import APIDataGen
 from ...utils.api_object import APIObject, GuildProperty
 from ...utils.convert_message import convert_message
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from typing import AsyncGenerator, Dict, List, Optional, Union
+    from typing import Dict, List, Optional, Union
 
     from .member import GuildMember
     from .overwrite import Overwrite
@@ -351,7 +351,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         await self._http.post(f"channels/{self.id}/typing")
 
-    async def get_pinned_messages(self) -> AsyncIterator[UserMessage]:
+    def get_pinned_messages(self) -> APIDataGen[UserMessage]:
         """|coro|
         Fetches all pinned messages in the channel. Returns an iterator of
         pinned messages.
@@ -361,9 +361,10 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         :class:`AsyncIterator[:class:`~pincer.objects.guild.message.UserMessage`]`
             An iterator of pinned messages.
         """
-        data = await self._http.get(f"channels/{self.id}/pins")
-        for message in data:
-            yield UserMessage.from_dict(message)
+        return APIDataGen(
+            UserMessage,
+            self._http.get(f"channels/{self.id}/pins")
+        )
 
     async def pin_message(
         self, message: UserMessage, reason: Optional[str] = None
@@ -520,7 +521,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         self.__post_sent(msg)
         return msg
 
-    async def get_webhooks(self) -> AsyncGenerator[Webhook, None]:
+    def get_webhooks(self) -> APIDataGen[Webhook]:
         """|coro|
         Get all webhooks in the channel.
         Requires the ``MANAGE_WEBHOOKS`` permission.
@@ -529,11 +530,12 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         -------
         AsyncGenerator[:class:`~.pincer.objects.guild.webhook.Webhook`, None]
         """
-        data = await self._http.get(f"channels/{self.id}/webhooks")
-        for webhook_data in data:
-            yield Webhook.from_dict(webhook_data)
+        return APIDataGen(
+            Webhook,
+            self._http.get(f"channels/{self.id}/webhooks")
+        )
 
-    async def get_invites(self) -> AsyncIterator[Invite]:
+    def get_invites(self) -> APIDataGen[Invite]:
         """|coro|
         Fetches all the invite objects for the channel. Only usable for
         guild channels. Requires the ``MANAGE_CHANNELS`` permission.
@@ -543,9 +545,10 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         AsyncIterator[:class:`~pincer.objects.guild.invite.Invite`]
             Invites iterator.
         """
-        data = await self._http.get(f"channels/{self.id}/invites")
-        for invite in data:
-            yield Invite.from_dict(invite)
+        return APIDataGen(
+            Invite,
+            self._http.get(f"channels/{self.id}/invites")
+        )
 
     async def create_invite(
         self,
@@ -1092,7 +1095,7 @@ class Thread(Channel):
             await self._http.get(f"channels/{self.id}/thread-members/{user.id}")
         )
 
-    async def list_members(self) -> AsyncIterator[ThreadMember]:
+    def list_members(self) -> APIDataGen[ThreadMember]:
         """|coro|
         Fetches all the thread members for the thread. Returns an iterator of
         ThreadMember objects.
@@ -1102,9 +1105,10 @@ class Thread(Channel):
         AsyncIterator[:class:`~pincer.objects.channel.ThreadMember`]
             An iterator of thread members.
         """
-        data = await self._http.get(f"channels/{self.id}/thread-members")
-        for member in data:
-            yield ThreadMember.from_dict(member)
+        return APIDataGen(
+            ThreadMember,
+            self._http.get(f"channels/{self.id}/thread-members")
+        )
 
 
 class PublicThread(Thread):

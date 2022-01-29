@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import IntEnum
-from typing import AsyncGenerator, overload, TYPE_CHECKING
+from typing import overload, TYPE_CHECKING
 
 from aiohttp import FormData
 
@@ -16,13 +16,13 @@ from ..message.emoji import Emoji
 from ..message.file import File
 from ...exceptions import UnavailableGuildError
 from ...utils import remove_none
+from ...utils.api_data import APIDataGen
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from typing import Any, Dict, List, Optional, Tuple, Union, Generator
 
-    from collections.abc import AsyncIterator
     from .audit_log import AuditLog
     from .ban import Ban
     from .channel import ChannelType
@@ -621,9 +621,9 @@ class Guild(APIObject):
 
         return threads, members
 
-    async def list_guild_members(
+    def list_guild_members(
         self, limit: int = 1, after: int = 0
-    ) -> AsyncIterator[GuildMember]:
+    ) -> APIDataGen[GuildMember]:
         """|coro|
         Returns a list of guild member objects that are members of the guild.
 
@@ -640,16 +640,17 @@ class Guild(APIObject):
             the guild member object that is in the guild
         """
 
-        members = await self._http.get(
-            f"guilds/{self.id}/members", params={"limit": limit, "after": after}
+        return APIDataGen(
+            GuildMember,
+            self._http.get(
+                f"guilds/{self.id}/members",
+                params={"limit": limit, "after": after}
+            )
         )
 
-        for member in members:
-            yield GuildMember.from_dict(member)
-
-    async def search_guild_members(
+    def search_guild_members(
         self, query: str, limit: Optional[int] = None
-    ) -> AsyncIterator[GuildMember]:
+    ) -> APIDataGen[GuildMember]:
         """|coro|
         Returns a list of guild member objects whose
         username or nickname starts with a provided string.
@@ -667,13 +668,13 @@ class Guild(APIObject):
             guild member objects
         """
 
-        data = await self._http.get(
-            f"guilds/{self.id}/members/search",
-            params={"query": query, "limit": limit},
+        return APIDataGen(
+            GuildMember,
+            self._http.get(
+                f"guilds/{self.id}/members/search",
+                params={"query": query, "limit": limit},
+            )
         )
-
-        for member in data:
-            yield GuildMember.from_dict(member)
 
     @overload
     async def add_guild_member(
@@ -857,7 +858,7 @@ class Guild(APIObject):
             f"/guilds/{self.id}/members/{member_id}", headers=headers
         )
 
-    async def get_roles(self) -> AsyncGenerator[Role, None]:
+    def get_roles(self) -> APIDataGen[Role]:
         """|coro|
         Fetches all the roles in the guild.
 
@@ -866,9 +867,10 @@ class Guild(APIObject):
         AsyncGenerator[:class:`~pincer.objects.guild.role.Role`, :data:`None`]
             An async generator of Role objects.
         """
-        data = await self._http.get(f"guilds/{self.id}/roles")
-        for role_data in data:
-            yield Role.from_dict(role_data)
+
+        return APIDataGen(
+            Role, self._http.get(f"guilds/{self.id}/roles")
+        )
 
     @overload
     async def create_role(
@@ -927,12 +929,12 @@ class Guild(APIObject):
             )
         )
 
-    async def edit_role_position(
+    def edit_role_position(
         self,
         id: Snowflake,
         reason: Optional[str] = None,
         position: Optional[int] = None,
-    ) -> AsyncGenerator[Role, None]:
+    ) -> APIDataGen[Role]:
         """|coro|
         Edits the position of a role.
 
@@ -950,13 +952,13 @@ class Guild(APIObject):
         AsyncGenerator[:class:`~pincer.objects.guild.role.Role`, :data:`None`]
             An async generator of all the guild's role objects.
         """
-        data = await self._http.patch(
-            f"guilds/{self.id}/roles",
-            data={"id": id, "position": position},
-            headers={"X-Audit-Log-Reason": reason},
+        return APIDataGen(
+            Role, self._http.patch(
+                f"guilds/{self.id}/roles",
+                data={"id": id, "position": position},
+                headers={"X-Audit-Log-Reason": reason},
+            )
         )
-        for role_data in data:
-            yield Role.from_dict(role_data)
 
     @overload
     async def edit_role(
@@ -1036,7 +1038,7 @@ class Guild(APIObject):
             headers={"X-Audit-Log-Reason": reason},
         )
 
-    async def get_bans(self) -> AsyncGenerator[Ban, None]:
+    def get_bans(self) -> APIDataGen[Ban]:
         """|coro|
         Fetches all the bans in the guild.
 
@@ -1045,9 +1047,11 @@ class Guild(APIObject):
         AsyncGenerator[:class:`~pincer.objects.guild.ban.Ban`, :data:`None`]
             An async generator of Ban objects.
         """
-        data = await self._http.get(f"guilds/{self.id}/bans")
-        for ban_data in data:
-            yield Ban.from_dict(ban_data)
+
+        return APIDataGen(
+            Ban,
+            self._http.get(f"guilds/{self.id}/bans")
+        )
 
     async def get_ban(self, id: Snowflake) -> Ban:
         """|coro|
@@ -1254,7 +1258,7 @@ class Guild(APIObject):
             headers={"X-Audit-Log-Reason": reason},
         )["pruned"]
 
-    async def get_voice_regions(self) -> AsyncGenerator[VoiceRegion, None]:
+    def get_voice_regions(self) -> APIDataGen[VoiceRegion]:
         """|coro|
         Returns an async generator of voice regions.
 
@@ -1263,11 +1267,13 @@ class Guild(APIObject):
         AsyncGenerator[:class:`~pincer.objects.voice.VoiceRegion`, :data:`None`]
             An async generator of voice regions.
         """
-        data = await self._http.get(f"guilds/{self.id}/regions")
-        for voice_region_data in data:
-            yield VoiceRegion.from_dict(voice_region_data)
 
-    async def get_invites(self) -> AsyncGenerator[Invite, None]:
+        return APIDataGen(
+            VoiceRegion,
+            self._http.get(f"guilds/{self.id}/regions")
+        )
+
+    def get_invites(self) -> APIDataGen[Invite]:
         """|coro|
         Returns an async generator of invites for the guild.
         Requires the ``MANAGE_GUILD`` permission.
@@ -1277,9 +1283,11 @@ class Guild(APIObject):
         AsyncGenerator[:class:`~pincer.objects.invite.Invite`, :data:`None`]
             An async generator of invites.
         """
-        data = await self._http.get(f"guilds/{self.id}/invites")
-        for invite_data in data:
-            yield Invite.from_dict(invite_data)
+
+        return APIDataGen(
+            Invite,
+            self._http.get(f"guilds/{self.id}/invites")
+        )
 
     async def get_invite(self, code: str) -> Invite:
         """|coro|
@@ -1298,7 +1306,7 @@ class Guild(APIObject):
         data = await self._http.get(f"invite/{code}")
         return Invite.from_dict(data)
 
-    async def get_integrations(self) -> AsyncIterator[Integration]:
+    def get_integrations(self) -> APIDataGen[Integration]:
         """|coro|
         Returns an async generator of integrations for the guild.
         Requires the ``MANAGE_GUILD`` permission.
@@ -1308,9 +1316,11 @@ class Guild(APIObject):
         AsyncGenerator[:class:`~pincer.objects.integration.Integration`, :data:`None`]
             An async generator of integrations.
         """
-        data = await self._http.get(f"guilds/{self.id}/integrations")
-        for integration_data in data:
-            yield Integration.from_dict(integration_data)
+
+        return APIDataGen(
+            Integration,
+            self._http.get(f"guilds/{self.id}/integrations")
+        )
 
     async def delete_integration(
         self, integration: Integration, reason: Optional[str] = None
@@ -1575,7 +1585,7 @@ class Guild(APIObject):
             await self._http.get(f"guilds/{self.id}/audit-logs")
         )
 
-    async def get_emojis(self) -> AsyncGenerator[Emoji, None]:
+    def get_emojis(self) -> APIDataGen[Emoji]:
         """|coro|
         Returns an async generator of the emojis in the guild.
 
@@ -1584,9 +1594,10 @@ class Guild(APIObject):
         :class:`~pincer.objects.guild.emoji.Emoji`
             The emoji object.
         """
-        data = await self._http.get(f"guilds/{self.id}/emojis")
-        for emoji_data in data:
-            yield Emoji.from_dict(emoji_data)
+        return APIDataGen(
+            Emoji,
+            self._http.get(f"guilds/{self.id}/emojis")
+        )
 
     async def get_emoji(self, id: Snowflake) -> Emoji:
         """|coro|
@@ -1700,7 +1711,7 @@ class Guild(APIObject):
             headers={"X-Audit-Log-Reason": reason},
         )
 
-    async def get_templates(self) -> AsyncIterator[GuildTemplate]:
+    def get_templates(self) -> APIDataGen[GuildTemplate]:
         """|coro|
         Returns an async generator of the guild templates.
 
@@ -1709,9 +1720,11 @@ class Guild(APIObject):
         AsyncGenerator[:class:`~pincer.objects.guild.template.GuildTemplate`, :data:`None`]
             The guild template object.
         """
-        data = await self._http.get(f"guilds/{self.id}/templates")
-        for template_data in data:
-            yield GuildTemplate.from_dict(template_data)
+
+        return APIDataGen(
+            GuildTemplate,
+            self._http.get(f"guilds/{self.id}/templates")
+        )
 
     async def create_template(
         self, name: str, description: Optional[str] = None
@@ -1811,7 +1824,7 @@ class Guild(APIObject):
         )
         return GuildTemplate.from_dict(data)
 
-    async def list_stickers(self) -> AsyncIterator[Sticker]:
+    def list_stickers(self) -> APIDataGen[Sticker]:
         """|coro|
         Yields sticker objects for the current guild.
         Includes ``user`` fields if the bot has the
@@ -1823,8 +1836,10 @@ class Guild(APIObject):
             a sticker for the current guild
         """
 
-        for sticker in await self._http.get(f"guild/{self.id}/stickers"):
-            yield Sticker.from_dict(sticker)
+        return APIDataGen(
+            Sticker,
+            self._http.get(f"guild/{self.id}/stickers")
+        )
 
     async def get_sticker(self, _id: Snowflake) -> Sticker:
         """|coro|
@@ -1905,7 +1920,7 @@ class Guild(APIObject):
         """
         await self._http.delete(f"guilds/{self.id}/stickers/{_id}")
 
-    async def get_webhooks(self) -> AsyncGenerator[Webhook, None]:
+    def get_webhooks(self) -> APIDataGen[Webhook]:
         """|coro|
         Returns an async generator of the guild webhooks.
 
@@ -1914,13 +1929,15 @@ class Guild(APIObject):
         AsyncGenerator[:class:`~pincer.objects.guild.webhook.Webhook`, None]
             The guild webhook object.
         """
-        data = await self._http.get(f"guilds/{self.id}/webhooks")
-        for webhook_data in data:
-            yield Webhook.from_dict(webhook_data)
 
-    async def get_scheduled_events(
+        return APIDataGen(
+            Webhook,
+            self._http.get(f"guilds/{self.id}/webhooks")
+        )
+
+    def get_scheduled_events(
         self, with_user_count: bool = False
-    ) -> AsyncIterator[ScheduledEvent]:
+    ) -> APIDataGen[ScheduledEvent]:
         """
         Returns an async generator of the guild scheduled events.
 
@@ -1934,12 +1951,14 @@ class Guild(APIObject):
         :class:`~pincer.objects.guild.scheduled_event.ScheduledEvent`
             The scheduled event object.
         """
-        data = await self._http.get(
-            f"guilds/{self.id}/scheduled-events",
-            param={"with_user_count": with_user_count},
+
+        return APIDataGen(
+            ScheduledEvent,
+            self._http.get(
+                f"guilds/{self.id}/scheduled-events",
+                param={"with_user_count": with_user_count},
+            )
         )
-        for event_data in data:
-            yield ScheduledEvent.from_dict(event_data)
 
     async def create_scheduled_event(
         self,
@@ -2137,14 +2156,14 @@ class Guild(APIObject):
         """
         await self._http.delete(f"guilds/{self.id}/scheduled-events/{_id}")
 
-    async def get_guild_scheduled_event_users(
+    def get_guild_scheduled_event_users(
         self,
         _id: int,
         limit: int = 100,
         with_member: bool = False,
         before: Optional[int] = None,
         after: Optional[int] = None,
-    ) -> AsyncIterator[GuildScheduledEventUser]:
+    ) -> APIDataGen[GuildScheduledEventUser]:
         """
         Get the users of a scheduled event.
 
@@ -2173,13 +2192,13 @@ class Guild(APIObject):
             "after": after,
         })
 
-        data = await self._http.get(
-            f"guilds/{self.id}/scheduled-events/{_id}/users",
-            params=params,
+        return APIDataGen(
+            GuildScheduledEventUser,
+            self._http.get(
+                f"guilds/{self.id}/scheduled-events/{_id}/users",
+                params=params,
+            )
         )
-
-        for user_data in data:
-            yield GuildScheduledEventUser.from_dict(user_data)
 
     @classmethod
     def from_dict(cls, data) -> Guild:
