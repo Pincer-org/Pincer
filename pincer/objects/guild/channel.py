@@ -853,7 +853,7 @@ class VoiceChannel(Channel):
 
     async def edit(self, **kwargs):
         """|coro|
-        Edit a text channel with the given keyword arguments.
+        Edit a voice channel with the given keyword arguments.
 
         Parameters
         ----------
@@ -897,7 +897,7 @@ class NewsChannel(Channel):
 
     async def edit(self, **kwargs):
         """|coro|
-        Edit a text channel with the given keyword arguments.
+        Edit a news channel with the given keyword arguments.
 
         Parameters
         ----------
