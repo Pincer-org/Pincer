@@ -644,8 +644,8 @@ class Guild(APIObject):
             GuildMember,
             self._http.get(
                 f"guilds/{self.id}/members",
-                params={"limit": limit, "after": after},
-            ),
+                params={"limit": limit, "after": after}
+            )
         )
 
     def search_guild_members(
@@ -673,7 +673,7 @@ class Guild(APIObject):
             self._http.get(
                 f"guilds/{self.id}/members/search",
                 params={"query": query, "limit": limit},
-            ),
+            )
         )
 
     @overload
@@ -871,7 +871,9 @@ class Guild(APIObject):
             An async generator of Role objects.
         """
 
-        return APIDataGen(Role, self._http.get(f"guilds/{self.id}/roles"))
+        return APIDataGen(
+            Role, self._http.get(f"guilds/{self.id}/roles")
+        )
 
     @overload
     async def create_role(
@@ -954,12 +956,11 @@ class Guild(APIObject):
             An async generator of all the guild's role objects.
         """
         return APIDataGen(
-            Role,
-            self._http.patch(
+            Role, self._http.patch(
                 f"guilds/{self.id}/roles",
                 data={"id": id, "position": position},
                 headers={"X-Audit-Log-Reason": reason},
-            ),
+            )
         )
 
     @overload
@@ -1050,7 +1051,10 @@ class Guild(APIObject):
             An async generator of Ban objects.
         """
 
-        return APIDataGen(Ban, self._http.get(f"guilds/{self.id}/bans"))
+        return APIDataGen(
+            Ban,
+            self._http.get(f"guilds/{self.id}/bans")
+        )
 
     async def get_ban(self, id: Snowflake) -> Ban:
         """|coro|
@@ -1268,7 +1272,8 @@ class Guild(APIObject):
         """
 
         return APIDataGen(
-            VoiceRegion, self._http.get(f"guilds/{self.id}/regions")
+            VoiceRegion,
+            self._http.get(f"guilds/{self.id}/regions")
         )
 
     def get_invites(self) -> APIDataGen[Invite]:
@@ -1282,7 +1287,10 @@ class Guild(APIObject):
             An async generator of invites.
         """
 
-        return APIDataGen(Invite, self._http.get(f"guilds/{self.id}/invites"))
+        return APIDataGen(
+            Invite,
+            self._http.get(f"guilds/{self.id}/invites")
+        )
 
     async def get_invite(self, code: str) -> Invite:
         """|coro|
@@ -1313,7 +1321,8 @@ class Guild(APIObject):
         """
 
         return APIDataGen(
-            Integration, self._http.get(f"guilds/{self.id}/integrations")
+            Integration,
+            self._http.get(f"guilds/{self.id}/integrations")
         )
 
     async def delete_integration(
@@ -1588,7 +1597,10 @@ class Guild(APIObject):
         :class:`~pincer.objects.guild.emoji.Emoji`
             The emoji object.
         """
-        return APIDataGen(Emoji, self._http.get(f"guilds/{self.id}/emojis"))
+        return APIDataGen(
+            Emoji,
+            self._http.get(f"guilds/{self.id}/emojis")
+        )
 
     async def get_emoji(self, id: Snowflake) -> Emoji:
         """|coro|
@@ -1713,7 +1725,8 @@ class Guild(APIObject):
         """
 
         return APIDataGen(
-            GuildTemplate, self._http.get(f"guilds/{self.id}/templates")
+            GuildTemplate,
+            self._http.get(f"guilds/{self.id}/templates")
         )
 
     async def create_template(
@@ -1826,7 +1839,10 @@ class Guild(APIObject):
             a sticker for the current guild
         """
 
-        return APIDataGen(Sticker, self._http.get(f"guild/{self.id}/stickers"))
+        return APIDataGen(
+            Sticker,
+            self._http.get(f"guild/{self.id}/stickers")
+        )
 
     async def get_sticker(self, _id: Snowflake) -> Sticker:
         """|coro|
@@ -1917,7 +1933,10 @@ class Guild(APIObject):
             The guild webhook object.
         """
 
-        return APIDataGen(Webhook, self._http.get(f"guilds/{self.id}/webhooks"))
+        return APIDataGen(
+            Webhook,
+            self._http.get(f"guilds/{self.id}/webhooks")
+        )
 
     def get_scheduled_events(
         self, with_user_count: bool = False
@@ -1941,7 +1960,7 @@ class Guild(APIObject):
             self._http.get(
                 f"guilds/{self.id}/scheduled-events",
                 param={"with_user_count": with_user_count},
-            ),
+            )
         )
 
     async def create_scheduled_event(
@@ -1993,7 +2012,10 @@ class Guild(APIObject):
         if scheduled_start_time < datetime.now():
             raise ValueError("An event cannot be created in the past")
 
-        if scheduled_end_time and scheduled_end_time < scheduled_start_time:
+        if (
+            scheduled_end_time
+            and scheduled_end_time < scheduled_start_time
+        ):
             raise ValueError("An event cannot start before it ends")
 
         data = await self._http.post(
@@ -2095,7 +2117,10 @@ class Guild(APIObject):
             if scheduled_start_time < datetime.now():
                 raise ValueError("An event cannot be created in the past")
 
-            if scheduled_end_time and scheduled_end_time < scheduled_start_time:
+            if (
+                scheduled_end_time
+                and scheduled_end_time < scheduled_start_time
+            ):
                 raise ValueError("An event cannot start before it ends")
 
         kwargs: Dict[str, str] = remove_none(
@@ -2163,21 +2188,19 @@ class Guild(APIObject):
         :class:`~pincer.objects.guild.scheduled_event.GuildScheduledEventUser`
             The scheduled event user object.
         """
-        params = remove_none(
-            {
-                "limit": limit,
-                "with_member": with_member,
-                "before": before,
-                "after": after,
-            }
-        )
+        params = remove_none({
+            "limit": limit,
+            "with_member": with_member,
+            "before": before,
+            "after": after,
+        })
 
         return APIDataGen(
             GuildScheduledEventUser,
             self._http.get(
                 f"guilds/{self.id}/scheduled-events/{_id}/users",
                 params=params,
-            ),
+            )
         )
 
     @classmethod
