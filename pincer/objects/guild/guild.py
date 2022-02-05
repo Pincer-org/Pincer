@@ -815,9 +815,11 @@ class Guild(APIObject):
         delete_message_days: int = None,
     ):
         """
+        Ban a guild member.
+
         Parameters
         ----------
-        member : : Union[:class:`int`, :class:`GuildMember`]
+        member : Union[:class:`int`, :class:`GuildMember`]
             ID or object of the guild member to ban.
         reason : Optional[:class:`str`]
             Reason for the kick.
@@ -844,9 +846,10 @@ class Guild(APIObject):
     ):
         """|coro|
         Kicks a guild member.
+
         Parameters
         ----------
-        member : : Union[:class:`int`, :class:`GuildMember`]
+        member : Union[:class:`int`, :class:`GuildMember`]
             ID or object of the guild member to kick.
         reason : Optional[:class:`str`]
             Reason for the kick.
