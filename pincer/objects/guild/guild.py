@@ -766,7 +766,7 @@ class Guild(APIObject):
             audit log reason |default| :data:`None`
         """
         data = await self._http.put(
-            f"guilds/{self.id}/{user_id}/roles/{role_id}",
+            f"guilds/{self.id}/members/{user_id}/roles/{role_id}",
             headers={"X-Audit-Log-Reason": reason},
         )
 
@@ -786,7 +786,7 @@ class Guild(APIObject):
             audit log reason |default| :data:`None`
         """
         await self._http.delete(
-            f"guilds/{self.id}/{user_id}/roles/{role_id}",
+            f"guilds/{self.id}/members/{user_id}/roles/{role_id}",
             headers={"X-Audit-Log-Reason": reason},
         )
 
