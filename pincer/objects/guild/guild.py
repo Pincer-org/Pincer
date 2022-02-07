@@ -842,7 +842,9 @@ class Guild(APIObject):
         )
 
     async def kick(
-        self, member: Union[int, GuildMember], reason: Optional[str] = None
+        self,
+        member: Union[int, GuildMember],
+        reason: Optional[str] = None
     ):
         """|coro|
         Kicks a guild member.
