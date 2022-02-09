@@ -810,21 +810,24 @@ class Guild(APIObject):
 
     async def ban(
         self,
-        member_id: int,
+        member: Union[int, GuildMember],
         reason: str = None,
         delete_message_days: int = None,
     ):
         """
+        Ban a guild member.
+
         Parameters
         ----------
-        member_id : :class:`int`
-            ID of the guild member to ban.
+        member : Union[:class:`int`, :class:`GuildMember`]
+            ID or object of the guild member to ban.
         reason : Optional[:class:`str`]
             Reason for the kick.
         delete_message_days : Optional[:class:`int`]
             Number of days to delete messages for (0-7)
         """
         headers = {}
+        member_id: int = member if isinstance(member, int) else member.id
 
         if reason is not None:
             headers["X-Audit-Log-Reason"] = reason
@@ -838,18 +841,23 @@ class Guild(APIObject):
             f"/guilds/{self.id}/bans/{member_id}", data=data, headers=headers
         )
 
-    async def kick(self, member_id: int, reason: Optional[str] = None):
+    async def kick(
+        self,
+        member: Union[int, GuildMember],
+        reason: Optional[str] = None
+    ):
         """|coro|
         Kicks a guild member.
+
         Parameters
         ----------
-        member_id : :class:`int`
-            ID of the guild member to kick.
+        member : Union[:class:`int`, :class:`GuildMember`]
+            ID or object of the guild member to kick.
         reason : Optional[:class:`str`]
             Reason for the kick.
         """
-
         headers = {}
+        member_id: int = member if isinstance(member, int) else member.id
 
         if reason is not None:
             headers["X-Audit-Log-Reason"] = reason
@@ -1995,7 +2003,7 @@ class Guild(APIObject):
             The description of the scheduled event.
         reason : Optional[:class:`str`]
             The reason for creating the scheduled event.
-            
+
         Raises
         ------
         ValueError:
