@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import TYPE_CHECKING, Callable, Optional
+from typing import TYPE_CHECKING
 
 from ._component import _Component
 from ...utils.types import MISSING
@@ -75,13 +75,9 @@ class Button(_Component):
     disabled: APINullable[bool] = False
 
     type: int = 2
-    _func: Optional[Callable] = None
 
     def __post_init__(self):
         self.type = 2
-
-    def __call__(self, *args, **kwargs):
-        return self._func(*args, **kwargs)
 
 
 @dataclass(repr=False)

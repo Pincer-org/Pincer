@@ -3,13 +3,12 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import List, Union, TYPE_CHECKING
-
-
-from pincer.commands.groups import Group, Subgroup
+from dataclasses import dataclass, field
+from typing import Any, Awaitable, Callable, Generic, List, Optional, Union, TYPE_CHECKING, TypeVar
 
 from .command_types import AppCommandOptionType, AppCommandType
+from ..app.throttle_scope import ThrottleScope
+from ...commands.groups import Group, Subgroup
 from ...objects.guild.channel import ChannelType
 from ...utils.api_object import APIObject, GuildProperty
 from ...utils.snowflake import Snowflake
@@ -18,8 +17,8 @@ from ...utils.types import MISSING
 
 if TYPE_CHECKING:
     from ...utils.types import APINullable
-    from ..app.throttle_scope import ThrottleScope
 
+T = TypeVar("T")
 
 @dataclass(repr=False)
 class AppCommandInteractionDataOption(APIObject):
@@ -146,8 +145,8 @@ class AppCommand(APIObject, GuildProperty):
         if self.options is MISSING and self.type is AppCommandType.MESSAGE:
             self.options = []
 
-    def __eq__(self, other: Union[AppCommand, ClientCommandStructure]):
-        if isinstance(other, ClientCommandStructure):
+    def __eq__(self, other: Union[AppCommand, InteractableStructure]):
+        if isinstance(other, InteractableStructure):
             other = other.app
 
         # `description` and `options` are tested for equality with a custom check
@@ -188,29 +187,41 @@ class AppCommand(APIObject, GuildProperty):
 
 
 @dataclass(repr=False)
-class ClientCommandStructure:
+class InteractableStructure(Generic[T]):
     """Represents the structure of how the client saves the existing
-    commands in the register.
+    commands to registers. This is generic over Application Commands,
+    Message Components, and Autocomplete.
 
     Attributes
     ----------
-    app: :class:`~pincer.objects.app.command.AppCommand`
-        The command application.
     call: :class:`~pincer.utils.types.Coro`
         The coroutine which should be called when the command gets
         executed.
+    metadata: T
+        The metadata for this command. |default| :data:`None`
+    manager : Optional[Any]
+        The manager for this interactable. |default| :data:`None`
+    extensions: List[Callable[..., Awaitable[bool]]]
+        List of extensions for this command. |default| :data:`[]`
     cooldown: :class:`int`
-        Amount of times for cooldown
+        Amount of times for cooldown |default| :data:`0`
     cooldown_scale: :class:`float`
-        Search time for cooldown
+        Search time for cooldown |default| :data:`60.0`
     cooldown_scope: :class:`~pincer.objects.app.throttle_scope.ThrottleScope`
-        The type of cooldown
+        The type of cooldown |default| :data:`ThrottleScope.USER`
     """
-    app: AppCommand
     call: Coro
-    cooldown: int
-    cooldown_scale: float
-    cooldown_scope: ThrottleScope
+
+    metadata: Optional[T] = None
+    manager: Optional[Any] = None
+    extensions: List[Callable[..., Awaitable[bool]]] = field(default_factory=list)
+
+    cooldown: int = 0
+    cooldown_scale: float = 60.0
+    cooldown_scope: ThrottleScope = ThrottleScope.USER
 
     group: APINullable[Group] = MISSING
     sub_group: APINullable[Subgroup] = MISSING
+
+    def __call__(self, *args: Any, **kwargs: Any) -> Any:
+        self.call(*args, **kwargs)

@@ -51,12 +51,12 @@ AppCommand
 
 .. autoclass:: AppCommand()
 
-ClientCommandStructure
+InteractableStructure
 ~~~~~~~~~~~~~~~~~~~~~~
 
-.. attributetable:: ClientCommandStructure
+.. attributetable:: InteractableStructure
 
-.. autoclass:: ClientCommandStructure()
+.. autoclass:: InteractableStructure()
 
 Intents
 -------

@@ -5,10 +5,12 @@ from functools import partial
 from inspect import iscoroutinefunction
 from typing import List
 
+
 from .button import Button, ButtonStyle
 from .select_menu import SelectMenu, SelectOption
 from .component_handler import ComponentHandler
 from ...exceptions import CommandIsNotCoroutine
+from ...objects.app.command import InteractableStructure
 from ...objects.message.emoji import Emoji
 from ...utils.conversion import remove_none
 
@@ -75,27 +77,26 @@ def button(
         if custom_id is None:
             custom_id = func.__name__
 
-        ComponentHandler().register_id(custom_id, func)
-
-        button = Button(
-            # Hack to not override defaults in button class
-            **remove_none(
-                {
-                    "custom_id": custom_id,
-                    "style": style,
-                    "label": label,
-                    "disabled": disabled,
-                    "emoji": emoji,
-                    "url": url,
-                    "_func": func
-                }
+        interactable = InteractableStructure(
+            call=func,
+            metadata=Button(
+                # Hack to not override defaults in button class
+                **remove_none(
+                    {
+                        "custom_id": custom_id,
+                        "style": style,
+                        "label": label,
+                        "disabled": disabled,
+                        "emoji": emoji,
+                        "url": url,
+                    }
+                )
             )
         )
 
-        button.func = func
-        button.__call__ = partial(func)
+        ComponentHandler.register[interactable.metadata.custom_id] = interactable
 
-        return button
+        return interactable
 
     return partial(wrap, custom_id)
 
@@ -149,22 +150,26 @@ def select_menu(
         if custom_id is None:
             custom_id = func.__name__
 
-        ComponentHandler().register_id(custom_id, func)
-
-        return SelectMenu(
-            # Hack to not override defaults in button class
-            **remove_none(
-                {
-                    "custom_id": custom_id,
-                    "options": options,
-                    "placeholder": placeholder,
-                    "min_values": min_values,
-                    "max_values": max_values,
-                    "disabled": disabled,
-                    "_func": func
-                }
+        interactable = InteractableStructure(
+            call=func,
+            metadata=SelectMenu(
+                # Hack to not override defaults in button class
+                **remove_none(
+                    {
+                        "custom_id": custom_id,
+                        "options": options,
+                        "placeholder": placeholder,
+                        "min_values": min_values,
+                        "max_values": max_values,
+                        "disabled": disabled,
+                    }
+                )
             )
         )
+
+        ComponentHandler.register[interactable.metadata.custom_id] = interactable
+
+        return interactable
 
     if func is None:
         return partial(wrap, custom_id)

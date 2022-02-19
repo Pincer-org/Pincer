@@ -5,7 +5,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ...objects.message.component import MessageComponent
+from ._component import _Component
+from ...objects.app.command import InteractableStructure
 
 from ...utils.api_object import APIObject
 if TYPE_CHECKING:
@@ -23,11 +24,13 @@ class ActionRow(APIObject):
         :class:`~pincer.objects.message.select_menu.SelectMenu`
     """
 
-    def __init__(self, *components: MessageComponent):
+    def __init__(self, *components: InteractableStructure[_Component]):
         self.components = components
 
     def to_dict(self) -> Dict:
         return {
             "type": 1,
-            "components": [component.to_dict() for component in self.components]
+            "components": [
+                component.metadata.to_dict() for component in self.components
+            ]
         }

@@ -68,3 +68,10 @@ Command Groups
 
 .. autoclass:: Group()
 .. autoclass:: Subgroup()
+
+Interactable Objects
+~~~~~~~~~~~~~~~~~~~~
+.. currentmodule:: pincer.commands.interactable
+
+.. attributetable:: Interactable
+.. autoclass:: Interactable()
