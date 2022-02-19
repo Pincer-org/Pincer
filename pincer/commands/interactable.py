@@ -37,11 +37,13 @@ class Interactable:
         ComponentHandler and removes loaded events from the client.
         """
         for value in vars(type(self)).values():
-            if isinstance(value, InteractableStructure):
-                if isinstance(value.metadata, AppCommand):
-                    for key, _value in INTERACTION_REGISTERS.items():
-                        if value is _value:
-                            INTERACTION_REGISTERS.pop(key)
+            if (
+                isinstance(value, InteractableStructure)
+                and isinstance(value.metadata, AppCommand)
+            ):
+                for key, _value in INTERACTION_REGISTERS.items():
+                    if value is _value:
+                        INTERACTION_REGISTERS.pop(key)
 
                 key = value.call.__name__.lower()
 
