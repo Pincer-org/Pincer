@@ -2209,9 +2209,6 @@ class Guild(APIObject):
             )
         )
 
-
-
-
     @classmethod
     def from_dict(cls, data) -> Guild:
         """
