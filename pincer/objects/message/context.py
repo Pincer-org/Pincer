@@ -29,7 +29,7 @@ class MessageContext:
     author: Union[:class:`~pincer.objects.guild.member.GuildMember`, :class:`~pincer.objects.user.user.User`]
 
         The user whom invoked the interaction.
-    command: :class:`~pincer.objects.app.command.ClientCommandStructure`
+    command: :class:`~pincer.objects.app.command.InteractableStructure`
         The local command object for the command to whom this context
         belongs.
 

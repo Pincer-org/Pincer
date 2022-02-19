@@ -4,12 +4,13 @@
 from __future__ import annotations
 
 import logging
+from copy import copy
 from contextlib import suppress
 from inspect import isasyncgenfunction, _empty
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from ..commands import ChatCommandHandler, ComponentHandler
-from ..commands.commands import _hash_app_command_params
+from ..commands.chat_command_handler import _hash_app_command_params
 from ..exceptions import InteractionDoesNotExist
 from ..objects import (
     Interaction,
@@ -87,16 +88,17 @@ def get_command_from_registry(interaction: Interaction):
     )
 
 
-def get_call(self: Client, interaction: Interaction):
+def get_call(self: Client, interaction: Interaction) -> Optional[Tuple[Coro, Any]]:
     if interaction.type == InteractionType.APPLICATION_COMMAND:
         command = get_command_from_registry(interaction)
         if command is None:
             return None
         # Only application commands can be throttled
         self.throttler.handle(command)
-        return command.call
+        return command.call, command.manager
     elif interaction.type == InteractionType.MESSAGE_COMPONENT:
-        return ComponentHandler.register.get(interaction.data.custom_id)
+        command = ComponentHandler.register.get(interaction.data.custom_id)
+        return command.call, command.manager
     elif interaction.type == InteractionType.AUTOCOMPLETE:
         raise NotImplementedError(
             "Handling for autocomplete is not implemented"
@@ -104,7 +106,9 @@ def get_call(self: Client, interaction: Interaction):
 
 
 async def interaction_response_handler(
+    self: Client,
     command: Coro,
+    manager: Any,
     context: MessageContext,
     interaction: Interaction,
     args: List[Any],
@@ -125,12 +129,14 @@ async def interaction_response_handler(
     \\*\\*kwargs :
         The arguments to be passed to the command.
     """
-    sig, params = get_signature_and_params(command)
-    if should_pass_ctx(sig, params):
+    # Prevent args from being mutated unexpectedly
+    args = copy(args)
+
+    if should_pass_ctx(*get_signature_and_params(command)):
         args.insert(0, context)
 
     if should_pass_cls(command):
-        args.insert(0, ChatCommandHandler.managers[command.__module__])
+        args.insert(0, manager or self)
 
     if isasyncgenfunction(command):
         message = command(*args, **kwargs)
@@ -147,7 +153,11 @@ async def interaction_response_handler(
 
 
 async def interaction_handler(
-    interaction: Interaction, context: MessageContext, command: Coro
+    self: Client,
+    interaction: Interaction,
+    context: MessageContext,
+    command: Coro,
+    manager: Any
 ):
     """|coro|
 
@@ -207,9 +217,25 @@ async def interaction_handler(
 
     kwargs = {**defaults, **params}
 
-    await interaction_response_handler(
-        command, context, interaction, args, kwargs
-    )
+    try:
+        await interaction_response_handler(
+            self, command, manager, context, interaction, args, kwargs
+        )
+    except Exception as e:
+        if coro := get_index(self.get_event_coro("on_command_error"), 0):
+            try:
+                await interaction_response_handler(
+                    self,
+                    coro.call,
+                    coro.manager,
+                    context,
+                    interaction,
+                    [e, *args],
+                    kwargs,
+                )
+            except Exception as e:
+                raise e
+        raise e
 
 
 async def interaction_create_middleware(
@@ -237,29 +263,10 @@ async def interaction_create_middleware(
         ``on_interaction_create`` and an ``Interaction``
     """
     interaction: Interaction = Interaction.from_dict(payload.data)
-
-    call = get_call(self, interaction)
+    call, manager = get_call(self, interaction)
     context = interaction.get_message_context()
 
-    try:
-        await interaction_handler(interaction, context, call)
-    except Exception as e:
-        if coro := get_index(self.get_event_coro("on_command_error"), 0):
-            params = get_signature_and_params(coro)[1]
-
-            # Check if a context or error var has been passed.
-            if 0 < len(params) < 3:
-                await interaction_response_handler(
-                    coro,
-                    context,
-                    interaction,
-                    # Always take the error parameter its name.
-                    {params[-1]: e},
-                )
-            else:
-                raise e
-        else:
-            raise e
+    await interaction_handler(self, interaction, context, call, manager)
 
     return "on_interaction_create", interaction
 

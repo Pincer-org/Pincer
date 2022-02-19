@@ -13,6 +13,7 @@ Client
 
 .. autoclass:: Client
     :exclude-members: event
+    :inherited-members:
 
     .. automethod:: Client.event()
         :decorator:

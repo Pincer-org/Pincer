@@ -13,7 +13,6 @@ from asyncio import (
 )
 from collections import defaultdict
 from functools import partial
-from importlib import import_module
 from inspect import isasyncgenfunction
 from typing import (
     Any,
@@ -27,19 +26,17 @@ from typing import (
     overload,
     TYPE_CHECKING,
 )
+
+
+from .cog import CogManager
+from .commands.interactable import Interactable
+from .objects.app.command import InteractableStructure
+
 from . import __package__
 from .commands import ChatCommandHandler
 from .core import HTTPClient
 from .core.gateway import GatewayInfo, Gateway
-from .exceptions import (
-    InvalidEventName,
-    TooManySetupArguments,
-    NoValidSetupMethod,
-    NoCogManagerReturnFound,
-    CogAlreadyExists,
-    CogNotFound,
-    GatewayConnectionError
-)
+from .exceptions import InvalidEventName, GatewayConnectionError
 from .middleware import middleware
 from .objects import (
     Role,
@@ -61,12 +58,10 @@ from .utils.event_mgr import EventMgr
 from .utils.extraction import get_index
 from .utils.insertion import should_pass_cls, should_pass_gateway
 from .utils.shards import calculate_shard_id
-from .utils.signature import get_params
 from .utils.types import CheckFunction
 from .utils.types import Coro
 
 if TYPE_CHECKING:
-    from .objects.app import AppCommand
     from .utils.snowflake import Snowflake
     from .core.dispatch import GatewayDispatch
     from .objects.app.throttling import ThrottleInterface
@@ -78,7 +73,7 @@ _log = logging.getLogger(__package__)
 
 MiddlewareType = Optional[Union[Coro, Tuple[str, List[Any], Dict[str, Any]]]]
 
-_event = Union[str, Coro]
+_event = Union[str, InteractableStructure[None]]
 _events: Dict[str, Optional[Union[List[_event], _event]]] = defaultdict(list)
 
 
@@ -163,7 +158,7 @@ for event, middleware_ in middleware.items():
     event_middleware(event)(middleware_)
 
 
-class Client:
+class Client(Interactable, CogManager):
     """The client is the main instance which is between the programmer
     and the discord API.
 
@@ -248,7 +243,9 @@ class Client:
         self.guilds: Dict[Snowflake, Optional[Guild]] = {}
         self.channels: Dict[Snowflake, Optional[Channel]] = {}
 
-        ChatCommandHandler.managers[self.__module__] = self
+        ChatCommandHandler.managers.append(self)
+
+        super().__init__()
 
     @property
     def chat_commands(self) -> List[str]:
@@ -257,7 +254,7 @@ class Client:
         Get a list of chat command calls which have been registered in
         the :class:`~pincer.commands.ChatCommandHandler`\\.
         """
-        return [cmd.app.name for cmd in ChatCommandHandler.register.values()]
+        return [cmd.metadata.name for cmd in ChatCommandHandler.register.values()]
 
     @property
     def guild_ids(self) -> List[Snowflake]:
@@ -339,17 +336,23 @@ class Client:
                 "it gets treated as a command and can have a response."
             )
 
-        _events[name].append(coroutine)
-        return coroutine
+        event = InteractableStructure(call=coroutine)
+
+        _events[name].append(event)
+        return event
 
     @staticmethod
-    def get_event_coro(name: str) -> List[Optional[Coro]]:
+    def get_event_coro(name: str) -> List[Optional[InteractableStructure[None]]]:
         """get the coroutine for an event
 
         Parameters
         ----------
         name : :class:`str`
             name of the event
+
+        Returns
+        -------
+        List[Optional[:class:`~pincer.objects.app.command.InteractableStructure`[None]]]
         """
         calls = _events.get(name.strip().lower())
 
@@ -359,135 +362,22 @@ class Client:
             else [
                 call
                 for call in calls
-                if iscoroutinefunction(call) or isasyncgenfunction(call)
+                if isinstance(call, InteractableStructure)
             ]
         )
 
-    def load_cog(self, path: str, package: Optional[str] = None):
-        """Load a cog from a string path, setup method in COG may
-        optionally have a first argument which will contain the client!
-
-        :Example usage:
-
-        run.py
-
-        .. code-block:: python3
-
-             from pincer import Client
-
-             class MyClient(Client):
-                 def __init__(self, *args, **kwargs):
-                     self.load_cog("cogs.say")
-                     super().__init__(*args, **kwargs)
-
-        cogs/say.py
-
-        .. code-block:: python3
-
-             from pincer import command
-
-             class SayCommand:
-                 @command()
-                 async def say(self, message: str) -> str:
-                     return message
-
-             setup = SayCommand
-
-        Parameters
-        ----------
-        path : :class:`str`
-            The import path for the cog.
-        package : :class:`str`
-            The package name for relative based imports.
-            |default| :data:`None`
-        """
-
-        if ChatCommandHandler.managers.get(path):
-            raise CogAlreadyExists(
-                f"Cog `{path}` is trying to be loaded but already exists."
-            )
-
-        try:
-            module = import_module(path, package=package)
-        except ModuleNotFoundError:
-            raise CogNotFound(f"Cog `{path}` could not be found!")
-
-        setup = getattr(module, "setup", None)
-
-        if not callable(setup):
-            raise NoValidSetupMethod(
-                f"`setup` method was expected in `{path}` but none was found!"
-            )
-
-        args, params = [], get_params(setup)
-
-        if len(params) == 1:
-            args.append(self)
-        elif (length := len(params)) > 1:
-            raise TooManySetupArguments(
-                f"Setup method in `{path}` requested {length} arguments "
-                f"but the maximum is 1!"
-            )
-
-        cog_manager = setup(*args)
-
-        if not cog_manager:
-            raise NoCogManagerReturnFound(
-                f"Setup method in `{path}` didn't return a cog manager! "
-                "(Did you forget to return the cog?)"
-            )
-
-        ChatCommandHandler.managers[path] = cog_manager
-
     @staticmethod
-    def get_cogs() -> Dict[str, Any]:
-        """Get a dictionary of all loaded cogs.
-
-        The key/value pair is import path/cog class.
-
-        Returns
-        -------
-        Dict[:class:`str`, Any]
-            The dictionary of cogs
-        """
-        return ChatCommandHandler.managers
-
-    async def unload_cog(self, path: str):
-        """|coro|
-
-        Unloads a currently loaded Cog
-
-        Parameters
-        ----------
-        path : :class:`str`
-            The path to the cog
-
-        Raises
-        ------
-        CogNotFound
-            When the cog is not in that path
-        """
-        if not ChatCommandHandler.managers.get(path):
-            raise CogNotFound(f"Cog `{path}` could not be found!")
-
-        to_remove: List[AppCommand] = []
-
-        for command in ChatCommandHandler.register.values():
-            if not command:
-                continue
-
-            if command.call.__module__ == path:
-                to_remove.append(command.app)
-
-        await ChatCommandHandler(self).remove_commands(to_remove)
-
-    @staticmethod
-    def execute_event(calls: List[Coro], gateway: Gateway, *args, **kwargs):
+    def execute_event(
+        events: List[InteractableStructure],
+        gateway: Gateway,
+        *args,
+        **kwargs
+    ):
         """Invokes an event.
 
         Parameters
         ----------
-        calls: :class:`~pincer.utils.types.Coro`
+        calls: List[:class:`~pincer.objects.app.command.InteractableStructure`]
             The call (method) to which the event is registered.
 
         \\*args:
@@ -497,18 +387,18 @@ class Client:
             The named arguments for the event.
         """
 
-        for call in calls:
+        for event in events:
             call_args = args
-            if should_pass_cls(call):
+            if should_pass_cls(event.call):
                 call_args = (
-                    ChatCommandHandler.managers[call.__module__],
+                    event.manager,
                     *remove_none(args),
                 )
 
-            if should_pass_gateway(call):
+            if should_pass_gateway(event.call):
                 call_args = (call_args[0], gateway, *call_args[1:])
 
-            ensure_future(call(*call_args, **kwargs))
+            ensure_future(event.call(*call_args, **kwargs))
 
     def run(self):
         """Start the bot."""

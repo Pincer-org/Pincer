@@ -8,6 +8,7 @@ The Full Pincer API Referance
 
     pincer
     core
+    cog
     commands
     middleware
     objects/index
