@@ -388,6 +388,22 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
         msg = await client.http.get(f"channels/{channel_id}/messages/{_id}")
         return cls.from_dict(msg)
 
+    async def crosspost(self) -> UserMessage:
+        """|coro|
+        Crosspost a message in a News Channel to following channels.
+
+        This endpoint requires the ``SEND_MESSAGES`` permission,
+        if the current user sent the message, or additionally the
+        ``MANAGE_MESSAGES`` permission, for all other messages,
+        to be present for the current user.
+
+        Returns
+        -------
+        :class:`~pincer.objects.message.UserMessage`
+            The crossposted message
+        """
+        return await self._client.crosspost_message(self.channel_id, self.id)
+
     def __str__(self):
         return self.content
 

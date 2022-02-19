@@ -12,6 +12,7 @@ from aiohttp import FormData
 
 from .channel import Channel, Thread
 from .scheduled_events import ScheduledEvent, GuildScheduledEventUser
+from .. import UserMessage
 from ..message.emoji import Emoji
 from ..message.file import File
 from ...exceptions import UnavailableGuildError
@@ -2207,6 +2208,9 @@ class Guild(APIObject):
                 params=params,
             )
         )
+
+
+
 
     @classmethod
     def from_dict(cls, data) -> Guild:

@@ -1194,5 +1194,28 @@ class Client:
         for pack in packs:
             yield StickerPack.from_dict(pack)
 
+    async def crosspost_message(self, channel_id: int, message_id: int) -> UserMessage:
+        """|coro|
+        Crosspost a message in a News Channel to following channels.
+
+        This endpoint requires the ``SEND_MESSAGES`` permission,
+        if the current user sent the message, or additionally the
+        ``MANAGE_MESSAGES`` permission, for all other messages,
+        to be present for the current user.
+
+        Parameters
+        ----------
+        channel_id : int
+            ID of the news channel that the message is in.
+        message_id : int
+            ID of the message to crosspost.
+
+        Returns
+        -------
+        :class:`~pincer.objects.message.UserMessage`
+            The crossposted message
+        """
+
+        return await self._http.post(f"channels/{channel_id}/{message_id}/crosspost")
 
 Bot = Client
