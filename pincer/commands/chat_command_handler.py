@@ -318,16 +318,14 @@ class ChatCommandHandler(metaclass=Singleton):
         local_registered_commands = self.get_local_registered_commands()
 
         def should_be_removed(target: AppCommand) -> bool:
-            for reg_cmd in local_registered_commands:
-                # Commands have endpoints based on their `name` amd `guild_id`. Other
-                # parameters can be updated instead of deleting and re-registering the
-                # command.
-                if (
-                    target.name == reg_cmd.name
-                    and target.guild_id == reg_cmd.guild_id
-                ):
-                    return False
-            return True
+            # Commands have endpoints based on their `name` amd `guild_id`. Other
+            # parameters can be updated instead of deleting and re-registering the
+            # command.
+            return all(
+                target.name != reg_cmd.name
+                and target.guild_id != reg_cmd.guild_id
+                for reg_cmd in local_registered_commands
+            )
 
         # NOTE: Cannot be generator since it can't be consumed due to lines 743-745
         to_remove = [*filter(should_be_removed, self._api_commands)]
