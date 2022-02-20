@@ -243,7 +243,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         Parameters
         ----------
         reason Optional[:class:`str`]
-            The reason of the channel delete.
+            The reason of the channel edit.
         \\*\\*kwargs :
             The keyword arguments to edit the channel with.
 
@@ -289,7 +289,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         type: :class:`int`
             0 for a role or 1 for a member.
         reason: Optional[:class:`str`]
-            The reason of the channel delete.
+            The reason of the channel permission edit.
         """
         await self._http.put(
             f"channels/{self.id}/permissions/{overwrite.id}",
@@ -309,7 +309,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         overwrite: :class:`~pincer.objects.guild.overwrite.Overwrite`
             The overwrite object.
         reason: Optional[:class:`str`]
-            The reason of the channel delete.
+            The reason of the channel permission delete.
         """
         await self._http.delete(
             f"channels/{self.id}/permissions/{overwrite.id}",
@@ -372,6 +372,11 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """|coro|
         Pin a message in a channel. Requires the ``MANAGE_MESSAGES`` permission.
         The maximum number of pinned messages is ``50``.
+        
+        Parameters
+        ----------
+        reason: Optional[:class:`str`]
+            The reason of the channel message pin.
         """
         await self._http.put(
             f"channels/{self.id}/pins/{message.id}",
@@ -383,6 +388,11 @@ class Channel(APIObject, GuildProperty):  # noqa E501
     ):
         """|coro|
         Unpin a message in a channel. Requires the ``MANAGE_MESSAGES`` permission.
+                
+        Parameters
+        ----------
+        reason: Optional[:class:`str`]
+            The reason of the channel message unpin.
         """
         await self._http.delete(
             f"channels/{self.id}/pins/{message.id}",
@@ -441,7 +451,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         messages: List[:class:`~.pincer.utils.Snowflake`]
             The list of message IDs to delete (2-100).
         reason: Optional[:class:`str`]
-            The reason of the channel delete.
+            The reason of the channel bulk delete.
         """
         await self._http.post(
             f"channels/{self.id}/messages/bulk_delete",
