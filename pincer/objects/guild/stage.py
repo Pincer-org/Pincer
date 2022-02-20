@@ -7,7 +7,6 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import TYPE_CHECKING, Optional
 
-from ...utils import remove_none
 from ...utils.api_object import APIObject, ChannelProperty, GuildProperty
 
 if TYPE_CHECKING:
