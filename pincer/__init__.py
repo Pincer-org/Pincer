@@ -56,7 +56,7 @@ class VersionInfo(NamedTuple):
         )
 
 
-version_info = VersionInfo(0, 15, 3)
+version_info = VersionInfo(0, 16, 0)
 __version__ = repr(version_info)
 
 __all__ = (
