@@ -145,33 +145,33 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
             return
 
         for option in self.data.options:
-            if option.type is AppCommandOptionType.STRING:
+            if option.type == AppCommandOptionType.STRING:
                 option.value = str(option.value)
-            elif option.type is AppCommandOptionType.INTEGER:
+            elif option.type == AppCommandOptionType.INTEGER:
                 option.value = int(option.value)
-            elif option.type is AppCommandOptionType.BOOLEAN:
-                option.value = bool(option.value)
-            elif option.type is AppCommandOptionType.NUMBER:
+            elif option.type == AppCommandOptionType.BOOLEAN:
+                option.value = option.value == "True"
+            elif option.type == AppCommandOptionType.NUMBER:
                 option.value = float(option.value)
 
-            elif option.type is AppCommandOptionType.USER:
+            elif option.type == AppCommandOptionType.USER:
                 user = self.return_type(option, self.data.resolved.members)
                 user.set_user_data(
                     self.return_type(option, self.data.resolved.users)
                 )
                 option.value = user
 
-            elif option.type is AppCommandOptionType.CHANNEL:
+            elif option.type == AppCommandOptionType.CHANNEL:
                 option.value = self.return_type(
                     option, self.data.resolved.channels
                 )
 
-            elif option.type is AppCommandOptionType.ROLE:
+            elif option.type == AppCommandOptionType.ROLE:
                 option.value = self.return_type(
                     option, self.data.resolved.roles
                 )
 
-            elif option.type is AppCommandOptionType.MENTIONABLE:
+            elif option.type == AppCommandOptionType.MENTIONABLE:
                 user = self.return_type(option, self.data.resolved.members)
                 if user:
                     user.set_user_data(self.return_type(
