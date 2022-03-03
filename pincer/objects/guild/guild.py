@@ -20,27 +20,29 @@ from ...utils.api_data import APIDataGen
 from ...utils.api_object import APIObject
 from ...utils.types import MISSING
 
+from .audit_log import AuditLog
+from .ban import Ban
+from .member import GuildMember
+from .invite import Invite
+from .role import Role
+from .template import GuildTemplate
+from .welcome_screen import WelcomeScreen
+from .widget import GuildWidget
+from .webhook import Webhook
+from ..user.integration import Integration
+from ..voice.region import VoiceRegion
+from ..message.sticker import Sticker
+
 if TYPE_CHECKING:
     from typing import Any, Dict, List, Optional, Tuple, Union, Generator
 
-    from .audit_log import AuditLog
-    from .ban import Ban
-    from .channel import ChannelType
-    from .member import GuildMember
-    from .features import GuildFeature
-    from .invite import Invite
-    from .overwrite import Overwrite
-    from .role import Role
-    from .stage import StageInstance
-    from .template import GuildTemplate
-    from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
-    from .widget import GuildWidget
-    from .webhook import Webhook
-    from ..user.user import User
-    from ..user.integration import Integration
-    from ..voice.region import VoiceRegion
     from ..events.presence import PresenceUpdateEvent
-    from ..message.sticker import Sticker
+    from .channel import ChannelType
+    from .features import GuildFeature
+    from .overwrite import Overwrite
+    from .stage import StageInstance
+    from .welcome_screen import WelcomeScreenChannel
+    from ..user.user import User
     from ..user.voice_state import VoiceState
     from ...client import Client
     from ...utils.timestamp import Timestamp
