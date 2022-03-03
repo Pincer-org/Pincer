@@ -154,12 +154,15 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
             elif option.type == AppCommandOptionType.NUMBER:
                 option.value = float(option.value)
 
-            elif option.type == AppCommandOptionType.USER:
+            elif option.type is AppCommandOptionType.USER:
                 user = self.return_type(option, self.data.resolved.members)
-                user.set_user_data(
-                    self.return_type(option, self.data.resolved.users)
-                )
-                option.value = user
+                if user:
+                    user.set_user_data(
+                        self.return_type(option, self.data.resolved.users)
+                    )
+                    option.value = user
+                else:
+                    option.value = self.return_type(option, self.data.resolved.users)
 
             elif option.type == AppCommandOptionType.CHANNEL:
                 option.value = self.return_type(
