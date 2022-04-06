@@ -54,7 +54,8 @@ class Bot(Client):
                         self.load_cog(obj)
                         self.loaded_cogs += 1
                         logging.info(
-                            "Successfully loaded %s (%s)" % (definition, container))
+                            "Successfully loaded %s (%s)" % (definition, container)
+                        )
 
 
 if __name__ == "__main__":
