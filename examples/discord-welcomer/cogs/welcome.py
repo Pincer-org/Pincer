@@ -30,7 +30,7 @@ class Welcome(Cog):
         super().__init__(client)
         self.__session: ClientSession = ClientSession(self.BASE_API_URL)
 
-        with open("./cogs/templates/welcome.html", "r") as f:
+        with open("./cogs/templates/welcome.html") as f:
             self.template = f.read()
 
     def _build_html(self, user: User) -> str:
