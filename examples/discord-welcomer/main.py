@@ -9,6 +9,7 @@ from os import getenv
 from time import perf_counter
 
 from dotenv import load_dotenv
+
 from pincer import Client, Cog
 
 
@@ -34,7 +35,8 @@ class Bot(Client):
 
     def load_packages(self):
         """
-        Goes through all files in the Cogs directory, and loads the classes that inherit from pincer.Cog.
+        Goes through all files in the Cogs directory, and loads the classes that inherit
+        from pincer.Cog.
 
         Side effects: Imports all files that it maps over in this file.
         """
@@ -51,7 +53,8 @@ class Bot(Client):
                     if Cog in parents:
                         self.load_cog(obj)
                         self.loaded_cogs += 1
-                        logging.info("Successfully loaded %s (%s)" % (definition, container))
+                        logging.info(
+                            "Successfully loaded %s (%s)" % (definition, container))
 
 
 if __name__ == "__main__":

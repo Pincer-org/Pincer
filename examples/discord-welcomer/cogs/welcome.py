@@ -10,6 +10,7 @@ from os import getenv
 from typing import TYPE_CHECKING
 
 from aiohttp import ClientSession
+
 from pincer import Cog, Client
 from pincer.objects import File, Message
 from pincer.objects.events.guild import GuildMemberAddEvent
@@ -59,7 +60,11 @@ class Welcome(Cog):
             }
         }
 
-        async with self.__session.post("/v1/html-to-image", data=json.dumps(body), headers=self.REQUEST_HEADERS) as res:
+        async with self.__session.post(
+            "/v1/html-to-image",
+            data=json.dumps(body),
+            headers=self.REQUEST_HEADERS
+        ) as res:
             if res.ok:
                 image_bytes = await res.read()
                 return File(image_bytes, "png", f"welcome-{user.id}.png")
@@ -71,7 +76,9 @@ class Welcome(Cog):
                 await sleep(0.5)
                 return await self.generate_welcome_for_user(user, ttl + 1)
 
-            raise RuntimeError("TTL Exceeded, not retrying request! (failed for welcomes)")
+            raise RuntimeError(
+                "TTL Exceeded, not retrying request! (failed for welcomes)"
+            )
 
     @Client.event
     async def on_ready(self):
