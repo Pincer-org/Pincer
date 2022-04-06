@@ -10,12 +10,12 @@ can load cogs and structure your project so that it is easily maintainable.
 
 ## Setup
 
-1. Install all dependencies with pip from the requirements.txt
-   file. _(`pip install -r requirements.txt`)_
+1.  Install all dependencies with pip from the requirements.txt
+    file. _(`pip install -r requirements.txt`)_
 
-2. Copy the `.env.example` file to `.env`, and fill in the expected values.
+2.  Copy the `.env.example` file to `.env`, and fill in the expected values.
 
-3. Run the `main.py` file.
+3.  Run the `main.py` file.
 
 ## Limitations
 
