@@ -12,7 +12,9 @@ can load cogs and structure your project so that it is easily maintainable.
 
 1. Install all dependencies with pip from the requirements.txt
    file. _(`pip install -r requirements.txt`)_
+
 2. Copy the `.env.example` file to `.env`, and fill in the expected values.
+
 3. Run the `main.py` file.
 
 ## Limitations
@@ -21,4 +23,3 @@ This uses the free version of the html->image api. Which restricts to a max of 1
 requests per day. _(window sliding)_
 You could properly handle this by looking at the HTTP headers, but this example does not
 cover that.
-
