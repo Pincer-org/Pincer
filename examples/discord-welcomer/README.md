@@ -6,7 +6,10 @@ API.
 This script has been build more extensive, which could provide some idea's on how you
 can load cogs and structure your project so that it is easily maintainable.
 
-![image](https://user-images.githubusercontent.com/38541241/162048398-b9942760-ea67-4f0d-99cd-ebd05c78fd63.png)
+![image](https://user-images.githubusercontent.com/38541241/162184018-770c8568-4a51-48d8-8f71-e8df68ef62eb.png)
+
+Variant:
+![image](https://user-images.githubusercontent.com/38541241/162183991-39a0d3ca-8b77-406f-9c4c-41c213ba3c99.png)
 
 ## Setup
 
