@@ -61,7 +61,9 @@ class Welcome(Cog):
         }
 
         async with self.__session.post(
-            "/v1/html-to-image",
+            "/v1/html-to-image-chrome",
+            # "/v1/html-to-image", # use this endpoint with the variant,
+            # as it delivers better performance.
             data=json.dumps(body),
             headers=self.REQUEST_HEADERS
         ) as res:
