@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING
 
 from aiohttp import ClientSession
 
-from pincer import Cog, Client
+from pincer import Cog, Client, command
 from pincer.objects import File, Message
 from pincer.objects.events.guild import GuildMemberAddEvent
 
@@ -30,7 +30,7 @@ class Welcome(Cog):
         super().__init__(client)
         self.__session: ClientSession = ClientSession(self.BASE_API_URL)
 
-        with open("./cogs/templates/welcome.html", "r") as f:
+        with open("./cogs/templates/welcome.html") as f:
             self.template = f.read()
 
     def _build_html(self, user: User) -> str:
@@ -61,9 +61,9 @@ class Welcome(Cog):
         }
 
         async with self.__session.post(
-            "/v1/html-to-image-chrome",
-            # "/v1/html-to-image", # use this endpoint with the variant,
-            # as it delivers better performance.
+            "/v1/html-to-image",
+            # "/v1/html-to-image-chrome", # use this endpoint with the variant,
+            # as it requires more modern css support
             data=json.dumps(body),
             headers=self.REQUEST_HEADERS
         ) as res:

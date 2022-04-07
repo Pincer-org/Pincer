@@ -1,92 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8" />
-        <meta content="IE=edge" http-equiv="X-UA-Compatible" />
-        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <title>Welcome template for Pincer example</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
         <style>
-            main {
+            body {
+                font-family: "Poppins", sans;
                 width: 700px;
                 height: 250px;
+                background-color: #44516a;
+                margin: 0;
 
-                color: #fff;
-                background-color: #2f6491;
+                display: grid;
+                place-items: center;
+            }
 
-                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-
-                border-radius: 15px;
-
-                display: -webkit-box;
-                display: -ms-flexbox;
+            main {
                 display: flex;
-
-                -webkit-box-align: center;
-                -ms-flex-align: center;
                 align-items: center;
+                gap: 40px;
+            }
+
+            img {
+                width: 150px;
+                height: 150px;
+                aspect-ratio: 1/1;
+                border: 8px solid #e2edf8;
+                border-radius: 150px;
             }
 
             h1 {
+                margin-block: 0;
+                font-style: normal;
+                font-weight: 800;
+                font-size: 64px;
+                letter-spacing: 0.04em;
+                color: #e2edf8;
                 text-transform: uppercase;
             }
 
-            .img-wrapper,
-            img {
-                width: 200px;
-                height: 200px;
-
-                border-radius: 50%;
-            }
-
-            .img-wrapper {
-                margin-left: 70px;
-
-                border: 4px solid #ffd53d;
-            }
-
-            h1 {
-                font-size: 45px;
-                margin: 0;
-            }
-
-            h2,
-            h3 {
-                margin: 0;
-                font-size: 35px;
-            }
-
             h2 {
-                margin-top: 5px;
-                white-space: nowrap;
-                overflow: hidden;
-                -o-text-overflow: ellipsis;
-                text-overflow: ellipsis;
+                margin-block: 0;
+                color: #77aee0;
+                font-style: normal;
+                font-weight: 700;
+                font-size: 32px;
+                color: #77aee0;
             }
 
-            h3 {
-                margin-top: -7px;
-                opacity: 0.75;
-                font-size: 20px;
+            span {
+                font-family: "Poppins";
+                font-style: normal;
+                font-weight: 600;
+                font-size: 24px;
+                letter-spacing: -0.04em;
+                color: #cbd6e1;
             }
 
-            .parent {
-                margin-left: 30px;
-                width: 350px;
+            .text {
+                display: flex;
+                flex-direction: column;
+                justify-self: center;
+                gap: 10px;
             }
         </style>
     </head>
+
     <body>
         <main>
-            <div class="img-wrapper">
-                <img alt="User icon" src="%icon%" />
-            </div>
-
-            <div class="parent">
-                <h1>Welcome</h1>
-                <div>
-                    <h2>%username%<span></span></h2>
-                    <h3>#%discriminator%</h3>
-                </div>
+            <img src="%icon%" alt="User icon" />
+            <div class="text">
+                <h1>welcome</h1>
+                <h2>%username%<span>#%discriminator%</span></h2>
             </div>
         </main>
     </body>
