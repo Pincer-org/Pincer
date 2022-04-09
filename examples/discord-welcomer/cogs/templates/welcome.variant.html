@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Welcome template for Pincer example</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <style>
+            body {
+                font-family: "Poppins", sans;
+                width: 700px;
+                height: 250px;
+                background-color: #44516a;
+                margin: 0;
+
+                display: grid;
+                place-items: center;
+            }
+
+            main {
+                display: flex;
+                align-items: center;
+                gap: 40px;
+            }
+
+            img {
+                width: 150px;
+                height: 150px;
+                aspect-ratio: 1/1;
+                border: 8px solid #e2edf8;
+                border-radius: 150px;
+            }
+
+            h1 {
+                margin-block: 0;
+                font-style: normal;
+                font-weight: 800;
+                font-size: 64px;
+                letter-spacing: 0.04em;
+                color: #e2edf8;
+                text-transform: uppercase;
+            }
+
+            h2 {
+                margin-block: 0;
+                color: #77aee0;
+                font-style: normal;
+                font-weight: 700;
+                font-size: 32px;
+                color: #77aee0;
+            }
+
+            span {
+                font-family: "Poppins";
+                font-style: normal;
+                font-weight: 600;
+                font-size: 24px;
+                letter-spacing: -0.04em;
+                color: #cbd6e1;
+            }
+
+            .text {
+                display: flex;
+                flex-direction: column;
+                justify-self: center;
+                gap: 10px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <main>
+            <img src="%icon%" alt="User icon" />
+            <div class="text">
+                <h1>welcome</h1>
+                <h2>%username%<span>#%discriminator%</span></h2>
+            </div>
+        </main>
+    </body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Welcome template for Pincer example</title>
+        <style>
+            main {
+                width: 700px;
+                height: 250px;
+
+                color: #fff;
+                background-color: #2f6491;
+
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+                border-radius: 15px;
+
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+            }
+
+            h1 {
+                text-transform: uppercase;
+            }
+
+            .img-wrapper,
+            img {
+                width: 200px;
+                height: 200px;
+
+                border-radius: 50%;
+            }
+
+            .img-wrapper {
+                margin-left: 70px;
+
+                border: 4px solid #fff;
+            }
+
+            h1 {
+                font-size: 45px;
+                margin: 0;
+            }
+
+            h2,
+            h3 {
+                margin: 0;
+                font-size: 35px;
+            }
+
+            h2 {
+                margin-top: 5px;
+                white-space: nowrap;
+                overflow: hidden;
+                -o-text-overflow: ellipsis;
+                text-overflow: ellipsis;
+            }
+
+            h3 {
+                margin-top: -7px;
+                opacity: 0.75;
+                font-size: 20px;
+            }
+
+            .parent {
+                margin-left: 30px;
+                width: 350px;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <div class="img-wrapper">
+                <img alt="User icon" src="%icon%" />
+            </div>
+
+            <div class="parent">
+                <h1>Welcome</h1>
+                <div>
+                    <h2>%username%<span></span></h2>
+                    <h3>#%discriminator%</h3>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>
