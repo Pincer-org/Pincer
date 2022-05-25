@@ -14,7 +14,7 @@ tox = "==3.25.0"
 pytest = "==7.1.2"
 pytest-asyncio = "==0.18.3"
 pytest-cov = "==3.0.0"
-mypy = "==0.950"
+mypy = "==0.960"
 twine = "==4.0.0"
 wheel = "==0.37.1"
 
