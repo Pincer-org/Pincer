@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
-        os: [ ubuntu. windows, macos ]
+        os: [ ubuntu, windows, macos ]
 
     name: Nox on ${{ matrix.os }}
     steps:
