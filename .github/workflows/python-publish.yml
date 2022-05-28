@@ -22,11 +22,11 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-    - name: Install dependencies
+    - name: Install Poetry
       run: |
-        pip install -r packages/build.txt
+        pip install poetry
     - name: Build package
-      run: python setup.py sdist bdist_wheel
+      run: poetry build
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
       with:

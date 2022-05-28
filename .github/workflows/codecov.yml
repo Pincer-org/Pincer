@@ -10,12 +10,12 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-      - name: Install dependencies (dev)
-        run: pip install -r packages/dev.txt
-      - name: Install dependencies (img)
-        run: pip install -r packages/img.txt
+      - name: Install poetry
+        run: pip install poetry
+      - name: Install base dependencies
+        run: poetry install
+      - name: Install extra dependencies
+        run: poetry install --extras "img speed"
       - name: Run tests and collect coverage
         run: |
           pytest --cov=.
