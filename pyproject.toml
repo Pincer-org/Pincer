@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pincer"
 version = "0.16.0"
-description = "Discord API wrapper rebuild from scratch."
+description = "Discord API wrapper rebuilt from scratch."
 readme = "docs/PYPI.md"
 homepage = "https://pincer.dev"
 documentation = "https://docs.pincer.dev"
