@@ -11,14 +11,14 @@ def test(session: nox.Session):
 @nox.session
 def format(session: nox.Session):
     session.install("black", "isort")
-    session.run("isort", ".")
-    session.run("black", ".")
+    session.run("isort", "pincer")
+    session.run("black", "pincer")
 
 
 @nox.session
 def lint(session: nox.Session):
     session.install("flake8")
-    session.run("flake8", ".")
+    session.run("flake8", "pincer")
 
 
 @nox.session
