@@ -20,4 +20,4 @@ jobs:
       - name: Install nox
         run: pip install nox
       - name: Run nox
-        run: nox -s format lint mypy 
+        run: nox -s format lint
