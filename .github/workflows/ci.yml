@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ${{ matrix.os }}-latest
+    strategy:
+      matrix:
+        os: [ ubuntu. windows, macos ]
+
+    name: Nox on ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Python Setup
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install nox
+        run: pip install nox
+      - name: Run nox
+        run: nox -s format lint mypy 
