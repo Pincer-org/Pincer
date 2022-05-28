@@ -84,9 +84,6 @@ autodoc_default_options = {
     'show-inheritance': True
 }
 
-with open('../requirements.txt') as f:
-    autodoc_mock_imports = f.read().splitlines()
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
