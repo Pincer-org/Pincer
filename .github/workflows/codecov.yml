@@ -18,7 +18,7 @@ jobs:
         run: poetry install --extras "img speed"
       - name: Run tests and collect coverage
         run: |
-          pytest --cov=.
+          poetry run python -m pytest --cov=.
           coverage xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
