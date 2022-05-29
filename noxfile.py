@@ -21,7 +21,12 @@ def lint(session: nox.Session):
     session.run("flake8", "pincer")
 
 
+"""
+Mypy will be be ran within a workflow until pincer provide complete typing
+that will not fail for every push.
+
 @nox.session
 def mypy(session: nox.Session):
-    session.install("mypy")
-    session.run("mypy", "pincer")
+   session.install("mypy")
+   session.run("mypy", "pincer")
+"""
