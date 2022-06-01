@@ -1,6 +1,7 @@
 [flake8]
-max-line-length = 88
 ignore =
+    E501, # line length
+    E203 # whitespace before : in slicing.
     D203,
     # H101: Use TODO(NAME)
     # H501: Do not use self.__dict__ for string formatting
