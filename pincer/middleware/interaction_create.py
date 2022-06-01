@@ -88,7 +88,9 @@ def get_command_from_registry(interaction: Interaction):
     )
 
 
-def get_call(self: Client, interaction: Interaction) -> Optional[Tuple[Coro, Any]]:
+def get_call(
+    self: Client, interaction: Interaction
+) -> Optional[Tuple[Coro, Any]]:
     if interaction.type == InteractionType.APPLICATION_COMMAND:
         command = get_command_from_registry(interaction)
         if command is None:
@@ -157,7 +159,7 @@ async def interaction_handler(
     interaction: Interaction,
     context: MessageContext,
     command: Coro,
-    manager: Any
+    manager: Any,
 ):
     """|coro|
 

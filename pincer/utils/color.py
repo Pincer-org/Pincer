@@ -48,7 +48,7 @@ class Color:
         if any(digit not in string.hexdigits for digit in c):
             raise ValueError("Illegal hex digit character.")
 
-        self.r, self.g, self.b = (int(c[n:n + 2], 16) for n in (0, 2, 4))
+        self.r, self.g, self.b = (int(c[n : n + 2], 16) for n in (0, 2, 4))
 
     def __eq__(self, other):
         return self.r == other.r and self.g == other.g and self.b == other.b

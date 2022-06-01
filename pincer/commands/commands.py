@@ -11,9 +11,7 @@ from inspect import Signature, isasyncgenfunction, _empty
 from typing import TYPE_CHECKING, Any, Callable, TypeVar, Union, List
 
 from . import __package__
-from .chat_command_handler import (
-    ChatCommandHandler, _hash_app_command_params
-)
+from .chat_command_handler import ChatCommandHandler, _hash_app_command_params
 from ..commands.arg_types import (
     ChannelTypes,
     CommandArg,
@@ -88,7 +86,7 @@ def command(
     cooldown: Optional[int] = 0,
     cooldown_scale: Optional[float] = 60.0,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
-    parent: Optional[Union[Group, Subgroup]] = None
+    parent: Optional[Union[Group, Subgroup]] = None,
 ):
     """A decorator to create a slash command to register and respond to
     with the discord API from a function.
@@ -193,7 +191,7 @@ def command(
             cooldown=cooldown,
             cooldown_scale=cooldown_scale,
             cooldown_scope=cooldown_scope,
-            parent=parent
+            parent=parent,
         )
 
     cmd = name or func.__name__
@@ -268,9 +266,7 @@ def command(
                         return obj.get_payload()
                 return MISSING
 
-        argument_description = (
-            get_arg(Description) or "Description not set"
-        )
+        argument_description = get_arg(Description) or "Description not set"
 
         choices = get_arg(Choices)
 
@@ -284,10 +280,7 @@ def command(
             )
         if choices is not MISSING:
             for choice in choices:
-                if (
-                    isinstance(choice.value, int)
-                    and argument_type is float
-                ):
+                if isinstance(choice.value, int) and argument_type is float:
                     continue
                 if not isinstance(choice.value, argument_type):
                     raise InvalidArgumentAnnotation(
@@ -295,10 +288,7 @@ def command(
                     )
 
         channel_types = get_arg(ChannelTypes)
-        if (
-            channel_types is not MISSING
-            and argument_type is not Channel
-        ):
+        if channel_types is not MISSING and argument_type is not Channel:
             raise InvalidArgumentAnnotation(
                 "ChannelTypes are only available for Channels"
             )
@@ -346,7 +336,7 @@ def command(
         cooldown_scale=cooldown_scale,
         cooldown_scope=cooldown_scope,
         command_options=options,
-        parent=parent
+        parent=parent,
     )
 
 
@@ -546,7 +536,7 @@ def register_command(
     cooldown_scale: Optional[float] = 60.0,
     cooldown_scope: Optional[ThrottleScope] = ThrottleScope.USER,
     command_options=MISSING,  # Missing typehint?
-    parent: Optional[Union[Group, Subgroup]] = MISSING
+    parent: Optional[Union[Group, Subgroup]] = MISSING,
 ):
     cmd = name or func.__name__
 
@@ -594,9 +584,7 @@ def register_command(
             f"registered by `{reg.call.__name__}`."
         )
 
-    _log.info(
-        f"Registered command `{cmd}` to `{func.__name__}` locally."
-    )
+    _log.info(f"Registered command `{cmd}` to `{func.__name__}` locally.")
 
     interactable = InteractableStructure(
         call=func,
@@ -612,17 +600,13 @@ def register_command(
             type=app_command_type,
             default_permission=enable_default,
             options=command_options,
-            guild_id=guild_id
+            guild_id=guild_id,
         ),
     )
 
     ChatCommandHandler.register[
         _hash_app_command_params(
-            cmd,
-            guild_id,
-            app_command_type,
-            group,
-            sub_group
+            cmd, guild_id, app_command_type, group, sub_group
         )
     ] = interactable
 

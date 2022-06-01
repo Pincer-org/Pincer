@@ -124,16 +124,16 @@ class File:
         return cls(
             content=file,
             image_format=_get_file_extension(filename),
-            filename=filename or os.path.basename(filepath)
+            filename=filename or os.path.basename(filepath),
         )
 
     @classmethod
     def from_pillow_image(
-            cls,
-            img: IMAGE_TYPE,
-            filename: Optional[str] = None,
-            image_format: Optional[str] = None,
-            **kwargs
+        cls,
+        img: IMAGE_TYPE,
+        filename: Optional[str] = None,
+        image_format: Optional[str] = None,
+        **kwargs,
     ) -> File:
         """Creates a file object from a PIL image
         Supports GIF, PNG, JPEG, and WEBP.
@@ -178,9 +178,7 @@ class File:
         img_bytes = img_byte_arr.getvalue()
 
         return cls(
-            content=img_bytes,
-            image_format=image_format,
-            filename=filename
+            content=img_bytes, image_format=image_format, filename=filename
         )
 
     @property
@@ -194,11 +192,11 @@ class File:
         """  # noqa: E501
         if self.image_format not in {"jpeg", "png", "gif"}:
             raise ImageEncodingError(
-                "Only image types \"jpeg\", \"png\", and \"gif\" can be sent in"
+                'Only image types "jpeg", "png", and "gif" can be sent in'
                 " an Image URI"
             )
 
-        encoded_bytes = b64encode(self.content).decode('ascii')
+        encoded_bytes = b64encode(self.content).decode("ascii")
 
         return f"data:image/{self.image_format};base64,{encoded_bytes}"
 

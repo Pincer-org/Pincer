@@ -33,6 +33,7 @@ class EventStatus(IntEnum):
     COMPLETED: int
         The event is completed.
     """
+
     SCHEDULED = 1
     ACTIVE = 2
     COMPLETED = 3
@@ -52,6 +53,7 @@ class GuildScheduledEventEntityType(IntEnum):
     EXTERNAL: int
         The event is scheduled for an external resource.
     """
+
     STAGE_INSTANCE = 1
     VOICE = 2
     EXTERNAL = 3
@@ -96,6 +98,7 @@ class ScheduledEvent(APIObject):
     user_count: APINullable[:class:`int`]
         The number of users who have joined the scheduled event
     """
+
     id: Snowflake
     name: str
     guild_id: Snowflake
@@ -127,8 +130,9 @@ class GuildScheduledEventUser(APIObject):
     user : :class:`~pincer.objects.user.user.User`
         user which subscribed to an event
     member : APINullable[:class:`~pincer.objects.guild.member.GuildMember`]
-        	guild member data for this user for the guild which this event belongs to, if any
+                guild member data for this user for the guild which this event belongs to, if any
     """
+
     guild_scheduled_event_id: Snowflake
     user: User
     member: APINullable[GuildMember] = MISSING

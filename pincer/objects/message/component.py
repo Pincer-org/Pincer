@@ -32,6 +32,7 @@ class ComponentType(IntEnum):
     SELECT_MENU : int
         A select menu. Must be inside an action row.
     """
+
     ACTION_ROW = 1
     BUTTON = 2
     SELECT_MENU = 3
@@ -73,6 +74,7 @@ class MessageComponent(APIObject):
     components: APINullable[List[:class:`~pincer.objects.message.component.MessageComponent`]]
         A list of child components
     """  # noqa: E501
+
     type: int
 
     options: List[SelectOption] = MISSING

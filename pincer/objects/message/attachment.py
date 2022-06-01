@@ -39,6 +39,7 @@ class Attachment(APIObject):
     width: APINullable[Optional[:class:`int`]]
         Width of file (if image)
     """
+
     id: Snowflake
     filename: str
     size: int

@@ -24,6 +24,7 @@ class Timestamp:
     ----------
     time: Union[:class:`str`, :class:`int`, :class:`float`, :class:`datetime.datetime`]
     """
+
     # noqa: E501
 
     def __init__(self, time: Optional[TS] = None):

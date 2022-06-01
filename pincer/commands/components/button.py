@@ -37,6 +37,7 @@ class ButtonStyle(IntEnum):
         - color: gray, navigates to a URL
         - required_field: url
     """
+
     PRIMARY = 1
     SECONDARY = 2
     SUCCESS = 3
@@ -67,6 +68,7 @@ class Button(_Component):
     disabled: APINullable[:class:`bool`]
         Whether the button is disabled |default| :data:`False`
     """
+
     custom_id: APINullable[str]
     label: APINullable[str]
     style: ButtonStyle

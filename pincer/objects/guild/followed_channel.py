@@ -23,5 +23,6 @@ class FollowedChannel(APIObject, ChannelProperty):
     webhook_id: :class:`~pincer.utils.snowflake.Snowflake`
         Created target webhook id
     """
+
     channel_id: Snowflake
     webhook_id: Snowflake

@@ -30,6 +30,7 @@ class RoleTags(APIObject):
     premium_subscriber: APINullable[:class:`bool`]
         Whether this is the guild's premium subscriber role or not.
     """
+
     bot_id: APINullable[Snowflake] = MISSING
     integration_id: APINullable[Snowflake] = MISSING
     premium_subscriber: APINullable[bool] = MISSING
@@ -65,6 +66,7 @@ class Role(APIObject):
     tags: :class:`~pincer.objects.guild.role.RoleTags`
         The tags this role has
     """
+
     color: Color
     hoist: bool
     id: Snowflake
@@ -98,5 +100,5 @@ class Role(APIObject):
         roles: list = await client.http.get(f"/guilds/{guild_id}/roles")
 
         for role in roles:
-            if int(role['id']) == role_id:
+            if int(role["id"]) == role_id:
                 return cls.from_dict(role)

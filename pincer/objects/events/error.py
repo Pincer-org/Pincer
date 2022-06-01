@@ -18,5 +18,6 @@ class DiscordError(PincerError, APIObject):
     message: :class:`str`
         The error description.
     """
+
     code: int
     message: str

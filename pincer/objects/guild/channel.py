@@ -362,8 +362,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
             An iterator of pinned messages.
         """
         return APIDataGen(
-            UserMessage,
-            self._http.get(f"channels/{self.id}/pins")
+            UserMessage, self._http.get(f"channels/{self.id}/pins")
         )
 
     async def pin_message(
@@ -372,7 +371,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """|coro|
         Pin a message in a channel. Requires the ``MANAGE_MESSAGES`` permission.
         The maximum number of pinned messages is ``50``.
-        
+
         Parameters
         ----------
         reason: Optional[:class:`str`]
@@ -388,7 +387,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
     ):
         """|coro|
         Unpin a message in a channel. Requires the ``MANAGE_MESSAGES`` permission.
-                
+
         Parameters
         ----------
         reason: Optional[:class:`str`]
@@ -541,8 +540,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         AsyncGenerator[:class:`~.pincer.objects.guild.webhook.Webhook`, None]
         """
         return APIDataGen(
-            Webhook,
-            self._http.get(f"channels/{self.id}/webhooks")
+            Webhook, self._http.get(f"channels/{self.id}/webhooks")
         )
 
     def get_invites(self) -> APIDataGen[Invite]:
@@ -555,10 +553,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         AsyncIterator[:class:`~pincer.objects.guild.invite.Invite`]
             Invites iterator.
         """
-        return APIDataGen(
-            Invite,
-            self._http.get(f"channels/{self.id}/invites")
-        )
+        return APIDataGen(Invite, self._http.get(f"channels/{self.id}/invites"))
 
     async def create_invite(
         self,
@@ -794,7 +789,8 @@ class TextChannel(Channel):
         )
 
     async def history(
-        self, limit: int = 50,
+        self,
+        limit: int = 50,
         before: Optional[Union[int, Snowflake]] = None,
         after: Optional[Union[int, Snowflake]] = None,
         around: Optional[Union[int, Snowflake]] = None,
@@ -820,19 +816,19 @@ class TextChannel(Channel):
         """
 
         if limit is None:
-            limit = float('inf')
+            limit = float("inf")
 
         while limit > 0:
             retrieve = min(limit, 100)
 
             raw_messages = await self._http.get(
-                f'/channels/{self.id}/messages',
+                f"/channels/{self.id}/messages",
                 params={
-                    'limit': retrieve,
-                    'before': before,
-                    'after': after,
-                    'around': around,
-                }
+                    "limit": retrieve,
+                    "before": before,
+                    "after": after,
+                    "around": around,
+                },
             )
 
             if not raw_messages:
@@ -841,7 +837,7 @@ class TextChannel(Channel):
             for _message in raw_messages:
                 yield UserMessage.from_dict(_message)
 
-            before = raw_messages[-1]['id']
+            before = raw_messages[-1]["id"]
             limit -= retrieve
 
 
@@ -1116,8 +1112,7 @@ class Thread(Channel):
             An iterator of thread members.
         """
         return APIDataGen(
-            ThreadMember,
-            self._http.get(f"channels/{self.id}/thread-members")
+            ThreadMember, self._http.get(f"channels/{self.id}/thread-members")
         )
 
 
