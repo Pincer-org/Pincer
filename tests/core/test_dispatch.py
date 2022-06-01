@@ -6,10 +6,7 @@ from pincer.core.dispatch import GatewayDispatch
 
 class TestDispatch:
     op = 123
-    data = {
-        "foo": "bar",
-        "bar": "foo"
-    }
+    data = {"foo": "bar", "bar": "foo"}
     seq = 456
     event_name = "test_event"
 

@@ -38,7 +38,7 @@ class Welcome(Cog):
         arguments = {
             "icon": user.get_avatar_url(256),
             "username": user.username,
-            "discriminator": user.discriminator
+            "discriminator": user.discriminator,
         }
 
         res = self.template
@@ -57,7 +57,7 @@ class Welcome(Cog):
                 "width": 700,
                 "height": 258,
                 "transparent": True,
-            }
+            },
         }
 
         async with self.__session.post(
@@ -65,7 +65,7 @@ class Welcome(Cog):
             # "/v1/html-to-image-chrome", # use this endpoint with the variant,
             # as it requires more modern css support
             data=json.dumps(body),
-            headers=self.REQUEST_HEADERS
+            headers=self.REQUEST_HEADERS,
         ) as res:
             if res.ok:
                 image_bytes = await res.read()
@@ -84,7 +84,9 @@ class Welcome(Cog):
 
     @Client.event
     async def on_ready(self):
-        self.channel = await self.client.get_channel(int(getenv("WELCOME_CHANNEL")))
+        self.channel = await self.client.get_channel(
+            int(getenv("WELCOME_CHANNEL"))
+        )
 
     @Client.event
     async def on_guild_member_add(self, event: GuildMemberAddEvent):

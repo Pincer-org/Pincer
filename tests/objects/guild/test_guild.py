@@ -4,66 +4,67 @@
 from pincer.objects import Guild, Emoji, Channel, Role
 
 FAKE_GUILD = {
-    'id': '0',
-    'name': 'test-server',
-    'features': [],
-    'emojis': [
-        {'name': 'test-emoji',
-         'roles': [],
-         'id': '0',
-         'require_colons': True,
-         'managed': False,
-         'animated': False,
-         'available': True
-         }
+    "id": "0",
+    "name": "test-server",
+    "features": [],
+    "emojis": [
+        {
+            "name": "test-emoji",
+            "roles": [],
+            "id": "0",
+            "require_colons": True,
+            "managed": False,
+            "animated": False,
+            "available": True,
+        }
     ],
-    'stickers': [],
-    'owner_id': '0',
-    'region': 'us-east',
-    'afk_timeout': 300,
-    'system_channel_id': '0',
-    'widget_enabled': False,
-    'widget_channel_id': '0',
-    'verification_level': 0,
-    'roles': [
-        {'id': '0',
-         'name': '@everyone',
-         'permissions': '0',
-         'position': 0,
-         'color': 0,
-         'hoist': False,
-         'managed': False,
-         'mentionable': False,
-         }
+    "stickers": [],
+    "owner_id": "0",
+    "region": "us-east",
+    "afk_timeout": 300,
+    "system_channel_id": "0",
+    "widget_enabled": False,
+    "widget_channel_id": "0",
+    "verification_level": 0,
+    "roles": [
+        {
+            "id": "0",
+            "name": "@everyone",
+            "permissions": "0",
+            "position": 0,
+            "color": 0,
+            "hoist": False,
+            "managed": False,
+            "mentionable": False,
+        }
     ],
-    'default_message_notifications': 0,
-    'mfa_level': 0,
-    'explicit_content_filter': 0,
-    'max_members': 250000,
-    'max_video_channel_users': 25,
-    'premium_tier': 0,
-    'premium_subscription_count': 0,
-    'system_channel_flags': 8,
-    'preferred_locale': 'en-US',
-    'premium_progress_bar_enabled': False,
-    'nsfw': False,
-    'nsfw_level': 0,
-    'channels':
-    [
-        {'id': '0',
-         'type': 4,
-         'name': 'Text Channels',
-         'position': 0,
-         'guild_id': '0',
-         'permission_overwrites': [],
-         'nsfw': False
-         },
-    ]
+    "default_message_notifications": 0,
+    "mfa_level": 0,
+    "explicit_content_filter": 0,
+    "max_members": 250000,
+    "max_video_channel_users": 25,
+    "premium_tier": 0,
+    "premium_subscription_count": 0,
+    "system_channel_flags": 8,
+    "preferred_locale": "en-US",
+    "premium_progress_bar_enabled": False,
+    "nsfw": False,
+    "nsfw_level": 0,
+    "channels": [
+        {
+            "id": "0",
+            "type": 4,
+            "name": "Text Channels",
+            "position": 0,
+            "guild_id": "0",
+            "permission_overwrites": [],
+            "nsfw": False,
+        },
+    ],
 }
 
 
 class TestChannel:
-
     @staticmethod
     def test_get():
 
@@ -81,7 +82,7 @@ class TestChannel:
                     require_colons=True,
                     managed=False,
                     animated=False,
-                    available=True
+                    available=True,
                 )
             ],
             stickers=[],
@@ -124,7 +125,7 @@ class TestChannel:
                     position=0,
                     guild_id=0,
                     permission_overwrites=[],
-                    nsfw=False
+                    nsfw=False,
                 )
-            ]
+            ],
         )

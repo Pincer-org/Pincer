@@ -767,7 +767,7 @@ class Guild(APIObject):
         reason : Optional[:class:`str`]
             audit log reason |default| :data:`None`
         """
-        data = await self._http.put(
+        await self._http.put(
             f"guilds/{self.id}/members/{user_id}/roles/{role_id}",
             headers={"X-Audit-Log-Reason": reason},
         )

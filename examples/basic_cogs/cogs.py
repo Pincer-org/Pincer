@@ -10,17 +10,14 @@ class ErrorHandler(Cog):
         ctx: MessageContext,
         error: Exception,
         args: List[Any],
-        kwargs: Dict[str, Any]
+        kwargs: Dict[str, Any],
     ):
         return Embed(
             "Oops...",
             "An error occurred while trying to execute the "
             f"`{ctx.interaction.data.name}` command! Please retry later!",
-            color=0xff0000
-        ).add_field(
-            "Exception:",
-            f"```\n{type(error).__name__}:\n{error}\n```"
-        )
+            color=0xFF0000,
+        ).add_field("Exception:", f"```\n{type(error).__name__}:\n{error}\n```")
 
 
 class OnReadyCog(Cog):
