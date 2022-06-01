@@ -8,6 +8,10 @@ from .ratelimiter import RateLimiter, Bucket
 
 
 __all__ = (
-    "Bucket", "Gateway", "GatewayDispatch", "GatewayInfo",
-    "HTTPClient", "RateLimiter"
+    "Bucket",
+    "Gateway",
+    "GatewayDispatch",
+    "GatewayInfo",
+    "HTTPClient",
+    "RateLimiter",
 )

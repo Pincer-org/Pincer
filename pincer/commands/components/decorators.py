@@ -26,6 +26,7 @@ def component(custom_id):
     custom_id : str
         The ID of the message component to handle.
     """
+
     def wrap(custom_id, func):
         ComponentHandler().register_id(_id=custom_id, func=func)
         return func
@@ -39,7 +40,7 @@ def button(
     emoji: Emoji = None,
     url: str = None,
     disabled: bool = None,
-    custom_id: str = None
+    custom_id: str = None,
 ) -> Button:
     """
     Turn a function into handler for a :class:`~pincer.commands.components.button.Button`.
@@ -72,7 +73,9 @@ def button(
     def wrap(custom_id, func) -> Button:
 
         if not iscoroutinefunction(func):
-            raise CommandIsNotCoroutine(f"`{func.__name__}` must be a coroutine.")
+            raise CommandIsNotCoroutine(
+                f"`{func.__name__}` must be a coroutine."
+            )
 
         if custom_id is None:
             custom_id = func.__name__
@@ -91,10 +94,12 @@ def button(
                         "url": url,
                     }
                 )
-            )
+            ),
         )
 
-        ComponentHandler.register[interactable.metadata.custom_id] = interactable
+        ComponentHandler.register[
+            interactable.metadata.custom_id
+        ] = interactable
 
         return interactable
 
@@ -108,7 +113,7 @@ def select_menu(
     min_values: int = None,
     max_values: int = None,
     disabled: bool = None,
-    custom_id: str = None
+    custom_id: str = None,
 ) -> SelectMenu:
     """
     Turn a function into handler for a :class:`~pincer.commands.components.select_menu.SelectMenu`.
@@ -145,7 +150,9 @@ def select_menu(
     def wrap(custom_id, func) -> SelectMenu:
 
         if not iscoroutinefunction(func):
-            raise CommandIsNotCoroutine(f"`{func.__name__}` must be a coroutine.")
+            raise CommandIsNotCoroutine(
+                f"`{func.__name__}` must be a coroutine."
+            )
 
         if custom_id is None:
             custom_id = func.__name__
@@ -164,10 +171,12 @@ def select_menu(
                         "disabled": disabled,
                     }
                 )
-            )
+            ),
         )
 
-        ComponentHandler.register[interactable.metadata.custom_id] = interactable
+        ComponentHandler.register[
+            interactable.metadata.custom_id
+        ] = interactable
 
         return interactable
 

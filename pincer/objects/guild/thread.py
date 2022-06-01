@@ -37,6 +37,7 @@ class ThreadMetadata(APIObject):
         Whether non-moderators can add other non-moderators to a thread;
         only available on private threads
     """
+
     archived: bool
     auto_archive_duration: int
     archive_timestamp: Timestamp
@@ -60,6 +61,7 @@ class ThreadMember(APIObject):
     user_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Id of the user
     """
+
     join_timestamp: Timestamp
     flags: int
 

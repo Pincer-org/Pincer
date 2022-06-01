@@ -77,9 +77,7 @@ class ChatCommandHandler(metaclass=Singleton):
     def __init__(self, client: Client):
         self.client = client
         self._api_commands: List[AppCommand] = []
-        _log.debug(
-            "%i commands registered.", len(ChatCommandHandler.register)
-        )
+        _log.debug("%i commands registered.", len(ChatCommandHandler.register))
 
         self.__prefix = f"applications/{self.client.bot.id}"
 
@@ -94,13 +92,17 @@ class ChatCommandHandler(metaclass=Singleton):
             List of commands.
         """
         # TODO: Update if discord adds bulk get guild commands
-        guild_commands = await gather(*(
-            self.client.http.get(
-                self.__prefix + self.__get_guild.format(
-                    guild_id=guild.id if isinstance(guild, Guild) else guild
+        guild_commands = await gather(
+            *(
+                self.client.http.get(
+                    self.__prefix
+                    + self.__get_guild.format(
+                        guild_id=guild.id if isinstance(guild, Guild) else guild
+                    )
                 )
-            ) for guild in self.client.guilds
-        ))
+                for guild in self.client.guilds
+            )
+        )
         return list(
             map(
                 AppCommand.from_dict,
@@ -209,7 +211,7 @@ class ChatCommandHandler(metaclass=Singleton):
                         description=cmd.group.description,
                         type=AppCommandType.CHAT_INPUT,
                         guild_id=cmd.metadata.guild_id,
-                        options=[]
+                        options=[],
                     )
 
                 # The top-level command now exists. A subcommand group now if placed
@@ -221,7 +223,7 @@ class ChatCommandHandler(metaclass=Singleton):
                     name=cmd.sub_group.name,
                     description=cmd.sub_group.description,
                     type=AppCommandOptionType.SUB_COMMAND_GROUP,
-                    options=[]
+                    options=[],
                 )
 
                 # This for-else makes sure that sub_command_group will hold a reference
@@ -230,7 +232,8 @@ class ChatCommandHandler(metaclass=Singleton):
                 for cmd_in_children in children:
                     if (
                         cmd_in_children.name == sub_command_group.name
-                        and cmd_in_children.description == sub_command_group.description
+                        and cmd_in_children.description
+                        == sub_command_group.description
                         and cmd_in_children.type == sub_command_group.type
                     ):
                         sub_command_group = cmd_in_children
@@ -238,12 +241,14 @@ class ChatCommandHandler(metaclass=Singleton):
                 else:
                     children.append(sub_command_group)
 
-                sub_command_group.options.append(AppCommandOption(
-                    name=cmd.metadata.name,
-                    description=cmd.metadata.description,
-                    type=AppCommandOptionType.SUB_COMMAND,
-                    options=cmd.metadata.options,
-                ))
+                sub_command_group.options.append(
+                    AppCommandOption(
+                        name=cmd.metadata.name,
+                        description=cmd.metadata.description,
+                        type=AppCommandOptionType.SUB_COMMAND,
+                        options=cmd.metadata.options,
+                    )
+                )
 
                 continue
 
@@ -264,7 +269,7 @@ class ChatCommandHandler(metaclass=Singleton):
                     cmd.metadata.guild_id,
                     AppCommandOptionType.SUB_COMMAND,
                     None,
-                    None
+                    None,
                 )
 
                 if key not in ChatCommandHandler.built_register:
@@ -273,7 +278,7 @@ class ChatCommandHandler(metaclass=Singleton):
                         description=cmd.group.description,
                         type=AppCommandOptionType.SUB_COMMAND,
                         guild_id=cmd.metadata.guild_id,
-                        options=[]
+                        options=[],
                     )
 
                 # No checking has to be done before appending `cmd` since it is the
@@ -283,7 +288,7 @@ class ChatCommandHandler(metaclass=Singleton):
                         name=cmd.metadata.name,
                         description=cmd.metadata.description,
                         type=AppCommandType.CHAT_INPUT,
-                        options=cmd.metadata.options
+                        options=cmd.metadata.options,
                     )
                 )
 
@@ -330,13 +335,10 @@ class ChatCommandHandler(metaclass=Singleton):
         # NOTE: Cannot be generator since it can't be consumed due to lines 743-745
         to_remove = [*filter(should_be_removed, self._api_commands)]
 
-        await gather(
-            *(self.remove_command(cmd) for cmd in to_remove)
-        )
+        await gather(*(self.remove_command(cmd) for cmd in to_remove))
 
         self._api_commands = [
-            cmd for cmd in self._api_commands
-            if cmd not in to_remove
+            cmd for cmd in self._api_commands if cmd not in to_remove
         ]
 
     async def __add_commands(self):
@@ -374,28 +376,22 @@ class ChatCommandHandler(metaclass=Singleton):
         await self.__add_commands()
 
 
-def _hash_interactable_structure(interactable: InteractableStructure[AppCommand]):
+def _hash_interactable_structure(
+    interactable: InteractableStructure[AppCommand],
+):
     return _hash_app_command(
-        interactable.metadata,
-        interactable.group,
-        interactable.sub_group
+        interactable.metadata, interactable.group, interactable.sub_group
     )
 
 
 def _hash_app_command(
-    command: AppCommand,
-    group: Optional[str],
-    sub_group: Optional[str]
+    command: AppCommand, group: Optional[str], sub_group: Optional[str]
 ) -> int:
     """
     See :func:`~pincer.commands.commands._hash_app_command_params` for information.
     """
     return _hash_app_command_params(
-        command.name,
-        command.guild_id,
-        command.type,
-        group,
-        sub_group
+        command.name, command.guild_id, command.type, group, sub_group
     )
 
 
@@ -404,7 +400,7 @@ def _hash_app_command_params(
     guild_id: Union[Snowflake, None, MISSING],
     app_command_type: AppCommandType,
     group: Optional[str],
-    sub_group: Optional[str]
+    sub_group: Optional[str],
 ) -> int:
     """
     The group layout in Pincer is very different from what discord has on their docs.

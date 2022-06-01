@@ -496,7 +496,7 @@ class UserMessage(APIObject, GuildProperty, ChannelProperty):
             self._http.get(
                 f"/channels/{self.channel_id}/messages/{self.id}/reactions/{emoji}",
                 params={"after": after, "limit": limit},
-            )
+            ),
         )
 
     async def remove_all_reactions(self):

@@ -9,6 +9,7 @@ class GatewayConfig:
     """This file is to make maintaining the library and its gateway
     configuration easier. Leave compression blank for no compression.
     """
+
     MAX_RETRIES: int = 5
     version: int = 9
     encoding: str = "json"
@@ -23,9 +24,7 @@ class GatewayConfig:
             The GatewayConfig's uri.
         """
         return (
-            f"{uri}"
-            f"?v={cls.version}"
-            f"&encoding={cls.encoding}"
+            f"{uri}" f"?v={cls.version}" f"&encoding={cls.encoding}"
         ) + f"&compress={cls.compression}" * cls.compressed()
 
     @classmethod

@@ -18,6 +18,7 @@ class Mentionable:
     role: Optional[:class:`~pincer.objects.guild.role.Role`]
         Role object returned from a discord interaction
     """
+
     user: Optional[User] = None
     role: Optional[Role] = None
 

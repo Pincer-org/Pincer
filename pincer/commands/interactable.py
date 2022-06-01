@@ -11,7 +11,9 @@ from .components.component_handler import ComponentHandler
 from ..objects.app.command import AppCommand, InteractableStructure
 
 
-INTERACTION_REGISTERS = ChainMap(ChatCommandHandler.register, ComponentHandler.register)
+INTERACTION_REGISTERS = ChainMap(
+    ChatCommandHandler.register, ComponentHandler.register
+)
 
 
 class Interactable:
@@ -37,9 +39,8 @@ class Interactable:
         ComponentHandler and removes loaded events from the client.
         """
         for value in vars(type(self)).values():
-            if (
-                isinstance(value, InteractableStructure)
-                and isinstance(value.metadata, AppCommand)
+            if isinstance(value, InteractableStructure) and isinstance(
+                value.metadata, AppCommand
             ):
                 for key, _value in INTERACTION_REGISTERS.items():
                     if value is _value:

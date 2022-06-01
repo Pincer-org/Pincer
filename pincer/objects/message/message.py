@@ -83,10 +83,12 @@ class Message:
             if isinstance(value, File):
                 attachment.append(value)
             elif PILLOW_IMPORT and isinstance(value, Image):
-                attachment.append(File.from_pillow_image(
-                    value,
-                    f"image{count}.png",
-                ))
+                attachment.append(
+                    File.from_pillow_image(
+                        value,
+                        f"image{count}.png",
+                    )
+                )
             elif isinstance(value, str):
                 attachment.append(File.from_file(value))
             else:
@@ -107,8 +109,7 @@ class Message:
     def to_dict(self):
 
         allowed_mentions = (
-            self.allowed_mentions.to_dict()
-            if self.allowed_mentions else {}
+            self.allowed_mentions.to_dict() if self.allowed_mentions else {}
         )
 
         # Attachments aren't serialized
@@ -117,24 +118,25 @@ class Message:
             "content": self.content,
             "tts": self.tts,
             "flags": self.flags,
-            "embeds": [
-                embed.to_dict() for embed in self.embeds
-            ] if self.embeds is not None else None,
+            "embeds": [embed.to_dict() for embed in self.embeds]
+            if self.embeds is not None
+            else None,
             "allowed_mentions": allowed_mentions,
             "components": [
                 components.to_dict() for components in self.components
-            ] if self.components is not None else None
+            ]
+            if self.components is not None
+            else None,
         }
 
         # IDE does not recognise return type of filter properly.
         # noinspection PyTypeChecker
-        return dict(filter(
-            lambda kv: kv[1] is not None,
-            resp.items()
-        ))
+        return dict(filter(lambda kv: kv[1] is not None, resp.items()))
 
     def serialize(
-        self, message_type: Optional[CallbackType] = None, allow_empty: bool = False
+        self,
+        message_type: Optional[CallbackType] = None,
+        allow_empty: bool = False,
     ) -> Tuple[str, Union[Payload, Dict]]:
         """
         Parameters
@@ -159,10 +161,7 @@ class Message:
 
         if message_type is not None:
             json_data = json_payload
-            json_payload = {
-                "data": json_data,
-                "type": message_type
-            }
+            json_payload = {"data": json_data, "type": message_type}
 
         if not self.attachments:
             return "application/json", json_payload

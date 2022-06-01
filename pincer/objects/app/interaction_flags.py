@@ -12,4 +12,5 @@ class InteractionFlags(IntFlag):
     EPHEMERAL:
         only the user receiving the message can see it
     """
+
     EPHEMERAL = 1 << 6

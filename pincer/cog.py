@@ -128,7 +128,8 @@ class CogManager:
             The list of cogs
         """
         return [
-            manager for manager in ChatCommandHandler.managers
+            manager
+            for manager in ChatCommandHandler.managers
             if isinstance(manager, Cog)
         ]
 

@@ -9,6 +9,7 @@ from ._component import _Component
 from ...objects.app.command import InteractableStructure
 
 from ...utils.api_object import APIObject
+
 if TYPE_CHECKING:
     from typing import Dict
 
@@ -32,5 +33,5 @@ class ActionRow(APIObject):
             "type": 1,
             "components": [
                 component.metadata.to_dict() for component in self.components
-            ]
+            ],
         }

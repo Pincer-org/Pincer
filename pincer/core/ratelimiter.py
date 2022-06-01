@@ -33,6 +33,7 @@ class Bucket:
     time_cached : float
         Time since epoch when this bucket was last saved.
     """
+
     limit: int
     remaining: int
     reset: float
@@ -55,10 +56,7 @@ class RateLimiter:
         self.buckets: Dict[str, Bucket] = {}
 
     def save_response_bucket(
-        self,
-        endpoint: str,
-        method: HttpCallable,
-        header: Dict
+        self, endpoint: str, method: HttpCallable, header: Dict
     ):
         """
         Parameters
@@ -82,19 +80,17 @@ class RateLimiter:
             remaining=int(header["X-RateLimit-Remaining"]),
             reset=float(header["X-RateLimit-Reset"]),
             reset_after=float(header["X-RateLimit-Reset-After"]),
-            time_cached=time()
+            time_cached=time(),
         )
 
         _log.info(
             "Rate limit bucket detected: %s - %r.",
             bucket_id,
-            self.buckets[bucket_id]
+            self.buckets[bucket_id],
         )
 
     async def wait_until_not_ratelimited(
-        self,
-        endpoint: str,
-        method: HttpCallable
+        self, endpoint: str, method: HttpCallable
     ):
         """|coro|
         Waits until the response no longer needs to be blocked to prevent a
@@ -121,12 +117,9 @@ class RateLimiter:
             _log.info(
                 "Waiting for %ss until rate limit for bucket %s is over.",
                 sleep_time,
-                bucket_id
+                bucket_id,
             )
 
             await sleep(sleep_time)
 
-            _log.info(
-                "Message sent. Bucket %s rate limit ended.",
-                bucket_id
-            )
+            _log.info("Message sent. Bucket %s rate limit ended.", bucket_id)

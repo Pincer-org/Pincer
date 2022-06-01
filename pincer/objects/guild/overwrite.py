@@ -28,6 +28,7 @@ class Overwrite(APIObject):
     deny: :class:`str`
         Permission bit set
     """
+
     id: Snowflake
     type: int
     allow: str

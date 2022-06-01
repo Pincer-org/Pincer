@@ -245,7 +245,7 @@ class InvalidTokenError(DispatchError, ValueError):
     """Exception raised when the authorization token is invalid."""
 
     def __init__(self, hint: Optional[str] = None):
-        hint = hint or ''
+        hint = hint or ""
 
         super(InvalidTokenError, self).__init__(
             "The given token is not a valid token.\n" + hint

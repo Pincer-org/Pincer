@@ -64,6 +64,7 @@ class Application(APIObject, GuildProperty):
     terms_of_service_url: APINullable[:class:`str`]
         the url of the app's terms of service
     """
+
     bot_public: bool
     bot_require_code_grant: bool
     description: str

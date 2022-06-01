@@ -20,13 +20,6 @@ jobs:
           git config user.email "actions@pincer.dev"
           git pull
 
-      - name: running all sorter
-        run: |
-          python ./.github/scripts/all_sorter.py
-          git commit -am ":art: Automatic `__all__` sorting" || echo "No changes to commit"
-          git push || echo "No changes to push"
-
-
       - name: running license generator
         run: |
           python ./.github/scripts/license_generator.py

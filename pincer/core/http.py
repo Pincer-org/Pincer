@@ -15,9 +15,15 @@ from . import __package__
 from .ratelimiter import RateLimiter
 from .._config import GatewayConfig
 from ..exceptions import (
-    NotFoundError, BadRequestError, NotModifiedError, UnauthorizedError,
-    ForbiddenError, MethodNotAllowedError, RateLimitError, ServerError,
-    HTTPError
+    NotFoundError,
+    BadRequestError,
+    NotModifiedError,
+    UnauthorizedError,
+    ForbiddenError,
+    MethodNotAllowedError,
+    RateLimitError,
+    ServerError,
+    HTTPError,
 )
 from ..utils.conversion import remove_none
 
@@ -34,13 +40,16 @@ _log = logging.getLogger(__package__)
 
 class HttpCallable(Protocol):
     """Aiohttp HTTP method."""
+
     __name__: str
 
     def __call__(
-            self, url: StrOrURL, *,
-            allow_redirects: bool = True,
-            method: Optional[Union[Dict, str, Payload]] = None,
-            **kwargs: Any
+        self,
+        url: StrOrURL,
+        *,
+        allow_redirects: bool = True,
+        method: Optional[Union[Dict, str, Payload]] = None,
+        **kwargs: Any,
     ) -> _RequestContextManager:
         ...
 
@@ -79,7 +88,7 @@ class HTTPClient:
 
         headers: Dict[str, str] = {
             "Authorization": f"Bot {token}",
-            "User-Agent": f"DiscordBot (https://github.com/Pincer-org/Pincer, {pincer.__version__})"  # noqa: E501
+            "User-Agent": f"DiscordBot (https://github.com/Pincer-org/Pincer, {pincer.__version__})",  # noqa: E501
         }
         self.__rate_limiter = RateLimiter()
         self.__session: ClientSession = ClientSession(headers=headers)
@@ -91,7 +100,7 @@ class HTTPClient:
             403: ForbiddenError(),
             404: NotFoundError(),
             405: MethodNotAllowedError(),
-            429: RateLimitError()
+            429: RateLimitError(),
         }
 
     # for with block
@@ -109,14 +118,15 @@ class HTTPClient:
         await self.__session.close()
 
     async def __send(
-            self,
-            method: HttpCallable,
-            endpoint: str, *,
-            content_type: str = "application/json",
-            data: Optional[Union[Dict, str, Payload]] = None,
-            headers: Optional[Dict[str, Any]] = None,
-            _ttl: Optional[int] = None,
-            params: Optional[Dict] = None,
+        self,
+        method: HttpCallable,
+        endpoint: str,
+        *,
+        content_type: str = "application/json",
+        data: Optional[Union[Dict, str, Payload]] = None,
+        headers: Optional[Dict[str, Any]] = None,
+        _ttl: Optional[int] = None,
+        params: Optional[Dict] = None,
     ) -> Optional[Dict]:
         """
         Send an api request to the Discord REST API.
@@ -168,33 +178,30 @@ class HTTPClient:
         # TODO: Adjust to work non-json types
         _log.debug(f"{method.__name__.upper()} {endpoint} | {data}")
 
-        await self.__rate_limiter.wait_until_not_ratelimited(
-            endpoint,
-            method
-        )
+        await self.__rate_limiter.wait_until_not_ratelimited(endpoint, method)
 
         url = f"{self.url}/{endpoint}"
         async with method(
-                url,
-                data=data,
-                headers={
-                    "Content-Type": content_type,
-                    **(remove_none(headers) or {})
-                },
-                params=remove_none(params)
+            url,
+            data=data,
+            headers={
+                "Content-Type": content_type,
+                **(remove_none(headers) or {}),
+            },
+            params=remove_none(params),
         ) as res:
             return await self.__handle_response(
                 res, method, endpoint, content_type, data, ttl
             )
 
     async def __handle_response(
-            self,
-            res: ClientResponse,
-            method: HttpCallable,
-            endpoint: str,
-            content_type: str,
-            data: Optional[str],
-            _ttl: int,
+        self,
+        res: ClientResponse,
+        method: HttpCallable,
+        endpoint: str,
+        content_type: str,
+        data: Optional[str],
+        _ttl: int,
     ) -> Optional[Dict]:
         """
         Handle responses from the discord API.
@@ -226,15 +233,11 @@ class HTTPClient:
         """
         _log.debug(f"Received response for {endpoint} | {await res.text()}")
 
-        self.__rate_limiter.save_response_bucket(
-            endpoint, method, res.headers
-        )
+        self.__rate_limiter.save_response_bucket(endpoint, method, res.headers)
 
         if res.ok:
             if res.status == 204:
-                _log.debug(
-                    "Request has been sent successfully. "
-                )
+                _log.debug("Request has been sent successfully. ")
                 return
 
             _log.debug(
@@ -257,10 +260,7 @@ class HTTPClient:
                 )
                 await sleep(timeout)
                 return await self.__send(
-                    method,
-                    endpoint,
-                    content_type=content_type,
-                    data=data
+                    method, endpoint, content_type=content_type, data=data
                 )
 
             _log.error(
@@ -287,13 +287,11 @@ class HTTPClient:
             endpoint,
             content_type=content_type,
             _ttl=_ttl - 1,
-            data=data
+            data=data,
         )
 
     async def delete(
-            self,
-            route: str,
-            headers: Optional[Dict[str, Any]] = None
+        self, route: str, headers: Optional[Dict[str, Any]] = None
     ) -> Optional[Dict]:
         """|coro|
 
@@ -312,16 +310,10 @@ class HTTPClient:
         Optional[:class:`Dict`]
             The response from discord.
         """
-        return await self.__send(
-            self.__session.delete,
-            route,
-            headers=headers
-        )
+        return await self.__send(self.__session.delete, route, headers=headers)
 
     async def get(
-        self,
-        route: str,
-        params: Optional[Dict] = None
+        self, route: str, params: Optional[Dict] = None
     ) -> Optional[Dict]:
         """|coro|
 
@@ -340,11 +332,7 @@ class HTTPClient:
         Optional[:class:`Dict`]
             The response from discord.
         """
-        return await self.__send(
-            self.__session.get,
-            route,
-            params=params
-        )
+        return await self.__send(self.__session.get, route, params=params)
 
     async def head(self, route: str) -> Optional[Dict]:
         """|coro|
@@ -381,11 +369,11 @@ class HTTPClient:
         return await self.__send(self.__session.options, route)
 
     async def patch(
-            self,
-            route: str,
-            data: Optional[Dict] = None,
-            content_type: str = "application/json",
-            headers: Optional[Dict[str, Any]] = None
+        self,
+        route: str,
+        data: Optional[Dict] = None,
+        content_type: str = "application/json",
+        headers: Optional[Dict[str, Any]] = None,
     ) -> Optional[Dict]:
         """|coro|
 
@@ -413,15 +401,15 @@ class HTTPClient:
             route,
             content_type=content_type,
             data=data,
-            headers=headers
+            headers=headers,
         )
 
     async def post(
-            self,
-            route: str,
-            data: Optional[Dict] = None,
-            content_type: str = "application/json",
-            headers: Optional[Dict[str, Any]] = None
+        self,
+        route: str,
+        data: Optional[Dict] = None,
+        content_type: str = "application/json",
+        headers: Optional[Dict[str, Any]] = None,
     ) -> Optional[Dict]:
         """|coro|
 
@@ -448,15 +436,15 @@ class HTTPClient:
             route,
             content_type=content_type,
             data=data,
-            headers=headers
+            headers=headers,
         )
 
     async def put(
-            self,
-            route: str,
-            data: Optional[Dict] = None,
-            content_type: str = "application/json",
-            headers: Optional[Dict[str, Any]] = None
+        self,
+        route: str,
+        data: Optional[Dict] = None,
+        content_type: str = "application/json",
+        headers: Optional[Dict[str, Any]] = None,
     ) -> Optional[Dict]:
         """|coro|
 
@@ -483,5 +471,5 @@ class HTTPClient:
             route,
             content_type=content_type,
             data=data,
-            headers=headers
+            headers=headers,
         )

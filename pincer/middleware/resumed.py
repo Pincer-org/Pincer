@@ -21,9 +21,7 @@ _log = logging.getLogger(__package__)
 
 
 async def on_resumed(
-    self: Client,
-    gateway: Gateway,
-    payload: GatewayDispatch
+    self: Client, gateway: Gateway, payload: GatewayDispatch
 ) -> Tuple[str]:
     """|coro|
 
@@ -44,7 +42,7 @@ async def on_resumed(
 
     _log.debug(
         "%s Successfully reconnected to Discord gateway. Restarting heartbeat.",
-        gateway.shard_key
+        gateway.shard_key,
     )
     gateway.start_heartbeat()
 
