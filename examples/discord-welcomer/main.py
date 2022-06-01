@@ -20,7 +20,9 @@ class Bot(Client):
         cog_loading_started = perf_counter()
         self.load_packages()
         cog_loading_ended = perf_counter()
-        self.cogs_load_time = round((cog_loading_ended - cog_loading_started) * 100, 2)
+        self.cogs_load_time = round(
+            (cog_loading_ended - cog_loading_started) * 100, 2
+        )
         super().__init__(*args, **kwargs)
 
     @Client.event
@@ -54,7 +56,8 @@ class Bot(Client):
                         self.load_cog(obj)
                         self.loaded_cogs += 1
                         logging.info(
-                            "Successfully loaded %s (%s)" % (definition, container)
+                            "Successfully loaded %s (%s)"
+                            % (definition, container)
                         )
 
 

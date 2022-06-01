@@ -6,14 +6,13 @@ from pincer.utils import Color
 
 
 class TestSnowflake:
-
     @staticmethod
     def test_conversion():
         c = Color("#aabb01")
         assert c.r == 170
         assert c.g == 187
         assert c.b == 1
-        assert c.hex == 'aabb01'
+        assert c.hex == "aabb01"
 
     @staticmethod
     def test_invalids():
