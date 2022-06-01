@@ -4,7 +4,17 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Awaitable, Callable, Generic, List, Optional, Union, TYPE_CHECKING, TypeVar
+from typing import (
+    Any,
+    Awaitable,
+    Callable,
+    Generic,
+    List,
+    Optional,
+    Union,
+    TYPE_CHECKING,
+    TypeVar,
+)
 
 from .command_types import AppCommandOptionType, AppCommandType
 from ..app.throttle_scope import ThrottleScope
@@ -19,6 +29,7 @@ if TYPE_CHECKING:
     from ...utils.types import APINullable
 
 T = TypeVar("T")
+
 
 @dataclass(repr=False)
 class AppCommandInteractionDataOption(APIObject):
@@ -35,12 +46,12 @@ class AppCommandInteractionDataOption(APIObject):
     options: APINullable[List[:data:`~pincer.objects.app.command.AppCommandInteractionDataOption`]]
         Present if this option is a group or subcommand
     """
+
     # noqa: E501
     name: str
     value: APINullable[str] = MISSING
     type: APINullable[AppCommandOptionType] = MISSING
-    options: APINullable[
-        List[AppCommandInteractionDataOption]] = MISSING
+    options: APINullable[List[AppCommandInteractionDataOption]] = MISSING
 
 
 @dataclass(repr=False)
@@ -54,6 +65,7 @@ class AppCommandOptionChoice(APIObject):
     value: Union[:data:`~pincer.utils.types.choice_value_types`]
         Value of the choice, up to 100 characters if string
     """
+
     name: str
     value: choice_value_types
 
@@ -83,6 +95,7 @@ class AppCommandOption(APIObject):
         If the option is a subcommand or subcommand group type,
         this nested options will be the parameters
     """
+
     # noqa: E501
     type: AppCommandOptionType
     name: str
@@ -125,6 +138,7 @@ class AppCommand(APIObject, GuildProperty):
         Whether the command is enabled by default
         when the app is added to a guild
     """
+
     # noqa: E501
     type: AppCommandType
     name: str
@@ -150,9 +164,7 @@ class AppCommand(APIObject, GuildProperty):
             other = other.app
 
         # `description` and `options` are tested for equality with a custom check
-        eq_props = (
-            "type", "name", "guild_id", "default_permission", "options"
-        )
+        eq_props = ("type", "name", "guild_id", "default_permission", "options")
 
         eq = (
             self.__getattribute__(prop) == other.__getattribute__(prop)
@@ -165,7 +177,7 @@ class AppCommand(APIObject, GuildProperty):
                 self.description == other.description
                 # If this command has a MISSING description, Discord would return
                 # registered the command with the description ''
-                or self.description is MISSING and not other.description
+                or self.description is MISSING and not other.description,
             )
         )
 
@@ -210,11 +222,14 @@ class InteractableStructure(Generic[T]):
     cooldown_scope: :class:`~pincer.objects.app.throttle_scope.ThrottleScope`
         The type of cooldown |default| :data:`ThrottleScope.USER`
     """
+
     call: Coro
 
     metadata: Optional[T] = None
     manager: Optional[Any] = None
-    extensions: List[Callable[..., Awaitable[bool]]] = field(default_factory=list)
+    extensions: List[Callable[..., Awaitable[bool]]] = field(
+        default_factory=list
+    )
 
     cooldown: int = 0
     cooldown_scale: float = 60.0

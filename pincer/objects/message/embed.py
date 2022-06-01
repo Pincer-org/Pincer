@@ -91,6 +91,7 @@ class EmbedAuthor:
     proxy_icon_url: APINullable[:class:`str`]
         A proxied url of the author icon
     """
+
     icon_url: APINullable[str] = MISSING
     name: APINullable[str] = MISSING
     proxy_icon_url: APINullable[str] = MISSING
@@ -139,6 +140,7 @@ class EmbedProvider:
     url: APINullable[:class:`str`]
         Url of the provider
     """
+
     name: APINullable[str] = MISSING
     url: APINullable[str] = MISSING
 
@@ -183,6 +185,7 @@ class EmbedVideo:
     width: APINullable[:class:`int`]
         Width of the video
     """
+
     height: APINullable[int] = MISSING
     url: APINullable[str] = MISSING
     proxy_url: APINullable[str] = MISSING
@@ -215,9 +218,7 @@ class EmbedFooter:
 
     def __post_init__(self):
         if _field_size(self.text) > 2048:
-            raise EmbedFieldError.from_desc(
-                "Footer text", 2048, len(self.text)
-            )
+            raise EmbedFieldError.from_desc("Footer text", 2048, len(self.text))
 
 
 @dataclass(repr=False)
@@ -248,9 +249,7 @@ class EmbedField:
 
     def __post_init__(self):
         if _field_size(self.name) > 256:
-            raise EmbedFieldError.from_desc(
-                "Field name", 256, len(self.name)
-            )
+            raise EmbedFieldError.from_desc("Field name", 256, len(self.name))
 
         if _field_size(self.value) > 1024:
             raise EmbedFieldError.from_desc(
@@ -293,6 +292,7 @@ class Embed(APIObject):
     type: APINullable[:class:`int`]
         type of message
     """
+
     # noqa: E501
 
     title: APINullable[str] = MISSING
@@ -311,9 +311,7 @@ class Embed(APIObject):
 
     def __post_init__(self):
         if _field_size(self.title) > 256:
-            raise EmbedFieldError.from_desc(
-                "Embed title", 256, len(self.title)
-            )
+            raise EmbedFieldError.from_desc("Embed title", 256, len(self.title))
 
         if _field_size(self.description) > 4096:
             raise EmbedFieldError.from_desc(
@@ -321,9 +319,7 @@ class Embed(APIObject):
             )
 
         if len(self.fields) > 25:
-            raise EmbedFieldError.from_desc(
-                "Embed field", 25, len(self.fields)
-            )
+            raise EmbedFieldError.from_desc("Embed field", 25, len(self.fields))
 
     def set_timestamp(self, time: datetime) -> Embed:
         """Discord uses iso format for time stamps.
@@ -344,11 +340,11 @@ class Embed(APIObject):
         return self
 
     def set_author(
-            self,
-            icon_url: APINullable[str] = MISSING,
-            name: APINullable[str] = MISSING,
-            proxy_icon_url: APINullable[str] = MISSING,
-            url: APINullable[str] = MISSING
+        self,
+        icon_url: APINullable[str] = MISSING,
+        name: APINullable[str] = MISSING,
+        proxy_icon_url: APINullable[str] = MISSING,
+        url: APINullable[str] = MISSING,
     ) -> Embed:
         """Set the author message for the embed. This is the top
         field of the embed.
@@ -372,20 +368,17 @@ class Embed(APIObject):
         """
 
         self.author = EmbedAuthor(
-            icon_url=icon_url,
-            name=name,
-            proxy_icon_url=proxy_icon_url,
-            url=url
+            icon_url=icon_url, name=name, proxy_icon_url=proxy_icon_url, url=url
         )
 
         return self
 
     def set_image(
-            self,
-            url: APINullable[str] = MISSING,
-            proxy_url: APINullable[str] = MISSING,
-            height: APINullable[int] = MISSING,
-            width: APINullable[int] = MISSING
+        self,
+        url: APINullable[str] = MISSING,
+        proxy_url: APINullable[str] = MISSING,
+        height: APINullable[int] = MISSING,
+        width: APINullable[int] = MISSING,
     ) -> Embed:
         """Sets an image for your embed.
 
@@ -406,20 +399,17 @@ class Embed(APIObject):
             The new embed object.
         """
         self.image = EmbedImage(
-            height=height,
-            url=url,
-            proxy_url=proxy_url,
-            width=width
+            height=height, url=url, proxy_url=proxy_url, width=width
         )
 
         return self
 
     def set_thumbnail(
-            self,
-            height: APINullable[int] = MISSING,
-            url: APINullable[str] = MISSING,
-            proxy_url: APINullable[str] = MISSING,
-            width: APINullable[int] = MISSING
+        self,
+        height: APINullable[int] = MISSING,
+        url: APINullable[str] = MISSING,
+        proxy_url: APINullable[str] = MISSING,
+        width: APINullable[int] = MISSING,
     ) -> Embed:  # ? it's normally smaller in the corner?
         """Sets the thumbnail of the embed.
         This image is bigger than the ``image`` property.
@@ -439,19 +429,16 @@ class Embed(APIObject):
             The new embed object.
         """
         self.thumbnail = EmbedThumbnail(
-            height=height,
-            url=url,
-            proxy_url=proxy_url,
-            width=width
+            height=height, url=url, proxy_url=proxy_url, width=width
         )
 
         return self
 
     def set_footer(
-            self,
-            text: str,
-            icon_url: APINullable[str] = MISSING,
-            proxy_icon_url: APINullable[str] = MISSING
+        self,
+        text: str,
+        icon_url: APINullable[str] = MISSING,
+        proxy_icon_url: APINullable[str] = MISSING,
     ) -> Embed:
         """
         Sets the embed footer. This is at the bottom of your embed.
@@ -471,18 +458,13 @@ class Embed(APIObject):
             The new embed object.
         """
         self.footer = EmbedFooter(
-            text=text,
-            icon_url=icon_url,
-            proxy_icon_url=proxy_icon_url
+            text=text, icon_url=icon_url, proxy_icon_url=proxy_icon_url
         )
 
         return self
 
     def add_field(
-            self,
-            name: str,
-            value: str,
-            inline: APINullable[bool] = MISSING
+        self, name: str, value: str, inline: APINullable[bool] = MISSING
     ) -> Embed:
         """Adds a field to the embed.
         An embed can contain up to 25 fields.
@@ -501,11 +483,7 @@ class Embed(APIObject):
         EmbedFieldError:
             Raised when there are more than 25 fields in the embed
         """
-        _field = EmbedField(
-            name=name,
-            value=value,
-            inline=inline
-        )
+        _field = EmbedField(name=name, value=value, inline=inline)
 
         if len(self.fields) > 25:
             raise EmbedFieldError.from_desc(
@@ -517,12 +495,12 @@ class Embed(APIObject):
         return self
 
     def add_fields(
-            self,
-            field_list: Union[Dict[Any, Any], Iterable[Iterable[Any, Any]]],
-            checks: Optional[Callable[[Any], Any]] = bool,
-            map_title: Optional[Callable[[Any], str]] = str,
-            map_values: Optional[Callable[[Any], str]] = str,
-            inline: bool = True
+        self,
+        field_list: Union[Dict[Any, Any], Iterable[Iterable[Any, Any]]],
+        checks: Optional[Callable[[Any], Any]] = bool,
+        map_title: Optional[Callable[[Any], str]] = str,
+        map_values: Optional[Callable[[Any], str]] = str,
+        inline: bool = True,
     ) -> Embed:
         """Add multiple fields from a list,
         dict or generator of fields with possible mapping.
@@ -564,9 +542,7 @@ class Embed(APIObject):
 
             if checks(val):
                 self.add_field(
-                    name=map_title(field_name),
-                    value=val,
-                    inline=inline
+                    name=map_title(field_name), value=val, inline=inline
                 )
 
         return self

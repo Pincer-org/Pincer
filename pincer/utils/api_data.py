@@ -10,18 +10,17 @@ from pincer.utils import APIObject
 if TYPE_CHECKING:
     from typing import Any, Coroutine, List, Type, Generator, AsyncIterator
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class APIDataGen(Generic[T]):
-
     def __init__(
-        self,
-        factory: Type[T],
-        request_func: Coroutine[Any, None, Any]
+        self, factory: Type[T], request_func: Coroutine[Any, None, Any]
     ):
 
-        self.fac = factory if isinstance(factory, APIObject) else factory.from_dict
+        self.fac = (
+            factory if isinstance(factory, APIObject) else factory.from_dict
+        )
         self.request_func = request_func
 
     async def __async(self) -> List[T]:

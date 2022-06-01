@@ -18,6 +18,7 @@ class ThrottleScope(Enum):
     GLOBAL:
         The cooldown is global.
     """
+
     GUILD = auto()
     CHANNEL = auto()
     USER = auto()

@@ -32,6 +32,7 @@ class Group:
         The description of the command. This has to be sent to Discord, but it does
         nothing, so it is optional.
     """
+
     name: str
     description: Optional[str] = None
 
@@ -69,6 +70,7 @@ class Subgroup:
         The description of the command. This has to be sent to Discord, but it does
         nothing, so it is optional.
     """
+
     name: str
     parent: Group
     description: Optional[str] = None

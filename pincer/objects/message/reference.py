@@ -31,6 +31,7 @@ class MessageReference(APIObject, ChannelProperty, GuildProperty):
         exist instead of sending as a normal (non-reply) message,
         default true
     """
+
     message_id: APINullable[Snowflake] = MISSING
     channel_id: APINullable[Snowflake] = MISSING
     guild_id: APINullable[Snowflake] = MISSING

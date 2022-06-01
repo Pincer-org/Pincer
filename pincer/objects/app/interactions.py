@@ -16,8 +16,13 @@ from ..message.context import MessageContext
 from ..message.message import Message
 from ..message.user_message import UserMessage
 from ..user import User
-from ...exceptions import InteractionDoesNotExist, UseFollowup, \
-    InteractionAlreadyAcknowledged, NotFoundError, InteractionTimedOut
+from ...exceptions import (
+    InteractionDoesNotExist,
+    UseFollowup,
+    InteractionAlreadyAcknowledged,
+    NotFoundError,
+    InteractionTimedOut,
+)
 from ...utils import APIObject
 from ...utils.convert_message import convert_message
 from ...utils.snowflake import Snowflake
@@ -49,6 +54,7 @@ class ResolvedData(APIObject):
     messages: APINullable[Dict[:class:`~pincer.utils.snowflake.Snowflake`, :class:`~pincer.objects.message.user_message.UserMessage`]]
         Map of Snowflakes to partial message objects
     """
+
     # noqa: E501
     users: APINullable[Dict[Snowflake, User]] = MISSING
     members: APINullable[Dict[Snowflake, GuildMember]] = MISSING
@@ -82,6 +88,7 @@ class InteractionData(APIObject):
     target_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         Id of the user or message targeted by a user or message command
     """  # noqa: E501
+
     id: APINullable[Snowflake] = MISSING
     name: APINullable[str] = MISSING
     type: APINullable[int] = MISSING
@@ -122,6 +129,7 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
     message: APINullable[:class:`~pincer.objects.message.user_message.UserMessage`]
         For components, the message they were attached to
     """
+
     # noqa: E501
     id: Snowflake
     application_id: Snowflake
@@ -174,21 +182,17 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
             elif option.type is AppCommandOptionType.MENTIONABLE:
                 user = self.return_type(option, self.data.resolved.members)
                 if user:
-                    user.set_user_data(self.return_type(
-                        option, self.data.resolved.users)
+                    user.set_user_data(
+                        self.return_type(option, self.data.resolved.users)
                     )
 
                 option.value = Mentionable(
-                    user,
-                    self.return_type(
-                        option, self.data.resolved.roles
-                    )
+                    user, self.return_type(option, self.data.resolved.roles)
                 )
 
     @staticmethod
     def return_type(
-        option: Snowflake,
-        data: Dict[Snowflake, Any]
+        option: Snowflake, data: Dict[Snowflake, Any]
     ) -> Optional[APIObject]:
         """
         Returns a value from the option or None if it doesn't exist.
@@ -206,7 +210,7 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
             self.member or self.user,
             self,
             self.guild_id,
-            self.channel_id
+            self.channel_id,
         )
 
     async def response(self) -> UserMessage:
@@ -230,9 +234,7 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
         return UserMessage.from_dict(resp)
 
     async def _base_ack(
-        self,
-        flags: Optional[InteractionFlags],
-        callback_type: CallbackType
+        self, flags: Optional[InteractionFlags], callback_type: CallbackType
     ):
         """|coro|
 
@@ -261,12 +263,7 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
         self.has_acknowledged = True
         await self._http.post(
             f"interactions/{self.id}/{self.token}/callback",
-            {
-                "type": callback_type,
-                "data": {
-                    "flags": flags
-                }
-            }
+            {"type": callback_type, "data": {"flags": flags}},
         )
 
     async def ack(self, flags: Optional[InteractionFlags] = None):
@@ -281,7 +278,9 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
         """
         return await self._base_ack(flags, CallbackType.DEFERRED_MESSAGE)
 
-    async def deferred_update_ack(self, flags: Optional[InteractionFlags] = None):
+    async def deferred_update_ack(
+        self, flags: Optional[InteractionFlags] = None
+    ):
         """|coro|
         Same as ack but for updating a message.
 
@@ -320,7 +319,7 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
         self,
         message: MessageConvertable,
         message_type: CallbackType,
-        allow_empty: bool
+        allow_empty: bool,
     ):
         """|coro|
 
@@ -358,15 +357,14 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
 
         message = convert_message(self._client, message)
         content_type, data = message.serialize(
-            message_type=message_type,
-            allow_empty=allow_empty
+            message_type=message_type, allow_empty=allow_empty
         )
 
         try:
             await self._http.post(
                 f"interactions/{self.id}/{self.token}/callback",
                 data,
-                content_type=content_type
+                content_type=content_type,
             )
         except NotFoundError:
             raise InteractionTimedOut(
@@ -388,7 +386,9 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
         Edits the reply to an interaction. Only works with Message Component
         Interactions.
         """
-        return await self._base_reply(message, CallbackType.UPDATE_MESSAGE, True)
+        return await self._base_reply(
+            message, CallbackType.UPDATE_MESSAGE, True
+        )
 
     async def edit(self, message: MessageConvertable) -> UserMessage:
         """|coro|
@@ -424,7 +424,7 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
         resp = await self._http.patch(
             f"webhooks/{self._client.bot.id}/{self.token}/messages/@original",
             data,
-            content_type=content_type
+            content_type=content_type,
         )
         self.__post_sent(message)
         return UserMessage.from_dict(resp)
@@ -450,9 +450,7 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
         )
 
     async def __post_followup_send_handler(
-            self,
-            followup: UserMessage,
-            message: Message
+        self, followup: UserMessage, message: Message
     ):
         """Process a followup after it was sent.
 
@@ -468,11 +466,7 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
             await sleep(message.delete_after)
             await self.delete_followup(followup.id)
 
-    def __post_followup_sent(
-            self,
-            followup: UserMessage,
-            message: Message
-    ):
+    def __post_followup_sent(self, followup: UserMessage, message: Message):
         """Ensure the `__post_followup_send_handler` method its future.
 
         Parameters
@@ -506,16 +500,14 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
         resp = await self._http.post(
             f"webhooks/{self._client.bot.id}/{self.token}",
             data,
-            content_type=content_type
+            content_type=content_type,
         )
         msg = UserMessage.from_dict(resp)
         self.__post_followup_sent(msg, message)
         return msg
 
     async def edit_followup(
-            self,
-            message_id: int,
-            message: MessageConvertable
+        self, message_id: int, message: MessageConvertable
     ) -> UserMessage:
         """|coro|
 
@@ -539,7 +531,7 @@ class Interaction(APIObject, ChannelProperty, GuildProperty):
         resp = await self._http.patch(
             f"webhooks/{self._client.bot.id}/{self.token}/messages/{message_id}",
             data,
-            content_type=content_type
+            content_type=content_type,
         )
         msg = UserMessage.from_dict(resp)
         self.__post_followup_sent(msg, message)

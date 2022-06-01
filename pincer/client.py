@@ -258,7 +258,9 @@ class Client(Interactable, CogManager):
         Get a list of chat command calls which have been registered in
         the :class:`~pincer.commands.ChatCommandHandler`\\.
         """
-        return [cmd.metadata.name for cmd in ChatCommandHandler.register.values()]
+        return [
+            cmd.metadata.name for cmd in ChatCommandHandler.register.values()
+        ]
 
     @property
     def guild_ids(self) -> List[Snowflake]:
@@ -346,7 +348,9 @@ class Client(Interactable, CogManager):
         return event
 
     @staticmethod
-    def get_event_coro(name: str) -> List[Optional[InteractableStructure[None]]]:
+    def get_event_coro(
+        name: str,
+    ) -> List[Optional[InteractableStructure[None]]]:
         """get the coroutine for an event
 
         Parameters
@@ -372,10 +376,7 @@ class Client(Interactable, CogManager):
 
     @staticmethod
     def execute_event(
-        events: List[InteractableStructure],
-        gateway: Gateway,
-        *args,
-        **kwargs
+        events: List[InteractableStructure], gateway: Gateway, *args, **kwargs
     ):
         """Invokes an event.
 
@@ -1185,7 +1186,9 @@ class Client(Interactable, CogManager):
             f"stage-instances/{_id}", headers={"reason": reason}
         )
 
-    async def crosspost_message(self, channel_id: int, message_id: int) -> UserMessage:
+    async def crosspost_message(
+        self, channel_id: int, message_id: int
+    ) -> UserMessage:
         """|coro|
         Crosspost a message in a News Channel to following channels.
 
@@ -1207,6 +1210,9 @@ class Client(Interactable, CogManager):
             The crossposted message
         """
 
-        return await self._http.post(f"channels/{channel_id}/{message_id}/crosspost")
+        return await self._http.post(
+            f"channels/{channel_id}/{message_id}/crosspost"
+        )
+
 
 Bot = Client

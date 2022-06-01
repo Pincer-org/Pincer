@@ -31,6 +31,7 @@ class TypingStartEvent(APIObject, ChannelProperty, GuildProperty):
     member: APINullable[:class:`~pincer.objects.guild.member.GuildMember`]
         The member who started typing if this happened in a guild
     """
+
     channel_id: Snowflake
     user_id: Snowflake
     timestamp: int

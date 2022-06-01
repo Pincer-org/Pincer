@@ -40,6 +40,7 @@ class MessageContext:
         The ID of the channel the interaction was invoked in.
         Can be None if it wasn't invoked in a channel.
     """  # noqa: E501
+
     _client: Client
 
     author: Union[GuildMember, User]

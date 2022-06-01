@@ -56,6 +56,7 @@ class GuildFeature(Enum):
     THREADS_ENABLED : str
         Guild can have threads enabled.
     """
+
     ANIMATED_ICON = "ANIMATED_ICON"
     BANNER = "BANNER"
     COMMERCE = "COMMERCE"
@@ -83,4 +84,3 @@ class GuildFeature(Enum):
     ANIMATED_BANNER = "ANIMATED_BANNER"
     MEMBER_PROFILES = "MEMBER_PROFILES"
     ENABLED_DISCOVERABLE_BEFORE = "ENABLED_DISCOVERABLE_BEFORE"
-

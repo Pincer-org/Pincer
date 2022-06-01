@@ -12,6 +12,7 @@ class PermissionEnum(IntFlag):
     """
     Represents the permissions for a guild.
     """
+
     CREATE_INSTANT_INVITE = 1 << 0
     KICK_MEMBERS = 1 << 1
     BAN_MEMBERS = 1 << 2

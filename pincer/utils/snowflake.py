@@ -16,6 +16,7 @@ class Snowflake(int):
     they are always returned as strings in the HTTP API
     to prevent integer overflows in some languages.
     """
+
     _MAX_VALUE: int = 9223372036854775807
     _MIN_VALUE: int = 0
 
@@ -37,7 +38,7 @@ class Snowflake(int):
     def __factory__(cls, string: str) -> Snowflake:
         # TODO: fix docs
         """
-        
+
         Parameters
         ----------
         string

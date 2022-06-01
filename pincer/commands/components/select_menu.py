@@ -35,6 +35,7 @@ class SelectOption(APIObject):
     default: APINullable[:class:`bool`]
         Will render this option as selected by default
     """
+
     label: str
     value: APINullable[str] = MISSING
     description: APINullable[str] = MISSING
@@ -72,6 +73,7 @@ class SelectMenu(_Component):
         Disable the selects
         |default| False
     """
+
     custom_id: str
     options: Optional[List[SelectOption]] = None
 

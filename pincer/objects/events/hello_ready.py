@@ -26,6 +26,7 @@ class HelloEvent(APIObject):
     heartbeat_interval: :class:`int`
         The interval (in milliseconds) the client should heartbeat with
     """
+
     heartbeat_interval: int
 
 
@@ -50,6 +51,7 @@ class ReadyEvent(APIObject):
         The shard information associated
         with this session, if sent when identifying
     """
+
     v: int
     user: User
     guilds: List[Guild]

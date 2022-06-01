@@ -47,6 +47,7 @@ class InviteCreateEvent(APIObject, ChannelProperty, GuildProperty):
     uses: :class:`int`
         How many times the invite has been used (always will be ``0``)
     """
+
     # noqa: E501
     channel_id: Snowflake
     code: str
@@ -75,6 +76,7 @@ class InviteDeleteEvent(APIObject, ChannelProperty, GuildProperty):
     guild_id: APINullable[:class:`~pincer.utils.snowflake.Snowflake`]
         The guild of the invite
     """
+
     channel_id: Snowflake
     code: str
 

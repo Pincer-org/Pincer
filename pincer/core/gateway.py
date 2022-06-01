@@ -15,7 +15,10 @@ from typing import TYPE_CHECKING, Any, Dict, Callable, Optional
 from zlib import decompressobj
 
 from aiohttp import (
-    ClientSession, WSMsgType, ClientConnectorError, ClientWebSocketResponse
+    ClientSession,
+    WSMsgType,
+    ClientConnectorError,
+    ClientWebSocketResponse,
 )
 
 from . import __package__
@@ -23,22 +26,27 @@ from ..utils.api_object import APIObject
 from .._config import GatewayConfig
 from ..core.dispatch import GatewayDispatch
 from ..exceptions import (
-    InvalidTokenError, GatewayConnectionError, GatewayError, UnhandledException
+    InvalidTokenError,
+    GatewayConnectionError,
+    GatewayError,
+    UnhandledException,
 )
 
 if TYPE_CHECKING:
     from ..objects.app.intents import Intents
+
     Handler = Callable[[GatewayDispatch], None]
 
 _log = logging.getLogger(__package__)
 
-ZLIB_SUFFIX = b'\x00\x00\xff\xff'
+ZLIB_SUFFIX = b"\x00\x00\xff\xff"
 inflator = decompressobj()
 
 
 @dataclass
 class SessionStartLimit(APIObject):
     """Session start limit info returned from the `gateway/bot` endpoint"""
+
     total: int
     remaining: int
     reset_after: int
@@ -48,6 +56,7 @@ class SessionStartLimit(APIObject):
 @dataclass
 class GatewayInfo(APIObject):
     """Gateway info returned from the `gateway/bot` endpoint"""
+
     url: str
     shards: int
     session_start_limit: SessionStartLimit
@@ -83,11 +92,12 @@ class Gateway:
 
     def __init__(
         self,
-        token: str, *,
+        token: str,
+        *,
         intents: Intents,
         url: str,
         shard: int,
-        num_shards: int
+        num_shards: int,
     ) -> None:
         if len(token) != 59:
             raise InvalidTokenError(
@@ -106,7 +116,7 @@ class Gateway:
             7: self.handle_reconnect,
             9: self.handle_invalid_session,
             10: self.identify_and_handle_hello,
-            11: self.handle_heartbeat
+            11: self.handle_heartbeat,
         }
 
         # 4000 and 4009 are not included. The client will reconnect when receiving
@@ -120,13 +130,15 @@ class Gateway:
             4005: GatewayError(
                 "Authentication was sent after client already authenticated"
             ),
-            4007: GatewayError("Invalid sequence sent when starting new session"),
+            4007: GatewayError(
+                "Invalid sequence sent when starting new session"
+            ),
             4008: GatewayError("Client was rate limited"),
             4010: GatewayError("Invalid shard"),
             4011: GatewayError("Sharding required"),
             4012: GatewayError("Invalid API version"),
             4013: GatewayError("Invalid intents"),
-            4014: GatewayError("Disallowed intents")
+            4014: GatewayError("Disallowed intents"),
         }
 
         # ClientSession to be used for this Dispatcher
@@ -224,7 +236,7 @@ class Gateway:
                 _log.warning(
                     "%s Could not open websocket with Discord."
                     " Retrying in 15 seconds...",
-                    self.shard_key
+                    self.shard_key,
                 )
                 await sleep(15)
 
@@ -257,7 +269,7 @@ class Gateway:
 
         _log.debug(
             "%s Disconnected from Gateway due without any errors. Reconnecting.",
-            self.shard_key
+            self.shard_key,
         )
         # ensure_future prevents a stack overflow
         ensure_future(self.start_loop())
@@ -279,19 +291,23 @@ class Gateway:
             "%s %s GatewayDispatch with opcode %s received",
             self.shard_key,
             datetime.now(),
-            payload.op
+            payload.op,
         )
 
         # Many events are sent with a `null` sequence. This sequence should not
         # be tracked.
         if payload.seq is not None:
             self.__sequence_number = payload.seq
-            _log.debug("%s Set sequence number to %s", self.shard_key, payload.seq)
+            _log.debug(
+                "%s Set sequence number to %s", self.shard_key, payload.seq
+            )
 
         handler = self.__dispatch_handlers.get(payload.op)
 
         if handler is None:
-            raise UnhandledException(f"Opcode {payload.op} does not have a handler")
+            raise UnhandledException(
+                f"Opcode {payload.op} does not have a handler"
+            )
 
         ensure_future(handler(payload))
 
@@ -308,7 +324,7 @@ class Gateway:
         _log.debug(
             "%s Requested to reconnect to Discord. Closing session and attempting to"
             " resume...",
-            self.shard_key
+            self.shard_key,
         )
 
         self.__should_resume = True
@@ -324,7 +340,7 @@ class Gateway:
         _log.debug(
             "%s Invalid session, attempting to %s...",
             self.shard_key,
-            "reconnect" if payload.data else "relog"
+            "reconnect" if payload.data else "relog",
         )
 
         self.__should_resume = payload.data
@@ -344,30 +360,38 @@ class Gateway:
         if self.__should_resume:
             _log.debug("%s Resuming connection with Discord", self.shard_key)
 
-            await self.send(str(GatewayDispatch(
-                6, {
-                    "token": self.token,
-                    "session_id": self.__session_id,
-                    "seq": self.__sequence_number
-                }
-            )))
+            await self.send(
+                str(
+                    GatewayDispatch(
+                        6,
+                        {
+                            "token": self.token,
+                            "session_id": self.__session_id,
+                            "seq": self.__sequence_number,
+                        },
+                    )
+                )
+            )
             return
 
-        await self.send(str(
-            GatewayDispatch(
-                2, {
-                    "token": self.token,
-                    "intents": self.intents,
-                    "properties": {
-                        "$os": system(),
-                        "$browser": __package__,
-                        "$device": __package__
+        await self.send(
+            str(
+                GatewayDispatch(
+                    2,
+                    {
+                        "token": self.token,
+                        "intents": self.intents,
+                        "properties": {
+                            "$os": system(),
+                            "$browser": __package__,
+                            "$device": __package__,
+                        },
+                        "compress": GatewayConfig.compressed(),
+                        "shard": self.shard_key,
                     },
-                    "compress": GatewayConfig.compressed(),
-                    "shard": self.shard_key
-                }
+                )
             )
-        ))
+        )
         self.__heartbeat_interval = payload.data["heartbeat_interval"]
 
         self.start_heartbeat()
@@ -392,16 +416,11 @@ class Gateway:
                 self.__session_id, "%s..." % self.__session_id[:4]
             )
 
-        _log.debug(
-            "%s Sending payload: %s",
-            self.shard_key,
-            safe_payload
-        )
+        _log.debug("%s Sending payload: %s", self.shard_key, safe_payload)
 
         if self.__socket.closed:
             _log.debug(
-                "%s Socket is closing. Payload not sent.",
-                self.shard_key
+                "%s Socket is closing. Payload not sent.", self.shard_key
             )
             return
 
@@ -442,14 +461,13 @@ class Gateway:
 
             _log.debug(
                 "%s %s sending heartbeat in %sms",
-                self.shard_key, datetime.now(),
-                duration
+                self.shard_key,
+                datetime.now(),
+                duration,
             )
 
             # Task is needed so waiting can be cancelled by op code 1
-            self.__wait_for_heartbeat = create_task(
-                sleep(duration / 1000)
-            )
+            self.__wait_for_heartbeat = create_task(sleep(duration / 1000))
 
             await self.__wait_for_heartbeat
 
@@ -459,7 +477,7 @@ class Gateway:
                     "%s %s ack not received. Attempting to reconnect."
                     " Closing socket with close code 4000. \U0001f480",
                     datetime.now(),
-                    self.shard_key
+                    self.shard_key,
                 )
                 await self.__socket.close(code=4000)
                 self.__should_resume = True
@@ -468,5 +486,7 @@ class Gateway:
                 return
 
             self.__has_received_ack = False
-            await self.send(str(GatewayDispatch(1, data=self.__sequence_number)))
+            await self.send(
+                str(GatewayDispatch(1, data=self.__sequence_number))
+            )
             _log.debug("%s sent heartbeat", self.shard_key)
