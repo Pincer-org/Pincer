@@ -10,6 +10,7 @@ venv
 virtualenv
 pyvenv
 Pipfile.lock
+.nox
 
 # Docs
 docs/_build
