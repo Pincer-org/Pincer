@@ -238,6 +238,19 @@ def command(
             # to implement it.
             argument_type = annotation.__origin__
 
+        # check if None to keep the type checker happy that its Any
+        if argument_type is not None and hasattr(argument_type, "__args__"):
+            # this is a Union, hopefully an Optional/Union[T, None]
+            # Optional[T] is an alias to Union[T, None]
+            args = argument_type.__args__
+
+            if len(args) != 2 or args[1] != type(None):
+                raise InvalidArgumentAnnotation(
+                    "`Union` is not a supported option type"
+                )
+
+            argument_type = args[0]
+
         if not argument_type:
             if annotation in _options_type_link:
                 options.append(
