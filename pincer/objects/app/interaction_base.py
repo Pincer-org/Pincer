@@ -23,7 +23,7 @@ class CallbackType(IntEnum):
 
     Attributes
     ----------
-    PONG::iphon
+    PONG:
         ACK a Ping
     MESSAGE:
         Respond to an interaction with a message
