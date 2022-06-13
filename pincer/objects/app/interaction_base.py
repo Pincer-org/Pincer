@@ -23,7 +23,7 @@ class CallbackType(IntEnum):
 
     Attributes
     ----------
-    PONG:
+    PONG::iphon
         ACK a Ping
     MESSAGE:
         Respond to an interaction with a message
@@ -55,13 +55,18 @@ class InteractionType(IntEnum):
     APPLICATION_COMMAND:
         A "slash" command.
     MESSAGE_COMPONENT:
-        A ui component like buttons and selects.
+        A UI component like buttons and selects.
+    AUTOCOMPLETE:
+        Autocomplete for interaction options.
+    MODAL:
+        Emitter when a modal gets submitted.
     """
 
     PING = 1
     APPLICATION_COMMAND = 2
     MESSAGE_COMPONENT = 3
     AUTOCOMPLETE = 4
+    MODAL = 5
 
 
 @dataclass(repr=False)
