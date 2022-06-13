@@ -10,7 +10,10 @@ class InteractionFlags(IntFlag):
     Attributes
     ----------
     EPHEMERAL:
-        only the user receiving the message can see it
+        Only the user receiving the message can see it.
+    SUPPRESS_EMBEDS:
+        No link embeds should be shown for this message.
     """
 
     EPHEMERAL = 1 << 6
+    SUPPRESS_EMBEDS = 1 << 2
