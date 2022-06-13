@@ -105,6 +105,10 @@ def get_call(
         raise NotImplementedError(
             "Handling for autocomplete is not implemented"
         )
+    elif interaction.type == InteractionType.MODAL:
+        raise NotImplementedError(
+            "Handling for modal submit is not implemented"
+        )
 
 
 async def interaction_response_handler(
