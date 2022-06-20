@@ -34,6 +34,8 @@ class CallbackType(IntEnum):
         For components, ACK an interaction and edit the original message later
     UPDATE_MESSAGE:
         For components, edit the message the component was attached to
+    MODAL:
+        Reply to that interaction with a modal
     """
 
     # noqa: E501
@@ -42,6 +44,7 @@ class CallbackType(IntEnum):
     DEFERRED_MESSAGE = 5
     DEFERRED_UPDATE_MESSAGE = 6
     UPDATE_MESSAGE = 7
+    MODAL = 9
 
 
 class InteractionType(IntEnum):
@@ -55,13 +58,18 @@ class InteractionType(IntEnum):
     APPLICATION_COMMAND:
         A "slash" command.
     MESSAGE_COMPONENT:
-        A ui component like buttons and selects.
+        A UI component like buttons and selects.
+    AUTOCOMPLETE:
+        Autocomplete for interaction options.
+    MODAL:
+        Emitter when a modal gets submitted.
     """
 
     PING = 1
     APPLICATION_COMMAND = 2
     MESSAGE_COMPONENT = 3
     AUTOCOMPLETE = 4
+    MODAL = 5
 
 
 @dataclass(repr=False)

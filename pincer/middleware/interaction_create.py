@@ -102,8 +102,14 @@ def get_call(
         command = ComponentHandler.register.get(interaction.data.custom_id)
         return command.call, command.manager
     elif interaction.type == InteractionType.AUTOCOMPLETE:
+        # TODO: Implement autocomplete
         raise NotImplementedError(
-            "Handling for autocomplete is not implemented"
+            "Handling for autocomplete is not implemented yet."
+        )
+    elif interaction.type == InteractionType.MODAL:
+        # TODO: Implement modals
+        raise NotImplementedError(
+            "Handling for modals is not implemented yet."
         )
 
 
