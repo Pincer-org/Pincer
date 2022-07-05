@@ -525,7 +525,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "types-pillow"
-version = "9.0.20"
+version = "9.2.0"
 description = "Typing stubs for Pillow"
 category = "main"
 optional = true
@@ -576,7 +576,7 @@ speed = ["orjson", "Brotli", "aiodns", "cchardet"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "dd95d148a0faa61b0ef4df055b1e8c678b1822357e111a997a45e4f6fe3002f8"
+content-hash = "a1868012edd5537e07f2cb92ce36ca3b8145eb02f32c1f0ce5d9f4b1ab52b633"
 
 [metadata.files]
 aiodns = [
@@ -1279,8 +1279,8 @@ tomli = [
     {file = "tomli-2.0.1.tar.gz", hash = "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"},
 ]
 types-pillow = [
-    {file = "types-Pillow-9.0.20.tar.gz", hash = "sha256:82dea83c21c665a334b0f88b78a7d6a62503c96d0777c8a2327701d4ca7bf421"},
-    {file = "types_Pillow-9.0.20-py3-none-any.whl", hash = "sha256:fa10b09284a8e0058484d747b8b3e75301250057390089f4c5a695c359fd3966"},
+    {file = "types-Pillow-9.2.0.tar.gz", hash = "sha256:6823851e179dcc157424175b5dc0e1204b1c949e1de32417ff2fbfa7e3d3f45b"},
+    {file = "types_Pillow-9.2.0-py3-none-any.whl", hash = "sha256:f367d22b54239b09607fcd8d4514b86bac6bf7d6ed1d5bdfa41782ea62083b2a"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.2.0-py3-none-any.whl", hash = "sha256:6657594ee297170d19f67d55c05852a874e7eb634f4f753dbd667855e07c1708"},
