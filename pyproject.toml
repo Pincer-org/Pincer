@@ -42,7 +42,7 @@ pytest = "^7.1.2"
 pytest-cov = "^3.0.0"
 mypy = "^0.971"
 pytest-asyncio = "^0.19.0"
-nox = "^2022.1.7"
+nox = "^2022.8.7"
 isort = "^5.10.1"
 
 [tool.poetry.extras]
