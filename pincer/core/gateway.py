@@ -99,11 +99,6 @@ class Gateway:
         shard: int,
         num_shards: int,
     ) -> None:
-        if len(token) != 59:
-            raise InvalidTokenError(
-                "Discord Token must have exactly 59 characters."
-            )
-
         self.token = token
         self.intents = intents
         self.url = url
