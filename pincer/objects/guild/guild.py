@@ -430,6 +430,9 @@ class Guild(APIObject):
             Client object to use the http gateway from.
         _id : :class:`~pincer.utils.snowflake.Snowflake`
             Guild ID.
+        with_counts : :class:`bool`
+            Whether to fetch approximate member and presence counts.
+
         Returns
         -------
         :class:`~pincer.objects.guild.guild.Guild`
