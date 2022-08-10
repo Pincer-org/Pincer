@@ -17,7 +17,7 @@ from ...utils.convert_message import convert_message
 from ...utils.types import MISSING
 
 if TYPE_CHECKING:
-    from typing import Dict, List, Optional, Union
+    from typing import Dict, List, Optional, TypeVar, Union
 
     from .member import GuildMember
     from .overwrite import Overwrite
@@ -31,6 +31,8 @@ if TYPE_CHECKING:
     from ...utils.timestamp import Timestamp
     from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
+
+    C = TypeVar("C", bound="Channel")
 
 
 class ChannelType(IntEnum):
@@ -189,7 +191,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         return f"<#{self.id}>"
 
     @classmethod
-    async def from_id(cls, client: Client, channel_id: int) -> Channel:
+    async def from_id(cls: type[C], client: Client, channel_id: int) -> C:
         """|coro|
         Creates a channel object. You should use the ``get_channel`` method
         from :class:`~pincer.client.Client` most of the time. The
