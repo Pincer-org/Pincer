@@ -191,7 +191,7 @@ So, in short, only use this if you know what you're doing.
 
 ## 🏷️ License
 
-`© 2021 copyright Pincer`
+`© 2022 copyright Pincer`
 
 This repository is licensed under the MIT License.
 
