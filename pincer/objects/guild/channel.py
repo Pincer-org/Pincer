@@ -28,6 +28,7 @@ if TYPE_CHECKING:
     from ..user.user import User
     from ...client import Client
     from ...objects import ThreadMember
+    from ...utils.convert_message import MessageConvertable
     from ...utils.timestamp import Timestamp
     from ...utils.types import APINullable
     from ...utils.snowflake import Snowflake
@@ -508,7 +509,7 @@ class Channel(APIObject, GuildProperty):  # noqa E501
         """
         ensure_future(self.__post_send_handler(message))
 
-    async def send(self, message: Union[Embed, Message, str]) -> UserMessage:
+    async def send(self, message: MessageConvertable) -> UserMessage:
         """|coro|
 
         Send a message in the channel.
