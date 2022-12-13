@@ -225,11 +225,11 @@ python-versions = "*"
 
 [[package]]
 name = "isort"
-version = "5.10.1"
+version = "5.11.1"
 description = "A Python utility / library to sort Python imports."
 category = "dev"
 optional = false
-python-versions = ">=3.6.1,<4.0"
+python-versions = ">=3.7.0"
 
 [package.extras]
 colors = ["colorama (>=0.4.3,<0.5.0)"]
@@ -566,7 +566,7 @@ speed = ["orjson", "Brotli", "aiodns", "cchardet"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "2ea49a592dc30b01e5cf17f8f776ce14439e85abd2573cb40dbc33f0d06dbe74"
+content-hash = "e17fa54b96cd92fc005449dbe3c11ce6a16c1aac5edc6f6b406815ae69cd74e0"
 
 [metadata.files]
 aiodns = [
@@ -984,8 +984,8 @@ iniconfig = [
     {file = "iniconfig-1.1.1.tar.gz", hash = "sha256:bc3af051d7d14b2ee5ef9969666def0cd1a000e121eaea580d4a313df4b37f32"},
 ]
 isort = [
-    {file = "isort-5.10.1-py3-none-any.whl", hash = "sha256:6f62d78e2f89b4500b080fe3a81690850cd254227f27f75c3a0c491a1f351ba7"},
-    {file = "isort-5.10.1.tar.gz", hash = "sha256:e8443a5e7a020e9d7f97f1d7d9cd17c88bcb3bc7e218bf9cf5095fe550be2951"},
+    {file = "isort-5.11.1-py3-none-any.whl", hash = "sha256:bf02c95f1fe615ebbe13a619cfed1619ddfe8941274c9e3de3143adca406cb02"},
+    {file = "isort-5.11.1.tar.gz", hash = "sha256:7c5bd998504826b6f1e6f2f98b533976b066baba29b8bae83fdeefd0b89c6b70"},
 ]
 mccabe = [
     {file = "mccabe-0.7.0-py2.py3-none-any.whl", hash = "sha256:6c2d30ab6be0e4a46919781807b4f0d834ebdd6c6e3dca0bda5a15f863427b6e"},
