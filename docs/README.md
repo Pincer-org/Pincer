@@ -24,37 +24,9 @@ The snappy asynchronous Discord API wrapper written with aiohttp.
 | :exclamation: | The package has been discontinued as of December 26, 2022 |
 | ------------- | :-------------------------------------------------------- |
 
-Thanks for the contributions and the support!
+## Thanks for the contributions and the support!
 
-<img height=48 src="https://avatars.githubusercontent.com/u/53050011?v=4">
-<img height=48 src="https://avatars.githubusercontent.com/u/38541241?v=4">
-<img height=48 src="https://avatars.githubusercontent.com/u/65521138?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/77130613?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/45527309?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/34910574?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/82736662?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/48654552?v=4">
-<img height=48 src="https://avatars.githubusercontent.com/u/79206232?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/69208565?v=4">
-<img height=48 src="https://avatars.githubusercontent.com/u/64019721?v=4">
-<img height=48 src="https://avatars.githubusercontent.com/u/49210777?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/68759343?v=4">
-<img height=48 src="https://avatars.githubusercontent.com/u/69681150?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/69248796?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/47520067?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/66625058?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/54999048?v=4">
-<img height=48 src="https://avatars.githubusercontent.com/u/84781603?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/71959217?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/86263361?v=4">
-<img height=48 src="https://avatars.githubusercontent.com/u/43090614?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/61637085?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/55721663?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/54180221?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/24192522?v=4">
-<img height=48 src="https://avatars.githubusercontent.com/u/33827994?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/78862561?v=4"> 
-<img height=48 src="https://avatars.githubusercontent.com/u/74103155?v=4">
+<img src="../assets/contributors.png">
 
 ## :pushpin: Links
 
