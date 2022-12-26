@@ -21,8 +21,8 @@
 
 The snappy asynchronous Discord API wrapper written with aiohttp.
 
-| :exclamation: | The package is currently within the Alpha phase |
-| ------------- | :---------------------------------------------- |
+| :exclamation: | The package as been discontinued as of the 26/12/22 |
+| ------------- | :-------------------------------------------------- |
 
 ## :pushpin: Links
 
